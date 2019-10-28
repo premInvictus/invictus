@@ -24,32 +24,39 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		'Games playedor extra- curricular activities in which pupil usually took part- <br>(mention achievement level there)',
 		'General Comduct', 'Date of application for certificate', 'Date of issue of certificate', 'Reasons for leaving the school',
 		'Any other Remarks'];
-	templateArray = [{'usts_id': '1', 'usts_name': 'Slc/Tc Printing', 'usts_value' : 'slctc'},
-					 {'usts_id': '2', 'usts_name': 'Certificate',  'usts_value' : 'certificate'},
-					 {'usts_id': '3', 'usts_name': 'Admit card', 'usts_value' : 'admitcard'},
-					 {'usts_id': '4', 'usts_name': 'Acknowledgement', 'usts_value' : 'acknowledgement'},
-					 {'usts_id': '5', 'usts_name': 'TC Issue Acknowledgement', 'usts_value' : 'tcissueacknowledgement'},
-					 {'usts_id': '6', 'usts_name': 'TC Re-issue Acknowledgement', 'usts_value' : 'tcreissueacknowledgement'},
-					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'},
-					 {'usts_id': '7', 'usts_name': 'Tc Cancel Acknowledgement', 'usts_value' : 'tcancelacknowledgement'},
-					 {'usts_id': '8', 'usts_name': 'Bus Pass Front', 'usts_value' : 'buspassfront'},
-					 {'usts_id': '9', 'usts_name': 'Bus Pass Back', 'usts_value' : 'buspassback'}
-					];
+	templateArray = [];
 	templateIndex = 0;
 	ckeConfig: any;
 	renderTable: any = '';
 	loadConfig = false;
+	typeArray: any[] = [];
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
 		private common: CommonAPIService) { }
 
 	ngOnInit() {
 		this.buildForm();
-		
-		this.getSLCTCFormConfig();
+		this.getSlcTcTemplateSetting();
+		this.getSLCTCFormConfig({value: '1'});
 		this.getSLCTCFormConfig2();
 		this.getTemplate();
 
+	}
+	getSlcTcTemplateSetting(){
+		this.sisService.getSlcTcTemplateSetting({}).subscribe((result: any) => {
+			if(result && result.status === 'ok') {
+				if(result.data && result.data.length > 0) {
+					this.typeArray = result.data;
+					result.data.forEach(element => {
+						this.templateArray.push({
+							usts_id: element.usts_id,
+							usts_name: element.usts_alias,
+							usts_value: element.usts_name
+						})
+					});
+				}
+			}
+		})
 	}
 	buildForm() {
 		this.templateForm = this.fbuild.group({
@@ -80,7 +87,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		}
 		this.sisService.getSlcTcTemplateSetting({ usts_id: this.templateForm.value.usts_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				// console.log(result.data[0].usts_template);
+				// console.log(result.data[0].usts_template); a
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template,
 					'usts_id' : result.data[0].usts_id,
@@ -94,12 +101,17 @@ export class SlctcPrintingSetupComponent implements OnInit {
 	}
 	loadPlugin() {
 		console.log('load plugin');
-		const array2 = this.configArray;
+		let array2 = [];
+		array2 = this.configArray;
+		console.log(this.configArray);
 		// tslint:disable-next-line:forin
+		console.log(CKEDITOR.plugins);
+		delete CKEDITOR.plugins.registered['strinsertExt'];
 		if (!(CKEDITOR.plugins.registered['strinsertExt'])) {
+			console.log('inside plugin');
 			CKEDITOR.plugins.add('strinsertExt', {
 				requires: ['richcombo'],
-				init: function (editor) {
+				init: editor => {
 					// array of strings to choose from that'll be inserted into the editor
 					const strings2: any = [];
 					for (const item of array2) {
@@ -112,6 +124,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 							strings2.push(['((' + item.sff_field_tag + '))', item.sff_label, 'Choose ' + item.sff_label, item.sff_ff_id]);
 						}
 					}
+					console.log(strings2);
 					// add the menu to the editor
 					editor.ui.addRichCombo('strinsertExt', {
 						label: 'Choose Label',
@@ -138,6 +151,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 						}
 					});
 				}
+				
 			});
 
 			this.ckeConfig = {
@@ -147,13 +161,21 @@ export class SlctcPrintingSetupComponent implements OnInit {
 				disallowedContent: 'm:omathpara',
 				height: '800',
 				width: '100%',
-				// tslint:disable-next-line:max-line-length
-				extraPlugins: 'strinsertExt',
+				// tslint:disable-next-line:max-line-length 
+				extraPlugins: 'strinsertExt,language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
+
 				scayt_multiLanguageMod: true,
+				filebrowserUploadMethod: 'form',
+				uploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+				filebrowserImageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+				filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+				filebrowserBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+				filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
 				toolbar: [
 					// tslint:disable-next-line:max-line-length
 					['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
-						{ name: 'strinsertExt', items: ['strinsertExt'] }
+						{ name: 'strinsertExt', items: ['strinsertExt'] },
+						{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
 					]
 				],
 				removeDialogTabs: 'image:advanced;image:Link'
@@ -164,9 +186,9 @@ export class SlctcPrintingSetupComponent implements OnInit {
 
 		// this.loadCkEditorConfiguration();
 	}
-	getSLCTCFormConfig() {
+	getSLCTCFormConfig(event) {
 		this.configArray = [];
-		this.sisService.getSlcTcFormConfig({ tmap_usts_id: '1' }).subscribe((result: any) => {
+		this.sisService.getSlcTcFormConfig({ tmap_usts_id: event.value }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				for (const item of result.data) {
 					this.configArray.push({

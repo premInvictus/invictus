@@ -1,0 +1,359 @@
+<div class="container-box__white">
+  <ng-container>
+    <div class="functional-button-five">
+      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request'))"
+        (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
+        <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
+      </button>
+    </div>
+
+    <div class="padding-15">
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Education </div>
+        </div>
+      </div>
+      <form [formGroup]="Education_Form">
+        <div class="row">
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Qualification</mat-label>
+              <mat-select formControlName="qualification" required [errorStateMatcher]="confirmValidParentMatcher"
+                placeholder="Qualification">
+                <mat-option>Please Select</mat-option>
+                <mat-option *ngFor="let item of qualficationArray" [value]="item.qlf_id">
+                  {{item.qlf_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 ">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Board/University</mat-label>
+              <mat-select formControlName="board" required [errorStateMatcher]="confirmValidParentMatcher"
+                placeholder="Board/University">
+                <mat-option>Please Select</mat-option>
+                <mat-option *ngFor="let item of boardArray" [value]="item.board_id">
+                  {{item.board_name}}
+                </mat-option>
+              </mat-select>
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-1">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Year</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="year"
+                required matInput placeholder="Year">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 ">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Division</mat-label>
+              <mat-select formControlName="division" [errorStateMatcher]="confirmValidParentMatcher"
+                placeholder="Division">
+                <mat-option>Please Select</mat-option>
+                <mat-option *ngFor="let item of divisonArray" [value]="item.id">
+                  {{item.name}}
+                </mat-option>
+              </mat-select>
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-1">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>%/CGPA</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="percentage" required matInput placeholder="%/CGPA">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Subject(Core)</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="subject"
+                required matInput placeholder="Subject(Core)">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 margin-top-10 ">
+            <button mat-raised-button class="btn-neutral" *ngIf="!educationUpdateFlag"
+              (click)="addPreviousEducations()">Add To List</button>
+            <button *ngIf="educationUpdateFlag" mat-raised-button class="btn-neutral" (click)="updateEducation()">Update
+              List</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row" *ngIf="educationsArray?.length > 0 ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
+                <th class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr" *ngFor="let item of educationsArray;let i=index">
+                <td class="custom-td">{{i+1}}</td>
+                <td class="custom-td">{{getQualificationsName(item.qualification)}}</td>
+                <td class="custom-td">{{getBoardName(item.board)}}</td>
+                <td class="custom-td">{{item.year}}</td>
+                <td class="custom-td">{{getdivisonName(item.division)}}</td>
+                <td class="custom-td">{{item.percentage}}</td>
+                <td class="custom-td">{{item.subject}}</td>
+                <td class="custom-td">
+                  <i class="far fa-edit modify-icon" (click)="editEducation(i)" style="cursor:pointer" title="Edit"></i>
+                  <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteEducation(i)"
+                    style="cursor:pointer" title="Delete"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row" *ngIf="educationsArray?.length === 0 && viewOnly ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Qualification</th>
+                <th class="custom-th">Board/University</th>
+                <th class="custom-th">Year</th>
+                <th class="custom-th">Divison</th>
+                <th class="custom-th">%/CGPA</th>
+                <th class="custom-th">Subject</th>
+                <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr">
+                <td colspan="8">No records Found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="padding-15">
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Experience </div>
+        </div>
+      </div>
+      <form [formGroup]="Experience_Form">
+        <div class="row">
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Organisation</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="organisation" required matInput placeholder="Organisation">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Designation</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="designation" required matInput placeholder="Designation">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Last salary drawn</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="last_salary" required matInput placeholder="Last salary drawn">
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Start Date</mat-label>
+              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>End Date</mat-label>
+              <input matInput [matDatepicker]="picker2" placeholder="End Date" formControlName="end_date">
+              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+              <mat-error>
+                This field is required*
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-2 margin-top-10 margin-top-12">
+            <button mat-raised-button class="btn-neutral" *ngIf="!experienceUpdateFlag" (click)="addexperience()">Add To
+              List</button>
+            <button *ngIf="experienceUpdateFlag" mat-raised-button class="btn-neutral"
+              (click)="updateExperience()">Update List</button>
+          </div>
+        </div>
+      </form>
+
+      <div class="row" *ngIf="experiencesArray?.length > 0 ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Organisation</th>
+                <th class="custom-th">Designation</th>
+                <th class="custom-th">Last Salary Drawn</th>
+                <th class="custom-th">Start Date</th>
+                <th class="custom-th">End date</th>
+                <th class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr" *ngFor="let item of experiencesArray;let i=index">
+                <td class="custom-td">{{i+1}}</td>
+                <td class="custom-td">{{item.organisation}}</td>
+                <td class="custom-td">{{item.designation}}</td>
+                <td class="custom-td">{{item.last_salary}}</td>
+                <td class="custom-td">{{item.start_date | date:'d-MMM-y'}}</td>
+                <td class="custom-td">{{item.end_date | date:'d-MMM-y'}}</td>
+                <td class="custom-td">
+                  <i class="far fa-edit modify-icon" (click)="editExperience(i)" style="cursor:pointer"
+                    title="Edit"></i>
+                  <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteExperience(i)"
+                    style="cursor:pointer" title="Delete"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row" *ngIf="experiencesArray?.length === 0 && viewOnly ">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Sr. No.</th>
+                <th class="custom-th">Organisation</th>
+                <th class="custom-th">Designation</th>
+                <th class="custom-th">Last Salary Drawn</th>
+                <th class="custom-th">Start Date</th>
+                <th class="custom-th">End date</th>
+                <th *ngIf="!viewOnly" class="custom-th">Modify</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <tr class="custom-tr">
+                <td colspan="8">No records Found</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="padding-15">
+      <div class="row">
+        <div class="col-6">
+          <div class="heading-class">Skills </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2">
+          <form [formGroup]="skillForm">
+            <div class="inline-flex ">
+              <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Skills</mat-label>
+                <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
+                  type="text" formControlName="skill_id">
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+        <div class="col-10">
+          <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
+            <span class="custom-btn-text">{{item}}</span>
+            <i class="fas fa-times-circle custom-entry-btn-icon" (click)="deleteSkill(item)"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="padding-15">
+      <form [formGroup]="remarksForm">
+        <div class="row">
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <div class="heading-class">Managements Remarks </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control"formControlName="management_remarks"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <div class="heading-class">Interview Remarks </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control" formControlName="interview_remarks"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="row">
+      <div class="col-12 text-center ">
+        <button  mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+          Continue</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+          (click)="updateForm(false)">Update &
+          Continue</button>
+        <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
+          (click)="checkFormChangedValue()">Edit & Continue</button>
+        <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+<!-- <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal> -->

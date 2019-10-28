@@ -96,7 +96,7 @@ export class AddSyllabusComponent implements OnInit {
 			disallowedContent: 'm:omathpara',
 			height: '150',
 			width: '100%',
-			// tslint:disable-next-line:max-line-length
+			// tslint:disable-next-line:max-line-length 
 			extraPlugins: 'language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
 			scayt_multiLanguageMod: true,
 			mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',

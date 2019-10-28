@@ -1,0 +1,302 @@
+<div>
+    <div class="container-box__white">
+        <div class="row">
+            <div class="col-12">
+                <div class="padding-15">
+                    <form [formGroup]="salaryDetails">
+                        <div class="row remove-top-margin">
+                            <div class="col-4 col-pad-5">
+                                <div class="row salary-card"> 
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Pan No.</mat-label>
+                                        <input class="text-capitalize" formControlName="pan" matInput
+                                            placeholder="Pan No." required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher" />
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Aadhaar No.</mat-label>
+                                        <input type="text" formControlName="aadhar" matInput placeholder="Aadhaar No."
+                                            required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>PF A/c No.| UAN</mat-label>
+                                        <input type="text" formControlName="pf_ac" matInput
+                                            placeholder="PF A/c No.| UAN" required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>ESI A/c No.</mat-label>
+                                        <input type="text" formControlName="esi_ac" matInput placeholder="ESI A/c No."
+                                            required 
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Nominee</mat-label>
+                                        <input type="text" matInput formControlName="nominee" placeholder="Nominee"
+                                            required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Date of Joining</mat-label>
+                                        <input matInput [matDatepicker]="picker" placeholder="Date of Joining"
+                                            formControlName="doj">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>PF Joining Date</mat-label>
+                                        <input matInput [matDatepicker]="picker1" placeholder="PF Joining Date"
+                                            formControlName="pf_doj">
+                                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker1></mat-datepicker>                                        
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>ESI Joining Date</mat-label>
+                                        <input matInput [matDatepicker]="picker2" placeholder="ESI Joining Date"
+                                            formControlName="esi_doj">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>                                          
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Probation</mat-label>
+                                        <input matInput [matDatepicker]="picker3" placeholder="Probation"
+                                            formControlName="probation">
+                                        <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker3></mat-datepicker>                                        
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Confirmation Date</mat-label>
+                                        <input matInput [matDatepicker]="picker4" placeholder="Confirmation Date"
+                                            formControlName="confirm_date">
+                                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker4></mat-datepicker>  
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-4 col-pad-5">
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Category I</mat-label>
+                                        <mat-select formControlName="category_1" required placeholder="Category I">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
+                                                {{item.cat_nme}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Category II</mat-label>
+                                        <mat-select formControlName="category_2" required placeholder="Category II">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of categoryTwoArray" [value]="item.cat_id">
+                                                {{item.cat_nme}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Category III</mat-label>
+                                        <mat-select formControlName="category_3" required placeholder="Category III">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of categoryThreeArray" [value]="item.cat_id">
+                                                {{item.cat_nme}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Increment Month</mat-label>
+                                        <input type="text" formControlName="increment_month" matInput
+                                            placeholder="Increment Month" required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Contract Period</mat-label>
+                                        <input type="text" formControlName="contract_period" matInput
+                                            placeholder="Contract Period" required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Bank Name</mat-label>
+                                        <mat-select formControlName="bank_name" required placeholder="Bank Name">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of bankArray" [value]="item.tb_id">
+                                                {{item.tb_name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Bank A/c No.</mat-label>
+                                        <input type="text" formControlName="bank_ac" matInput placeholder="Bank A/c No."
+                                            required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>IFSC Code</mat-label>
+                                        <input type="text" formControlName="ifsc_code" matInput placeholder="IFSC Code"
+                                            required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-4 col-pad-5">
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Salary Structure/Pay Scale</mat-label>
+                                        <mat-select formControlName="sal_str" (selectionChange)="onChangeData()"
+                                            required placeholder="Salary Structure/Pay Scale">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of scaleArray" [value]="item.ss_id">
+                                                {{item.ss_name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Pay Mode</mat-label>
+                                        <mat-select formControlName="pay_mode" required placeholder="Pay Mode">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of payMode" [value]="item.id">
+                                                {{item.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Basic Pay</mat-label>
+                                        <input type="text" formControlName="basic_pay" matInput placeholder="Basic Pay"
+                                            (keyup)="getNetSalary()" required
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <ng-container *ngIf="scaleData.length > 0">
+                                        <ng-container *ngFor="let item of scaleData; let i=index">
+                                            <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
+                                                <ng-container *ngIf="item.sc_calculation_type === 'text'">
+                                                    <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>{{item.sc_name}}</mat-label>
+                                                        <input type="text" matInput [formControlName]="'sc_value'+i"
+                                                            (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
+                                                            required [errorStateMatcher]="confirmValidParentMatcher">
+                                                        <mat-error>
+                                                            This field is required
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </ng-container>
+                                                <ng-container *ngIf="item.sc_calculation_type === '%'">
+                                                    <mat-form-field class="form-field" appearance="outline">
+                                                        <mat-label>{{item.sc_name}}</mat-label>
+                                                        <input type="text" matInput placeholder="{{item.sc_name}}"
+                                                            [formControlName]="'sc_value'+i"
+                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)">
+                                                        <mat-error>
+                                                            This field is required
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </ng-container>
+                                            </form>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Net Salary</mat-label>
+                                        <input type="text" formControlName="net_salary" matInput [value]="netSalary"
+                                            placeholder="Net Salary" required [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Total Earning</mat-label>
+                                        <input type="text" formControlName="total_earning" matInput
+                                            [value]="totalEarning" placeholder="Total Earning" required
+                                            [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="row">
+            <div class="col-12 text-center ">
+                <form>
+                    <button class="sis-btn-success" mat-raised-button (click)="saveForm()">Submit</button>
+                    <button class="sis-btn-success btn-save-continue btn-spacer" mat-raised-button
+                        (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span>
+                        & Continue</button>
+                    <button class="btn-danger btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>

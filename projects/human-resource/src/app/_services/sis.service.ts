@@ -5,7 +5,7 @@ import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
 export class SisService {
-
+ 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getEnrollmentStatus() {
 		return of({
@@ -105,5 +105,25 @@ export class SisService {
 		}
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
+	}
+	getStateCountryByCity(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/getStateCountryByCity', value);
+	}
+	getState() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/setup/getState/');
+	}
+	getQualifications() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/qualifications/getQualifications');
+	}
+	getDepartment(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/department');
+	}
+	getGender() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/gender');
 	}
 }

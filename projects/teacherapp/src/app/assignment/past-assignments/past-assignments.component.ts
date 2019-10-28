@@ -160,36 +160,38 @@ export class PastAssignmentsComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+		this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
 
 	getSectionsByClass() {
 		this.sectionArray = [];
-		this.smartService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSectionByTeacherIdClassId({
+			teacher_id: this.currentUser.login_id,
+			class_id: this.paramForm.value.class_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
 
 	getSubjectsByClass() {
-		this.subjectArray = [];
 		this.paramForm.patchValue({
 			sub_id: ''
 		});
-		this.smartService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+
+		this.subjectArray = [];
+		this.smartService.getSubjectByTeacherIdClassIdSectionId({
+			teacher_id: this.currentUser.login_id,
+			class_id: this.paramForm.value.class_id,
+			sec_id: this.paramForm.value.sec_id
+		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
-			} else {
-				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}

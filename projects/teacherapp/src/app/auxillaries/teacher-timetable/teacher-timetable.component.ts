@@ -17,10 +17,10 @@ export class TeacherTimetableComponent implements OnInit {
 	sectionArray: any[] = [];
 	teacherwiseArray: any[] = [];
 	teacherwiseWeekArray: any[] = [];
-	finalArr: any[] = [];
+	finalArr: any[] = []; 
 	sessionArray: any[] = [];
 	teacherwiseForm: FormGroup;
-	teacherId: any;
+	teacherId: any; 
 	teacherName: any;
 	noOfDay: any;
 	sum = 0;
@@ -96,12 +96,12 @@ export class TeacherTimetableComponent implements OnInit {
 	}
 	// get section by class and teacher
 	getSectionByTeacherIdClassId() {
+		this.teacherId = this.currentUser.login_id;
 		this.sectionArray = [];
 		const jsonInput = {
-			teacher_id: 1239,
+			teacher_id: this.teacherId,
 			class_id: this.teacherwiseForm.value.tt_class_id
-		};
-		this.teacherId = this.currentUser.login_id;
+		};		
 		this.smartService.getSectionByTeacherIdClassId(jsonInput).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.sectionArray = result.data;
@@ -113,12 +113,13 @@ export class TeacherTimetableComponent implements OnInit {
 	// get Subject by class,section and teacher
 	getSubjectByTeacherIdClassIdSectionId() {
 		this.subArray = [];
+		this.teacherId = this.currentUser.login_id;
 		const jsonInput = {
-			teacher_id: 1239,
+			teacher_id: this.teacherId,
 			class_id: this.teacherwiseForm.value.tt_class_id,
 			sec_id: this.teacherwiseForm.value.tt_section_id
 		};
-		this.teacherId = this.currentUser.login_id;
+		
 		this.smartService.getSubjectByTeacherIdClassIdSectionId(jsonInput).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subArray = result.data;

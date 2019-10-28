@@ -21,7 +21,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from 'src/app/_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from '../_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -33,11 +33,12 @@ import { AssignmentAttachmentDialogComponent } from './assignment-attachment-dia
 import { PublishModalComponent } from './publish-modal/publish-modal.component';
 import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
-import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../employee-master/employee-tab-six-container/preview-document/preview-document.component';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
+import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
-import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
+//import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -108,7 +109,8 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		AdvancedSearchModalComponent,
+		//EmployeeDetailsComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -118,7 +120,8 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		PublishModalComponent,
 		UnpublishModalComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		AdvancedSearchModalComponent,
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -159,7 +162,8 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
-		EmployeeDetailsComponent
+		AdvancedSearchModalComponent,
+		//EmployeeDetailsComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -16,7 +16,7 @@
      <div class="row">
         <div class="col-3">
          <mat-form-field class="form-field" appearance="outline">
-            <mat-select (selectionChange)="getTemplate()" placeholder="Setup Options" formControlName="usts_id">
+            <mat-select (selectionChange)="getTemplate();getSLCTCFormConfig($event);" placeholder="Setup Options" formControlName="usts_id">
                <mat-option value="{{item?.usts_id}}" *ngFor="let item of templateArray;">{{item?.usts_name}}</mat-option>
                <!-- <mat-option value="2">Certificate</mat-option>
                <mat-option value="3">Admit card</mat-option>
@@ -27,7 +27,7 @@
             </mat-select>
          </mat-form-field>
         </div>
-        <div class="col-lg-6">
+        <div class="col-lg-8">
           <div style="width:auto;text-align: center" *ngIf="loadConfig">
            <ckeditor id="editor1" [config]="ckeConfig" formControlName="usts_template"></ckeditor> 
            </div>

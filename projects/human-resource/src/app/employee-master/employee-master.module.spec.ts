@@ -1,13 +1,13 @@
 import { EmployeeMasterModule } from './employee-master.module';
 
 describe('EmployeeMasterModule', () => {
-  let employeeMasterModule: EmployeeMasterModule;
+	let EmployeeMasterModule: EmployeeMasterModule;
 
-  beforeEach(() => {
-    employeeMasterModule = new EmployeeMasterModule();
-  });
+	beforeEach(() => {
+		EmployeeMasterModule = new EmployeeMasterModule();
+	});
 
-  it('should create an instance', () => {
-    expect(employeeMasterModule).toBeTruthy();
-  });
+	it('should create an instance', () => {
+		expect(EmployeeMasterModule).toBeTruthy();
+	});
 });

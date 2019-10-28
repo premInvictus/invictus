@@ -235,22 +235,7 @@
                               <mat-error>Please Enter Remark Set Name</mat-error>
                             </mat-form-field>
                           </div>
-                        </div>
-                        <div class="row">
-                          <div class="col-12">
-                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Grade Set</mat-label>
-                              <mat-select formControlName="ers_egs_number" placeholder="Select Grade Set"
-                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
-                                <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of gradeSetArray" [value]="item.egs_id">
-                                  {{item.egs_name}}
-                                </mat-option>
-                              </mat-select>
-                              <mat-error>Please Choose Grade Set Name</mat-error>
-                            </mat-form-field>
-                          </div>
-                        </div>
+                        </div>                      
                         <div class="row">
                           <div class="col-12">
                             <mat-form-field class="form-field" appearance="outline">
@@ -476,7 +461,6 @@
                           </div>
                         </div>
 
-
                       </form>
                     </div>
 
@@ -571,7 +555,8 @@
                                           <span *ngIf="!item.grade_name">-</span>
                                         </td>
                                       </ng-container>
-                                      <!-- <ng-container *ngIf="configValue == '7'" matColumnDef="co_grade_name">
+                                      
+                                      <ng-container *ngIf="configValue == '7'" matColumnDef="co_grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Co-Scholastic
                                         </th>
@@ -579,8 +564,8 @@
                                           <span *ngIf="item.co_grade_name">{{ item.co_grade_name }}</span>
                                           <span *ngIf="!item.co_grade_name">-</span>
                                         </td>
-                                      </ng-container> -->
-                                      <!-- <ng-container *ngIf="configValue == '7'" matColumnDef="exam_type">
+                                      </ng-container> 
+                                       <ng-container *ngIf="configValue == '7'" matColumnDef="exam_type">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Exam Type
                                         </th>
@@ -588,7 +573,8 @@
                                           <span *ngIf="item.exam_type">{{ item.exam_type }}</span>
                                           <span *ngIf="!item.exam_type">-</span>
                                         </td>
-                                      </ng-container> -->
+                                      </ng-container>
+
                                       <!-- <ng-container *ngIf="configValue == '3'" matColumnDef="grade_value">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Grade Value
@@ -626,7 +612,7 @@
                                           <span *ngIf="!item.grade_set_description">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '4'" matColumnDef="remark_grade_name">
+                                      <!-- <ng-container *ngIf="configValue == '4'" matColumnDef="remark_grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Grade Name
                                         </th>
@@ -634,7 +620,7 @@
                                           <span *ngIf="item.remark_grade_name">{{ item.remark_grade_name }}</span>
                                           <span *ngIf="!item.remark_grade_name">-</span>
                                         </td>
-                                      </ng-container>
+                                      </ng-container> -->
                                       <ng-container *ngIf="configValue == '4'" matColumnDef="remark_type">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Remark Type
