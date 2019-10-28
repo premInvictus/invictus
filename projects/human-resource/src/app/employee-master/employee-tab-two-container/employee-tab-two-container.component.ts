@@ -37,34 +37,29 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	arrayState: any[] = [];
 	@ViewChild('editReference') editReference;
 	constructor(private sisService: SisService, private fbuild: FormBuilder,
-		public common: CommonAPIService) { }
-
-
+		public commonAPIService: CommonAPIService) { }
 	ngOnInit() {
 		this.buildForm();
 		this.getState();
 		if (this.employeedetails) {
 			this.getPersonaContactsdata();
 		}
-
-		this.common.reRenderForm.subscribe((data: any) => {
-			console.log('data', data);
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
 				}
+				if (data.editMode) {
+					this.setActionControls({ editMode: true });
+				} 
 			}
 		});
-
-
-
-		console.log('second', this.employeedetails);
 	}
 
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
-			this.viewOnly =false;
+			this.viewOnly = false;
 			this.personalContacts.patchValue({
 				relationship: '',
 				fullname: '',
@@ -83,7 +78,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		}
 		if (data.editMode) {
 			this.editOnly = true;
-			//this.viewOnly = false;
+			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
@@ -121,7 +116,6 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getPersonaContactsdata() {
-		console.log('this.employeedetails', this.employeedetails);
 		if (this.employeedetails) {
 			this.personalContacts.patchValue({
 				relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
@@ -155,19 +149,19 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	cancelForm() {
 		if (this.addOnly) {
-			this.common.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag || this.editRequestFlag) {
 			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
 			this.getPersonaContactsdata();
-			this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
 	}
 	updateForm(isview) {
-		this.contactsArray['emp_personal_contact'] = {
+		this.employeedetails['emp_personal_contact'] = {
 			relationship_personal_detail: {
 				rel_category: {
 					rel_id: this.personalContacts.value.relationship,
-					rel_name: this.personalContacts.value.relationship
+					rel_name: this.getRelationShipName(this.personalContacts.value.relationship)
 				},
 				rel_full_name: this.personalContacts.value.fullname,
 				rel_occupation: this.personalContacts.value.occupation,
@@ -189,6 +183,11 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				}
 			}
 		};
+		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
+
+			}
+		});
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');
@@ -215,7 +214,12 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 			state: item.sta_id,
 		});
 	}
-
+	getRelationShipName(id) {
+		const findIndex = this.relationshipArray.findIndex(f => f.id === id);
+		if (findIndex !== -1) {
+			return this.relationshipArray[findIndex].name;
+		}
+	}
 	getCityName(id) {
 		const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
 		if (findIndex !== -1) {

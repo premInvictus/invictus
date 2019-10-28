@@ -15,7 +15,7 @@
               <div class="col-12 remove-col-padding-left">
                 <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
                   <div class="row margin-top-10 margin-bottom-20">
-                    <div class="col-12">
+                    <div class="col-12"> 
                       <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
                     </div>
                   </div>
@@ -31,7 +31,7 @@
                           File</label>
                       </a>
                     </div>
-                    <ng-container *ngFor="let img of this.imageArray;let i = index">
+                    <ng-container *ngFor="let img of imageArray;let i = index">
 
                       <div class="col-1 tab-custom-col-20 col-doc-img-3 custom-col-15"
                         *ngIf="img.ed_docreq_id === item.docreq_id">
@@ -47,7 +47,7 @@
                                 </div>
                                 <div *ngIf="img.ed_docreq_id ===  item.docreq_id">
                                   <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
-                                    [src]="img.imgName" >
+                                    [src]="img.imgName" (click)="previewImage(imageArray, i)">
                                   <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                     (click)="previewImage(imageArray, i)"><br>
@@ -103,14 +103,14 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> 
 
 
 
 
     <div class="row">
       <div class="col-12 text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button  mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
         <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"

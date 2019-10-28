@@ -3,7 +3,7 @@ import { AxiomService, SisService, CommonAPIService } from '../../_services/inde
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 
-
+import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
  
 @Component({
 	selector: 'app-employee-tab-four-container',
@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 })
 export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	@Input() employeedetails;
+	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	Education_Form: FormGroup;
 	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
@@ -68,6 +69,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 						//this.commonAPIService.studentData.next(result.data[0]);
 						this.addOnly = false;
 					}
+					
 				});
 			} else {
 				//this.commonAPIService.studentData.next(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
@@ -90,9 +92,9 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			management_remarks: this.employeedetails.emp_remark_detail.management_remark,
 			interview_remarks: this.employeedetails.emp_remark_detail.interview_remark,
 		});
-		this.skillsArray = this.employeedetails.emp_remark_detail.skills;
-		// this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail;
-		// this.educationsArray = this.employeedetails.emp_remark_detail.education_detail;
+		this.skillsArray = [this.employeedetails.emp_remark_detail.skills];
+		this.experiencesArray = this.employeedetails.emp_remark_detail.experience_detail ? this.employeedetails.emp_remark_detail.experience_detail : [];
+		this.educationsArray = this.employeedetails.emp_remark_detail.education_detail ? this.employeedetails.emp_remark_detail.education_detail : [];
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');
@@ -291,11 +293,16 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	saveForm() {
 		this.employeedetails['emp_remark_detail'] = {
 			education_detail: this.educationsArray,
-			experience_detail: this.experienceValue,
+			experience_detail: this.experiencesArray,
 			management_remark: this.remarksForm.value.management_remarks,
 			interview_remark: this.remarksForm.value.interview_remarks,
 			skills: this.skillsArray
 		};
+		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+			if (result.status === 'ok') {
+
+			}
+		});
 		console.log('tttt',this.employeedetails);
 	}
 } 

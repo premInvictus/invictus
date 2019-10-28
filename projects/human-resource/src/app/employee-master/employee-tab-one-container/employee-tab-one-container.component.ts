@@ -1,9 +1,5 @@
 import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
-
-// import { ChildDetailsEmployeeComponent } from '../child-details-theme-two/child-details-theme-two.component';
-// import { ParentDetailsEmployeeComponent } from '../parent-details-theme-two/parent-details-theme-two.component';
-// import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -43,9 +39,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
-	// @ViewChild(ChildDetailsEmployeeComponent) childDetails: ChildDetailsEmployeeComponent;
-	// @ViewChild(ParentDetailsEmployeeComponent) parentDetails: ParentDetailsEmployeeComponent;
-	// @ViewChild(MedicalInformationEmployeeComponent) medicalDetails: MedicalInformationEmployeeComponent;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
@@ -75,7 +68,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		}
 		if (data.editMode) {
 			this.editOnly = true;
-			//this.viewOnly = false;
+			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
@@ -97,6 +90,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
+				} 
+				if (data.editMode) {
+					this.setActionControls({ editMode: true });
 				} 
 			}
 		});
