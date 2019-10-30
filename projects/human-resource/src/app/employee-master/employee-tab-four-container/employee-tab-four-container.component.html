@@ -19,7 +19,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Qualification</mat-label>
               <mat-select formControlName="qualification" required [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Qualification">
+                placeholder="Qualification" [disabled]="viewOnly">
                 <mat-option>Please Select</mat-option>
                 <mat-option *ngFor="let item of qualficationArray" [value]="item.qlf_id">
                   {{item.qlf_name}}
@@ -34,7 +34,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Board/University</mat-label>
               <mat-select formControlName="board" required [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Board/University">
+                placeholder="Board/University" [disabled]="viewOnly">
                 <mat-option>Please Select</mat-option>
                 <mat-option *ngFor="let item of boardArray" [value]="item.board_id">
                   {{item.board_name}}
@@ -49,7 +49,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Year</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="year"
-                required matInput placeholder="Year">
+                required matInput placeholder="Year" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -59,7 +59,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Division</mat-label>
               <mat-select formControlName="division" [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Division">
+                placeholder="Division" [disabled]="viewOnly">
                 <mat-option>Please Select</mat-option>
                 <mat-option *ngFor="let item of divisonArray" [value]="item.id">
                   {{item.name}}
@@ -74,7 +74,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>%/CGPA</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="percentage" required matInput placeholder="%/CGPA">
+                formControlName="percentage" required matInput placeholder="%/CGPA" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -84,7 +84,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Subject(Core)</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="subject"
-                required matInput placeholder="Subject(Core)">
+                required matInput placeholder="Subject(Core)" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -170,7 +170,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Organisation</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="organisation" required matInput placeholder="Organisation">
+                formControlName="organisation" required matInput placeholder="Organisation" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -180,7 +180,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Designation</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="designation" required matInput placeholder="Designation">
+                formControlName="designation" required matInput placeholder="Designation" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -190,7 +190,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Last salary drawn</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="last_salary" required matInput placeholder="Last salary drawn">
+                formControlName="last_salary" required matInput placeholder="Last salary drawn" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -199,7 +199,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Start Date</mat-label>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date">
+              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date" [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>
@@ -210,7 +210,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>End Date</mat-label>
-              <input matInput [matDatepicker]="picker2" placeholder="End Date" formControlName="end_date">
+              <input matInput [matDatepicker]="picker2" placeholder="End Date" formControlName="end_date" [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error>
@@ -296,15 +296,15 @@
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Skills</mat-label>
                 <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
-                  type="text" formControlName="skill_id">
+                  type="text" formControlName="skill_id" [readonly]="viewOnly">
               </mat-form-field>
             </div>
           </form>
         </div>
-        <div class="col-10">
+        <div class="col-10" *ngIf="skillsArray.length > 0">
           <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
             <span class="custom-btn-text">{{item}}</span>
-            <i class="fas fa-times-circle custom-entry-btn-icon" (click)="deleteSkill(item)"></i>
+            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="!viewOnly" (click)="deleteSkill(item)"></i>
           </button>
         </div>
       </div>
@@ -320,7 +320,7 @@
             </div>
             <div class="row">
               <div class="col-12 ">
-                <textarea rows="5" class="form-control"formControlName="management_remarks"></textarea>
+                <textarea rows="5" class="form-control"formControlName="management_remarks" [readonly]="viewOnly"></textarea>
               </div>
             </div>
           </div>
@@ -332,7 +332,7 @@
             </div>
             <div class="row">
               <div class="col-12 ">
-                <textarea rows="5" class="form-control" formControlName="interview_remarks"></textarea>
+                <textarea rows="5" class="form-control" formControlName="interview_remarks" [readonly]="viewOnly"></textarea>
               </div>
             </div>
           </div>
@@ -342,14 +342,14 @@
     </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button  mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button  *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
-        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
-        <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+        <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
           (click)="updateForm(false)">Update &
           Continue</button>
-        <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
-          (click)="checkFormChangedValue()">Edit & Continue</button>
+        <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
+          (click)="checkFormChangedValue()">Edit & Continue</button> -->
         <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
       </div>
     </div>

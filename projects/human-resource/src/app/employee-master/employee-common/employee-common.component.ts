@@ -61,7 +61,8 @@ export class EmployeeCommonComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
-		this.deleteModal.openModal(data);
+		console.log('data', data);
+		this.deleteModal.openModal({text:''});
 	}
 	getStuData = (data) => {
 		console.log('yes');
@@ -97,9 +98,6 @@ export class EmployeeCommonComponent implements OnInit {
 
 		this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
-				if (this.login_id !== data.last_record) {
-					this.studentdetailsflag = true;
-				}
 				this.login_id = data.last_record;
 				this.lastRecordId = data.last_record;
 				this.lastEmployeeDetails = {};
@@ -115,8 +113,9 @@ export class EmployeeCommonComponent implements OnInit {
 
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data) {
-				this.studentdetailsflag = true;
 				if ((data && data.reRenderForm) || (data && data.viewMode)) {
+					this.employeedetails = {};
+					this.employeedetails.emp_status = 'live';
 					this.getEmployeeDetail(this.lastRecordId);
 				}
 			}
@@ -125,6 +124,14 @@ export class EmployeeCommonComponent implements OnInit {
 
 		this.getEmployeeDetail(result.emp_id);
 
+	}
+
+	ngOnChanges() {
+		this.employeedetails.emp_status == 'live';
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
+		this.getEmployeeDetail(this.employeedetails.emp_id);
 	}
 
 	getDepartment() {
@@ -174,18 +181,20 @@ export class EmployeeCommonComponent implements OnInit {
 					emp_profile_pic: result.emp_profile_pic,
 					emp_id: result.emp_id,
 					emp_name: result.emp_name,
-					emp_honorific_id: result.emp_honorific_detail.hon_id,
-					emp_designation_id: result.emp_designation_detail.des_id,
-					emp_department_id: result.emp_department_detail.dpt_id,
-					emp_wing_id: result.emp_wing_detail.wing_id,
+					emp_honorific_id: result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '',
+					emp_designation_id: result.emp_designation_detail ? result.emp_designation_detail.des_id : '',
+					emp_department_id: result.emp_department_detail ? result.emp_department_detail.dpt_id : '',
+					emp_wing_id: result.emp_wing_detail ? result.emp_wing_detail.wing_id : '',
+					emp_status:result.emp_status
 				});
 				if (result.emp_profile_pic) {
 					this.defaultsrc = result.emp_profile_pic
 				} else {
 					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 				}
+				this.navigation_record = result.navigation;
 			}
-			this.navigation_record = result.navigation;
+			
 			if (this.navigation_record) {
 				this.viewOnly = true;
 				if (this.navigation_record.first_record &&
@@ -205,11 +214,6 @@ export class EmployeeCommonComponent implements OnInit {
 					this.previousB = false;
 				}
 			}
-			// this.lastRecordId = result.emp_id;
-			// this.commonAPIService.employeeData.next(
-			// 	{
-			// 		last_record: emp_id
-			// 	});
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
 		});
@@ -223,6 +227,8 @@ export class EmployeeCommonComponent implements OnInit {
 			this.addOnly = false;
 			this.viewOnly = false;
 			this.deleteOnly = false;
+			this.employeedetails = {};
+			this.employeedetails.emp_status = 'live';
 			this.employeeDetailsForm.reset();
 			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 			this.enrolmentPlaceholder = 'New Emp. Id';
@@ -271,6 +277,7 @@ export class EmployeeCommonComponent implements OnInit {
 			emp_designation_id: '',
 			emp_department_id: '',
 			emp_wing_id: '',
+			emp_status:'live'
 		});
 
 	}
@@ -303,7 +310,6 @@ export class EmployeeCommonComponent implements OnInit {
 
 	nextUser(next_au_login_id) {
 		this.nextEvent.next('1000');
-		//this.router.navigate([`../${this.belongToForm}`], { queryParams: { login_id: next_au_login_id }, relativeTo: this.route });
 		this.commonAPIService.employeeData.next('1001');
 	}
 	nextId(admno) {
@@ -366,13 +372,14 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	deleteUser() {
-		// this.sisService.deleteStudentDetails({ au_login_id: this.employeeDetailsForm.value.au_login_id }).subscribe((result: any) => {
-		// 	if (result.status === 'ok') {
-		// 		this.commonAPIService.showSuccessErrorMessage('Deleted successfully', 'success');
-		// 		this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
-
-		// 	}
-		// });
+		this.commonAPIService.deleteEmployee({ emp_id: this.employeeDetailsForm.value.emp_id, emp_status : 'left' }).subscribe((result: any) => {
+			if (result) {
+				this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
+				this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error While Deleting Employee Detail', 'error');
+			}
+		});
 	}
 	deleteCancel() { }
 	openConfig() {

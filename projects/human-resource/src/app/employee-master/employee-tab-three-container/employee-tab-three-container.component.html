@@ -110,7 +110,7 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category I</mat-label>
-                                        <mat-select formControlName="category_1" required placeholder="Category I">
+                                        <mat-select formControlName="category_1" required placeholder="Category I" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -122,7 +122,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category II</mat-label>
-                                        <mat-select formControlName="category_2" required placeholder="Category II">
+                                        <mat-select formControlName="category_2" required placeholder="Category II" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryTwoArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -134,7 +134,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category III</mat-label>
-                                        <mat-select formControlName="category_3" required placeholder="Category III">
+                                        <mat-select formControlName="category_3" required placeholder="Category III" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryThreeArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -166,7 +166,7 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Bank Name</mat-label>
-                                        <mat-select formControlName="bank_name" required placeholder="Bank Name">
+                                        <mat-select formControlName="bank_name" required placeholder="Bank Name" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of bankArray" [value]="item.tb_id">
                                                 {{item.tb_name}}
@@ -201,7 +201,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Salary Structure/Pay Scale</mat-label>
                                         <mat-select formControlName="sal_str" (selectionChange)="onChangeData()"
-                                            required placeholder="Salary Structure/Pay Scale">
+                                            required placeholder="Salary Structure/Pay Scale" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of scaleArray" [value]="item.ss_id">
                                                 {{item.ss_name}}
@@ -213,7 +213,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Pay Mode</mat-label>
-                                        <mat-select formControlName="pay_mode" required placeholder="Pay Mode">
+                                        <mat-select formControlName="pay_mode" required placeholder="Pay Mode" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of payMode" [value]="item.id">
                                                 {{item.name}}
@@ -227,7 +227,7 @@
                                         <mat-label>Basic Pay</mat-label>
                                         <input type="text" formControlName="basic_pay" matInput placeholder="Basic Pay"
                                             (keyup)="getNetSalary()" required
-                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                            [errorStateMatcher]="confirmValidParentMatcher" [readOnly]="viewOnly">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -240,7 +240,7 @@
                                                         <mat-label>{{item.sc_name}}</mat-label>
                                                         <input type="text" matInput [formControlName]="'sc_value'+i"
                                                             (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
-                                                            required [errorStateMatcher]="confirmValidParentMatcher">
+                                                            required [errorStateMatcher]="confirmValidParentMatcher" [readOnly]="viewOnly">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>
@@ -251,7 +251,7 @@
                                                         <mat-label>{{item.sc_name}}</mat-label>
                                                         <input type="text" matInput placeholder="{{item.sc_name}}"
                                                             [formControlName]="'sc_value'+i"
-                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)">
+                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)" [readOnly]="viewOnly">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>
@@ -290,13 +290,24 @@
         </div>
         <div class="row">
             <div class="col-12 text-center ">
-                <form>
+                <!-- <form>
                     <button class="sis-btn-success" mat-raised-button (click)="saveForm()">Submit</button>
                     <button class="sis-btn-success btn-save-continue btn-spacer" mat-raised-button
                         (click)="remainOnSame()"><span *ngIf="addOnly">Save</span> <span *ngIf="editOnly">Update</span>
                         & Continue</button>
                     <button class="btn-danger btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
-                </form>
+                </form> -->
+                <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+                    Continue</button>
+                  <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+                  <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+                    (click)="updateForm(false)">Update & Continue</button>
+                  <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
+                    (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit &
+                    Continue</button> -->
+                  <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer"
+                    (click)="cancelForm()">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
