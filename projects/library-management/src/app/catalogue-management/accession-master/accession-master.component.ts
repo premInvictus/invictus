@@ -527,9 +527,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.notif.stopLoading();
 					const jsonString = xhr.response;
 					this.result = JSON.parse(jsonString);
-					this.bookDetails = this.result.items[0];
-					if (Object.keys(this.bookDetails).length > 0) {
-						if (this.bookDetails.volumeInfo.imageLinks.smallThumbnail) {
+					this.bookDetails.TotalItems = this.result.totalItems;
+					if (this.bookDetails.TotalItems > 0) {
+						this.bookDetails = this.result.items[0];
+
+						if (this.bookDetails.volumeInfo.readingModes.image===true) {
 							this.bookImage = this.bookDetails.volumeInfo.imageLinks.smallThumbnail;
 							this.imageFlag = true;
 						}
