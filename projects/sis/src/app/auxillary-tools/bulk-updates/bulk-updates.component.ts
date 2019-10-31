@@ -49,10 +49,9 @@ export class BulkUpdatesComponent implements OnInit {
 		console.log('file--', files);
 		if (files.length > 1) {
 			for (let i = 0; i < files.length; i++) {
-				if (files[i]['type'] === 'application/vnd.ms-excel') {
+				if (files[i]['type'] === 'application/vnd.ms-excel' || files[i]['type'] === 'application/octet-stream' || (files[i]['type'] === '' && files[i]['size'] > 0) ) {
 					formData.append('uploadFile', files[i], files[i].name);
-				}
-				if (files[i]['type'] === 'application/zip') {
+				}else if ((files[i]['type'] === 'application/zip' || files[i]['type'] === 'application/x-zip-compressed') && files[i]['size'] > 0) {
 					formData.append('zipFile', files[i], files[i].name);
 				}
 			}
