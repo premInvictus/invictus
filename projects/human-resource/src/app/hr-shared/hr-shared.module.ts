@@ -36,6 +36,7 @@ import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.compo
 import { PreviewDocumentComponent } from '../employee-master/employee-tab-six-container/preview-document/preview-document.component';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
+import { EmployeeCommonComponent } from './../employee-master/employee-common/employee-common.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
@@ -110,6 +111,7 @@ export const MY_FORMATS = {
 		PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		EmployeeCommonComponent,
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
@@ -122,6 +124,7 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		PreviewDocumentComponent,
 		AdvancedSearchModalComponent,
+		EmployeeCommonComponent,
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -163,6 +166,7 @@ export const MY_FORMATS = {
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		EmployeeCommonComponent
 		//EmployeeDetailsComponent
 	],
 	providers: [

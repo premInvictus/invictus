@@ -4,7 +4,6 @@ import { SisService, CommonAPIService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
-// import { SearchViaNameComponent } from '../../sharedmodule/search-via-name/search-via-name.component';
 
 @Component({
 	selector: 'app-employee-common',

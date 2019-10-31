@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input, ComponentRef } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -11,7 +11,9 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
+	private componentRef: ComponentRef<{}>;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
+	@Input() employeeCommonDetails;
 	@Input() employeedetails;
 	personalDetails: FormGroup;
 	personaldetails: any = {};
@@ -39,10 +41,24 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
+	honrificArr = [
+		{hon_id : "1" , hon_name : 'Mr.'},
+		{hon_id : "2" , hon_name : 'Mrs.'},
+		{hon_id : "3" , hon_name : 'Miss.'},
+		{hon_id : "4" , hon_name : 'Ms.'},
+		{hon_id : "5" , hon_name : 'Mx.'},
+		{hon_id : "6" , hon_name : 'Sir.'},
+		{hon_id : "7" , hon_name : 'Dr.'},
+		{hon_id : "8" , hon_name : 'Lady.'}
+
+	];
+	departmentArray;
+	designationArray;
+	wingArray;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
-		private sisService: SisService, private fbuild: FormBuilder, ) {
+		private sisService: SisService, private fbuild: FormBuilder) {
 
 	}
 	setActionControls(data) {
@@ -66,7 +82,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				same_as_residential: false,
 				emp_status: 'live'
 			});
-			this.addressFlag= false;
+			this.addressFlag = false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
@@ -90,19 +106,26 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
-				} 
+				}
 				if (data.editMode) {
 					this.setActionControls({ editMode: true });
-				} 
+				}
 				if (data.viewMode) {
 					this.setActionControls({ viewMode: true });
-				} 
+				}
 			}
 		});
 	}
-	ngOnChanges() {	
-		this.buildForm();	
+	ngOnChanges() {
+		console.log('commnComponent', this.employeeCommonDetails);
+		console.log('this.employeedetails', this.employeedetails);
+
+
+		this.buildForm();
 		this.getState();
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
 		this.getPersonalDetailsdata();
 	}
 	buildForm() {
@@ -119,7 +142,40 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			sec_mobile: '',
 			whatsapp_no: '',
 			email_id: '',
-			emp_status : 'live'
+			emp_status: 'live'
+		});
+	}
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
+
+		});
+	}
+
+	getDesignation() {
+		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+			if (result) {
+				this.designationArray = result;
+			} else {
+				this.designationArray = [];
+			}
+
+		});
+	}
+
+
+	getWing() {
+		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+			if (result) {
+				this.wingArray = result;
+			} else {
+				this.wingArray = [];
+			}
+
 		});
 	}
 	getPersonalDetailsdata() {
@@ -145,9 +201,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				this.addressFlag = true;
 			}
 		}
-		
+
 	}
-	saveForm() {		
+	saveForm() {
 		if (this.addressFlag) {
 			this.personaldetails['emp_personal_detail'] = {
 				same_as_residential: false,
@@ -317,7 +373,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					pc_id: '',
 					pc_name: ''
 				},
-				emp_pay_mode: { 
+				emp_pay_mode: {
 					pm_id: '',
 					pm_name: ''
 				},
@@ -382,8 +438,31 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				}
 			}
 		];
-		this.employeedetails['emp_personal_detail'] = this.personalDetails;
-		this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {			
+		this.employeedetails['emp_personal_detail'] = this.personalDetails['emp_personal_detail'];
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
+		console.log('this.employeedetails', this.employeedetails);
+		this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
 				this.commonAPIService.renderTab.next({ tabMove: true });
@@ -482,6 +561,30 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		}
 
 		this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
+
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
+		console.log('this.employeedetails', this.employeedetails);
 		if (!moveStatus) {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
@@ -500,7 +603,35 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				}
 			});
 		}
-		
+
+	}
+
+	getDepartmentName(dpt_id) {
+		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
+		if (findIndex !== -1) {
+			return this.departmentArray[findIndex].dept_name;
+		}
+	}
+
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].des_name;
+		}
+	}
+
+	getHonorificName(hon_id) {
+		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
+		if (findIndex !== -1) {
+			return this.honrificArr[findIndex].hon_name;
+		}
+	}	
+
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].wing_name;
+		}
 	}
 
 	isExistUserAccessMenu(actionT) {

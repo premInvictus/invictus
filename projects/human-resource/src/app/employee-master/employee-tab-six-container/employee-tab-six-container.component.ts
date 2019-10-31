@@ -17,6 +17,7 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@Input() employeedetails;
+	@Input() employeeCommonDetails;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	panelOpenState = true;
 	addOnly = false;
@@ -54,6 +55,20 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		{ docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
 	];
 	parentId;
+	honrificArr = [
+		{ hon_id: "1", hon_name: 'Mr.' },
+		{ hon_id: "2", hon_name: 'Mrs.' },
+		{ hon_id: "3", hon_name: 'Miss.' },
+		{ hon_id: "4", hon_name: 'Ms.' },
+		{ hon_id: "5", hon_name: 'Mx.' },
+		{ hon_id: "6", hon_name: 'Sir.' },
+		{ hon_id: "7", hon_name: 'Dr.' },
+		{ hon_id: "8", hon_name: 'Lady.' }
+
+	];
+	departmentArray;
+	designationArray;
+	wingArray;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService, private dialog: MatDialog,
@@ -77,6 +92,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			this.viewOnly = true;
 			this.editOnly = false;
 			this.saveFlag = false;
+			this.addOnly = false;
 		}
 	}
 
@@ -98,7 +114,50 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() {
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
+		this.documentsArray = [
+			{ docreq_id: 1, docreq_name: "Id & Address Proof", docreq_alias: "Id", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+			{ docreq_id: 2, docreq_name: "Education", docreq_alias: "Education", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+			{ docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+			{ docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
+		];
 		this.getDocuments();
+	}
+
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
+
+		});
+	}
+
+	getDesignation() {
+		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+			if (result) {
+				this.designationArray = result;
+			} else {
+				this.designationArray = [];
+			}
+
+		});
+	}
+
+
+	getWing() {
+		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+			if (result) {
+				this.wingArray = result;
+			} else {
+				this.wingArray = [];
+			}
+
+		});
 	}
 
 
@@ -124,7 +183,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		this.finalDocumentArray = [];
 		this.imageArray = [];
 		this.documentArray = this.employeedetails.emp_document_detail && this.employeedetails.emp_document_detail.document_data ? this.employeedetails.emp_document_detail.document_data : [];
-		console.log('this.documentArray', this.documentArray);
+
 		this.finalJSon = this.documentArray;
 		for (const item of this.documentArray) {
 			if (item && item.files_data) {
@@ -136,7 +195,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				}
 
 			}
-			console.log('item',item);
 			if (item.verified_staus) {
 				if (item.document_id === 1) {
 					this.documentsArray[0]['verified_status'] = true;
@@ -150,11 +208,10 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				if (item.document_id === 4) {
 					this.documentsArray[3]['verified_status'] = true;
 				}
-				
+
 			}
 
 		}
-		console.log('this.finalJSon', this.documentsArray);
 		const tempArray: any[] = [];
 		for (const item of this.documentArray) {
 			const findex = tempArray.indexOf(item.docreq_id);
@@ -272,6 +329,28 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	saveForm() {
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
 		this.employeedetails['emp_document_detail'] = {
 			document_data: this.finalJSon
 		};
@@ -286,6 +365,28 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	}
 
 	updateForm() {
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
 		this.employeedetails['emp_document_detail'] = {
 			document_data: this.finalJSon
 		};
@@ -310,19 +411,47 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 	insertVerifyId($event) {
 		if ($event.checked) {
-			for (var i=0; i < this.documentArray.length; i++) {
+			for (var i = 0; i < this.documentArray.length; i++) {
 				if (Number(this.documentArray[i].document_id) === ($event.source.value)) {
 					this.documentArray[i].verified_staus = true;
 				}
 			}
 		} else {
-			for (var i=0; i < this.documentArray.length; i++) {
+			for (var i = 0; i < this.documentArray.length; i++) {
 				if (Number(this.documentArray[i].document_id) === ($event.source.value)) {
 					this.documentArray[i].verified_staus = false;
 				}
 			}
 		}
 
-		
+
+	}
+
+	getDepartmentName(dpt_id) {
+		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
+		if (findIndex !== -1) {
+			return this.departmentArray[findIndex].dept_name;
+		}
+	}
+
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].des_name;
+		}
+	}
+
+	getHonorificName(hon_id) {
+		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
+		if (findIndex !== -1) {
+			return this.honrificArr[findIndex].hon_name;
+		}
+	}
+
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].wing_name;
+		}
 	}
 }
