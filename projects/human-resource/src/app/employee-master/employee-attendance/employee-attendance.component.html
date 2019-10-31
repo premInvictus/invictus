@@ -41,9 +41,13 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Category</mat-label>
               <mat-select formControlName="cat_id" (selectionChange)="getCategoryName($event);getEmployeeDetail();">
-                <mat-option value="1">Teaching</mat-option>
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
+                    {{item.cat_name}}
+                  </mat-option>
+                <!-- <mat-option value="1">Teaching</mat-option>
                 <mat-option value="2">Non Teaching (Administrative)</mat-option>
-                <mat-option value="3">Class IV Staff</mat-option>
+                <mat-option value="3">Class IV Staff</mat-option> -->
               </mat-select>
             </mat-form-field>
           </div>
