@@ -51,6 +51,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	departmentArray;
 	designationArray;
 	wingArray;
+	categoryOneArray: any[] = [];
 	constructor(private sisService: SisService, private fbuild: FormBuilder,
 		public commonAPIService: CommonAPIService) { }
 	ngOnInit() {
@@ -124,6 +125,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.buildForm();
+		this.getCategoryOne();
 		this.getState();
 		this.getDepartment();
 		this.getDesignation();
@@ -209,6 +211,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 				};
+				this.employeedetails.emp_category = {
+					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+				};
 			}
 			this.employeedetails['emp_personal_contact'] = {
 				relationship_personal_detail: {
@@ -288,6 +294,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_wing_detail = {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
+				this.employeedetails.emp_category = {
+					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
 			this.employeedetails['emp_personal_contact'] = {
@@ -408,6 +418,21 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
 		if (findIndex !== -1) {
 			return this.wingArray[findIndex].wing_name;
+		}
+	}
+
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
+		});
+	}
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
 }
