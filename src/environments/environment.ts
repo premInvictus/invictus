@@ -6,7 +6,7 @@ export const environment = {
 	apiSmartUrl: 'http://13.234.2.36/smartbackend/index.php',
 	apiExamUrl: 'http://13.234.2.36/examination-backend/index.php',
 	apiReservUrl: 'http://13.234.2.36/reservoir-backend/index.php',
-	apiHRUrl: 'http://13.234.2.36/human-resources/index.php',
+	apiHRUrl: 'http://13.234.2.36:3000/',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
 	testInitiateCode : 'T100',

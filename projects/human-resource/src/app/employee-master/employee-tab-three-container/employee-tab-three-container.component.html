@@ -6,28 +6,28 @@
                     <form [formGroup]="salaryDetails">
                         <div class="row remove-top-margin">
                             <div class="col-4 col-pad-5">
-                                <div class="row salary-card"> 
+                                <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Pan No.</mat-label>
-                                        <input class="text-capitalize" formControlName="pan" matInput
-                                            placeholder="Pan No." required [readonly]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher" />
+                                        <input class="text-capitalize" formControlName="pan" matInput minlength="10"
+                                            maxlength="10" pattern="[0-9]*" placeholder="Pan No." required
+                                            [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                                         <mat-error>
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Aadhaar No.</mat-label>
-                                        <input type="text" formControlName="aadhar" matInput placeholder="Aadhaar No."
-                                            required [readonly]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <input formControlName="aadhar" matInput placeholder="Aadhaar No."
+                                            mask="0000 0000 0000 0000" minlength="12" maxlength="14" required
+                                            [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PF A/c No.| UAN</mat-label>
-                                        <input type="text" formControlName="pf_ac" matInput
+                                        <input type="number" formControlName="pf_ac" matInput
                                             placeholder="PF A/c No.| UAN" required [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
@@ -37,8 +37,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI A/c No.</mat-label>
                                         <input type="text" formControlName="esi_ac" matInput placeholder="ESI A/c No."
-                                            required 
-                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                            required [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -69,7 +68,7 @@
                                         <input matInput [matDatepicker]="picker1" placeholder="PF Joining Date"
                                             formControlName="pf_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker1></mat-datepicker>                                        
+                                        <mat-datepicker #picker1></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -79,7 +78,7 @@
                                         <input matInput [matDatepicker]="picker2" placeholder="ESI Joining Date"
                                             formControlName="esi_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker2></mat-datepicker>                                          
+                                        <mat-datepicker #picker2></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -89,7 +88,7 @@
                                         <input matInput [matDatepicker]="picker3" placeholder="Probation"
                                             formControlName="probation">
                                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker3></mat-datepicker>                                        
+                                        <mat-datepicker #picker3></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -99,7 +98,7 @@
                                         <input matInput [matDatepicker]="picker4" placeholder="Confirmation Date"
                                             formControlName="confirm_date">
                                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker4></mat-datepicker>  
+                                        <mat-datepicker #picker4></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -110,7 +109,8 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category I</mat-label>
-                                        <mat-select formControlName="category_1" required placeholder="Category I" [disabled]="viewOnly">
+                                        <mat-select formControlName="category_1" required placeholder="Category I"
+                                            [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -122,7 +122,8 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category II</mat-label>
-                                        <mat-select formControlName="category_2" required placeholder="Category II" [disabled]="viewOnly">
+                                        <mat-select formControlName="category_2" required placeholder="Category II"
+                                            [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryTwoArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -134,7 +135,8 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category III</mat-label>
-                                        <mat-select formControlName="category_3" required placeholder="Category III" [disabled]="viewOnly">
+                                        <mat-select formControlName="category_3" required placeholder="Category III"
+                                            [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryThreeArray" [value]="item.cat_id">
                                                 {{item.cat_nme}}
@@ -166,7 +168,8 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Bank Name</mat-label>
-                                        <mat-select formControlName="bank_name" required placeholder="Bank Name" [disabled]="viewOnly">
+                                        <mat-select formControlName="bank_name" required placeholder="Bank Name"
+                                            [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of bankArray" [value]="item.tb_id">
                                                 {{item.tb_name}}
@@ -213,7 +216,8 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Pay Mode</mat-label>
-                                        <mat-select formControlName="pay_mode" required placeholder="Pay Mode" [disabled]="viewOnly">
+                                        <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
+                                            [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of payMode" [value]="item.id">
                                                 {{item.name}}
@@ -240,7 +244,8 @@
                                                         <mat-label>{{item.sc_name}}</mat-label>
                                                         <input type="text" matInput [formControlName]="'sc_value'+i"
                                                             (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
-                                                            required [errorStateMatcher]="confirmValidParentMatcher" [readOnly]="viewOnly">
+                                                            required [errorStateMatcher]="confirmValidParentMatcher"
+                                                            [readOnly]="viewOnly">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>
@@ -251,7 +256,8 @@
                                                         <mat-label>{{item.sc_name}}</mat-label>
                                                         <input type="text" matInput placeholder="{{item.sc_name}}"
                                                             [formControlName]="'sc_value'+i"
-                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)" [readOnly]="viewOnly">
+                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
+                                                            [readOnly]="viewOnly">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>
@@ -297,17 +303,19 @@
                         & Continue</button>
                     <button class="btn-danger btn-spacer" mat-raised-button (click)="cancelForm()">Cancel</button>
                 </form> -->
-                <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+                <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue"
+                    (click)="saveForm()">Save &
                     Continue</button>
-                  <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
-                  <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+                <button *ngIf="editOnly" mat-raised-button class="btn-success"
+                    (click)="updateForm(true)">Submit</button>
+                <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
                     (click)="updateForm(false)">Update & Continue</button>
-                  <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
+                <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
                     (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit &
                     Continue</button> -->
-                  <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer"
+                <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer"
                     (click)="cancelForm()">Cancel</button>
-                </div>
             </div>
         </div>
     </div>
+</div>
