@@ -371,207 +371,217 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	}
 	saveForm() {
-		this.employeedetails['emp_salary_detail'] = {
-			account_docment_detail: {
-				pan_no: this.salaryDetails.value.pan,
-				aadhar_no: this.salaryDetails.value.aadhar,
-				pf_acc_no: this.salaryDetails.value.pf_ac,
-				esi_ac_no: this.salaryDetails.value.esi_ac
-			},
-			nominee_detail: {
-				name: this.salaryDetails.value.nominee
-			},
-			emp_organisation_relation_detail: {
-				doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
-				pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
-				esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
-				probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
-				confirmation_date: this.dateConversion(this.salaryDetails.value.confirm_date, 'yyyy-MM-dd')
-			},
-			emp_job_detail: {
-				category_1: {
-					cat_id: this.salaryDetails.value.category_1,
-					cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
+		if (this.salaryDetails.valid) {
+			this.employeedetails['emp_salary_detail'] = {
+				account_docment_detail: {
+					pan_no: this.salaryDetails.value.pan,
+					aadhar_no: this.salaryDetails.value.aadhar,
+					pf_acc_no: this.salaryDetails.value.pf_ac,
+					esi_ac_no: this.salaryDetails.value.esi_ac
 				},
-				category_2: {
-					cat_id: this.salaryDetails.value.category_2,
-					cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
+				nominee_detail: {
+					name: this.salaryDetails.value.nominee
 				},
-				category_3: {
-					cat_id: this.salaryDetails.value.category_3,
-					cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
+				emp_organisation_relation_detail: {
+					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
+					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
+					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
+					confirmation_date: this.dateConversion(this.salaryDetails.value.confirm_date, 'yyyy-MM-dd')
 				},
-				contact_period: this.salaryDetails.value.contract_period
-			},
-			emp_incremental_month_detail: {
-				month_data: this.salaryDetails.value.increment_month
-			},
-			emp_bank_detail: [
-				{
-					bnk_detail: {
-						bnk_id: this.salaryDetails.value.bank_name,
-						bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
-						bnk_ifsc: this.salaryDetails.value.ifsc_code,
-						bnk_acc_no: this.salaryDetails.value.bank_ac
-					}
-				}
-			],
-			emp_salary_structure: {
-				emp_pay_scale: {
-					pc_id: this.salaryDetails.value.sal_str,
-					pc_name: this.getPayScaleName(this.salaryDetails.value.sal_str)
+				emp_job_detail: {
+					category_1: {
+						cat_id: this.salaryDetails.value.category_1,
+						cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
+					},
+					category_2: {
+						cat_id: this.salaryDetails.value.category_2,
+						cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
+					},
+					category_3: {
+						cat_id: this.salaryDetails.value.category_3,
+						cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
+					},
+					contact_period: this.salaryDetails.value.contract_period
 				},
-				emp_pay_mode: {
-					pm_id: this.salaryDetails.value.pay_mode,
-					pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+				emp_incremental_month_detail: {
+					month_data: this.salaryDetails.value.increment_month
 				},
-				emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
-				emp_salary_heads: this.salaryFinalArray,
-				emp_deduction_detail: [
+				emp_bank_detail: [
 					{
-						pf_deduction: this.salaryDetails.value.pf_deduction,
-						esic_deduction: this.salaryDetails.value.esi_deduction,
-						tds_deduction: this.salaryDetails.value.tds_deduction
+						bnk_detail: {
+							bnk_id: this.salaryDetails.value.bank_name,
+							bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
+							bnk_ifsc: this.salaryDetails.value.ifsc_code,
+							bnk_acc_no: this.salaryDetails.value.bank_ac
+						}
 					}
 				],
-				emp_net_salary: this.netSalary,
-				emp_total_earning: this.totalEarning
+				emp_salary_structure: {
+					emp_pay_scale: {
+						pc_id: this.salaryDetails.value.sal_str,
+						pc_name: this.getPayScaleName(this.salaryDetails.value.sal_str)
+					},
+					emp_pay_mode: {
+						pm_id: this.salaryDetails.value.pay_mode,
+						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+					},
+					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
+					emp_salary_heads: this.salaryFinalArray,
+					emp_deduction_detail: [
+						{
+							pf_deduction: this.salaryDetails.value.pf_deduction,
+							esic_deduction: this.salaryDetails.value.esi_deduction,
+							tds_deduction: this.salaryDetails.value.tds_deduction
+						}
+					],
+					emp_net_salary: this.netSalary,
+					emp_total_earning: this.totalEarning
+				}
+			};
+			if (this.employeedetails) {
+				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+				this.employeedetails.emp_department_detail = {
+					dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+					dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+				};
+				this.employeedetails.emp_designation_detail = {
+					des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+					des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+				};
+				this.employeedetails.emp_honorific_detail = {
+					hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+					hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+				};
+				this.employeedetails.emp_wing_detail = {
+					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
 			}
-		};
-		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
-			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
-			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
-			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
-			this.employeedetails.emp_department_detail = {
-				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
-				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
-			};
-			this.employeedetails.emp_designation_detail = {
-				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
-				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
-			};
-			this.employeedetails.emp_honorific_detail = {
-				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
-				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
-			};
-			this.employeedetails.emp_wing_detail = {
-				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
-				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
-			};
+			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+				if (result) {
+					this.commonAPIService.renderTab.next({ tabMove: true });
+					this.commonAPIService.showSuccessErrorMessage('Employee Salary Detail Submitted Successfylly', 'success');
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Inserting Employee Salary Details', 'error');
+				}
+			});
+
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
-		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
-			if (result) {
-				this.commonAPIService.renderTab.next({ tabMove: true });
-				this.commonAPIService.showSuccessErrorMessage('Employee Salary Detail Submitted Successfylly', 'success');
-			} else {
-				this.commonAPIService.showSuccessErrorMessage('Error While Inserting Employee Salary Details', 'error');
-			}
-		});
 	}
 
 	updateForm(moveNext) {
-		this.employeedetails['emp_salary_detail'] = {
-			account_docment_detail: {
-				pan_no: this.salaryDetails.value.pan,
-				aadhar_no: this.salaryDetails.value.aadhar,
-				pf_acc_no: this.salaryDetails.value.pf_ac,
-				esi_ac_no: this.salaryDetails.value.esi_ac
-			},
-			nominee_detail: {
-				name: this.salaryDetails.value.nominee
-			},
-			emp_organisation_relation_detail: {
-				doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
-				pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
-				esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
-				probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
-				confirmation_date: this.dateConversion(this.salaryDetails.value.confirm_date, 'yyyy-MM-dd')
-			},
-			emp_job_detail: {
-				category_1: {
-					cat_id: this.salaryDetails.value.category_1,
-					cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
+		if (this.salaryDetails.valid) {
+			this.employeedetails['emp_salary_detail'] = {
+				account_docment_detail: {
+					pan_no: this.salaryDetails.value.pan,
+					aadhar_no: this.salaryDetails.value.aadhar,
+					pf_acc_no: this.salaryDetails.value.pf_ac,
+					esi_ac_no: this.salaryDetails.value.esi_ac
 				},
-				category_2: {
-					cat_id: this.salaryDetails.value.category_2,
-					cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
+				nominee_detail: {
+					name: this.salaryDetails.value.nominee
 				},
-				category_3: {
-					cat_id: this.salaryDetails.value.category_3,
-					cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
+				emp_organisation_relation_detail: {
+					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
+					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
+					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
+					confirmation_date: this.dateConversion(this.salaryDetails.value.confirm_date, 'yyyy-MM-dd')
 				},
-				contact_period: this.salaryDetails.value.contract_period
-			},
-			emp_incremental_month_detail: {
-				month_data: this.salaryDetails.value.increment_month
-			},
-			emp_bank_detail: [
-				{
-					bnk_detail: {
-						bnk_id: this.salaryDetails.value.bank_name,
-						bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
-						bnk_ifsc: this.salaryDetails.value.ifsc_code,
-						bnk_acc_no: this.salaryDetails.value.bank_ac
-					}
-				}
-			],
-			emp_salary_structure: {
-				emp_pay_scale: {
-					pc_id: this.salaryDetails.value.sal_str,
-					pc_name: this.getPayScaleName(this.salaryDetails.value.sal_str)
+				emp_job_detail: {
+					category_1: {
+						cat_id: this.salaryDetails.value.category_1,
+						cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
+					},
+					category_2: {
+						cat_id: this.salaryDetails.value.category_2,
+						cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
+					},
+					category_3: {
+						cat_id: this.salaryDetails.value.category_3,
+						cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
+					},
+					contact_period: this.salaryDetails.value.contract_period
 				},
-				emp_pay_mode: {
-					pm_id: this.salaryDetails.value.pay_mode,
-					pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+				emp_incremental_month_detail: {
+					month_data: this.salaryDetails.value.increment_month
 				},
-				emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
-				emp_salary_heads: this.salaryFinalArray,
-				emp_deduction_detail: [
+				emp_bank_detail: [
 					{
-						pf_deduction: this.salaryDetails.value.pf_deduction,
-						esic_deduction: this.salaryDetails.value.esi_deduction,
-						tds_deduction: this.salaryDetails.value.tds_deduction
+						bnk_detail: {
+							bnk_id: this.salaryDetails.value.bank_name,
+							bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
+							bnk_ifsc: this.salaryDetails.value.ifsc_code,
+							bnk_acc_no: this.salaryDetails.value.bank_ac
+						}
 					}
 				],
-				emp_net_salary: this.netSalary,
-				emp_total_earning: this.totalEarning
-			}
-		};
-		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
-			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
-			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
-			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
-			this.employeedetails.emp_department_detail = {
-				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
-				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
-			};
-			this.employeedetails.emp_designation_detail = {
-				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
-				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
-			};
-			this.employeedetails.emp_honorific_detail = {
-				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
-				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
-			};
-			this.employeedetails.emp_wing_detail = {
-				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
-				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
-			};
-		}
-
-		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
-			if (result) {
-				if (moveNext) {
-					this.commonAPIService.renderTab.next({ tabMove: true });
+				emp_salary_structure: {
+					emp_pay_scale: {
+						pc_id: this.salaryDetails.value.sal_str,
+						pc_name: this.getPayScaleName(this.salaryDetails.value.sal_str)
+					},
+					emp_pay_mode: {
+						pm_id: this.salaryDetails.value.pay_mode,
+						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+					},
+					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
+					emp_salary_heads: this.salaryFinalArray,
+					emp_deduction_detail: [
+						{
+							pf_deduction: this.salaryDetails.value.pf_deduction,
+							esic_deduction: this.salaryDetails.value.esi_deduction,
+							tds_deduction: this.salaryDetails.value.tds_deduction
+						}
+					],
+					emp_net_salary: this.netSalary,
+					emp_total_earning: this.totalEarning
 				}
-				this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
-
-			} else {
-				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Salary Details', 'error');
+			};
+			if (this.employeedetails) {
+				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+				this.employeedetails.emp_department_detail = {
+					dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+					dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+				};
+				this.employeedetails.emp_designation_detail = {
+					des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+					des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+				};
+				this.employeedetails.emp_honorific_detail = {
+					hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+					hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+				};
+				this.employeedetails.emp_wing_detail = {
+					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
 			}
-		});
+
+			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+				if (result) {
+					if (moveNext) {
+						this.commonAPIService.renderTab.next({ tabMove: true });
+					}
+					this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
+
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Salary Details', 'error');
+				}
+			});
+
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
+		}
 	}
 
 
