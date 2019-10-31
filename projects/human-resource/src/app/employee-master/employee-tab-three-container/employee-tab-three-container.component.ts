@@ -12,7 +12,9 @@ import { DatePipe } from '@angular/common';
 })
 export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
+	@Input() employeeCommonDetails;
 	@Input() employeedetails;
+
 	addOnly = false;
 	editOnly = false;
 	viewOnly = true;
@@ -46,6 +48,20 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		{ id: 1, name: 'Cash Payment' },
 		{ id: 2, name: 'Cheque Payment' }
 	];
+	honrificArr = [
+		{ hon_id: "1", hon_name: 'Mr.' },
+		{ hon_id: "2", hon_name: 'Mrs.' },
+		{ hon_id: "3", hon_name: 'Miss.' },
+		{ hon_id: "4", hon_name: 'Ms.' },
+		{ hon_id: "5", hon_name: 'Mx.' },
+		{ hon_id: "6", hon_name: 'Sir.' },
+		{ hon_id: "7", hon_name: 'Dr.' },
+		{ hon_id: "8", hon_name: 'Lady.' }
+
+	];
+	departmentArray;
+	designationArray;
+	wingArray;
 	constructor(
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -60,10 +76,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				}
 				if (data.editMode) {
 					this.setActionControls({ editMode: true });
-				} 
+				}
 				if (data.viewMode) {
 					this.setActionControls({ viewMode: true });
-				} 
+				}
 			}
 		});
 	}
@@ -152,16 +168,53 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.buildForm();
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
 		this.getPayScale();
 		this.getBank();
 		this.getCategoryOne();
 		this.getCategoryTwo();
-		this.getCategoryThree();		
-		if (this.employeedetails) {						
+		this.getCategoryThree();
+		if (this.employeedetails) {
 			this.getSalartDetails();
 			this.onChangeData();
 		}
-		
+
+	}
+
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
+
+		});
+	}
+
+	getDesignation() {
+		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+			if (result) {
+				this.designationArray = result;
+			} else {
+				this.designationArray = [];
+			}
+
+		});
+	}
+
+
+	getWing() {
+		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+			if (result) {
+				this.wingArray = result;
+			} else {
+				this.wingArray = [];
+			}
+
+		});
 	}
 	getPayModeName(id) {
 		const findex = this.payMode.findIndex(e => Number(e.id) === Number(id));
@@ -280,25 +333,25 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.salaryDetails.patchValue({
 				pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
-				aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no: '',
+				aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
 				pf_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no : '',
 				esi_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.esi_ac_no : '',
 				nominee: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.nominee_detail.name : '',
 				doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd') : '',
-				pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ?  this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
-				esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ?  this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
-				probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ?  this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
-				confirm_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ?  this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd') : '',
-				category_1: this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
-				category_2: this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id : '',
-				category_3: this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id : '',
-				increment_month: this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
-				contract_period: this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
-				bank_name:this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
+				pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
+				esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
+				probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
+				confirm_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd') : '',
+				category_1: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
+				category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id : '',
+				category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id : '',
+				increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
+				contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
+				bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
 				bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
 				ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
-				sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id,10) : '',
-				pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure  && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id, 10) : '',
+				sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id, 10) : '',
+				pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id, 10) : '',
 				basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
 				da: '',
 				hra: '',
@@ -385,6 +438,28 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				emp_total_earning: this.totalEarning
 			}
 		};
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.renderTab.next({ tabMove: true });
@@ -463,6 +538,28 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				emp_total_earning: this.totalEarning
 			}
 		};
+		if (this.employeedetails) {
+			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+			this.employeedetails.emp_department_detail = {
+				dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+				dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+			};
+			this.employeedetails.emp_designation_detail = {
+				des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+				des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+			};
+			this.employeedetails.emp_honorific_detail = {
+				hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+				hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+			};
+			this.employeedetails.emp_wing_detail = {
+				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+			};
+		}
 
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
@@ -470,7 +567,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					this.commonAPIService.renderTab.next({ tabMove: true });
 				}
 				this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
-				
+
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Salary Details', 'error');
 			}
@@ -533,7 +630,34 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 
 	remainOnSame() {
-		
+
+	}
+	getDepartmentName(dpt_id) {
+		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
+		if (findIndex !== -1) {
+			return this.departmentArray[findIndex].dept_name;
+		}
+	}
+
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].des_name;
+		}
+	}
+
+	getHonorificName(hon_id) {
+		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
+		if (findIndex !== -1) {
+			return this.honrificArr[findIndex].hon_name;
+		}
+	}
+
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].wing_name;
+		}
 	}
 
 }

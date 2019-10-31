@@ -111,7 +111,7 @@
                 <th class="custom-th">Divison</th>
                 <th class="custom-th">%/CGPA</th>
                 <th class="custom-th">Subject</th>
-                <th class="custom-th">Modify</th>
+                <th class="custom-th" *ngIf="!viewOnly">Modify</th>
               </tr>
             </thead>
             <tbody class="table-skill__body text-center">
@@ -123,7 +123,7 @@
                 <td class="custom-td">{{getdivisonName(item.division)}}</td>
                 <td class="custom-td">{{item.percentage}}</td>
                 <td class="custom-td">{{item.subject}}</td>
-                <td class="custom-td">
+                <td class="custom-td" *ngIf="!viewOnly">
                   <i class="far fa-edit modify-icon" (click)="editEducation(i)" style="cursor:pointer" title="Edit"></i>
                   <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteEducation(i)"
                     style="cursor:pointer" title="Delete"></i>
@@ -238,7 +238,7 @@
                 <th class="custom-th">Last Salary Drawn</th>
                 <th class="custom-th">Start Date</th>
                 <th class="custom-th">End date</th>
-                <th class="custom-th">Modify</th>
+                <th class="custom-th" *ngIf="!viewOnly">Modify</th>
               </tr>
             </thead>
             <tbody class="table-skill__body text-center">
@@ -249,7 +249,7 @@
                 <td class="custom-td">{{item.last_salary}}</td>
                 <td class="custom-td">{{item.start_date | date:'d-MMM-y'}}</td>
                 <td class="custom-td">{{item.end_date | date:'d-MMM-y'}}</td>
-                <td class="custom-td">
+                <td class="custom-td" *ngIf="!viewOnly">
                   <i class="far fa-edit modify-icon" (click)="editExperience(i)" style="cursor:pointer"
                     title="Edit"></i>
                   <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteExperience(i)"
