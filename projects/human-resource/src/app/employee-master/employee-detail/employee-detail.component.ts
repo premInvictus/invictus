@@ -3,14 +3,14 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 // import { EmployeeTabOneContainerComponent } from '../employee-tab-one-container/employee-tab-one-container.component';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
-
+import { EmployeeCommonComponent } from '../employee-common/employee-common.component';
 @Component({
 	selector: 'app-employee-detail',
 	templateUrl: './employee-detail.component.html',
 	styleUrls: ['./employee-detail.component.scss']
 })
 export class EmployeeDetailComponent implements OnInit {
-	//@ViewChild(EmployeeCommonComponent) employeedetails: EmployeeCommonComponent;
+	@ViewChild(EmployeeCommonComponent) employeeCommonDetails: EmployeeCommonComponent;
 	
 	tabSelectedIndex = 0;
 	rendorForm = false;
@@ -27,19 +27,16 @@ export class EmployeeDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		
 		this.reRenderFormSubscription = this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data && data.reRenderForm) {
 				this.tabSelectedIndex = 0;
 				this.getEmployeeNavigationRecords();
 			}
 			if (data && data.addMode) {
-				this.tabSelectedIndex = 0;
+				this.tabSelectedIndex = 0;	
+				this.employeeRecord = {};	
 			}
-			// if (data && (data.viewMode || data.editMode)) {
-			// 	for (let i = 0; i < this.formsTab.length; i++) {
-			// 		this.formEnabledTwoService.setFormEnabled(i);
-			// 	}
-			// }
 
 		});
 
@@ -62,7 +59,7 @@ export class EmployeeDetailComponent implements OnInit {
 
 	getEmployeeNavigationRecords() {
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			console.log('employee navigation records', result);
+			console.log('result', result);			
 			this.getEmployeeDetail(result.last_record);
 		});
 	}
@@ -72,6 +69,7 @@ export class EmployeeDetailComponent implements OnInit {
 			this.employeeRecord = result;
 			
 			this.rendorForm = true;
+			console.log('employeeCommonDetails', this.employeeCommonDetails);
 		});
 	}
 

@@ -10,12 +10,12 @@
     </button>
   </div>
   <div class="functional-button-three">
-    <button mat-fab *ngIf="editOnly"
+    <button mat-fab *ngIf="editOnly && !(employeedetails.emp_status=='left')"
       (click)="editForm()"><i class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
         Employee</span></button>
   </div>
   <div class="functional-button-four">
-    <button mat-fab *ngIf="deleteOnly"
+    <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')"
       (click)="openDeleteDialog()">
       <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
     </button> 
@@ -32,15 +32,6 @@
             </label>
             <input type="file" placeholder="Upload image" id="image" class="image-upload-btn"
               (change)="bindImageToForm($event)" [disabled]="viewOnly">
-            <div>
-              <div
-                [ngClass]="studentdetails?.prevStep?.process_name ? 'registration-container__box':'registration-container__box'"
-                *ngIf="divFlag && studentdetails?.prevStep?.process_name && studentdetails?.prevStep?.process_no">
-                <span class="regno-title font-size-14 font-white"
-                  *ngIf="studentdetails?.prevStep?.process_name">{{studentdetails.prevStep.process_name}}:
-                  {{studentdetails.prevStep.process_no}}</span>
-              </div>
-            </div>
           </div>
           <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
             <div class="row remove-margin">
@@ -64,7 +55,7 @@
                   <input class="text-center enroll-font-30 font-size-30" formControlName="emp_id" matInput
                     [readonly]="!viewOnly" (keydown.enter)="getEmployeeId($event)" #myInput>
                 </mat-form-field><br>
-                <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_process_type=='5'"><span>LEFT</span>
+                <div class="font-size-16 font-bold blink" *ngIf="employeedetails.emp_status=='left'"><span>LEFT</span>
                 </div>
                 <br>
               </div>

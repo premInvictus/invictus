@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnChanges, Input, ComponentRef } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
@@ -11,7 +11,9 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 	styleUrls: ['./employee-tab-one-container.component.scss']
 })
 export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
+	private componentRef: ComponentRef<{}>;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
+	@Input() employeeCommonDetails;
 	@Input() employeedetails;
 	personalDetails: FormGroup;
 	personaldetails: any = {};
@@ -39,15 +41,30 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
+	honrificArr = [
+		{ hon_id: "1", hon_name: 'Mr.' },
+		{ hon_id: "2", hon_name: 'Mrs.' },
+		{ hon_id: "3", hon_name: 'Miss.' },
+		{ hon_id: "4", hon_name: 'Ms.' },
+		{ hon_id: "5", hon_name: 'Mx.' },
+		{ hon_id: "6", hon_name: 'Sir.' },
+		{ hon_id: "7", hon_name: 'Dr.' },
+		{ hon_id: "8", hon_name: 'Lady.' }
+
+	];
+	departmentArray;
+	designationArray;
+	wingArray;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
-		private sisService: SisService, private fbuild: FormBuilder, ) {
+		private sisService: SisService, private fbuild: FormBuilder) {
 
 	}
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.editOnly = false;
 			this.viewOnly = false;
 			this.personalDetails.patchValue({
 				p_address: '',
@@ -62,45 +79,50 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				sec_mobile: '',
 				whatsapp_no: '',
 				email_id: '',
-				same_as_residential: false
+				same_as_residential: false,
+				emp_status: 'live'
 			});
-			this.addressFlag= false;
+			this.addressFlag = false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
+			this.addOnly = false;
 			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
 			this.viewOnly = true;
+			this.addOnly = false;
+			this.editOnly = false;
 			this.saveFlag = false;
-			this.editRequestFlag = false;
-
-			
 		}
 	}
 
 	ngOnInit() {
-		this.buildForm();
-		this.getState();
-		this.getPersonalDetailsdata();
-		//console.log(this.employeedetails);
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
-			console.log('data', data);
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
-				} 
+				}
 				if (data.editMode) {
 					this.setActionControls({ editMode: true });
-				} 
+				}
+				if (data.viewMode) {
+					this.setActionControls({ viewMode: true });
+				}
 			}
 		});
 	}
 	ngOnChanges() {
+		console.log('commnComponent', this.employeeCommonDetails);
 		console.log('this.employeedetails', this.employeedetails);
+
+
 		this.buildForm();
 		this.getState();
+		this.getDepartment();
+		this.getDesignation();
+		this.getWing();
 		this.getPersonalDetailsdata();
 	}
 	buildForm() {
@@ -117,293 +139,506 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			sec_mobile: '',
 			whatsapp_no: '',
 			email_id: '',
+			emp_status: 'live'
+		});
+	}
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
+
+		});
+	}
+
+	getDesignation() {
+		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+			if (result) {
+				this.designationArray = result;
+			} else {
+				this.designationArray = [];
+			}
+
+		});
+	}
+
+
+	getWing() {
+		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+			if (result) {
+				this.wingArray = result;
+			} else {
+				this.wingArray = [];
+			}
+
 		});
 	}
 	getPersonalDetailsdata() {
-		if (this.employeedetails) {
+		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
 			this.personalDetails.patchValue({
 				p_address: this.employeedetails.emp_personal_detail.address_detail.address,
-				p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_name,
+				p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_id,
 				p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
 				p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
 				r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
-				r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name,
+				r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_id,
 				r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
 				r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
 				pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
 				sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
 				whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
 				email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
+				emp_status: this.employeedetails.emp_status ? this.employeedetails.emp_status : 'live'
 			});
 			if (this.employeedetails.emp_personal_detail.same_as_residential) {
-				this.addressFlag = true;
-			} else {
 				this.addressFlag = false;
+			} else {
+				this.addressFlag = true;
 			}
 		}
-		
+
 	}
 	saveForm() {
-		this.personaldetails['emp_id'] = '';
-		this.personaldetails['emp_name'] = '';
-		this.personaldetails['emp_honorific_detail'] = {
-			hon_id: '',
-			hon_name: ''
-		};
-		this.personaldetails['emp_designation_detail'] = {
-			des_id: '',
-			des_name: ''
-		};
-		this.personaldetails['emp_department_detail'] = {
-			dpt_id: '',
-			des_name: ''
-		};
-		this.personaldetails['emp_wing_detail'] = {
-			wing_id: '',
-			wing_name: ''
-		};
-		if (this.addressFlag) {
-			this.personaldetails['emp_personal_detail'] = {
-				same_as_residential: false,
-				residential_address_detail: {
-					address: this.personalDetails.value.r_address,
-					city: {
-						cit_id: this.personalDetails.value.r_city,
-						cit_name: this.getCityName(this.personalDetails.value.r_city)
+		if (this.personalDetails.valid) {
+			if (this.addressFlag) {
+				this.personaldetails['emp_personal_detail'] = {
+					same_as_residential: false,
+					residential_address_detail: {
+						address: this.personalDetails.value.r_address,
+						city: {
+							cit_id: this.personalDetails.value.r_city,
+							cit_name: this.getCityName(this.personalDetails.value.r_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.r_state,
+							sta_name: this.getStateName(this.personalDetails.value.r_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.r_pincode
 					},
-					state: {
-						sta_id: this.personalDetails.value.r_state,
-						sta_name: this.getStateName(this.personalDetails.value.r_state)
+					address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
 					},
-					country: {
-						ct_id: 101,
-						ct_name: "India"
+					contact_detail: {
+						primary_mobile_no: this.personalDetails.value.pri_mobile,
+						secondary_mobile_no: this.personalDetails.value.sec_mobile,
+						whatsup_no: this.personalDetails.value.whatsapp_no,
+						email_id: this.personalDetails.value.email_id
+					}
+				};
+			} else {
+				this.personaldetails['emp_personal_detail'] = {
+					same_as_residential: true,
+					residential_address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
 					},
-					pin: this.personalDetails.value.r_pincode
-				},
-				address_detail: {
-					address: this.personalDetails.value.p_address,
-					city: {
-						cit_id: this.personalDetails.value.p_city,
-						cit_name: this.getCityName(this.personalDetails.value.p_city)
+					address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
 					},
-					state: {
-						sta_id: this.personalDetails.value.p_state,
-						sta_name: this.getStateName(this.personalDetails.value.p_state)
+					contact_detail: {
+						primary_mobile_no: this.personalDetails.value.pri_mobile,
+						secondary_mobile_no: this.personalDetails.value.sec_mobile,
+						whatsup_no: this.personalDetails.value.whatsapp_no,
+						email_id: this.personalDetails.value.email_id
+					}
+				};
+			}
+			this.personaldetails['emp_personal_contact'] = {
+				relationship_personal_detail: {
+					rel_category: '',
+					rel_full_name: '',
+					rel_occupation: '',
+					rel_organisation: '',
+					rel_designation: '',
+					rel_contact_detail: {
+						rel_mobile_no: '',
+						rel_email: ''
 					},
-					country: {
-						ct_id: 101,
-						ct_name: "India"
+					rel_address_detail: {
+						address: '',
+						city: {
+							cit_id: '',
+							cit_name: ''
+						},
+						state: {
+							sta_id: '',
+							sta_name: ''
+						},
+						country: {
+							ct_id: '',
+							ct_name: ''
+						},
+						pin: ''
 					},
-					pin: this.personalDetails.value.p_pincode
-				},
-				contact_detail: {
-					primary_mobile_no: this.personalDetails.value.pri_mobile,
-					secondary_mobile_no: this.personalDetails.value.sec_mobile,
-					whatsup_no: this.personalDetails.value.whatsapp_no,
-					email_id: this.personalDetails.value.email_id
+					rel_reference_detail: {
+						ref_person_name: ''
+					}
 				}
 			};
-		} else {
-			this.personaldetails['emp_personal_detail'] = {
-				same_as_residential: true,
-				residential_address_detail: {
-					address: this.personalDetails.value.p_address,
-					city: {
-						cit_id: this.personalDetails.value.p_city,
-						cit_name: this.getCityName(this.personalDetails.value.p_city)
-					},
-					state: {
-						sta_id: this.personalDetails.value.p_state,
-						sta_name: this.getStateName(this.personalDetails.value.p_state)
-					},
-					country: {
-						ct_id: 101,
-						ct_name: "India"
-					},
-					pin: this.personalDetails.value.p_pincode
+			this.personaldetails['emp_salary_detail'] = {
+				account_docment_detail: {
+					pan_no: '',
+					aadhar_no: '',
+					pf_acc_no: '',
+					esi_ac_no: ''
 				},
-				address_detail: {
-					address: this.personalDetails.value.p_address,
-					city: {
-						cit_id: this.personalDetails.value.p_city,
-						cit_name: this.getCityName(this.personalDetails.value.p_city)
-					},
-					state: {
-						sta_id: this.personalDetails.value.p_state,
-						sta_name: this.getStateName(this.personalDetails.value.p_state)
-					},
-					country: {
-						ct_id: 101,
-						ct_name: "India"
-					},
-					pin: this.personalDetails.value.p_pincode
+				nominee_detail: {
+					name: ''
 				},
-				contact_detail: {
-					primary_mobile_no: this.personalDetails.value.pri_mobile,
-					secondary_mobile_no: this.personalDetails.value.sec_mobile,
-					whatsup_no: this.personalDetails.value.whatsapp_no,
-					email_id: this.personalDetails.value.email_id
-				}
-			};
-		}
-		this.personaldetails['emp_personal_contact'] = {
-			relationship_personal_detail: {
-				rel_category: '',
-				rel_full_name: '',
-				rel_occupation: '',
-				rel_organisation: '',
-				rel_designation: '',
-				rel_contact_detail: {
-					rel_mobile_no: '',
-					rel_email: ''
+				emp_organisation_relation_detail: {
+					doj: '',
+					pf_joining_date: '',
+					esic_joining_date: '',
+					probation_till_date: ''
 				},
-				rel_address_detail: {
-					address: '',
-					city: {
-						cit_id: '',
-						cit_name: ''
+				emp_job_detail: {
+					category_1: {
+						cat_id: '',
+						cat_name: ''
 					},
-					state: {
-						sta_id: '',
-						sta_name: ''
+					category_2: {
+						cat_id: '',
+						cat_name: ''
 					},
-					country: {
-						ct_id: '',
-						ct_name: ''
+					category_3: {
+						cat_id: '',
+						cat_name: ''
 					},
-					pin: ''
+					contact_period: ''
 				},
-				rel_reference_detail: {
-					ref_person_name: ''
-				}
-			}
-		};
-		this.personaldetails['emp_salary_detail'] = {
-			account_docment_detail: {
-				pan_no: '',
-				aadhar_no: '',
-				pf_acc_no: '',
-				esi_ac_no: ''
-			},
-			nominee_detail: {
-				name: ''
-			},
-			emp_organisation_relation_detail: {
-				doj: '',
-				pf_joining_date: '',
-				esic_joining_date: '',
-				probation_till_date: ''
-			},
-			emp_job_detail: {
-				category_1: {
-					cat_id: '',
-					cat_name: ''
-				},
-				category_2: {
-					cat_id: '',
-					cat_name: ''
-				},
-				category_3: {
-					cat_id: '',
-					cat_name: ''
-				},
-				contact_period: ''
-			},
-			emp_incremental_month_detail: {
-				month_data: {
-					month_id: '',
-					month_name: ''
-				}
-			},
-			emp_bank_detail: [
-				{
-					bnk_detail: {
-						bnk_id: '',
-						bnk_name: '',
-						bnk_ifsc: '',
-						bnk_acc_no: ''
+				emp_incremental_month_detail: {
+					month_data: {
+						month_id: '',
+						month_name: ''
 					}
-				}
-			],
-			emp_salary_structure: {
-				emp_pay_scale: {
-					pc_id: '',
-					pc_name: ''
 				},
-				emp_pay_mode: { 
-					pm_id: '',
-					pm_name: ''
-				},
-				emp_basic_pay_scale: {
-					bps_id: '',
-					bps_name: ''
-				},
-				emp_salary_heads: [
+				emp_bank_detail: [
 					{
-						id: '',
-						name: '',
-						value: ''
-					}
-				],
-				emp_deduction_detail: [
-					{
-						pf_deduction: '',
-						esic_deduction: '',
-						tds_deduction: ''
-					}
-				],
-				emp_net_salary: '',
-				emp_total_earning: ''
-			}
-		};
-		this.personaldetails['emp_remark_detail'] = {
-			management_remark: '',
-			interview_remark: '',
-			skills: ''
-		};
-		this.personaldetails['emp_class_section_detail'] = [
-			{
-				class_detail: {
-					class_id: '',
-					class_name: ''
-				},
-				section_detail: {
-					sec_id: '',
-					sec_name: ''
-				},
-				subject_detail: {
-					sub_id: '',
-					sub_name: ''
-				},
-				class_teacher_staus: false,
-				status: ''
-			}
-		];
-		this.personaldetails['emp_document_detail'] = [
-			{
-				document_id: '',
-				document_name: '',
-				document_data: {
-					verified_staus: false,
-					files_data: [
-						{
-							file_id: '',
-							file_name: '',
-							file_url: ''
+						bnk_detail: {
+							bnk_id: '',
+							bnk_name: '',
+							bnk_ifsc: '',
+							bnk_acc_no: ''
 						}
-					]
+					}
+				],
+				emp_salary_structure: {
+					emp_pay_scale: {
+						pc_id: '',
+						pc_name: ''
+					},
+					emp_pay_mode: {
+						pm_id: '',
+						pm_name: ''
+					},
+					emp_basic_pay_scale: {
+						bps_id: '',
+						bps_name: ''
+					},
+					emp_salary_heads: [
+						{
+							id: '',
+							name: '',
+							value: ''
+						}
+					],
+					emp_deduction_detail: [
+						{
+							pf_deduction: '',
+							esic_deduction: '',
+							tds_deduction: ''
+						}
+					],
+					emp_net_salary: '',
+					emp_total_earning: ''
 				}
+			};
+			this.personaldetails['emp_remark_detail'] = {
+				management_remark: '',
+				interview_remark: '',
+				skills: ''
+			};
+			this.personaldetails['emp_class_section_detail'] = [
+				{
+					class_detail: {
+						class_id: '',
+						class_name: ''
+					},
+					section_detail: {
+						sec_id: '',
+						sec_name: ''
+					},
+					subject_detail: {
+						sub_id: '',
+						sub_name: ''
+					},
+					class_teacher_staus: false,
+					status: ''
+				}
+			];
+			this.personaldetails['emp_document_detail'] = [
+				{
+					document_id: '',
+					document_name: '',
+					document_data: {
+						verified_staus: false,
+						files_data: [
+							{
+								file_id: '',
+								file_name: '',
+								file_url: ''
+							}
+						]
+					}
+				}
+			];
+			this.employeedetails['emp_personal_detail'] = this.personalDetails['emp_personal_detail'];
+			if (this.employeedetails) {
+				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+				this.employeedetails.emp_department_detail = {
+					dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+					dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+				};
+				this.employeedetails.emp_designation_detail = {
+					des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+					des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+				};
+				this.employeedetails.emp_honorific_detail = {
+					hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+					hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+				};
+				this.employeedetails.emp_wing_detail = {
+					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
 			}
-		];
-		console.log(this.personaldetails);
-		this.commonAPIService.insertEmployeeDetails(this.personaldetails).subscribe((result: any) => {
-			if (result.status === 'ok') {
-
-			}
-		});
-
+			console.log('this.employeedetails', this.employeedetails);
+			this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
+				if (result) {
+					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
+					this.commonAPIService.renderTab.next({ tabMove: true });
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all Required field', 'error');
+		}
 	}
+
+	updateForm(moveStatus) {
+		if (this.personalDetails.valid) {
+			if (this.addressFlag) {
+				this.personaldetails['emp_personal_detail'] = {
+					same_as_residential: false,
+					residential_address_detail: {
+						address: this.personalDetails.value.r_address,
+						city: {
+							cit_id: this.personalDetails.value.r_city,
+							cit_name: this.getCityName(this.personalDetails.value.r_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.r_state,
+							sta_name: this.getStateName(this.personalDetails.value.r_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.r_pincode
+					},
+					address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
+					},
+					contact_detail: {
+						primary_mobile_no: this.personalDetails.value.pri_mobile,
+						secondary_mobile_no: this.personalDetails.value.sec_mobile,
+						whatsup_no: this.personalDetails.value.whatsapp_no,
+						email_id: this.personalDetails.value.email_id
+					}
+				};
+			} else {
+				this.personaldetails['emp_personal_detail'] = {
+					same_as_residential: true,
+					residential_address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
+					},
+					address_detail: {
+						address: this.personalDetails.value.p_address,
+						city: {
+							cit_id: this.personalDetails.value.p_city,
+							cit_name: this.getCityName(this.personalDetails.value.p_city)
+						},
+						state: {
+							sta_id: this.personalDetails.value.p_state,
+							sta_name: this.getStateName(this.personalDetails.value.p_state)
+						},
+						country: {
+							ct_id: 101,
+							ct_name: "India"
+						},
+						pin: this.personalDetails.value.p_pincode
+					},
+					contact_detail: {
+						primary_mobile_no: this.personalDetails.value.pri_mobile,
+						secondary_mobile_no: this.personalDetails.value.sec_mobile,
+						whatsup_no: this.personalDetails.value.whatsapp_no,
+						email_id: this.personalDetails.value.email_id
+					}
+				};
+			}
+
+			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
+
+			if (this.employeedetails) {
+				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
+				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+				this.employeedetails.emp_department_detail = {
+					dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+					dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+				};
+				this.employeedetails.emp_designation_detail = {
+					des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+					des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+				};
+				this.employeedetails.emp_honorific_detail = {
+					hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+					hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+				};
+				this.employeedetails.emp_wing_detail = {
+					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
+			}
+			console.log('this.employeedetails', this.employeedetails);
+			if (!moveStatus) {
+				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
+						this.commonAPIService.renderTab.next({ tabMove: true });
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
+					}
+				});
+			} else {
+				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
+					}
+				});
+			}
+
+
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all Required field', 'error');
+		}
+	}
+
+	getDepartmentName(dpt_id) {
+		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
+		if (findIndex !== -1) {
+			return this.departmentArray[findIndex].dept_name;
+		}
+	}
+
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].des_name;
+		}
+	}
+
+	getHonorificName(hon_id) {
+		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
+		if (findIndex !== -1) {
+			return this.honrificArr[findIndex].hon_name;
+		}
+	}
+
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].wing_name;
+		}
+	}
+
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
 		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT); 
@@ -471,7 +706,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		if (this.addOnly) {
 			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag || this.editRequestFlag) {
-			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
 			this.getPersonalDetailsdata();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}

@@ -105,6 +105,8 @@ export class CertificatePrintingComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
   getAllStudent() {
+    this.ELEMENT_DATA = [];
+    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     if (this.paramForm.valid) {
       this.sisService.getMasterStudentDetail(this.paramForm.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
@@ -149,6 +151,8 @@ export class CertificatePrintingComponent implements OnInit {
     console.log(printData);
     const param: any = {};
     param.certificate_type = this.paramForm.value.certificate_type;
+    param.class_id = this.paramForm.value.class_id,
+    param.sec_id = this.paramForm.value.sec_id,
     param.printData = printData;
     this.sisService.printAllCertificate({param}).subscribe((result: any) => {
       if(result && result.status === 'ok') {
