@@ -6,7 +6,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 	styleUrls: ['./delete-modal.component.scss']
 })
 export class DeleteModalComponent implements OnInit {
-	inputData: any;
+	inputData: any = {'text':''};
 	@Input() deleteMessage;
 	@Output() deleteOk = new EventEmitter<any>();
 	@Output() deleteCancel = new EventEmitter<any>();

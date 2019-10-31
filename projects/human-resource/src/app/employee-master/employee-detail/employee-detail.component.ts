@@ -35,11 +35,6 @@ export class EmployeeDetailComponent implements OnInit {
 			if (data && data.addMode) {
 				this.tabSelectedIndex = 0;
 			}
-			// if (data && (data.viewMode || data.editMode)) {
-			// 	for (let i = 0; i < this.formsTab.length; i++) {
-			// 		this.formEnabledTwoService.setFormEnabled(i);
-			// 	}
-			// }
 
 		});
 
@@ -62,7 +57,7 @@ export class EmployeeDetailComponent implements OnInit {
 
 	getEmployeeNavigationRecords() {
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			console.log('employee navigation records', result);
+			console.log('result', result);
 			this.getEmployeeDetail(result.last_record);
 		});
 	}

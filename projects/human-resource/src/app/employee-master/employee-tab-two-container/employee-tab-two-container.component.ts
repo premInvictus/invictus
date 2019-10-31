@@ -39,11 +39,11 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	constructor(private sisService: SisService, private fbuild: FormBuilder,
 		public commonAPIService: CommonAPIService) { }
 	ngOnInit() {
-		this.buildForm();
-		this.getState();
-		if (this.employeedetails) {
-			this.getPersonaContactsdata();
-		}
+		// this.buildForm();
+		// this.getState();
+		// if (this.employeedetails) {
+		// 	this.getPersonaContactsdata();
+		// }
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data) {
 				if (data.addMode) {
@@ -52,6 +52,9 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				if (data.editMode) {
 					this.setActionControls({ editMode: true });
 				} 
+				if (data.viewMode) {
+					this.setActionControls({ viewMode: true });
+				} 
 			}
 		});
 	}
@@ -59,6 +62,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.editOnly = false;
 			this.viewOnly = false;
 			this.personalContacts.patchValue({
 				relationship: '',
@@ -78,15 +82,15 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		}
 		if (data.editMode) {
 			this.editOnly = true;
+			this.addOnly = false;
 			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
 			this.viewOnly = true;
+			this.addOnly = false;
+			this.editOnly = false;
 			this.saveFlag = false;
-			this.editRequestFlag = false;
-
-
 		}
 	}
 
@@ -116,7 +120,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getPersonaContactsdata() {
-		if (this.employeedetails) {
+		if (this.employeedetails && this.employeedetails.emp_personal_contact && this.employeedetails.emp_personal_contact.relationship_personal_detail) {
 			this.personalContacts.patchValue({
 				relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
 				fullname: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_full_name,
@@ -151,7 +155,6 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		if (this.addOnly) {
 			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag || this.editRequestFlag) {
-			//this.context.studentdetails.getStudentInformation(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
 			this.getPersonaContactsdata();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
@@ -184,8 +187,8 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 			}
 		};
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
-			if (result.status === 'ok') {
-
+			if (result) {
+				this.commonAPIService.renderTab.next({ tabMove: true });
 			}
 		});
 	}
