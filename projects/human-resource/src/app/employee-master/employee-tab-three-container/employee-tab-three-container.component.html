@@ -18,8 +18,8 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Aadhaar No.</mat-label>
-                                        <input formControlName="aadhar" matInput placeholder="Aadhaar No."
-                                            mask="0000 0000 0000 0000" minlength="12" maxlength="14" required
+                                        <input matInput formControlName="aadhar"  placeholder="Aadhaar No."
+                                             minlength="12" maxlength="14" required
                                             [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
