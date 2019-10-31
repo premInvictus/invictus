@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EmployeeDetailComponent } from './employee-detail/employee-detail.component';
-import { EmployeeCommonComponent } from './employee-common/employee-common.component';
+
 
 import { HrSharedModule } from '../hr-shared/hr-shared.module';
 import * as _moment from 'moment';
@@ -17,7 +17,6 @@ import { EmployeeTabSixContainerComponent } from './employee-tab-six-container/e
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { EmployeeLedgerComponent } from './employee-ledger/employee-ledger.component';
-
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -48,7 +47,6 @@ export const MY_FORMATS = {
 		EmployeeAttendanceComponent,
 		EmployeeLeaveComponent,
 		EmployeeLedgerComponent,
-		EmployeeCommonComponent
 		],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 

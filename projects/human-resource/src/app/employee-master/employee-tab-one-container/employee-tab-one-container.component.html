@@ -95,45 +95,35 @@
 
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
-              <input type="number" matInput placeholder="Pincode" [readonly]="viewOnly" required
-                formControlName="r_pincode" [errorStateMatcher]="confirmValidParentMatcher">
-              <mat-error>
-                This field is required
-              </mat-error>
+              <input  matInput placeholder="Pincode" [readonly]="viewOnly" required minlength="6"
+                maxlength="6" pattern="[0-9]*"  formControlName="r_pincode" [errorStateMatcher]="confirmValidParentMatcher">             
             </mat-form-field>
           </div>
 
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Primary Mobile No.</mat-label>
-              <input type="number" class="text-capitalize" matInput placeholder="Primary Mobile No." required
-                [readonly]="viewOnly" formControlName="pri_mobile" [errorStateMatcher]="confirmValidParentMatcher" />
-              <mat-error>
-                This field is required
-              </mat-error>
+              <input class="text-capitalize" matInput placeholder="Primary Mobile No." required minlength="10"
+                maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" formControlName="pri_mobile"
+                [errorStateMatcher]="confirmValidParentMatcher" />
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Secondary Mobile No.</mat-label>
-              <input type="number" matInput placeholder="Secondary Mobile No." required formControlName="sec_mobile"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-              <mat-error>
-                This field is required
-              </mat-error>
+              <input matInput placeholder="Secondary Mobile No." required formControlName="sec_mobile" minlength="10"
+                maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Whatsapp No.</mat-label>
-              <input type="number" matInput placeholder="Whatsapp No." required formControlName="whatsapp_no"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-              <mat-error>
-                This field is required
-              </mat-error>
+              <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Whatsapp No." required
+                formControlName="whatsapp_no" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Email Id</mat-label>
-              <input type="text" matInput placeholder="Email Id" required formControlName="email_id"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+              <input pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" type="email" matInput
+                formControlName="email_id" placeholder="Email Id" required [readonly]="viewOnly"
+                [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
-                This field is required
+                Please enter valid email
               </mat-error>
             </mat-form-field>
           </div>
@@ -151,14 +141,14 @@
     </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
-        <button *ngIf="saveFlag" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
-        <button *ngIf="saveFlag" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+        <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
           (click)="updateForm(false)">Update &
           Continue</button>
-        <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
-          (click)="checkFormChangedValue()">Edit & Continue</button>
+        <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
+          (click)="checkFormChangedValue()">Edit & Continue</button> -->
         <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
       </div>
     </div>

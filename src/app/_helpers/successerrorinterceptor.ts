@@ -56,7 +56,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		return next.handle(request).pipe(
 			map((event: HttpEvent<any>) => {
 				if (event instanceof HttpResponse) {
-					if (event.body.status === 'error' &&
+					if (event.body && event.body.status === 'error' &&
 						(event.body.data === 'Token Expired' || event.body.data === 'Logout Successfully' ||
 							event.body.data === 'Token Not Matched')) {
 						localStorage.clear();

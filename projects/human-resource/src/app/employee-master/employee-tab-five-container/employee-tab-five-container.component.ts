@@ -45,28 +45,20 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 	setActionControls(data) {
 		if (data.addMode) {
 			this.addOnly = true;
+			this.editOnly = false;
 			this.viewOnly = false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
+			this.addOnly = false;
 			this.viewOnly = false;
 			this.saveFlag = true;
 		}
 		if (data.viewMode) {
 			this.viewOnly = true;
+			this.addOnly = false;
+			this.editOnly = false;
 			this.saveFlag = false;
-			this.editRequestFlag = false;
-
-			if (this.addOnly) {
-				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
-					if (result.status === 'ok') {
-						//this.commonAPIService.studentData.next(result.data[0]);
-						this.addOnly = false;
-					}
-				});
-			} else {
-				//this.commonAPIService.studentData.next(this.context.studentdetails.studentdetailsform.value.au_enrollment_id);
-			}
 		}
 	}
 
@@ -75,6 +67,22 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 		this.getClass();
 	}
 	ngOnChanges() {
+		this.buildForm();
+		this.getClass();
+		this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			if (data) {
+				if (data.addMode) {
+					this.setActionControls({ addMode: true });
+				} 
+				if (data.editMode) {
+					this.setActionControls({ editMode: true });
+				} 
+				if (data.viewMode) {
+					this.setActionControls({ viewMode: true });
+				} 
+				
+			}
+		});
 	}
 	buildForm() {
 		this.classSection = this.fbuild.group({
@@ -177,5 +185,15 @@ export class EmployeeTabFiveContainerComponent implements OnInit, OnChanges {
 		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
 		// }
 	}
-	editConfirm() { }
+	editConfirm() { 
+
+	}
+	cancelForm() {
+		if (this.addOnly) {
+			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		} else if (this.saveFlag || this.editRequestFlag) {
+			this.getClass();
+			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
+	}
 }
