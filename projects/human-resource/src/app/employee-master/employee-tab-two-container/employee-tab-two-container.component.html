@@ -50,15 +50,14 @@
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Phone/Mobile</mat-label>
-                <input type="number" matInput placeholder="Phone/Mobile" [readonly]="viewOnly" formControlName="mobile"
-                  required [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
+                <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Phone/Mobile"
+                  [readonly]="viewOnly" formControlName="mobile" required
+                  [errorStateMatcher]="confirmValidParentMatcher">
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Email</mat-label>
-                <input type="text" matInput placeholder="Email" [readonly]="viewOnly" formControlName="email" required
+                <input pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" type="email" matInput
+                  placeholder="Email" [readonly]="viewOnly" formControlName="email" required
                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
@@ -109,11 +108,8 @@
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Pincode</mat-label>
-                <input type="number" matInput placeholder="Pincode" required [readonly]="viewOnly"
-                  formControlName="pincode" [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
+                <input minlength="6" maxlength="6" pattern="[0-9]*" matInput placeholder="Pincode" required
+                  [readonly]="viewOnly" formControlName="pincode" [errorStateMatcher]="confirmValidParentMatcher">
               </mat-form-field>
             </div>
 
