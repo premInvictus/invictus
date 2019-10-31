@@ -222,6 +222,11 @@ export class CommonAPIService {
 		return this.http.post(environment.apiHRUrl + 'employee/update', value);
 	}
 
+	deleteEmployee(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'employee/update', value);
+	}
+
 	getEmployeeNavigationRecords(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + 'employee/getNavigationId', value);
