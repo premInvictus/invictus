@@ -68,25 +68,27 @@ export class EmployeeLeaveComponent implements OnInit {
 				var total_leave_availed = 0;
 				var total_leave_granted = 0;
 				var total_lwp = 0;
-				for (var i = 0; i < result.emp_month_attendance_data.length; i++) {
-					var emp_month = result.emp_month_attendance_data[i].month_id;
-					var emp_attendance_detail = result.emp_month_attendance_data[i];
+				for (var i = 0; i < result.emp_month_attendance_data.month_data.length; i++) {
+					var emp_month = result.emp_month_attendance_data.month_data[i].month_id;
+					var emp_attendance_detail = result.emp_month_attendance_data.month_data[i].attendance_detail;
 					element = {
 						srno: pos,
-						month_name: emp_attendance_detail.month_name,
-						leave_opening_balance: result.leave_opening_balance ? result.leave_opening_balance : 30,
+						month_name: result.emp_month_attendance_data.month_data[i].month_name,
+						leave_opening_balance: emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
 						leave_credited: result.leave_credited ? result.leave_credited : 1.5,
-						leave_availed: emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : 0,
-						leave_granted: emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : 0,
-						lwp: emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0,
-						leave_closing_balance: emp_attendance_detail.attendance_detail.emp_lwp
+						leave_availed: result.emp_leave_availed ? result.emp_leave_availed : 0,
+						leave_granted: result.emp_leave_granted ? result.emp_leave_granted : 0,
+						lwp: emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
+						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance) + (result.leave_credited ? result.leave_credited : 1.5) - parseFloat(result.emp_leave_granted)
 					};
 					total_leave_credited = total_leave_credited + parseFloat(result.leave_credited ? result.leave_credited : 1.5);
-					total_leave_availed = total_leave_availed + parseFloat(emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : 0);
-					total_leave_granted = total_leave_granted + parseFloat(emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : 0);
-					total_lwp = total_lwp + parseFloat(emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0);
+					total_leave_availed = total_leave_availed + parseFloat(result.emp_leave_availed ? result.emp_leave_availed : 0);
+					total_leave_granted = total_leave_granted + parseFloat(result.emp_leave_granted ? result.emp_leave_granted : 0);
+					total_lwp = total_lwp + parseFloat(emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0);
 					this.EMPLOYEE_ELEMENT.push(element);
 					pos++;
+
+					console.log(parseFloat(emp_attendance_detail.leave_opening_balance) , (result.leave_credited ? result.leave_credited : 1.5) , parseFloat(result.emp_leave_granted))
 
 				}
 

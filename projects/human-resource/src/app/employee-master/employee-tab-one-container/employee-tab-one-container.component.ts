@@ -41,6 +41,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
+	categoryOneArray:any[] = [];
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },
 		{ hon_id: "2", hon_name: 'Mrs.' },
@@ -119,6 +120,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 
 		this.buildForm();
+		this.getCategoryOne();
 		this.getState();
 		this.getDepartment();
 		this.getDesignation();
@@ -178,18 +180,18 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	getPersonalDetailsdata() {
 		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
 			this.personalDetails.patchValue({
-				p_address: this.employeedetails.emp_personal_detail.address_detail.address,
-				p_city: this.employeedetails.emp_personal_detail.address_detail.city.cit_id,
-				p_state: this.employeedetails.emp_personal_detail.address_detail.state.sta_id,
-				p_pincode: this.employeedetails.emp_personal_detail.address_detail.pin,
-				r_address: this.employeedetails.emp_personal_detail.residential_address_detail.address,
-				r_city: this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_id,
-				r_state: this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id,
-				r_pincode: this.employeedetails.emp_personal_detail.residential_address_detail.pin,
-				pri_mobile: this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no,
-				sec_mobile: this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no,
-				whatsapp_no: this.employeedetails.emp_personal_detail.contact_detail.whatsup_no,
-				email_id: this.employeedetails.emp_personal_detail.contact_detail.email_id,
+				p_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.address : '',
+				p_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.city.cit_id : '',
+				p_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.state.sta_id : '',
+				p_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.pin : '',
+				r_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.address : '',
+				r_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_id : '',
+				r_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id : '',
+				r_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.pin : '',
+				pri_mobile: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no : '',
+				sec_mobile: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no : '',
+				whatsapp_no: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.whatsup_no : '',
+				email_id: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.email_id : '',
 				emp_status: this.employeedetails.emp_status ? this.employeedetails.emp_status : 'live'
 			});
 			if (this.employeedetails.emp_personal_detail.same_as_residential) {
@@ -436,7 +438,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					}
 				}
 			];
-			this.employeedetails['emp_personal_detail'] = this.personalDetails['emp_personal_detail'];
+			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
+			console.log("this.personalDetails['emp_personal_detail']", this.personaldetails['emp_personal_detail']);
 			if (this.employeedetails) {
 				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
@@ -457,6 +460,10 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_wing_detail = {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+				};
+				this.employeedetails.emp_category = {
+					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
 			console.log('this.employeedetails', this.employeedetails);
@@ -584,6 +591,10 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 				};
+				this.employeedetails.emp_category = {
+					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+				};
 			}
 			console.log('this.employeedetails', this.employeedetails);
 			if (!moveStatus) {
@@ -708,6 +719,20 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		} else if (this.saveFlag || this.editRequestFlag) {
 			this.getPersonalDetailsdata();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+		}
+	}
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
+		});
+	}
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
 }
