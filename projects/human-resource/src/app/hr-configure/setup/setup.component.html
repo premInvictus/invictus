@@ -22,11 +22,10 @@
                                                     <mat-label>Setup Option</mat-label>
                                                     <mat-select (selectionChange)="loadConfiguration($event)"
                                                         placeholder="Setup Options">
-                                                        <mat-option value="">Please Select</mat-option>
-                                                        <mat-option value="1">Master</mat-option>
-                                                        <mat-option value="2">Salary Compopnent</mat-option>
-                                                        <mat-option value="3">Salary Structure</mat-option>
-                                                        <!-- <mat-option value="2">Setup Configuration</mat-option> -->
+                                                        <mat-option value="">Please select</mat-option>
+                                                        <mat-option *ngFor="let item of congigArray" [value]="item.id">
+                                                            {{item.name}}
+                                                        </mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </div>
@@ -36,20 +35,18 @@
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Master Type</mat-label>
-                                                            <mat-select (selectionChange)="loadConfiguration($event)"
-                                                                placeholder="Setup Options" formControlName="type">
-                                                                <mat-option value="">Please Select</mat-option>
-                                                                <mat-option value="1">Wing Master</mat-option>
-                                                                <mat-option value="2">Designation Master</mat-option>
-                                                                <mat-option value="3">Category One</mat-option>
-                                                                <mat-option value="4">Category Two</mat-option>
-                                                                <mat-option value="5">Category Three</mat-option>
-                                                                <!-- <mat-option value="2">Setup Configuration</mat-option> -->
+                                                            <mat-label>Master Type</mat-label>
+                                                            <mat-select (selectionChange)="getConfiguration($event)"
+                                                                placeholder="Select Master Type" formControlName="type">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of typeArray"
+                                                                    [value]="item.id">
+                                                                    {{item.name}}
+                                                                </mat-option>
                                                             </mat-select>
                                                         </mat-form-field>
                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Name</mat-label>
+                                                            <mat-label>Name</mat-label>
                                                             <input matInput placeholder="Enter Name"
                                                                 class="text-capitalize" type="text"
                                                                 formControlName="name"
@@ -62,7 +59,94 @@
                                                 </div>
                                             </form>
                                         </div>
-
+                                        <div *ngIf="configValue == '2'">
+                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Name</mat-label>
+                                                            <input matInput placeholder="Enter Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="name"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('name').value | capitalize"
+                                                                required>
+                                                            <mat-error>Please Enter Name</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Calculation Type</mat-label>
+                                                            <mat-select (selectionChange)="getCalculationValue($event)"
+                                                                placeholder="Calcualtion Type"
+                                                                formControlName="calculation_type">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of calculationTypeArray"
+                                                                    [value]="item.id">
+                                                                    {{item.name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline"
+                                                            *ngIf="calculationFlag">
+                                                            <mat-label>% Value</mat-label>
+                                                            <input matInput placeholder="Enter % Value"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="value"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('value').value | capitalize">
+                                                            <mat-error>Please Enter % Value</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Format</mat-label>
+                                                            <mat-select placeholder="Format" formControlName="type">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of formatTypeArray"
+                                                                    [value]="item.id">
+                                                                    {{item.name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Order</mat-label>
+                                                            <input matInput placeholder="Enter Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="order"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('order').value | capitalize"
+                                                                required>
+                                                            <mat-error>Please Enter Order</mat-error>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div *ngIf="configValue == '3'">
+                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Name</mat-label>
+                                                            <input matInput placeholder="Enter Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="name"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('name').value | capitalize"
+                                                                required>
+                                                            <mat-error>Please Enter Name</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Salary Component</mat-label>
+                                                            <mat-select placeholder="Select Salary Component"
+                                                                formControlName="ss_component_type" multiple>
+                                                                <mat-option *ngFor="let item of configArray"
+                                                                    [value]="item.sc_id">
+                                                                    {{item.sc_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                         <div class="text-center margin-top-15">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                                                 (click)="addConfiguration(configValue)">Add</button>
@@ -108,13 +192,63 @@
                                                                             <ng-container matColumnDef="name">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
-                                                                                    Genre Name
+                                                                                    Name
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
                                                                                     <span
                                                                                         *ngIf="item.name">{{ item.name }}</span>
                                                                                     <span *ngIf="!item.name">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container
+                                                                                matColumnDef="calculation_type">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Calculation Type
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.calculation_type">{{ item.calculation_type }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.calculation_type">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="type">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Format
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.type">{{ item.type }}</span>
+                                                                                    <span *ngIf="!item.type">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="order">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Order
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.order">{{ item.order }}</span>
+                                                                                    <span *ngIf="!item.order">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="value">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    % Value
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.value">{{ item.value }}</span>
+                                                                                    <span *ngIf="!item.value">-</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container matColumnDef="status">
