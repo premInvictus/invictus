@@ -34,13 +34,13 @@
       <mat-card class="card-height-730" [hidden]="!(barCodeArray.length > 0)">
         <div class="margin-left-15" id="print-bars">
           <div class="row">
-            <div class="col-3 smart-col-11" *ngFor="let item of barCodeArray">
+            <div class="col-4 smart-col-11" *ngFor="let item of barCodeArray">
               <div class="bar-acc-div">
                 <span
-                  class="font-size-16 font-bold bar-tiltle-span">{{(item.title | titlecase) | truncatetext : 20}}</span>
+                  class="font-bold bar-tiltle-span" style="font-size: 13px !important;">{{(item.title | titlecase) | truncatetext : 18}}</span>
               </div>
               <div class="barcode-print-lib">
-                <ngx-barcode bc-element-type="img" [bc-value]="item.reserv_id" bc-format="CODE128" bc-width="2">
+                <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.reserv_id" bc-format="CODE128" bc-width="2">
                 </ngx-barcode>
               </div>
               <br />
