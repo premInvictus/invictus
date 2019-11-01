@@ -204,80 +204,80 @@ export class CommonAPIService {
 	}
 	insertEmployeeDetails(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/insert', value);
+		return this.http.post(environment.apiHRUrl + '/employee/insert', value);
 	}
 
 	getAllEmployee(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/employee/getAll', value);
 	}
 
 	getEmployeeDetail(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/get', value);
+		return this.http.post(environment.apiHRUrl + '/employee/get', value);
 	}
 
 	updateEmployee(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/update', value);
+		return this.http.post(environment.apiHRUrl + '/employee/update', value);
 	}
 
 	deleteEmployee(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/update', value);
+		return this.http.post(environment.apiHRUrl + '/employee/update', value);
 	}
 
 	getEmployeeNavigationRecords(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/getNavigationId', value);
+		return this.http.post(environment.apiHRUrl + '/employee/getNavigationId', value);
 	}
 
 	getAllDesignation(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'designation/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/designation/getAll', value);
 	}
 
 	getAllWing(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'wing/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/wing/getAll', value);
 	}
 	getCategoryOne(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'category-one/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/category-one/getAll', value);
 	}
 	getCategoryTwo(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'category-two/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/category-two/getAll', value);
 	}
 	getCategoryThree(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'category-three/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/category-three/getAll', value);
 	}
 	getSalaryStructure(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-structure/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/salary-structure/getAll', value);
 	}
 	getFilterData(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'employee/getFilterData', value);
+		return this.http.post(environment.apiHRUrl + '/employee/getFilterData', value);
 	}
 	getSalaryHeads(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-component/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/salary-component/getAll', value);
 	}
 	insertSalaryCompute(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-compute/insert', value);
+		return this.http.post(environment.apiHRUrl + '/salary-compute/insert', value);
 	}
 
 	updateSalaryCompute(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-compute/update', value);
+		return this.http.post(environment.apiHRUrl + '/salary-compute/update', value);
 	}
 
 	getSalaryCompute(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-compute/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
 	}
 
 	
