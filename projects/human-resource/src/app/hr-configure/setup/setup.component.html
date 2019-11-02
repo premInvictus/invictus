@@ -201,6 +201,18 @@
                                                                                     <span *ngIf="!item.name">-</span>
                                                                                 </td>
                                                                             </ng-container>
+                                                                            <ng-container matColumnDef="component_type">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Salary Component
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.component_type">{{ item.component_type }}</span>
+                                                                                    <span *ngIf="!item.component_type">-</span>
+                                                                                </td>
+                                                                            </ng-container>
                                                                             <ng-container
                                                                                 matColumnDef="calculation_type">
                                                                                 <th mat-header-cell *matHeaderCellDef

@@ -40,6 +40,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	configArray: any[] = [];
 	configFlag = false;
 	calculationFlag = false;
+	multipleDropdownName: any;
 	congigArray = [
 		{ id: "1", name: 'Master' },
 		{ id: "2", name: 'Salary Compopnent' },
@@ -177,6 +178,38 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+
+	getSalaryStructure() {
+		this.CONFIG_ELEMENT_DATA = [];
+		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+		this.commonService.getSalaryStr().subscribe((result: any) => {
+			if (result) {
+				if (this.configValue === '3') {
+					let pos = 1;
+					const tableName = {};
+					for (const item of result) {
+						let tableName = '';
+						for (const det of item.ss_component_data) {
+							tableName = tableName + det.sc_name + ',';
+						}
+						tableName = tableName.substring(0, tableName.length - 1)
+						this.CONFIG_ELEMENT_DATA.push({
+							position: pos,
+							name: item.ss_name,
+							component_type: tableName,
+							status: item.ss_status,
+							action: item
+						});
+						pos++;
+					}
+					this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+					this.configDataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.configDataSource.sort = this.sort;
+				}
+			}
+		});
+	}
 	resetForm(value) {
 		this.formGroupArray[value - 1].formGroup.reset();
 		this.setupUpdateFlag = false;
@@ -204,6 +237,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 2) {
 			if (value.sc_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 3) {
+			if (value.ss_status === '1') {
 				return true;
 			}
 		}
@@ -235,9 +272,19 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				calculation_type: value.sc_calculation_type,
 				status: value.sc_status
 			});
+		} else if (Number(this.configValue) === 3) {
+			this.setupUpdateFlag = true;
+			let tableName = [];
+			for (const det of value.ss_component_data) {
+				tableName.push(det.sc_id);
+			}
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				id: value.ss_id,
+				name: value.ss_name,
+				ss_component_type: tableName
+			});
 		}
 	}
-
 	loadConfiguration(event) {
 		this.searchtoggle = false;
 		this.configFlag = false;
@@ -256,6 +303,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSalaryComponent();
+			this.getSalaryStructure();
 			this.displayedColumns = ['position', 'name', 'component_type', 'status', 'action'];
 			this.configFlag = true;
 		}
@@ -278,7 +326,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				break;
 			case '2':
 				data.sc_status = '5';
-				this.deleteEntry(data, 'updateSalaryComponent', data.type);
+				this.deleteEntry(data, 'updateSalaryComponent', 'data');
+				break;
+			case '3':
+				data.ss_status = '5';
+				this.deleteEntry(data, 'updateSalaryStructure', 'data');
 				break;
 		}
 	}
@@ -313,6 +365,14 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_status: '1',
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
+					break;
+				case '3':
+					this.setupDetails = {
+						ss_component_data: this.getJsonFromArray(this.formGroupArray[value - 1].formGroup.value.ss_component_type),
+						ss_name: this.formGroupArray[value - 1].formGroup.value.name,
+						ss_status: '1'
+					};
+					this.addEntry(this.setupDetails, 'insertSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
 			}
 		}
@@ -351,6 +411,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
+				case '3':
+					this.setupDetails = {
+						ss_component_data: this.getJsonFromArray(this.formGroupArray[value - 1].formGroup.value.ss_component_type),
+						ss_name: this.formGroupArray[value - 1].formGroup.value.name,
+						ss_status: '1',
+						ss_id: this.formGroupArray[value - 1].formGroup.value.id
+					};
+					this.updateEntry(this.setupDetails, 'updateSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
+					break;
 			}
 		}
 	}
@@ -369,8 +438,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.getConfiguration({ 'value': value.type.type_id });
 				}
 			});
-		}
-		if (Number(this.configValue) === 2) {
+		} else if (Number(this.configValue) === 2) {
 			if (value.sc_status === '1') {
 				value.sc_status = '0';
 			} else {
@@ -383,26 +451,35 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				}
 			});
 		}
+		else if (Number(this.configValue) === 3) {
+			if (value.ss_status === '1') {
+				value.ss_status = '0';
+			} else {
+				value.ss_status = '1';
+			}
+			this.commonService.updateSalaryStructure(value).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getSalaryStructure();
+				}
+			});
+		}
 	}
-
-	applyFilter(event) {
-		this.configDataSource.filter = event.trim().toLowerCase();
-	}
-
 	deleteEntry(deletedData, serviceName, next) {
 		this.commonService[serviceName](deletedData).subscribe((result: any) => {
 			if (result) {
 				if (this.configValue === '1') {
 					this.getConfiguration({ 'value': next });
-				} else if (this.configValue === '1') {
+				} else if (this.configValue === '2') {
 					this.getSalaryComponent();
+				} else if (this.configValue === '3') {
+					this.getSalaryStructure();
 				}
 				this.commonService.showSuccessErrorMessage('Delete Successfully', 'success');
 			}
 		});
 	}
 	addEntry(data, serviceName, next) {
-		console.log(data);
 		this.commonService[serviceName](data).subscribe((result: any) => {
 			if (result) {
 				if (this.configValue === '1') {
@@ -413,6 +490,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '2') {
 					this.getSalaryComponent();
 					this.calculationFlag = false;
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '3') {
+					this.getSalaryStructure();
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Inserted Successfully', 'success');
@@ -432,6 +512,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '2') {
 					this.getSalaryComponent();
 					this.calculationFlag = false;
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '3') {
+					this.getSalaryStructure();
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Updated Successfully', 'success');
@@ -457,5 +540,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (findIndex !== -1) {
 			return array[findIndex].name;
 		}
+	}
+	getJsonFromArray(event) {
+		const salaryCompute: any[] = [];
+		for (let item of event) {
+			const findIndex = this.configArray.findIndex(f => Number(f.sc_id) === Number(item));
+			if (findIndex !== -1) {
+				salaryCompute.push(this.configArray[findIndex]);
+			}
+		}
+		return salaryCompute;
 	}
 }
