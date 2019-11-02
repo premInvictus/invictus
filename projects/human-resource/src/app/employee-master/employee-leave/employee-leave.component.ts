@@ -75,11 +75,11 @@ export class EmployeeLeaveComponent implements OnInit {
 						srno: pos,
 						month_name: result.emp_month_attendance_data.month_data[i].month_name,
 						leave_opening_balance: emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
-						leave_credited: result.leave_credited ? result.leave_credited : 1.5,
-						leave_availed: result.emp_leave_availed ? result.emp_leave_availed : 0,
-						leave_granted: result.emp_leave_granted ? result.emp_leave_granted : 0,
+						leave_credited: emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5,
+						leave_availed: emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
+						leave_granted: emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
 						lwp: emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
-						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance) + (result.leave_credited ? result.leave_credited : 1.5) - parseFloat(result.emp_leave_granted)
+						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5) - parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 					};
 					total_leave_credited = total_leave_credited + parseFloat(result.leave_credited ? result.leave_credited : 1.5);
 					total_leave_availed = total_leave_availed + parseFloat(result.emp_leave_availed ? result.emp_leave_availed : 0);
@@ -88,7 +88,7 @@ export class EmployeeLeaveComponent implements OnInit {
 					this.EMPLOYEE_ELEMENT.push(element);
 					pos++;
 
-					console.log(parseFloat(emp_attendance_detail.leave_opening_balance) , (result.leave_credited ? result.leave_credited : 1.5) , parseFloat(result.emp_leave_granted))
+					console.log(emp_attendance_detail, parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) , (result.leave_credited ? result.leave_credited : 1.5) , parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0))
 
 				}
 

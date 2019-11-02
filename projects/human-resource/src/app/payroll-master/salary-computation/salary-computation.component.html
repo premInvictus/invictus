@@ -58,7 +58,7 @@
           <div class="row ">
             <div class="col-9 remove-col-padding-left">
               <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" (keyup)="applyFilter($event.target.value)" />
+                <input matInput placeholder="Search" (blur)="applyFilter($event.target.value)" />
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
@@ -197,7 +197,7 @@
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.value.advance) ? 'Type Here.' : ''"
-                      formControlName="advance" autocomplete="off" (change)="setNetSalary(element, $event)"/>
+                      formControlName="advance" autocomplete="off" value="{{element?.emp_modes_data.advance}}" (blur)="setNetSalary(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -216,7 +216,7 @@
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[0]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[0]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
+                      formControlName="{{paymentModeArray[0]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[0]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -229,7 +229,7 @@
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[1]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[1]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
+                      formControlName="{{paymentModeArray[1]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[1]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -241,7 +241,7 @@
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[2]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[2]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
+                      formControlName="{{paymentModeArray[2]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[2]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -278,7 +278,7 @@
       </div>
       <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
         <div class="col-12" *ngIf="!editFlag">
-          <button mat-raised-button class="btn-success-green margin-right-15" (click)="save()">Confirm and
+          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
             Reset
