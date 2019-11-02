@@ -41,7 +41,10 @@ export class EmployeeDetailComponent implements OnInit {
 		});
 
 		this.reRenderTabSubscription = this.commonAPIService.renderTab.subscribe((data: any) => {
-			if (data && data.tabMove) {
+			if (data && data.tabMove && data.renderForLast) {
+				this.tabSelectedIndex = 0;
+				this.getEmployeeNavigationRecords();
+			} else if (data && data.tabMove) {
 				this.tabSelectedIndex += 1;
 				this.getEmployeeNavigationRecords();
 			}

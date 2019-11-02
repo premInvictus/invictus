@@ -180,9 +180,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.getSalartDetails();
 			this.onChangeData();
 		}
-
 	}
-
 	getDepartment() {
 		this.sisService.getDepartment({}).subscribe((result: any) => {
 			if (result && result.status == 'ok') {
@@ -193,9 +191,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -204,10 +201,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -223,45 +218,45 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getCategoryOne() {
-		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+		this.categoryOneArray = [];
+		this.commonAPIService.getMaster({ type_id: '3' }).subscribe((res: any) => {
 			if (res) {
-				this.categoryOneArray = [];
 				this.categoryOneArray = res;
 			}
 		});
 	}
-	getCategoryOneName(cat_id) {
-		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+	getCategoryOneName(config_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.config_id) === Number(config_id));
 		if (findex !== -1) {
-			return this.categoryOneArray[findex].cat_name;
+			return this.categoryOneArray[findex].name;
 		}
 	}
 	getCategoryTwo() {
-		this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
+		this.categoryTwoArray = [];
+		this.commonAPIService.getMaster({ type_id: '4' }).subscribe((res: any) => {
 			if (res) {
-				this.categoryTwoArray = [];
 				this.categoryTwoArray = res;
 			}
 		});
 	}
-	getCategoryTwoName(cat_id) {
-		const findex = this.categoryTwoArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+	getCategoryTwoName(config_id) {
+		const findex = this.categoryTwoArray.findIndex(e => Number(e.config_id) === Number(config_id));
 		if (findex !== -1) {
-			return this.categoryTwoArray[findex].cat_name;
+			return this.categoryTwoArray[findex].name;
 		}
 	}
 	getCategoryThree() {
-		this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
+		this.categoryThreeArray = [];
+		this.commonAPIService.getMaster({ type_id: '5' }).subscribe((res: any) => {
 			if (res) {
-				this.categoryThreeArray = [];
 				this.categoryThreeArray = res;
 			}
 		});
 	}
-	getCategoryThreeName(cat_id) {
-		const findex = this.categoryThreeArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+	getCategoryThreeName(config_id) {
+		const findex = this.categoryThreeArray.findIndex(e => Number(e.config_id) === Number(config_id));
 		if (findex !== -1) {
-			return this.categoryThreeArray[findex].cat_name;
+			return this.categoryThreeArray[findex].name;
 		}
 	}
 	getPayScale() {
@@ -329,45 +324,43 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		return datePipe.transform(value, format);
 	}
 	getSalartDetails() {
-		console.log('this.employeedetails', this.employeedetails);
-		if (this.employeedetails) {
-			this.salaryDetails.patchValue({
-				pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
-				aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
-				pf_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no : '',
-				esi_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.esi_ac_no : '',
-				nominee: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.nominee_detail.name : '',
-				doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd') : '',
-				pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
-				esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
-				probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
-				confirm_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd') : '',
-				//category_1: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
-				category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id : '',
-				category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_3.cat_id : '',
-				increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
-				contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
-				bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
-				bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
-				ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
-				sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id, 10) : '',
-				pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure &&  this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id, 10) : '',
-				basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
-				da: '',
-				hra: '',
-				allowances: '',
-				pf_deduction: '',
-				esi_deduction: '',
-				tds_deduction: '',
-				net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
-				total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
-			});
-			if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) {
-				this.onChangeData();
-				this.netSalary = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '';
-				this.totalEarning = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '';
-			}
+		this.salaryDetails.patchValue({
+			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
+			aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
+			pf_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no : '',
+			esi_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.esi_ac_no : '',
+			nominee: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.nominee_detail.name : '',
+			doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd') : '',
+			pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
+			esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
+			probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
+			confirm_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd') : '',
+			//category_1: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
+			category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
+			category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id : '',
+			increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
+			contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
+			bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
+			bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
+			ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
+			sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id, 10) : '',
+			pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id, 10) : '',
+			basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
+			da: '',
+			hra: '',
+			allowances: '',
+			pf_deduction: '',
+			esi_deduction: '',
+			tds_deduction: '',
+			net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
+			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
+		});
+		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) {
+			this.onChangeData();
+			this.netSalary = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '';
+			this.totalEarning = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '';
 		}
+
 
 	}
 	saveForm() {
@@ -440,7 +433,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				}
 			};
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -500,14 +492,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				},
 				emp_job_detail: {
 					category_1: {
-						cat_id: this.salaryDetails.value.category_1,
-						cat_name: this.getCategoryOneName(this.salaryDetails.value.category_1)
-					},
-					category_2: {
 						cat_id: this.salaryDetails.value.category_2,
 						cat_name: this.getCategoryTwoName(this.salaryDetails.value.category_2)
 					},
-					category_3: {
+					category_2: {
 						cat_id: this.salaryDetails.value.category_3,
 						cat_name: this.getCategoryThreeName(this.salaryDetails.value.category_3)
 					},
@@ -549,7 +537,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				}
 			};
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -577,8 +564,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
-					if (moveNext) {
+					if (!moveNext) {
 						this.commonAPIService.renderTab.next({ tabMove: true });
+					} else {
+						this.getSalartDetails();
+						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
 					this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
 
@@ -588,19 +578,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please fill all Required field', 'error');
 		}
 	}
-
-
 	getNetSalary() {
 		this.earning = 0;
 		this.deduction = 0;
 		this.totalEarning = 0;
 		this.netSalary = 0;
-
 		this.salaryFinalArray = [];
-		console.log(this.formGroupArray2);
 		if (this.formGroupArray2.length > 0) {
 			let i = 0;
 			this.netSalary = this.salaryDetails.value.basic_pay;
@@ -646,24 +632,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
 	}
-
-	remainOnSame() {
-
-	}
 	getDepartmentName(dpt_id) {
 		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
 		if (findIndex !== -1) {
 			return this.departmentArray[findIndex].dept_name;
 		}
 	}
-
-	getDesignationName(des_id) {
-		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
-		if (findIndex !== -1) {
-			return this.designationArray[findIndex].des_name;
-		}
-	}
-
 	getHonorificName(hon_id) {
 		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
 		if (findIndex !== -1) {
@@ -672,12 +646,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 
 	getWingName(wing_id) {
-		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
+		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
 		if (findIndex !== -1) {
-			return this.wingArray[findIndex].wing_name;
+			return this.wingArray[findIndex].name;
+		}
+	}
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.config_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].name;
 		}
 	}
 
-	
+
 
 }

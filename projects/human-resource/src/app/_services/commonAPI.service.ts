@@ -281,37 +281,37 @@ export class CommonAPIService {
 	}
 	insertMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'common/insert', value);
+		return this.http.post(environment.apiHRUrl + '/common/insert', value);
 	}
 	getMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'common/findAll', value);
+		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
 	}
 	updateMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'common/update', value);
+		return this.http.post(environment.apiHRUrl + '/common/update', value);
 	}
 	insertSalaryComponent(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-component/insert', value);
+		return this.http.post(environment.apiHRUrl + '/salary-component/insert', value);
 	}
 	getSalaryComponent() {
-		return this.http.get(environment.apiHRUrl + 'salary-component/getSalaryComponent');
+		return this.http.get(environment.apiHRUrl + '/salary-component/getSalaryComponent');
 	}
 	updateSalaryComponent(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-component/update', value);
+		return this.http.post(environment.apiHRUrl + '/salary-component/update', value);
 	}
 	insertSalaryStructure(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-structure/insert', value);
+		return this.http.post(environment.apiHRUrl + '/salary-structure/insert', value);
 	}
 	getSalaryStr() {
-		return this.http.get(environment.apiHRUrl + 'salary-structure/getSalaryStructure');
+		return this.http.get(environment.apiHRUrl + '/salary-structure/getSalaryStructure');
 	}
 	updateSalaryStructure(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + 'salary-structure/update', value);
+		return this.http.post(environment.apiHRUrl + '/salary-structure/update', value);
 	}
 	
 

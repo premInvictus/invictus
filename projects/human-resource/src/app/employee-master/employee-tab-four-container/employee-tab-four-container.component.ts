@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from 
 import { DatePipe } from '@angular/common';
 
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
- 
+
 @Component({
 	selector: 'app-employee-tab-four-container',
 	templateUrl: './employee-tab-four-container.component.html',
@@ -57,7 +57,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	departmentArray;
 	designationArray;
 	wingArray;
-	categoryOneArray:any[] = [];
+	categoryOneArray: any[] = [];
 	@ViewChild('editReference') editReference;
 	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
 		private sisService: SisService) {
@@ -93,14 +93,14 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			if (data) {
 				if (data.addMode) {
 					this.setActionControls({ addMode: true });
-				} 
+				}
 				if (data.editMode) {
 					this.setActionControls({ editMode: true });
-				} 
+				}
 				if (data.viewMode) {
 					this.setActionControls({ viewMode: true });
-				} 
-				
+				}
+
 			}
 		});
 	}
@@ -125,9 +125,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -136,10 +135,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -148,7 +145,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-	getRemarksDetails(){
+	getRemarksDetails() {
 		if (this.employeedetails && this.employeedetails.emp_remark_detail) {
 			this.remarksForm.patchValue({
 				management_remarks: this.employeedetails.emp_remark_detail.management_remark,
@@ -159,13 +156,13 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.experiencesArray = [];
 			this.educationsArray = [];
-		}	
+		}
 		if (this.employeedetails && this.employeedetails.emp_remark_detail && this.employeedetails.emp_remark_detail.skills.length > 0) {
 			this.skillsArray = this.employeedetails.emp_remark_detail.skills;
 		} else {
 			this.skillsArray = [];
 		}
-		
+
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');
@@ -344,7 +341,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 				});
 			}
 		} else {
-			const index = this.skillsArray.indexOf($event.srcElement.value);String
+			const index = this.skillsArray.indexOf($event.srcElement.value); String
 			if (index === -1) {
 				this.skillForm.patchValue({
 					skill_id: ''
@@ -369,7 +366,6 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			skills: this.skillsArray
 		};
 		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -406,7 +402,6 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	updateForm(moveNext) {
 		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -438,7 +433,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			interview_remark: this.remarksForm.value.interview_remarks,
 			skills: this.skillsArray
 		};
-		if (moveNext) {
+		if (!moveNext) {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Updated Successfully', 'success');
@@ -451,12 +446,16 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Updated Successfully', 'success');
+					this.getQualifications();
+					this.getBoard();
+					this.getRemarksDetails();
+					this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Remark Detail', 'error');
 				}
 			});
 		}
-		
+
 	}
 
 	cancelForm() {
@@ -477,28 +476,12 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			return this.departmentArray[findIndex].dept_name;
 		}
 	}
-
-	getDesignationName(des_id) {
-		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
-		if (findIndex !== -1) {
-			return this.designationArray[findIndex].des_name;
-		}
-	}
-
 	getHonorificName(hon_id) {
 		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
 		if (findIndex !== -1) {
 			return this.honrificArr[findIndex].hon_name;
 		}
-	}	
-
-	getWingName(wing_id) {
-		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
-		if (findIndex !== -1) {
-			return this.wingArray[findIndex].wing_name;
-		}
 	}
-
 	getCategoryOne() {
 		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
@@ -511,6 +494,18 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
+		}
+	}
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].name;
+		}
+	}
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.config_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].name;
 		}
 	}
 } 

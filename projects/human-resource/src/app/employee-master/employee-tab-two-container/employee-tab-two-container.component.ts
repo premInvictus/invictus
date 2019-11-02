@@ -145,9 +145,8 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -156,10 +155,8 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -191,7 +188,6 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	saveForm() {
 		if (this.personalContacts.valid) {
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -244,7 +240,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 			};
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
-					//this.commonAPIService.renderTab.next({ tabMove: true });
+					this.commonAPIService.renderTab.next({ tabMove: true });
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
@@ -275,7 +271,6 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	updateForm(isview) {
 		if (this.personalContacts.valid) {
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -331,8 +326,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
 					if (isview) {
 						this.commonAPIService.renderTab.next({ tabMove: true });
+					} else {
+						this.getPersonaContactsdata();
+						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
-
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
 				}
@@ -400,24 +397,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		}
 	}
 
-	getDesignationName(des_id) {
-		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
-		if (findIndex !== -1) {
-			return this.designationArray[findIndex].des_name;
-		}
-	}
-
 	getHonorificName(hon_id) {
 		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
 		if (findIndex !== -1) {
 			return this.honrificArr[findIndex].hon_name;
-		}
-	}
-
-	getWingName(wing_id) {
-		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
-		if (findIndex !== -1) {
-			return this.wingArray[findIndex].wing_name;
 		}
 	}
 
@@ -433,6 +416,18 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
+		}
+	}
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].name;
+		}
+	}
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.config_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].name;
 		}
 	}
 }
