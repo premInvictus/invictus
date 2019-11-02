@@ -279,7 +279,29 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
 	}
-
+	insertMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'common/insert', value);
+	}
+	getMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'common/findAll', value);
+	}
+	updateMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'common/update', value);
+	}
+	insertSalaryComponent(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-component/insert', value);
+	}
+	getSalaryComponent() {
+		return this.http.get(environment.apiHRUrl + 'salary-component/getSalaryComponent');
+	}
+	updateSalaryComponent(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + 'salary-component/update', value);
+	}
 	
-
+	
 }
