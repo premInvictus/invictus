@@ -20,7 +20,9 @@ export class EmployeeLeaveComponent implements OnInit {
 	session_id;
 	allEmployeeData:any
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-	displayedEmployeeColumns: string[] = ['srno', 'month_name', 'leave_opening_balance', 'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
+	leave_opening_balance = 0;
+	//'leave_opening_balance',
+	displayedEmployeeColumns: string[] = ['srno', 'month_name',  'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -61,12 +63,14 @@ export class EmployeeLeaveComponent implements OnInit {
 			this.employeeData = result;
 			this.EMPLOYEE_ELEMENT = [];
 			this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+			console.log('result', result);
 			if (result) {
 				let pos = 1;
 				let recordArray = result;
 				var total_leave_credited = 0;
 				var total_leave_availed = 0;
 				var total_leave_granted = 0;
+				var total_leave_closing_balance = 0;
 				var total_lwp = 0;
 				for (var i = 0; i < result.emp_month_attendance_data.month_data.length; i++) {
 					var emp_month = result.emp_month_attendance_data.month_data[i].month_id;
@@ -75,20 +79,21 @@ export class EmployeeLeaveComponent implements OnInit {
 						srno: pos,
 						month_name: result.emp_month_attendance_data.month_data[i].month_name,
 						leave_opening_balance: emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
-						leave_credited: result.leave_credited ? result.leave_credited : 1.5,
-						leave_availed: result.emp_leave_availed ? result.emp_leave_availed : 0,
-						leave_granted: result.emp_leave_granted ? result.emp_leave_granted : 0,
+						leave_credited: emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 1.5,
+						leave_availed: emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
+						leave_granted: emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
 						lwp: emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
-						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance) + (result.leave_credited ? result.leave_credited : 1.5) - parseFloat(result.emp_leave_granted)
+						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5) - parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 					};
-					total_leave_credited = total_leave_credited + parseFloat(result.leave_credited ? result.leave_credited : 1.5);
+					total_leave_credited = total_leave_credited + parseFloat(result.emp_leave_credited ? result.emp_leave_credited : 1.5);
 					total_leave_availed = total_leave_availed + parseFloat(result.emp_leave_availed ? result.emp_leave_availed : 0);
 					total_leave_granted = total_leave_granted + parseFloat(result.emp_leave_granted ? result.emp_leave_granted : 0);
 					total_lwp = total_lwp + parseFloat(emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0);
+					total_leave_closing_balance = total_leave_closing_balance + parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5) - parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 					this.EMPLOYEE_ELEMENT.push(element);
 					pos++;
 
-					console.log(parseFloat(emp_attendance_detail.leave_opening_balance) , (result.leave_credited ? result.leave_credited : 1.5) , parseFloat(result.emp_leave_granted))
+					
 
 				}
 
@@ -100,7 +105,7 @@ export class EmployeeLeaveComponent implements OnInit {
 					leave_availed: '<b>' + total_leave_availed + '</b>',
 					leave_granted: '<b>' + total_leave_granted + '</b>',
 					lwp: '<b>' + total_lwp + '</b>',
-					leave_closing_balance: ''
+					leave_closing_balance: '<b>' + total_leave_closing_balance + '</b>'
 				}
 				this.EMPLOYEE_ELEMENT.push(lastRow);
 				this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
@@ -140,7 +145,7 @@ export class EmployeeLeaveComponent implements OnInit {
 export interface EmployeeElement {
 	srno: any;
 	month_name: string;
-	leave_opening_balance: string;
+	// leave_opening_balance: string;
 	leave_credited: string;
 	leave_availed: any;
 	leave_granted: any;
