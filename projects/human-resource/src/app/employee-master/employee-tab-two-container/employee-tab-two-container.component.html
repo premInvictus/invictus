@@ -117,7 +117,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Reference/Resource(optional)</mat-label>
                 <input class="text-capitalize" matInput placeholder="Primary Mobile No." [readonly]="viewOnly"
-                  formControlName="reference" required [errorStateMatcher]="confirmValidParentMatcher" />
+                  formControlName="reference" [errorStateMatcher]="confirmValidParentMatcher" />
                 <mat-error>
                   This field is required
                 </mat-error>
@@ -132,9 +132,9 @@
     <div class="col-12 text-center">
       <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
         Continue</button>
-      <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
+      <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(false)">Submit</button>
       <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-        (click)="updateForm(false)">Update & Continue</button>
+        (click)="updateForm(true)">Update & Continue</button>
       <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
             (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit &
             Continue</button> -->

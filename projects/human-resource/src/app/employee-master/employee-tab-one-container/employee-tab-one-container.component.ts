@@ -20,6 +20,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	cityId: any;
 	cityId2: any;
 	addressFlag = false;
+	requiredOnly = false;
 	panelOpenState = true;
 	addOnly = false;
 	editOnly = false;
@@ -41,7 +42,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	finalArray: any = [];
 	settingsArray: any[] = [];
 	parentId;
-	categoryOneArray:any[] = [];
+	categoryOneArray: any[] = [];
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },
 		{ hon_id: "2", hon_name: 'Mrs.' },
@@ -84,6 +85,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				emp_status: 'live'
 			});
 			this.addressFlag = false;
+			this.requiredOnly = false;
 		}
 		if (data.editMode) {
 			this.editOnly = true;
@@ -115,10 +117,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() {
-		console.log('commnComponent', this.employeeCommonDetails);
-		console.log('this.employeedetails', this.employeedetails);
-
-
 		this.buildForm();
 		this.getCategoryOne();
 		this.getState();
@@ -154,9 +152,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -165,10 +162,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -196,8 +191,12 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			});
 			if (this.employeedetails.emp_personal_detail.same_as_residential) {
 				this.addressFlag = false;
+				this.requiredOnly = false;
 			} else {
 				this.addressFlag = true;
+				// if(this.editOnly){
+				// 	this.requiredOnly = true;
+				// }
 			}
 		}
 
@@ -439,9 +438,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				}
 			];
 			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
-			console.log("this.personalDetails['emp_personal_detail']", this.personaldetails['emp_personal_detail']);
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -466,7 +463,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
-			console.log('this.employeedetails', this.employeedetails);
 			this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
@@ -567,11 +563,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					}
 				};
 			}
-
 			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];
-
 			if (this.employeedetails) {
-				console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -596,7 +589,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
-			console.log('this.employeedetails', this.employeedetails);
 			if (!moveStatus) {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 					if (result) {
@@ -610,32 +602,24 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
+						this.getPersonalDetailsdata();
+						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					} else {
 						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
 					}
 				});
 			}
 
-
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please fill all Required field', 'error');
 		}
 	}
-
 	getDepartmentName(dpt_id) {
 		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
 		if (findIndex !== -1) {
 			return this.departmentArray[findIndex].dept_name;
 		}
 	}
-
-	getDesignationName(des_id) {
-		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
-		if (findIndex !== -1) {
-			return this.designationArray[findIndex].des_name;
-		}
-	}
-
 	getHonorificName(hon_id) {
 		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
 		if (findIndex !== -1) {
@@ -643,12 +627,6 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		}
 	}
 
-	getWingName(wing_id) {
-		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
-		if (findIndex !== -1) {
-			return this.wingArray[findIndex].wing_name;
-		}
-	}
 
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
@@ -659,9 +637,11 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 
 	address_change(event) {
 		if (event.checked) {
+			this.requiredOnly = true;
 			this.addressFlag = true;
 		} else {
 			this.addressFlag = false;
+			this.requiredOnly = false;
 		}
 	}
 	filterCityStateCountry($event) {
@@ -733,6 +713,18 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
+		}
+	}
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].name;
+		}
+	}
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.config_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].name;
 		}
 	}
 }

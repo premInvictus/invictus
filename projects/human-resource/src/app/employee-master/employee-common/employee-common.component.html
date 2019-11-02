@@ -101,7 +101,7 @@
                   <mat-select formControlName="emp_designation_id" placeholder="Designation" required
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.des_id}}" *ngFor="let item of designationArray">{{item?.des_name}}
+                    <mat-option value="{{item?.config_id}}" *ngFor="let item of designationArray">{{item?.name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
@@ -136,7 +136,7 @@
                   <mat-label>Wing</mat-label>
                   <mat-select formControlName="emp_wing_id" placeholder="Wing" required [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.wing_id}}" *ngFor="let item of wingArray">{{item?.wing_name}}
+                    <mat-option value="{{item?.config_id}}" *ngFor="let item of wingArray">{{item?.name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
