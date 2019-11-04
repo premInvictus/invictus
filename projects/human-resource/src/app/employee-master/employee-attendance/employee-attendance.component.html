@@ -234,5 +234,12 @@
           [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
       </div>
     </mat-card>
+    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'No Employee Attendance Found'"></app-no-data>
+        </div>
+      </mat-card>
   </div>
 </div>

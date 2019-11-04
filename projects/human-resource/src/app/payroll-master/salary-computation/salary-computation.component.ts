@@ -177,13 +177,15 @@ export class SalaryComputationComponent implements OnInit {
 				this.shacolumns[0] = { columnDef: 'Basic Pay', header: 'Basic Pay', data: { sc_type: { 'type_id': 1 } } };
 				for (var i = 0; i < this.salaryHeadsArr.length; i++) {
 					//console.log("this.salaryHeadsArr[i]['sc_type']", this.salaryHeadsArr[i]['sc_type']);
-					if (this.salaryHeadsArr[i]['sc_type']['type_id'] === 1) {
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 1) {
 						this.shacolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i] });
 					}
-					if (this.salaryHeadsArr[i]['sc_type']['type_id'] === 2) {
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2) {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
 				}
+
+				console.log('shacolumns', this.shacolumns);
 				//this.getAllEmployee();
 			}
 		});
@@ -217,10 +219,10 @@ export class SalaryComputationComponent implements OnInit {
 				let pos = 1;
 				let recordArray = result;
 
-				let emp_present_days;
+				
 				for (const item of recordArray) {
 					var editableStatus = false;
-
+					let emp_present_days = 0;
 					this.empShacolumns = [];
 					this.empShdcolumns = [];
 					var total_deductions = 0;
@@ -239,7 +241,7 @@ export class SalaryComputationComponent implements OnInit {
 					var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale) : 0;
 
 					for (var i = 0; i < this.shacolumns.length; i++) {
-						if (this.shacolumns[i]['data']['sc_type']['type_id'] === 1) {
+						if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 							var value = 0;
 
 							if (this.shacolumns[i]['header'] === 'Basic Pay') {
@@ -248,65 +250,74 @@ export class SalaryComputationComponent implements OnInit {
 								this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 							}
 
-
-							for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-								if ( item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-
-									if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
-										item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
-										Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
-									) {
-										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
-											value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
+								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
+									if ( item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+	
+										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
+											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
+											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
+										) {
+											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+											}
+	
+											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
+												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
+	
+											}
+	
+											this.empShacolumns[i]['value'] = value;
+											this.shacolumns[i]['value'] = value;
+											total_earnings = total_earnings + Number(value);
+	
+										} else {
+											this.shacolumns[i]['value'] = 0;
+											this.empShacolumns[i]['value'] = 0;
 										}
-
-										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
-											value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-
-										}
-
-										this.empShacolumns[i]['value'] = value;
-										this.shacolumns[i]['value'] = value;
-										total_earnings = total_earnings + Number(value);
-
-									} else {
-										this.shacolumns[i]['value'] = 0;
-										this.empShacolumns[i]['value'] = 0;
 									}
 								}
 							}
+
+							
 
 						}
 					}
 					for (var i = 0; i < this.shdcolumns.length; i++) {
-						if (this.shdcolumns[i]['data']['sc_type']['type_id'] === 2) {
+						if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 							var value = 0;
 							this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
-							for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_deduction_detail.length; j++) {
-								if (Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_id'])) {
 
-									if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] &&
-										item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_type'] &&
-										Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
-									) {
-										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === 'text') {
-											value = Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+							if (item.emp_salary_detail 
+								&& item.emp_salary_detail.emp_salary_structure 
+								&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
+								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
+									if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+	
+										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
+											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
+											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
+										) {
+											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+											}
+	
+											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
+												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
+	
+											}
+											this.empShdcolumns[i]['value'] = value;
+											this.shdcolumns[i]['value'] = value;
+											total_deductions = total_deductions - Number(value);
+	
+										} else {
+											this.shdcolumns[i]['value'] = 0;
+											this.empShdcolumns[i]['value'] = 0;
 										}
-
-										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-											value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
-
-										}
-										this.empShdcolumns[i]['value'] = value;
-										this.shdcolumns[i]['value'] = value;
-										total_deductions = total_deductions - Number(value);
-
-									} else {
-										this.shdcolumns[i]['value'] = 0;
-										this.empShdcolumns[i]['value'] = 0;
 									}
 								}
 							}
+							
 						}
 
 					}
@@ -314,17 +325,14 @@ export class SalaryComputationComponent implements OnInit {
 					if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 						for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
+							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];							
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								emp_present_days = emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance  : 0;
+								
+								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ?  emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
 
-							} else {
-								emp_present_days = 0;
-							}
+							} 
 						}
-					} else {
-						emp_present_days = 0;
-					}
+					} 
 
 
 
@@ -346,8 +354,9 @@ export class SalaryComputationComponent implements OnInit {
 						var salary_payable = 0;
 						total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] : 0;
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
-						salary_payable = Math.round((Number(total_earnings) - Number(total_deductions)) * (Number(emp_present_days) / Number(no_of_days)));
-
+						emp_present_days = emp_present_days ? emp_present_days : 0;
+						salary_payable = Math.round(((Number(total_earnings) + Number(empBasicPay) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
+						console.log('salary_payable', salary_payable);
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
@@ -360,7 +369,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_allowances: '',
 							empShacolumns: this.empShacolumns,
 							empShdcolumns: this.empShdcolumns,
-							emp_total_earnings: total_earnings,
+							emp_total_earnings: Number(empBasicPay) + total_earnings,
 							emp_total_deductions: total_deductions,
 							emp_deductions: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_deduction_detail : [],
 							emp_present_days: emp_present_days,
@@ -378,8 +387,13 @@ export class SalaryComputationComponent implements OnInit {
 					} else {
 						var salary_payable = 0;
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
-						salary_payable = Math.round((Number(total_earnings) - Number(total_deductions)) * (Number(emp_present_days) / Number(no_of_days)));
+						emp_present_days = emp_present_days ? emp_present_days : 0;
 
+
+						salary_payable = Math.round(((Number(total_earnings) + Number(empBasicPay) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
+
+
+						console.log('salary_payable', salary_payable, Number(empBasicPay), total_earnings, total_deductions, emp_present_days, no_of_days);
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
@@ -392,7 +406,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_allowances: '',
 							empShacolumns: this.empShacolumns,
 							empShdcolumns: this.empShdcolumns,
-							emp_total_earnings: total_earnings,
+							emp_total_earnings: Number(empBasicPay)+total_earnings,
 							emp_total_deductions: total_deductions,
 							emp_deductions: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_deduction_detail : [],
 							emp_present_days: emp_present_days,
