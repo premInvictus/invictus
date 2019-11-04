@@ -554,6 +554,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 							buy_link: this.bookDetails.saleInfo.buyLink ? this.bookDetails.saleInfo.buyLink : ''
 						});
 					}
+				} else {
+					this.notif.stopLoading();
 				}
 			};
 		}
