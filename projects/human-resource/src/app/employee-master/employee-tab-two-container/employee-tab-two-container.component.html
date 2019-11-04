@@ -35,7 +35,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Occupation</mat-label>
                 <input type="text" matInput placeholder="Occupation" [readonly]="viewOnly" formControlName="occupation"
-                  required [errorStateMatcher]="confirmValidParentMatcher">
+                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
                 </mat-error>
@@ -43,7 +43,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Education</mat-label>
                 <input type="text" matInput placeholder="Education" [readonly]="viewOnly" formControlName="education"
-                  required [errorStateMatcher]="confirmValidParentMatcher">
+                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
                 </mat-error>
@@ -57,7 +57,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Email</mat-label>
                 <input pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" type="email" matInput
-                  placeholder="Email" [readonly]="viewOnly" formControlName="email" required
+                  placeholder="Email" [readonly]="viewOnly" formControlName="email" 
                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
@@ -68,14 +68,14 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Organisation</mat-label>
                 <input class="text-capitalize" matInput placeholder="Organisation" [readonly]="viewOnly"
-                  formControlName="organisation" required [errorStateMatcher]="confirmValidParentMatcher" />
+                  formControlName="organisation"  [errorStateMatcher]="confirmValidParentMatcher" />
                 <mat-error>
                   This field is required
                 </mat-error>
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Designation</mat-label>
-                <input type="text" matInput placeholder="Designation" required [readonly]="viewOnly"
+                <input type="text" matInput placeholder="Designation"  [readonly]="viewOnly"
                   formControlName="designation" [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
