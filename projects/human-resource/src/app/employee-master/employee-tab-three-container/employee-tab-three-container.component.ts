@@ -5,6 +5,7 @@ import { saveAs } from 'file-saver';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { FeeService } from 'projects/fee/src/app/_services';
 import { DatePipe } from '@angular/common';
+
 @Component({
 	selector: 'app-employee-tab-three-container',
 	templateUrl: './employee-tab-three-container.component.html',
@@ -300,13 +301,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.tempData = [];
 		}
+		console.log('tempData',this.tempData);
 		for (let item of this.tempData) {
-			if (item.sc_type.type_id === '1' || item.sc_type.type_id === 1) {
+			if (item.sc_type.type_id === '1' || Number(item.sc_type.type_id) === 1) {
 				this.scaleData.push(item);
 			}
 		}
 		for (let item of this.tempData) {
-			if (item.sc_type.type_id === '2' || item.sc_type.type_id === 2) {
+			if (item.sc_type.type_id === '2' || Number(item.sc_type.type_id) === 2) {
 				this.scaleData.push(item);
 			}
 		}

@@ -243,7 +243,8 @@
                                             <ng-container
                                                 *ngIf="item.sc_type.type_id === 1 || item.sc_type.type_id === '1'">
                                                 <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
-                                                    <ng-container *ngIf="item.sc_calculation_type === 'text'">
+                                                    <ng-container
+                                                        *ngIf="(item.sc_calculation_type ) === 'text' || item.sc_calculation_type === 'Text'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name}}</mat-label>
                                                             <input type="text" matInput [formControlName]="'sc_value'+i"
@@ -274,7 +275,8 @@
                                             <ng-container
                                                 *ngIf="item.sc_type.type_id === '2' || item.sc_type.type_id === 2">
                                                 <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
-                                                    <ng-container *ngIf="item.sc_calculation_type === 'text'">
+                                                    <ng-container
+                                                        *ngIf="(item.sc_calculation_type ) === 'text'  || item.sc_calculation_type === 'Text'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name  + ' Deduction' }}</mat-label>
                                                             <input type="text" matInput [formControlName]="'sc_value'+i"
