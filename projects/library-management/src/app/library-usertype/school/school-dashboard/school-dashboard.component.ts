@@ -78,7 +78,8 @@ export class SchoolDashboardComponent implements OnInit {
         this.issuedToStaff = 0;
         this.reissued = 0;
 
-        totalBookIssued = Number(this.dashboardIssueBookData.teachers) + Number(this.dashboardIssueBookData.students) + Number(this.dashboardIssueBookData.staff) + Number(this.dashboardIssueBookData.reissue);
+        totalBookIssued = Number(this.dashboardIssueBookData.teachers) + Number(this.dashboardIssueBookData.students) + Number(this.dashboardIssueBookData.staff);
+
         this.issuedToTeacher = Number(this.dashboardIssueBookData.teachers);
         this.issuedToStudent = Number(this.dashboardIssueBookData.students);
         this.issuedToStaff = Number(this.dashboardIssueBookData.staff);
