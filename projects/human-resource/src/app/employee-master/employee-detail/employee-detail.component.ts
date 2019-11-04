@@ -11,14 +11,14 @@ import { EmployeeCommonComponent } from '../employee-common/employee-common.comp
 })
 export class EmployeeDetailComponent implements OnInit {
 	@ViewChild(EmployeeCommonComponent) employeeCommonDetails: EmployeeCommonComponent;
-	
+
 	tabSelectedIndex = 0;
 	rendorForm = false;
 	formsTab: any[] = [];
 	settingsArray: any[] = [];
 	reRenderFormSubscription: any;
 	reRenderTabSubscription: any;
-	employeeDataSubscripton:any;
+	employeeDataSubscripton: any;
 	employeeRecord: any = {};
 	constructor(
 		private route: ActivatedRoute,
@@ -27,15 +27,15 @@ export class EmployeeDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		
+
 		this.reRenderFormSubscription = this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data && data.reRenderForm) {
 				this.tabSelectedIndex = 0;
 				this.getEmployeeNavigationRecords();
 			}
 			if (data && data.addMode) {
-				this.tabSelectedIndex = 0;	
-				this.employeeRecord = {};	
+				this.tabSelectedIndex = 0;
+				this.employeeRecord = {};
 			}
 
 		});
@@ -44,33 +44,36 @@ export class EmployeeDetailComponent implements OnInit {
 			if (data && data.tabMove && data.renderForLast) {
 				this.tabSelectedIndex = 0;
 				this.getEmployeeNavigationRecords();
+			} else if (data && data.tabMove && data.renderForAdd) {
+				this.tabSelectedIndex += 1;
+				this.getEmployeeNavigationRecords();
 			} else if (data && data.tabMove) {
 				this.tabSelectedIndex += 1;
-				// this.getEmployeeNavigationRecords();
 			}
 		});
 
-		this.employeeDataSubscripton = this.commonAPIService.employeeData.subscribe((data: any)=> {
+		this.employeeDataSubscripton = this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				this.getEmployeeDetail(data.last_record);
 			}
 		});
 
 		this.getEmployeeNavigationRecords();
-		
+
 	}
 
 	getEmployeeNavigationRecords() {
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			console.log('result', result);			
+			console.log('result', result);
 			this.getEmployeeDetail(result.last_record);
 		});
 	}
 
 	getEmployeeDetail(emp_id) {
-		this.commonAPIService.getEmployeeDetail({emp_id:emp_id}).subscribe((result: any) => {
-			this.employeeRecord = result;
-			
+		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result: any) => {
+			var finResult = result ? result : {}
+			finResult['last_record'] = emp_id ? emp_id : 0;
+			this.employeeRecord = finResult;
 			this.rendorForm = true;
 			console.log('employeeCommonDetails', this.employeeCommonDetails);
 		});

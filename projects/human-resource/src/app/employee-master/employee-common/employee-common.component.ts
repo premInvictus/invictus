@@ -129,6 +129,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	ngOnChanges() {
 		this.buildForm();
+		
 		this.employeedetails.emp_status == 'live';
 		this.getDepartment();
 		this.getDesignation();

@@ -9,12 +9,12 @@
       <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Employee</span>
     </button>
   </div>
-  <div class="functional-button-three">
+  <div class="functional-button-three" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="editOnly && !(employeedetails.emp_status=='left')" (click)="editForm()"><i
         class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
         Employee</span></button>
   </div>
-  <div class="functional-button-four">
+  <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')" (click)="openDeleteDialog()">
       <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
     </button>

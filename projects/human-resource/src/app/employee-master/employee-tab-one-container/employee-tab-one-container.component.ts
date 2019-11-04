@@ -467,7 +467,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
-					this.commonAPIService.renderTab.next({ tabMove: true });
+					this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
 				}
