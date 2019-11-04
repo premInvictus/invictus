@@ -201,7 +201,7 @@ export class SalaryComputationComponent implements OnInit {
 			let recordArray = [];
 			this.employeeData = result;
 			this.SALARY_COMPUTE_ELEMENT = [];
-			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
+			this.displayedSalaryComputeColumns = ['emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
 			this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 			if (result && result.length > 0) {
 				for (let i = 0; i < this.shacolumns.length; i++) {

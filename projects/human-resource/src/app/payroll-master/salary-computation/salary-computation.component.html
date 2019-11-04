@@ -88,7 +88,7 @@
           </div>
           <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog" id="salary_compute_log">
             <ng-container matColumnDef="header-row-first-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="5"> </th>
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> </th>
             </ng-container>
 
             <ng-container matColumnDef="header-row-salary-heads-group">
@@ -114,33 +114,32 @@
               'header-row-modes-group',
               'header-row-four-group'
             ]"></tr>
-            <ng-container matColumnDef="srno">
+            <!-- <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"  [ngStyle]="{'background-color':element?.colorCode}"> {{element.srno}} </td>
-            </ng-container>
+            </ng-container> -->
             <ng-container matColumnDef="emp_id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Emp. ID</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <a class="font-skyblue cursor-pointer" (click)="openBookModal(element.emp_id)">{{element?.emp_id}}
-                </a>
+                {{element?.emp_id}}
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%">Emp Name</th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Emp Name</th>
+              <td mat-cell *matCellDef="let element" class="text-left text-nowrap" [ngStyle]="{'background-color':element?.colorCode}">
                 <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_designation">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Designation</th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Designation</th>
+              <td mat-cell *matCellDef="let element" class="text-left text-nowrap" [ngStyle]="{'background-color':element?.colorCode}">
                 <span class="text-left text-capitalize">{{element?.emp_designation | titlecase}} </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_pay_scale">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Pay Scale</th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-left text-capitalize">{{element?.emp_pay_scale | titlecase}} </span>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Pay Scale</th>
+              <td mat-cell *matCellDef="let element" class="text-center text-nowrap" [ngStyle]="{'background-color':element?.colorCode}">
+                <span class="text-center text-capitalize">{{element?.emp_pay_scale | titlecase}} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_salary_heads">
@@ -153,9 +152,9 @@
 
             <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
 
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">{{column?.header}}</th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-left text-capitalize">{{element?.empShacolumns[i]['value']}} </span>
+              <th mat-header-cell *matHeaderCellDef width="5%">{{column?.header}}</th>
+              <td mat-cell *matCellDef="let element" class="text-center text-nowrap" [ngStyle]="{'background-color':element?.colorCode}">
+                <span class="text-center text-capitalize">{{element?.empShacolumns[i]['value']}} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_allowances">
@@ -165,14 +164,14 @@
               </td>
             </ng-container> -->
             <ng-container matColumnDef="emp_total_earnings">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Total Earnings </th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}"> <span
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Total Earnings </th>
+              <td mat-cell *matCellDef="let element" class="text-center text-nowrap" [ngStyle]="{'background-color':element?.colorCode}"> <span
                   *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings)}} </span> </td>
             </ng-container>
             <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">{{column?.header}}</th>
-              <td mat-cell *matCellDef="let element" class="text-left" [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-left text-capitalize">{{element?.empShdcolumns[i]['value']}} </span>
+              <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.header}}</th>
+              <td mat-cell *matCellDef="let element" class="text-center" [ngStyle]="{'background-color':element?.colorCode}">
+                <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value']}} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_deductions">
@@ -182,14 +181,14 @@
               </td>
             </ng-container> -->
             <ng-container matColumnDef="emp_present_days">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Present Days</th>
+              <th mat-header-cell *matHeaderCellDef width="10%"> Present Days</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 {{element?.emp_present_days}}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="emp_advance">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Advance/Arrear's
+              <th mat-header-cell *matHeaderCellDef width="10%"> Advance/Arrear's
               </th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <!-- {{element?.emp_advance}} -->
@@ -203,13 +202,13 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_salary_payable">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Salary Payable</th>
+              <th mat-header-cell *matHeaderCellDef width="10%" class="text-nowrap"> Salary Payable</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 {{element?.emp_salary_payable}}
               </td>
             </ng-container>
             <ng-container matColumnDef="bank_transfer">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Bank Transfer</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Bank Transfer</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <!-- {{element?.emp_pay_mode}} -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
@@ -222,7 +221,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="cheque_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Cheque</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cheque</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <!-- {{element?.emp_pay_mode}} -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
@@ -235,7 +234,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="cash_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Cash</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cash</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
@@ -247,13 +246,13 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_total">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Total</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
+              <th mat-header-cell *matHeaderCellDef width="10%"> Total</th>
+              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}" class="text-nowrap">
                 {{element?.emp_total}}
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Status</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}} </span>
               </td>
