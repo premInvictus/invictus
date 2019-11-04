@@ -353,6 +353,8 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Documents Submitted Successfully', 'success');
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+				this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });				
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
 			}
