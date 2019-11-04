@@ -140,6 +140,7 @@ export class ReservoirEditModalComponent implements OnInit {
     });
   }
   getBookData(id) {
+    this.bookImage = '';
     const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': id, 'type': 'text' }], search_from: 'master' };
     this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
       if (res && res.status === 'ok') {
