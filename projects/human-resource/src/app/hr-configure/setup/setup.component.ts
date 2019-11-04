@@ -60,6 +60,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "3", name: 'Category One' },
 		{ id: "4", name: 'Category Two' },
 		{ id: "5", name: 'Category Three' },
+		{ id: "6", name: 'Payment Mode' },
 	];
 	constructor(
 		private fbuild: FormBuilder,
@@ -251,7 +252,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				id: value.config_id,
-				name: value.sc_name,
+				name: value.name,
 				status: value.status
 			});
 		} else if (Number(this.configValue) === 2) {

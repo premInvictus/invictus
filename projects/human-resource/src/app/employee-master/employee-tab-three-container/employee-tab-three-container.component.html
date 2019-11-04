@@ -122,7 +122,7 @@
                                     </mat-form-field> -->
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category I</mat-label>
-                                        <mat-select formControlName="category_2" placeholder="Category I" required
+                                        <mat-select formControlName="category_2" required placeholder="Category I"
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of categoryTwoArray" [value]="item.config_id">
@@ -247,7 +247,7 @@
                                                         <input type="text" matInput [formControlName]="'sc_value'+i"
                                                             (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
                                                             required [errorStateMatcher]="confirmValidParentMatcher"
-                                                            [readOnly]="viewOnly">
+                                                            [readonly]="viewOnly" [value]="getValue(item.sc_id)">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>
@@ -259,7 +259,7 @@
                                                         <input type="text" matInput placeholder="{{item.sc_name}}"
                                                             [formControlName]="'sc_value'+i"
                                                             [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
-                                                            [readOnly]="viewOnly">
+                                                            [readonly]="viewOnly">
                                                         <mat-error>
                                                             This field is required
                                                         </mat-error>

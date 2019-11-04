@@ -96,7 +96,7 @@ export class EmployeeCommonComponent implements OnInit {
 		// 		emp_wing_id: result.emp_wing_detail && result.emp_wing_detail.wing_id ? result.emp_wing_detail.wing_id : '',			
 		// 	});
 		// }
-
+ 
 		this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
@@ -399,17 +399,17 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	getCategoryOne() {
-		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+		this.categoryOneArray = [];
+		this.commonAPIService.getMaster({ type_id: '3' }).subscribe((res: any) => {
 			if (res) {
-				this.categoryOneArray = [];
 				this.categoryOneArray = res;
 			}
 		});
 	}
-	getCategoryOneName(cat_id) {
-		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+	getCategoryOneName(config_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.config_id) === Number(config_id));
 		if (findex !== -1) {
-			return this.categoryOneArray[findex].cat_name;
+			return this.categoryOneArray[findex].name;
 		}
 	}
 }
