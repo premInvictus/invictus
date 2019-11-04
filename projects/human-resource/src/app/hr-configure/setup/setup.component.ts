@@ -57,9 +57,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	typeArray = [
 		{ id: "1", name: 'Wing Master' },
 		{ id: "2", name: 'Designation Master' },
-		{ id: "3", name: 'Category One' },
-		{ id: "4", name: 'Category Two' },
-		{ id: "5", name: 'Category Three' },
+		{ id: "4", name: 'Category One' },
+		{ id: "5", name: 'Category Two' },
 		{ id: "6", name: 'Payment Mode' },
 	];
 	constructor(
