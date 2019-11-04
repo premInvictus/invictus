@@ -39,6 +39,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	componentData: any[] = [];
 	formGroupArray2: any[] = [];
 	salaryFinalArray: any[] = [];
+	salaryHeadsArray: any[] = [];
 	netSalary = 0;
 	totalEarning = 0;
 	deduction = 0;
@@ -324,7 +325,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		return datePipe.transform(value, format);
 	}
 	getSalartDetails() {
-		this.salaryDetails.patchValue({
+		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : ''; this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
 			aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
 			pf_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pf_acc_no : '',
@@ -336,8 +337,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
 			confirm_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'yyyy-MM-dd') : '',
 			//category_1: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
-			category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id : '',
-			category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id : '',
+			category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? Number(this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id) : '',
+			category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? Number(this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id) : '',
 			increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
 			contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
 			bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
@@ -657,7 +658,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			return this.designationArray[findIndex].name;
 		}
 	}
-
+	getValue(event) {
+		if (this.salaryHeadsArray.length > 0) {
+			const findIndex = this.salaryHeadsArray.findIndex(f => Number(f.sc_id) === Number(event));
+			if (findIndex !== -1) {
+				return this.salaryHeadsArray[findIndex].sc_value;
+			}
+		} else {
+			return 0;
+		}
+	}
 
 
 }
