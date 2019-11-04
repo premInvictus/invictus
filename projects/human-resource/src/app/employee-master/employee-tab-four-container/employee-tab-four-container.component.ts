@@ -385,7 +385,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 			};
-			this.employeedetails.emp_category = {
+			this.employeedetails.emp_category_detail = {
 				cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
 				cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 			};
@@ -421,7 +421,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 			};
-			this.employeedetails.emp_category = {
+			this.employeedetails.emp_category_detail = {
 				cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
 				cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 			};
@@ -483,17 +483,17 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getCategoryOne() {
-		this.categoryOneArray = [];
-		this.commonAPIService.getMaster({ type_id: '3' }).subscribe((res: any) => {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
+				this.categoryOneArray = [];
 				this.categoryOneArray = res;
 			}
 		});
 	}
-	getCategoryOneName(config_id) {
-		const findex = this.categoryOneArray.findIndex(e => Number(e.config_id) === Number(config_id));
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
-			return this.categoryOneArray[findex].name;
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
 	getWingName(wing_id) {

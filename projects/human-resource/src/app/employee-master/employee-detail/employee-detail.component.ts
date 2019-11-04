@@ -46,12 +46,11 @@ export class EmployeeDetailComponent implements OnInit {
 				this.getEmployeeNavigationRecords();
 			} else if (data && data.tabMove) {
 				this.tabSelectedIndex += 1;
-				this.getEmployeeNavigationRecords();
+				// this.getEmployeeNavigationRecords();
 			}
 		});
 
 		this.employeeDataSubscripton = this.commonAPIService.employeeData.subscribe((data: any)=> {
-			console.log('fdg', data);
 			if (data && data.last_record) {
 				this.getEmployeeDetail(data.last_record);
 			}
