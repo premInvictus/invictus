@@ -97,7 +97,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_designation: item.emp_designation_detail.des_name,
-							emp_balance_leaves: item.emp_month_attendance_data.leave_opening_balance,
+							emp_balance_leaves: item.emp_month_attendance_data && item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : '' ,
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							action: item
 						};
