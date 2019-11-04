@@ -112,14 +112,14 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_present">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Present </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Working Days </th>
               <td mat-cell *matCellDef="let element" class="text-left">
                 <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_present) ? 'Enter Present Count.' : ''"
                       formControlName="emp_present" autocomplete="off" (change)="getLWP(element,element.srno - 1)" 
-                      [readonly] = "!(formGroupArray[element.srno - 1]?.formGroup?.value.editFlag) ? true : false"/>
+                      [readonly] = "!(element.viewFlag) ? true : false"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -133,7 +133,7 @@
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_leave_availed) ? 'Enter Leaves Availed' : ''"
                       formControlName="emp_leave_availed" autocomplete="off" (change)="getLWP(element,element.srno - 1)"
-                      [readonly] = "!(formGroupArray[element.srno - 1]?.formGroup?.value.editFlag) ? true : false"
+                      [readonly] = "!(element.viewFlag) ? true : false"
                       />
                   </mat-form-field>
                 </form>
@@ -147,7 +147,7 @@
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_leave_granted) ? 'Enter Leave Granted.' : ''"
                       formControlName="emp_leave_granted" autocomplete="off" (change)="getLWP(element, element.srno - 1)"
-                      [readonly] = "!(formGroupArray[element.srno - 1]?.formGroup?.value.editFlag) ? true : false"
+                      [readonly] = "!(element.viewFlag) ? true : false"
                       />
                   </mat-form-field>
                 </form>
@@ -180,7 +180,7 @@
                     <input matInput
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_remarks) ? 'Type Here.' : ''"
                       formControlName="emp_remarks" autocomplete="off" 
-                      [readonly] = "!(formGroupArray[element.srno - 1]?.formGroup?.value.editFlag) ? true : false"/>
+                      [readonly] = "!(element.viewFlag) ? true : false"/>
                   </mat-form-field>
                 </form>
               </td>
@@ -195,12 +195,12 @@
             <ng-container matColumnDef="action">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Action </th>
               <td mat-cell *matCellDef="let element">
-                <a href="javascript:void(0)" *ngIf="!editFlag"><i class="fas fa-edit font-color-grey margin-right-15" style="font-size:16px;"
-                    (click)="editAttendance()"></i></a>
-                <a href="javascript:void(0)" *ngIf="editFlag"><i class="fas fa-file font-color-grey margin-right-15" style="font-size:16px;"
+                <a href="javascript:void(0)" *ngIf="!(element?.viewFlag)"><i class="fas fa-edit font-color-grey margin-right-15" style="font-size:16px;"
+                    (click)="editAttendance(element)"></i></a>
+                <a href="javascript:void(0)" *ngIf="element?.updateFlag"><i class="fas fa-file font-color-grey margin-right-15" style="font-size:16px;"
                     (click)="updateAttendance(element)"></i></a>
-                <a href="javascript:void(0)"  *ngIf="editFlag"><i class="fas fa-times-circle font-color-grey margin-right-15" style="font-size:16px;color:red"
-                  (click)="cancelUpdate()"></i></a>
+                <a href="javascript:void(0)"  *ngIf="element?.updateFlag"><i class="fas fa-times-circle font-color-grey margin-right-15" style="font-size:16px;color:red"
+                  (click)="cancelUpdate(element)"></i></a>
               </td>
             </ng-container>
 
