@@ -110,6 +110,7 @@ export class SalaryComputationComponent implements OnInit {
 	length: any;
 	settingData: any;
 	currentUser:any;
+	showPdf = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -256,7 +257,7 @@ export class SalaryComputationComponent implements OnInit {
 										Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 									) {
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+											value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 										}
 
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
@@ -289,7 +290,7 @@ export class SalaryComputationComponent implements OnInit {
 										Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 									) {
 										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+											value = Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
 										}
 
 										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
@@ -315,7 +316,7 @@ export class SalaryComputationComponent implements OnInit {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
 							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								emp_present_days = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
+								emp_present_days = emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance  : 0;
 
 							} else {
 								emp_present_days = 0;
@@ -329,7 +330,7 @@ export class SalaryComputationComponent implements OnInit {
 
 					var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 					if (eIndex > -1) {
-						if (Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
+						if (this.salaryComputeEmployeeData[eIndex] && Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
 							&& Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)
 							&& Number(this.salaryComputeEmployeeData[eIndex]['session_id']) === Number(this.session_id.ses_id)) {
 							editableStatus = true;
@@ -631,7 +632,7 @@ export class SalaryComputationComponent implements OnInit {
 										Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 									) {
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+											value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 										}
 
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
@@ -664,7 +665,7 @@ export class SalaryComputationComponent implements OnInit {
 										Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 									) {
 										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+											value = Number(item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
 										}
 
 										if (item.emp_salary_detail.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
@@ -690,7 +691,7 @@ export class SalaryComputationComponent implements OnInit {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
 							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								emp_present_days = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
+								emp_present_days = emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
 
 							} else {
 								emp_present_days = 0;
@@ -704,7 +705,7 @@ export class SalaryComputationComponent implements OnInit {
 
 					var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 					if (eIndex > -1) {
-						if (Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
+						if (this.salaryComputeEmployeeData[eIndex] && Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
 							&& Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)
 							&& Number(this.salaryComputeEmployeeData[eIndex]['session_id']) === Number(this.session_id.ses_id)) {
 							editableStatus = true;
@@ -819,7 +820,7 @@ export class SalaryComputationComponent implements OnInit {
 		});
 		columns.push({
 			key: 'emp_name',
-			width: this.checkWidth('emp_name', 'Book Name')
+			width: this.checkWidth('emp_name', 'Emp Name')
 		});
 		columns.push({
 			key: 'emp_designation',
@@ -868,15 +869,19 @@ export class SalaryComputationComponent implements OnInit {
 		worksheet.mergeCells('E3:F3');
 		worksheet.getCell('E3').value = '';
 		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
-		worksheet.getCell('A5').value = 'Book No.';
-		worksheet.getCell('B5').value = 'Book Name';
-		worksheet.getCell('C5').value = 'Author';
-		worksheet.getCell('D5').value = 'Publisher';
-		worksheet.getCell('E5').value = 'Issued On';
-		worksheet.getCell('F5').value = 'Due Date';
-		worksheet.getCell('G5').value = 'Returned On';
-		worksheet.getCell('H5').value = 'Fine';
+		worksheet.getCell('A5').value = 'Emp. ID';
+		worksheet.getCell('B5').value = 'Emp Name';
+		worksheet.getCell('C5').value = 'Designation';
+		worksheet.getCell('D5').value = 'Pay Scale';
+		// worksheet.getCell('E5').value = 'Issued On';
+		// worksheet.getCell('F5').value = 'Due Date';
+		// worksheet.getCell('G5').value = 'Returned On';
+		// worksheet.getCell('H5').value = 'Fine';
 		
+		// for(let i=0; i<this.shdcolumns.length;i++) {
+		// 	columnName
+		// 	worksheet.getCell()
+		// }
 		
 
 		worksheet.columns = columns;
@@ -893,15 +898,11 @@ export class SalaryComputationComponent implements OnInit {
 		for (const item of this.employeeData) {
 			const prev = this.length + 1;
 			const obj: any = {};
-			let aval = '';
-			for (const avalue of item.reserv_user_logs.authors) {
-				aval += avalue + ',';
-			}
 
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.reserv_id;
+			worksheet.getCell('A' + this.length).value = item.emp_id;
 			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
-			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
+			// worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
 			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;
 			worksheet.getCell('E' + this.length).value = item.reserv_user_logs.issued_on;
 			worksheet.getCell('F' + this.length).value = item.reserv_user_logs.due_date;
@@ -1019,6 +1020,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	downloadPdf() {
+		this.showPdf = true;
 		const doc = new jsPDF('landscape');
 
 		doc.autoTable({
@@ -1124,6 +1126,7 @@ export class SalaryComputationComponent implements OnInit {
 		// doc.autoTable({ html: '#book_log' });
 
 		doc.save('EmployeeSalaryCompute_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
+		this.showPdf = false;
 	}
 
 }

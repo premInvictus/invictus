@@ -15,9 +15,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
 	formGroupArray: any[] = [];
-	editFlag = false;
+	//editFlag = false;
 	employeeData: any[] = [];
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
+	COPY_EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	session_id;
 	categoryOneArray: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
@@ -97,9 +98,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_designation: item.emp_designation_detail.des_name,
-							emp_balance_leaves: item.emp_month_attendance_data && item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : '' ,
+							emp_balance_leaves: item.emp_month_attendance_data && item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0 ,
 							emp_status: item.emp_status ? item.emp_status : 'live',
-							action: item
+							viewFlag : true,
+							action: item,
+							
 						};
 						if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data && item.emp_month_attendance_data.month_data.length > 0) {							
 							this.formGroupArray[j] = {
@@ -112,7 +115,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									emp_total_attendance: '',
 									emp_balance_leaves: '0',
 									emp_lwp: '',
-									editFlag: true
+									
 								})
 							}
 							for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
@@ -122,6 +125,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
 										element.emp_total_attendance = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : '';
+										element.viewFlag = emp_attendance_detail.attendance_detail.emp_present ? false : true
 										this.formGroupArray[j] = {
 											formGroup: this.fbuild.group({
 												emp_id: item.emp_id,
@@ -133,7 +137,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 												emp_balance_leaves: emp_attendance_detail.attendance_detail.emp_balance_leaves ? emp_attendance_detail.attendance_detail.emp_balance_leaves : '',
 												emp_lwp: emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : '',
 
-												editFlag: emp_attendance_detail.attendance_detail.emp_present ? false : true
 											})
 										}
 									}
@@ -151,8 +154,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									emp_leave_availed: '',
 									emp_total_attendance: '',
 									emp_balance_leaves: 0,
-									emp_lwp: '',
-									editFlag: true
+									emp_lwp: ''
 								})
 							}
 						}
@@ -165,7 +167,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 						j++;
 
 					}
-
+					console.log('this.EMPLOYEE_ELEMENT', this.EMPLOYEE_ELEMENT);
+					this.COPY_EMPLOYEE_ELEMENT = JSON.parse(JSON.stringify( this.EMPLOYEE_ELEMENT));
 					this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 					this.employeedataSource.paginator = this.paginator;
 					if (this.sort) {
@@ -201,8 +204,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 					"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
 				}
 			};
-
-
 
 			if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(this.formGroupArray[i].formGroup.value.emp_id)) {
 				if (this.employeeData[i]['emp_month_attendance_data'] && this.employeeData[i]['emp_month_attendance_data']['month_data']) {
@@ -242,8 +243,13 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.getEmployeeDetail();
 	}
 
-	editAttendance(emp_id) {
-		this.editFlag = true;
+	editAttendance(element) {
+		for (var i = 0; i<this.EMPLOYEE_ELEMENT.length;i++) {
+			if (this.EMPLOYEE_ELEMENT[i]['emp_id'] === element.emp_id) {
+				element.viewFlag = true;
+				element.updateFlag = true;
+			}
+		}
 	}
 
 	goToEmployee(emp_id) {
@@ -251,8 +257,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	getLWP(element, index) {
-		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed, 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted, 10)).toString();
-		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10) + parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted, 10)).toString();
+		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();		
+		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
 	}
 
 	getMonthName(ev) {
@@ -266,8 +272,17 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.currentCategoryName = ev.source.selected.viewValue;
 	}
 
-	cancelUpdate(element, index) {
-		this.getEmployeeDetail();
+	cancelUpdate(element) {
+		// this.getEmployeeDetail();
+		
+		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
+			if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
+				this.EMPLOYEE_ELEMENT[i] = this.COPY_EMPLOYEE_ELEMENT[i];
+			}
+		}
+		
+		element.updateFlag = false;
+		element.viewFlag = true;
 	}
 
 	updateAttendance(element) {
@@ -276,7 +291,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
 				inputJson = {
-					"session_id": this.session_id,
 					"month_id": this.searchForm.value.month_id,
 					"month_name": this.currentMonthName,
 					"attendance_detail": {
@@ -289,29 +303,32 @@ export class EmployeeAttendanceComponent implements OnInit {
 						"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
 					}
 				};
-				var flag = false;
-				for (var j = 0; j < this.employeeData[i]['emp_month_attendance_data'].length; j++) {
-					if (parseInt(this.employeeData[i]['emp_month_attendance_data'][j].month_id, 10) === parseInt(this.searchForm.value.month_id, 10)) {
-						this.employeeData[i]['emp_month_attendance_data'][j] = inputJson;
-						flag = true;
-					} else {
-						flag = false;
+				if (this.EMPLOYEE_ELEMENT[i]['action'] && this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data'] && this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data']['month_data']) {
+					for (var j = 0; j < this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data']['month_data'].length; j++) {						
+						if (parseInt(this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data']['month_data'][j].month_id, 10) === parseInt(this.searchForm.value.month_id, 10)) {
+							this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data']['month_data'][j] = inputJson;
+							employeeArrData.push(this.EMPLOYEE_ELEMENT[i]['action']);
+						} 
 					}
+					console.log('this.employeeData', employeeArrData);
 				}
-				if (!flag) {
-					this.employeeData[i]['emp_month_attendance_data'].push(inputJson);
-				}
+				
 			}
 		}
-		//console.log('this.employeeData', this.employeeData);
-		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
-			if (result) {
-				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-			} else {
-				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
-			}
-
-		});
+		if (employeeArrData.length > 0) {
+			this.commonAPIService.updateEmployee(employeeArrData).subscribe((result: any) => {
+				if (result) {
+					this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+					this.getEmployeeDetail();
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
+				}
+	
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
+		}
+		
 	}
 
 	applyFilter(filterValue: String) {

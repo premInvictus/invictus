@@ -78,18 +78,18 @@ export class EmployeeLeaveComponent implements OnInit {
 					element = {
 						srno: pos,
 						month_name: result.emp_month_attendance_data.month_data[i].month_name,
-						leave_opening_balance: emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
-						leave_credited: emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 1.5,
-						leave_availed: emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
-						leave_granted: emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
-						lwp: emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
-						leave_closing_balance: parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5) - parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
+						leave_opening_balance: emp_attendance_detail && emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
+						leave_credited: emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0,
+						leave_availed: emp_attendance_detail && emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
+						leave_granted: emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
+						lwp: emp_attendance_detail && emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
+						leave_closing_balance: parseFloat(emp_attendance_detail && emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail && emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 					};
-					total_leave_credited = total_leave_credited + parseFloat(result.emp_leave_credited ? result.emp_leave_credited : 1.5);
+					total_leave_credited = total_leave_credited + parseFloat(result.emp_leave_credited ? result.emp_leave_credited : 0);
 					total_leave_availed = total_leave_availed + parseFloat(result.emp_leave_availed ? result.emp_leave_availed : 0);
 					total_leave_granted = total_leave_granted + parseFloat(result.emp_leave_granted ? result.emp_leave_granted : 0);
-					total_lwp = total_lwp + parseFloat(emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0);
-					total_leave_closing_balance = total_leave_closing_balance + parseFloat(emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +(emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 1.5) - parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
+					total_lwp = total_lwp + parseFloat(emp_attendance_detail && emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0);
+					total_leave_closing_balance = total_leave_closing_balance + parseFloat(emp_attendance_detail && emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0 ) +( emp_attendance_detail && emp_attendance_detail.leave_credited ? emp_attendance_detail.leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 					this.EMPLOYEE_ELEMENT.push(element);
 					pos++;
 
