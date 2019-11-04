@@ -240,32 +240,68 @@
                                     </mat-form-field>
                                     <ng-container *ngIf="scaleData.length > 0">
                                         <ng-container *ngFor="let item of scaleData; let i=index">
-                                            <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
-                                                <ng-container *ngIf="item.sc_calculation_type === 'text'">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>{{item.sc_name}}</mat-label>
-                                                        <input type="text" matInput [formControlName]="'sc_value'+i"
-                                                            (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
-                                                            required [errorStateMatcher]="confirmValidParentMatcher"
-                                                            [readonly]="viewOnly" [value]="getValue(item.sc_id)">
-                                                        <mat-error>
-                                                            This field is required
-                                                        </mat-error>
-                                                    </mat-form-field>
-                                                </ng-container>
-                                                <ng-container *ngIf="item.sc_calculation_type === '%'">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>{{item.sc_name}}</mat-label>
-                                                        <input type="text" matInput placeholder="{{item.sc_name}}"
-                                                            [formControlName]="'sc_value'+i"
-                                                            [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
-                                                            [readonly]="viewOnly">
-                                                        <mat-error>
-                                                            This field is required
-                                                        </mat-error>
-                                                    </mat-form-field>
-                                                </ng-container>
-                                            </form>
+                                            <ng-container
+                                                *ngIf="item.sc_type.type_id === 1 || item.sc_type.type_id === '1'">
+                                                <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
+                                                    <ng-container *ngIf="item.sc_calculation_type === 'text'">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>{{item.sc_name}}</mat-label>
+                                                            <input type="text" matInput [formControlName]="'sc_value'+i"
+                                                                (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
+                                                                required [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [readonly]="viewOnly" [value]="getValue(item.sc_id)">
+                                                            <mat-error>
+                                                                This field is required
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="item.sc_calculation_type === '%'">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>{{item.sc_name}}</mat-label>
+                                                            <input type="text" matInput placeholder="{{item.sc_name}}"
+                                                                [formControlName]="'sc_value'+i"
+                                                                [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
+                                                                readonly>
+                                                            <mat-error>
+                                                                This field is required
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                </form>
+                                            </ng-container>
+                                            <!-- </ng-container>
+                                        <ng-container *ngFor="let item of scaleData; let i=index"> -->
+                                            <ng-container
+                                                *ngIf="item.sc_type.type_id === '2' || item.sc_type.type_id === 2">
+                                                <form [formGroup]="formGroupArray2[i].formGroup" class="form-css">
+                                                    <ng-container *ngIf="item.sc_calculation_type === 'text'">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>{{item.sc_name  + ' Deduction' }}</mat-label>
+                                                            <input type="text" matInput [formControlName]="'sc_value'+i"
+                                                                (keyup)="getNetSalary()"
+                                                                placeholder="{{item.sc_name + ' Deduction'}}" required
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [readonly]="viewOnly" [value]="getValue(item.sc_id)">
+                                                            <mat-error>
+                                                                This field is required
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="item.sc_calculation_type === '%'">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>{{item.sc_name + ' Deduction'}}</mat-label>
+                                                            <input type="text" matInput
+                                                                placeholder="{{item.sc_name + ' Deduction'}}"
+                                                                [formControlName]="'sc_value'+i"
+                                                                [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
+                                                                readonly>
+                                                            <mat-error>
+                                                                This field is required
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                </form>
+                                            </ng-container>
                                         </ng-container>
                                     </ng-container>
                                 </div>
