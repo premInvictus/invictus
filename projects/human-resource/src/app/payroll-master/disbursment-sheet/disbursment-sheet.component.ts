@@ -75,10 +75,10 @@ export class DisbursmentSheetComponent implements OnInit {
 				this.shacolumns[0] = { columnDef: 'Basic Pay', header: 'Basic Pay', data: { sc_type: { 'type_id': 1 } } };
 				for (var i = 0; i < this.salaryHeadsArr.length; i++) {
 					//console.log("this.salaryHeadsArr[i]['sc_type']", this.salaryHeadsArr[i]['sc_type']);
-					if (this.salaryHeadsArr[i]['sc_type']['type_id'] === 1) {
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 1) {
 						this.shacolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i] });
 					}
-					if (this.salaryHeadsArr[i]['sc_type']['type_id'] === 2) {
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2) {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
 				}
@@ -145,7 +145,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 					for (var i = 0; i < this.shacolumns.length; i++) {
-						if (this.shacolumns[i]['data']['sc_type']['type_id'] === 1) {
+						if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 							var value = 0;
 
 							if (this.shacolumns[i]['header'] === 'Basic Pay') {
@@ -164,7 +164,7 @@ export class DisbursmentSheetComponent implements OnInit {
 										Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 									) {
 										if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+											value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 										}
 
 										if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
@@ -186,7 +186,7 @@ export class DisbursmentSheetComponent implements OnInit {
 						}
 					}
 					for (var i = 0; i < this.shdcolumns.length; i++) {
-						if (this.shdcolumns[i]['data']['sc_type']['type_id'] === 2) {
+						if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 							var value = 0;
 
 
@@ -203,7 +203,7 @@ export class DisbursmentSheetComponent implements OnInit {
 										Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 									) {
 										if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === 'text') {
-											value = Number(empBasicPay) + Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+											value = Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
 										}
 
 										if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
@@ -240,7 +240,8 @@ export class DisbursmentSheetComponent implements OnInit {
 
 					var salary_payable = 0;
 					var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
-					salary_payable = Math.round((Number(total_earnings) - Number(total_deductions)) * (Number(emp_present_days) / Number(no_of_days)));
+					emp_present_days = emp_present_days ? emp_present_days : 0;
+						salary_payable = Math.round(((Number(total_earnings) + Number(empBasicPay) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 
 					var modeTotal = 0;
 					for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
@@ -275,7 +276,6 @@ export class DisbursmentSheetComponent implements OnInit {
 
 					this.SALARY_COMPUTE_ELEMENT.push(element);
 					pos++;
-					console.log('element', element);
 				}
 
 				this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
@@ -437,7 +437,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 								for (var i = 0; i < this.shacolumns.length; i++) {
-									if (this.shacolumns[i]['data']['sc_type']['type_id'] === 1) {
+									if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 										var value = 0;
 
 										if (this.shacolumns[i]['header'] === 'Basic Pay') {
@@ -456,7 +456,7 @@ export class DisbursmentSheetComponent implements OnInit {
 													Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 												) {
 													if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
-														value = Number(empBasicPay) + Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+														value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 													}
 
 													if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
@@ -478,7 +478,7 @@ export class DisbursmentSheetComponent implements OnInit {
 									}
 								}
 								for (var i = 0; i < this.shdcolumns.length; i++) {
-									if (this.shdcolumns[i]['data']['sc_type']['type_id'] === 2) {
+									if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 										var value = 0;
 
 
@@ -487,19 +487,19 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 
-										for (var j = 0; j < item.emp_salary_structure.emp_deduction_detail.length; j++) {
-											if (Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_id'])) {
+										for (var j = 0; j < item.emp_salary_structure.emp_salary_heads.length; j++) {
+											if (Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
 
-												if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] &&
-													item.emp_salary_structure.emp_deduction_detail[j]['sc_type'] &&
-													Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
+												if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
+													item.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
+													Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
 												) {
-													if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === 'text') {
-														value = Number(empBasicPay) + Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+													if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+														value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 													}
 
-													if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-														value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
+													if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
+														value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
 
 													}
 													this.empShdcolumns[i]['value'] = value;
@@ -532,7 +532,8 @@ export class DisbursmentSheetComponent implements OnInit {
 
 								var salary_payable = 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
-								salary_payable = Math.round((Number(total_earnings) - Number(total_deductions)) * (Number(emp_present_days) / Number(no_of_days)));
+								emp_present_days = emp_present_days ? emp_present_days : 0;
+								salary_payable = Math.round(((Number(total_earnings) + Number(empBasicPay) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 
 								var modeTotal = 0;
 								for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
