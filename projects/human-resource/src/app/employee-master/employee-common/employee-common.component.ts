@@ -96,7 +96,7 @@ export class EmployeeCommonComponent implements OnInit {
 		// 		emp_wing_id: result.emp_wing_detail && result.emp_wing_detail.wing_id ? result.emp_wing_detail.wing_id : '',			
 		// 	});
 		// }
- 
+
 		this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
@@ -182,7 +182,7 @@ export class EmployeeCommonComponent implements OnInit {
 					emp_honorific_id: result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '',
 					emp_designation_id: result.emp_designation_detail ? result.emp_designation_detail.des_id : '',
 					emp_department_id: result.emp_department_detail ? result.emp_department_detail.dpt_id : '',
-					emp_category_id: result.emp_category ? Number(result.emp_category.cat_id) : '',
+					emp_category_id: result.emp_category_detail ? Number(result.emp_category_detail.cat_id) : '',
 					emp_wing_id: result.emp_wing_detail ? result.emp_wing_detail.wing_id : '',
 					emp_status: result.emp_status
 				});
@@ -399,17 +399,17 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	getCategoryOne() {
-		this.categoryOneArray = [];
-		this.commonAPIService.getMaster({ type_id: '3' }).subscribe((res: any) => {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
+				this.categoryOneArray = [];
 				this.categoryOneArray = res;
 			}
 		});
 	}
-	getCategoryOneName(config_id) {
-		const findex = this.categoryOneArray.findIndex(e => Number(e.config_id) === Number(config_id));
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
-			return this.categoryOneArray[findex].name;
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
 }

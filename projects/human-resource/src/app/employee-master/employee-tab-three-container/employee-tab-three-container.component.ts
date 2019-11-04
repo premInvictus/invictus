@@ -35,6 +35,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	categoryThreeArray: any[] = [];
 	scaleArray: any[] = [];
 	scaleData: any[] = [];
+	tempData: any[] = [];
 	bankArray: any[] = [];
 	componentData: any[] = [];
 	formGroupArray2: any[] = [];
@@ -219,17 +220,17 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getCategoryOne() {
-		this.categoryOneArray = [];
-		this.commonAPIService.getMaster({ type_id: '3' }).subscribe((res: any) => {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
+				this.categoryOneArray = [];
 				this.categoryOneArray = res;
 			}
 		});
 	}
-	getCategoryOneName(config_id) {
-		const findex = this.categoryOneArray.findIndex(e => Number(e.config_id) === Number(config_id));
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
-			return this.categoryOneArray[findex].name;
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
 	getCategoryTwo() {
@@ -261,7 +262,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getPayScale() {
-		this.commonAPIService.getSalaryStructure({}).subscribe((res: any) => {
+		this.commonAPIService.getSalaryStr().subscribe((res: any) => {
 			if (res) {
 				this.scaleArray = [];
 				this.scaleArray = res;
@@ -291,11 +292,23 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 
 	onChangeData() {
+		this.tempData = [];
+		this.scaleData = [];
 		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(this.salaryDetails.value.sal_str));
 		if (findex !== -1) {
-			this.scaleData = this.scaleArray[findex].ss_component_data;
+			this.tempData = this.scaleArray[findex].ss_component_data;
 		} else {
-			this.scaleData = [];
+			this.tempData = [];
+		}
+		for (let item of this.tempData) {
+			if (item.sc_type.type_id === '1' || item.sc_type.type_id === 1) {
+				this.scaleData.push(item);
+			}
+		}
+		for (let item of this.tempData) {
+			if (item.sc_type.type_id === '2' || item.sc_type.type_id === 2) {
+				this.scaleData.push(item);
+			}
 		}
 		let i = 0;
 		for (let item of this.scaleData) {
@@ -312,10 +325,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 			i++;
 		}
+
 	}
 	getDynamicValue(weigtage, value) {
-		if (value > 0) {
-			return (value * weigtage) / 100;
+		if (Number(value) > 0) {
+			return Number((Number(value) * Number(weigtage)) / 100);
 		} else {
 			return 0;
 		}
@@ -453,7 +467,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 				};
-				this.employeedetails.emp_category = {
+				this.employeedetails.emp_category_detail = {
 					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
@@ -557,7 +571,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 					wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 				};
-				this.employeedetails.emp_category = {
+				this.employeedetails.emp_category_detail = {
 					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};

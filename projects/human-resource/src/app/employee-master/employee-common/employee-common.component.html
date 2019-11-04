@@ -111,8 +111,8 @@
                   <mat-label>Employee Type</mat-label>
                   <mat-select formControlName="emp_category_id" required placeholder="Employee Type" [disabled]="viewOnly">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.config_id">
-                      {{item.name}}
+                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
+                      {{item.cat_name}}
                     </mat-option>
                   </mat-select>
                   <mat-error>
