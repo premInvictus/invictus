@@ -49,6 +49,21 @@ export class EmployeeLeaveComponent implements OnInit {
 		});
 	}
 
+	getFilterEmployee(event) {
+		var tempArr = [];
+		for(var i=0; i<this.allEmployeeData.length;i++) {
+			if(this.allEmployeeData[i]['emp_name'].includes(event.target.value)) {
+				tempArr.push(this.allEmployeeData[i]);
+			}
+		}
+		if (tempArr.length > 0) {
+			this.allEmployeeData = tempArr;
+		} else {
+			this.getAllEmployee();
+		}
+		
+	}
+
 	getEmployeeDetail() {
 		let inputJson = {}
 		if (this.searchForm.value && this.searchForm.value.emp_id && this.searchForm.value.emp_name) {
