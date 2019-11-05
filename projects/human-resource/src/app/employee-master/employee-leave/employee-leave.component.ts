@@ -76,6 +76,7 @@ export class EmployeeLeaveComponent implements OnInit {
 			let element: any = {};
 			let recordArray = [];
 			this.employeeData = result;
+			element = {};
 			this.EMPLOYEE_ELEMENT = [];
 			this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 			console.log('result', result);
@@ -87,13 +88,14 @@ export class EmployeeLeaveComponent implements OnInit {
 				var total_leave_granted = 0;
 				var total_leave_closing_balance = 0;
 				var total_lwp = 0;
+				
+				this.leave_opening_balance = result.emp_month_attendance_data ? result.emp_month_attendance_data.leave_opening_balance : 0;
 				for (var i = 0; i < result.emp_month_attendance_data.month_data.length; i++) {
 					var emp_month = result.emp_month_attendance_data.month_data[i].month_id;
 					var emp_attendance_detail = result.emp_month_attendance_data.month_data[i].attendance_detail;
 					element = {
 						srno: pos,
-						month_name: result.emp_month_attendance_data.month_data[i].month_name,
-						leave_opening_balance: emp_attendance_detail && emp_attendance_detail.leave_opening_balance ? emp_attendance_detail.leave_opening_balance : 0,
+						month_name: result.emp_month_attendance_data.month_data[i].month_name,						
 						leave_credited: emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0,
 						leave_availed: emp_attendance_detail && emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
 						leave_granted: emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
@@ -112,6 +114,8 @@ export class EmployeeLeaveComponent implements OnInit {
 
 				}
 
+				var total_closing_balance = Number(this.leave_opening_balance) + Number(total_leave_closing_balance);
+
 				var lastRow = {
 					srno: 'Grand Total',
 					month_name: '',
@@ -120,7 +124,7 @@ export class EmployeeLeaveComponent implements OnInit {
 					leave_availed: '<b>' + total_leave_availed + '</b>',
 					leave_granted: '<b>' + total_leave_granted + '</b>',
 					lwp: '<b>' + total_lwp + '</b>',
-					leave_closing_balance: '<b>' + total_leave_closing_balance + '</b>'
+					leave_closing_balance: '<b>' + total_closing_balance + '</b>'
 				}
 				this.EMPLOYEE_ELEMENT.push(lastRow);
 				this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);

@@ -99,7 +99,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_balance_leaves">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Balance of Leaves </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> BOL </th>
               <td mat-cell *matCellDef="let element">
                 <!-- <form [formGroup]="formGroupArray[element.srno - 1].formGroup">
                   <mat-form-field class="form-field lib-form" appearance="outline">
@@ -108,7 +108,7 @@
                       formControlName="emp_balance_leaves" autocomplete="off" />
                   </mat-form-field>
                 </form> -->
-                {{element?.emp_balance_leaves}}
+                {{element?.emp_bol}}
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_present">
