@@ -219,7 +219,12 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			var flag = false;
-			inputJson = { "ses_id" :this.session_id.ses_id }
+			if (this.employeeData[i]['emp_month_attendance_data'] && this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] && this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] > 0) {
+				inputJson = { "ses_id" :this.session_id.ses_id, 'leave_opening_balance' : this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] };
+			} else {
+				inputJson = { "ses_id" :this.session_id.ses_id, 'leave_opening_balance' : 0 };
+			}
+			
 			inputJson["month_data"] = [];
 			var monthJson =  {
 				"month_id": this.searchForm.value.month_id,
@@ -260,7 +265,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				
 			}
 		}
-		//console.log(this.employeeData);
+		// console.log(this.employeeData);
 		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
