@@ -258,13 +258,12 @@ export class SalaryComputationComponent implements OnInit {
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 										) {
-											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
 	
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-	
 											}
 	
 											this.empShacolumns[i]['value'] = value;
@@ -298,7 +297,7 @@ export class SalaryComputationComponent implements OnInit {
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
 										) {
-											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
 	
@@ -645,7 +644,7 @@ export class SalaryComputationComponent implements OnInit {
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 										) {
-											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
 	
@@ -685,7 +684,7 @@ export class SalaryComputationComponent implements OnInit {
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
 										) {
-											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === 'text') {
+											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
 	
