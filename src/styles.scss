@@ -5496,18 +5496,16 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     width: 220px !important;
     height: 80px !important;
 }
-.barcode-print-lib2 {
-    width: 180px !important;
-}
 div.barcode-print-lib > ngx-barcode > div > img {
     width: 70% !important;
     height: 80px !important;
 }
 div.barcode-print-lib2 > ngx-barcode > div > img {
-    width: 80% !important;
-    height: 55px !important;
+    width: 85% !important;
+    height: 35px !important;
     position: relative;
-    top: -8px;
+    top: -7px;
+    left: 8px;
 }
 .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
     line-height: 15px !important;
