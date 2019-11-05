@@ -144,9 +144,10 @@ export class SalaryComputationComponent implements OnInit {
 			if (res) {
 				//this.paymentModeArray = res;
 				for (let i=0; i<res.length;i++) {
+					console.log('res', res);
 					var inputJson = {
-						'pm_id' : res[i]['type_name'].toLowerCase().replace(' ','_'),
-						'pm_name':res[i]['type_name'],
+						'pm_id' : res[i]['name'] ? res[i]['name'].toLowerCase().replace(' ','_') : '',
+						'pm_name':res[i]['name'],
 						'pm_value' : 0
 					}
 					this.paymentModeArray.push(inputJson);
