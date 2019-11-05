@@ -492,6 +492,7 @@ export class IssueReturnComponent implements OnInit {
 			}
 			
 		} else if (this.searchForm.value.user_role_id === '3') {
+			console.log(this.finIssueBook.length >  parseInt(this.settingData['book_issued_limit_teacher'], 10));
 			if (this.finIssueBook.length >  parseInt(this.settingData['book_issued_limit_teacher'], 10)) {
 				flag = true;
 			}
