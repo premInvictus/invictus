@@ -338,6 +338,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 			i++;
 		}
+		this.getNetSalary();
 	}
 	getDynamicValue(weigtage, value) {
 		if (Number(value) > 0) {
@@ -591,6 +592,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				};
 			}
 
+			// console.log('this.employeedetails', this.employeedetails);
+
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					if (!moveNext) {
@@ -700,14 +703,24 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getValue(event) {
-		if (this.salaryHeadsArray.length > 0) {
-			const findIndex = this.salaryHeadsArray.findIndex(f => Number(f.sc_id) === Number(event));
-			if (findIndex !== -1) {
-				return this.salaryHeadsArray[findIndex].sc_value;
+		if (this.employeedetails.emp_salary_detail 
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure 
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale 
+			&& (Number(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) === Number(this.salaryDetails.value.sal_str))) {
+			if (this.salaryHeadsArray.length > 0) {
+				const findIndex = this.salaryHeadsArray.findIndex(f => Number(f.sc_id) === Number(event));
+				if (findIndex !== -1) {
+					return this.salaryHeadsArray[findIndex].sc_value;
+				}
+			} else {
+				return 0;
 			}
 		} else {
+			
 			return 0;
 		}
+
+		
 	}
 
 
