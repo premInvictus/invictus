@@ -99,7 +99,7 @@ export class SalaryComputationComponent implements OnInit {
 		37: 'AK',
 		38: 'AL',
 		39: 'AM',
-		40: 'AN',
+		40: 'AN', 
 		41: 'AO',
 		42: 'AP',
 		43: 'AQ',
