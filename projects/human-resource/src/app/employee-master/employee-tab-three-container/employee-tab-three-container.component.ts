@@ -301,7 +301,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.tempData = [];
 		}
-		console.log('tempData',this.tempData);
 		for (let item of this.tempData) {
 			if (item.sc_type.type_id === '1' || Number(item.sc_type.type_id) === 1) {
 				this.scaleData.push(item);
@@ -327,7 +326,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			});
 			i++;
 		}
-
 	}
 	getDynamicValue(weigtage, value) {
 		if (Number(value) > 0) {
@@ -608,7 +606,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			let i = 0;
 			this.netSalary = this.salaryDetails.value.basic_pay;
 			for (const item of this.formGroupArray2) {
-				if (item.formGroup.value['sc_calculation_type' + i] === 'text') {
+				if (item.formGroup.value['sc_calculation_type' + i] === 'Text' || item.formGroup.value['sc_calculation_type' + i] === 'text') {
 					if (Number(item.formGroup.value['type' + i]) === 1) {
 						this.earning = this.earning + Number(item.formGroup.value['sc_value' + i]);
 						this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
