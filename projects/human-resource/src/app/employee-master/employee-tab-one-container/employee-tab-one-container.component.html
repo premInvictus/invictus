@@ -133,7 +133,7 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
             <span>Whether the address of correspondence is different from the Permanent address?</span>
-            <mat-slide-toggle class="btn-spacer" [checked]="addressFlag" (change)="address_change($event)">
+            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly"  [checked]="addressFlag" (change)="address_change($event)">
             </mat-slide-toggle>
           </div>
         </div>
