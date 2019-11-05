@@ -93,12 +93,35 @@ export class EmployeeAttendanceComponent implements OnInit {
 					for (const item of result) {
 						var emp_month;
 						var emp_attendance_detail;
+						var total_leave_closing_balance = 0;
+						var curr_total_leave_closing_balance = 0;
+						var leave_credited_count = 0;
+						if (item.emp_month_attendance_data) {
+							for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
+								emp_month = item.emp_month_attendance_data.month_data[i].month_id;
+								emp_attendance_detail = item.emp_month_attendance_data.month_data[i].attendance_detail;							
+								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
+									total_leave_closing_balance += (item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0) ;
+									if (parseInt(this.searchForm.value.month_id, 10) > parseInt(emp_month, 10)) {
+										total_leave_closing_balance = total_leave_closing_balance + ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
+									}
+									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+										curr_total_leave_closing_balance =  ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
+
+										leave_credited_count = ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
+									}
+								}
+							}
+						}
+						
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_designation: item.emp_designation_detail.des_name,
-							emp_balance_leaves: item.emp_month_attendance_data && item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0 ,
+							emp_bol : total_leave_closing_balance,
+							emp_balance_leaves: curr_total_leave_closing_balance ,
+							emp_leave_credited : leave_credited_count,
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							viewFlag : true,
 							action: item,
@@ -167,7 +190,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 						j++;
 
 					}
-					console.log('this.EMPLOYEE_ELEMENT', this.EMPLOYEE_ELEMENT);
 					this.COPY_EMPLOYEE_ELEMENT = JSON.parse(JSON.stringify( this.EMPLOYEE_ELEMENT));
 					this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 					this.employeedataSource.paginator = this.paginator;
@@ -202,6 +224,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 					"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
 					"emp_total_attendance": this.EMPLOYEE_ELEMENT[i]['emp_total_attendance'],
 					"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
+					"emp_leave_credited": this.EMPLOYEE_ELEMENT[i]['emp_leave_credited']
 				}
 			};
 
@@ -229,7 +252,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				
 			}
 		}
-		//console.log('this.employeeData', this.employeeData);
+		//console.log(this.employeeData);
 		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
