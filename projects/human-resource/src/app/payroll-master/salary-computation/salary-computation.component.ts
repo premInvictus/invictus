@@ -127,7 +127,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.getSession();
 		this.getSchool();
 		this.getSalaryHeads();
-
+		this.getPaymentModes();
 
 	}
 
@@ -136,6 +136,22 @@ export class SalaryComputationComponent implements OnInit {
 			month_id: '',
 			//pay_date: ''
 
+		});
+	}
+
+	getPaymentModes() {
+		this.commonAPIService.getMaster({type_id:6}).subscribe((res: any) => {
+			if (res) {
+				//this.paymentModeArray = res;
+				for (let i=0; i<res.length;i++) {
+					var inputJson = {
+						'pm_id' : res[i]['type_name'].toLowerCase().replace(' ','_'),
+						'pm_name':res[i]['type_name'],
+						'pm_value' : 0
+					}
+					this.paymentModeArray.push(inputJson);
+				}
+			} 
 		});
 	}
 

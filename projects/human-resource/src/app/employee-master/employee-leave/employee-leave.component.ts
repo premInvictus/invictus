@@ -118,9 +118,6 @@ export class EmployeeLeaveComponent implements OnInit {
 				}
 				
 
-				console.log('this.leave_opening_balance', this.leave_opening_balance);
-				console.log('total_leave_closing_balance', total_leave_closing_balance);
-
 				var total_closing_balance = Number(this.leave_opening_balance) + Number(total_leave_closing_balance);
 
 				var lastRow = {
