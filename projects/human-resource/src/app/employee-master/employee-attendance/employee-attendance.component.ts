@@ -97,11 +97,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 						var curr_total_leave_closing_balance = 0;
 						var leave_credited_count = 0;
 						if (item.emp_month_attendance_data) {
+							if (item.emp_month_attendance_data && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
+								console.log('in');
+								total_leave_closing_balance += (item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0) ;
+							}
 							for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 								emp_month = item.emp_month_attendance_data.month_data[i].month_id;
 								emp_attendance_detail = item.emp_month_attendance_data.month_data[i].attendance_detail;							
-								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
-									total_leave_closing_balance += (item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0) ;
+								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {									
 									if (parseInt(this.searchForm.value.month_id, 10) > parseInt(emp_month, 10)) {
 										total_leave_closing_balance = total_leave_closing_balance + ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
 									}
@@ -109,10 +112,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 										curr_total_leave_closing_balance =  ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
 
 										leave_credited_count = ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
+
+										total_leave_closing_balance = Number(total_leave_closing_balance)+Number(leave_credited_count);
 									}
 								}
 							}
 						}
+
+						console.log('total_leave_closing_balance', total_leave_closing_balance);
+						console.log('curr_total_leave_closing_balance', curr_total_leave_closing_balance);
 						
 						element = {
 							srno: pos,
@@ -223,7 +231,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 					"emp_leave_availed": this.formGroupArray[i].formGroup.value.emp_leave_availed,
 					"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
 					"emp_total_attendance": this.EMPLOYEE_ELEMENT[i]['emp_total_attendance'],
-					"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
+					"emp_balance_leaves": Number(this.EMPLOYEE_ELEMENT[i]['emp_bol']) - Number(this.formGroupArray[i].formGroup.value.emp_leave_granted),
 					"emp_leave_credited": this.EMPLOYEE_ELEMENT[i]['emp_leave_credited']
 				}
 			};
