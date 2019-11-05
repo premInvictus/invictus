@@ -83,25 +83,30 @@
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="5"> </th>
                   </ng-container>
       
-                  <ng-container matColumnDef="header-row-salary-heads-group">
+                  <!-- <ng-container matColumnDef="header-row-salary-heads-group">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="shacolumns?.length + 1"> Salary Heads </th>
-                  </ng-container>
+                  </ng-container> -->
                   <!-- <ng-container matColumnDef="header-row-second-group">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
                   </ng-container> -->
-                  <ng-container matColumnDef="header-row-deductions-group">
+                  <!-- <ng-container matColumnDef="header-row-deductions-group">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Deductions </th>
+                  </ng-container> -->
+                  <ng-container matColumnDef="header-row-three-group" width="50%">
+                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> </th>
                   </ng-container>
-                  <ng-container matColumnDef="header-row-three-group">
-                    <th mat-header-cell *matHeaderCellDef [attr.colspan]="3"> </th>
-                  </ng-container>
-                  <ng-container matColumnDef="header-row-modes-group">
+                  <ng-container matColumnDef="header-row-modes-group" width="40%">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="paymentModeArray.length+1"> Modes </th>
                   </ng-container>
-                  <ng-container matColumnDef="header-row-four-group">
+                  <ng-container matColumnDef="header-row-four-group" width="10%">
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="1"> </th>
                   </ng-container>
-                  <tr mat-header-row *matHeaderRowDef="['header-row-first-group', 'header-row-salary-heads-group', 'header-row-deductions-group',
+                  <!-- <tr mat-header-row *matHeaderRowDef="['header-row-first-group', 'header-row-salary-heads-group', 'header-row-deductions-group',
+                    'header-row-three-group',
+                    'header-row-modes-group',
+                    'header-row-four-group'
+                  ]"></tr> -->
+                  <tr mat-header-row *matHeaderRowDef="[
                     'header-row-three-group',
                     'header-row-modes-group',
                     'header-row-four-group'
@@ -111,7 +116,7 @@
                     <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_id">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Emp. ID</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
                     <td mat-cell *matCellDef="let element">
                       <a class="font-skyblue cursor-pointer" (click)="openBookModal(element.emp_id)">{{element?.emp_id}}
                       </a>
@@ -124,40 +129,40 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_designation">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Designation</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="23%">Designation</th>
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.emp_designation | titlecase}} </span>
                     </td>
                   </ng-container>
-                  <ng-container matColumnDef="emp_pay_scale">
+                  <!-- <ng-container matColumnDef="emp_pay_scale">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Pay Scale</th>
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.emp_pay_scale | titlecase}} </span>
                     </td>
-                  </ng-container>
+                  </ng-container> -->
                   <!-- <ng-container matColumnDef="emp_salary_heads">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header  [attr.rowspan]="2">Salary Heads</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header >Salary Heads</th>
                    
                     <td mat-cell *matCellDef="let element">
                       {{element?.emp_salary_heads}}
                     </td>
                   </ng-container> -->
       
-                  <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
+                  <!-- <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
       
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">{{column?.header}}</th>
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.empShacolumns[i]['value']}} </span>
                     </td>
-                  </ng-container>
+                  </ng-container> -->
                   <!-- <ng-container matColumnDef="emp_allowances">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%" [attr.rowspan]="2">Allowances</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Allowances</th>
                     <td mat-cell *matCellDef="let element">
                       {{element?.emp_allowances}}
                     </td>
                   </ng-container> -->
-                  <ng-container matColumnDef="emp_total_earnings">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2">Total Earnings </th>
+                  <!-- <ng-container matColumnDef="emp_total_earnings">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Total Earnings </th>
                     <td mat-cell *matCellDef="let element" class="text-left"> <span
                         *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings)}} </span> </td>
                   </ng-container>
@@ -166,24 +171,24 @@
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.empShdcolumns[i]['value']}} </span>
                     </td>
-                  </ng-container>
+                  </ng-container> -->
                   <!-- <ng-container matColumnDef="emp_deductions">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Deductions</th>
                     <td mat-cell *matCellDef="let element">
                       <span *ngIf="element.emp_deductions">{{element?.emp_deductions}} </span>
                     </td>
                   </ng-container> -->
-                  <ng-container matColumnDef="emp_present_days">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Present Days</th>
+                  <!-- <ng-container matColumnDef="emp_present_days">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Present Days</th>
                     <td mat-cell *matCellDef="let element">
                       {{element?.emp_present_days}}
                     </td>
-                  </ng-container>
+                  </ng-container> -->
       
-                  <ng-container matColumnDef="emp_advance">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Advance/Arrear's
+                  <!-- <ng-container matColumnDef="emp_advance">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Advance/Arrear's
                     </th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element"> -->
                       <!-- {{element?.emp_advance}} -->
                       <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
                         <mat-form-field class="form-field lib-form">
@@ -192,17 +197,17 @@
                             formControlName="advance" autocomplete="off" (change)="setNetSalary(element, $event)"/>
                         </mat-form-field>
                       </form> -->
-                      {{element?.emp_modes_data?.advance}}
-                    </td>
-                  </ng-container>
+                      <!-- {{element?.emp_modes_data?.advance}} -->
+                    <!-- </td>
+                  </ng-container> -->
                   <ng-container matColumnDef="emp_salary_payable">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Salary Payable</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Salary Payable</th>
                     <td mat-cell *matCellDef="let element">
                       {{element?.emp_salary_payable}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="bank_transfer">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2">Bank Transfer</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Bank Transfer</th>
                     <td mat-cell *matCellDef="let element">
                       <!-- {{element?.emp_pay_mode}} -->
                       <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
@@ -216,7 +221,7 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="cheque_payment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2">Cheque</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Cash</th>
                     <td mat-cell *matCellDef="let element">
                       <!-- {{element?.emp_pay_mode}} -->
                       <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
@@ -230,7 +235,7 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="cash_payment">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2">Cash</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Cheque</th>
                     <td mat-cell *matCellDef="let element">
                       <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
                         <mat-form-field class="form-field lib-form">
@@ -243,17 +248,17 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_total">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Total</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Total</th>
                     <td mat-cell *matCellDef="let element">
                       {{element?.emp_total}}
                     </td>
                   </ng-container>
-                  <ng-container matColumnDef="emp_status">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%" [attr.rowspan]="2"> Status</th>
+                  <!-- <ng-container matColumnDef="emp_status">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%"> Status</th>
                     <td mat-cell *matCellDef="let element">
                       <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}} </span>
                     </td>
-                  </ng-container>
+                  </ng-container> -->
       
       
       

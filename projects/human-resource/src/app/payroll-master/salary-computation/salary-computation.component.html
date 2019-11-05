@@ -221,7 +221,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="cheque_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cheque</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cash</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <!-- {{element?.emp_pay_mode}} -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
@@ -234,7 +234,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="cash_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cash</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cheque</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
