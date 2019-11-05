@@ -51,21 +51,21 @@
                 {{employeeData?.emp_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Designation : </span><span
-                class="font-size-14 font-bold">{{employeeData?.emp_designation_detail?.des_name}} </span>
+                class="font-size-14 opacity-7">{{employeeData?.emp_designation_detail?.des_name}} </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Department : </span><span
-                class="font-size-14 font-bold">
+                class="font-size-14 opacity-7">
                 {{employeeData?.emp_department_detail?.dpt_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Category : </span><span
-                class="font-size-14 font-bold">
+                class="font-size-14 opacity-7">
                 {{employeeData?.emp_category_detail?.cat_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Status : </span><span
-                class="font-size-14 font-bold">
+                class="font-size-14 opacity-7">
                 {{employeeData?.emp_status}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
-              class="font-size-14 font-bold">
+              class="font-size-14 opacity-7">
               {{leave_opening_balance}}
             </span>
             </div>
@@ -86,10 +86,10 @@
                     </mat-form-field>
                   </div>
                 </div> -->
-              <table mat-table [dataSource]="employeedataSource" matSort class="table-100 text-center"
+              <table mat-table [dataSource]="employeedataSource" matSort class="table-80 text-center"
                 id="report_table67">
                 <ng-container matColumnDef="srno">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+                  <th mat-header-cell *matHeaderCellDef  class="text-nowrap" width="1%"> Sr. No. </th>
                   <ng-container *matCellDef="let element">
                     <td mat-cell *ngIf="element.srno==='Grand Total'" colspan="2">
                       <b>{{element?.srno}}</b>
@@ -103,48 +103,48 @@
 
                 </ng-container>
                 <ng-container matColumnDef="month_name">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Month </th>
+                  <th mat-header-cell *matHeaderCellDef  width="30%"> Month </th>
                   <ng-container *matCellDef="let element">
-                    <td mat-cell *ngIf="!(element.srno==='Grand Total')">{{element.month_name}}
+                    <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-left">{{element.month_name}}
                     </td>
                   </ng-container>
                 </ng-container>
                 <!-- <ng-container matColumnDef="leave_opening_balance">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Opening Balance</th>
+                  <th mat-header-cell *matHeaderCellDef  width="25%"> Opening Balance</th>
                   <ng-container *matCellDef="let element">
-                    <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-left">
+                    <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-center">
                       {{element.leave_opening_balance}}
                     </td>
                   </ng-container>
                 </ng-container> -->
                 <ng-container matColumnDef="leave_credited">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Credited </th>
-                  <td mat-cell *matCellDef="let element" class="text-left">
+                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Credited </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_credited"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_availed">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Availed </th>
-                  <td mat-cell *matCellDef="let element">
+                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Availed </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_availed"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_granted">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Granted </th>
-                  <td mat-cell *matCellDef="let element" class="text-left">
+                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Granted </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_granted"></p>
                   </td>
 
                 </ng-container>
                 <ng-container matColumnDef="lwp">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leave Without Pay</th>
+                  <th mat-header-cell *matHeaderCellDef  width="5%"> LWP</th>
                   <td mat-cell *matCellDef="let element">
                     <p [innerHtml]="element.lwp"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_closing_balance">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Leaves Closing Balance </th>
-                  <td mat-cell *matCellDef="let element">
+                  <th mat-header-cell *matHeaderCellDef  width="5%"> Closing Balance </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_closing_balance"></p>
                   </td>
                 </ng-container>
@@ -152,7 +152,7 @@
                 <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
                 </tr>
               </table>
-              <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="10" showFirstLastButtons>
+              <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="15" showFirstLastButtons>
               </mat-paginator>
             </div>
           </div>
