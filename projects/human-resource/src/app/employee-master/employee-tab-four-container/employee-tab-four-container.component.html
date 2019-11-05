@@ -200,7 +200,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Start Date</mat-label>
               <input matInput [matDatepicker]="picker" required placeholder="Start Date" formControlName="start_date"
-                [readonly]="viewOnly">
+                (dateChange)="setMinTo($event)" [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>
@@ -211,7 +211,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>End Date</mat-label>
-              <input matInput [matDatepicker]="picker2" required placeholder="End Date" formControlName="end_date"
+              <input matInput [matDatepicker]="picker2" required placeholder="End Date" [min]="toMin" formControlName="end_date"
                 [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
@@ -294,7 +294,7 @@
       <div class="row">
         <div class="col-2" *ngIf="!viewOnly">
           <form [formGroup]="skillForm">
-            <div class="inline-flex " >
+            <div class="inline-flex ">
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Skills</mat-label>
                 <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
@@ -312,7 +312,7 @@
         <div class="col-10" *ngIf="skillsArray.length === 0 && viewOnly">
           <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
             <span class="custom-btn-text">No Record Found</span>
-            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="viewOnly" ></i>
+            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="viewOnly"></i>
           </button>
         </div>
       </div>

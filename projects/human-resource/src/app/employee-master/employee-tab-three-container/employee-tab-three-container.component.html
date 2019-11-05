@@ -8,9 +8,9 @@
                             <div class="col-4 col-pad-5">
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Pan No.</mat-label>
+                                        <mat-label>PAN</mat-label>
                                         <input class="text-capitalize" formControlName="pan" matInput minlength="10"
-                                            maxlength="10" placeholder="Pan No." required [readonly]="viewOnly"
+                                            maxlength="10" placeholder="PAN" [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher" />
                                         <mat-error>
                                             This field is required
@@ -19,7 +19,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Aadhaar No.</mat-label>
                                         <input matInput formControlName="aadhar" placeholder="Aadhaar No."
-                                            minlength="12" maxlength="14" required [readonly]="viewOnly"
+                                            minlength="12" maxlength="14"  [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
@@ -28,7 +28,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PF A/c No.| UAN</mat-label>
                                         <input type="number" formControlName="pf_ac" matInput
-                                            placeholder="PF A/c No.| UAN" required [readonly]="viewOnly"
+                                            placeholder="PF A/c No.| UAN"  [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
@@ -37,7 +37,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI A/c No.</mat-label>
                                         <input type="text" formControlName="esi_ac" matInput placeholder="ESI A/c No."
-                                            required [errorStateMatcher]="confirmValidParentMatcher">
+                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -45,7 +45,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Nominee</mat-label>
                                         <input type="text" matInput formControlName="nominee" placeholder="Nominee"
-                                            required [readonly]="viewOnly"
+                                             [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required

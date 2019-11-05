@@ -14,6 +14,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	@Input() employeedetails;
 	@Input() employeeCommonDetails;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
+	toMin = new Date();
 	Education_Form: FormGroup;
 	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
@@ -507,5 +508,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		if (findIndex !== -1) {
 			return this.designationArray[findIndex].name;
 		}
+	}
+	setMinTo(event) {
+		this.toMin = event.value;
 	}
 } 

@@ -51,7 +51,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Phone/Mobile</mat-label>
                 <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Phone/Mobile"
-                  [readonly]="viewOnly" formControlName="mobile" required
+                  [readonly]="viewOnly" formControlName="mobile" 
                   [errorStateMatcher]="confirmValidParentMatcher">
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
@@ -83,7 +83,7 @@
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Address</mat-label>
-                <input type="text" matInput placeholder="Address" required [readonly]="viewOnly"
+                <input type="text" matInput placeholder="Address"  [readonly]="viewOnly"
                   formControlName="address" [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
@@ -92,7 +92,7 @@
 
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>City</mat-label>
-                <input type="text" matInput placeholder="City" [readonly]="viewOnly" formControlName="city" required
+                <input type="text" matInput placeholder="City" [readonly]="viewOnly" formControlName="city" 
                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
@@ -100,7 +100,7 @@
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>State</mat-label>
-                <input type="text" matInput placeholder="State" [readonly]="viewOnly" formControlName="state" required
+                <input type="text" matInput placeholder="State" [readonly]="viewOnly" formControlName="state" 
                   [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-error>
                   This field is required
@@ -108,7 +108,7 @@
               </mat-form-field>
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Pincode</mat-label>
-                <input minlength="6" maxlength="6" pattern="[0-9]*" matInput placeholder="Pincode" required
+                <input minlength="6" maxlength="6" pattern="[0-9]*" matInput placeholder="Pincode" 
                   [readonly]="viewOnly" formControlName="pincode" [errorStateMatcher]="confirmValidParentMatcher">
               </mat-form-field>
             </div>
