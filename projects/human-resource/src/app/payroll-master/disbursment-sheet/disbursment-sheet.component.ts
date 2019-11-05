@@ -2,9 +2,18 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { ErpCommonService } from 'src/app/_services';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
+import * as Excel from 'exceljs/dist/exceljs';
+import * as XLSX from 'xlsx';
+import * as moment from 'moment/moment';
+declare var require;
+const jsPDF = require('jspdf');
+import 'jspdf-autotable';
+import html2canvas from 'html2canvas';
+import { saveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-disbursment-sheet',
@@ -23,6 +32,61 @@ export class DisbursmentSheetComponent implements OnInit {
 	shdcolumns = [];
 	empShdcolumns = [];
 	formGroupArray = [];
+	schoolInfo: any;
+	length: any;
+	settingData: any;
+	currentUser: any;
+	showPdf = false;
+	sessionArray: any[] = [];
+	sessionName: any;
+	session_id;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
 	paymentModeArray: any[] = [
 		{
 			pm_id: 'bank_transfer',
@@ -47,12 +111,18 @@ export class DisbursmentSheetComponent implements OnInit {
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		private sisService: SisService
-	) { }
+		private sisService: SisService,
+		private erpCommonService: ErpCommonService
+	) {
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'))
+		this.session_id = JSON.parse(localStorage.getItem('session'));
+	}
 
 	ngOnInit() {
 		this.buildForm();
 		this.getSalaryHeads();
+		this.getSchool();
+		this.getSession();
 
 
 	}
@@ -63,6 +133,31 @@ export class DisbursmentSheetComponent implements OnInit {
 			//pay_date: ''
 
 		});
+	}
+	getSession() {
+		this.erpCommonService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						if (this.session_id) {
+							this.sessionName = this.sessionArray[this.session_id.ses_id];
+						}
+
+					}
+				});
+	}
+
+	getSchool() {
+		this.erpCommonService.getSchool()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.schoolInfo = result.data[0];
+					}
+				});
 	}
 
 	getSalaryHeads() {
@@ -100,8 +195,8 @@ export class DisbursmentSheetComponent implements OnInit {
 			let recordArray = [];
 			this.employeeData = result;
 			this.SALARY_COMPUTE_ELEMENT = [];
-//			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
-this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation'];
+			//			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
+			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation'];
 			this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 			if (result && result.length > 0) {
 				for (let i = 0; i < this.shacolumns.length; i++) {
@@ -116,8 +211,8 @@ this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designa
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
-//				this.displayedSalaryComputeColumns.push('emp_total', 'emp_status');
-this.displayedSalaryComputeColumns.push('emp_total');
+				//				this.displayedSalaryComputeColumns.push('emp_total', 'emp_status');
+				this.displayedSalaryComputeColumns.push('emp_total');
 				let pos = 1;
 				let recordArray = [];
 
@@ -163,7 +258,7 @@ this.displayedSalaryComputeColumns.push('emp_total');
 							if (item.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_structure.emp_salary_heads.length; j++) {
 									if (item.emp_salary_structure.emp_salary_heads && item.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-	
+
 										if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
@@ -171,16 +266,16 @@ this.displayedSalaryComputeColumns.push('emp_total');
 											if ((item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
-	
+
 											if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-	
+
 											}
-	
+
 											this.empShacolumns[i]['value'] = value;
 											this.shacolumns[i]['value'] = value;
 											total_earnings = total_earnings + Number(value);
-	
+
 										} else {
 											this.shacolumns[i]['value'] = 0;
 											this.empShacolumns[i]['value'] = 0;
@@ -188,7 +283,7 @@ this.displayedSalaryComputeColumns.push('emp_total');
 									}
 								}
 							}
-							
+
 
 						}
 					}
@@ -418,7 +513,7 @@ this.displayedSalaryComputeColumns.push('emp_total');
 							}
 							this.displayedSalaryComputeColumns.push('emp_total', 'emp_status');
 							let pos = 1;
-							
+
 							for (var i = 0; i < result.length; i++) {
 								recordArray.push(result[i]['emp_salary_compute_data']);
 							}
@@ -595,6 +690,304 @@ this.displayedSalaryComputeColumns.push('emp_total');
 
 	}
 
+	downloadPdf() {
+		this.showPdf = true;
+		const doc = new jsPDF('landscape');
+
+		doc.autoTable({
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 15,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+
+		doc.autoTable({
+			head: [[new TitleCasePipe().transform('Employee Disbursment Sheet report: ') + this.sessionName]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 13,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+
+		doc.autoTable({
+			html: '#salary_compute_log',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 14,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 14,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89A8C9',
+			},
+			theme: 'grid'
+		});
+
+		doc.autoTable({
+			head: [['Report Generated By : ' + this.currentUser.full_name]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 13,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		doc.autoTable({
+			head: [['No. of Records : ' + this.employeeData.length]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 13,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		// doc.save('table.pdf');
+
+		// const doc = new jsPDF('landscape');
+		// doc.setFont('helvetica');
+		// doc.setFontSize(5);
+		// doc.autoTable({ html: '#book_log' });
+
+		doc.save('EmployeeDisbursmentSheet_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
+		this.showPdf = false;
+	}
+	checkWidth(id, header) {
+
+		const res = this.employeeData.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+
+	downloadExcel() {
+		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any = [];
+		columns.push({
+			key: 'emp_id',
+			width: this.checkWidth('emp_id', 'Emp. ID')
+		});
+		columns.push({
+			key: 'emp_name',
+			width: this.checkWidth('emp_name', 'Emp Name')
+		});
+		columns.push({
+			key: 'emp_designation',
+			width: this.checkWidth('emp_designation', 'Designation')
+		});
+		columns.push({
+			key: 'emp_salary_payable',
+			width: this.checkWidth('emp_salary_payable', 'Salary Payable')
+		});
+		columns.push({
+			key: 'emp_modes_data',
+			width: this.checkWidth('emp_modes_data', 'Bank Transfer')
+		});
+		columns.push({
+			key: 'emp_modes_data2',
+			width: this.checkWidth('emp_modes_data2', 'Check')
+		});
+		columns.push({
+			key: 'emp_modes_data3',
+			width: this.checkWidth('emp_modes_data3', 'Cash')
+		});
+		columns.push({
+			key: 'emp_total',
+			width: this.checkWidth('emp_total', 'Total')
+		});
+
+
+		reportType2 = new TitleCasePipe().transform(' employeeDisbursmentSheet_') + this.sessionName;
+		reportType = new TitleCasePipe().transform(' Employee Disbursment Sheet report: ') + this.sessionName;
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[8] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
+		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report: ') + this.sessionName;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A3:B3');
+		worksheet.getCell('A3').value = '';
+		worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('C3:D3');
+		worksheet.getCell('C3').value = '';
+		worksheet.getCell(`C3`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('E3:F3');
+		worksheet.getCell('E3').value = '';
+		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A5:C5');
+		worksheet.getCell('A5').value = ' ';
+		worksheet.mergeCells('D5:G5');
+		worksheet.getCell('D5').value = 'Modes';
+		worksheet.getCell('H5').value = '';
+		worksheet.getCell('A6').value = 'Emp. ID';
+		worksheet.getCell('B6').value = 'Emp Name';
+		worksheet.getCell('C6').value = 'Designation';
+		worksheet.getCell('D6').value = 'Salary Payable';
+		worksheet.getCell('E6').value = 'Bank Transfer';
+		worksheet.getCell('F6').value = 'Cheque';
+		worksheet.getCell('G6').value = 'Cash';
+		worksheet.getCell('H6').value = 'Total';
+
+		worksheet.columns = columns;
+		this.length = worksheet._rows.length;
+		let totRow = this.length + this.employeeData.length + 5;
+		console.log(worksheet._rows.length, this.currentUser, totRow);
+
+		worksheet.mergeCells('A' + totRow + ':' + 'D' + totRow);
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).value = 'Report Generated By : ' + this.currentUser.full_name;
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A' + (totRow + 1) + ':' + 'B' + (totRow + 1));
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).value = 'No. of Records : ' + this.employeeData.length;
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).alignment = { horizontal: 'left' };
+		for (const item of this.SALARY_COMPUTE_ELEMENT) {
+			const prev = this.length + 1;
+			const obj: any = {};
+			this.length++;
+			worksheet.getCell('A' + this.length).value = item.emp_id;
+			worksheet.getCell('B' + this.length).value = item.emp_name;
+			worksheet.getCell('C' + this.length).value = item.emp_designation;
+			worksheet.getCell('D' + this.length).value = item.emp_salary_payable ? item.emp_salary_payable : '-';
+			worksheet.getCell('E' + this.length).value = item.emp_modes_data.mode_data[0].pm_value ? item.emp_modes_data.mode_data[0].pm_value : '-';
+			worksheet.getCell('F' + this.length).value = item.emp_modes_data.mode_data[1].pm_value ? item.emp_modes_data.mode_data[1].pm_value : '-';
+			worksheet.getCell('G' + this.length).value = item.emp_modes_data.mode_data[2].pm_value ? item.emp_modes_data.mode_data[2].pm_value : '-';
+			worksheet.getCell('H' + this.length).value = item.emp_total ? item.emp_total : '-';
+
+			worksheet.addRow(obj);
+		}
+
+
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 3) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+			}
+			if (rowNum === 5 || rowNum === 6) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum >= 7 && rowNum <= this.employeeData.length + 7) {
+				row.eachCell(cell => {
+					if (rowNum % 2 === 0) {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					} else {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					}
+
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			} else if (rowNum === totRow || rowNum === (totRow + 1)) {
+				row.font = {
+					name: 'Arial',
+					size: 12,
+					bold: true
+				};
+				row.eachCell(cell => {
+					cell.alignment = { horizontal: 'text', vertical: 'top', wrapText: true };
+				});
+			}
+		});
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+	}
 }
 
 
@@ -614,4 +1007,5 @@ export interface SalaryComputeElement {
 	// emp_pay_mode: any;
 	emp_total: any;
 	emp_status: any;
+	emp_modes_data: any;
 }
