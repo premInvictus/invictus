@@ -25,7 +25,10 @@ div.barcode-print-lib > ngx-barcode > div > img {
     left: 20px;
     top: -15px;
 }
-.bar-location-span {
+.col-3 {
+    display: grid;
+}
+ .bar-location-span {
     position: relative;
     left: -3px;
     top: -16px;
@@ -58,45 +61,47 @@ hr {
 .barcode-div-print.margin-barcode-print {
     margin-top: 80.64px;
 }
+div.barcode-print-lib2 > ngx-barcode > div > img {
+    width: 85% !important;
+    height: 35px !important;
+    position: relative;
+    top: -17px;
+    left: -2px;
+}
 .barcode-div-print{
-    border: 1px solid;
-    width: 172px !important;
-    height: 79.37px !important;
-    border-radius: 6px;
+    width: 140.54px !important;
+    height: 66px !important;
 }
 .accumulate-div-bar-code {
-    padding-top: 80.64px;
-    padding-bottom: 80.64px;
     background: white;
-    width: 797.48px;
-    margin: auto;
-    padding-left: 36.48px;
-    padding-right: 36.48px;
-}
-.bar-location-span2 {
-    position: relative;
-    left: -35px;
-    top: -11px;
-    font-size: 11px;
-}
-.bar-isbn-span2 {
-    position: relative;
-    left: 18px;
-    top: -11px;
-    font-size: 11px; 
+    width: 595px;
+    zoom: 185%;
+    height: 841px;
+    padding-right: 32.9px;
+    padding-top: 35.48px;
+    padding-left: 6px;
 }
 .bar-tiltle-span2 {
     position: relative;
-    top: 0px;
-    left: 19px;
+    top: 2px;
     font-size: 10px;
+    left: 14px
 }
-div.barcode-print-lib2 > ngx-barcode > div > img {
-    width: 80% !important;
-    height: 55px !important;
+.barcode-margin-div2 {
+    margin-top: 0px;
+}
+.barcode-margin-div {
+    margin-top: 73px !important;
+}
+.bar-isbn-span2 {
     position: relative;
-    top: -19px;
+    left: 14px;
+    top: -8px;
+    font-size: 11px;
 }
-.barcode-print-lib2 {
-    width: 180px !important;
+.bar-location-span2 {
+    position: relative;
+    left: -17px;
+    top: -8px;
+    font-size: 11px;
 }

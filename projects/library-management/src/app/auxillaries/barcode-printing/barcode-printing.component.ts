@@ -15,7 +15,7 @@ export class BarcodePrintingComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
   }
-  openSearchDialog = (data) => { this.barCodePrintForm.reset();		this.searchModal.openModal(data);  this.barCodeArray = [];}
+  openSearchDialog = (data) => { this.barCodePrintForm.reset(); this.searchModal.openModal(data); this.barCodeArray = []; }
   buildForm() {
     this.barCodePrintForm = this.fbuild.group({
       reserv_id: ''
@@ -23,7 +23,7 @@ export class BarcodePrintingComponent implements OnInit {
   }
   getBarCode() {
     if (this.barCodePrintForm.value.reserv_id) {
-      let inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' } ],search_from: 'master' };
+      let inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.barCodePrintForm.value.reserv_id, 'type': 'text' }], search_from: 'master' };
       this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.barCodeArray = [];
@@ -45,19 +45,30 @@ export class BarcodePrintingComponent implements OnInit {
   }
 
   searchOk($event) {
-		localStorage.removeItem('invoiceBulkRecords');
-		if ($event) {
-			this.common.getReservoirDataBasedOnFilter({ 
-				filters: $event.filters,
+    localStorage.removeItem('invoiceBulkRecords');
+    if ($event) {
+      this.common.getReservoirDataBasedOnFilter({
+        filters: $event.filters,
         generalFilters: $event.generalFilters,
         search_from: 'master'
-			}).subscribe((res: any) => {
-				if (res && res.status === 'ok') {
+      }).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
           this.barCodeArray = [];
-          this.barCodeArray = res.data.resultData;		
-          this.barCodePrintForm.reset();		
-				}
-			});
-		}
-	}
+          this.barCodeArray = res.data.resultData;
+          this.barCodePrintForm.reset();
+        }
+      });
+    }
+  }
+  getClass(index) {
+    if (index > 47) {
+      if (index % 48 === 0 || index % 48 === 1 || index % 48 === 2 || index % 48 === 3) {
+        return 'barcode-div-print barcode-margin-div';
+      } else {
+        return 'barcode-div-print barcode-margin-div2';
+      }
+    } else {
+      return 'barcode-div-print';
+    }
+  }
 }
