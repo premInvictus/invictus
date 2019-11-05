@@ -405,7 +405,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_allowances: '',
 							empShacolumns: this.empShacolumns,
 							empShdcolumns: this.empShdcolumns,
-							emp_total_earnings: total_earnings,
+							emp_total_earnings: Number(empBasicPay) + total_earnings,
 							emp_total_deductions: total_deductions,
 							emp_deductions: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_deduction_detail : [],
 							emp_present_days: emp_present_days,
