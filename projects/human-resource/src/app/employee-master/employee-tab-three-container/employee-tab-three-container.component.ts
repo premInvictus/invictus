@@ -608,7 +608,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			let i = 0;
 			this.netSalary = this.salaryDetails.value.basic_pay;
 			for (const item of this.formGroupArray2) {
-				if (item.formGroup.value['sc_calculation_type' + i].toLowerCase() === 'text') {
+				if (item.formGroup.value['sc_calculation_type' + i] === 'text' || item.formGroup.value['sc_calculation_type' + i] === 'Text') {
 					if (Number(item.formGroup.value['type' + i]) === 1) {
 						if (item.formGroup.value['sc_value' + i] === '') {
 							this.earning = this.earning + Number(this.getValue(item.formGroup.value['sc_id' + i]));
