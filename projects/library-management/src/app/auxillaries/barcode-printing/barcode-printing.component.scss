@@ -1,16 +1,33 @@
 .bar-tiltle-span {
     position: relative;
-    left: 17px !important;
+    left: 10px !important;
+}
+.bar-tiltle-span2 {
+    position: relative;
+    top: -2px;
+    font-size: 10px;
 }
 .bar-isbn-span {
     position: relative;
-    left: 18px;
+    left: 10px;
     top: -20px;
+}
+.bar-isbn-span2 {
+    position: relative;
+    left: -52px;
+    top: -16px;
+    font-size: 11px;
 }
 .bar-location-span {
     position: relative;
-    left: -18px;
+    left: -26px;
     top: -20px;
+}
+.bar-location-span2 {
+    position: relative;
+    left: -26px;
+    top: -13px;
+    font-size: 11px;
 }
 .align-btn-bar {
     position: relative;
@@ -19,3 +36,29 @@
 .bar-acc-div {
     width: 184px !important
 }
+.barcode-div-print.margin-barcode-print {
+    margin-top: 80.64px;
+}
+.barcode-div-print{
+    border: 1px solid;
+    width: 172px !important;
+    height: 79.37px !important;
+    border-radius: 6px;
+}
+.accumulate-div-bar-code {
+    padding-top: 80.64px;
+    padding-bottom: 80.64px;
+    background: white;
+    width: 797.48px;
+    margin: auto;
+    padding-left: 36.48px;
+    padding-right: 36.48px;
+}
+@media print {
+    .visible-print-row {
+      display: block !important;
+    }
+}
+.visible-print-row {
+    display: none !important;
+  }

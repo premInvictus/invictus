@@ -8,24 +8,24 @@
     </div>
 
     <div class="container-box__white">
-      <div> 
+      <div>
         <div class="row remove-top-margin">
           <div class="col-6 remove-col-padding vertical-line-1">
             <div class="row remove-top-margin">
               <div class="col-12 remove-col-padding-left">
                 <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
                   <div class="row margin-top-10 margin-bottom-20">
-                    <div class="col-12"> 
+                    <div class="col-12">
                       <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
                     </div>
                   </div>
                   <div class="row height-100">
-                    <div class="col-2 text-center">
-                      <input  type="file" class="form-control form-control-sm mv_top"
-                        multiple="true" (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                    <div class="col-2 text-center" *ngIf="!viewOnly">
+                      <input type="file" class="form-control form-control-sm mv_top" multiple="true"
+                        (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
                         style="display: none !important" [disabled]="viewOnly">
 
-                      <a class=" text-center cursor-pointer" >
+                      <a class=" text-center cursor-pointer">
                         <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
                         &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" [for]="item.docreq_id">Choose
                           File</label>
@@ -39,7 +39,7 @@
                             <div>
                               <div>
                                 <div *ngIf="img.docreq_id === item.docreq_id" style="float:right;">
-                                  <button  mat-button class="upload-document-delete-btn" *ngIf="!viewOnly"
+                                  <button mat-button class="upload-document-delete-btn" *ngIf="!viewOnly"
                                     (click)="deleteFile(img.imgName,img.docreq_id)">
                                     <mat-icon class="btn-upload-icon">delete</mat-icon>
                                   </button>
@@ -88,9 +88,8 @@
                   <br>
                   <br>
                   <ol class="remove-col-padding" *ngFor="let item of documentsArray;let i =index">
-                    <mat-checkbox [disabled]="viewOnly"
-                      class="inline-form-doc-checkbox" [checked]="item?.verified_status"
-                      [value]="item.docreq_id" (change)="insertVerifyId($event)">
+                    <mat-checkbox [disabled]="viewOnly" class="inline-form-doc-checkbox"
+                      [checked]="item?.verified_status" [value]="item.docreq_id" (change)="insertVerifyId($event)">
                     </mat-checkbox>{{item.docreq_name}}
                   </ol>
                   <br>
@@ -102,14 +101,15 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
 
 
 
 
     <div class="row">
       <div class="col-12 text-center ">
-        <button  *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save</button>
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue"
+          (click)="saveForm()">Save</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm()">Submit</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
           (click)="updateForm()">Update </button>

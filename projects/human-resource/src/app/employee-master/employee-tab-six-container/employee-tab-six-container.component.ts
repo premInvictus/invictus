@@ -69,6 +69,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	departmentArray;
 	designationArray;
 	wingArray;
+	categoryOneArray: any[] = [];
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService, private dialog: MatDialog,
@@ -114,6 +115,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	ngOnChanges() {
+		this.getCategoryOne();
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
@@ -136,9 +138,8 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -147,10 +148,8 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -159,8 +158,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
-
-
 	isExistUserAccessMenu(actionT) {
 		// if (this.context && this.context.studentdetails) {
 		// 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
@@ -185,6 +182,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		this.documentArray = this.employeedetails.emp_document_detail && this.employeedetails.emp_document_detail.document_data ? this.employeedetails.emp_document_detail.document_data : [];
 
 		this.finalJSon = this.documentArray;
+
 		for (const item of this.documentArray) {
 			if (item && item.files_data) {
 				for (const iitem of item.files_data) {
@@ -195,22 +193,18 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				}
 
 			}
-			if (item.verified_staus) {
-				if (item.document_id === 1) {
-					this.documentsArray[0]['verified_status'] = true;
-				}
-				if (item.document_id === 2) {
-					this.documentsArray[1]['verified_status'] = true;
-				}
-				if (item.document_id === 3) {
-					this.documentsArray[2]['verified_status'] = true;
-				}
-				if (item.document_id === 4) {
-					this.documentsArray[3]['verified_status'] = true;
-				}
-
+			if (item.document_id === 1) {
+				this.documentsArray[0]['verified_status'] = true;
 			}
-
+			if (item.document_id === 2) {
+				this.documentsArray[1]['verified_status'] = true;
+			}
+			if (item.document_id === 3) {
+				this.documentsArray[2]['verified_status'] = true;
+			}
+			if (item.document_id === 4) {
+				this.documentsArray[3]['verified_status'] = true;
+			}
 		}
 		const tempArray: any[] = [];
 		for (const item of this.documentArray) {
@@ -251,16 +245,15 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			if (this.counter === this.currentFileChangeEvent.target.files.length) {
 				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
-						console.log('this.finalJSon', this.finalJSon);
 						for (const item of result.data) {
-							const findex = this.finalDocumentArray.findIndex(f => f.docreq_id === doc_req_id);
+							const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
 							const findex2 = this.imageArray.findIndex(f => f.imgName === item.file_url && f.docreq_id === doc_req_id);
 							if (findex === -1) {
-								// this.finalDocumentArray.push({
-								// 	docreq_id: doc_req_id,
-								// 	ed_name: item.file_name,
-								// 	ed_link: item.file_url,
-								// });
+								this.finalDocumentArray.push({
+									docreq_id: doc_req_id,
+									ed_name: item.file_name,
+									ed_link: item.file_url,
+								});
 								this.finalJSon.push({
 									document_id: doc_req_id,
 									document_name: this.getFileName(doc_req_id),
@@ -274,7 +267,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 								});
 							} else {
-								this.finalDocumentArray.splice(findex, 1);
+								this.finalJSon.splice(findex, 1);
 							}
 							if (findex2 === -1) {
 								this.imageArray.push({
@@ -319,10 +312,10 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	deleteFile(doc_name, doc_req_id) {
-		const findex = this.finalDocumentArray.findIndex(f => f.docreq_id === doc_req_id && f.ed_link === doc_name);
+		const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
 		const findex2 = this.imageArray.findIndex(f => f.docreq_id === doc_req_id && f.imgName === doc_name);
 		if (findex !== -1) {
-			this.finalDocumentArray.splice(findex, 1);
+			this.finalJSon.splice(findex, 1);
 		}
 		if (findex2 !== -1) {
 			this.imageArray.splice(findex2, 1);
@@ -330,7 +323,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	}
 	saveForm() {
 		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -350,6 +342,10 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 			};
+			this.employeedetails.emp_category_detail = {
+				cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+				cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+			};
 		}
 		this.employeedetails['emp_document_detail'] = {
 			document_data: this.finalJSon
@@ -357,6 +353,8 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Documents Submitted Successfully', 'success');
+				//this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });				
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false,reRenderForm:true });
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
 			}
@@ -366,7 +364,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 
 	updateForm() {
 		if (this.employeedetails) {
-			console.log('employeeDetailsForm', this.employeeCommonDetails.employeeDetailsForm.value);
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 			this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
@@ -386,12 +383,19 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 				wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
 				wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
 			};
+			this.employeedetails.emp_category_detail = {
+				cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+				cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+			};
 		}
 		this.employeedetails['emp_document_detail'] = {
 			document_data: this.finalJSon
 		};
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
+				//this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm:true });
+				
 				this.commonAPIService.showSuccessErrorMessage('Employee Documents Updated Successfully', 'success');
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
@@ -433,25 +437,38 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			return this.departmentArray[findIndex].dept_name;
 		}
 	}
-
-	getDesignationName(des_id) {
-		const findIndex = this.designationArray.findIndex(f => Number(f.des_id) === Number(des_id));
-		if (findIndex !== -1) {
-			return this.designationArray[findIndex].des_name;
-		}
-	}
-
 	getHonorificName(hon_id) {
 		const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
 		if (findIndex !== -1) {
 			return this.honrificArr[findIndex].hon_name;
 		}
 	}
-
-	getWingName(wing_id) {
-		const findIndex = this.wingArray.findIndex(f => Number(f.wing_id) === Number(wing_id));
-		if (findIndex !== -1) {
-			return this.wingArray[findIndex].wing_name;
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
+		});
+	}
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
 		}
 	}
+
+	getWingName(wing_id) {
+		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
+		if (findIndex !== -1) {
+			return this.wingArray[findIndex].name;
+		}
+	}
+	getDesignationName(des_id) {
+		const findIndex = this.designationArray.findIndex(f => Number(f.config_id) === Number(des_id));
+		if (findIndex !== -1) {
+			return this.designationArray[findIndex].name;
+		}
+	}
+
 }

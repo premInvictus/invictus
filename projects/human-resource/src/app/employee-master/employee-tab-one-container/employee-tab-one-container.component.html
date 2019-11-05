@@ -60,15 +60,15 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Residential Address</mat-label>
               <input class="text-capitalize" matInput placeholder="Residential Address" [readonly]="viewOnly"
-                formControlName="r_address" required [errorStateMatcher]="confirmValidParentMatcher" />
+                formControlName="r_address" [required]="requiredOnly" [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>City</mat-label>
-              <input type="text" matInput placeholder="City" formControlName="r_city" required [readonly]="viewOnly"
-                [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+              <input type="text" matInput placeholder="City" formControlName="r_city" [required]="requiredOnly"
+                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
                 <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
@@ -81,7 +81,7 @@
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>State</mat-label>
-              <mat-select formControlName="r_state" placeholder="State" required disabled="true"
+              <mat-select formControlName="r_state" placeholder="State" [required]="requiredOnly" disabled="true"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option value="">Please Select</mat-option>
                 <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
@@ -92,11 +92,11 @@
                 This field is required
               </mat-error>
             </mat-form-field>
-
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
-              <input  matInput placeholder="Pincode" [readonly]="viewOnly" required minlength="6"
-                maxlength="6" pattern="[0-9]*"  formControlName="r_pincode" [errorStateMatcher]="confirmValidParentMatcher">             
+              <input matInput placeholder="Pincode" [readonly]="viewOnly" [required]="requiredOnly" minlength="6"
+                maxlength="6" pattern="[0-9]*" formControlName="r_pincode"
+                [errorStateMatcher]="confirmValidParentMatcher">
             </mat-form-field>
           </div>
 

@@ -49,7 +49,7 @@ export class EmployeeCommonComponent implements OnInit {
 	sectionArray = [];
 	departmentArray = [];
 	wingArray = [];
-	designationArray = [];
+	designationArray: any[] = [];
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
@@ -57,11 +57,12 @@ export class EmployeeCommonComponent implements OnInit {
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
 	lastRecordId;
+	categoryOneArray: any[] = [];
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
 		console.log('data', data);
-		this.deleteModal.openModal({text:''});
+		this.deleteModal.openModal({ text: '' });
 	}
 	getStuData = (data) => {
 		console.log('yes');
@@ -78,10 +79,11 @@ export class EmployeeCommonComponent implements OnInit {
 	) {
 	}
 	ngOnInit() {
-		this.buildForm();
-		this.getDepartment();
-		this.getDesignation();
-		this.getWing();
+		// this.buildForm();
+		// this.getDepartment();
+		// this.getDesignation();
+		// this.getWing();
+		// this.getCategoryOne();
 		var result = this.employeedetails;
 		// if (result) {
 		// 	this.employeeDetailsForm.patchValue({
@@ -126,10 +128,13 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	ngOnChanges() {
+		this.buildForm();
+		
 		this.employeedetails.emp_status == 'live';
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
+		this.getCategoryOne();
 		this.getEmployeeDetail(this.employeedetails.emp_id);
 	}
 
@@ -143,9 +148,8 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
-
 	getDesignation() {
-		this.commonAPIService.getAllDesignation({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
 				this.designationArray = result;
 			} else {
@@ -154,10 +158,8 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
-
-
 	getWing() {
-		this.commonAPIService.getAllWing({}).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {
@@ -166,8 +168,6 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
-
-
 	getEmployeeDetail(emp_id) {
 		this.previousB = true;
 		this.nextB = true;
@@ -183,8 +183,9 @@ export class EmployeeCommonComponent implements OnInit {
 					emp_honorific_id: result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '',
 					emp_designation_id: result.emp_designation_detail ? result.emp_designation_detail.des_id : '',
 					emp_department_id: result.emp_department_detail ? result.emp_department_detail.dpt_id : '',
+					emp_category_id: result.emp_category_detail ? Number(result.emp_category_detail.cat_id) : '',
 					emp_wing_id: result.emp_wing_detail ? result.emp_wing_detail.wing_id : '',
-					emp_status:result.emp_status
+					emp_status: result.emp_status
 				});
 				if (result.emp_profile_pic) {
 					this.defaultsrc = result.emp_profile_pic
@@ -193,9 +194,9 @@ export class EmployeeCommonComponent implements OnInit {
 				}
 				this.navigation_record = result.navigation;
 			}
-			
+
 			if (this.navigation_record) {
-				this.viewOnly = true;
+
 				if (this.navigation_record.first_record &&
 					this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
 					this.viewOnly) {
@@ -272,11 +273,12 @@ export class EmployeeCommonComponent implements OnInit {
 			emp_profile_pic: '',
 			emp_id: '',
 			emp_name: '',
+			emp_category_id: '',
 			emp_honorific_id: '',
 			emp_designation_id: '',
 			emp_department_id: '',
 			emp_wing_id: '',
-			emp_status:'live'
+			emp_status: 'live'
 		});
 
 	}
@@ -312,6 +314,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.commonAPIService.employeeData.next('1001');
 	}
 	nextId(admno) {
+		this.viewOnly = true;
 		this.lastRecordId = admno;
 		this.commonAPIService.employeeData.next(
 			{
@@ -319,13 +322,15 @@ export class EmployeeCommonComponent implements OnInit {
 			});
 	}
 	previousId(admno) {
-		this.lastRecordId = admno;	
+		this.viewOnly = true;
+		this.lastRecordId = admno;
 		this.commonAPIService.employeeData.next(
 			{
 				last_record: admno
 			});
 	}
 	firstId(admno) {
+		this.viewOnly = true;
 		this.lastRecordId = admno;
 		this.commonAPIService.employeeData.next(
 			{
@@ -333,6 +338,7 @@ export class EmployeeCommonComponent implements OnInit {
 			});
 	}
 	lastId(admno) {
+		this.viewOnly = true;
 		this.lastRecordId = admno;
 		this.commonAPIService.employeeData.next(
 			{
@@ -348,6 +354,7 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	getEmployeeId($event) {
+		this.viewOnly = true;
 		$event.preventDefault();
 		this.getEmployeeDetail($event.target.value);
 	}
@@ -371,7 +378,7 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	deleteUser() {
-		this.commonAPIService.deleteEmployee({ emp_id: this.employeeDetailsForm.value.emp_id, emp_status : 'left' }).subscribe((result: any) => {
+		this.commonAPIService.deleteEmployee({ emp_id: this.employeeDetailsForm.value.emp_id, emp_status: 'left' }).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
 				this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
@@ -390,5 +397,20 @@ export class EmployeeCommonComponent implements OnInit {
 
 	openSearchDialog() {
 
+	}
+
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
+		});
+	}
+	getCategoryOneName(cat_id) {
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
+		}
 	}
 }

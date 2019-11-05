@@ -1,74 +1,93 @@
-<div>
-  <div class="row">
-    <div class="col-12">
-      <mat-card>
-        <div class="row">
-          <div class="col-6 margin-top-15">
-            <span class="font-size-24 font-bold">Bar Code Printing</span>
-          </div>
-          <div class="col-6 text-right">
-            <form [formGroup]="barCodePrintForm">
-              <mat-form-field appearance="outline" class=" form-field-150">
-                <mat-label>Book ID </mat-label>
-                <input matInput placeholder="Book ID " formControlName="reserv_id" type="text" (keydown.enter)="getBarCode();$event.preventDefault();"  autocomplete="off" />
-              </mat-form-field>
-              <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6 margin-top-15">
+          <span class="font-size-24 font-bold">Bar Code Printing</span>
+        </div>
+        <div class="col-6 text-right">
+          <form [formGroup]="barCodePrintForm">
+            <mat-form-field appearance="outline" class=" form-field-150">
+              <mat-label>Book ID </mat-label>
+              <input matInput placeholder="Book ID " formControlName="reserv_id" type="text"
+                (keydown.enter)="getBarCode();$event.preventDefault();" autocomplete="off" />
+            </mat-form-field>
+            <!-- <mat-form-field appearance="outline" class="btn-spacer form-field-150">
                 <mat-label>Book ID To</mat-label>
                 <input matInput placeholder="Book ID TO" formControlName="reserv_id_to" type="number" />
               </mat-form-field> -->
-              <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openSearchDialog({})">
-                Advanced Filter
-              </button>
-              <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()">
-                Create Bar Code
-              </button>
-            </form>
+            <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openSearchDialog({})">
+              Advanced Filter
+            </button>
+            <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getBarCode()">
+              Create Bar Code
+            </button>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="barCodeArray.length > 0" class="visible-print-row">
+  <div class="col-lg-12">
+    <div class="text-center" id="print-bars">
+      <div class="accumulate-div-bar-code">
+        <div class="row">
+          <div class="col-3" *ngFor="let item of barCodeArray; let i = index">
+            <div class="barcode-div-print">
+              <div class="barcode-print-lib2">
+                <span class="font-bold bar-tiltle-span2">{{(item.title | titlecase) | truncatetext : 18}}</span>
+                <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.reserv_id" bc-format="CODE128" bc-width="2">
+                </ngx-barcode>
+                <span class="font-size-14 font-bold bar-isbn-span2">{{item.reserv_id}}</span>
+                <span class="float-right font-size-14 font-bold bar-location-span2">{{item.location}}</span>
+              </div>
+            </div>
           </div>
         </div>
-      </mat-card>
+      </div>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col-12">
-      <mat-card class="card-height-730" [hidden]="!(barCodeArray.length > 0)">
-        <div class="margin-left-15" id="print-bars">
-          <div class="row">
-            <div class="col-3 smart-col-11" *ngFor="let item of barCodeArray">
-              <div class="bar-acc-div">
-                <span
-                  class="font-size-16 font-bold bar-tiltle-span">{{(item.title | titlecase) | truncatetext : 20}}</span>
-              </div>
-              <div class="barcode-print-lib">
-                <ngx-barcode bc-element-type="img" [bc-value]="item.reserv_id" bc-format="CODE128" bc-width="2">
-                </ngx-barcode>
-              </div>
-              <br />
-              <span class="font-size-14 font-bold bar-isbn-span">{{item.reserv_id}}</span><span
-                class="float-right font-size-14 font-bold bar-location-span">{{item.location}}</span>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-730" [hidden]="!(barCodeArray.length > 0)">
+      <div class="margin-left-15">
+        <div class="row">
+          <div class="col-4 smart-col-11" *ngFor="let item of barCodeArray">
+            <div class="bar-acc-div">
+              <span class="font-bold bar-tiltle-span"
+                style="font-size: 13px !important;">{{(item.title | titlecase) | truncatetext : 18}}</span>
             </div>
-            <br>
+            <div class="barcode-print-lib">
+              <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.reserv_id" bc-format="CODE128" bc-width="2">
+              </ngx-barcode>
+            </div>
+            <br />
+            <span class="font-size-14 font-bold bar-isbn-span">{{item.reserv_id}}</span><span
+              class="float-right font-size-14 font-bold bar-location-span">{{item.location}}</span>
           </div>
+          <br>
         </div>
-        <hr class="margin-left-15 margin-right-15">
-        <br />
-        <div class="row text-center">
-          <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
-            <button mat-raised-button class="btn-reset btn-spacer">
-              Cancel
-            </button>
-          </div>
+      </div>
+      <hr class="margin-left-15 margin-right-15">
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="printbars()">Print</button>
+          <button mat-raised-button class="btn-reset btn-spacer">
+            Cancel
+          </button>
         </div>
-      </mat-card>
-      <mat-card *ngIf="barCodeArray.length === 0">
-        <div class="text-center">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/bar_code_printing.png'"
-            [noDataText]="'No Book for Barcode Print'" [subText]="'Please filter data to print bar code'"></app-no-data>
-        </div>
-      </mat-card>
-    </div>
+      </div>
+    </mat-card>
+    <mat-card *ngIf="barCodeArray.length === 0">
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/bar_code_printing.png'"
+          [noDataText]="'No Book for Barcode Print'" [subText]="'Please filter data to print bar code'"></app-no-data>
+      </div>
+    </mat-card>
   </div>
 </div>
 <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

@@ -1,10 +1,10 @@
-<div class="row remove-top-margin">
-  <div class="col-12 remove-col-padding">
+<div class="row">
+  <div class="col-12">
 
     <div>
       <!-- [belongToForm]="formname" [config]="config" [configSetting]="settingsArray"-->
       <!-- <ng-container *ngIf="rendorForm"> -->
-      <app-employee-common [employeedetails]="employeeRecord"></app-employee-common>
+      <app-employee-common  [employeedetails]="employeeRecord"></app-employee-common>
       <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
         <!-- <ng-container *ngFor="let tab of formsTab; let i=index">
         <mat-tab [disabled]="checkFormEnabled(i)">

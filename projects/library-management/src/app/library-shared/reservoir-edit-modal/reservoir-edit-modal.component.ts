@@ -140,11 +140,13 @@ export class ReservoirEditModalComponent implements OnInit {
     });
   }
   getBookData(id) {
+    this.bookImage = '';
     const inputJson = { 'filters': [{ 'filter_type': 'reserv_id', 'filter_value': id, 'type': 'text' }], search_from: 'master' };
     this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.bookData = {};
         this.bookData = res.data.resultData[0];
+        console.log(this.bookData);
         if (this.bookData.images_links && (this.bookData.images_links.smallThumbnail || this.bookData.images_links.thumbnail)) {
           this.imageFlag = true;
           this.bookImage = this.bookData.images_links.smallThumbnail ? this.bookData.images_links.smallThumbnail :
@@ -360,8 +362,8 @@ export class ReservoirEditModalComponent implements OnInit {
     if (this.bookForm.valid) {
       if(this.bookImage) {
         this.bookForm.value['bookImage'] = this.bookImage;
-        this.bookForm.value['reserv_id'] = this.bookData.reserv_id;
       }
+      this.bookForm.value['reserv_id'] = this.bookData.reserv_id;
       if (!this.classChange) {
         this.bookForm.value['location_class_name'] = this.bookData.location_class_name;
       }

@@ -1,8 +1,8 @@
 <div class="container-box__white">
   <ng-container>
     <div class="functional-button-five">
-      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request'))"
-        (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
+      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request'))" (click)="editRequest()"
+        (keydown.enter)="$event.preventDefault()">
         <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
       </button>
     </div>
@@ -14,7 +14,7 @@
         </div>
       </div>
       <form [formGroup]="Education_Form">
-        <div class="row">
+        <div class="row" *ngIf="!viewOnly">
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Qualification</mat-label>
@@ -165,7 +165,7 @@
         </div>
       </div>
       <form [formGroup]="Experience_Form">
-        <div class="row">
+        <div class="row" *ngIf="!viewOnly">
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Organisation</mat-label>
@@ -199,7 +199,8 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Start Date</mat-label>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date" [readonly]="viewOnly">
+              <input matInput [matDatepicker]="picker" required placeholder="Start Date" formControlName="start_date"
+                [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error>
@@ -210,7 +211,8 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>End Date</mat-label>
-              <input matInput [matDatepicker]="picker2" placeholder="End Date" formControlName="end_date" [readonly]="viewOnly">
+              <input matInput [matDatepicker]="picker2" required placeholder="End Date" formControlName="end_date"
+                [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error>
@@ -290,9 +292,9 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-2">
+        <div class="col-2" *ngIf="!viewOnly">
           <form [formGroup]="skillForm">
-            <div class="inline-flex ">
+            <div class="inline-flex " >
               <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Skills</mat-label>
                 <input autocomplete="off" matInput placeholder="Placeholder" (keydown.enter)="insertSkill($event)"
@@ -305,6 +307,12 @@
           <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
             <span class="custom-btn-text">{{item}}</span>
             <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="!viewOnly" (click)="deleteSkill(item)"></i>
+          </button>
+        </div>
+        <div class="col-10" *ngIf="skillsArray.length === 0 && viewOnly">
+          <button *ngFor="let item of skillsArray" mat-stroked-button class="custom-entry-button margin-left-10">
+            <span class="custom-btn-text">No Record Found</span>
+            <i class="fas fa-times-circle custom-entry-btn-icon" *ngIf="viewOnly" ></i>
           </button>
         </div>
       </div>
@@ -320,7 +328,8 @@
             </div>
             <div class="row">
               <div class="col-12 ">
-                <textarea rows="5" class="form-control"formControlName="management_remarks" [readonly]="viewOnly"></textarea>
+                <textarea rows="5" class="form-control" formControlName="management_remarks"
+                  [readonly]="viewOnly"></textarea>
               </div>
             </div>
           </div>
@@ -332,7 +341,8 @@
             </div>
             <div class="row">
               <div class="col-12 ">
-                <textarea rows="5" class="form-control" formControlName="interview_remarks" [readonly]="viewOnly"></textarea>
+                <textarea rows="5" class="form-control" formControlName="interview_remarks"
+                  [readonly]="viewOnly"></textarea>
               </div>
             </div>
           </div>
@@ -342,7 +352,7 @@
     </div>
     <div class="row">
       <div class="col-12 text-center ">
-        <button  *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
           Continue</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)">Submit</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"

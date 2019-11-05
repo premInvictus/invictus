@@ -8,3 +8,19 @@
 .overflow {
     overflow-x: scroll;
 }
+
+.btn-success-green-1 {
+    background-color: #43A047 !important;
+    width: 160px !important;
+    color: #ffffff !important;
+    text-transform: capitalize;
+    font-size: 13px !important;
+}
+
+.mat-row, .mat-header-row {  
+    min-width: 2800px;  
+    width: 100%;  
+ }  
+ table.mat-table{
+    width: 140% !important;
+ }
