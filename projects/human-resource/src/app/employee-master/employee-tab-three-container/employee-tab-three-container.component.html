@@ -221,7 +221,7 @@
                                         <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
                                             [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                             <mat-option value="">Please select</mat-option>
-                                            <mat-option *ngFor="let item of payMode" [value]="item.id">
+                                            <mat-option *ngFor="let item of payMode" [value]="item.config_id">
                                                 {{item.name}}
                                             </mat-option>
                                         </mat-select>

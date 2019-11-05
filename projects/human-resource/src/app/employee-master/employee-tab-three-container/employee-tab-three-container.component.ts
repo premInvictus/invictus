@@ -175,6 +175,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getDesignation();
 		this.getWing();
 		this.getPayScale();
+		this.getPayMode();
 		this.getBank();
 		this.getCategoryOne();
 		this.getCategoryTwo();
@@ -214,8 +215,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 		});
 	}
+	getPayMode() {
+		this.commonAPIService.getMaster({ type_id: '6' }).subscribe((result: any) => {
+			if (result) {
+				this.payMode = result;
+			} else {
+				this.payMode = [];
+			}
+
+		});
+	}
 	getPayModeName(id) {
-		const findex = this.payMode.findIndex(e => Number(e.id) === Number(id));
+		const findex = this.payMode.findIndex(e => Number(e.config_id) === Number(id));
 		if (findex !== -1) {
 			return this.payMode[findex].name;
 		}
@@ -295,6 +306,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	onChangeData() {
 		this.tempData = [];
 		this.scaleData = [];
+		this.formGroupArray2 = [];
 		const findex = this.scaleArray.findIndex(e => Number(e.ss_id) === Number(this.salaryDetails.value.sal_str));
 		if (findex !== -1) {
 			this.tempData = this.scaleArray[findex].ss_component_data;
@@ -611,6 +623,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				if (item.formGroup.value['sc_calculation_type' + i] === 'text' || item.formGroup.value['sc_calculation_type' + i] === 'Text') {
 					if (Number(item.formGroup.value['type' + i]) === 1) {
 						if (item.formGroup.value['sc_value' + i] === '') {
+							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
 							this.earning = this.earning + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 						} else {
@@ -620,6 +633,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 					} else {
 						if (item.formGroup.value['sc_value' + i] === '') {
+							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
 							this.deduction = this.deduction + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id' + i]));
 						} else {
