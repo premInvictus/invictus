@@ -5507,6 +5507,13 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     top: -7px;
     left: 8px;
 }
+div.barcode-print-lib3 > ngx-barcode > div > img {
+    width: 88% !important;
+    height: 28px !important;
+    position: relative;
+    top: 1px;
+    left: 8px;
+}
 .slickgrid-container .slick-header-columns .slick-header-column.ui-state-default {
     line-height: 15px !important;
 }

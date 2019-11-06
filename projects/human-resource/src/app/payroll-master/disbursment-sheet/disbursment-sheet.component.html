@@ -118,12 +118,13 @@
                   <ng-container matColumnDef="emp_id">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
                     <td mat-cell *matCellDef="let element">
-                      <a class="font-skyblue cursor-pointer" (click)="openBookModal(element.emp_id)">{{element?.emp_id}}
-                      </a>
+                      <!-- <a class="font-skyblue cursor-pointer" (click)="openBookModal(element.emp_id)">{{element?.emp_id}}
+                      </a> -->
+                      {{element?.emp_id}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%">Emp Name</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width=" 0%">Emp Name</th>
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
                     </td>
@@ -201,56 +202,48 @@
                     <!-- </td>
                   </ng-container> -->
                   <ng-container matColumnDef="emp_salary_payable">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Salary Payable</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Salary Payable ( <span><i class="fas fa-rupee-sign"></i></span> )</th>
                     <td mat-cell *matCellDef="let element">
-                      {{element?.emp_salary_payable}}
+                      {{element?.emp_salary_payable | number}}
                     </td>
                   </ng-container>
-                  <ng-container matColumnDef="bank_transfer">
+                  <!-- <ng-container matColumnDef="bank_transfer">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Bank Transfer</th>
-                    <td mat-cell *matCellDef="let element">
-                      <!-- {{element?.emp_pay_mode}} -->
-                      <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
-                        <mat-form-field class="form-field lib-form">
-                          <input matInput
-                            [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[0]['pm_id']]) ? 'Type Here.' : ''"
-                            formControlName="{{paymentModeArray[0]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
-                        </mat-form-field>
-                      </form> -->
+                    <td mat-cell *matCellDef="let element">                     
                       {{element?.emp_modes_data?.mode_data[0]['pm_value']}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="cheque_payment">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Cash</th>
-                    <td mat-cell *matCellDef="let element">
-                      <!-- {{element?.emp_pay_mode}} -->
-                      <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
-                        <mat-form-field class="form-field lib-form">
-                          <input matInput
-                            [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[1]['pm_id']]) ? 'Type Here.' : ''"
-                            formControlName="{{paymentModeArray[1]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
-                        </mat-form-field>
-                      </form> -->
+                    <td mat-cell *matCellDef="let element">                     
                       {{element?.emp_modes_data?.mode_data[1]['pm_value']}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="cash_payment">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Cheque</th>
-                    <td mat-cell *matCellDef="let element">
+                    <td mat-cell *matCellDef="let element">                     
+                      {{element?.emp_modes_data?.mode_data[2]['pm_value']}}
+                    </td>
+                  </ng-container> -->
+                  <ng-container *ngFor="let column of paymentModeArray; let i = index;" [matColumnDef]="column?.pm_id">
+                    <th mat-header-cell *matHeaderCellDef width="10%" class="text-nowrap">{{column?.pm_name}} (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let element" class="text-center" [ngStyle]="{'background-color':element?.colorCode}">
+                      <!-- <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value']}} </span> -->
                       <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
                         <mat-form-field class="form-field lib-form">
                           <input matInput
-                            [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[2]['pm_id']]) ? 'Type Here.' : ''"
-                            formControlName="{{paymentModeArray[2]['pm_id']}}" autocomplete="off" (change)="setNetTotal(element, $event)"/>
+                            [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
+                            formControlName="{{paymentModeArray[i]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[i]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
                         </mat-form-field>
                       </form> -->
-                      {{element?.emp_modes_data?.mode_data[2]['pm_value']}}
+                      <span *ngIf="element?.emp_modes_data?.mode_data[i]">{{element?.emp_modes_data?.mode_data[i]['pm_value'] | number}}</span>
+                      <span *ngIf="!(element?.emp_modes_data?.mode_data[i])">-</span>
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_total">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Total</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Total (<span><i class="fas fa-rupee-sign"></i></span>)</th>
                     <td mat-cell *matCellDef="let element">
-                      {{element?.emp_total}}
+                      {{element?.emp_total | number}}
                     </td>
                   </ng-container>
                   <!-- <ng-container matColumnDef="emp_status">
