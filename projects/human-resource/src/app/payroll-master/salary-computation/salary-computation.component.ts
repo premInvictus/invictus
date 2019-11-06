@@ -33,22 +33,22 @@ export class SalaryComputationComponent implements OnInit {
 	formGroupArray = [];
 	session_id;
 	paymentModeArray: any[] = [
-		{
-			pm_id: 'bank_transfer',
-			pm_name: 'Bank Transfer',
-			pm_value: 0
-		},
-		{
-			pm_id: 'cash_payment',
-			pm_name: 'Cash Payment',
-			pm_value: 0
+		// {
+		// 	pm_id: 'bank_transfer',
+		// 	pm_name: 'Bank Transfer',
+		// 	pm_value: 0
+		// },
+		// {
+		// 	pm_id: 'cash_payment',
+		// 	pm_name: 'Cash Payment',
+		// 	pm_value: 0
 
-		},
-		{
-			pm_id: 'cheque_payment',
-			pm_name: 'Cheque Payment',
-			pm_value: 0
-		},
+		// },
+		// {
+		// 	pm_id: 'cheque_payment',
+		// 	pm_name: 'Cheque Payment',
+		// 	pm_value: 0
+		// },
 	];
 
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
@@ -126,8 +126,9 @@ export class SalaryComputationComponent implements OnInit {
 		this.buildForm();
 		this.getSession();
 		this.getSchool();
-		this.getSalaryHeads();
+		
 		this.getPaymentModes();
+		this.getSalaryHeads();
 
 	}
 
@@ -144,9 +145,10 @@ export class SalaryComputationComponent implements OnInit {
 			if (res) {
 				//this.paymentModeArray = res;
 				for (let i=0; i<res.length;i++) {
+					console.log('res', res);
 					var inputJson = {
-						'pm_id' : res[i]['type_name'].toLowerCase().replace(' ','_'),
-						'pm_name':res[i]['type_name'],
+						'pm_id' : res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ','_') : '',
+						'pm_name':res[i]['name'],
 						'pm_value' : 0
 					}
 					this.paymentModeArray.push(inputJson);
@@ -202,6 +204,7 @@ export class SalaryComputationComponent implements OnInit {
 				}
 
 				console.log('shacolumns', this.shacolumns);
+				console.log('this.paymentModeArray', this.paymentModeArray);
 				//this.getAllEmployee();
 			}
 		});

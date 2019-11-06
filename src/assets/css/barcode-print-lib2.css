@@ -87,6 +87,12 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     font-size: 10px;
     left: 14px
 }
+.barcode-margin-div2 {
+    margin-top: 0px;
+}
+.barcode-margin-div {
+    margin-top: 73px !important;
+}
 .bar-isbn-span2 {
     position: relative;
     left: 14px;
@@ -98,4 +104,25 @@ div.barcode-print-lib2 > ngx-barcode > div > img {
     left: -17px;
     top: -8px;
     font-size: 11px;
+}
+div.barcode-print-lib3 > ngx-barcode > div > img {
+    width: 88% !important;
+    height: 28px !important;
+    position: relative;
+    top: -14px;
+    left: -5px;
+}
+.accumulate-div-bar-code-2 {
+    padding-top: 24.94px;
+    padding-bottom: 44.13px;
+    zoom: 193%;
+    background: white;
+    padding-left: 2.09px;
+    padding-right: 14.09px;
+}
+.barcode-div-print-2{
+    width: 128.54px !important;
+    height: 31.81px !important;
+    border-radius: 5.67px;
+    margin-bottom: 3px;
 }

@@ -88,18 +88,18 @@ export class DisbursmentSheetComponent implements OnInit {
 
 	};
 	paymentModeArray: any[] = [
-		{
-			pm_id: 'bank_transfer',
-			pm_name: 'Bank Transfer',
-		},
-		{
-			pm_id: 'cash_payment',
-			pm_name: 'Cash Payment',
-		},
-		{
-			pm_id: 'cheque_payment',
-			pm_name: 'Cheque Payment',
-		},
+		// {
+		// 	pm_id: 'bank_transfer',
+		// 	pm_name: 'Bank Transfer',
+		// },
+		// {
+		// 	pm_id: 'cash_payment',
+		// 	pm_name: 'Cash Payment',
+		// },
+		// {
+		// 	pm_id: 'cheque_payment',
+		// 	pm_name: 'Cheque Payment',
+		// },
 	];
 
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
@@ -120,6 +120,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getPaymentModes();
 		this.getSalaryHeads();
 		this.getSchool();
 		this.getSession();
@@ -134,6 +135,24 @@ export class DisbursmentSheetComponent implements OnInit {
 
 		});
 	}
+
+	getPaymentModes() {
+		this.commonAPIService.getMaster({type_id:6}).subscribe((res: any) => {
+			if (res) {
+				//this.paymentModeArray = res;
+				for (let i=0; i<res.length;i++) {
+					console.log('res', res);
+					var inputJson = {
+						'pm_id' : res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ','_') : '',
+						'pm_name':res[i]['name'],
+						'pm_value' : 0
+					}
+					this.paymentModeArray.push(inputJson);
+				}
+			} 
+		});
+	}
+
 	getSession() {
 		this.erpCommonService.getSession()
 			.subscribe(
