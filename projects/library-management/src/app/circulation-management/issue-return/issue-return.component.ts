@@ -38,6 +38,7 @@ export class IssueReturnComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('bookDet')bookDet;
 	finIssueBook : any = [];
+	minDate = new Date();
 	stuOutStandingFine = 0;
 	BOOK_LOG_LIST_ELEMENT: BookLogListElement[] = [];
 	bookLoglistdataSource = new MatTableDataSource<BookLogListElement>(this.BOOK_LOG_LIST_ELEMENT);
@@ -237,7 +238,37 @@ export class IssueReturnComponent implements OnInit {
 			if (!bookAlreadyAddedStatus) {
 				const issueBookStatus = this.checkForIssueBook(this.returnIssueReservoirForm.value.scanBookId);
 				if (issueBookStatus.status) {
-					console.log(issueBookStatus.index);					
+					// console.log(this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']);	
+					const date = new Date();
+					if (this.searchForm.value.user_role_id === '4') {
+						if (this.settingData['book_return_days_student']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_student'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					} else if (this.searchForm.value.user_role_id === '3') {
+						if (this.settingData['book_return_days_teacher']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_teacher'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					} else if (this.searchForm.value.user_role_id === '2') {
+						if (this.settingData['book_return_days_staff']) {
+							date.setDate(date.getDate() + parseInt(this.settingData['book_return_days_staff'], 10));
+						} else {
+							date.setDate(date.getDate() + 7);
+						}
+						
+					}
+					if (this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']) {
+						this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']['due_date'] = date;
+						this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']['fdue_date'] = date;
+						
+					}
+					
+
 					this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']);
 
 				} else {
@@ -272,8 +303,11 @@ export class IssueReturnComponent implements OnInit {
 					
 					this.erpCommonService.searchReservoirByStatus(inputJson).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
+
+							console.log('result', result);
 							if (result && result.data && result.data.resultData[0]) {
 								delete result.data.resultData[0]['_id'];
+								console.log('date', date);
 								result.data.resultData[0]['due_date'] = date;
 								// result.data.resultData[0]['issued_on'] = '';
 								// result.data.resultData[0]['returned_on'] = '';
@@ -398,14 +432,16 @@ export class IssueReturnComponent implements OnInit {
 		
 		for (let i = 0; i < bookData.length; i++) {
 			if (bookData[i]['reserv_status'] === 'issued') {
-				if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
-				bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+				//bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
+				if (
+				bookData[i]['due_date'] !== this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
 							bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 							bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 							bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
 							bookData[i]['reissue_status'] = 1;
+							console.log('in available jh');
 						} else {
-							
+							console.log('in available');
 							bookData[i]['reserv_status'] = 'available';
 							bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
 							bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
@@ -443,7 +479,7 @@ export class IssueReturnComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-			console.log('inputJson', inputJson);
+			
 			if (!this.userHaveBooksData) {
 				this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
