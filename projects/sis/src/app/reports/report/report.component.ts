@@ -94,6 +94,16 @@ export class ReportComponent implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
+		},
+		{
+			report_id: '10',
+			report_name: 'Bar Code Report',
+			report_image:
+				'/assets/images/Fee Reports/missing_fee_invoice.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
 		}
 	];
 	reportType: string;
@@ -113,7 +123,7 @@ export class ReportComponent implements OnInit {
 		} else {
 			return 'report-card mat-card';
     } */
-    return 'report-card mat-card';
+		return 'report-card mat-card';
 	}
 	executeReport(report_id) {
 		this.reportTypeArray = [];
