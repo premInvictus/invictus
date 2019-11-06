@@ -13,11 +13,11 @@ export class BarcodePrintingComponent implements OnInit {
   printformat: any = '';
   printTypeArray: any[] = [{
     id: '1',
-    name: 'ST-48 A4100 Format'
+    name: 'ST-48 A4100'
   },
   {
     id: '2',
-    name: 'ST-24 A4100 Format'
+    name: 'ST-84 A4100'
   }];
   @ViewChild('searchModal') searchModal;
   constructor(private common: ErpCommonService, private fbuild: FormBuilder,
@@ -93,6 +93,17 @@ export class BarcodePrintingComponent implements OnInit {
       }
     } else {
       return 'barcode-div-print';
+    }
+  }
+  getClass2(index) {
+    if (index > 83) {
+      if (index % 84 === 0 || index % 84 === 1 || index % 84 === 2 || index % 84 === 3) {
+        return 'barcode-div-print-2 barcode-margin-div3';
+      } else {
+        return 'barcode-div-print-2 barcode-margin-div4';
+      }
+    } else {
+      return 'barcode-div-print-2';
     }
   }
   changePrintFormat($event) {
