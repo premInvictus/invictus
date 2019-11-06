@@ -231,7 +231,7 @@
                     <td  width="15%" class="custom-td text-nowrap" 
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <div class="inline-flex date-width-100">
-                        <input matInput [matDatepicker]="picker" formControlName="due_date"
+                        <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
                           (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
                           [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>

@@ -139,3 +139,18 @@
   button.mat-fab:hover mat-icon {
     display:none;
   }
+
+  .sis-student-pic__size {
+      height: 80px !important;
+      width: 80px !important;
+  }
+
+  .container-box__white {
+      padding: 5px 10px !important;
+  }
+
+  :host ::ng-deep #iemp_id .mat-form-field-infix {
+      padding : 1px !important;
+      border-top: 0 !important;
+  }
+  
