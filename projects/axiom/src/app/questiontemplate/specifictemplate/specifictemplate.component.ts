@@ -261,6 +261,7 @@ export class SpecifictemplateComponent implements OnInit {
 	}
 
 	getTopicByClassSubject(): void {
+		console.log('1 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
 		this.qelementService.getTopicByClassSubject(this.templatesform1.value.tp_class_id, this.templatesform1.value.tp_sub_id).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -419,6 +420,7 @@ export class SpecifictemplateComponent implements OnInit {
 			this.notif.showSuccessErrorMessage('Section is required', 'error');
 		}
 		if (!this.templatesform1.value.tp_sub_id) {
+			console.log('2 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
 			this.notif.showSuccessErrorMessage('Subject is required', 'error');
 		}
 		if (!this.templatesform1.value.tp_marks) {
@@ -489,6 +491,7 @@ export class SpecifictemplateComponent implements OnInit {
 			this.notif.showSuccessErrorMessage('Section is required', 'error');
 		}
 		if (!this.templatesform1.value.tp_sub_id) {
+			console.log('3 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
 			this.notif.showSuccessErrorMessage('Subject is required', 'error');
 		}
 		if (!this.templatesform1.value.tp_marks) {
@@ -535,6 +538,8 @@ export class SpecifictemplateComponent implements OnInit {
 				'tp_tt_id': 1,
 				'tp_sub_id': [this.templatesform1.value.tp_sub_id]
 			});
+			console.log('templatesform1', this.templatesform1.value);
+			console.log('4 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
 			if (this.instruction_form.value.ti_id) {
 				this.qelementService.addTemplate(this.templatesform1.value).subscribe(
 
@@ -584,6 +589,7 @@ export class SpecifictemplateComponent implements OnInit {
 			'filters': this.templates,
 			'tp_sub_id': [this.templatesform1.value.tp_sub_id]
 		});
+		console.log('5 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
 		if (Number(this.leftmarks) === 0) {
 			this.qelementService.updateTemplate(this.templatesform1.value).subscribe(
 				(result: any) => {

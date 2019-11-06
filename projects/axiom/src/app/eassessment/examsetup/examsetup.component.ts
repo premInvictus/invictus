@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService, BreadCrumbService, HtmlToTextService } from '../../_services/index';
+import { NotificationService, BreadCrumbService, HtmlToTextService, SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appConfig } from '../../app.config';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -53,6 +53,7 @@ export class ExamsetupComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
+		private smartService: SmartService,
 		private notif: NotificationService,
 		private htt: HtmlToTextService,
 		private route: ActivatedRoute,
@@ -539,20 +540,39 @@ export class ExamsetupComponent implements OnInit {
 		);
 	}
 
-	getAllTeacher(): void {
+	async getAllTeacher(): void {
 		this.teacherArray = [];
 		const param: any = {};
 		param.class_id = this.Exam_setup_Form.value.es_class_id;
 		param.sub_id = this.Exam_setup_Form.value.es_sub_id;
 		param.sec_id = this.Exam_setup_Form.value.es_sec_id;
 		param.status = 1;
-		this.qelementService.getAllTeacher(param).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.teacherArray = result.data;
+		if(param.class_id && param.sec_id && param.sub_id) {
+			const smartparam: any = {};
+			smartparam.tgam_config_type = '1';
+			smartparam.tgam_axiom_config_id = param.class_id;
+			smartparam.tgam_global_sec_id = param.sec_id;
+			await this.smartService.getSmartToAxiom(smartparam).toPromise().then((result: any) => {
+				if(result && result.status === 'ok') {
+					param.class_id = result.data[0].tgam_global_config_id;
 				}
-			}
-		);
+			});
+			const smartparam1: any = {};
+			smartparam1.tgam_config_type = '2';
+			smartparam1.tgam_axiom_config_id = param.sub_id;
+			await this.smartService.getSmartToAxiom(smartparam1).toPromise().then((result: any) => {
+				if(result && result.status === 'ok') {
+					param.sub_id = result.data[0].tgam_global_config_id;
+				}
+			});
+			await this.qelementService.getAllTeacher(param).toPromise().then(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.teacherArray = result.data;
+					}
+				}
+			);
+		}
 	}
 
 	getQuestionPaper() {
