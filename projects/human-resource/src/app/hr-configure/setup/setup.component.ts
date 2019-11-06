@@ -551,4 +551,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		}
 		return salaryCompute;
 	}
+
+	deleteCancel() {
+		
+	}
 }
