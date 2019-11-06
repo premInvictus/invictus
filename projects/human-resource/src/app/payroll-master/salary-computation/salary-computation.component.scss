@@ -24,3 +24,8 @@
  table.mat-table{
     width: 140% !important;
  }
+
+ :host ::ng-deep  #salary_compute_log .mat-form-field-infix{
+    width : 80px !important;
+    
+}

@@ -46,12 +46,25 @@
     height: 59.81px !important;
     border-radius: 6px;
 }
+.barcode-div-print-2{
+    border: 1px solid;
+    width: 130.54px !important;
+    height: 31.81px !important;
+    border-radius: 6px;
+}
 .accumulate-div-bar-code {
     padding-top: 60.48px;
     padding-bottom: 59.9px;
     background: white;
     padding-left: 27.35px;
     padding-right: 27.35px;
+}
+.accumulate-div-bar-code-2 {
+    padding-top: 44.94px;
+    padding-bottom: 44.13px;
+    background: white;
+    padding-left: 14.09px;
+    padding-right: 14.09px;
 }
 @media print {
     .visible-print-row {
