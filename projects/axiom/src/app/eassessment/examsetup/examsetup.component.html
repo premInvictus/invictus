@@ -59,7 +59,7 @@
                         <div class="col-lg-6 fin-tab-col-50">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Teacher</mat-label>
-                            <mat-select placeholder="Teacher" formControlName="es_teacher_id" required>
+                            <mat-select placeholder="Teacher" formControlName="es_teacher_id">
                               <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id">
                                 {{item.au_full_name}}
                               </mat-option>

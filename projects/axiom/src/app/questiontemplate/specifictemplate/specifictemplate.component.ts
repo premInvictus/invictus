@@ -536,12 +536,13 @@ export class SpecifictemplateComponent implements OnInit {
 			this.templatesform1.patchValue({
 				'filters': this.templates,
 				'tp_tt_id': 1,
-				'tp_sub_id': [this.templatesform1.value.tp_sub_id]
+				'tp_sub_id': this.templatesform1.value.tp_sub_id
 			});
-			console.log('templatesform1', this.templatesform1.value);
-			console.log('4 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
+			let param: any = Object.assign({}, this.templatesform1.value) ;
+			param.tp_sub_id = [this.templatesform1.value.tp_sub_id];
+			console.log('param', param);
 			if (this.instruction_form.value.ti_id) {
-				this.qelementService.addTemplate(this.templatesform1.value).subscribe(
+				this.qelementService.addTemplate(param).subscribe(
 
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -587,11 +588,12 @@ export class SpecifictemplateComponent implements OnInit {
 		// this.templatesform1.controls.filters.setValue(this.templates);
 		this.templatesform1.patchValue({
 			'filters': this.templates,
-			'tp_sub_id': [this.templatesform1.value.tp_sub_id]
+			'tp_sub_id': this.templatesform1.value.tp_sub_id
 		});
-		console.log('5 this.templatesform1.value.tp_sub_id', this.templatesform1.value.tp_sub_id);
+		let param: any = Object.assign({}, this.templatesform1.value) ;
+			param.tp_sub_id = [this.templatesform1.value.tp_sub_id];
 		if (Number(this.leftmarks) === 0) {
-			this.qelementService.updateTemplate(this.templatesform1.value).subscribe(
+			this.qelementService.updateTemplate(param).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.notif.showSuccessErrorMessage('Template updated successfully', 'success');

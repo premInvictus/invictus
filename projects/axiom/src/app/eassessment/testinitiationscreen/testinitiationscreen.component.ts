@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService, SocketService } from '../../_services/index';
+import { NotificationService, SocketService, SmartService } from '../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort, MatInput } from '@angular/material';
 
 @Component({
@@ -29,7 +29,8 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 		private qelementService: QelementService,
 		private notif: NotificationService,
 		private socketService: SocketService,
-		private router: Router
+		private router: Router,
+		private smartService: SmartService
 	) { }
 
 	displayedColumns = [
@@ -53,7 +54,7 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 					console.log('scheduleExam', this.scheduleExam);
 					if (this.scheduleExam.es_status === '1') {
 						this.testInitiationScreenDiv = false;
-						this.router.navigate(['../../teinvilagation', this.es_id], {relativeTo: this.route});
+						this.router.navigate(['../../teinvilagation', this.es_id], { relativeTo: this.route });
 					}
 					this.getStudents();
 				}
@@ -96,7 +97,7 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 							})
 							.subscribe((result1: any) => {
 								if (result1 && result1.status === 'ok') {
-									this.router.navigate(['../../teinvilagation', this.es_id], {relativeTo: this.route});
+									this.router.navigate(['../../teinvilagation', this.es_id], { relativeTo: this.route });
 								}
 							});
 						this.notif.showSuccessErrorMessage(
@@ -107,7 +108,7 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 						result &&
 						Number(this.scheduleExam.es_grace_time_extend) === 1
 					) {
-						this.router.navigate(['../../teinvilagation', this.es_id], {relativeTo: this.route});
+						this.router.navigate(['../../teinvilagation', this.es_id], { relativeTo: this.route });
 						this.notif.showSuccessErrorMessage(
 							'Attendence marked successfully',
 							'success'
@@ -119,15 +120,25 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	getStudents() {
-		this.qelementService
-			.getUser({
-				class_id: this.scheduleExam.es_class_id,
-				sec_id: this.scheduleExam.es_sec_id,
-				role_id: '4',
-				status: '1'
-			})
-			.subscribe((result: any) => {
+	async getStudents() {
+		const param: any = {
+			class_id: this.scheduleExam.es_class_id,
+			sec_id: this.scheduleExam.es_sec_id,
+			role_id: '4',
+			status: '1'
+		}
+		const smartparam: any = {};
+		smartparam.tgam_config_type = '1';
+		smartparam.tgam_axiom_config_id = param.class_id;
+		smartparam.tgam_global_sec_id = param.sec_id;
+		await this.smartService.getSmartToAxiom(smartparam).toPromise().then((result: any) => {
+			if(result && result.status === 'ok') {
+				param.class_id = result.data[0].tgam_global_config_id;
+			}
+		});
+		await this.qelementService
+			.getUser(param)
+			.toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
 					this.studentArray = result.data;
 					let position = 1;

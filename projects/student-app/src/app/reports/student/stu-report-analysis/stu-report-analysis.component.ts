@@ -11,7 +11,7 @@ require('highcharts/modules/solid-gauge')(Highcharts);
 require('highcharts/modules/heatmap')(Highcharts);
 require('highcharts/modules/treemap')(Highcharts);
 require('highcharts/modules/funnel')(Highcharts);
-import { BreadCrumbService } from 'projects/axiom/src/app/_services/index';
+import { BreadCrumbService, SmartService } from 'projects/axiom/src/app/_services/index';
 
 @Component({
 	selector: 'app-stu-report-analysis',
@@ -339,7 +339,8 @@ export class StuReportAnalysisComponent implements OnInit, AfterViewInit {
 		private route: ActivatedRoute,
 		private htt: HtmlToTextService,
 		private reportService: ReportService,
-		private breadCrumbService: BreadCrumbService
+		private breadCrumbService: BreadCrumbService,
+		private smartService: SmartService
 	) {
 		this.percentageValue = function (value: number): string {
 			return `${Math.round(value)} / ${this['max']}`;
@@ -974,10 +975,22 @@ export class StuReportAnalysisComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	getStudents() {
-
-		this.qelementService.getUser({
-			class_id: this.examDetail.es_class_id, sec_id: this.examDetail.es_sec_id, role_id: '4', status: '1' }).subscribe(
+	async getStudents() {
+		const param: any = {};
+		param.class_id = this.examDetail.es_class_id;
+		param.sec_id = this.examDetail.es_sec_id;
+		param.status = '1';
+		const smartparam: any = {};
+		smartparam.tgam_config_type = '1';
+		smartparam.tgam_axiom_config_id = this.examDetail.es_class_id;
+		smartparam.tgam_global_sec_id = this.examDetail.es_sec_id;
+		await this.smartService.getSmartToAxiom(smartparam).toPromise().then((result: any) => {
+			if(result && result.status === 'ok') {
+				param.class_id = result.data[0].tgam_global_config_id;
+			}
+		});
+		await this.qelementService.getUser({
+			class_id: param.class_id, sec_id: param.sec_id, role_id: '4', status: '1' }).toPromise().then(
 			(result: any) => {
 
 				if (result && result.status === 'ok') {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
 import { ActivatedRoute } from '@angular/router';
+import { SmartService } from 'projects/axiom/src/app/_services/index';
 
 @Component({
 	selector: 'app-overall-student-performance',
@@ -13,7 +14,8 @@ export class OverallStudentPerformanceComponent implements OnInit {
 	constructor(
 		private reportService: ReportService,
 		private qelementService: QelementService,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private smartService: SmartService
 	) { }
 	overAllFlag = false;
 	loading = false;
@@ -123,9 +125,22 @@ export class OverallStudentPerformanceComponent implements OnInit {
 		return total / countExam;
 	}
 
-	getOverallPerformance() {
+	async getOverallPerformance() {
 		this.overallPerformanceArray = [];
-		this.reportService.studentOveralPerformance({ class_id: this.userDetail.au_class_id, login_id: this.login_id }).subscribe(
+		const param: any = {};
+		param.class_id = this.userDetail.au_class_id;
+		param.sec_id = this.userDetail.au_sec_id;
+		const smartparam: any = {};
+		smartparam.tgam_config_type = '1';
+		smartparam.tgam_global_config_id = param.class_id;
+		smartparam.tgam_global_sec_id = param.sec_id;
+		await this.smartService.getSmartToAxiom(smartparam).toPromise().then((result: any) => {
+			if(result && result.status === 'ok') {
+				param.class_id = result.data[0].tgam_axiom_config_id;
+			}
+		});
+			
+		await this.reportService.studentOveralPerformance({ class_id: param.class_id, login_id: this.login_id }).toPromise().then(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					let testMarks: any[] = [];

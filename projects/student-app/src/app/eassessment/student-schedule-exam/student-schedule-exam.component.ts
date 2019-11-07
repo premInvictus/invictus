@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
-import { NotificationService, SocketService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService, SocketService, SmartService } from 'projects/axiom/src/app/_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { appConfig } from 'projects/axiom/src/app/app.config';
 import { Event } from 'projects/axiom/src/app/_models/event';
@@ -30,13 +30,15 @@ export class StudentScheduleExamComponent implements OnInit {
 	currentUser: any;
 	displayedColumns = ['position', 'name', 'class', 'subject', 'duration', 'marks', 'location', 'date', 'time', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	axiomClassSecSub: any = {};
 
 
 	constructor(
 		private fbuild: FormBuilder,
 		private notif: NotificationService,
 		private qelementService: QelementService,
-		private socketService: SocketService
+		private socketService: SocketService,
+		private smartService: SmartService
 	) { }
 
 	ngOnInit() {
@@ -47,7 +49,18 @@ export class StudentScheduleExamComponent implements OnInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
-					this.getSubjectsByClass(this.userDetail.au_class_id);
+					const smartparam: any = {};
+					smartparam.tgam_config_type = '1';
+					smartparam.tgam_global_config_id = this.userDetail.au_class_id;
+					smartparam.tgam_global_sec_id = this.userDetail.au_sec_id;
+					this.smartService.getSmartToAxiom(smartparam).subscribe((result: any) => {
+						if(result && result.status === 'ok') {
+							this.axiomClassSecSub.class_id = result.data[0].tgam_axiom_config_id;
+							this.axiomClassSecSub.sec_id = this.userDetail.au_sec_id;
+							console.log('this.axiomClassSecSub', this.axiomClassSecSub);
+							this.getSubjectsByClass(this.axiomClassSecSub.class_id);
+						}
+					});
 				}
 			}
 		);
@@ -80,6 +93,7 @@ export class StudentScheduleExamComponent implements OnInit {
 	}
 
 	getSubjectsByClass(class_id): void {
+
 		this.subjectArray = [];
 		this.qelementService.getSubjectsByClass(class_id).subscribe(
 			(result: any) => {
@@ -102,7 +116,7 @@ export class StudentScheduleExamComponent implements OnInit {
 			if (this.Student_Schedule_Form.value.es_exam_type !== '2') {
 				es_status = '0';
 				this.qelementService.getScheduledExam({
-					es_class_id: this.userDetail.au_class_id, es_sec_id: this.userDetail.au_sec_id,
+					es_class_id: this.axiomClassSecSub.class_id, es_sec_id: this.axiomClassSecSub.sec_id,
 					es_sub_id: this.Student_Schedule_Form.value.es_sub_id, es_status: es_status
 				}).subscribe(
 					(result: any) => {
@@ -150,7 +164,7 @@ export class StudentScheduleExamComponent implements OnInit {
 			} else if (this.Student_Schedule_Form.value.es_exam_type === '2') {
 				es_status = '1';
 				this.qelementService.getScheduledExam({
-					es_class_id: this.userDetail.au_class_id, es_sec_id: this.userDetail.au_sec_id,
+					es_class_id: this.axiomClassSecSub.class_id, es_sec_id: this.axiomClassSecSub.sec_id,
 					es_sub_id: this.Student_Schedule_Form.value.es_sub_id, es_status: es_status,
 					es_exam_type: this.Student_Schedule_Form.value.es_exam_type
 				}).subscribe(

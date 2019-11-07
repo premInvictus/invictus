@@ -289,9 +289,6 @@ export class ExamsetupComponent implements OnInit {
 		if (!this.Exam_setup_Form.value.es_qp_id) {
 			this.notif.showSuccessErrorMessage('Question paper is required', 'error');
 		}
-		if (!this.Exam_setup_Form.value.es_teacher_id) {
-			this.notif.showSuccessErrorMessage('Teacher is required', 'error');
-		}
 		if (!this.Exam_setup_Form.value.es_lab_id) {
 			this.notif.showSuccessErrorMessage('Lab location is required', 'error');
 		}
@@ -415,9 +412,6 @@ export class ExamsetupComponent implements OnInit {
 		if (!this.Exam_setup_Form.value.es_qp_id) {
 			this.notif.showSuccessErrorMessage('Question paper is required', 'error');
 		}
-		if (!this.Exam_setup_Form.value.es_teacher_id) {
-			this.notif.showSuccessErrorMessage('Teacher is required', 'error');
-		}
 		if (!this.Exam_setup_Form.value.es_lab_id) {
 			this.notif.showSuccessErrorMessage('Lab location is required', 'error');
 		}
@@ -540,13 +534,13 @@ export class ExamsetupComponent implements OnInit {
 		);
 	}
 
-	async getAllTeacher(): void {
+	async getAllTeacher() {
 		this.teacherArray = [];
 		const param: any = {};
 		param.class_id = this.Exam_setup_Form.value.es_class_id;
 		param.sub_id = this.Exam_setup_Form.value.es_sub_id;
 		param.sec_id = this.Exam_setup_Form.value.es_sec_id;
-		param.status = 1;
+		param.status = '1';
 		if(param.class_id && param.sec_id && param.sub_id) {
 			const smartparam: any = {};
 			smartparam.tgam_config_type = '1';

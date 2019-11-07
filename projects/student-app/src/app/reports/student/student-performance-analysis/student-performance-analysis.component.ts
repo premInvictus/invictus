@@ -3,6 +3,7 @@ import { QelementService } from 'projects/axiom/src/app/questionbank/service/qel
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
 import { AcsetupService } from 'projects/axiom/src/app/acsetup/service/acsetup.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { SmartService } from 'projects/axiom/src/app/_services/index';
 
 @Component({
 	selector: 'app-student-performance-analysis',
@@ -40,12 +41,14 @@ export class StudentPerformanceAnalysisComponent implements OnInit {
 	qstHeaderStyle: any;
 	tableWidthCopy: any;
 	tdSkillWidth: any;
+	axiomClassSecSub: any = {};
 
 	constructor(
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
 		private reportService: ReportService,
-		private acsetupService: AcsetupService
+		private acsetupService: AcsetupService,
+		private smartService: SmartService
 	) { }
 
 	buildForm() {
@@ -63,12 +66,24 @@ export class StudentPerformanceAnalysisComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.performanceDiv = false;
 					this.userDetail = result.data[0];
-					this.class_id = this.userDetail.au_class_id;
-					this.getClass();
-					this.getLod();
-					this.getSkill();
-					this.getQsubtype();
-					this.getSubjectsByClass(this.class_id);
+					const smartparam: any = {};
+					smartparam.tgam_config_type = '1';
+					smartparam.tgam_global_config_id = this.userDetail.au_class_id;
+					smartparam.tgam_global_sec_id = this.userDetail.au_sec_id;
+					this.smartService.getSmartToAxiom(smartparam).subscribe((result: any) => {
+						if(result && result.status === 'ok') {
+							this.axiomClassSecSub.class_id = result.data[0].tgam_axiom_config_id;
+							this.axiomClassSecSub.sec_id = this.userDetail.au_sec_id;
+							console.log('this.axiomClassSecSub', this.axiomClassSecSub);
+							this.class_id = this.axiomClassSecSub.class_id;
+							this.getClass();
+							this.getLod();
+							this.getSkill();
+							this.getQsubtype();
+							this.getSubjectsByClass(this.axiomClassSecSub.class_id);
+						}
+					});
+					
 				}
 			}
 
