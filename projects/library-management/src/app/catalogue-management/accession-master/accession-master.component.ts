@@ -23,10 +23,10 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	@ViewChild('editReservoir') editReservoir;
 	@ViewChild(MatSort) sort: MatSort;
 	filters: any = {};
-	bookpagesize = 10;
+	bookpagesize = 100;
 	pageEvent: PageEvent;
 	bookpageindex = 0;
-	bookpagesizeoptions = [10, 25, 50, 100];
+	bookpagesizeoptions = [100, 300, 500, 1000];
 	result: any = {};
 	languageArray: any[] = [];
 	imageFlag = false;
