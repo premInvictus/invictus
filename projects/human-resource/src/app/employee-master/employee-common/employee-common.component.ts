@@ -61,11 +61,9 @@ export class EmployeeCommonComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
-		console.log('data', data);
 		this.deleteModal.openModal({ text: '' });
 	}
 	getStuData = (data) => {
-		console.log('yes');
 		//this.getStudentDetailsByAdmno(data);
 	}
 

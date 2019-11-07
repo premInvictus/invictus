@@ -121,7 +121,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		this.CONFIG_ELEMENT_DATA = [];
 		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
 		this.commonService.getMaster({ type_id: event.value }).subscribe((result: any) => {
-			console.log(result);
 			if (result) {
 				this.configArray = result;
 				if (this.configValue === '1') {
@@ -395,6 +394,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						config_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateMaster', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 				case '2':
 					this.setupDetails = {
@@ -410,6 +410,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 				case '3':
 					this.setupDetails = {
@@ -419,6 +420,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						ss_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 			}
 		}
@@ -431,7 +433,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			} else {
 				value.status = '1';
 			}
-			console.log(value);
 			this.commonService.updateMaster(value).subscribe((result: any) => {
 				if (result) {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
