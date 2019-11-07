@@ -13,7 +13,7 @@ export class SchoolDashboardComponent implements OnInit {
 
   ngOnInit() {
   }
-  viewSyllabus() {
-    this.router.navigate(['smart/school/syllabus/browse']);
+  viewEmployee() {
+    this.router.navigate(['hr/school/employee/employee-details']);
   }
 }
