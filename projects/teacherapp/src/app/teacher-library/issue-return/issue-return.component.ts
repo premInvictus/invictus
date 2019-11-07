@@ -217,16 +217,19 @@ export class IssueReturnComponent implements OnInit {
 					if ((userData.class_id === this.classTeacherClassId) && (userData.sec_id === this.classTeacherSecId)) {
 						this.userData = userData;
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					} else {
 						this.userData = [];
 						this.bookData = [];
+						this.bookLogData = [];
 						this.common.showSuccessErrorMessage('No Record Found', 'error');
 					}
 
 				} else {
 					this.userData = [];
 					this.bookData = [];
+					this.bookLogData = [];
 				}
 			});
 
@@ -390,8 +393,8 @@ export class IssueReturnComponent implements OnInit {
 		for (let i = 0; i < bookData.length; i++) {
 			if (bookData[i]['reserv_status'] === 'issued') {
 
-				if (bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') ||
-					bookData[i]['due_date'] < this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+				if (
+					this.common.dateConvertion(bookData[i]['due_date'], 'yyyy-MM-dd') != this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['fdue_date'] = bookData[i]['fdue_date'];

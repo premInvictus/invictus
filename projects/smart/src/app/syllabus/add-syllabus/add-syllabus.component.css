@@ -32,3 +32,7 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
 .desc-width{
     width: 20%;
 }
+
+.no-border td{
+    border:0 !important;
+}
