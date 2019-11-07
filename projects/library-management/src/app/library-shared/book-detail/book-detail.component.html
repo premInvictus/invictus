@@ -1,11 +1,77 @@
-<div class="book-detial-container">
-  <div class="row">
-    <div class="col-12">
+ <div class="book-detial-container">
+  <!--<div class="row">
+    <div class="col-6">
       <mat-card>
         <span class="font-size-24">Book Details</span>
       </mat-card>
     </div>
+    <div class="col-6">
+        <div class="search-container">
+          <form [formGroup]="searchForm">
+            <div class="row remove-top-margin">
+
+              <div class="col-8">
+                <mat-form-field class="lib-form form-field">
+                  <input matInput placeholder="Search Any Book By Name or ID" formControlName="searchId"  autocomplete="off" />
+                </mat-form-field>
+              </div>
+
+              <div class="col-4 margin-top-10  text-right">
+                <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                    class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                      class="fas fa-chevron-down"></i></span></a>
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                  (keyup.enter)="search()">
+                  Search
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+  </div> -->
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Book Details</span>
+          </div>
+          <div class="col-6">
+            <div class="search-container">
+              <form [formGroup]="searchForm">
+                <div class="row remove-top-margin">
+  
+                  <div class="col-8">
+                    <mat-form-field class="lib-form form-field">
+                      <input matInput placeholder="Search Any Book By Name or ID" formControlName="searchId"  autocomplete="off" />
+                    </mat-form-field>
+                  </div>
+  
+                  <div class="col-4 margin-top-10  text-right">
+                    <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                        class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                          class="fas fa-chevron-down"></i></span></a>
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                      (keyup.enter)="search()">
+                      Search
+                    </button>
+                  </div>
+  
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
   </div>
+  <div class="row">
+      <div class="col-12">
+        <span class="font-size-16 opacity-7"> <a href="javascript:void(0)" (click)="goToBookSearch()">Book Search</a> - </span><span class="font-bold">Search Result</span>
+      </div>
+    </div>
   <div class="row">
     <div class="col-12">
       <mat-card *ngIf="bookData?.reserv_id">
@@ -146,3 +212,4 @@
   </div>
 </div>
 <app-book-reserve-request-confirmation #bookReserve></app-book-reserve-request-confirmation>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
