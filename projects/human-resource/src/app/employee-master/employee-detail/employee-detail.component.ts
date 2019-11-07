@@ -64,7 +64,6 @@ export class EmployeeDetailComponent implements OnInit {
 
 	getEmployeeNavigationRecords() {
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			console.log('result', result);
 			this.getEmployeeDetail(result.last_record);
 		});
 	}
@@ -75,7 +74,6 @@ export class EmployeeDetailComponent implements OnInit {
 			finResult['last_record'] = emp_id ? emp_id : 0;
 			this.employeeRecord = finResult;
 			this.rendorForm = true;
-			console.log('employeeCommonDetails', this.employeeCommonDetails);
 		});
 	}
 

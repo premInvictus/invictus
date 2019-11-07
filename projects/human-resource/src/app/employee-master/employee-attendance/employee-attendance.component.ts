@@ -98,7 +98,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 						var leave_credited_count = 0;
 						if (item.emp_month_attendance_data) {
 							if (item.emp_month_attendance_data && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
-								console.log('in');
 								total_leave_closing_balance += (item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0) ;
 							}
 							for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
@@ -119,8 +118,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 							}
 						}
 
-						console.log('total_leave_closing_balance', total_leave_closing_balance);
-						console.log('curr_total_leave_closing_balance', curr_total_leave_closing_balance);
+						// console.log('total_leave_closing_balance', total_leave_closing_balance);
+						// console.log('curr_total_leave_closing_balance', curr_total_leave_closing_balance);
 						
 						element = {
 							srno: pos,
@@ -346,7 +345,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							employeeArrData.push(this.EMPLOYEE_ELEMENT[i]['action']);
 						} 
 					}
-					console.log('this.employeeData', employeeArrData);
+					//console.log('this.employeeData', employeeArrData);
 				}
 				
 			}
@@ -368,7 +367,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	applyFilter(filterValue: String) {
-		console.log('filterValue', filterValue);
+		//console.log('filterValue', filterValue);
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
 	}
 
