@@ -26,6 +26,13 @@
  }
 
  :host ::ng-deep  #salary_compute_log .mat-form-field-infix{
-    width : 80px !important;
-    
+    width : 80px !important;    
+}
+
+.mat-card {
+    padding:5px !important;
+}
+
+.btn-success-blue {
+    margin-top: 10px;
 }

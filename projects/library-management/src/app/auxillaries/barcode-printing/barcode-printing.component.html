@@ -54,11 +54,13 @@
     <div class="accumulate-div-bar-code-2">
       <div class="row">
         <div class="col-3" *ngFor="let item of barCodeArray; let i = index">
-          <div class="barcode-div-print-2">
+          <div [class]="getClass2(i)">
             <div class="barcode-print-lib3">
               <ngx-barcode bc-element-type="img" [bc-value]="'00'+item.reserv_id" bc-format="CODE128" bc-width="2">
               </ngx-barcode>
-              <!-- <span class="font-size-14 font-bold bar-isbn-span3">{{item.reserv_id}}</span> -->
+              <div class="barcode-id-div">
+              <span class="font-bold bar-isbn-span3">{{item.reserv_id}}</span>
+              </div>
             </div>
           </div>
         </div>

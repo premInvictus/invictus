@@ -33,7 +33,12 @@
     border-bottom-left-radius: 5px !important;
     cursor: pointer !important;
 }
-.red {
-    background-color: #ff0000;
+.font-red {
+    color: #ff0000;
     cursor: pointer;
+}
+
+.delete-div {
+position: absolute;
+margin: -5px 0  0 140px;
 }

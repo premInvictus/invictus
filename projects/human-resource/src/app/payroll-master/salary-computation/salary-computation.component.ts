@@ -57,8 +57,8 @@ export class SalaryComputationComponent implements OnInit {
 	displayedSalaryComputeColumns: string[] = [];
 	salaryComputeEmployeeData: any[] = [];
 	salaryComputeEmployeeIds: any[] = [];
-	sessionArray:any[] = [];
-	sessionName : any;
+	sessionArray: any[] = [];
+	sessionName: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -99,7 +99,7 @@ export class SalaryComputationComponent implements OnInit {
 		37: 'AK',
 		38: 'AL',
 		39: 'AM',
-		40: 'AN', 
+		40: 'AN',
 		41: 'AO',
 		42: 'AP',
 		43: 'AQ',
@@ -109,7 +109,7 @@ export class SalaryComputationComponent implements OnInit {
 	schoolInfo: any;
 	length: any;
 	settingData: any;
-	currentUser:any;
+	currentUser: any;
 	showPdf = false;
 	constructor(
 		private fbuild: FormBuilder,
@@ -126,7 +126,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.buildForm();
 		this.getSession();
 		this.getSchool();
-		
+
 		this.getPaymentModes();
 		this.getSalaryHeads();
 
@@ -141,19 +141,19 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	getPaymentModes() {
-		this.commonAPIService.getMaster({type_id:6}).subscribe((res: any) => {
+		this.commonAPIService.getMaster({ type_id: 6 }).subscribe((res: any) => {
 			if (res) {
 				//this.paymentModeArray = res;
-				for (let i=0; i<res.length;i++) {
+				for (let i = 0; i < res.length; i++) {
 					console.log('res', res);
 					var inputJson = {
-						'pm_id' : res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ','_') : '',
-						'pm_name':res[i]['name'],
-						'pm_value' : 0
+						'pm_id': res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ', '_') : '',
+						'pm_name': res[i]['name'],
+						'pm_value': 0
 					}
 					this.paymentModeArray.push(inputJson);
 				}
-			} 
+			}
 		});
 	}
 
@@ -183,7 +183,7 @@ export class SalaryComputationComponent implements OnInit {
 				});
 	}
 
-	
+
 
 	getSalaryHeads() {
 		this.commonAPIService.getSalaryHeads({}).subscribe((res: any) => {
@@ -234,11 +234,11 @@ export class SalaryComputationComponent implements OnInit {
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
-				this.displayedSalaryComputeColumns.push('emp_total','balance', 'emp_status');
+				this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
 				let pos = 1;
 				let recordArray = result;
 
-				
+
 				for (const item of recordArray) {
 					var editableStatus = false;
 					let emp_present_days = 0;
@@ -254,10 +254,10 @@ export class SalaryComputationComponent implements OnInit {
 
 					var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 
-					
+
 
 					for (var i = 0; i < this.paymentModeArray.length; i++) {
-						formJson[this.paymentModeArray[i]['pm_id']] =  this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value']  : '';
+						formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] : '';
 					}
 
 					this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
@@ -275,8 +275,8 @@ export class SalaryComputationComponent implements OnInit {
 
 							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-									if ( item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-	
+									if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
@@ -284,15 +284,15 @@ export class SalaryComputationComponent implements OnInit {
 											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
-	
+
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
 											}
-	
+
 											this.empShacolumns[i]['value'] = value;
 											this.shacolumns[i]['value'] = value;
 											total_earnings = total_earnings + Number(value);
-	
+
 										} else {
 											this.shacolumns[i]['value'] = 0;
 											this.empShacolumns[i]['value'] = 0;
@@ -301,7 +301,7 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							}
 
-							
+
 
 						}
 					}
@@ -310,12 +310,12 @@ export class SalaryComputationComponent implements OnInit {
 							var value = 0;
 							this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
 
-							if (item.emp_salary_detail 
-								&& item.emp_salary_detail.emp_salary_structure 
+							if (item.emp_salary_detail
+								&& item.emp_salary_detail.emp_salary_structure
 								&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 									if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-	
+
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
@@ -323,15 +323,15 @@ export class SalaryComputationComponent implements OnInit {
 											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
-	
+
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-	
+
 											}
 											this.empShdcolumns[i]['value'] = value;
 											this.shdcolumns[i]['value'] = value;
 											total_deductions = total_deductions - Number(value);
-	
+
 										} else {
 											this.shdcolumns[i]['value'] = 0;
 											this.empShdcolumns[i]['value'] = 0;
@@ -339,7 +339,7 @@ export class SalaryComputationComponent implements OnInit {
 									}
 								}
 							}
-							
+
 						}
 
 					}
@@ -347,14 +347,14 @@ export class SalaryComputationComponent implements OnInit {
 					if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 						for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];							
+							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								
-								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ?  emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
 
-							} 
+								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+
+							}
 						}
-					} 
+					}
 
 
 
@@ -378,7 +378,7 @@ export class SalaryComputationComponent implements OnInit {
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
-				
+
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
@@ -404,7 +404,7 @@ export class SalaryComputationComponent implements OnInit {
 							},
 							emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
 							emp_status: item.emp_status ? item.emp_status : 'live',
-							balance : Number (emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
+							balance: Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
 							isEditable: editableStatus
 						};
 					} else {
@@ -443,7 +443,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							isEditable: editableStatus,
 							colorCode: '',
-							balance : Number (emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
+							balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
 						};
 					}
 
@@ -504,11 +504,11 @@ export class SalaryComputationComponent implements OnInit {
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total']) + Number(this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']]);
 						this.SALARY_COMPUTE_ELEMENT[i]['balance'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable']) - Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total']);
 						if (element['emp_total'] > element['emp_salary_payable']) {
-							element.colorCode = 'rgb(252, 191, 188)';							
+							element.colorCode = 'rgb(252, 191, 188)';
 						} else {
 							element.colorCode = '';
 						}
-					}else{
+					} else {
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total']) + 0;
 
 						this.SALARY_COMPUTE_ELEMENT[i]['balance'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable']) - Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total']);
@@ -574,7 +574,7 @@ export class SalaryComputationComponent implements OnInit {
 				}
 				for (var j = 0; j < this.paymentModeArray.length; j++) {
 					if (Object.keys(this.formGroupArray[i]['value']).indexOf(this.paymentModeArray[j]['pm_id']) > -1) {
-	
+
 						inputJson['emp_modes_data']['mode_data'].push(
 							{ pm_id: this.paymentModeArray[j]['pm_id'], pm_name: this.paymentModeArray[j]['pm_name'], pm_value: this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']] }
 						)
@@ -582,7 +582,7 @@ export class SalaryComputationComponent implements OnInit {
 				}
 				inputArr.push(inputJson);
 			}
-	
+
 			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
 			finJson['emp_salary_compute_data'] = inputArr;
 			if (!edit) {
@@ -596,7 +596,7 @@ export class SalaryComputationComponent implements OnInit {
 				});
 			}
 		}
-		
+
 
 	}
 
@@ -628,11 +628,11 @@ export class SalaryComputationComponent implements OnInit {
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
-				this.displayedSalaryComputeColumns.push('emp_total','balance', 'emp_status');
+				this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
 				let pos = 1;
 				let recordArray = result;
 
-				
+
 				for (const item of recordArray) {
 					var editableStatus = false;
 					let emp_present_days = 0;
@@ -648,10 +648,10 @@ export class SalaryComputationComponent implements OnInit {
 
 					var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 
-					
+
 
 					for (var i = 0; i < this.paymentModeArray.length; i++) {
-						formJson[this.paymentModeArray[i]['pm_id']] =  this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value']  : '';
+						formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] : '';
 					}
 
 					this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
@@ -669,8 +669,8 @@ export class SalaryComputationComponent implements OnInit {
 
 							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-									if ( item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-	
+									if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
@@ -678,15 +678,15 @@ export class SalaryComputationComponent implements OnInit {
 											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
-	
+
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
 											}
-	
+
 											this.empShacolumns[i]['value'] = value;
 											this.shacolumns[i]['value'] = value;
 											total_earnings = total_earnings + Number(value);
-	
+
 										} else {
 											this.shacolumns[i]['value'] = 0;
 											this.empShacolumns[i]['value'] = 0;
@@ -695,7 +695,7 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							}
 
-							
+
 
 						}
 					}
@@ -704,12 +704,12 @@ export class SalaryComputationComponent implements OnInit {
 							var value = 0;
 							this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
 
-							if (item.emp_salary_detail 
-								&& item.emp_salary_detail.emp_salary_structure 
+							if (item.emp_salary_detail
+								&& item.emp_salary_detail.emp_salary_structure
 								&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 									if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-	
+
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 											Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
@@ -717,15 +717,15 @@ export class SalaryComputationComponent implements OnInit {
 											if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 												value = Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']);
 											}
-	
+
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = (Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-	
+
 											}
 											this.empShdcolumns[i]['value'] = value;
 											this.shdcolumns[i]['value'] = value;
 											total_deductions = total_deductions - Number(value);
-	
+
 										} else {
 											this.shdcolumns[i]['value'] = 0;
 											this.empShdcolumns[i]['value'] = 0;
@@ -733,7 +733,7 @@ export class SalaryComputationComponent implements OnInit {
 									}
 								}
 							}
-							
+
 						}
 
 					}
@@ -741,14 +741,14 @@ export class SalaryComputationComponent implements OnInit {
 					if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 						for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];							
+							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								
-								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ?  emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
 
-							} 
+								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+
+							}
 						}
-					} 
+					}
 
 
 
@@ -772,7 +772,7 @@ export class SalaryComputationComponent implements OnInit {
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
-				
+
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
@@ -798,7 +798,7 @@ export class SalaryComputationComponent implements OnInit {
 							},
 							emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
 							emp_status: item.emp_status ? item.emp_status : 'live',
-							balance : Number (emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
+							balance: Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
 							isEditable: editableStatus
 						};
 					} else {
@@ -837,7 +837,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							isEditable: editableStatus,
 							colorCode: '',
-							balance : Number (emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
+							balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
 						};
 					}
 
@@ -858,7 +858,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	checkWidth(id, header) {
-		
+
 		const res = this.employeeData.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
@@ -885,25 +885,33 @@ export class SalaryComputationComponent implements OnInit {
 			key: 'emp_pay_scale',
 			width: this.checkWidth('emp_pay_scale', 'Pay Scale')
 		});
+		// columns.push({
+		// 	key: 'emp_total_earnings',
+		// 	width: this.checkWidth('emp_total_earnings', 'Total Earnings')
+		// });
 		columns.push({
-			key: 'issued_on',
-			width: this.checkWidth('issued_on', 'Issued On')
+			key: 'emp_present_days',
+			width: this.checkWidth('emp_present_days', 'Present Days')
 		});
 		columns.push({
-			key: 'due_date',
-			width: this.checkWidth('due_date', 'Due Date')
+			key: 'emp_salary_payable',
+			width: this.checkWidth('emp_salary_payable', 'Salary Payable')
 		});
 		columns.push({
-			key: 'returned_on',
-			width: this.checkWidth('returned_on', 'Returned On')
+			key: 'emp_pay_scale',
+			width: this.checkWidth('emp_pay_scale', 'Total')
 		});
 		columns.push({
-			key: 'fine',
-			width: this.checkWidth('fine', 'Fine') ? this.checkWidth('fine', 'Fine') : 10
+			key: 'emp_status',
+			width: this.checkWidth('emp_status', 'Status')
+		});
+		columns.push({
+			key: 'balance',
+			width: this.checkWidth('balance', 'Balance')
 		});
 
-		reportType2 = new TitleCasePipe().transform(' employeesalarycomputereport_') + this.sessionName;
-		reportType = new TitleCasePipe().transform(' Employee Salary Compute report: ') + this.sessionName;
+		reportType2 = new TitleCasePipe().transform('employeesalarycomputereport_') + this.sessionName;
+		reportType = new TitleCasePipe().transform('Employee Salary Compute report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -913,7 +921,7 @@ export class SalaryComputationComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Salary Compute report: ') + this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report: ') + this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -924,49 +932,108 @@ export class SalaryComputationComponent implements OnInit {
 		worksheet.mergeCells('E3:F3');
 		worksheet.getCell('E3').value = '';
 		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
-		worksheet.getCell('A5').value = 'Emp. ID';
-		worksheet.getCell('B5').value = 'Emp Name';
-		worksheet.getCell('C5').value = 'Designation';
-		worksheet.getCell('D5').value = 'Pay Scale';
-		// worksheet.getCell('E5').value = 'Issued On';
-		// worksheet.getCell('F5').value = 'Due Date';
-		// worksheet.getCell('G5').value = 'Returned On';
-		// worksheet.getCell('H5').value = 'Fine';
-		
-		// for(let i=0; i<this.shdcolumns.length;i++) {
-		// 	columnName
-		// 	worksheet.getCell()
-		// }
-		
 
+		worksheet.mergeCells('A5:D5');
+		worksheet.getCell('A5').value = '';
+		let w = 5;
+		for (let a = 0; a < this.shacolumns.length; a++) {
+			w++;
+		}
+		worksheet.mergeCells('E5:' + this.alphabetJSON[w] + '5');
+		worksheet.getCell('E5').value = 'Salary Heads';
+		let x = w;
+		for (let b = 0; b < this.shdcolumns.length; b++) {
+			x++;
+		}
+		worksheet.mergeCells(this.alphabetJSON[w + 1] + '5:' + this.alphabetJSON[x] + '5');
+		worksheet.getCell(this.alphabetJSON[w + 1] + '5').value = 'Deductions';
+		worksheet.mergeCells(this.alphabetJSON[x + 1] + '5:' + this.alphabetJSON[x + 3] + '5');
+		worksheet.getCell(this.alphabetJSON[x + 1] + '5').value = '';
+
+		let y = x + 3;
+		for (let b = 0; b < this.paymentModeArray.length; b++) {
+			y++;
+		}
+		worksheet.mergeCells(this.alphabetJSON[x + 4] + '5:' + this.alphabetJSON[y + 1] + '5');
+		worksheet.getCell(this.alphabetJSON[x + 4] + '5').value = 'Modes';
+
+		worksheet.mergeCells(this.alphabetJSON[y + 2] + '5:' + this.alphabetJSON[y + 3] + '5');
+		worksheet.getCell(this.alphabetJSON[y + 2] + '5').value = '';
+
+		worksheet.getCell('A6').value = 'Emp. ID';
+		worksheet.getCell('B6').value = 'Emp Name';
+		worksheet.getCell('C6').value = 'Designation';
+		worksheet.getCell('D6').value = 'Pay Scale';
+		let k = 5;
+		for (let i = 0; i < this.shacolumns.length; i++) {
+			worksheet.getCell(this.alphabetJSON[5 + i] + '6').value = this.shacolumns[i].header;
+			k++;
+		}
+		worksheet.getCell(this.alphabetJSON[k] + '6').value = 'Total Earnings';
+
+		let l = k;
+		for (let j = 0; j < this.shdcolumns.length; j++) {
+			worksheet.getCell(this.alphabetJSON[k + j + 1] + '6').value = this.shdcolumns[j].header;
+			l++;
+		}
+		worksheet.getCell(this.alphabetJSON[l + 1] + '6').value = 'Present Days';
+		worksheet.getCell(this.alphabetJSON[l + 2] + '6').value = 'Advance/Arrear';
+		worksheet.getCell(this.alphabetJSON[l + 3] + '6').value = 'Salary Payable';
+
+		let m = l + 3;
+		let o = l + 3
+		for (let n = 0; n < this.paymentModeArray.length; n++) {
+			worksheet.getCell(this.alphabetJSON[o + n + 1] + '6').value = this.paymentModeArray[n].pm_name;
+			m++;
+		}
+		worksheet.getCell(this.alphabetJSON[m + 1] + '6').value = 'Total';
+		worksheet.getCell(this.alphabetJSON[m + 2] + '6').value = 'Balance';
+		worksheet.getCell(this.alphabetJSON[m + 3] + '6').value = 'Status';
 		worksheet.columns = columns;
-		this.length = worksheet._rows.length;
-		let totRow = this.length+this.employeeData.length+5;
-		console.log(worksheet._rows.length, this.currentUser, totRow);
-		
-		worksheet.mergeCells('A'+totRow+':'+'B'+totRow);
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).value = 'Report Generated By : ' +this.currentUser.full_name;
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A'+(totRow+1)+':'+'B'+(totRow+1));
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).value = 'No. of Records : ' +this.employeeData.length;
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).alignment = { horizontal: 'left' };
-		for (const item of this.employeeData) {
+		this.length = worksheet._rows.length; 
+		let totRow = this.length + this.SALARY_COMPUTE_ELEMENT.length + 6;
+
+		worksheet.mergeCells('A' + totRow + ':' + 'E' + totRow);
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).value = 'Report Generated By : ' + this.currentUser.full_name;
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A' + (totRow + 1) + ':' + 'B' + (totRow + 1));
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).value = 'No. of Records : ' + this.employeeData.length;
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).alignment = { horizontal: 'left' };
+		for (const item of this.SALARY_COMPUTE_ELEMENT) {
 			const prev = this.length + 1;
 			const obj: any = {};
-
 			this.length++;
 			worksheet.getCell('A' + this.length).value = item.emp_id;
-			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
-			// worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
-			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;
-			worksheet.getCell('E' + this.length).value = item.reserv_user_logs.issued_on;
-			worksheet.getCell('F' + this.length).value = item.reserv_user_logs.due_date;
-			worksheet.getCell('G' + this.length).value = item.reserv_user_logs.returned_on ? item.reserv_user_logs.returned_on : '-';
-			worksheet.getCell('H' + this.length).value = item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '-';
+			worksheet.getCell('B' + this.length).value = item.emp_name;
+			worksheet.getCell('C' + this.length).value = item.emp_designation;
+			worksheet.getCell('D' + this.length).value = item.emp_pay_scale;
+			let k = 5;
+			for (let i = 0; i < this.shacolumns.length; i++) {
+				worksheet.getCell(this.alphabetJSON[5 + i] + this.length).value = item.empShacolumns[i]['value'];
+				k++;
+			}
+			worksheet.getCell(this.alphabetJSON[k] + this.length).value = item.emp_total_earnings;
+			let l = k;
+			for (let j = 0; j < this.shdcolumns.length; j++) {
+				worksheet.getCell(this.alphabetJSON[k + j + 1] + this.length).value = item.empShdcolumns[j]['value'];
+				l++;
+			}
+			worksheet.getCell(this.alphabetJSON[l + 1] + this.length).value = item.emp_present_days;
+			worksheet.getCell(this.alphabetJSON[l + 2] + this.length).value = item.emp_modes_data.advance;
+			worksheet.getCell(this.alphabetJSON[l + 3] + this.length).value = item.emp_salary_payable;
 
+			let m = l + 3;
+			let o = l + 3
+			for (let n = 0; n < this.paymentModeArray.length; n++) {
+				worksheet.getCell(this.alphabetJSON[o + n + 1] + this.length).value = item.emp_modes_data.mode_data[n]['pm_value'];
+				m++;
+			}
+			worksheet.getCell(this.alphabetJSON[m + 1] + this.length).value = item.emp_total;
+			worksheet.getCell(this.alphabetJSON[m + 2] + this.length).value = item.balance;
+			worksheet.getCell(this.alphabetJSON[m + 3] + this.length).value = item.emp_status;
 			worksheet.addRow(obj);
 		}
-		
+
 
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
@@ -990,15 +1057,15 @@ export class SalaryComputationComponent implements OnInit {
 					bold: true
 				};
 			}
-			
-			if (rowNum === totRow || rowNum === (totRow+1)) {
+
+			if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 14,
 					bold: true
 				};
 			}
-			if (rowNum === 5) {
+			if (rowNum === 5 || rowNum === 6) {
 				row.eachCell(cell => {
 					cell.font = {
 						name: 'Arial',
@@ -1021,7 +1088,7 @@ export class SalaryComputationComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum >= 5 && rowNum <= this.employeeData.length+5) {
+			if (rowNum >= 7 && rowNum <= this.SALARY_COMPUTE_ELEMENT.length + 7) {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 
@@ -1055,7 +1122,7 @@ export class SalaryComputationComponent implements OnInit {
 					};
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
-			} else if (rowNum === totRow || rowNum === (totRow+1)) {
+			} else if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 12,
@@ -1070,8 +1137,6 @@ export class SalaryComputationComponent implements OnInit {
 			const blob = new Blob([data], { type: 'application/octet-stream' });
 			saveAs(blob, fileName);
 		});
-
-
 	}
 
 	downloadPdf() {
@@ -1109,21 +1174,7 @@ export class SalaryComputationComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		// doc.autoTable({
-		// 	head: [['Admission No : ' + this.userData.em_admission_no + '    Name : ' +this.userData.au_full_name + '     Class : ' +this.userData.class_name+'     '+' Section: '+this.userData.sec_name]],
-		// 	didDrawPage: function (data) {
-		// 		doc.setFont('Roboto');
-		// 	},
-		// 	headerStyles: {
-		// 		fontStyle: 'bold',
-		// 		fillColor: '#ffffff',
-		// 		textColor: 'black',
-		// 		halign: 'center',
-		// 		fontSize: 13,
-		// 	},
-		// 	useCss: true,
-		// 	theme: 'striped'
-		// });
+
 		doc.autoTable({
 			html: '#salary_compute_log',
 			headerStyles: {
@@ -1144,7 +1195,7 @@ export class SalaryComputationComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [['Report Generated By : ' +this.currentUser.full_name]],
+			head: [['Report Generated By : ' + this.currentUser.full_name]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -1159,7 +1210,7 @@ export class SalaryComputationComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.autoTable({
-			head: [['No. of Records : ' +this.employeeData.length]],
+			head: [['No. of Records : ' + this.employeeData.length]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -1203,4 +1254,8 @@ export interface SalaryComputeElement {
 	// emp_pay_mode: any;
 	emp_total: any;
 	emp_status: any;
+	empShacolumns: any;
+	empShdcolumns: any;
+	emp_modes_data: any;
+	balance: any;
 }
