@@ -76,7 +76,6 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 			this.searchBook();
 		}
 		
-		
 	}
 	ngAfterViewInit() {
 		this.bookDataSource.paginator = this.paginator;
