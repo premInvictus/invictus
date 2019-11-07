@@ -261,7 +261,7 @@
                                                             <mat-label>{{item.sc_name}}</mat-label>
                                                             <input type="text" matInput placeholder="{{item.sc_name}}"
                                                                 [formControlName]="'sc_value'+i"
-                                                                [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
+                                                                [value]="getDynamicValue(item.sc_value,salaryDetails.value.basic_pay)"
                                                                 readonly>
                                                             <mat-error>
                                                                 This field is required
@@ -295,7 +295,7 @@
                                                             <input type="text" matInput
                                                                 placeholder="{{item.sc_name + ' Deduction'}}"
                                                                 [formControlName]="'sc_value'+i"
-                                                                [value]="getDynamicValue(item.sc_value,this.salaryDetails.value.basic_pay)"
+                                                                [value]="getDynamicValue(item.sc_value,salaryDetails.value.basic_pay)"
                                                                 readonly>
                                                             <mat-error>
                                                                 This field is required
