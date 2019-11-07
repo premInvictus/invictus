@@ -42,10 +42,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	formGroupArray2: any[] = [];
 	salaryFinalArray: any[] = [];
 	salaryHeadsArray: any[] = [];
-	netSalary = 0;
-	totalEarning = 0;
-	deduction = 0;
-	earning = 0;
+	netSalary: any = 0;
+	totalEarning: any = 0;
+	deduction: any = 0;
+	earning: any = 0;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Payment' },
@@ -342,7 +342,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	getDynamicValue(weigtage, value) {
 		if (Number(value) > 0) {
-			return Number((Number(value) * Number(weigtage)) / 100);
+			return (Number((Number(value) * Number(weigtage)) / 100)).toFixed(2);
 		} else {
 			return 0;
 		}
@@ -647,11 +647,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 				} else if (item.formGroup.value['sc_calculation_type' + i] === '%') {
 					if (Number(item.formGroup.value['type' + i]) === 1) {
-						this.earning = this.earning + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
-						this.netSalary = Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+						this.earning = (Number(this.earning) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
+						this.netSalary = (Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 					} else {
-						this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
-						this.netSalary = Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100);
+						this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100).toFixed(2);
+						this.netSalary = (Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 					}
 				}
 				this.salaryFinalArray.push(
@@ -703,9 +703,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getValue(event) {
-		if (this.employeedetails.emp_salary_detail 
-			&& this.employeedetails.emp_salary_detail.emp_salary_structure 
-			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale 
+		if (this.employeedetails.emp_salary_detail
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale
 			&& (Number(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) === Number(this.salaryDetails.value.sal_str))) {
 			if (this.salaryHeadsArray.length > 0) {
 				const findIndex = this.salaryHeadsArray.findIndex(f => Number(f.sc_id) === Number(event));
@@ -716,11 +716,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				return 0;
 			}
 		} else {
-			
+
 			return 0;
 		}
 
-		
+
 	}
 
 

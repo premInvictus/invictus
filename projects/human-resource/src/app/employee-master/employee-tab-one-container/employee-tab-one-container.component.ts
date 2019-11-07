@@ -176,11 +176,11 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
 			this.personalDetails.patchValue({
 				p_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.address : '',
-				p_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.city.cit_id : '',
+				p_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.city.cit_name : '',
 				p_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.state.sta_id : '',
 				p_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.pin : '',
 				r_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.address : '',
-				r_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_id : '',
+				r_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name : '',
 				r_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id : '',
 				r_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.pin : '',
 				pri_mobile: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no : '',
@@ -209,8 +209,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					residential_address_detail: {
 						address: this.personalDetails.value.r_address,
 						city: {
-							cit_id: this.personalDetails.value.r_city,
-							cit_name: this.getCityName(this.personalDetails.value.r_city)
+							cit_id: this.cityId2,
+							cit_name: this.personalDetails.value.r_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.r_state,
@@ -225,8 +225,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
@@ -251,8 +251,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					residential_address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
@@ -267,8 +267,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
@@ -485,8 +485,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					residential_address_detail: {
 						address: this.personalDetails.value.r_address,
 						city: {
-							cit_id: this.personalDetails.value.r_city,
-							cit_name: this.getCityName(this.personalDetails.value.r_city)
+							cit_id: this.cityId2,
+							cit_name: this.personalDetails.value.r_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.r_state,
@@ -501,8 +501,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
@@ -527,8 +527,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					residential_address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
@@ -543,8 +543,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					address_detail: {
 						address: this.personalDetails.value.p_address,
 						city: {
-							cit_id: this.personalDetails.value.p_city,
-							cit_name: this.getCityName(this.personalDetails.value.p_city)
+							cit_id: this.cityId,
+							cit_name: this.personalDetails.value.p_city
 						},
 						state: {
 							sta_id: this.personalDetails.value.p_state,
