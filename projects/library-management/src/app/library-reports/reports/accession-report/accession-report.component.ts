@@ -175,7 +175,7 @@ export class AccessionReportComponent implements OnInit {
 		this.getSubject();
 		this.getVendorDetails('', false);
 		const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
-		this.getAccessionReport(value);
+		this.getAccessionReport('');
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -323,7 +323,8 @@ export class AccessionReportComponent implements OnInit {
 		if (value) {
 			accessionJSON = value;
 		} else {
-			accessionJSON = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" }
+			//accessionJSON = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" }
+			accessionJSON = {"withoutFilter" : true }
 		}
 
 		this.columnDefinitions = [
@@ -655,7 +656,6 @@ export class AccessionReportComponent implements OnInit {
 				this.totalRecords = Number(result.data.totalRecords);
 				let index = 0;
 				for (const item of repoArray) {
-					console.log('this.classDataArray', this.classDataArray);
 					let currentVendorName = '';
 					let currentClassName = '';
 					let currentSubjectName = '';
@@ -669,7 +669,6 @@ export class AccessionReportComponent implements OnInit {
 					}
 
 					for (let i =0; i < this.classDataArray.length;i++) {
-						console.log(this.classDataArray[i]['class_id'] , repoArray[Number(index)]['reserv_class_id']);
 						var cindex = repoArray[Number(index)]['reserv_class_id'].indexOf(this.classDataArray[i]['class_id']);
 						if (cindex > -1) {
 							currentClassName += this.classDataArray[cindex]['class_name']+",";						
@@ -706,7 +705,7 @@ export class AccessionReportComponent implements OnInit {
 					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['title']) : '-';
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) : '-';
-					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) : '-';
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'] && repoArray[Number(index)]['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) : '-';
 					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) : '-';
 					obj['pages'] = repoArray[Number(index)]['pages'] ? repoArray[Number(index)]['pages'] : '-';
 					obj['price'] = repoArray[Number(index)]['price'] ? repoArray[Number(index)]['price'] : '-';
