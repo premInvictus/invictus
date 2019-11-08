@@ -124,7 +124,7 @@
 .mark-attendance{
     @include background(-3050px 0px)
 }
-.catalogue_management{
+.marks-register{
     @include background(-3100px 0px)
 }
 .performance-reports{
@@ -133,4 +133,73 @@
 .record-assessment{
     @include background(-3200px 0px)
 }
+.exam{
+    @include background(-3250px 0px)
+}
+.sub-exam{
+    @include background(-3300px 0px)
+}
+.gradecard-setting{
+    @include background(-3350px 0px)
+}
+.upload-marks{
+    @include background(-3400px 0px)
+}
+.subject-subexam-mapping{
+    @include background(-3450px 0px)
+}
+// .record-assessment{
+//     @include background(-3500px 0px)
+// }
 
+.catalogue-management{
+    @include background(-3550px 0px)
+}
+.accession-master{
+    @include background(-3600px 0px)
+}
+.periodical-master{
+    @include background(-3650px 0px)
+}
+.vendor-master{
+    @include background(-3700px 0px)
+}
+.purchase-master{
+    @include background(-3750px 0px)
+}
+.circulation{
+    @include background(-3800px 0px)
+}
+.issue-return{
+    @include background(-3850px 0px)
+}
+.book-reservation{
+    @include background(-3900px 0px)
+}
+.change-book-status{
+    @include background(-3950px 0px)
+}
+.books-issued{
+    @include background(-4000px 0px)
+}
+.book-search{
+    @include background(-4100px 0px)
+}
+.verification{
+    @include background(-4150px 0px)
+}
+.bar-code-printing{
+    @include background(-4200px 0px)
+}
+.rfid-mapping{
+    @include background(-4250px 0px)
+}
+.bulk-upload{
+    @include background(-4300px 0px)
+}
+// .book-reservation{
+//     @include background(-4300px 0px)
+// }
+// .book-reservation{
+//     @include background(-4350px 0px)
+// }

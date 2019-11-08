@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { MatTableDataSource, MatPaginatorIntl, MatPaginator, MatSort, PageEvent } from '@angular/material';
+import { AdvancedSearchModalComponent } from '../../library-shared/advanced-search-modal/advanced-search-modal.component';
 import { MatPaginatorI18n } from '../../library-shared/customPaginatorClass';
 import { DatePipe } from '@angular/common';
 @Component({
@@ -16,6 +17,7 @@ import { DatePipe } from '@angular/common';
 })
 export class BookDetailComponent implements OnInit, AfterViewInit {
 	searchForm: FormGroup;
+	@ViewChild('searchModal') searchModal;
 	@ViewChild('bookReserve') bookReserve;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -51,7 +53,23 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 			this.getBookDetail(book_no);
 		}
 
+		this.route.queryParams.subscribe(queryParams => {
+			// do something with the query params
+			console.log('routeParams', queryParams);
+			this.getBookDetail(queryParams.book_id);
+		});
+
 	}
+	openSearchDialog = (data) => { this.searchModal.openModal(data); }
+	// openAdvanceSearchDialog(): void {
+	// 	const dialogRef = this.dialog.open(AdvancedSearchModalComponent, {
+	// 	  width: '750px',
+	// 	});
+	
+	// 	dialogRef.afterClosed().subscribe(result => {
+	// 	  console.log('The dialog was closed');
+	// 	});
+	//   }
 
 	buildForm() {
 		this.searchForm = this.fbuild.group({
@@ -236,5 +254,20 @@ export class BookDetailComponent implements OnInit, AfterViewInit {
 				this.datasource.paginator = this.paginator;
 			}
 		});
+	}
+
+	searchOk($event) {
+		this.common.setDashboardSearchData({filters: $event.filters,
+		  generalFilters: $event.generalFilters});
+		  this.router.navigate(['../book-search'], {relativeTo: this.route , queryParams : {book_id :this.searchForm.value.searchId }});	
+	}
+	  
+	search() {
+	 this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
+	 this.router.navigate(['../book-search'], {relativeTo: this.route });
+	}
+
+	goToBookSearch() {
+		this.router.navigate(['../book-search'], {relativeTo: this.route });
 	}
 }
