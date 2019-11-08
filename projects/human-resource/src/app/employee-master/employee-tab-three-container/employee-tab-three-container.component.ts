@@ -239,7 +239,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	getCategoryOneName(cat_id) {
+	getCategoryOneName(cat_id) { 
 		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
