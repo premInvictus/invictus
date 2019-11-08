@@ -141,9 +141,10 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	getPaymentModes() {
-		this.commonAPIService.getMaster({ type_id: 6 }).subscribe((res: any) => {
+		this.commonAPIService.getMaster({ type_id: "6" }).subscribe((res: any) => {
 			if (res) {
 				//this.paymentModeArray = res;
+				console.log('res', res);
 				for (let i = 0; i < res.length; i++) {
 					var calculation_type = 'text';
 					var calculation_value = 0;
@@ -163,6 +164,8 @@ export class SalaryComputationComponent implements OnInit {
 
 					this.paymentModeArray.push(inputJson);
 				}
+
+				console.log(this.paymentModeArray);
 			}
 		});
 	}
@@ -417,26 +420,52 @@ export class SalaryComputationComponent implements OnInit {
 								advance: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data']['advance'],
 								mode_data: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data']['mode_data']
 							},
-							emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
+							//emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							// balance: Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
 							isEditable: editableStatus
 						};
 
 						if (element.emp_salary_payable) {
+							var deduction = 0;
+							var tdeduction = 0;
 							for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 
 								if (this.paymentModeArray[pi]['calculation_type'] === '%') {
+									
 									// this.paymentModeArray[pi]['pm_value'] = ((Number(element.emp_salary_payable) * Number(this.paymentModeArray[pi]['calculation_value'])) / 100);
 									if (element.emp_modes_data.mode_data[pi]) {
 										element.emp_modes_data.mode_data[pi]['pm_value'] = (((salary_payable) * Number(this.paymentModeArray[pi]['calculation_value'])) / 100);
-										element.balance = Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']) - Number(element.emp_modes_data.mode_data[pi]['pm_value']);
-										// console.log('event', element.balance);
+										
+
+										deduction = deduction + Number(element.emp_modes_data.mode_data[pi]['pm_value']);
+										
+										
 										//this.setNetTotal(element, event);
+									} else {
+										
+										var inputJson = {
+												'pm_id': this.paymentModeArray[pi]['pm_id'],
+												'pm_name': this.paymentModeArray[pi]['pm_name'],
+												'pm_value': (((salary_payable) * Number(this.paymentModeArray[pi]['calculation_value'])) / 100),
+												'calculation_type': this.paymentModeArray[pi]['calculation_type'],
+												'calculation_value': this.paymentModeArray[pi]['calculation_value']
+											};
+										
+										element.emp_modes_data.mode_data.push(inputJson);
+
+										tdeduction =  Number(element.emp_modes_data.mode_data[pi]['pm_value']);
+										//element.balance = element.balance - tdeduction;
 									}
 
 								}
+								
 							}
+						//	console.log(Number(emp_present_days ? salary_payable : 0) ,  Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']) , deduction, tdeduction);
+							element.balance = (Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']) - deduction - tdeduction).toFixed(2);
+							
+							//console.log('event', element.balance);
+							element.emp_total = deduction + tdeduction;
 						}
 					} else {
 						var salary_payable = 0;
@@ -479,6 +508,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 						if (element.emp_salary_payable) {
+							deduction = 0;
 							for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 								if (this.paymentModeArray[pi]['calculation_type'] === '%') {
 									// console.log(element.emp_modes_data.mode_data[pi]);
@@ -489,19 +519,33 @@ export class SalaryComputationComponent implements OnInit {
 
 									if (element.emp_modes_data.mode_data[pi]) {
 										element.emp_modes_data.mode_data[pi]['pm_value'] = (((salary_payable) * Number(this.paymentModeArray[pi]['calculation_value'])) / 100);
-										element.balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - Number(element.emp_modes_data.mode_data[pi]['pm_value']);
+										deduction = deduction + Number(element.emp_modes_data.mode_data[pi]['pm_value']);
 										// console.log('event', element.balance);
 										//this.setNetTotal(element, event);
 									}
 
+									element.balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - deduction;
+
+								} else {
+									var tdeduction = 0;
+									var inputJson = {
+											'pm_id': this.paymentModeArray[pi]['name'] ? this.paymentModeArray[pi]['name'].trim().toLowerCase().replace(' ', '_') : '',
+											'pm_name': this.paymentModeArray[pi]['name'],
+											'pm_value': (((salary_payable) * Number(this.paymentModeArray[pi]['calculation_value'])) / 100),
+											'calculation_type': this.paymentModeArray[pi]['calculation_type'],
+											'calculation_value': this.paymentModeArray[pi]['calculation_value']
+										};
+									
+									element.emp_modes_data.mode_data.push(inputJson);
+
+									tdeduction = Number(element.emp_modes_data.mode_data[pi]['pm_value']);
+
+									element.balance = element.balance -tdeduction;
 								}
 							}
+
+							
 						}
-
-
-
-
-
 					}
 
 					this.SALARY_COMPUTE_ELEMENT.push(element);
