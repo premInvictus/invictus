@@ -272,11 +272,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 
-					for (var i = 0; i < this.paymentModeArray.length; i++) {
-						formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] : '';
-					}
-
-					this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
+					
 					var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale) : 0;
 
 					for (var i = 0; i < this.shacolumns.length; i++) {
@@ -466,8 +462,21 @@ export class SalaryComputationComponent implements OnInit {
 							
 							//console.log('event', element.balance);
 							element.emp_total = deduction + tdeduction;
+
+							for (var i = 0; i < this.paymentModeArray.length; i++) {
+								formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] : '';
+							}
+		
+							this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
 						}
 					} else {
+						for (var i = 0; i < this.paymentModeArray.length; i++) {
+							formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] : '';
+						}
+	
+						this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
+
+						
 						var salary_payable = 0;
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
