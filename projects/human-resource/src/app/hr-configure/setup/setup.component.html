@@ -55,6 +55,29 @@
                                                                 required>
                                                             <mat-error>Please Enter Name</mat-error>
                                                         </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline"
+                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '6'">
+                                                            <mat-label>Calculation Type</mat-label>
+                                                            <mat-select (selectionChange)="getCalculationValue($event)"
+                                                                placeholder="Calcualtion Type"
+                                                                formControlName="calculation_type">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of calculationTypeArray"
+                                                                    [value]="item.id">
+                                                                    {{item.name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline"
+                                                            *ngIf="calculationFlag">
+                                                            <mat-label>% Value</mat-label>
+                                                            <input matInput placeholder="Enter % Value"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="value"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('value').value | capitalize">
+                                                            <mat-error>Please Enter % Value</mat-error>
+                                                        </mat-form-field>
                                                     </div>
                                                 </div>
                                             </form>
@@ -210,7 +233,8 @@
                                                                                     *matCellDef="let item">
                                                                                     <span
                                                                                         *ngIf="item.component_type">{{ item.component_type }}</span>
-                                                                                    <span *ngIf="!item.component_type">-</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.component_type">-</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container

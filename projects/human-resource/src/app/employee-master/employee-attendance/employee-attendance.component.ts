@@ -28,6 +28,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	currentMonthName = '';
 	currentStatusName = '';
 	currentCategoryName = '';
+	editAllStatus = true;
 
 	constructor(
 		private fbuild: FormBuilder,
@@ -295,6 +296,23 @@ export class EmployeeAttendanceComponent implements OnInit {
 		}
 	}
 
+	editAll() {
+		this.editAllStatus = false;
+		for (var i = 0; i<this.EMPLOYEE_ELEMENT.length;i++) {
+			if (!this.EMPLOYEE_ELEMENT[i]['viewFlag']) {
+				this.EMPLOYEE_ELEMENT[i]['viewFlag'] = true;
+				this.EMPLOYEE_ELEMENT[i]['updateFlag'] = true;
+			}
+			
+		}
+		//this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+	}
+
+	resetAll() {
+		this.editAllStatus = true;
+		this.getEmployeeDetail();
+	}
+
 	goToEmployee(emp_id) {
 
 	}
@@ -328,7 +346,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 		}
 		
 		element.updateFlag = false;
-		element.viewFlag = true;
+		element.viewFlag = false;
 	}
 
 	updateAttendance(element) {
