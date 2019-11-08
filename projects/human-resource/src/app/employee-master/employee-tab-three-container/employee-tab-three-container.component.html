@@ -233,7 +233,7 @@
                                         <mat-label>Basic Pay</mat-label>
                                         <input type="text" formControlName="basic_pay" matInput placeholder="Basic Pay"
                                             (keyup)="getNetSalary()" required
-                                            [errorStateMatcher]="confirmValidParentMatcher" [readOnly]="viewOnly">
+                                            [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly">
                                         <mat-error>
                                             This field is required
                                         </mat-error>

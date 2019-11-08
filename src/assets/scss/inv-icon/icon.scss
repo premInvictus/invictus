@@ -197,9 +197,27 @@
 .bulk-upload{
     @include background(-4300px 0px)
 }
-// .book-reservation{
-//     @include background(-4300px 0px)
-// }
-// .book-reservation{
-//     @include background(-4350px 0px)
-// }
+.employee_master {
+    @include background(-4350px 0px)
+}
+.employee-details{
+    @include background(-4400px 0px)
+}
+.employee-attendance{
+    @include background(-4450px 0px)
+}
+.employee-leave{
+    @include background(-4500px 0px)
+}
+.payroll-master{
+    @include background(-4550px 0px)
+}
+.salary-computation{
+    @include background(-4600px 0px)
+}
+.disbursment-sheet{
+    @include background(-4650px 0px)
+}
+.employee-ledger{
+    @include background(-4700px 0px)
+}
