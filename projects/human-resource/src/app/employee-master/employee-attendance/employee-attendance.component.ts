@@ -22,7 +22,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 	session_id;
 	categoryOneArray: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-	displayedEmployeeColumns: string[] = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_balance_leaves', 'emp_present', 'emp_leave_availed', 'emp_leave_granted', 'emp_lwp', 'emp_total_attendance', 'emp_remarks', 'emp_status', 'action'
+	//'emp_present',
+	displayedEmployeeColumns: string[] = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_balance_leaves', 'emp_leave_availed', 'emp_leave_granted', 'emp_lwp', 'emp_total_attendance', 'emp_remarks', 'emp_status', 'action'
 	];
 	currentMonthName = '';
 	currentStatusName = '';
@@ -71,8 +72,13 @@ export class EmployeeAttendanceComponent implements OnInit {
 		}
 	}
 
+	getDaysInMonth(month, year) {
+		return new Date(year, month, 0).getDate();
+	};
+
 	getEmployeeDetail() {
 		if (this.searchForm.value.month_id) {
+			var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			let inputJson = {
 				month_id: this.searchForm.value.month_id,
 				emp_status: this.searchForm.value.status_id,
@@ -127,6 +133,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							emp_name: item.emp_name,
 							emp_designation: item.emp_designation_detail.des_name,
 							emp_bol : total_leave_closing_balance,
+							emp_present: no_of_days,
 							emp_balance_leaves: curr_total_leave_closing_balance ,
 							emp_leave_credited : leave_credited_count,
 							emp_status: item.emp_status ? item.emp_status : 'live',
@@ -138,7 +145,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							this.formGroupArray[j] = {
 								formGroup: this.fbuild.group({
 									emp_id: item.emp_id,
-									emp_present: item.emp_present ? item.emp_present : '',
+									//emp_present: item.emp_present ? item.emp_present : 30,
 									emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : '',
 									emp_remarks: item.emp_remarks ? item.emp_remarks : '',
 									emp_leave_availed: '',
@@ -155,11 +162,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
 										element.emp_total_attendance = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : '';
-										element.viewFlag = emp_attendance_detail.attendance_detail.emp_present ? false : true
+										element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
+										element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
 										this.formGroupArray[j] = {
 											formGroup: this.fbuild.group({
-												emp_id: item.emp_id,
-												emp_present: emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : '',
+												emp_id: item.emp_id,												
 												emp_leave_granted: emp_attendance_detail.attendance_detail.emp_leave_granted ? emp_attendance_detail.attendance_detail.emp_leave_granted : '',
 												emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : '',
 												emp_leave_availed: emp_attendance_detail.attendance_detail.emp_leave_availed ? emp_attendance_detail.attendance_detail.emp_leave_availed : '',
@@ -178,7 +185,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							this.formGroupArray[j] = {
 								formGroup: this.fbuild.group({
 									emp_id: item.emp_id,
-									emp_present: '',
+									//emp_present: '',
 									emp_leave_granted: '',
 									emp_remarks: '',
 									emp_leave_availed: '',
@@ -189,7 +196,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							}
 						}
 
-
+						// this.getLWP(element, pos);
 
 
 						this.EMPLOYEE_ELEMENT.push(element);
@@ -229,7 +236,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				"month_id": this.searchForm.value.month_id,
 				"month_name": this.currentMonthName,
 				"attendance_detail": {
-					"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
+					//"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
+					"emp_present" : this.EMPLOYEE_ELEMENT[i]['emp_present'],
 					"emp_leave_granted": this.formGroupArray[i].formGroup.value.emp_leave_granted,
 					"emp_remarks": this.formGroupArray[i].formGroup.value.emp_remarks,
 					"emp_leave_availed": this.formGroupArray[i].formGroup.value.emp_leave_availed,
@@ -293,7 +301,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 	getLWP(element, index) {
 		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();		
-		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+		//(parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10)
+		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+
+		console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 	}
 
 	getMonthName(ev) {
@@ -329,7 +340,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 					"month_id": this.searchForm.value.month_id,
 					"month_name": this.currentMonthName,
 					"attendance_detail": {
-						"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
+						//"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
+						"emp_present": this.EMPLOYEE_ELEMENT[i]['emp_present'],
 						"emp_leave_granted": this.formGroupArray[i].formGroup.value.emp_leave_granted,
 						"emp_remarks": this.formGroupArray[i].formGroup.value.emp_remarks,
 						"emp_leave_availed": this.formGroupArray[i].formGroup.value.emp_leave_availed,
@@ -378,7 +390,7 @@ export interface EmployeeElement {
 	emp_id: string;
 	emp_name: string;
 	emp_designation: string;
-	emp_present: any;
+	//emp_present: any;
 	emp_leave_availed: string;
 	emp_leave_granted: any;
 	emp_lwp: string;

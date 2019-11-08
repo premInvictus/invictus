@@ -375,7 +375,7 @@ export class SalaryComputationComponent implements OnInit {
 					if (editableStatus) {
 						var salary_payable = 0;
 						total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] : 0;
-						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
+						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 
@@ -409,7 +409,7 @@ export class SalaryComputationComponent implements OnInit {
 						};
 					} else {
 						var salary_payable = 0;
-						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
+						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 
 
@@ -531,7 +531,7 @@ export class SalaryComputationComponent implements OnInit {
 				//this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable']) + Number(value)
 				var salary_payable = 0;
 				var total_earnings = Number(element.emp_total_earnings);
-				var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
+				var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 				this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((Number(total_earnings) + Number(element.emp_total_deductions)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(value);
 				this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
 			}
@@ -769,7 +769,7 @@ export class SalaryComputationComponent implements OnInit {
 					if (editableStatus) {
 						var salary_payable = 0;
 						total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] : 0;
-						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
+						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 
@@ -803,7 +803,7 @@ export class SalaryComputationComponent implements OnInit {
 						};
 					} else {
 						var salary_payable = 0;
-						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
+						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 
 
