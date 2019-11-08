@@ -239,7 +239,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	getCategoryOneName(cat_id) { 
+	getCategoryOneName(cat_id) {
 		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
@@ -627,20 +627,20 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					if (Number(item.formGroup.value['type' + i]) === 1) {
 						if (item.formGroup.value['sc_value' + i] === '') {
 							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
-							this.earning = this.earning + Number(this.getValue(item.formGroup.value['sc_id' + i]));
+							this.earning = Number(this.earning) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 							this.netSalary = Number(this.netSalary) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 						} else {
-							this.earning = this.earning + Number(item.formGroup.value['sc_value' + i]);
+							this.earning = Number(this.earning) + Number(item.formGroup.value['sc_value' + i]);
 							this.netSalary = Number(this.netSalary) + Number(item.formGroup.value['sc_value' + i]);
 						}
 
 					} else {
 						if (item.formGroup.value['sc_value' + i] === '') {
 							item.formGroup.value['sc_value' + i] = this.getValue(item.formGroup.value['sc_id' + i]);
-							this.deduction = this.deduction + Number(this.getValue(item.formGroup.value['sc_id' + i]));
+							this.deduction = Number(this.deduction) + Number(this.getValue(item.formGroup.value['sc_id' + i]));
 							this.netSalary = Number(this.netSalary) - Number(this.getValue(item.formGroup.value['sc_id' + i]));
 						} else {
-							this.deduction = this.deduction + Number(item.formGroup.value['sc_value' + i]);
+							this.deduction = Number(this.deduction) + Number(item.formGroup.value['sc_value' + i]);
 							this.netSalary = Number(this.netSalary) - Number(item.formGroup.value['sc_value' + i]);
 						}
 					}
@@ -650,7 +650,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.earning = (Number(this.earning) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 						this.netSalary = (Number(this.netSalary) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 					} else {
-						this.deduction = this.deduction + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100).toFixed(2);
+						this.deduction = (Number(this.deduction) + Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 						this.netSalary = (Number(this.netSalary) - Number((this.salaryDetails.value.basic_pay * item.formGroup.value['sc_value' + i]) / 100)).toFixed(2);
 					}
 				}
@@ -666,7 +666,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				);
 				i++;
 			}
-			this.totalEarning = Number(this.salaryDetails.value.basic_pay) + Number(this.deduction) + Number(this.earning);
+			console.log('this.salaryDetails.value.basic_pay', this.salaryDetails.value.basic_pay);
+			console.log('deductiony', this.deduction);
+			console.log('earning', this.earning);
+			this.netSalary = this.netSalary.toFixed(2);
+			this.totalEarning = (Number(this.salaryDetails.value.basic_pay) + Number(this.deduction) + Number(this.earning)).toFixed(2);
 		}
 	}
 	cancelForm() {
