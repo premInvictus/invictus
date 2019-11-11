@@ -43,7 +43,6 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
-import { ManageUsersService } from '../manage-users/service/manage-users.service';
 import { DynamicContentThemeTwoComponent } from './dynamic-content-theme-two/dynamic-content-theme-two.component';
 // tslint:disable-next-line: max-line-length
 import { ThemeTwoTabOneContainerComponent } from '../student-master-theme-two/theme-two-tab-one-container/theme-two-tab-one-container.component';
@@ -190,7 +189,7 @@ export const MY_FORMATS = {
 		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		AdmissionRemarksThemeTwoComponent, ImageViewerComponent,
 		SearchViaNameComponent, ProcessdateModalComponent],
-	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService, ManageUsersService,
+	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService,
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
