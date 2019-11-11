@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NotificationService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService, SmartService } from 'projects/axiom/src/app/_services/index';
 import { Element } from './testReportElement.model';
 
 @Component({
@@ -28,12 +28,14 @@ export class TestReportComponent implements OnInit {
 
 	displayedColumns = ['position', 'name', 'class', 'subject', 'duration', 'marks', 'location', 'date', 'time', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	axiomClassSecSub: any = {};
 
 	constructor(
 		private qelementService: QelementService,
 		private router: Router,
 		private route: ActivatedRoute,
-		private notif: NotificationService
+		private notif: NotificationService,
+		private smartService: SmartService
 	) { }
 
 	ngOnInit() {
@@ -44,7 +46,19 @@ export class TestReportComponent implements OnInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
-					this.getScheduleExam();
+					const smartparam: any = {};
+					smartparam.tgam_config_type = '1';
+					smartparam.tgam_global_config_id = this.userDetail.au_class_id;
+					smartparam.tgam_global_sec_id = this.userDetail.au_sec_id;
+					this.smartService.getSmartToAxiom(smartparam).subscribe((result: any) => {
+						if(result && result.status === 'ok') {
+							this.axiomClassSecSub.class_id = result.data[0].tgam_axiom_config_id;
+							this.axiomClassSecSub.sec_id = this.userDetail.au_sec_id;
+							console.log('this.axiomClassSecSub', this.axiomClassSecSub);
+							this.getScheduleExam();
+						}
+					});
+					
 				}
 			}
 		);
@@ -89,7 +103,7 @@ export class TestReportComponent implements OnInit {
 		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.ELEMENT_DATA = [];
 		// tslint:disable-next-line:max-line-length
-		this.qelementService.getScheduledExam({ es_class_id: this.userDetail.au_class_id, es_sec_id: this.userDetail.au_sec_id, es_status: 2, es_exam_type: this.es_exam_type }).subscribe(
+		this.qelementService.getScheduledExam({ es_class_id: this.axiomClassSecSub.class_id, es_sec_id: this.axiomClassSecSub.sec_id, es_status: '2', es_exam_type: this.es_exam_type }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.paginator.pageIndex = 0;

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { CommonAPIService } from '../../_services/index';
-import { ManageUsersService } from './../../manage-users/service/manage-users.service';
+import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 	selector: 'app-user-credential',
@@ -23,13 +22,13 @@ export class UserCredentialComponent implements OnInit {
 		private router: Router,
 		private fbuild: FormBuilder,
 		private notif: CommonAPIService,
-		private manageUsersService: ManageUsersService
+		private sisService: SisService
 	) { }
 
 	ngOnInit() {
 		this.buildForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.manageUsersService.getUser({ login_id: this.currentUser.login_id, role_id: this.currentUser.role_id }).subscribe(
+		this.sisService.getUser({ login_id: this.currentUser.login_id, role_id: this.currentUser.role_id }).subscribe(
 			(result: any) => {
 				if (result) {
 					this.currentUserDetail = result.data[0];
@@ -62,7 +61,7 @@ export class UserCredentialComponent implements OnInit {
 		}
 
 		if (this.user_credential_form.valid) {
-			this.manageUsersService.reset_password({
+			this.sisService.reset_password({
 				oldPassword: this.user_credential_form.value.old_password,
 				username: this.currentUserDetail.au_username,
 				loginId: this.currentUser.login_id, password: this.user_credential_form.value.new_password

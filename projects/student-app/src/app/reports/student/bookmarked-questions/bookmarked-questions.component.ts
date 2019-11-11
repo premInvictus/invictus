@@ -5,7 +5,7 @@ import { AcsetupService } from 'projects/axiom/src/app/acsetup/service/acsetup.s
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NotificationService } from 'projects/axiom/src/app/_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import {HtmlToTextService } from 'projects/axiom/src/app/_services/index';
+import {HtmlToTextService, SmartService } from 'projects/axiom/src/app/_services/index';
 import { EssayDialogsComponent } from 'projects/axiom/src/app/questionbank/essay-dialogs/essay-dialogs.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 
@@ -35,6 +35,8 @@ export class BookmarkedQuestionsComponent implements OnInit, AfterViewInit, Afte
 	bookmarkdataSourceArray: any[] = [];
 	BOOKMARK_ELEMENT_DATA_FINAL: any[] = [];
 	showData = false;
+	axiomClassSecSub: any = {};
+	
 	constructor(
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
@@ -42,7 +44,8 @@ export class BookmarkedQuestionsComponent implements OnInit, AfterViewInit, Afte
 		private acsetupService: AcsetupService,
 		private notif: NotificationService,
 		private htt: HtmlToTextService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		private smartService: SmartService
 	) { }
 
 
@@ -54,8 +57,19 @@ export class BookmarkedQuestionsComponent implements OnInit, AfterViewInit, Afte
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
-					this.class_id = this.userDetail.au_class_id;
-					this.getSubjectsByClass(this.class_id);
+					const smartparam: any = {};
+					smartparam.tgam_config_type = '1';
+					smartparam.tgam_global_config_id = this.userDetail.au_class_id;
+					smartparam.tgam_global_sec_id = this.userDetail.au_sec_id;
+					this.smartService.getSmartToAxiom(smartparam).subscribe((result: any) => {
+						if(result && result.status === 'ok') {
+							this.axiomClassSecSub.class_id = result.data[0].tgam_axiom_config_id;
+							this.axiomClassSecSub.sec_id = this.userDetail.au_sec_id;
+							console.log('this.axiomClassSecSub', this.axiomClassSecSub);
+							this.class_id = this.axiomClassSecSub.class_id;
+							this.getSubjectsByClass(this.axiomClassSecSub.class_id);
+						}
+					});
 				}
 			}
 

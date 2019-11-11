@@ -34,8 +34,6 @@ const routes: Routes = [
 			loadChildren: 'projects/sis/src/app/reports/reports.module#ReportsModule'},
 			{ path: 'setup',
 			loadChildren: '../setup/setup.module#SetupModule'},
-			{ path: 'manage-users',
-			loadChildren: '../manage-users/manage-users.module#ManageUsersModule'},
 			{ path: 'notifications',
 			loadChildren: '../scheduler-notifications/scheduler-notifications.module#SchedulerNotificationsModule'},
 			{ path: 'user-credential', component: UserCredentialComponent }

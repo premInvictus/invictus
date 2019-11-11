@@ -1036,4 +1036,7 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/setup/getReasonType');
 	}
+	reset_password(value) {
+		return this.http.post('/users/reset_password', value);
+	}
 }

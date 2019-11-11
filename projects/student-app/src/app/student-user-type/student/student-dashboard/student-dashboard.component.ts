@@ -135,6 +135,14 @@ export class StudentDashboardComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.userDetail = result.data[0];
 					console.log('userDetail', this.userDetail);
+					this.erpCommonService.getStudentInformation({login_id: currentUser.login_id, enrollment_type: '4'}).subscribe((resutl1: any) => {
+						if(resutl1 && resutl1.status === 'ok') {
+							this.className = resutl1.data[0].class_name;
+							this.secName = resutl1.data[0].sec_name;
+							this.dob = resutl1.data[0].au_dob;
+							this.phoneNumber = resutl1.data[0].au_mobile;
+						}
+					})
 					this.getOverallPerformance();
 					this.getSmartToAxiom();
 					// this.getPeriodDayByClass();
