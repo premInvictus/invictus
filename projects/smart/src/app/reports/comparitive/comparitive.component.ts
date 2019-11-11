@@ -19,7 +19,7 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 })
 export class ComparitiveComponent implements OnInit {
 
-	editRequestFlag = false; 
+	editRequestFlag = false;
 	startDate: any;
 	finalDivFlag = true;
 	headerDivFlag = false;
@@ -182,7 +182,7 @@ export class ComparitiveComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.sectionArray = result.data;
-						this.getSubjectsByClass();
+						// this.getSubjectsByClass();
 					} else {
 						this.sectionArray = [];
 					}
@@ -738,18 +738,22 @@ export class ComparitiveComponent implements OnInit {
 								// tslint:disable-next-line: max-line-length
 								this.finalSpannedArray[findex].deviation = Number(this.finalSpannedArray[findex].total) - Number(this.finalSpannedArray[findex].total1);
 							}
-							// console.log('finalSpannedArray', this.finalSpannedArray);
 							this.dataArr = [];
-							for (const item of this.finalSpannedArray) {
+							for (const item of this.finalSpannedArray) {								
 								const obj: any = {};
 								for (const dety of item.details) {
 									this.dataArr.push(dety);
+
 								}
+							}
+						}
+						for (const item of this.finalSpannedArray) {
+							if (item.total1 > 0) {
+								this.deviationSum = this.deviationSum + (item.total - item.total1);
 							}
 						}
 						this.grandTotal = this.teachingSum + this.testSum + this.revisionSum;
 						this.grandTotal1 = this.cwteachingSum + this.cwtestSum + this.cwrevisionSum;
-						this.deviationSum = (this.teachingSum + this.testSum + this.revisionSum) - (this.cwteachingSum + this.cwtestSum + this.cwrevisionSum);
 						if (this.finalSpannedArray.length > 0) {
 							let totalPeriodFromInitial = 0;
 							this.finalSpannedArray.forEach(element => {
@@ -760,7 +764,6 @@ export class ComparitiveComponent implements OnInit {
 									const sessionSD = moment(sessionStartDate);
 									const sessionED = moment(sessionEndDate);
 									for (const d = sessionSD; d.diff(sessionED) <= 0; d.add(1, 'days')) {
-										// console.log(d.format('YYYY-MM-DD'));
 										// if day is sunday
 										if (d.day() === 0) {
 											continue;
@@ -871,6 +874,9 @@ export class ComparitiveComponent implements OnInit {
 		let deviation = 0;
 		for (const item of this.finalSpannedArray) {
 			if (item.syl_term_id === syl_term_id) {
+				if (item.total1 > 0) {
+					deviation = deviation + (item.total - item.total1);
+				}
 				const obj: any = {};
 				for (const dety of item.details) {
 					if (syl_term_id === dety.syl_term_id) {
@@ -882,7 +888,7 @@ export class ComparitiveComponent implements OnInit {
 						cw_test = cw_test + Number(dety.cw_period_test);
 						cw_revise = cw_revise + Number(dety.cw_period_revision);
 						cw_total = cw_teacher + cw_test + cw_revise;
-						deviation = total - cw_total;
+						//deviation = total - cw_total;
 					}
 
 				}
