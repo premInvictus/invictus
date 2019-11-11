@@ -61,11 +61,9 @@ export class EmployeeCommonComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
 	openDeleteDialog = (data) => {
-		console.log('data', data);
 		this.deleteModal.openModal({ text: '' });
 	}
 	getStuData = (data) => {
-		console.log('yes');
 		//this.getStudentDetailsByAdmno(data);
 	}
 
@@ -193,7 +191,7 @@ export class EmployeeCommonComponent implements OnInit {
 					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 				}
 				this.navigation_record = result.navigation;
-			}
+			} 
 
 			if (this.navigation_record) {
 
@@ -351,6 +349,17 @@ export class EmployeeCommonComponent implements OnInit {
 
 	acceptNo(event) {
 		event.target.value = '';
+	}
+
+	loadEmployee(event) {
+		event.preventDefault();
+		this.viewOnly = true;
+		this.lastRecordId = event.target.value;
+		this.commonAPIService.employeeData.next(
+			{
+				last_record: event.target.value
+			});
+			
 	}
 
 	getEmployeeId($event) {

@@ -186,16 +186,18 @@ export class IssueReturnComponent implements OnInit {
 		if (this.searchForm && this.searchForm.value.searchId) {
 			const au_role_id = this.searchForm.value.user_role_id;
 			const au_admission_no = this.searchForm.value.searchId;
-
+			
 			if (au_role_id === '4') {
 				this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id }).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.userData = result.data ? result.data[0] : '';
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					} else {
 						this.userData = [];
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					}
 				});
@@ -205,10 +207,12 @@ export class IssueReturnComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.userData = result.data ? result.data[0] : '';
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					} else {
 						this.userData = [];
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					}
 				});
@@ -220,10 +224,12 @@ export class IssueReturnComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.userData = result.data ? result.data[0] : '';
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					} else {
 						this.userData = [];
 						this.bookData = [];
+						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
 					}
 				});
@@ -267,7 +273,7 @@ export class IssueReturnComponent implements OnInit {
 						this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']['fdue_date'] = date;
 						
 					}
-					
+									
 
 					this.bookData.push(this.bookLogData[Number(issueBookStatus.index)]['reserv_user_logs']);
 
@@ -433,8 +439,9 @@ export class IssueReturnComponent implements OnInit {
 		for (let i = 0; i < bookData.length; i++) {
 			if (bookData[i]['reserv_status'] === 'issued') {
 				//bookData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
-				if (
-				bookData[i]['due_date'] !== this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
+
+				console.log(bookData[i]['due_date'] , this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd'));
+				if (this.common.dateConvertion(bookData[i]['due_date'],'yyyy-MM-dd') !== this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd')) {
 							bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 							bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 							bookData[i]['fdue_date'] = bookData[i]['fdue_date'];

@@ -70,11 +70,11 @@
                           matTooltip="Export as excel" (click)="downloadExcel()" />
                       </div>
                     </div>
-                    <div class="inline-flex btn-spacer text-right margin-bottom-5">
+                    <!-- <div class="inline-flex btn-spacer text-right margin-bottom-5">
                       <button mat-raised-button class="btn-success-blue" (click)="print()">
                         Print
                       </button>
-                    </div>
+                    </div> -->
                   </div>
       
                 </div>
@@ -124,7 +124,7 @@
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="emp_name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width=" 0%">Emp Name</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">Emp Name</th>
                     <td mat-cell *matCellDef="let element" class="text-left">
                       <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
                     </td>
@@ -266,7 +266,7 @@
                     <td colspan="8">No Record Found</td>
                   </tr>
                 </table>
-                <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons>
+                <mat-paginator #paginator [pageSize]="300" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
                 </mat-paginator>
               </div>
             </div>

@@ -23,3 +23,11 @@ tr.custom-tr:nth-child(odd) td.custom-td { background: #ffffff !important }
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.no-border td{
+    border:0 !important;
+}
+
+.table tbody+tbody {
+    border:0 !important;
+}

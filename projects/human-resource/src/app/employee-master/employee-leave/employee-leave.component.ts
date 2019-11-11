@@ -18,7 +18,8 @@ export class EmployeeLeaveComponent implements OnInit {
 	employeeData: any;
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	session_id;
-	allEmployeeData:any
+	allEmployeeData:any[] = [];
+	tmpAllEmployeeData:any;
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	leave_opening_balance = 0;
 	//'leave_opening_balance',
@@ -44,25 +45,31 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	getAllEmployee() {
 		this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-			console.log('result', result);
-			this.allEmployeeData = result;
+			
+			this.tmpAllEmployeeData = result;
 		});
 	}
 
 	getFilterEmployee(event) {
 		var tempArr = [];
-		for(var i=0; i<this.allEmployeeData.length;i++) {
-			if(this.allEmployeeData[i]['emp_name'].includes(event.target.value)) {
-				tempArr.push(this.allEmployeeData[i]);
-			}
-		}
-		if (tempArr.length > 0) {
-			this.allEmployeeData = tempArr;
+		if (event.target.value.length > 2) {			
+			this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+				this.tmpAllEmployeeData = result;
+				if (this.tmpAllEmployeeData && (event.target.value.length > 2)) {
+					for(var i=0; i<this.tmpAllEmployeeData.length;i++) {
+						if(this.tmpAllEmployeeData[i]['emp_name'].toLowerCase().includes(event.target.value)) {
+							tempArr.push(this.tmpAllEmployeeData[i]);
+						}
+					}
+					if (tempArr.length > 0) {
+						this.allEmployeeData = tempArr;
+					}
+				}
+			});			
 		} else {
-			this.getAllEmployee();
-		}
-		
-	}
+			this.allEmployeeData = []
+		}		
+	} 
 
 	getEmployeeDetail() {
 		let inputJson = {}
@@ -155,7 +162,7 @@ export class EmployeeLeaveComponent implements OnInit {
 			emp_id: empDetails.emp_id,
 			emp_name: empDetails.emp_name,
 		});
-		this.getEmployeeDetail();
+		this.allEmployeeData = []
 	}
 
 

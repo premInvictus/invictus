@@ -137,7 +137,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 
 	getPaymentModes() {
-		this.commonAPIService.getMaster({type_id:6}).subscribe((res: any) => {
+		this.commonAPIService.getMaster({type_id:"6"}).subscribe((res: any) => {
 			if (res) {
 				//this.paymentModeArray = res;
 				for (let i=0; i<res.length;i++) {
@@ -272,8 +272,6 @@ export class DisbursmentSheetComponent implements OnInit {
 							}
 
 
-							console.log('item', item);
-							console.log(this.shacolumns[i]['data']);
 							if (item.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_structure.emp_salary_heads.length; j++) {
 									if (item.emp_salary_structure.emp_salary_heads && item.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
@@ -363,7 +361,6 @@ export class DisbursmentSheetComponent implements OnInit {
 					var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
 					emp_present_days = emp_present_days ? emp_present_days : 0;
 
-					console.log(total_earnings, total_deductions, emp_present_days, Number(no_of_days));
 					salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 
 					var modeTotal = 0;

@@ -18,10 +18,10 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 	@ViewChild('searchModal') searchModal;
 	@ViewChild('paginator') paginator: MatPaginator;
 	filters: any = {};
-	bookpagesize = 10;
+	bookpagesize = 100;
 	pageEvent: PageEvent;
 	bookpageindex = 0;
-	bookpagesizeoptions = [10, 25, 50, 100];
+	bookpagesizeoptions = [100, 300, 500, 1000];
 	gridView = true;
 	enteredVal: any = false;
 	statusArray: any[] = [
@@ -75,7 +75,6 @@ export class BookSearchComponent implements OnInit, AfterViewInit {
 			});
 			this.searchBook();
 		}
-		
 		
 	}
 	ngAfterViewInit() {

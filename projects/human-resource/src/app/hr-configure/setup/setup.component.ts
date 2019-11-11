@@ -87,6 +87,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				id: '',
 				name: '',
+				calculation_type: '',
+				value: '',
 				status: '',
 				type: ''
 			})
@@ -117,19 +119,30 @@ export class SetupComponent implements OnInit, AfterViewInit {
 
 	// get genre list
 	getConfiguration(event) {
+		if (this.formGroupArray[this.configValue - 1].formGroup.value.type === '6') {
+			this.displayedColumns = ['position', 'name', 'calculation_type', 'value', 'status', 'action'];
+		} else {
+			this.displayedColumns = ['position', 'name', 'status', 'action'];
+		}
+		this.calculationFlag = false;
 		this.configArray = [];
+		this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+			calculation_type: '',
+		});
 		this.CONFIG_ELEMENT_DATA = [];
 		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
 		this.commonService.getMaster({ type_id: event.value }).subscribe((result: any) => {
-			console.log(result);
 			if (result) {
 				this.configArray = result;
 				if (this.configValue === '1') {
 					let pos = 1;
 					for (const item of result) {
+						// console.log('jhjhjhh',item.type.calculation_type ? item.type.calculation_type.cy_name : '');
 						this.CONFIG_ELEMENT_DATA.push({
 							position: pos,
 							name: item.name,
+							calculation_type: item.type.calculation_type ? item.type.calculation_type.cy_name : '',
+							value: item.type.calculation_type ? item.type.calculation_type.cy_value : '',
 							status: item.status,
 							action: item
 						});
@@ -249,10 +262,21 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	formEdit(value: any) {
 		if (Number(this.configValue) === 1) {
 			this.setupUpdateFlag = true;
+			if (value.type.calculation_type) {
+				if (value.type.calculation_type.cy_name === '%') {
+					value.type.calculation_type.cy_name = '2';
+					this.calculationFlag = true;
+				} else {
+					this.calculationFlag = false;
+					value.type.calculation_type.cy_name = '1';
+				}
+			}
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				id: value.config_id,
 				name: value.name,
-				status: value.status
+				status: value.status,
+				calculation_type: value.type.calculation_type ? value.type.calculation_type.cy_name : '',
+				value: value.type.calculation_type ? value.type.calculation_type.cy_value : '',
 			});
 		} else if (Number(this.configValue) === 2) {
 			this.setupUpdateFlag = true;
@@ -295,7 +319,12 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				type: '1',
 			});
-			this.displayedColumns = ['position', 'name', 'status', 'action'];
+			if (this.formGroupArray[this.configValue - 1].formGroup.value.type === 6) {
+				this.displayedColumns = ['position', 'name', 'calculation_type', 'value', 'status', 'action'];
+			} else {
+				this.displayedColumns = ['position', 'name', 'status', 'action'];
+			}
+
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getSalaryComponent();
@@ -345,7 +374,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.setupDetails = {
 						type: {
 							type_id: this.formGroupArray[value - 1].formGroup.value.type,
-							type_name: this.gettypeName(this.formGroupArray[value - 1].formGroup.value.type)
+							type_name: this.gettypeName(this.formGroupArray[value - 1].formGroup.value.type),
+							calculation_type: {
+								cy_name: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
+								cy_value: this.formGroupArray[value - 1].formGroup.value.value
+							}
 						},
 						name: this.formGroupArray[value - 1].formGroup.value.name,
 						status: '1',
@@ -388,13 +421,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.setupDetails = {
 						type: {
 							type_id: this.formGroupArray[value - 1].formGroup.value.type,
-							type_name: this.gettypeName(this.formGroupArray[value - 1].formGroup.value.type)
+							type_name: this.gettypeName(this.formGroupArray[value - 1].formGroup.value.type),
+							calculation_type: {
+								cy_name: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
+								cy_value: this.formGroupArray[value - 1].formGroup.value.value
+							}
 						},
 						name: this.formGroupArray[value - 1].formGroup.value.name,
 						status: '1',
 						config_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateMaster', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 				case '2':
 					this.setupDetails = {
@@ -410,6 +448,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 				case '3':
 					this.setupDetails = {
@@ -419,6 +458,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						ss_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
 					break;
 			}
 		}
@@ -431,7 +471,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			} else {
 				value.status = '1';
 			}
-			console.log(value);
 			this.commonService.updateMaster(value).subscribe((result: any) => {
 				if (result) {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
@@ -553,6 +592,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 
 	deleteCancel() {
-		
+
 	}
 }

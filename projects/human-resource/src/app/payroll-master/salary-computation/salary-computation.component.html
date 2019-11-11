@@ -11,7 +11,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pay Month</mat-label>
-              <mat-select formControlName="month_id" required (selectionChange)="getAllEmployee()">
+              <mat-select formControlName="month_id" required (selectionChange)="getSalaryComputeEmployee()">
                 <mat-option value="1">January</mat-option>
                 <mat-option value="2">February</mat-option>
                 <mat-option value="3">March</mat-option>
@@ -58,7 +58,7 @@
           <div class="row ">
             <div class="col-9 remove-col-padding-left">
               <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" (blur)="applyFilter($event.target.value)" />
+                <input matInput placeholder="Search" (keyup)="applyFilter($event.target.value)" />
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
@@ -78,11 +78,11 @@
                     matTooltip="Export as excel" (click)="downloadExcel()" />
                 </div>
               </div>
-              <div class="inline-flex btn-spacer text-right margin-bottom-5">
+              <!-- <div class="inline-flex btn-spacer text-right margin-bottom-5">
                 <button mat-raised-button class="btn-success-blue" (click)="print()">
                   Print
                 </button>
-              </div>
+              </div> -->
             </div>
 
           </div>
@@ -296,7 +296,7 @@
               <td colspan="8">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons>
+          <mat-paginator #paginator [pageSize]="300" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div> 
