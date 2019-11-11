@@ -69,6 +69,8 @@ export class AddSyllabusComponent implements OnInit {
 	totalPeriodTempCount = 0;
 	subtopicIdArray: any[] = [];
 	add = 'Add';
+	startDate: any;
+	enddate: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -160,6 +162,16 @@ export class AddSyllabusComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.startMonth = result.data[0].session_start_month;
 						this.endMonth = result.data[0].session_end_month;
+						this.syllabusService.getSessionStartDate().subscribe((result: any) => {
+							if (result) {
+								this.startDate = result;
+							}
+						});
+						this.syllabusService.getSessionEndDate().subscribe((result: any) => {
+							if (result) {
+								this.enddate = result;
+							}
+						});
 					}
 				});
 	}
@@ -378,7 +390,7 @@ export class AddSyllabusComponent implements OnInit {
 	getSyllabusTerm(term_id) {
 		const tindex = this.termsArray.findIndex(f => Number(f.id) === Number(term_id));
 		if (tindex !== -1) {
-			return this.termsArray[tindex].sub_name;
+			return this.termsArray[tindex].name;
 		}
 	}
 
@@ -467,11 +479,11 @@ export class AddSyllabusComponent implements OnInit {
 						} else {
 							this.syllabus_flag = false;
 							this.details_flag = true;
-						}
+						} 
 					});
 			const dateParam: any = {};
-			dateParam.datefrom = this.currentYear + '-' + this.startMonth + '-1';
-			dateParam.dateyear = this.nextYear + '-' + this.endMonth + '-31';
+			dateParam.datefrom = this.startDate;
+			dateParam.dateyear = this.enddate;
 			dateParam.dateto = this.commonService.dateConvertion(this.todaydate);
 			dateParam.class_id = this.syllabusForm.value.syl_class_id;
 			dateParam.subject_id = this.syllabusForm.value.syl_sub_id;

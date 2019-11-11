@@ -448,6 +448,14 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/getSubjectType', value);
 	}
+	getSessionStartDate() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/smtreport/getSessionStartDate');
+	}
+	getSessionEndDate() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSmartUrl + '/smtreport/getSessionEndDate');
+	}
 
 }
 

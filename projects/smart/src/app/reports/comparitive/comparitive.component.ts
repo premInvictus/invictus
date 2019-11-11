@@ -19,7 +19,7 @@ import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
 })
 export class ComparitiveComponent implements OnInit {
 
-	editRequestFlag = false;
+	editRequestFlag = false; 
 	startDate: any;
 	finalDivFlag = true;
 	headerDivFlag = false;
