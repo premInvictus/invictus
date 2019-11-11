@@ -47,6 +47,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 	totalCompletion = 0;
 	totalAvailed = 0;
 	totalAvailable = 0;
+	startDate: any;
+	enddate: any;
 	remarkParam: any = {};
 	alphabetJSON = {
 		1: 'A',
@@ -216,6 +218,16 @@ export class SyllabusProgressReportComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.schooInfo = result.data[0];
+						this.smartService.getSessionStartDate().subscribe((result: any) => {
+							if (result) {
+								this.startDate = result;
+							}
+						});
+						this.smartService.getSessionEndDate().subscribe((result: any) => {
+							if (result) {
+								this.enddate = result;
+							}
+						});
 						this.startMonth = result.data[0].session_start_month;
 						this.endMonth = result.data[0].session_end_month;
 					}
@@ -595,8 +607,8 @@ export class SyllabusProgressReportComponent implements OnInit {
 								}
 							});
 							const dateParam: any = {};
-							dateParam.datefrom = this.currentYear + '-' + this.startMonth + '-1';
-							dateParam.dateyear = this.nextYear + '-' + this.endMonth + '-31';
+							dateParam.datefrom = this.startDate;
+							dateParam.dateyear = this.enddate;
 							dateParam.dateto = this.commonService.dateConvertion(this.todaydate);
 							dateParam.class_id = this.progressReportForm.value.syl_class_id;
 							dateParam.td_tt_id = result.data[0].tt_id;
