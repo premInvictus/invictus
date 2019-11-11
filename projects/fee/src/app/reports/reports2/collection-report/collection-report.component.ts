@@ -1702,6 +1702,8 @@ export class CollectionReportComponent implements OnInit {
 				});
 			} else if (this.reportType === 'summary') {
 				const collectionJSON: any = {
+					'from_date': value.from_date,
+					'to_date': value.to_date
 				};
 				this.feeService.getFeeCollectionSummaryReport(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
