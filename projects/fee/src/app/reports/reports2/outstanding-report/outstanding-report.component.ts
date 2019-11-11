@@ -1666,8 +1666,8 @@ export class OutstandingReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
-											obj['total'] = repoArray[Number(keys)]['invoice_amount']
-												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
+												? Number(repoArray[Number(keys)]['inv_due_total_amt']) : 0;
 											k++;
 										}
 									});
