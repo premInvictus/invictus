@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../../reports/service/report.service';
 import {ActivatedRoute} from '@angular/router';
-import { BreadCrumbService } from '../../_services/index';
+import { BreadCrumbService, CommonAPIService, SmartService } from '../../_services/index';
 import { QelementService } from '../../questionbank/service/qelement.service';
 
 @Component({
@@ -34,6 +34,8 @@ export class TeacherReportAnalysisComponent implements OnInit {
 		private qelementService: QelementService,
 		private reportService: ReportService,
 		private breadCrumbService: BreadCrumbService,
+		private common: CommonAPIService,
+		private smartService: SmartService
 	) { }
 
 	getTestQuestions(): void {
@@ -75,14 +77,21 @@ export class TeacherReportAnalysisComponent implements OnInit {
 	}
 
 	getStudents() {
-		const param = { class_id: this.examDetail.es_class_id, sec_id: this.examDetail.es_sec_id, role_id: '4', status: '1' };
-		this.qelementService.getUser(param).subscribe(
-			(result: any) => {
-
-				if (result && result.status === 'ok') {
-					this.studentArray = result.data;
-				}
+		const param: any = {};
+		param.tgam_config_type = '1';
+		param.tgam_axiom_config_id = this.examDetail.es_class_id;
+		param.tgam_global_sec_id = this.examDetail.es_sec_id;
+		this.smartService.getSmartToAxiom(param).subscribe((result1: any) => {
+			if (result1 && result1.status === 'ok') {
+				this.common.getMasterStudentDetail({ class_id: result1.data[0].tgam_global_config_id,
+					sec_id: result1.data[0].tgam_global_sec_id, role_id: '4', enrollment_type: '4' }).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.studentArray = result.data;
+						}
+					}
+				);
 			}
-		);
+		})
 	}
 }

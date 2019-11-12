@@ -19,7 +19,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Class</mat-label>
                     <mat-select formControlName="es_class_id"
-                      (selectionChange)="getSectionsByClass();getSubjectsByClass();getUser()" placeholder="Class"
+                      (selectionChange)="getSectionsByClass();getSubjectsByClass();" placeholder="Class"
                       required>
                       <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                         {{item.class_name}}
