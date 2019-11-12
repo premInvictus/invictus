@@ -667,7 +667,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				i++;
 			}
 			this.netSalary = this.netSalary.toFixed(2);
-			this.totalEarning = (Number(this.salaryDetails.value.basic_pay) + Number(this.deduction) + Number(this.earning)).toFixed(2);
+			this.totalEarning = (Number(this.salaryDetails.value.basic_pay) + Number(this.earning)).toFixed(2);
 		}
 	}
 	cancelForm() {
