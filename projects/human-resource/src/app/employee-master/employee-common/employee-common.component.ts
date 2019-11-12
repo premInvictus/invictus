@@ -113,7 +113,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data) {
 				if ((data && data.reRenderForm) || (data && data.viewMode)) {
-					this.employeedetails = {};
+					//this.employeedetails = {};
 					this.employeedetails.emp_status = 'live';
 					this.getEmployeeDetail(this.lastRecordId);
 				}
@@ -127,7 +127,6 @@ export class EmployeeCommonComponent implements OnInit {
 
 	ngOnChanges() {
 		this.buildForm();
-		
 		this.employeedetails.emp_status == 'live';
 		this.getDepartment();
 		this.getDesignation();
@@ -146,6 +145,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
+	
 	getDesignation() {
 		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
@@ -191,7 +191,7 @@ export class EmployeeCommonComponent implements OnInit {
 					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 				}
 				this.navigation_record = result.navigation;
-			} 
+			}
 
 			if (this.navigation_record) {
 
@@ -359,7 +359,7 @@ export class EmployeeCommonComponent implements OnInit {
 			{
 				last_record: event.target.value
 			});
-			
+
 	}
 
 	getEmployeeId($event) {

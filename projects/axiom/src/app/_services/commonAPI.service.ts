@@ -55,4 +55,12 @@ export class CommonAPIService {
 			return this.userData = JSON.parse(this._cookieService.get('userData'));
 		}
 	}
+	getStudentInformation(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudentInformation', value);
+	}
+	getMasterStudentDetail(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
 }

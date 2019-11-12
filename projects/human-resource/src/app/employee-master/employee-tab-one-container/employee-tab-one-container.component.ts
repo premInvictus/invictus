@@ -728,14 +728,14 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			return this.designationArray[findIndex].name;
 		}
 	}
-	copyForWhatsapp(value){
-		if(value === 'primary'){
+	copyForWhatsapp(value) {
+		if (value === 'primary') {
 			this.personalDetails.patchValue({
-				whatsapp_no:this.personalDetails.value.pri_mobile
+				whatsapp_no: this.personalDetails.value.pri_mobile
 			});
 		} else {
 			this.personalDetails.patchValue({
-				whatsapp_no:this.personalDetails.value.sec_mobile
+				whatsapp_no: this.personalDetails.value.sec_mobile
 			});
 		}
 	}

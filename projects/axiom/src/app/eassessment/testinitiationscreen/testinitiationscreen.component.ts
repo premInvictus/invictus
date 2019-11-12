@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { NotificationService, SocketService, SmartService } from '../../_services/index';
+import { NotificationService, SocketService, SmartService, CommonAPIService } from '../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort, MatInput } from '@angular/material';
 
 @Component({
@@ -30,7 +30,8 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 		private notif: NotificationService,
 		private socketService: SocketService,
 		private router: Router,
-		private smartService: SmartService
+		private smartService: SmartService,
+		private common: CommonAPIService
 	) { }
 
 	displayedColumns = [
@@ -124,7 +125,7 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 		const param: any = {
 			class_id: this.scheduleExam.es_class_id,
 			sec_id: this.scheduleExam.es_sec_id,
-			role_id: '4',
+			enrollment_type: '4',
 			status: '1'
 		}
 		const smartparam: any = {};
@@ -136,8 +137,8 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 				param.class_id = result.data[0].tgam_global_config_id;
 			}
 		});
-		await this.qelementService
-			.getUser(param)
+		await this.common
+			.getMasterStudentDetail(param)
 			.toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
 					this.studentArray = result.data;
@@ -147,7 +148,7 @@ export class TestinitiationscreenComponent implements OnInit, AfterViewInit {
 						this.ELEMENT_DATA.push({
 							position: position,
 							admission: stu.au_login_id,
-							loginid: stu.au_admission_no,
+							loginid: stu.em_admission_no,
 							student: stu.au_full_name,
 							class: this.scheduleExam.class_name,
 							section: this.scheduleExam.sec_name,

@@ -58,6 +58,62 @@ export class StudentManagementComponent implements OnInit {
 		});
 
 	}
+	/*getUser() {
+		this.studentdetailArray = [];
+		this.ELEMENT_DATA = [];
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		const param: any = {};
+		param.tgam_config_type = '1';
+		if (this.Filter_form.value.au_class_id) {
+			param.tgam_axiom_config_id = this.Filter_form.value.au_class_id;
+		}
+		if (this.Filter_form.value.au_sec_id) {
+			param.tgam_global_sec_id = this.Filter_form.value.au_sec_id;
+		}
+		param.role_id = '4';
+		param.status = 1;
+		if (this.Filter_form.valid) {
+
+			this.smartService.getSmartToAxiom(param).subscribe((result1: any) => {
+				if (result1 && result1.status === 'ok') {
+					this.common.getMasterStudentDetail({ class_id: result1.data[0].tgam_global_config_id,
+						sec_id: result1.data[0].tgam_global_sec_id, role_id: '4', enrollment_type: '4' }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								(result: any) => {
+									if (result && result.status === 'ok') {
+										this.studentdetailArray = result.data;
+										let ind = 1;
+										for (const t of this.studentdetailArray) {
+											// tslint:disable-next-line:max-line-length
+											this.ELEMENT_DATA.push({ 
+												position: ind, userId: t.au_username, 
+												name: t.au_full_name, class: t.class_name, 
+												section: t.sec_name, 
+												mobile: t.au_mobile, 
+												email: t.au_email, 
+												action: t 
+											});
+											ind++;
+										}
+										this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+										this.dataSource.paginator = this.paginator;
+										this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+										this.dataSource.sort = this.sort;
+									} else {
+										this.tableCollection = false;
+										this.notif.showSuccessErrorMessage('No records found', 'error');
+									}
+				
+								}
+							}
+						}
+					);
+				}
+			})
+		}
+		this.tableCollection = true;
+	}*/
 	getUser() {
 		this.studentdetailArray = [];
 		this.ELEMENT_DATA = [];
