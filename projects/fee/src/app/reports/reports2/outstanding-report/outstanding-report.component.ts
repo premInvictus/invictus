@@ -202,7 +202,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getOutstandingReport(value: any) {
-		// value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
@@ -1459,12 +1459,13 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'feedue') {
+				value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': value.report_type,
 					'feeHeadId': value.fee_value,
-					// 'from_date': value.from_date,
+					'from_date': value.from_date,
 					'to_date': value.to_date,
 					'pageSize': '10',
 					'pageIndex': '0',
