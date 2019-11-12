@@ -107,13 +107,15 @@
                 maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" formControlName="pri_mobile"
                 [errorStateMatcher]="confirmValidParentMatcher" />
             </mat-form-field>
-            <i class="fab fa-whatsapp whatsapp-field-icon" (click)="copyForWhatsapp('primary')" matPrefix></i>
+            <i class="fab fa-whatsapp whatsapp-field-icon" matTooltip="Mark as What's app No." 
+              (click)="copyForWhatsapp('primary')" matPrefix></i>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Secondary Mobile No.</mat-label>
               <input matInput placeholder="Secondary Mobile No." formControlName="sec_mobile" minlength="10"
                 maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
             </mat-form-field>
-            <i class="fab fa-whatsapp whatsapp-field-icon1" (click)="copyForWhatsapp('seconday')" matPrefix></i>
+            <i class="fab fa-whatsapp whatsapp-field-icon1" matTooltip="Mark as What's app No." 
+              (click)="copyForWhatsapp('seconday')" matPrefix></i>
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Whatsapp No.</mat-label>
               <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Whatsapp No."
