@@ -32,6 +32,7 @@ export class SalaryComputationComponent implements OnInit {
 	empShdcolumns = [];
 	formGroupArray = [];
 	session_id;
+	editFlag = false;
 	paymentModeArray: any[] = [
 		// {
 		// 	pm_id: 'bank_transfer',
