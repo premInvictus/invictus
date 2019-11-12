@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NotificationService } from '../../_services/index';
+import { NotificationService, SmartService, SisService } from '../../_services/index';
 
 @Component({
 	selector: 'app-school-student-reports',
@@ -25,7 +25,10 @@ export class SchoolStudentReportsComponent implements OnInit {
 	tabFlag6 = false;
 	constructor( private fbuild: FormBuilder,
 		private qelementService: QelementService,
-		private notif: NotificationService) { }
+		private notif: NotificationService,
+		private smartService: SmartService,
+		private sisService: SisService
+		) { }
 
 	ngOnInit() {
 		this.getClass();
@@ -43,7 +46,29 @@ export class SchoolStudentReportsComponent implements OnInit {
 
 	getUser() {
 		this.userDetail = [];
-		this.qelementService.getUser({ class_id: this.adminOverallFilter.value.es_class_id,
+		const param: any = {};
+		param.tgam_config_type = '1';
+		param.tgam_axiom_config_id = this.adminOverallFilter.value.es_class_id;
+		param.tgam_global_sec_id = this.adminOverallFilter.value.es_sec_id;
+		this.smartService.getSmartToAxiom(param).subscribe((result1: any) => {
+			if (result1 && result1.status === 'ok') {
+				this.sisService.getMasterStudentDetail({ class_id: result1.data[0].tgam_global_config_id,
+					sec_id: result1.data[0].tgam_global_sec_id, role_id: '4', enrollment_type: '4' }).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.userDetail = result.data;
+							this.reportFlag = false;
+							this.tabFlag = false;
+						} else {
+							this.notif.showSuccessErrorMessage('No student  in this section', 'error');
+							this.reportFlag = false;
+							this.tabFlag = false;
+						}
+					}
+				);
+			}
+		})
+		/*this.qelementService.getUser({ class_id: this.adminOverallFilter.value.es_class_id,
 			sec_id: this.adminOverallFilter.value.es_sec_id, role_id: '4' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -56,8 +81,9 @@ export class SchoolStudentReportsComponent implements OnInit {
 					this.tabFlag = false;
 				}
 			}
-		);
+		);*/
 	}
+
 
 	getCurrentUser(value): void {
 		this.currentUser = [];
