@@ -3,11 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
 import { AdminReturnComponent } from './admin-return/admin-return.component';
+import { HrSharedModule } from '../hr-shared/hr-shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    AuxiliariesRoutingModule
+    AuxiliariesRoutingModule,
+    HrSharedModule 
   ],
   declarations: [AdminReturnComponent]
 })

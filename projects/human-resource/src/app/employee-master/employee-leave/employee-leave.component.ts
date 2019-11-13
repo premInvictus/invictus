@@ -162,7 +162,8 @@ export class EmployeeLeaveComponent implements OnInit {
 			emp_id: empDetails.emp_id,
 			emp_name: empDetails.emp_name,
 		});
-		this.allEmployeeData = []
+		this.allEmployeeData = [];
+		this.getEmployeeDetail();
 	}
 
 
