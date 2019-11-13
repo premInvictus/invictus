@@ -504,6 +504,7 @@ export class QuestionPaperListComponent implements OnInit {
 		mrow.MJX-TeXAtom-ORD{display:none !important}
 		} 
 		</style>
+		<script src="https://cdn.jsdelivr.net/gh/ianlucas/mathjax-editor/dist/mathjax-editor.js?v=3"></script>
 		<body onload="window.print()">'
 		${printModal2.innerHTML}  
 		</body>

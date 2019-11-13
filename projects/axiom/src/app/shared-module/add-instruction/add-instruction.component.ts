@@ -4,6 +4,7 @@ import { FormGroup , FormBuilder } from '@angular/forms';
 import { QbankService } from '../../questionbank/service/qbank.service';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { NotificationService } from '../../_services';
+import { ckconfig } from '../../questionbank/ckeditorconfig';
 
 @Component({
 	selector: 'app-add-instruction',
@@ -26,7 +27,7 @@ export class AddInstructionComponent implements OnInit {
 	finalResultArray: any[] = [];
 	templatesform1: FormGroup;
 	title: any;
-
+	ckeConfig: any;
 
 	constructor(  private fbuild: FormBuilder,
 		private qbankService: QbankService,
@@ -37,6 +38,7 @@ export class AddInstructionComponent implements OnInit {
 
 
 	ngOnInit() {
+		this.ckeConfig = ckconfig;
 		this.buildForm();
 		this.getInstruction();
 	}

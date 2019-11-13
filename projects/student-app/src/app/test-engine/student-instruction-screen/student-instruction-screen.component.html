@@ -36,7 +36,7 @@
             <hr>
             <div class="container-cu">
                 <h6>Please read the following instructions very carefully.</h6>
-                {{examDetailTemp?.ti_description}}
+                <div [innerHTML]="examDetailTemp?.ti_description"></div>
             </div>
         </mat-card-content>
     </mat-card>
