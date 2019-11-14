@@ -348,7 +348,7 @@ export class AdminReturnComponent implements OnInit {
 					if (editableStatus) {
 						var salary_payable = 0;
 						total_earnings = item.emp_salary_detail && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_total_earning : 0;
-				
+
 						total_earnings = Number(total_earnings) + Number(total_deductions);
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
@@ -876,6 +876,7 @@ export class AdminReturnComponent implements OnInit {
 	// }
 
 	getNetSalary() {
+		var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 		for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
 			this.earning = 0;
 			this.deduction = 0;
@@ -891,8 +892,9 @@ export class AdminReturnComponent implements OnInit {
 					this.deduction = Number(this.deduction) + Number(this.formGroupArray[i].value[this.shdcolumns[j]['header']]);
 				}
 			}
-			this.totalEarning = ((Number(this.earning) * Number(this.SALARY_COMPUTE_ELEMENT[i].emp_present_days) / 31) - Number(this.deduction)).toFixed(2);
-			
+			if (Number(this.SALARY_COMPUTE_ELEMENT[i].emp_present_days) > 0) {
+				this.totalEarning = ((Number(this.earning) * Number(this.SALARY_COMPUTE_ELEMENT[i].emp_present_days) / Number(no_of_days)) - Number(this.deduction)).toFixed(2);
+			}
 			this.SALARY_COMPUTE_ELEMENT[i].emp_total_earnings = this.earning;
 			this.SALARY_COMPUTE_ELEMENT[i].emp_total = this.totalEarning;
 		}

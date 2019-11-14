@@ -1,0 +1,66 @@
+<div class="container-box__grey">
+  <div class="container-box__white">
+    <div class="row">
+      <div class="col-12 text-center">
+        <h4 class="text-center"><b>Bulk Insert</b></h4>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="col-12">
+        <div style="float:right">
+          <span><b>Note:</b> Please download the excel file before uploading*</span> &nbsp;
+          <button mat-raised-button class="btn-neutral">
+            <i class="fas fa-download" style="font-size: 1.25rem !important;"
+            (click)="downloadExcel()">&nbsp; Download Excel</i></button>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div *ngIf="!validateFlag" class="row">
+      <div class="col-12">
+        <div class="container-box__uploadbox">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+            <div class="bulk-upload-content" style="height: 40vh !important"> 
+              <div class="bulk-upload-sub-content" style="margin-top: 4% !important">
+                <i class="material-icons bulk-upload-icon">
+                  save_alt
+                </i><br>
+                <span><b>{{header1}}</b> {{header2}}</span>
+                <input style="display:none;" #inputFile type="file" name="file" id="bulkupdate" (change)="bulkUpdateValidate($event)">
+              </div>
+            </div>
+          </label>
+          </div>
+        </div>
+        <br>
+        <br>
+      </div>
+    </div>
+    <br>
+    <div *ngIf="validateFlag" class="row">
+        <div class="col-12">
+          <div class="container-box__uploadbox">
+            <div class="bulk-upload-main-content">
+              <label class="upload-box" for="bulkupdateconfirm">
+              <div class="bulk-upload-content" style="height: 40vh !important"> 
+                <div class="bulk-upload-sub-content" style="margin-top: 4% !important">
+                  <i class="material-icons bulk-upload-icon">
+                    save_alt
+                  </i><br>
+                  <span><b>{{header3}}</b> {{header4}}</span>
+                  <input style="display:none;" #inputFile type="file" name="file" id="bulkupdateconfirm" 
+                  accept="application/zip"
+                  (change)="bulkInsert($event)">
+                </div>
+              </div>
+            </label>
+            </div>
+          </div>
+          <br>
+          <br>
+        </div>
+      </div>
+  </div>
+</div>

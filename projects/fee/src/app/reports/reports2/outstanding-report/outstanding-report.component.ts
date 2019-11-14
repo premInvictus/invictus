@@ -128,6 +128,21 @@ export class OutstandingReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	// monthArray = [
+	// 	{"id" : '04' , "name" : 'April'},
+	// 	{"id" : '05' , "name" : 'May'},
+	// 	{"id" : '06' , "name" : 'June'},
+	// 	{"id" : '07' , "name" : 'July'},
+	// 	{"id" : '08' , "name" : 'August'},
+	// 	{"id" : '09' , "name" : 'September'},
+	// 	{"id" : '10' , "name" : 'October'},
+	// 	{"id" : '11' , "name" : 'November'},
+	// 	{"id" : '12' , "name" : 'December'},
+	// 	{"id" : '01' , "name" : 'January'},
+	// 	{"id" : '02' , "name" : 'Feburary'},
+	// 	{"id" : '03' , "name" : 'March'}
+	// ];
+	monthArray = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -136,10 +151,14 @@ export class OutstandingReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
+		
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		
 		this.getSchool();
+		this.getInvoiceFeeMonths();
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
+		
 		this.buildForm();
 		this.getClassData();
 		this.reportTypeArray.push({
@@ -161,7 +180,8 @@ export class OutstandingReportComponent implements OnInit {
 		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
-			'to_date': date
+			'to_date': date,
+			'month_id' : '4'
 		});
 		this.filterFlag = true;
 	}
@@ -185,6 +205,7 @@ export class OutstandingReportComponent implements OnInit {
 			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
+			'month_id':'',
 			'downloadAll': '',
 			'hidden_value': '',
 			'hidden_value2': '',
@@ -201,8 +222,18 @@ export class OutstandingReportComponent implements OnInit {
 		});
 	}
 
+	getInvoiceFeeMonths() {
+		this.monthArray = [];
+		this.feeService.getInvoiceFeeMonths({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('monthArray', result.data.fm_data);
+				this.monthArray = result.data.fm_data;
+			}
+		});
+	}
+
 	getOutstandingReport(value: any) {
-		// value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
@@ -1459,13 +1490,15 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'feedue') {
+				value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': value.report_type,
 					'feeHeadId': value.fee_value,
 					// 'from_date': value.from_date,
-					'to_date': value.to_date,
+					// 'to_date': value.to_date,
+					'month_id' : this.reportFilterForm.value.month_id,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -1593,29 +1626,41 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
-										id: 'receipt_no',
-										name: 'Invoice No.',
-										field: 'receipt_no',
+										id: 'invoice_due_date', name: 'Invoice Due Date', field: 'invoice_due_date',
 										sortable: true,
-										width: 70,
 										filterable: true,
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										formatter: this.checkReceiptFormatter,
-										cssClass: 'receipt_collection_report'
+										width: 120,
+										formatter: this.checkDateFormatter,
+										filterSearchType: FieldType.dateIso,
+										filter: { model: Filters.compoundDate },
+										grouping: {
+											getter: 'invoice_due_date',
+											formatter: (g) => {
+												if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+													return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+												} else {
+													return `${''}`;
+												}
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+										groupTotalsFormatter: this.srnTotalsFormatter,
 									},
-									{
-										id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+									// {
+									// 	id: 'inv_opening_balance', name: 'Previous Balance', field: 'inv_opening_balance',
+									// 	filterable: true,
+									// 	cssClass: 'amount-report-fee',
+									// 	filterSearchType: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber },
+									// 	sortable: true,
+									// 	formatter: this.checkFeeFormatter,
+									// 	groupTotalsFormatter: this.sumTotalsFormatter
+									// }
+								];
 							}
-							if (repoArray[Number(keys)]['fee_head_data']) {
+							if (repoArray[Number(keys)] && repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
 								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
@@ -1660,6 +1705,9 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
+											obj['invoice_due_date'] = repoArray[Number(keys)]['invoice_due_date'] ?
+												repoArray[Number(keys)]['invoice_due_date'] : '-';
+												
 											obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
@@ -1709,6 +1757,7 @@ export class OutstandingReportComponent implements OnInit {
 						obj3['id'] = 'footer';
 						obj3['srno'] = '';
 						obj3['invoice_created_date'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['invoice_due_date'] = this.common.htmlToText('<b></b>');
 						obj3['stu_admission_no'] = '';
 						obj3['stu_full_name'] = '';
 						obj3['stu_class_name'] = '';

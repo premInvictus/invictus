@@ -31,6 +31,7 @@ import { CancelSlctcComponent } from './cancel-slctc/cancel-slctc.component';
 import { ViewSlctcComponent } from './view-slctc/view-slctc.component';
 import { ViewSlctcPrintComponent } from './config-slctc/view-slctc-print/view-slctc-print.component';
 import { BranchTransferToolComponent } from './branch-transfer-tool/branch-transfer-tool.component';
+import { BulkInsertComponent } from './bulk-insert/bulk-insert.component';
 
 
 
@@ -70,7 +71,8 @@ import { BranchTransferToolComponent } from './branch-transfer-tool/branch-trans
 		CancelSlctcComponent,
 		ViewSlctcComponent,
 		ViewSlctcPrintComponent,
-		BranchTransferToolComponent
+		BranchTransferToolComponent,
+		BulkInsertComponent
 	],
 	entryComponents: [ViewIdCardComponent, PrintIdCardComponent, ViewSlctcPrintComponent]
 })

@@ -296,17 +296,20 @@
               <td colspan="8">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSize]="300" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
-          </mat-paginator>
+         
         </div>
       </div> 
-      <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
-        <div class="col-12" *ngIf="!editFlag">
+      <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
+        <div class="col-6" *ngIf="!editFlag" style="text-align: right">
           <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
             Reset
-          </button>
+          </button>          
+        </div>
+        <div class="col-6">
+          <mat-paginator #paginator [pageSize]="300" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
+          </mat-paginator>
         </div>
       </div> 
       

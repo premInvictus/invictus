@@ -446,7 +446,7 @@ export class QuestionPaperListComponent implements OnInit {
 		this.essayGroupQuestionArray = [];
 		this.viewCurrentQPDiv = false;
 		this.paperListDiv = true;
-		this.tableCollection = false;
+		this.tableCollection = true;
 	}
 
 	getSchool() {
@@ -506,6 +506,12 @@ export class QuestionPaperListComponent implements OnInit {
 		</style>
 		<body onload="window.print()">'
 		${printModal2.innerHTML}  
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+		</script>
+		<script type="text/javascript" async
+		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+		</script>
 		</body>
 		</html>`);
 		popupWin.document.close();

@@ -78,4 +78,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/studentDetails/getStudentLastRecordPerProcessType/fee');
 	}
+	getMasterStudentDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
 }
