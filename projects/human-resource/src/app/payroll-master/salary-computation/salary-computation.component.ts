@@ -598,7 +598,7 @@ export class SalaryComputationComponent implements OnInit {
 		// return new Date(year, month+1, 0).getDate();
 	};
 
-	setNetTotal(element, event) {
+	setNetTotal(element, event) { 
 		var value = 0;
 		if (event.target.value) {
 			value = event.target.value;
