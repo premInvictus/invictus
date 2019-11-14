@@ -88,4 +88,13 @@ export class UserManagementComponent implements OnInit {
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
 	deleteComCancel() {  }
+
+	toggleStatus(status) {
+		if(status == 1) {
+			status = 0;
+		} else {
+			status = 1;
+		}
+		console.log(status);
+	}
 }

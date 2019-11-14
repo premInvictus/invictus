@@ -17,7 +17,7 @@
                         <mat-form-field class="form-field">
                             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                             <span matPrefix>
-                <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                                <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
                         </mat-form-field>
                     </div>
                     <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
@@ -51,23 +51,34 @@
                                 <!--status-->
                                 <ng-container matColumnDef="status">
                                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-                                    <td mat-cell *matCellDef="let item"> {{item.status}} </td>
+                                    <td mat-cell *matCellDef="let item">
+                                        <mat-slide-toggle 
+                                        class="system-info-toggle-btn" 
+                                        [checked]="item.status"
+                                        (click)="toggleStatus(item.status)">
+                                        </mat-slide-toggle>
+                                    </td>
                                 </ng-container>
                                 <!-- Action Column -->
                                 <ng-container matColumnDef="action">
                                     <th mat-header-cell *matHeaderCellDef> Action </th>
                                     <td mat-cell *matCellDef="let item" class="tab-display-flex">
-                                        <a [routerLink]="['../create-new-user']" [queryParams]="{login_id:item.action.au_login_id}">
-                                            <i *ngIf="isExistUserAccessMenu('70')" class="material-icons icon-edit">create</i>
+                                        <a [routerLink]="['../create-new-user']"
+                                            [queryParams]="{login_id:item.action.au_login_id}">
+                                            <i *ngIf="isExistUserAccessMenu('70')"
+                                                class="material-icons icon-edit">create</i>
                                         </a>
-                                        <i *ngIf="isExistUserAccessMenu('71')" class="material-icons icon-danger icon-spacer" (click)="openModal({});deleteUsr(item.action.au_login_id)">delete</i>
+                                        <i *ngIf="isExistUserAccessMenu('71')"
+                                            class="material-icons icon-danger icon-spacer"
+                                            (click)="openModal({});deleteUsr(item.action.au_login_id)">delete</i>
                                     </td>
                                 </ng-container>
                                 <tr mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></tr>
                                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                             </table>
                         </div>
-                        <mat-paginator #paginator [pageSize]="9" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true">
+                        <mat-paginator #paginator [pageSize]="9" [pageSizeOptions]="[10,20,30]"
+                            [showFirstLastButtons]="true">
                         </mat-paginator>
                     </div>
                 </div>
@@ -77,5 +88,6 @@
 </div>
 
 <!-- Delete Modal -->
-<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteUser(currentUser)" (deleteCancel)="deleteComCancel()">
+<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '"
+    (deleteOk)="deleteUser(currentUser)" (deleteCancel)="deleteComCancel()">
 </app-delete-modal>
