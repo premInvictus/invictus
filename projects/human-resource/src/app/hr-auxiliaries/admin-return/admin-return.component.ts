@@ -984,7 +984,7 @@ export class AdminReturnComponent implements OnInit {
 		worksheet.getCell('D5').value = 'Pay Scale';
 		worksheet.getCell('E5').value = 'Present Days';
 		worksheet.getCell('F5').value = 'Salary Payable';
-		worksheet.getCell('G5').value = 'Total';
+		worksheet.getCell('G5').value = 'Net Salary';
 		worksheet.getCell('H5').value = 'Difference';
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
