@@ -21,6 +21,7 @@ import { IdcardStyle3Component } from './id-card-printing/idcard-style3/idcard-s
 import { CancelSlctcComponent } from './cancel-slctc/cancel-slctc.component';
 import { ViewSlctcComponent } from './view-slctc/view-slctc.component';
 import { BranchTransferToolComponent } from './branch-transfer-tool/branch-transfer-tool.component';
+import { BulkInsertComponent } from './bulk-insert/bulk-insert.component';
 
 const routes: Routes = [
 	{path: '', component: PromotionToolComponent},
@@ -43,6 +44,7 @@ const routes: Routes = [
 	{path: 'slc', component: SlctcComponent},
 	{path: 'edit-requests', component: EditRequestsComponent},
 	{path: 'bulk-updates', component: BulkUpdatesComponent},
+	{path: 'bulk-insert', component: BulkInsertComponent},
 	{path: 'cancel-slc', component: CancelSlctcComponent},
 	{path: 'view-slc', component: ViewSlctcComponent}
 ];

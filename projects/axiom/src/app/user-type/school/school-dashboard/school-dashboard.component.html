@@ -1,4 +1,4 @@
-<div class="main-dashboard">
+<div class="main-dashboard" style="margin-left: -10px">
 	<!-- <div class="row row-remove-top-margin">
 		<div class="col-lg-12 remove-col-modal-padding">
 			<div class="dash-second-white-box">
@@ -24,12 +24,12 @@
 				</div>
 			</div>
 		</div>
-	</div> -->
+	</div> --> 
 	<div class="row">
 		<div class="col-lg-12 ">
-			<div class="row">
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
+			<div class="row" style="margin-top: 0px !important;">
+				<div class="col-lg-3 remove-col-padding-right">
+					<mat-card>
 						<div class="row">
 							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
 								<span class="dash-info-card-title-value">{{schooldashBoardInfo.qus_count}}</span>
@@ -44,8 +44,8 @@
 						</div>
 					</mat-card>
 				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
+				<div class="col-lg-3 remove-col-padding-right">
+					<mat-card>
 						<div class="row">
 							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
 								<span class="dash-info-card-title-value">{{schooldashBoardInfo.tp_count}}</span>
@@ -60,8 +60,8 @@
 						</div>
 					</mat-card>
 				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
+				<div class="col-lg-3 remove-col-padding-right">
+					<mat-card>
 						<div class="row">
 							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
 								<span class="dash-info-card-title-value">{{schooldashBoardInfo.qp_count}}</span>
@@ -76,8 +76,8 @@
 						</div>
 					</mat-card>
 				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
+				<div class="col-lg-3 remove-col-padding-right">
+					<mat-card>
 						<div class="row">
 							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
 								<span class="dash-info-card-title-value">{{schooldashBoardInfo.es_count}}</span>
@@ -95,11 +95,11 @@
 			</div>
 		</div>
 	</div>
-	<section class="margin-top-8">
+	<section style="margin-top: 0px !important;">
 		<div class="row remove-top-margin">
 			<div class="col-lg-12">
 				<div class="row">
-					<div class="col-lg-3 fin-tab-col-3">
+					<div class="col-lg-3 remove-col-padding-right">
 						<mat-card class="dash-card-info-card-main-box dash-second-row-card-height">
 							<mat-tab-group class="school-dash-left-tab">
 								<mat-tab>
@@ -115,7 +115,7 @@
 													<div class="dash-profile-details-content">
 														<div class="row">
 															<div class="col-lg-3 col-remove-left-padding">
-																<img class="dash-profile-img" [src]="hosturl+imageArray[i]">
+																<img class="dash-profile-img" [src]="imageArray[i]">
 															</div>
 															<div class="col-lg-6">
 																<div class="dash-profile-details">
@@ -195,7 +195,7 @@
 							</mat-tab-group>
 						</mat-card>
 					</div>
-					<div class="col-lg-6 fin-tab-col-7">
+					<div class="col-lg-6 remove-col-padding-right">
 						<mat-card class="dash-card-info-card-main-box dash-second-row-card-height second-card-graph-section">
 							<div class="float-right">
 								<i matTooltip="Reload Chart" class="fas fa-sync-alt" style="font-size:22px !important;color:#8a8484 !important;" (click)="reloadHeatMap()"></i>
@@ -211,7 +211,7 @@
 							</mat-tab-group>
 						</mat-card>
 					</div>
-					<div class="col-lg-3 fin-tab-col-3 fin-tab-tp-margin-25">
+					<div class="col-lg-3 remove-col-padding-right fin-tab-tp-margin-25">
 						<mat-card class="dash-card-info-card-main-box dash-second-row-card-height top-result-card">
 							<mat-tab-group class="school-dash-right-tab">
 								<mat-tab>
