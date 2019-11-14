@@ -313,6 +313,16 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-structure/update', value);
 	}
-	
-
+	getAdminReturn(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/admin-return/getAdminReturn', value);
+	}
+	updateAdminReturn(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/admin-return/updateAdminReturn', value);
+	}
+	insertAdminReturn(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/admin-return/insertAdminReturn', value);
+	}
 }
