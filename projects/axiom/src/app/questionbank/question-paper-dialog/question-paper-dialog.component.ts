@@ -253,5 +253,6 @@ export class QuestionPaperDialogComponent implements OnInit {
 
 	closeDialog() {
 		this.dialogRef.close();
+		//window.print();
 	}
 }
