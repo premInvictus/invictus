@@ -44,13 +44,19 @@ export class UserManagementComponent implements OnInit {
 	getUser() {
 		this.userdetailArray = [];
 		this.ELEMENT_DATA = [];
-		this.qelementService.getUser({ role_id: '2', status: '1' }).subscribe(
+		this.qelementService.getUser({ role_id: '2'}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userdetailArray = result.data;
 					let ind = 1;
 					for (const t of this.userdetailArray) {
-						this.ELEMENT_DATA.push({ position: ind, userId: t.au_username, name: t.au_full_name, status: t.au_status, action: t });
+						this.ELEMENT_DATA.push({ 
+							position: ind, 
+							userId: t.au_username, 
+							name: t.au_full_name, 
+							status: t.au_status === '1' ? true : false, 
+							action: t 
+						});
 						ind++;
 					}
 					this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -89,12 +95,22 @@ export class UserManagementComponent implements OnInit {
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
 	deleteComCancel() {  }
 
-	toggleStatus(status) {
-		if(status == 1) {
-			status = 0;
-		} else {
-			status = 1;
-		}
+	toggleStatus(au_login_id, status) {
 		console.log(status);
+		if(status === '1') {
+			status = '0';
+		} else {
+			status = '1';
+		}
+		this.qelementService.changeUserStatus({ au_login_id: au_login_id, au_status: status }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getUser();
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			},
+		);
 	}
 }

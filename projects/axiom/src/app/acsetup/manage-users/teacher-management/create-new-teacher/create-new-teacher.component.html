@@ -97,11 +97,28 @@
                                     </div>
                                  </div>
                                  <div class="row form-group">
-                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques">
+                                    <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques" *ngIf="login_id">
+                                       <div class="row">
+                                          <div class="col-lg-4 fin-tab-col-50">
+                                                <mat-checkbox class="user-opt-select" name="read-only"
+                                                (change)="activePasswordInput($event)" formControlName="changepassword">
+                                                Change Password </mat-checkbox>
+                                          </div>
+                                          <div class="col-lg-8 fin-tab-col-50" *ngIf="Teacher_Form.value.changepassword">
+                                                <mat-form-field class="form-field" appearance="outline"
+                                                >
+                                                <mat-label>Password</mat-label>
+                                                <input matInput formControlName="au_password" autocomplete="off"
+                                                   placeholder="Password" type="password">
+                                             </mat-form-field>
+                                          </div>
+                                       </div>
+                                       
+                                       
                                     </div>
                                     <div class="col-lg-7 fin-tab-col-50 col-mobile-view-add-ques">
                                        <div class="image-upload">
-                                             Signature :
+                                          Signature :
                                           <label for="file-input_sign">
                                              <img class="img-fluid teacher-img" [src]="Teacher_Form.value.usr_signature"
                                                 style="width: 200px; height: 60px;  border: 1px solid rgb(149, 145, 216);"

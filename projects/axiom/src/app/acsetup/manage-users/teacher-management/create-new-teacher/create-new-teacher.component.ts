@@ -212,7 +212,9 @@ export class CreateNewTeacherComponent implements OnInit {
 			au_email: '',
 			au_role_id: '3',
 			au_login_id: '',
-			usr_signature: ''
+			usr_signature: '',
+			au_password: '',
+			changepassword: ''
 		});
 		this.Cs_relation_Form = this.fbuild.group({
 			uc_class_id: '',
@@ -272,6 +274,13 @@ export class CreateNewTeacherComponent implements OnInit {
 			uc_interviewe: '',
 			uc_other: '',
 		});
+	}
+	activePasswordInput(event) {
+		if(!event.checked) {
+			this.Teacher_Form.patchValue({
+				'au_password': ''
+			});
+		}
 	}
 
 	isExistUserAccessMenu(mod_id) {
@@ -540,9 +549,11 @@ export class CreateNewTeacherComponent implements OnInit {
 			newTeacherFormData.append('au_username', this.Teacher_Form.value.au_username);
 			newTeacherFormData.append('au_mobile', this.Teacher_Form.value.au_mobile);
 			newTeacherFormData.append('au_email', this.Teacher_Form.value.au_email);
+			newTeacherFormData.append('au_password', this.Teacher_Form.value.au_password);
 			newTeacherFormData.append('au_role_id', '3');
 			newTeacherFormData.append('au_admission_no', this.userDetails.au_admission_no);
 			newTeacherFormData.append('cs_relations', JSON.stringify(this.cs_relationArray));
+			console.log(newTeacherFormData);
 			this.qelementService.updateUser(newTeacherFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

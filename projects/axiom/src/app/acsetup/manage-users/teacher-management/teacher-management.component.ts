@@ -77,7 +77,6 @@ export class TeacherManagementComponent implements OnInit {
 			param.sub_id = that.Filter_form.value.uc_sub_id;
 		}
 		param.role_id = '3';
-		param.status = 1;
 		if (that.Filter_form.valid) {
 			that.qelementService.getAllTeacher(param).subscribe(
 				(result: any) => {
@@ -86,7 +85,14 @@ export class TeacherManagementComponent implements OnInit {
 						let ind = 1;
 						for (const t of that.userdetailArray) {
 								// tslint:disable-next-line:max-line-length
-								that.ELEMENT_DATA.push({ position: ind, userId: t.au_username, name: t.au_full_name, mobile: t.au_mobile, email: t.au_email, status: t.au_status, action: t });
+								that.ELEMENT_DATA.push({ 
+									position: ind, 
+									userId: t.au_username, 
+									name: t.au_full_name, 
+									mobile: t.au_mobile, 
+									email: t.au_email, 
+									status: t.au_status === '1' ? true : false,
+									action: t });
 							ind++;
 						}
 						that.dataSource = new MatTableDataSource<Element>(that.ELEMENT_DATA);
@@ -198,5 +204,23 @@ export class TeacherManagementComponent implements OnInit {
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
 	deleteComCancel() {  }
+	toggleStatus(au_login_id, status) {
+		console.log(status);
+		if(status === '1') {
+			status = '0';
+		} else {
+			status = '1';
+		}
+		this.qelementService.changeUserStatus({ au_login_id: au_login_id, au_status: status }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getAllTeacher(this);
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			},
+		);
+	}
 }
 

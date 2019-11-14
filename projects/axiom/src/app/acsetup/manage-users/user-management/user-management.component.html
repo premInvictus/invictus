@@ -55,7 +55,7 @@
                                         <mat-slide-toggle 
                                         class="system-info-toggle-btn" 
                                         [checked]="item.status"
-                                        (click)="toggleStatus(item.status)">
+                                        (click)="toggleStatus(item.action.au_login_id, item.action.au_status)">
                                         </mat-slide-toggle>
                                     </td>
                                 </ng-container>
