@@ -5,3 +5,18 @@
 .table tbody td {
     border: 1px solid #bbbbbb;
 }
+.fieldset_invoice {
+    border: 1px solid #e0e0e0;
+    padding: 20px !important;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.invoice_legend {
+    position: absolute;
+    top: -9px;
+    font-size: 18px !important;
+    background: #fff;
+    display: inline;
+    padding: 0 3px;
+    color: rgba(0,0,0,.87) !important;
+}

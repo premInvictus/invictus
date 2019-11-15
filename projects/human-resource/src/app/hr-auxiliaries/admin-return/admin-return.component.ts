@@ -1189,7 +1189,9 @@ export class AdminReturnComponent implements OnInit {
 		doc.save('EmployeeSalaryCompute_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
 		this.showPdf = false;
 	}
+	searchOk(event) {
 
+	}
 
 }
 export interface AdminReturnElement {

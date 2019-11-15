@@ -1,118 +1,4 @@
 <div class="padding-15">
-    <div class="row">
-        <div class="col-12 ">
-            <div class="row remove-top-margin">
-                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-left"
-                    *ngIf="checkIfFieldExist('erm_remark')">
-                    <form [formGroup]="admissionremarkform" novalidate>
-                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
-
-                        </div>
-                        <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Admission Test Remarks</mat-label>
-                            <textarea formControlName="erm_remark" [errorStateMatcher]="confirmValidParentMatcher"
-                                matInput placeholder="Admission Test Remarks" [readonly]="viewOnly" rows="2"></textarea>
-                        </mat-form-field>
-                    </form>
-                </div>
-                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 " *ngIf="checkIfFieldExist('erm_remark')">
-                    <form [formGroup]="studentremarkform" novalidate>
-
-                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
-
-                        </div>
-                        <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Student Interaction/ Persnal Interviewer's Remarks</mat-label>
-                            <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
-                                matInput placeholder="Student Interaction/ Personal Interviewer's Remarks"
-                                [readonly]="viewOnly" rows="2"></textarea>
-                        </mat-form-field>
-                    </form>
-                </div>
-
-                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-right"
-                    *ngIf="checkIfFieldExist('erm_remark')">
-                    <form [formGroup]="parentremarkform" novalidate>
-
-                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
-
-                        </div>
-                        <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Parent Interaction/ Personal's Interviewer's</mat-label>
-                            <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
-                                matInput placeholder="Parent Interaction/ Personal interviewer's Remarks"
-                                [readonly]="viewOnly" rows="2"></textarea>
-                        </mat-form-field>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12 text-center">
-            <table class="table table-borderd table-stripped custom-table "
-                *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
-                <thead class="table-skill__head text-center">
-                    <tr class="custom-tr">
-                        <th class="custom-th">&nbsp;</th>
-                        <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
-                            <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span>
-                            <span *ngIf='item.value["mf_type"]==="others"'>{{item.value["mf_value"]}}</span>
-                        </th>
-                        <th *ngIf="viewOnly" class="custom-th">
-                            <span>Total</span>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="marks_remark" class="table-skill__body text-center">
-                    <ng-container>
-                        <tr class="custom-tr" *ngFor="let item of marksTableJson;let i=index;">
-                            <td class="custom-td">{{item['gt_name']}}</td>
-                            <td class="custom-td" *ngFor="let colItem of item['data'] | keyvalue; let j=index">
-                                <!-- [formGroup]="dynamicMarksForm[i]"-->
-                                <form [formGroup]="dynamicMarksForm[i]">
-
-                                    <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
-                                    <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
-                                    <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field"
-                                        appearance="outline">
-
-                                        <input type="number" matInput [formControlName]="'col'+colItem?.key"
-                                            class="margin-bottom-15">
-                                    </mat-form-field>
-                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field"
-                                        appearance="outline">
-
-                                        <input type="text" matInput [formControlName]="'col'+colItem?.key"
-                                            class="margin-bottom-15">
-                                    </mat-form-field>
-                                    <!-- </span> -->
-                                    <!-- <span *ngIf="!viewOnly && j == 0">
-                                    {{colItem.value["mf_value"]}}
-                                </span>
-                                <span *ngIf="!viewOnly && (j == (markObjectLength -1))">
-                                    {{colItem.value["mf_value"]}}
-                                </span> -->
-                                </form>
-                            </td>
-                            <td *ngIf="viewOnly" class="custom-td">{{item['total']}}</td>
-                        </tr>
-                    </ng-container>
-                </tbody>
-                <tbody *ngIf="!(marksTableJson.length > 0)">
-
-                    <tr>
-                        <td colspan="6" class="text-center">No Record Found</td>
-                    </tr>
-                </tbody>
-            </table>
-
-
-        </div>
-    </div>
-
-    <br>
     <div class="row ">
         <div class="col-12">
             <span class="text-uppercase"><b>Admission and concession remarks</b></span>
@@ -121,10 +7,9 @@
     <br>
     <form [formGroup]="concessionremarksform" novalidate *ngIf="!viewOnly">
         <div class="row">
-
-            <div class="col-6 remove-col-padding">
+            <div class="col-2 remove-col-padding">
                 <div class="row remove-top-margin">
-                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4">
+                    <div class="col-12 ">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Date</mat-label>
                             <input formControlName="era_doj" [min]="minDate" matInput [matDatepicker]="picker"
@@ -135,7 +20,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_aut_id')">
+                    <div class="col-12 " *ngIf="checkIfFieldExist('era_aut_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Authority</mat-label>
                             <mat-select formControlName="era_aut_id" placeholder="Authority" [disabled]="viewOnly"
@@ -147,7 +32,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_ar_id')">
+                    <div class="col-12 " *ngIf="checkIfFieldExist('era_ar_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Area</mat-label>
                             <mat-select formControlName="era_ar_id" [errorStateMatcher]="confirmValidParentMatcher"
@@ -161,29 +46,32 @@
                     </div>
                 </div>
             </div>
-            <div class="col-3" *ngIf="checkIfFieldExist('era_teachers_remark')">
+
+            <div class="col-5" *ngIf="checkIfFieldExist('era_teachers_remark')">
                 <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Remarks</mat-label>
-                    <input matInput placeholder="Remarks" [errorStateMatcher]="confirmValidParentMatcher"
-                        formControlName="era_teachers_remark" [readOnly]="viewOnly">
+                    <textarea formControlName="era_teachers_remark" [errorStateMatcher]="confirmValidParentMatcher"
+                        matInput placeholder="Remarks" [readonly]="viewOnly" rows="8"></textarea>
                 </mat-form-field>
             </div>
-            <div class="col-3 remove-col-padding text-center">
-                <div class="text-left inline-flex margin-top-10" *ngIf="checkIfFieldExist('erd_doc_link')">
+
+            <div class="col-4 remove-col-padding text-center">
+                <div class="text-left inline-flex margin-top-10 mtp-10" *ngIf="checkIfFieldExist('erd_doc_link')">
                     <button mat-raised-button class="btn-neutral" [disabled]="viewOnly">
                         <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
                             class="btn-document-label" for="documents">Upload File</label>
                     </button>
                     <input style="display:none" type="file" id="documents" (change)="bindImageToForm($event)">
                 </div>
-                <button *ngIf="!editlist" mat-raised-button class="btn-neutral btn-spacer" (click)="addtolist()"
+                <button *ngIf="!editlist" mat-raised-button class="btn-neutral btn-spacer mtp-10" (click)="addtolist()"
                     [disabled]="viewOnly">Add to list</button>
-                <button *ngIf="editlist" mat-raised-button class="btn-neutral btn-spacer"
+                <button *ngIf="editlist" mat-raised-button class="btn-neutral btn-spacer mtp-10"
                     (click)="updatetolist()">Update to
                     list</button>
-                <button [disabled]="viewOnly" mat-raised-button class="btn-danger btn-spacer"
+                <button [disabled]="viewOnly" mat-raised-button class="btn-danger btn-spacer mtp-10"
                     (click)="resetAdmissionConcessionList()">Reset</button>
             </div>
+            <div class="col-1 remove-col-padding text-center"></div>
 
         </div>
         <!-- <div class="row">
@@ -310,6 +198,120 @@
             </form>
         </div>
     </div>
+    <hr>
+    <div class="row">
+        <div class="col-12 ">
+            <div class="row remove-top-margin">
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-left"
+                    *ngIf="checkIfFieldExist('erm_remark')">
+                    <form [formGroup]="admissionremarkform" novalidate>
+                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
 
+                        </div>
+                        <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Admission Test Remarks</mat-label>
+                            <textarea formControlName="erm_remark" [errorStateMatcher]="confirmValidParentMatcher"
+                                matInput placeholder="Admission Test Remarks" [readonly]="viewOnly" rows="4"></textarea>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 " *ngIf="checkIfFieldExist('erm_remark')">
+                    <form [formGroup]="studentremarkform" novalidate>
+
+                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
+
+                        </div>
+                        <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Student Interaction/ Persnal Interviewer's Remarks</mat-label>
+                            <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
+                                matInput placeholder="Student Interaction/ Personal Interviewer's Remarks"
+                                [readonly]="viewOnly" rows="4"></textarea>
+                        </mat-form-field>
+                    </form>
+                </div>
+
+                <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4 remove-col-padding-right"
+                    *ngIf="checkIfFieldExist('erm_remark')">
+                    <form [formGroup]="parentremarkform" novalidate>
+
+                        <div *ngIf="checkIfFieldExist('erm_mark_obtained')" class="row">
+
+                        </div>
+                        <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Parent Interaction/ Personal's Interviewer's</mat-label>
+                            <textarea [errorStateMatcher]="confirmValidParentMatcher" formControlName="erm_remark"
+                                matInput placeholder="Parent Interaction/ Personal interviewer's Remarks"
+                                [readonly]="viewOnly" rows="4"></textarea>
+                        </mat-form-field>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <table class="table table-borderd table-stripped custom-table "
+                *ngIf="marksTableJson && marksTableJson[0] && marksTableJson[0]['data']">
+                <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                        <th class="custom-th">&nbsp;</th>
+                        <th class="custom-th" *ngFor="let item of marksTableJson[0]['data'] | keyvalue">
+                            <span *ngIf='item.value["mf_type"]==="subjects"'>{{item.value["sub_name"]}}</span>
+                            <span *ngIf='item.value["mf_type"]==="others"'>{{item.value["mf_value"]}}</span>
+                        </th>
+                        <th *ngIf="viewOnly" class="custom-th">
+                            <span>Total</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="marks_remark" class="table-skill__body text-center">
+                    <ng-container>
+                        <tr class="custom-tr" *ngFor="let item of marksTableJson;let i=index;">
+                            <td class="custom-td">{{item['gt_name']}}</td>
+                            <td class="custom-td" *ngFor="let colItem of item['data'] | keyvalue; let j=index">
+                                <!-- [formGroup]="dynamicMarksForm[i]"-->
+                                <form [formGroup]="dynamicMarksForm[i]">
+
+                                    <span *ngIf="viewOnly">{{colItem.value["erms_value"]}}</span>
+                                    <!-- <span *ngIf="!viewOnly && (j !== 0 && j != (markObjectLength -1))"> -->
+                                    <!-- test {{dynamicMarksForm[i]['value']['col'+colItem?.key]['gf_id']}} -->
+                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']!=='Grade'" class="form-field"
+                                        appearance="outline">
+
+                                        <input type="number" matInput [formControlName]="'col'+colItem?.key"
+                                            class="margin-bottom-15">
+                                    </mat-form-field>
+                                    <mat-form-field *ngIf="!viewOnly && item['gt_name']==='Grade'" class="form-field"
+                                        appearance="outline">
+
+                                        <input type="text" matInput [formControlName]="'col'+colItem?.key"
+                                            class="margin-bottom-15">
+                                    </mat-form-field>
+                                    <!-- </span> -->
+                                    <!-- <span *ngIf="!viewOnly && j == 0">
+                                        {{colItem.value["mf_value"]}}
+                                    </span>
+                                    <span *ngIf="!viewOnly && (j == (markObjectLength -1))">
+                                        {{colItem.value["mf_value"]}}
+                                    </span> -->
+                                </form>
+                            </td>
+                            <td *ngIf="viewOnly" class="custom-td">{{item['total']}}</td>
+                        </tr>
+                    </ng-container>
+                </tbody>
+                <tbody *ngIf="!(marksTableJson.length > 0)">
+
+                    <tr>
+                        <td colspan="6" class="text-center">No Record Found</td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+
+    <br>
 
 </div>
