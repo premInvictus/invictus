@@ -2,6 +2,6 @@ export interface Element {
     position: number;
     userId: string;
     name: string;
-    status: string;
+    status: any;
     action: any;
 }

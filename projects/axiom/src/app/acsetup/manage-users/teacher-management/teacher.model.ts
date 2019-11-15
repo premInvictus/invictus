@@ -4,6 +4,6 @@ export interface Element {
 		name: string;
 		mobile: string;
 		email: string;
-		status: string;
+		status: any;
 		action: any;
 	}

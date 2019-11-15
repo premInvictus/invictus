@@ -70,7 +70,7 @@ export class BarCodeReportComponent implements OnInit {
     });
   }
   getBarCode() {
-    if (this.classForm.value.class_id && this.classForm.value.sec_id) {
+    if (this.classForm.value.class_id) {
       this.sisService.getStudentsPromotionTool({
         class_id: this.classForm.value.class_id,
         ses_id: this.promoteSessionId,
@@ -84,7 +84,7 @@ export class BarCodeReportComponent implements OnInit {
         }
       });
     } else {
-      this.common.showSuccessErrorMessage('Please choose class and section', 'error');
+      this.common.showSuccessErrorMessage('Please choose class', 'error');
     }
   }
   getClass2(index) {

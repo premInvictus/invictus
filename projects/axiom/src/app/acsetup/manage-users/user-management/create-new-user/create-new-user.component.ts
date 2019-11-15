@@ -74,6 +74,10 @@ export class CreateNewUserComponent implements OnInit {
 						this.setUserForm(this.userDetails);
 					}
 				});
+		} else {
+			this.Cu_Form.patchValue({
+				changepassword: true
+			});
 		}
 	}
 
@@ -92,6 +96,7 @@ export class CreateNewUserComponent implements OnInit {
 			up_change_date: '',
 			up_switch_tp: '',
 			up_read_only: '',
+			changepassword: ''
 		});
 
 	}
@@ -105,6 +110,13 @@ export class CreateNewUserComponent implements OnInit {
 	}
 	isExistUserAccessMenu(mod_id) {
 		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
+	}
+	activePasswordInput(event) {
+		if(!event.checked) {
+			this.Cu_Form.patchValue({
+				'au_password': ''
+			});
+		}
 	}
 
 	addUser() {
@@ -254,7 +266,6 @@ export class CreateNewUserComponent implements OnInit {
 		this.Cu_Form.patchValue({
 			au_full_name: value.au_full_name,
 			au_username: value.au_username,
-			au_password: value.au_password,
 			au_mobile: value.au_mobile,
 			au_email: value.au_email,
 			au_dob: value.au_dob,

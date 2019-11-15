@@ -773,6 +773,10 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.delete(environment.apiAxiomUrl + `/users/deleteUser/${value.au_login_id}`);
 	}
+	changeUserStatus(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiAxiomUrl + '/users/changeUserStatus', value);
+	}
 
 	deleteScheduledExam(value) {
 		const param: any = {};

@@ -54,11 +54,11 @@
                            <div class="row">
                               <div class="col-lg-6">
                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Password</mat-label>
-                                    <input matInput formControlName="au_password" autocomplete="off"
-                                       [readonly]="updateFlag" placeholder="Password" type="password" required>
-                                    <mat-error *ngIf="au_full_name.hasError('required')">
-                                       Password is <strong>required</strong>
+                                    <mat-label>Email</mat-label>
+                                    <input matInput formControlName="au_email" placeholder="Email" required
+                                       autocomplete="off" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+                                    <mat-error *ngIf="au_email.hasError('required')">
+                                       Email is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
                               </div>
@@ -89,13 +89,14 @@
                                     </mat-error>
                                  </mat-form-field>
                               </div>
-                              <div class="col-lg-6">
+
+                              <div class="col-lg-6" *ngIf="Cu_Form.value.changepassword">
                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Email</mat-label>
-                                    <input matInput formControlName="au_email" placeholder="Email" required
-                                       autocomplete="off" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-                                    <mat-error *ngIf="au_email.hasError('required')">
-                                       Email is <strong>required</strong>
+                                    <mat-label>Password</mat-label>
+                                    <input matInput formControlName="au_password" autocomplete="off"
+                                       placeholder="Password" type="password">
+                                    <mat-error *ngIf="au_full_name.hasError('required')">
+                                       Password is <strong>required</strong>
                                     </mat-error>
                                  </mat-form-field>
                               </div>
@@ -138,6 +139,11 @@
                                        formControlName="up_read_only">
                                        Read Only </mat-checkbox>
                                  </section>
+                                 <section class="manage-section">
+                                    <mat-checkbox class="user-opt-select" name="read-only"
+                                       (change)="activePasswordInput($event)" formControlName="changepassword">
+                                       Change Password </mat-checkbox>
+                                 </section>
                               </div>
                            </div>
                         </div>
@@ -155,9 +161,7 @@
                      (click)="saveief()">Reset</button>
                   &nbsp;&nbsp;
                   <a [routerLink]="['../manage-access-user',userIdManageAccess]">
-                     <button mat-raised-button class="btn-primary btn-success" 
-                     style="width: 180px"
-                     *ngIf="updateFlag"
+                     <button mat-raised-button class="btn-primary btn-success" style="width: 180px" *ngIf="updateFlag"
                         [disabled]="manageAccessFlag">Manage Access</button>
                   </a>
                </div>
