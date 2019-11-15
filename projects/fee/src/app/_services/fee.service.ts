@@ -438,4 +438,44 @@ export class FeeService {
 	checkChildExists(value) {
 		return this.http.post(environment.apiFeeUrl + '/familyInformation/checkChildExists', value);
 	}
+
+	getSecurityDepositList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/getSecurityDepositList', value);
+	}
+
+	downloadBulkSecurityDepositTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/downloadBulkSecurityDepositTemplate', value);
+	}
+
+	uploadBulkSecurityDeposit(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/uploadBulkSecurityDeposit', value);
+	}
+
+	getBulkSecurityDepositList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/getBulkSecurityDepositList', value);
+	}
+
+	getDropoutStudentList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/getDropoutStudentList', value);
+	}
+
+	insertSecurityDeposit(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/insertSecurityDeposit', value);
+	}
+
+	updateSecurityDeposit(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/updateSecurityDeposit', value);
+	}
+
+	viewReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/securityDeposit/viewReceipt', value);
+	}
 }

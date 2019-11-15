@@ -12,7 +12,8 @@ import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywi
 import { AddFamilyComponent } from './add-family/add-family.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
 import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
-
+import { SecurityDepositComponent } from './security-deposit/security-deposit.component';
+import { DropoutComponent } from './dropout/dropout.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -31,7 +32,9 @@ import { FamilyTransactionEntryComponent } from './family-transaction-entry/fami
 		FamilywiseFeeRecieptComponent,
 		AddFamilyComponent,
 		FamilyInformationComponent,
-		FamilyTransactionEntryComponent
+		FamilyTransactionEntryComponent,
+		SecurityDepositComponent,
+		DropoutComponent
 	]
 })
 export class AuxiliaryModule { }

@@ -1,0 +1,49 @@
+.rst-btn {
+    background-color: #fd5a5a;
+    color: #ffffff;
+    text-transform: uppercase;
+    width: 60px;
+    font-size: 12px;
+    line-height: 32px !important;
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+ul {
+    list-style-type: none;
+    padding: 0px !important;
+  }
+  .mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
+}
+.cleared-button , .bounce-button{
+    padding: 0px 0px;
+}
+.cdk-column-studentname{
+    width: 23%;
+}
+.my-filter-btn.mat-raised-button {
+    color: white !important;
+    background-color: #757b85 !important;
+    text-transform: uppercase;
+    margin-left: 25px !important;
+    width: 126px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.my-filter-btn.mat-raised-button:hover {
+  color:#757b85 !important;
+  background-color: white !important ;
+  margin-left: 25px !important;
+  border: 2px solid  #757b85;
+  text-transform: uppercase;
+  width: 126px;
+  height: 32px;
+  font-size: 13px;
+}

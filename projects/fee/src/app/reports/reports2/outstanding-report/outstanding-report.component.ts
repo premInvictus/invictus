@@ -181,7 +181,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
 			'to_date': date,
-			'month_id' : '4'
+			'month_id' : 4
 		});
 		this.filterFlag = true;
 	}
@@ -205,7 +205,7 @@ export class OutstandingReportComponent implements OnInit {
 			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
-			'month_id':'',
+			'month_id':4,
 			'downloadAll': '',
 			'hidden_value': '',
 			'hidden_value2': '',
@@ -1725,15 +1725,15 @@ export class OutstandingReportComponent implements OnInit {
 							this.dataset.push(obj);
 						});
 						this.columnDefinitions.push(
-							{
-								id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
-								filterable: true,
-								filterSearchType: FieldType.number,
-								filter: { model: Filters.compoundInputNumber },
-								sortable: true,
-								formatter: this.checkFeeFormatter,
-								groupTotalsFormatter: this.sumTotalsFormatter
-							},
+							// {
+							// 	id: 'invoice_fine_amount', name: 'Fine Amount', field: 'invoice_fine_amount',
+							// 	filterable: true,
+							// 	filterSearchType: FieldType.number,
+							// 	filter: { model: Filters.compoundInputNumber },
+							// 	sortable: true,
+							// 	formatter: this.checkFeeFormatter,
+							// 	groupTotalsFormatter: this.sumTotalsFormatter
+							// },
 							{
 								id: 'total', name: 'Total', field: 'total',
 								filterable: true,

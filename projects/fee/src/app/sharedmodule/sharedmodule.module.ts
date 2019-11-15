@@ -18,6 +18,7 @@ import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynam
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { TransactionModalComponent } from './transaction-modal/transaction-modal.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
@@ -98,6 +99,7 @@ export const MY_FORMATS = {
 	declarations: [
 		CommonDynamicChartComponent,
 		DeleteModalComponent,
+		TransactionModalComponent,
 		ImagecropComponent,
 		EditRequestModalComponent,
 		CapitalizePipe,
@@ -158,10 +160,12 @@ export const MY_FORMATS = {
 		CreateInvoiceModalComponent,
 		SearchDialogComponent,
 		IndianCurrency,
-		TruncatetextPipe
+		TruncatetextPipe,
+		TransactionModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
+		TransactionModalComponent,
 		ImagecropComponent,
 		ImageViewerComponent,
 		EditRequestModalComponent,
