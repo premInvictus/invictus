@@ -21,6 +21,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Select Class</mat-label>
                                         <mat-select id="school-region" formControlName="au_class_id" (selectionChange)="getSectionsByClass()" placeholder="Select Class">
+                                            <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                                                 {{item.class_name}}
                                             </mat-option>
@@ -31,6 +32,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Section</mat-label>
                                         <mat-select formControlName="sub_id" id="school-region" formControlName="au_sec_id" placeholder="Section">
+                                            <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                                                 {{item.sec_name}}
                                             </mat-option>
@@ -105,16 +107,21 @@
                                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
                                 <td mat-cell *matCellDef="let item" class="text-left"> {{item.email}} </td>
                             </ng-container>
+                            <!--status-->
+                            <ng-container matColumnDef="status">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                <td mat-cell *matCellDef="let item">
+                                    <mat-slide-toggle class="system-info-toggle-btn" [checked]="item.status"
+                                        (click)="toggleStatus(item.action.au_login_id, item.action.au_status)">
+                                    </mat-slide-toggle>
+                                </td>
+                            </ng-container>
                             <ng-container matColumnDef="action">
                                 <th mat-header-cell *matHeaderCellDef> Action </th>
                                 <td mat-cell *matCellDef="let item">
-                                    <a [routerLink]="['../view-student-profile']" [queryParams]="{login_id:item.action.au_login_id}">
-                                        <i class="material-icons icon-view">remove_red_eye</i>
+                                    <a (click)="openchangepasswordmodal(item.action.au_login_id)">
+                                        <i class="material-icons icon-edit">create</i>
                                     </a>
-                                    <a [routerLink]="['../create-new-student']" [queryParams]="{login_id:item.action.au_login_id}">
-                                        <i *ngIf="isExistUserAccessMenu('130')" class="material-icons icon-edit">create</i>
-                                    </a>
-                                    <i *ngIf="isExistUserAccessMenu('130')" class="material-icons icon-danger icon-spacer" (click)="openModal({});deleteStu(item.action.au_login_id)">delete</i>
                                 </td>
                             </ng-container>
                             <tr mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></tr>
