@@ -324,7 +324,7 @@ export class ErpCommonService {
 	}
 
 
-	
+
 
 	insertUserReservoirData(value) {
 		this.service.startLoading();
@@ -341,7 +341,7 @@ export class ErpCommonService {
 		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/updateUserReservoirData', value);
 	}
 
-	
+
 	changeReservoirStatus(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/reservoir/changeReservoirStatus', value);
@@ -469,7 +469,19 @@ export class ErpCommonService {
 	getUserOutstandingFine(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiReservUrl + '/issuereturnprocess/getUserOutstandingFine', value);
-		
+
+	}
+	checkUserStatus(value) {
+		this.service.startLoading();
+		return this.http.put(environment.apiAxiomUrl + `/users/checkUserExists`, value);
+	}
+	changeUserStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/changeUserStatus', value);
+	}
+	reset_password(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/reset_password', value);
 	}
 
 }

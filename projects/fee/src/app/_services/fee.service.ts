@@ -478,4 +478,14 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/securityDeposit/viewReceipt', value);
 	}
+
+	getBulkSecurityDepositReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getBulkSecurityDepositReport', value);
+	}
+
+	getDropoutReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDropoutReport', value);
+	}
 }

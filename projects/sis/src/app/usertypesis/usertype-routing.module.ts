@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
 import { SchoolComponent } from './school/school.component';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
-import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential/user-credential.component';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 /* import {theme} from '../app.routing';
 let pathJSON = {};

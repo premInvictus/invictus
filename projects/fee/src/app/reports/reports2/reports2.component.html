@@ -80,6 +80,7 @@
                 <app-transport-report [userName]="userName"
                 (displyRep)="displyRep($event)"
                 *ngIf="reportType === '15'"></app-transport-report>
+                <app-drop-out-report *ngIf="reportType === '16'"></app-drop-out-report>
               </div>
             </div>
           </mat-expansion-panel>

@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { NotificationService, BreadCrumbService } from 'projects/axiom/src/app/_services/index';
-import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
-import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
+import { ErpCommonService, CommonAPIService } from '../../_services/index';
 import {Router} from '@angular/router';
 @Component({
 	selector: 'app-user-credential',
@@ -18,62 +16,72 @@ export class UserCredentialComponent implements OnInit {
 	confirmmismatch = false;
 	currentUser: any = {};
 	currentUserDetail: any = {};
+	usernameText = '';
+	isUserAvailable = false;
 
 	constructor(
 		private router: Router,
 		private fbuild: FormBuilder,
-		private notif: NotificationService,
-		private breadCrumbService: BreadCrumbService,
-		private adminService: AdminService,
-		private qelementService: QelementService
+		private erpCommonService: ErpCommonService,
+		private common: CommonAPIService
 	) { }
 
 	ngOnInit() {
-		this.homeUrl = this.breadCrumbService.getUrl();
+		this.homeUrl = this.common.getUrl();
 		this.buildForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.qelementService.getUser({ login_id: this.currentUser.login_id, role_id: this.currentUser.role_id }).subscribe(
+		this.getUser();
+		
+
+	}
+	getUser(){
+		this.erpCommonService.getUser({ login_id: this.currentUser.login_id, role_id: this.currentUser.role_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.currentUserDetail = result.data[0];
+					if(this.currentUserDetail.au_changeusername == '1') {
+						this.user_credential_form.patchValue({
+							new_username: this.currentUserDetail.au_username
+						});
+					}
 				}
 			}
 		);
-
 	}
 
 	buildForm() {
 		this.user_credential_form = this.fbuild.group({
 			old_password: '',
 			new_password: '',
-			confirm_password: ''
+			confirm_password: '',
+			new_username: ''
 		});
 	}
 
 	Changepassword() {
 		if (!this.user_credential_form.value.old_password) {
-			this.notif.showSuccessErrorMessage('Old password is Required', 'error');
+			this.common.showSuccessErrorMessage('Old password is Required', 'error');
 		}
 		if (!this.user_credential_form.value.new_password) {
-			this.notif.showSuccessErrorMessage('New passowrd is Required', 'error');
+			this.common.showSuccessErrorMessage('New passowrd is Required', 'error');
 		}
 		if (!this.user_credential_form.value.confirm_password) {
-			this.notif.showSuccessErrorMessage('Confirm password is required', 'error');
+			this.common.showSuccessErrorMessage('Confirm password is required', 'error');
 		}
 		if (this.user_credential_form.value.confirm_password !== this.user_credential_form.value.new_password) {
-			this.notif.showSuccessErrorMessage('Confirm Password Mismatch', 'error');
+			this.common.showSuccessErrorMessage('Confirm Password Mismatch', 'error');
 		}
 
 		if (this.user_credential_form.valid &&
 			this.user_credential_form.value.confirm_password === this.user_credential_form.value.new_password) {
-			this.adminService.reset_password({
+			this.erpCommonService.reset_password({
 				oldPassword: this.user_credential_form.value.old_password,
 				username: this.currentUserDetail.au_username,
 				loginId: this.currentUser.login_id, password: this.user_credential_form.value.new_password
 			}).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						this.notif.showSuccessErrorMessage('Password Changed Successfully', 'success');
+						this.common.showSuccessErrorMessage('Password Changed Successfully', 'success');
 						if (this.currentUser.role_id === '1') {
 							this.router.navigateByUrl('axiom/admin');
 						} else if (this.currentUser.role_id === '2') {
@@ -85,6 +93,35 @@ export class UserCredentialComponent implements OnInit {
 						}
 					}
 				}
+			);
+		}
+	}
+	checkUserExists() {
+		console.log(this.user_credential_form.value.new_username);
+		if (this.user_credential_form.value.new_username) {
+			this.erpCommonService.checkUserStatus({ user_name: this.user_credential_form.value.new_username }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.usernameText = result.data;
+					this.isUserAvailable = true;
+				} else {
+					this.usernameText = result.data;
+					this.isUserAvailable = false;
+				}
+			});
+		}
+	}
+	changeUsername() {
+		if(this.isUserAvailable) {
+			this.erpCommonService.changeUserStatus({ au_login_id: this.currentUser.login_id, au_username: this.user_credential_form.value.new_username }).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.data, 'success');
+						this.getUser();
+						this.usernameText = '';
+					} else {
+						this.common.showSuccessErrorMessage(result.data, 'error');
+					}
+				},
 			);
 		}
 	}

@@ -11,6 +11,11 @@ import { MatSidenavModule, MatTooltipModule, MatButtonModule } from '@angular/ma
 import { RouterModule } from '@angular/router';
 import { AccordionModule } from 'ngx-bootstrap';
 import { IndianCurrency } from '../_pipes';
+import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -23,8 +28,12 @@ import { IndianCurrency } from '../_pipes';
 		MatSidenavModule,
 		RouterModule,
 		AccordionModule.forRoot(),
+		MatInputModule,
+		MatTabsModule,
+		MatCardModule,
+		MatIconModule
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency],
+	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency, UserCredentialComponent],
 	exports: [
 		TopNavComponent,
 		SideNavComponent,

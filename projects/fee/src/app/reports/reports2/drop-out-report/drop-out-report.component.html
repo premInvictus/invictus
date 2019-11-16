@@ -5,15 +5,6 @@
   <div class="row">
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Security Deposit</mat-label>
-        <mat-select formControlName="sd_type_value" [placeholder]="valueLabel" (selectionChange)="getSecurityDeposit($event)">
-          <mat-option [value]="1">Current Session</mat-option>
-          <mat-option [value]="2">Previous Session</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="col-2">
-      <mat-form-field appearance="outline" class="form-field">
         <mat-label>Class</mat-label>
         <mat-select formControlName="fee_value" (selectionChange)="getSectionByClass($event)">
           <mat-option value="">Please Select</mat-option>

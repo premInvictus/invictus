@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
+import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential/user-credential.component';
 const routes: Routes = [
 	{
 		path: '', canActivate: [AuthGuard] , redirectTo: 'school', pathMatch: 'full'
@@ -13,7 +14,8 @@ const routes: Routes = [
 			{ path: 'feeconfiguration', loadChildren: '../feeconfiguration/feeconfiguration.module#FeeconfigurationModule'},
 			{ path: 'feemaster', loadChildren: '../feemaster/feemaster.module#FeemasterModule'},
 			{ path: 'reports', loadChildren: 'projects/fee/src/app/reports/reports.module#ReportsModule'},
-			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'}
+			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'},
+			{ path: 'user-credential', component: UserCredentialComponent}
 		]
 	}
 ];
