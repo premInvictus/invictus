@@ -30,6 +30,11 @@ export class UserCredentialComponent implements OnInit {
 		this.homeUrl = this.common.getUrl();
 		this.buildForm();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.getUser();
+		
+
+	}
+	getUser(){
 		this.erpCommonService.getUser({ login_id: this.currentUser.login_id, role_id: this.currentUser.role_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -42,7 +47,6 @@ export class UserCredentialComponent implements OnInit {
 				}
 			}
 		);
-
 	}
 
 	buildForm() {
@@ -112,6 +116,8 @@ export class UserCredentialComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.data, 'success');
+						this.getUser();
+						this.usernameText = '';
 					} else {
 						this.common.showSuccessErrorMessage(result.data, 'error');
 					}
