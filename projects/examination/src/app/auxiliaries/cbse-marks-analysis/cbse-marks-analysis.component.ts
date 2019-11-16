@@ -96,75 +96,75 @@ export class CbseMarksAnalysisComponent implements OnInit {
 		}]
 	};
 	header: any = 'Analysis';
-	succImg = '/src/assets/images/examination/successful.svg';
+	succImg = '/assets/images/examination/successful.svg';
 	cardArray: any[] = [{
 		id: '1',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/marks_register.svg',
+		img: '/assets/images/examination/marks_register.svg',
 		header: 'Marks Register'
 	},
 	{
 		id: '2',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/best_five_subjects.svg',
+		img: '/assets/images/examination/best_five_subjects.svg',
 		header: 'Best Five Subjects'
 	},
 	{
 		id: '3',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/subject_wise_analysis.svg',
+		img: '/assets/images/examination/subject_wise_analysis.svg',
 		header: 'Subject Wise Analysis'
 	},
 	// {
 	//   id: '4',
 	//   class: 'cbse-box-two',
 	//   initialState: 'cbse-report-box disabled-box text-center',
-	//   img: '/src/assets/images/examination/trend_analysis.svg',
+	//   img: '/assets/images/examination/trend_analysis.svg',
 	//   header: 'Stream Wise Analysis'
 	// },
 	{
 		id: '5',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/trend_analysis.svg',
+		img: '/assets/images/examination/trend_analysis.svg',
 		header: 'Trend Wise Analysis'
 	}];
 	cardArray2: any[] = [{
 		id: '1',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/marks_register.svg',
+		img: '/assets/images/examination/marks_register.svg',
 		header: 'Marks Register'
 	},
 	{
 		id: '2',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/best_five_subjects.svg',
+		img: '/assets/images/examination/best_five_subjects.svg',
 		header: 'Best Five Subjects'
 	},
 	{
 		id: '3',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/subject_wise_analysis.svg',
+		img: '/assets/images/examination/subject_wise_analysis.svg',
 		header: 'Subject Wise Analysis'
 	},
 	// {
 	//   id: '4',
 	//   class: 'cbse-box-two',
 	//   initialState: 'cbse-report-box disabled-box text-center',
-	//   img: '/src/assets/images/examination/trend_analysis.svg',
+	//   img: '/assets/images/examination/trend_analysis.svg',
 	//   header: 'Stream Wise Analysis'
 	// },
 	{
 		id: '5',
 		class: 'cbse-box-two',
 		initialState: 'cbse-report-box disabled-box text-center',
-		img: '/src/assets/images/examination/trend_analysis.svg',
+		img: '/assets/images/examination/trend_analysis.svg',
 		header: 'Trend Wise Analysis'
 	}];
 	previousIndex: any = 0;
@@ -429,35 +429,35 @@ export class CbseMarksAnalysisComponent implements OnInit {
 			id: '1',
 			class: 'cbse-box-two',
 			initialState: 'cbse-report-box disabled-box text-center',
-			img: '/src/assets/images/examination/marks_register.svg',
+			img: '/assets/images/examination/marks_register.svg',
 			header: 'Marks Register'
 		},
 		{
 			id: '2',
 			class: 'cbse-box-two',
 			initialState: 'cbse-report-box disabled-box text-center',
-			img: '/src/assets/images/examination/best_five_subjects.svg',
+			img: '/assets/images/examination/best_five_subjects.svg',
 			header: 'Best Five Subjects'
 		},
 		{
 			id: '3',
 			class: 'cbse-box-two',
 			initialState: 'cbse-report-box disabled-box text-center',
-			img: '/src/assets/images/examination/subject_wise_analysis.svg',
+			img: '/assets/images/examination/subject_wise_analysis.svg',
 			header: 'Subject Wise Analysis'
 		},
 		// {
 		//   id: '4',
 		//   class: 'cbse-box-two',
 		//   initialState: 'cbse-report-box disabled-box text-center',
-		//   img: '/src/assets/images/examination/trend_analysis.svg',
+		//   img: '/assets/images/examination/trend_analysis.svg',
 		//   header: 'Stream Wise Analysis'
 		// },
 		{
 			id: '5',
 			class: 'cbse-box-two',
 			initialState: 'cbse-report-box disabled-box text-center',
-			img: '/src/assets/images/examination/trend_analysis.svg',
+			img: '/assets/images/examination/trend_analysis.svg',
 			header: 'Trend Wise Analysis'
 		}];
 		this.exam.getMarksAnalysis({
