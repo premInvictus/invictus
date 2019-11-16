@@ -279,8 +279,8 @@ export class SecurityDepositReportComponent implements OnInit {
 				field: 'fh_amount',
 				sortable: true,
 				filterable: true,
-				formatter: this.checkFeeFormatter,
-				groupTotalsFormatter: this.sumTotalsFormatter
+				// formatter: this.checkFeeFormatter,
+				// groupTotalsFormatter: this.sumTotalsFormatter
 			},
 			{
 				id: 'refund_status',
@@ -346,6 +346,20 @@ export class SecurityDepositReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['invoice_created_date'] = this.common.htmlToText('');
+				obj3['stu_admission_no'] = '';
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['invoice_no'] = '';
+				obj3['receipt_no'] = '';
+				obj3['fh_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
+				obj3['refund_date'] = this.common.htmlToText('');
+				obj3['refund_status'] = '';	
+				this.dataset.push(obj3);
+				console.log(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -416,14 +430,14 @@ export class SecurityDepositReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			return new DecimalPipe('en-in').transform(Number(value));
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			return new DecimalPipe('en-in').transform(Number(value));
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
@@ -911,8 +925,8 @@ export class SecurityDepositReportComponent implements OnInit {
 				field: 'fh_amount',
 				sortable: true,
 				filterable: true,
-				formatter: this.checkFeeFormatter,
-				groupTotalsFormatter: this.sumTotalsFormatter
+				// formatter: this.checkFeeFormatter,
+				// groupTotalsFormatter: this.sumTotalsFormatter
 			},
 			{
 				id: 'refund_status',
@@ -978,6 +992,23 @@ export class SecurityDepositReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['invoice_created_date'] = this.common.htmlToText('');
+				obj3['stu_admission_no'] = '';
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['invoice_no'] = '';
+				obj3['receipt_no'] = '';
+				obj3['fh_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
+				obj3['refund_date'] = this.common.htmlToText('');
+				obj3['refund_status'] = '';	
+				this.dataset.push(obj3);					
+
+
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -986,7 +1017,7 @@ export class SecurityDepositReportComponent implements OnInit {
 	}
 
 	getSecurityDeposit(event) {
-		console.log('event', event);
+		this.dataset = [];
 		if (event.value === 1) {
 			this.activeReport = 1;
 			
