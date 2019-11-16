@@ -25,7 +25,7 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 	// tslint:disable-next-line:no-input-rename
 	@Input('editOnly') editOnly: boolean;
 	// tslint:disable-next-line:no-input-rename
-	@Input('viewOnly') viewOnly: boolean;
+	@Input('viewOnly') viewOnly: boolean; 
 	// tslint:disable-next-line:no-input-rename
 	@Input('formData') formData: boolean;
 	@Input() configSetting: any;

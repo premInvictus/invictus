@@ -12,70 +12,88 @@
                   </div>
                </div>
             </div>
+
             <div *ngIf="showDetailsDiv(i)">
                <div class="row">
-                  <div class="col-12">
-                     <mat-radio-group name="'active_parent'+i" [disabled]="viewOnly"
-                        (change)="setActiveParent(i,$event)" formControlName="epd_status">
-                        <mat-radio-button value="1">
-                           <span class="text-uppercase"><b>{{item.formHeader}}</b></span>
-                        </mat-radio-button>
-                     </mat-radio-group>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-1 col-xl-1">
-                     <div class=" student-img ">
-                        <div class="student-pic--parent text-center">
-                           <label [for]="'image'+i" class="main-label-img">
-                              <img class="parent-pic--imgone parent-pic__circle sis-parent-pic__size"
-                                 [src]="profileImageArray[i]">
-                              <img *ngIf="!viewOnly"
-                                 class="sis-parent-pic--imgtwo parent-pictwo__size student-pictwo__color"
-                                 src="/assets/images/twitpic-symbol.svg">
-                           </label>
-                           <input type="file" placeholder="Upload image" [id]="'image'+i" class="image-upload-btn"
-                              (change)="bindImageToForm($event, i)" [disabled]="viewOnly">
+                  <div class="col-3">
+                     <fieldset class="col-12 fieldset_invoice">
+                        <div class="col-12">
+                           <mat-radio-group name="'active_parent'+i" [disabled]="viewOnly"
+                              (change)="setActiveParent(i,$event)" formControlName="epd_status">
+                              <mat-radio-button value="1">
+                                 <span class="text-uppercase"><b>{{item.formHeader}}</b></span>
+                              </mat-radio-button>
+                           </mat-radio-group>
                         </div>
-                     </div>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-12 col-lg-11 col-xl-11">
-                     <div class="row remove-top-margin">
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
-                           *ngIf="checkIfFieldExist('epd_parent_name')">
+                        <div class="col-12">
+                           <div class=" student-img ">
+                              <div class="student-pic--parent text-center">
+                                 <label [for]="'image'+i" class="main-label-img">
+                                    <img class="parent-pic--imgone parent-pic__circle sis-parent-pic-size"
+                                       [src]="profileImageArray[i]">
+                                    <img *ngIf="!viewOnly"
+                                       class="sis-parent-pic--imgtwo parent-pictwo__size student-pictwo__color"
+                                       src="/assets/images/twitpic-symbol.svg">
+                                 </label>
+                                 <input type="file" placeholder="Upload image" [id]="'image'+i" class="image-upload-btn"
+                                    (change)="bindImageToForm($event, i)" [disabled]="viewOnly">
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row">
+                           <div class="col-4" *ngIf="checkIfFieldExist('epd_parent_name')">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Honorific</mat-label>
+                                 <mat-select placeholder="Category" formControlName="epd_parent_honorific" required
+                                    [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                    <mat-option value="">Please Select</mat-option>
+                                    <mat-option value="1">Mr.</mat-option>
+                                    <mat-option value="2">Mrs.</mat-option>
+                                    <mat-option value="3">Miss.</mat-option>
+                                    <mat-option value="4">Ms.</mat-option>
+                                    <mat-option value="5">Mx.</mat-option>
+                                    <mat-option value="6">Sir.</mat-option>
+                                    <mat-option value="7">Dr.</mat-option>
+                                    <mat-option value="8">Lady</mat-option>
+                                 </mat-select>
+                                 <mat-error>
+                                    This field is required
+                                 </mat-error>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-8  " *ngIf="checkIfFieldExist('epd_parent_name')">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Full Name</mat-label>
+                                 <input matInput placeholder="Full name" [readonly]="viewOnly" minlength="2"
+                                    maxlength="50" formControlName="epd_parent_name"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required class="text-capitalize"
+                                    [value]="formGroupArray[i].formGroup.get('epd_parent_name').value | capitalize" />
+                                 <mat-error>
+                                    Please enter full name
+                                 </mat-error>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="col-12 " [hidden]="!checkIfFieldExist('epd_parent_dob')">
                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Choose Honorific</mat-label>
-                              <mat-select placeholder="Category" formControlName="epd_parent_honorific" required
-                                 [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-                                 <mat-option value="">Please Select</mat-option>
-                                 <mat-option value="1">Mr.</mat-option>
-                                 <mat-option value="2">Mrs.</mat-option>
-                                 <mat-option value="3">Miss.</mat-option>
-                                 <mat-option value="4">Ms.</mat-option>
-                                 <mat-option value="5">Mx.</mat-option>
-                                 <mat-option value="6">Sir.</mat-option>
-                                 <mat-option value="7">Dr.</mat-option>
-                                 <mat-option value="8">Lady</mat-option>
-                              </mat-select>
+                              <mat-label>Date of Birth</mat-label>
+                              <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
+                                 placeholder="Date of Birth" formControlName="epd_parent_dob" />
+                              <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker tabindex="-1" [disabled]="viewOnly" #picker></mat-datepicker>
                               <mat-error>
-                                 This field is required
+                                 Please enter date of birth
                               </mat-error>
                            </mat-form-field>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
-                           *ngIf="checkIfFieldExist('epd_parent_name')">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Full Name</mat-label>
-                              <input matInput placeholder="Full name" [readonly]="viewOnly" minlength="2" maxlength="50"
-                                 formControlName="epd_parent_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                 required class="text-capitalize" [value]="formGroupArray[i].formGroup.get('epd_parent_name').value | capitalize" />
-                              <mat-error>
-                                 Please enter full name
-                              </mat-error>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
-                           *ngIf="checkIfFieldExist('epd_contact_no')">
+                     </fieldset>
+                  </div>
+
+                  <div class="col-3">
+                     <fieldset class="col-12 fieldset_invoice">
+                        <legend class="invoice_legend"> <b>Personal Details</b></legend>
+
+                        <div class="col-12  mar-top-30" *ngIf="checkIfFieldExist('epd_contact_no')">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Contact No.</mat-label>
                               <input matInput placeholder="Contact No." formControlName="epd_contact_no" minlength="10"
@@ -86,8 +104,7 @@
                               </mat-error>
                            </mat-form-field>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
-                           *ngIf="checkIfFieldExist('epd_whatsapp_no')">
+                        <div class="col-12  " *ngIf="checkIfFieldExist('epd_whatsapp_no')">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Whatsapp No</mat-label>
                               <input matInput placeholder="Whatsapp No." formControlName="epd_whatsapp_no"
@@ -95,8 +112,7 @@
                                  [errorStateMatcher]="confirmValidParentMatcher">
                            </mat-form-field>
                         </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 "
-                           *ngIf="checkIfFieldExist('epd_email')">
+                        <div class="col-12  " *ngIf="checkIfFieldExist('epd_email')">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Email</mat-label>
                               <input formControlName="epd_email"
@@ -107,6 +123,174 @@
                               </mat-error>
                            </mat-form-field>
                         </div>
+                        <div class="col-12" *ngIf="checkIfFieldExist('epd_aadhar_no')">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Aadhaar No.</mat-label>
+                              <input matInput placeholder="Aadhaar no." formControlName="epd_aadhar_no"
+                                 mask="0000 0000 0000 0000" minlength="12" maxlength="14" [readonly]="viewOnly"
+                                 [errorStateMatcher]="confirmValidParentMatcher">
+                              <mat-error>
+                                 Please enter aadhar number
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </fieldset>
+                     <div class="col-12 mar-top-25">
+                        <span>Whether Staff of the Organisation ?</span>
+                        <mat-slide-toggle class="inline-form-radio-spacing-parent"
+                           formControlName="epd_parent_staff_of_organisation" (change)="checkStaffStatus($event,i)"
+                           [disabled]="viewOnly" [ngModel]="staffStatus[i] === 'No' ? false: true">{{staffStatus[i]}}
+                        </mat-slide-toggle>
+                     </div>
+                  </div>
+                  <div class="col-3">
+                     <fieldset class="col-12 fieldset_invoice">
+                        <legend class="invoice_legend"> <b>Occupation Details</b></legend>
+                        <form [formGroup]="formGroupArray[i].formGroup">
+                           <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_parent_occupation_type')">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Occupation Type</mat-label>
+                                 <mat-select placeholder="Occupation Type" [disabled]="viewOnly"
+                                    formControlName="epd_parent_occupation_type"
+                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                    <br>
+                                    <mat-form-field class="form-field">
+                                       <input matInput placeholder="Search.."
+                                          (keyup)="filterOccupation($event.target.value)" (blur)="refillData()" />
+                                    </mat-form-field>
+                                    <mat-option value="">Please Select</mat-option>
+                                    <mat-option *ngFor="let item of occupationTypeArray" [value]="item.ocpt_id">
+                                       {{item.ocpt_name}}</mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-12 " *ngIf="checkIfFieldExist('epd_organisation')">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Name of Organisation</mat-label>
+                                 <input class="text-capitalize" matInput placeholder="Name of Organisation"
+                                    [readonly]="viewOnly" formControlName="epd_organisation"
+                                    [errorStateMatcher]="confirmValidParentMatcher" />
+                              </mat-form-field>
+                           </div>
+                           <div class="row mar-top-0">
+                              <div class="col-6 " *ngIf="checkIfFieldExist('epd_designation')">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Designation</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Designation"
+                                       [readonly]="viewOnly" formControlName="epd_designation"
+                                       [errorStateMatcher]="confirmValidParentMatcher" />
+                                 </mat-form-field>
+                              </div>
+                              <div class="col-6 " *ngIf="checkIfFieldExist('epd_income')">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Annual Income</mat-label>
+                                    <mat-select placeholder="Annual Income" [disabled]="viewOnly"
+                                       formControlName="epd_income" [errorStateMatcher]="confirmValidParentMatcher">
+                                       <mat-option>Please Select</mat-option>
+                                       <mat-option *ngFor="let item of annualIncomeArray" [value]="item.ai_id">
+                                          {{item.ai_from_to}}
+                                       </mat-option>
+                                    </mat-select>
+                                 </mat-form-field>
+                              </div>
+                           </div>
+                           <div class="col-12 " *ngIf="checkIfFieldExist('ea_address1')">
+                              <form [formGroup]="formGroupArray[i].ea_office_address">
+                                 <mat-form-field class="form-field" appearance="outline">
+                                    <mat-label>Office Address</mat-label>
+                                    <input class="text-capitalize" matInput placeholder="Office Address"
+                                       [readonly]="viewOnly" minlength="3" formControlName="ea_address1" />
+                                 </mat-form-field>
+                              </form>
+                           </div>
+                        </form>
+                     </fieldset>
+                     <div class="col-12 mar-top-25" *ngIf="checkIfFieldExist('epd_is_transferable')">
+                        <span>Is Job transferable ?</span>
+                        <mat-slide-toggle class="btn-spacer" formControlName="epd_is_transferable" [disabled]="viewOnly"
+                           [ngModel]="jobStatus[i] === 'No' ? false: true" (change)="checkJobStatus($event, i)">
+                           {{jobStatus[i]}}</mat-slide-toggle>
+                     </div>
+                  </div>
+                  <div class="col-3">
+                     <fieldset class="col-12 fieldset_invoice">
+                        <legend class="invoice_legend"> <b>Education Details</b></legend>
+                        <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_qualification')">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Choose Qualification</mat-label>
+                              <mat-select placeholder="Choose Qualification.." formControlName="epd_qualification"
+                                 [disabled]="viewOnly" multiple [errorStateMatcher]="confirmValidParentMatcher">
+                                 <mat-option *ngFor="let item of qualificationArray" [value]="item.qlf_id">
+                                    {{item.qlf_name}}
+                                 </mat-option>
+                              </mat-select>
+                              <mat-error>
+                                 Please Choose Qualification
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </fieldset>
+                     <div class="col-12 ">
+                        <div class="margin-top-25 mar-bot-25">
+                           <span>Whether Alumni of the School?</span>
+                           <mat-slide-toggle class="margin-legt-imp-10" (change)="checkAluminiStatus(i,$event)"
+                              [disabled]="viewOnly" [ngModel]="aluminiStatus[i] === 'No' ? false: true"
+                              formControlName="epd_parent_alumni">
+                              {{aluminiStatus[i]}}</mat-slide-toggle>
+                        </div>
+                     </div>
+                     <fieldset class="col-12 fieldset_invoice" [ngClass]="opacityClass">
+                        <legend class="invoice_legend"> <b>Alumni Details</b></legend>
+                        <div class="row mar-top-30">
+                           <div class="col-6 ">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Enter Admission No.</mat-label>
+                                 <input class="text-capitalize" matInput placeholder="Enter Admission Number"
+                                    [readonly]="!(aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')) && viewOnly"
+                                    pattern="[0-9]*" minlength="4" maxlength="4"
+                                    formControlName="epd_parent_admission_no"
+                                    [errorStateMatcher]="confirmValidParentMatcher" />
+                                 <mat-error>
+                                    Please enter admission number.
+                                 </mat-error>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-6">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Enter Year</mat-label>
+                                 <input class="text-capitalize" matInput placeholder="Enter Year"
+                                    [readonly]="!(aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')) && viewOnly"
+                                    pattern="[0-9]*" minlength="4" maxlength="4"
+                                    formControlName="epd_parent_alumni_last_year"
+                                    [errorStateMatcher]="confirmValidParentMatcher" required />
+                                 <mat-error>
+                                    Please enter value in year format.
+                                 </mat-error>
+                              </mat-form-field>
+                           </div>
+                        </div>
+                        <div class="col-12">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Last Class Attended</mat-label>
+                              <mat-select placeholder="Last Class Attended"
+                                 [disabled]="!(aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')) && viewOnly"
+                                 formControlName="epd_parent_alumni_last_class"
+                                 [errorStateMatcher]="confirmValidParentMatcher" required>
+                                 <mat-option value="">Please Select</mat-option>
+                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                                 </mat-option>
+                              </mat-select>
+                              <mat-error>
+                                 Please select class
+                              </mat-error>
+                           </mat-form-field>
+                        </div>
+                     </fieldset>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12 col-sm-12 col-md-12 col-lg-11 col-xl-11">
+                     <div class="row remove-top-margin">
                         <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
                            *ngIf="i==2 && checkIfFieldExist('epd_guard_child_rel')">
                            <mat-form-field class="form-field" appearance="outline">
@@ -116,19 +300,6 @@
                                  [errorStateMatcher]="confirmValidParentMatcher" required />
                               <mat-error>
                                  Please enter relation
-                              </mat-error>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
-                           [hidden]="!checkIfFieldExist('epd_parent_dob')">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Date of Birth</mat-label>
-                              <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
-                                 placeholder="Date of Birth" formControlName="epd_parent_dob" />
-                              <mat-datepicker-toggle tabindex="-1" matSuffix [for]="picker"></mat-datepicker-toggle>
-                              <mat-datepicker tabindex="-1" [disabled]="viewOnly" #picker></mat-datepicker>
-                              <mat-error>
-                                 Please enter date of birth
                               </mat-error>
                            </mat-form-field>
                         </div>
@@ -144,190 +315,26 @@
                            </mat-form-field>
                         </div>
                         <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
-                           *ngIf="checkIfFieldExist('epd_aadhar_no')">
+                           *ngIf="checkIfFieldExist('epd_parent_nationality')">
                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Aadhaar No.</mat-label>
-                              <input matInput placeholder="Aadhaar no." formControlName="epd_aadhar_no"
-                                 mask="0000 0000 0000 0000" minlength="12" maxlength="14" [readonly]="viewOnly"
-                                 [errorStateMatcher]="confirmValidParentMatcher">
-                              <mat-error>
-                                 Please enter aadhar number
-                              </mat-error>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2 remove-col-padding">
-                           <div class="margin-top-15">
-                              <span>Whether Alumni of the School?</span>
-                              <mat-slide-toggle class="margin-legt-imp-10" (change)="checkAluminiStatus(i,$event)"
-                                 [disabled]="viewOnly" [ngModel]="aluminiStatus[i] === 'No' ? false: true"
-                                 formControlName="epd_parent_alumni">
-                                 {{aluminiStatus[i]}}</mat-slide-toggle>
-                           </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
-                           *ngIf="aluminiStatusArray[i] && checkIfFieldExist('epd_parent_alumni_last_class')">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Last Class Attended</mat-label>
-                              <mat-select placeholder="Last Class Attended" [disabled]="viewOnly"
-                                 formControlName="epd_parent_alumni_last_class"
+                              <mat-label>Nationality</mat-label>
+                              <mat-select placeholder="Nationality" [disabled]="viewOnly"
+                                 formControlName="epd_parent_nationality"
                                  [errorStateMatcher]="confirmValidParentMatcher" required>
                                  <mat-option value="">Please Select</mat-option>
-                                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
-                                 </mat-option>
+                                 <mat-option value="91">Indian</mat-option>
                               </mat-select>
                               <mat-error>
-                                 Please select class
-                              </mat-error>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
-                           *ngIf="aluminiStatusArray[i] && checkIfFieldExist('epd_parent_alumni_last_year')">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Enter Year</mat-label>
-                              <input class="text-capitalize" matInput placeholder="Enter Year" [readonly]="viewOnly"
-                                 pattern="[0-9]*" minlength="4" maxlength="4"
-                                 formControlName="epd_parent_alumni_last_year"
-                                 [errorStateMatcher]="confirmValidParentMatcher" required />
-                              <mat-error>
-                                 Please enter value in year format.
-                              </mat-error>
-                           </mat-form-field>
-                        </div>
-                        <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2"
-                           *ngIf="aluminiStatusArray[i] && checkIfFieldExist('epd_parent_admission_no')">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Enter Admission No.</mat-label>
-                              <input class="text-capitalize" matInput placeholder="Enter Admission Number"
-                                 [readonly]="viewOnly" pattern="[0-9]*" minlength="4" maxlength="4"
-                                 formControlName="epd_parent_admission_no"
-                                 [errorStateMatcher]="confirmValidParentMatcher" />
-                              <mat-error>
-                                 Please enter admission number.
+                                 Please select Nationality
                               </mat-error>
                            </mat-form-field>
                         </div>
                      </div>
-                  </div>
-               </div>
-               <div class="row remove-top-margin">
-               </div>
-               <div class="row remove-top-margin">
-                  <div *ngIf="checkIfFieldExist('epd_parent_nationality')" class="col-6">
-                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Nationality</mat-label>
-                        <mat-select placeholder="Nationality" [disabled]="viewOnly"
-                           formControlName="epd_parent_nationality" [errorStateMatcher]="confirmValidParentMatcher"
-                           required>
-                           <mat-option value="">Please Select</mat-option>
-                           <mat-option value="91">Indian</mat-option>
-                        </mat-select>
-                        <mat-error>
-                           Please select Nationality
-                        </mat-error>
-                     </mat-form-field>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-12">
-                     <span class="text-uppercase"><b>Education Details</b></span>
-                  </div>
-               </div>
-               <div class="row">
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3"
-                     *ngIf="checkIfFieldExist('epd_qualification')">
-                     <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Choose Qualification</mat-label>
-                        <mat-select placeholder="Choose Qualification.." formControlName="epd_qualification"
-                           [disabled]="viewOnly" multiple [errorStateMatcher]="confirmValidParentMatcher">
-                           <mat-option *ngFor="let item of qualificationArray" [value]="item.qlf_id">{{item.qlf_name}}
-                           </mat-option>
-                        </mat-select>
-                        <mat-error>
-                           Please Choose Qualification
-                        </mat-error>
-                     </mat-form-field>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 margin-top-15">
-                     <span>Whether Staff of the Organisation ?</span>
-                     <mat-slide-toggle class="inline-form-radio-spacing-parent"
-                        formControlName="epd_parent_staff_of_organisation" (change)="checkStaffStatus($event,i)"
-                        [disabled]="viewOnly" [ngModel]="staffStatus[i] === 'No' ? false: true">{{staffStatus[i]}}
-                     </mat-slide-toggle>
-                  </div>
-                  <div class="col-12 col-sm-12 col-md-6 col-lg-3 col-xl-3 margin-top-15"
-                     *ngIf="checkIfFieldExist('epd_is_transferable')">
-                     <span>Is Job transferable ?</span>
-                     <mat-slide-toggle class="btn-spacer" formControlName="epd_is_transferable" [disabled]="viewOnly"
-                        [ngModel]="jobStatus[i] === 'No' ? false: true" (change)="checkJobStatus($event, i)">
-                        {{jobStatus[i]}}</mat-slide-toggle>
-                  </div>
-               </div>
-               <div class="row margin-top-15">
-                  <div class="col-12">
-                     <span class="text-uppercase"><b>Occupation Details</b></span>
                   </div>
                </div>
                <form [formGroup]="formGroupArray[i].formGroup">
-                  <div class="row">
-                     <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2 text-center"
-                        *ngIf="checkIfFieldExist('epd_parent_occupation_type')">
-                        <mat-form-field class="form-field" appearance="outline">
-                           <mat-label>Occupation Type</mat-label>
-                           <mat-select placeholder="Occupation Type" [disabled]="viewOnly"
-                              formControlName="epd_parent_occupation_type"
-                              [errorStateMatcher]="confirmValidParentMatcher">
-                              <br>
-                              <mat-form-field class="form-field">
-                                 <input matInput placeholder="Search.." (keyup)="filterOccupation($event.target.value)"
-                                    (blur)="refillData()" />
-                              </mat-form-field>
-                              <mat-option value="">Please Select</mat-option>
-                              <mat-option *ngFor="let item of occupationTypeArray" [value]="item.ocpt_id">
-                                 {{item.ocpt_name}}</mat-option>
-                           </mat-select>
-                        </mat-form-field>
-                     </div>
-                     <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2"
-                        *ngIf="checkIfFieldExist('epd_organisation')">
-                        <mat-form-field class="form-field" appearance="outline">
-                           <mat-label>Name of Organisation</mat-label>
-                           <input class="text-capitalize" matInput placeholder="Name of Organisation"
-                              [readonly]="viewOnly" formControlName="epd_organisation"
-                              [errorStateMatcher]="confirmValidParentMatcher" />
-                        </mat-form-field>
-                     </div>
-                     <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2"
-                        *ngIf="checkIfFieldExist('epd_designation')">
-                        <mat-form-field class="form-field" appearance="outline">
-                           <mat-label>Designation</mat-label>
-                           <input class="text-capitalize" matInput placeholder="Designation" [readonly]="viewOnly"
-                              formControlName="epd_designation" [errorStateMatcher]="confirmValidParentMatcher" />
-                        </mat-form-field>
-                     </div>
-                     <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2" *ngIf="checkIfFieldExist('epd_income')">
-                        <mat-form-field class="form-field" appearance="outline">
-                           <mat-label>Annual Income</mat-label>
-                           <mat-select placeholder="Annual Income" [disabled]="viewOnly" formControlName="epd_income"
-                              [errorStateMatcher]="confirmValidParentMatcher">
-                              <mat-option>Please Select</mat-option>
-                              <mat-option *ngFor="let item of annualIncomeArray" [value]="item.ai_id">
-                                 {{item.ai_from_to}}
-                              </mat-option>
-                           </mat-select>
-                        </mat-form-field>
-                     </div>
-                     <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2" *ngIf="checkIfFieldExist('ea_address1')">
-                        <form [formGroup]="formGroupArray[i].ea_office_address">
-                           <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Office Address</mat-label>
-                              <input class="text-capitalize" matInput placeholder="Office Address" [readonly]="viewOnly"
-                                 minlength="3" formControlName="ea_address1" />
-                           </mat-form-field>
-                        </form>
-                     </div>
-                  </div>
                   <form [formGroup]="formGroupArray[i].ea_office_address">
-                     <div class="row">
+                     <div class="row" style="margin-left:10px;">
                         <div *ngIf="checkIfFieldExist('ea_city')" class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
                            <mat-form-field class="form-field" appearance="outline">
                               <mat-label>City</mat-label>

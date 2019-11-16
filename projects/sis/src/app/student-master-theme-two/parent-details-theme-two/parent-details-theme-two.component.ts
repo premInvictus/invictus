@@ -70,6 +70,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	staffStatus: any[] = ['No', 'No', 'No'];
 	addressStatus: any[] = ['No', 'No', 'No'];
 	jobStatus: any[] = ['No', 'No', 'No'];
+	opacityClass = '';
 	@Input() addOnly = false;
 	@Input() viewOnly = false;
 	@Input() editRequestFlag = false;
@@ -84,8 +85,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
 		this.buildForm();
 		this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
-								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
-								'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 		this.getQualifications();
 		this.getAnnualIncome();
 		this.getOccupationType();
@@ -410,12 +411,14 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 			this.aluminiStatusArray[index] = true;
 			this.aluminiStatus[index] = 'Yes';
+			this.opacityClass = '';
 		} else {
 			this.aluminiStatusArray[index] = false;
 			this.formGroupArray[index].formGroup.patchValue({
 				'epd_parent_alumni': 'N'
 			});
 			this.aluminiStatus[index] = 'No';
+			this.opacityClass = 'opacity-class';
 		}
 	}
 	checkJobStatus($event, index) {
@@ -560,10 +563,12 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				if (value[i] && value[i].epd_parent_alumni
 					&& value[i].epd_parent_alumni === 'Y') {
 					this.aluminiStatusArray[i] = true;
+					this.opacityClass = '';
 					this.aluminiStatus[i] = 'Yes';
 				} else {
 					this.aluminiStatusArray[i] = false;
 					this.aluminiStatus[i] = 'No';
+					this.opacityClass = 'opacity-class';
 				}
 				if (value[i] && value[i].epd_custody_of_guardian === 'Y') {
 					this.showHideGuardianField = true;
@@ -814,8 +819,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.aluminiStatusArray = [false, false, false];
 			this.showHideGuardianField = false;
 			this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
-			 						'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
+				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 		}
 	}
 	getCityPerId(item: any, index) {
