@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../_guards/index';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
-import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential/user-credential.component';
 import { ProjectComponent } from '../../../../../src/app/invictus-shared/project/project.component';
 const routes: Routes = [
 	{
