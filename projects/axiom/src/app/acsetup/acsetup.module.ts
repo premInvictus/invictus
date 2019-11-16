@@ -25,6 +25,7 @@ import { SystemInfoUploadComponent } from './system-info-upload/system-info-uplo
 import { ViewStudentProfileComponent } from './manage-users/student-management/view-student-profile/view-student-profile.component';
 import { SearchStudentComponent } from './manage-users/student-management/view-student-profile/search-student/search-student.component';
 import { SearchTeacherComponent } from './manage-users/teacher-management/view-teacher-profile/search-teacher/search-teacher.component';
+import { ChangePasswordModalComponent } from './manage-users/change-password-modal/change-password-modal.component';
 
 
 
@@ -41,9 +42,9 @@ import { SearchTeacherComponent } from './manage-users/teacher-management/view-t
 		TreeviewModule.forRoot()
 	],
 
-	entryComponents: [SearchStudentComponent, SearchTeacherComponent],
+	entryComponents: [SearchStudentComponent, SearchTeacherComponent, ChangePasswordModalComponent],
 	// tslint:disable-next-line:max-line-length
-	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent],
+	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent, ChangePasswordModalComponent],
 	providers: [AcsetupService, AuthGuard, NotificationsService]
 })
 

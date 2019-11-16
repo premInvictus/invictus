@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SchoolComponent } from './school/school.component';
-import { UserCredentialComponent } from './user-credential/user-credential.component';
 import { UserTypeRoutingModule } from './usertype-routing.module';
 import { SharedmoduleModule } from '../sharedmodule/sharedmodule.module';
 import { SchoolDashboardComponent } from './school/school-dashboard/school-dashboard.component';
@@ -17,13 +16,11 @@ import { SchoolDashboardComponent } from './school/school-dashboard/school-dashb
 	declarations:
 		[
 			SchoolComponent,
-			UserCredentialComponent,
 			SchoolDashboardComponent],
 
 	exports:
 		[
-			SchoolComponent,
-			UserCredentialComponent
+			SchoolComponent
 		]
 })
 export class UsertypeModule { }
