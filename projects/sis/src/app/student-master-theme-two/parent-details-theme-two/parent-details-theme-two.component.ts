@@ -70,7 +70,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	staffStatus: any[] = ['No', 'No', 'No'];
 	addressStatus: any[] = ['No', 'No', 'No'];
 	jobStatus: any[] = ['No', 'No', 'No'];
-	opacityClass = '';
+	opacityClass = ['', '', ''];
 	@Input() addOnly = false;
 	@Input() viewOnly = false;
 	@Input() editRequestFlag = false;
@@ -411,14 +411,14 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 			this.aluminiStatusArray[index] = true;
 			this.aluminiStatus[index] = 'Yes';
-			this.opacityClass = '';
+			this.opacityClass[index] = '';
 		} else {
 			this.aluminiStatusArray[index] = false;
 			this.formGroupArray[index].formGroup.patchValue({
 				'epd_parent_alumni': 'N'
 			});
 			this.aluminiStatus[index] = 'No';
-			this.opacityClass = 'opacity-class';
+			this.opacityClass[index] = 'opacity-class';
 		}
 	}
 	checkJobStatus($event, index) {
@@ -563,12 +563,12 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				if (value[i] && value[i].epd_parent_alumni
 					&& value[i].epd_parent_alumni === 'Y') {
 					this.aluminiStatusArray[i] = true;
-					this.opacityClass = '';
+					this.opacityClass[i] = '';
 					this.aluminiStatus[i] = 'Yes';
 				} else {
 					this.aluminiStatusArray[i] = false;
 					this.aluminiStatus[i] = 'No';
-					this.opacityClass = 'opacity-class';
+					this.opacityClass[i] = 'opacity-class';
 				}
 				if (value[i] && value[i].epd_custody_of_guardian === 'Y') {
 					this.showHideGuardianField = true;

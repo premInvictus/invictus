@@ -63,6 +63,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	cityCountryArray: any[] = [];
 	cityId: any;
 	cityId2: any;
+	opacityClass = '';
 	constructor(
 		private formEnabledTwoService: FormEnabledTwoService,
 		private fbuild: FormBuilder,
@@ -145,6 +146,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			});
 			this.showAddressFlag = true;
 			this.raddressviewonly = false;
+			this.opacityClass = '';
 		} else {
 			this.addressStatus = 'No';
 			this.paddressform.patchValue({
@@ -155,6 +157,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			});
 			this.showAddressFlag = false;
 			this.raddressviewonly = true;
+			this.opacityClass = 'opacity-class';
 		}
 	}
 
@@ -552,7 +555,9 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 						if (element.ea_same_residential_address === 'N') {
 							this.showAddressFlag = false;
 							this.addressStatus = 'Yes';
+							this.opacityClass = 'opacity-class';
 						} else {
+							this.opacityClass = '';
 							this.showAddressFlag = true;
 							this.addressStatus = 'No';
 						}
