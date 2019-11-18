@@ -33,7 +33,7 @@ export class SchoolDashboardComponent implements OnInit {
 	totalfeeoutstanding = 0;
 	totalfeeclassoutstanding = 0;
 	currentDate = new Date();
-
+	cumcurrentTab = 0;
 
 	feeprojectionlinechartflag = false;
 	feeprojectiondonutchartflag = false;
@@ -214,7 +214,10 @@ export class SchoolDashboardComponent implements OnInit {
 		const param: any = {};
 		param.receiptReportType = receiptReportType;
 		if (month) {
-			param.month = month;
+			param.month = month;			
+		}
+		if (this.cumcurrentTab) {
+			param.cumulative = true;
 		}
 		this.feeService.getFeeReceiptReport(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -255,28 +258,45 @@ export class SchoolDashboardComponent implements OnInit {
 		if (month) {
 			param.month = month;
 		}
+		if (this.cumcurrentTab) {
+			param.cumulative = true;
+		}
 		this.feeService.getFeeProjectionReport(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result.data);
+				
 				const xcategories: string[] = [];
 				const projected: any[] = result.data.projected;
 				const received: any[] = result.data.received;
 				const projectedSeries: any[] = [];
 				const receivedSeries: any[] = [];
-				if (projected.length > 0 && received.length > 0) {
+				if (received.length > 0) {
 					this.totalprojected = 0;
 					this.totalreceived = 0;
 					projected.forEach(value => {
 						if (this.currentTabIndex === 0) {
 							xcategories.push(value.month_day);
 						} else if (this.currentTabIndex === 1) {
-							xcategories.push(value.month_name.substr(0, 3) + "'" + value.year.toString().substring(value.year.toString().length -2, value.year.toString().length));
+							if (value.year) {
+								xcategories.push(value.month_name.substr(0, 3) + "'" + value.year.toString().substring(value.year.toString().length -2, value.year.toString().length));
+							} else {
+								xcategories.push(value.month_name.substr(0, 3));
+							}
+							
 						}
 						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
 						projectedSeries.push(amt);
 						this.totalprojected = this.totalprojected + amt;
 					});
 					received.forEach(value => {
+						if (this.currentTabIndex === 0) {
+							xcategories.push(value.month_day);
+						} else if (this.currentTabIndex === 1) {
+							if (value.year) {
+								xcategories.push(value.month_name.substr(0, 3) + "'" + value.year.toString().substring(value.year.toString().length -2, value.year.toString().length));
+							} else {
+								xcategories.push(value.month_name.substr(0, 3));
+							}							
+						}
 						const amt = value.total_fee_amount ? Number(value.total_fee_amount) : 0;
 						receivedSeries.push({
 							y: amt,
@@ -410,6 +430,22 @@ export class SchoolDashboardComponent implements OnInit {
 	getFeeProjectionReportMonthly() {
 		this.renderFeeProjectionReport(this.tabType[this.currentTabIndex], this.months);
 		this.renderFeeReceiptReport(this.tabType[this.currentTabIndex], this.months);
+	}
+
+	changeTab(event) {
+
+		
+		this.cumcurrentTab  = event.index;
+		if (!(this.cumcurrentTab)) {
+			this.getFeeProjectionReport();
+			this.getFeeReceiptReport();
+			this.getFeeOutstanding();
+			this.getClassWiseFeeOutstanding();
+		} else {
+			this.currentTabIndex = 0;
+			this.getFeeProjectionReport();
+			this.getFeeReceiptReport();
+		}
 	}
 }
 
