@@ -1,3 +1,39 @@
 .parent-detail-new-theme .mat-radio-label .mat-radio-container .mat-radio-outer-circle {
     border-radius: 0% !important;
 }
+.sis-parent-pic-size{
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 100%;
+    border: 2px solid #dfdfdf;
+}
+.fieldset_invoice {
+    border: 1px solid #e0e0e0;
+    padding: 5px !important;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+.invoice_legend {
+    position: absolute;
+    top: -9px;
+    font-size: 18px !important;
+    background: #fff;
+    display: inline;
+    padding: 0 3px;
+    color: rgba(0,0,0,.87) !important;
+}
+.mar-top-30{
+    margin-top:30px;
+}
+.mar-top-25{
+    margin-top:25px;
+}
+.mar-top-0{
+    margin-top:0px !important;
+}
+.mar-bot-25{
+    margin-bottom:25px;
+}
+.opacity-class{
+    opacity: 0.5;
+}

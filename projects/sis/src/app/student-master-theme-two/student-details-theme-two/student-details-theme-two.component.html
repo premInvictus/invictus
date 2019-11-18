@@ -48,7 +48,7 @@
                 <span class="font-size-16 font-medium">{{(belongToForm | capitalize) + ' No.'}}</span>&nbsp;
                 <span class="font-size-16">
                   <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
-                  (click)="openSearchDialog()"></i>
+                    (click)="openSearchDialog()"></i>
                 </span>
               </div>
             </div>
@@ -66,12 +66,11 @@
               </div>
               <div class="col-4 text-center remove-col-padding">
                 <mat-form-field class="form-field text-center">
-                  <input class="text-center enroll-font-30 font-size-30"
-                  formControlName="au_enrollment_id" matInput
-                    [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)"
-                    #myInput>
+                  <input class="text-center enroll-font-30 font-size-30" formControlName="au_enrollment_id" matInput
+                    [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)" #myInput>
                 </mat-form-field><br>
-                <div class="font-size-16 font-bold blink"  *ngIf="studentdetails.au_process_type=='5'"><span>LEFT</span></div>
+                <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_process_type=='5'"><span>LEFT</span>
+                </div>
                 <br>
               </div>
               <div class="col-4  remove-col-padding text-center">
@@ -99,7 +98,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="au_full_name" matInput placeholder="Full Name"
-                    required [readonly]="viewOnly"  [value]="studentdetailsform.get('au_full_name').value | capitalize">
+                    required [readonly]="viewOnly" [value]="studentdetailsform.get('au_full_name').value | capitalize">
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="fieldEnableAtAdmission()">
@@ -148,6 +147,15 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-2 col-xl-2">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Blood Group</mat-label>
+                  <mat-select placeholder="Blood Group" formControlName="mi_blood_group" [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of bloodGroupArray" [value]="item.bg_id">{{item.bg_name}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12" *ngIf="studentdetailsform.value.epd_parent_name">
                 <div [ngClass]="studentdetailsform.value.epd_parent_name? 'remove-col-padding' : 'remove-col-padding '">
                   <mat-form-field appearance="outline" class="form-field"
@@ -173,10 +181,11 @@
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.epd_whatsapp_no"
                     class="form-field">
                     <mat-label>WhatsApp No.</mat-label>
-                    <input class="margin-left-10" formControlName="epd_whatsapp_no" mask="00000 00000" matInput readonly>
+                    <input class="margin-left-10" formControlName="epd_whatsapp_no" mask="00000 00000" matInput
+                      readonly>
                     <i class="fab fa-whatsapp whatsapp-field-icon" matPrefix></i>
                   </mat-form-field>
-                </div> 
+                </div>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12"
                 *ngIf="studentdetailsform.value.mi_emergency_contact_name">
@@ -185,8 +194,8 @@
                   <mat-form-field appearance="outline" class="form-field"
                     *ngIf="studentdetailsform.value.mi_emergency_contact_name">
                     <mat-label>Emergency Contact Name</mat-label>
-                    <input class="text-capitalize" formControlName="mi_emergency_contact_name"  matInput
-                      placeholder="Emergency Contact Name"  readonly>
+                    <input class="text-capitalize" formControlName="mi_emergency_contact_name" matInput
+                      placeholder="Emergency Contact Name" readonly>
                   </mat-form-field>
                 </div>
               </div>
@@ -196,8 +205,8 @@
                   <mat-form-field appearance="outline" *ngIf="studentdetailsform.value.mi_emergency_contact_no"
                     class="form-field">
                     <mat-label>Emergency Contact No</mat-label>
-                    <input formControlName="mi_emergency_contact_no" mask="00000 00000" matInput placeholder="Emergency Contact No."
-                      readonly>
+                    <input formControlName="mi_emergency_contact_no" mask="00000 00000" matInput
+                      placeholder="Emergency Contact No." readonly>
                   </mat-form-field>
                 </div>
               </div>

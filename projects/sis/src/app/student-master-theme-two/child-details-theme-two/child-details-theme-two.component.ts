@@ -56,7 +56,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	tb_id;
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
-	showAddressFlag = true;
+	showAddressFlag = false;
 	addressStatus = 'No';
 	siblingStaus = 'No';
 	datePlaceHolder: any;
@@ -549,7 +549,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_country: element.ea_country,
 							ea_pincode: element.ea_pincode
 						});
-						if (element.ea_same_residential_address) {
+						if (element.ea_same_residential_address === 'N') {
 							this.showAddressFlag = false;
 							this.addressStatus = 'Yes';
 						} else {
@@ -569,6 +569,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_country: element.ea_country,
 							ea_pincode: element.ea_pincode
 						});
+
 					}
 				});
 			} else {
