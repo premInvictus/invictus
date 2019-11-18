@@ -17,7 +17,9 @@ export class UserCredentialComponent implements OnInit {
 	currentUser: any = {};
 	currentUserDetail: any = {};
 	usernameText = '';
+	usernameColor = '';
 	isUserAvailable = false;
+	maticonname = '';
 
 	constructor(
 		private router: Router,
@@ -102,10 +104,14 @@ export class UserCredentialComponent implements OnInit {
 			this.erpCommonService.checkUserStatus({ user_name: this.user_credential_form.value.new_username }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.usernameText = result.data;
+					this.usernameColor = 'green';
 					this.isUserAvailable = true;
+					this.maticonname = 'done'
 				} else {
 					this.usernameText = result.data;
+					this.usernameColor = 'red';
 					this.isUserAvailable = false;
+					this.maticonname = 'clear'
 				}
 			});
 		}
