@@ -48,6 +48,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
+	bloodGroupArray: any[] = [];
 	multipleFileArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
@@ -83,6 +84,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		this.buildForm();
 		this.getClass();
 		this.getHouses();
+		this.getBloodGroup();
 		const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 		inputElem.select();
 		this.commonAPIService.studentData.subscribe((data: any) => {
@@ -223,7 +225,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			epd_contact_no: '',
 			epd_whatsapp_no: '',
 			mi_emergency_contact_name: '',
-			mi_emergency_contact_no: ''
+			mi_emergency_contact_no: '',
+			mi_blood_group: '',
 		});
 
 	}
@@ -630,6 +633,14 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 				} else {
 					this.router.navigate(['../' + url], { relativeTo: this.route });
 				}
+			}
+		});
+	}
+	getBloodGroup() {
+		this.bloodGroupArray = [];
+		this.sisService.getBloodGroup().subscribe((result: any) => {
+			if (result) {
+				this.bloodGroupArray = result.data;
 			}
 		});
 	}
