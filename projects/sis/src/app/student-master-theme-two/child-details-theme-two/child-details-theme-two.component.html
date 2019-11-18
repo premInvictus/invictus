@@ -155,7 +155,7 @@
                 <legend class="invoice_legend"> <b>Permanent Address</b></legend>
               </div>
               <div class="row">
-                <input type="hidden" formControlName="ea_same_residential_address" >
+                <input type="hidden" formControlName="ea_same_residential_address">
                 <div class="col-12  remove-col-padding-left" *ngIf="checkIfFieldExist('ea_address1')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
@@ -171,7 +171,7 @@
                     <mat-label>City</mat-label>
                     <input type="text" matInput placeholder="City" formControlName="ea_city" required
                       [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
-                      [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)">
+                      [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete">
                       <mat-option (onSelectionChange)="getCityPerId(item)" (click)="getCityPerId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
@@ -241,7 +241,7 @@
           </fieldset>
         </div>
         <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-          <fieldset class="col-12 fieldset_invoice">
+          <fieldset class="col-12 fieldset_invoice" [ngClass]="opacityClass">
             <form [formGroup]="raddressform" novalidate>
               <div class="row">
                 <legend class="invoice_legend"> <b>Correspondence Address</b></legend>
@@ -251,22 +251,22 @@
               </div>
               <div class="row">
                 <div class="col-12  remove-col-padding-right" *ngIf="checkIfFieldExist('ea_address1')">
-                    <input type="hidden" formControlName="ea_same_residential_address" >
+                  <input type="hidden" formControlName="ea_same_residential_address">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
-                    <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address" required
-                      [readonly]="showAddressFlag" [errorStateMatcher]="confirmValidParentMatcher" />
+                    <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address"
+                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error>
                       This field is required
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12  " *ngIf="checkIfFieldExist('ea_city')">
+                <div class="col-12 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
-                    <input type="text" matInput placeholder="City" formControlName="ea_city" required
-                      [readonly]="showAddressFlag" [errorStateMatcher]="confirmValidParentMatcher"
-                      [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)">
+                    <input type="text" matInput placeholder="City" formControlName="ea_city" [readonly]="viewOnly"
+                      [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup" autocomplete="off"
+                      (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete">
                       <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
@@ -312,7 +312,7 @@
                   <mat-form-field class="form-field " appearance="outline">
                     <mat-label>Pin Code</mat-label>
                     <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
-                      placeholder="Zip/Pin Code" required [readonly]="showAddressFlag"
+                      placeholder="Zip/Pin Code" [readonly]="viewOnly"
                       [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error>
                       This field is required
@@ -328,8 +328,8 @@
         <div class="row">
           <div class="col-12">
             <span>Whether the address of correspondence is different from the Permanent address
-              ?</span>            
-            <mat-slide-toggle  [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly"
+              ?</span>
+            <mat-slide-toggle [checked]="showAddressFlag" class="btn-spacer" [disabled]="viewOnly"
               (change)="ea_same_residential_address_change($event)">{{addressStatus}}</mat-slide-toggle>
           </div>
 
@@ -348,7 +348,7 @@
 
   </div>
 
-  <div *ngIf="siblingdetailsdiv">
+  <div *ngIf="siblingdetailsdiv" style="padding-left: 10px;">
     <div class="row">
       <div class="col-12">
         <span class="text-uppercase"><b>Sibling Details</b></span>

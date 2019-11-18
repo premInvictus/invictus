@@ -144,7 +144,7 @@
                      </div>
                   </div>
                   <div class="col-3">
-                     <fieldset class="col-12 fieldset_invoice">
+                     <fieldset class="col-12 fieldset_invoice" *ngIf="checkIfFieldExist('epd_parent_occupation_type')">
                         <legend class="invoice_legend"> <b>Occupation Details</b></legend>
                         <form [formGroup]="formGroupArray[i].formGroup">
                            <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_parent_occupation_type')">
@@ -213,7 +213,7 @@
                      </div>
                   </div>
                   <div class="col-3">
-                     <fieldset class="col-12 fieldset_invoice">
+                     <fieldset class="col-12 fieldset_invoice" *ngIf="checkIfFieldExist('epd_qualification')">
                         <legend class="invoice_legend"> <b>Education Details</b></legend>
                         <div class="col-12 mar-top-30" *ngIf="checkIfFieldExist('epd_qualification')">
                            <mat-form-field class="form-field" appearance="outline">
@@ -239,7 +239,7 @@
                               {{aluminiStatus[i]}}</mat-slide-toggle>
                         </div>
                      </div>
-                     <fieldset class="col-12 fieldset_invoice" [ngClass]="opacityClass">
+                     <fieldset class="col-12 fieldset_invoice" [ngClass]="opacityClass[i]">
                         <legend class="invoice_legend"> <b>Alumni Details</b></legend>
                         <div class="row mar-top-30">
                            <div class="col-6 ">

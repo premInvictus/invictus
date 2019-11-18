@@ -7,9 +7,9 @@
     <br>
     <form [formGroup]="concessionremarksform" novalidate *ngIf="!viewOnly">
         <div class="row">
-            <div class="col-2 remove-col-padding">
+            <div class="col-6 remove-col-padding">
                 <div class="row remove-top-margin">
-                    <div class="col-12 ">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Date</mat-label>
                             <input formControlName="era_doj" [min]="minDate" matInput [matDatepicker]="picker"
@@ -20,7 +20,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div class="col-12 " *ngIf="checkIfFieldExist('era_aut_id')">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_aut_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Authority</mat-label>
                             <mat-select formControlName="era_aut_id" placeholder="Authority" [disabled]="viewOnly"
@@ -32,7 +32,7 @@
                             </mat-select>
                         </mat-form-field>
                     </div>
-                    <div class="col-12 " *ngIf="checkIfFieldExist('era_ar_id')">
+                    <div class="col-12 co-sm-12 col-md-12 col-lg-4 col-xl-4" *ngIf="checkIfFieldExist('era_ar_id')">
                         <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Area</mat-label>
                             <mat-select formControlName="era_ar_id" [errorStateMatcher]="confirmValidParentMatcher"
@@ -46,56 +46,22 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-5" *ngIf="checkIfFieldExist('era_teachers_remark')">
+            <div class="col-3" *ngIf="checkIfFieldExist('era_teachers_remark')">
                 <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Remarks</mat-label>
-                    <textarea formControlName="era_teachers_remark" [errorStateMatcher]="confirmValidParentMatcher"
-                        matInput placeholder="Remarks" [readonly]="viewOnly" rows="8"></textarea>
+                    <input matInput placeholder="Remarks" [errorStateMatcher]="confirmValidParentMatcher"
+                        formControlName="era_teachers_remark" [readOnly]="viewOnly">
                 </mat-form-field>
             </div>
-
-            <div class="col-4 remove-col-padding text-center">
-                <div class="text-left inline-flex margin-top-10 mtp-10" *ngIf="checkIfFieldExist('erd_doc_link')">
+            <div class="col-3 remove-col-padding text-center">
+                <div class="text-left inline-flex margin-top-10" *ngIf="checkIfFieldExist('erd_doc_link')">
                     <button mat-raised-button class="btn-neutral" [disabled]="viewOnly">
                         <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
                             class="btn-document-label" for="documents">Upload File</label>
                     </button>
                     <input style="display:none" type="file" id="documents" (change)="bindImageToForm($event)">
                 </div>
-                <button *ngIf="!editlist" mat-raised-button class="btn-neutral btn-spacer mtp-10" (click)="addtolist()"
-                    [disabled]="viewOnly">Add to list</button>
-                <button *ngIf="editlist" mat-raised-button class="btn-neutral btn-spacer mtp-10"
-                    (click)="updatetolist()">Update to
-                    list</button>
-                <button [disabled]="viewOnly" mat-raised-button class="btn-danger btn-spacer mtp-10"
-                    (click)="resetAdmissionConcessionList()">Reset</button>
-            </div>
-            <div class="col-1 remove-col-padding text-center"></div>
-
-        </div>
-        <!-- <div class="row">
-            <div class="col-8" *ngIf="checkIfFieldExist('era_teachers_remark')">
-                    <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Remarks</mat-label>
-                    <input formControlName="era_teachers_remark" [errorStateMatcher]="confirmValidParentMatcher"
-                        matInput placeholder="Remarks" [readonly]="viewOnly">
-                </mat-form-field>
-            </div>
-            <div *ngIf="checkIfFieldExist('erd_doc_link')" class="row">
-                <div class="col-2">
-                    <div class="text-left">
-                        <button mat-raised-button class="btn-neutral" [disabled]="viewOnly">
-                            <mat-icon class="btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
-                                class="btn-document-label" for="documents">Upload File</label>
-                        </button>
-                        <input style="display:none" type="file" id="documents" (change)="bindImageToForm($event)">
-                    </div>
-                    <br>
-                </div>
-            </div>
-            <div class="col-2 remove-col-padding text-center margin-top-8">
-                <button *ngIf="!editlist" mat-raised-button class="btn-neutral" (click)="addtolist()"
+                <button *ngIf="!editlist" mat-raised-button class="btn-neutral btn-spacer" (click)="addtolist()"
                     [disabled]="viewOnly">Add to list</button>
                 <button *ngIf="editlist" mat-raised-button class="btn-neutral btn-spacer"
                     (click)="updatetolist()">Update to
@@ -103,8 +69,7 @@
                 <button [disabled]="viewOnly" mat-raised-button class="btn-danger btn-spacer"
                     (click)="resetAdmissionConcessionList()">Reset</button>
             </div>
-
-        </div> -->
+        </div>    
     </form>
     <div class="row">
         <div class="col-12">

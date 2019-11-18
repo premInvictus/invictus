@@ -115,7 +115,7 @@
                             <div class="col-6">
                                 <div class="col-sm" *ngIf="modeFlag && transportFlag">
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Application Form</mat-label>
+                                        <mat-label>Applicable Form</mat-label>
                                         <input matInput [matDatepicker]="picker" [max]="maxDate" [readonly]="viewOnly"
                                             placeholder="ApplicableFrom" formControlName="accd_transport_from"
                                             [errorStateMatcher]="confirmValidParentMatcher" required />
@@ -148,7 +148,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="row">
+                    <div class="row" *ngIf="transportFlag">
                         <div class="col-12">
                             <span>{{terminateStatus}} </span>
                             <mat-slide-toggle *ngIf="modeFlag && transportFlag" [disabled]="viewOnly"
@@ -162,12 +162,12 @@
                         <legend class="invoice_legend"> <b>Concession</b></legend>
                         <div class="row mar-top-30">
                             <div class="col-6">
-                                <div class="col-12">
+                                <div class="col-sm">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Concession Group</mat-label>
                                         <mat-select placeholder="Concession Group" [disabled]="viewOnly"
                                             formControlName="accd_fcg_id"
-                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                            [errorStateMatcher]="confirmValidParentMatcher" 
                                             (selectionChange)="setDescription($event)">
                                             <mat-option>Please Select</mat-option>
                                             <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">
@@ -176,7 +176,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-sm" *ngIf="conDesc">
+                                <div class="col-sm" *ngIf="conDescFlag">
                                     <mat-form-field appearance="outline" class="form-field">
                                         <mat-label>Reason For Approve Concession</mat-label>
                                         <mat-select placeholder="Reason For Approve Concession" [disabled]="viewOnly"
@@ -191,8 +191,8 @@
                                 </div>
 
                             </div>
-                            <div class="col-6">
-                                <div class="col-sm" *ngIf="conDesc">
+                            <div class="col-6" *ngIf="conDescFlag">
+                                <div class="col-sm">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Remarks</mat-label>
                                         <textarea formControlName="accd_remark_id"
@@ -202,8 +202,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row ">
-                            <div class="col-1 padding-left-20" *ngIf="conDesc">
+                        <div class="row" *ngIf="conDescFlag">
+                            <div class="col-2 padding-left-20" *ngIf="!viewOnly">
                                 <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
                                     multiple="true" (change)="fileChangeEvent($event,docreq_id)" id="docreq_id"
                                     style="display: none !important">
@@ -215,14 +215,29 @@
                                         File</label>
                                 </a>
                             </div>
-                            <div class="col-11 remove-col-padding">
-                                <div class="col-sm margin-left-15 pad-bot-10" *ngIf="conDesc">
+                            <div class="col-1 pad-left-22" *ngIf="conDescFlag">
+                                <div style="float:right;">
+                                    <!-- <button *ngIf="!viewOnly" mat-button class="upload-document-delete-btn"
+                                        (click)="deleteFile(img.imgName,img.ed_docreq_id)">
+                                        <mat-icon class="btn-upload-icon">delete</mat-icon>
+                                    </button> -->
+                                </div>
+                                <!-- <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                    [src]="img.imgName" (click)="previewImage(imageArray, i)"> -->
+                                <img class="btn-doc-upload-preview-1 thumbnail-img" src="{{concession_document}}"
+                                    (click)="previewImage(concessionArray, 0)"><br>
+
+                                <br>
+                            </div>
+                            <div class="col-9 remove-col-padding" *ngIf="conDescFlag">
+                                <div class="col-sm margin-left-15 pad-bot-10">
                                     Description: {{conDesc}} <span *ngIf="conStatus === 'approved'"
                                         class="approved">{{conStatus | capitalize}}</span>
                                     <span *ngIf="conStatus === 'pending'"
                                         class="pending">{{conStatus | capitalize}}</span>
                                 </div>
                             </div>
+
                         </div>
                     </fieldset>
                     <br>
@@ -267,7 +282,7 @@
                             </div>
                         </div>
                     </fieldset>
-                    <div class="row">
+                    <div class="row" *ngIf="hostelFlag">
                         <div class="col-12">
                             <span>{{hostelStatus}} </span>
                             <mat-slide-toggle *ngIf="hostelFlag " [disabled]="viewOnly" (change)="hostel($event)"
@@ -280,7 +295,7 @@
             </div>
 
 
-<!--             
+            <!--             
             <div class="row">
                 <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding">
                     <div class="row ">

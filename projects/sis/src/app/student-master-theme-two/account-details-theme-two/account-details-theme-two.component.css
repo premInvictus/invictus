@@ -5,14 +5,12 @@
 .pad-bot-10{
     padding-bottom: 10px;
 }
-.approved{
-    margin-left: 10px;
+.approved{    
     color:green;
     font-size: 16px;
     font-weight: 700
 }
-.pending{
-    margin-left: 10px;
+.pending{  
     color:red;
     font-size: 16px;
     font-weight: 700
@@ -57,5 +55,19 @@
     padding-top: 10px;
 }
 .padding-left-20{
-    padding-left: 20px;
+    padding-left: 50px;
+    padding-top: 15px;
+}
+textarea.mat-input-element {
+    padding: 0px 0px !important;
+}
+.pad-left-22 {
+    padding-left: 22px;
+}
+.btn-doc-upload-preview-1 {
+    height: 40px;
+    width: 40px;
+    border: 1px solid #646471;
+    border-radius: 4%;
+    position: relative;
 }
