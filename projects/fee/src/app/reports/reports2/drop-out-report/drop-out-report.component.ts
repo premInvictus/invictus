@@ -19,11 +19,11 @@ declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 @Component({
-	selector: 'app-security-deposit-report',
-	templateUrl: './security-deposit-report.component.html',
-	styleUrls: ['./security-deposit-report.component.css']
+	selector: 'app-drop-out-report',
+	templateUrl: './drop-out-report.component.html',
+	styleUrls: ['./drop-out-report.component.css']
 })
-export class SecurityDepositReportComponent implements OnInit {
+export class DropoutReportComponent implements OnInit {
 
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
@@ -70,7 +70,7 @@ export class SecurityDepositReportComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
-		this.getSecurityFeeReport(this.reportFilterForm.value);
+		this.getDropoutReport(this.reportFilterForm.value);
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -100,7 +100,7 @@ export class SecurityDepositReportComponent implements OnInit {
 		});
 	}
 
-	getSecurityFeeReport(value: any) {
+	getDropoutReport(value: any) {
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
@@ -214,20 +214,20 @@ export class SecurityDepositReportComponent implements OnInit {
 				sortable: true,
 				width: 1
 			},
-			{
-				id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true, width: 4,
-				filterable: true,
-				formatter: this.checkDateFormatter,
-				grouping: {
-					getter: 'invoice_created_date',
-					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
+			// {
+			// 	id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true, width: 4,
+			// 	filterable: true,
+			// 	formatter: this.checkDateFormatter,
+			// 	grouping: {
+			// 		getter: 'invoice_created_date',
+			// 		formatter: (g) => {
+			// 			return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// },
 			{
 				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
 				width: 4
@@ -257,41 +257,34 @@ export class SecurityDepositReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'invoice_no',
-				name: 'Invoice No.',
-				field: 'invoice_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'receipt_no',
-				name: 'Receipt No.',
-				field: 'receipt_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
+			// {
+			// 	id: 'invoice_no',
+			// 	name: 'Invoice No.',
+			// 	field: 'invoice_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
+			// {
+			// 	id: 'receipt_no',
+			// 	name: 'Receipt No.',
+			// 	field: 'receipt_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
 			{
 				id: 'fh_amount',
-				name: 'Fee Amount',
+				name: 'Outstanding Amount',
 				field: 'fh_amount',
 				sortable: true,
 				filterable: true,
-				// formatter: this.checkFeeFormatter,
-				// groupTotalsFormatter: this.sumTotalsFormatter
-			},
-			{
-				id: 'refund_status',
-				name: 'Refund Status',
-				field: 'refund_status',
-				sortable: true,
-				filterable: true
+				formatter: this.checkFeeFormatter,
+				groupTotalsFormatter: this.sumTotalsFormatter
 			},
 			{
 				id: 'refund_date',
-				name: 'Refund Date',
+				name: 'Transaction Date',
 				field: 'refund_date',
 				sortable: true, width: 4,
 				filterable: true,
@@ -311,8 +304,16 @@ export class SecurityDepositReportComponent implements OnInit {
 					collapsed: false,
 				},
 				
-			}];
-		this.feeService.getAdvanceSecurityDepositReport(collectionJSON).subscribe((result: any) => {
+			},
+			{
+				id: 'refund_status',
+				name: 'Status',
+				field: 'refund_status',
+				sortable: true,
+				filterable: true
+			},
+			];
+		this.feeService.getDropoutReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
 				repoArray = result.data.reportData;
@@ -341,25 +342,11 @@ export class SecurityDepositReportComponent implements OnInit {
 						repoArray[Number(index)]['receipt_no'] : '-';
 					obj['fh_amount'] = item['fh_amount'] ?
 						Number(item['fh_amount']) : 0;
-					obj['refund_date'] = item['fsd_created_date'] ? item['fsd_created_date'] : '-';
+					obj['refund_date'] = item['flgr_date'] ? item['flgr_date'] : '-';
 					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Expired' : 'Pending';
 					this.dataset.push(obj);
 					index++;
 				}
-				const obj3: any = {};
-				obj3['id'] = 'footer';
-				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
-				obj3['invoice_created_date'] = this.common.htmlToText('');
-				obj3['stu_admission_no'] = '';
-				obj3['stu_full_name'] = '';
-				obj3['stu_class_name'] = '';
-				obj3['invoice_no'] = '';
-				obj3['receipt_no'] = '';
-				obj3['fh_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
-				obj3['refund_date'] = this.common.htmlToText('');
-				obj3['refund_status'] = '';	
-				this.dataset.push(obj3);
-				console.log(obj3);
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
@@ -430,14 +417,14 @@ export class SecurityDepositReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(Number(value));
+			return new DecimalPipe('en-in').transform(value);
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(Number(value));
+			return new DecimalPipe('en-in').transform(value);
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
@@ -745,279 +732,8 @@ export class SecurityDepositReportComponent implements OnInit {
 		});
 	}
 
-
-	getBulkSecurityFeeReport(value: any) {
-		this.dataArr = [];
-		this.aggregatearray = [];
-		this.columnDefinitions = [];
-		this.dataset = [];
-		this.tableFlag = false;
-		this.gridOptions = {
-			enableDraggableGrouping: true,
-			createPreHeaderPanel: true,
-			showPreHeaderPanel: true,
-			enableHeaderMenu: true,
-			preHeaderPanelHeight: 40,
-			enableFiltering: true,
-			enableSorting: true,
-			enableColumnReorder: true,
-			createFooterRow: true,
-			showFooterRow: true,
-			footerRowHeight: 21,
-			enableExcelCopyBuffer: true,
-			fullWidthRows: true,
-			enableAutoTooltip: true,
-			enableCellNavigation: true,
-			headerMenu: {
-				iconColumnHideCommand: 'fas fa-times',
-				iconSortAscCommand: 'fas fa-sort-up',
-				iconSortDescCommand: 'fas fa-sort-down',
-				title: 'Sort'
-			},
-			exportOptions: {
-				sanitizeDataExport: true,
-				exportWithFormatter: true
-			},
-			gridMenu: {
-				customItems: [{
-					title: 'pdf',
-					titleKey: 'Export as PDF',
-					command: 'exportAsPDF',
-					iconCssClass: 'fas fa-download'
-				},
-				{
-					title: 'expand',
-					titleKey: 'Expand Groups',
-					command: 'expandGroup',
-					iconCssClass: 'fas fa-expand-arrows-alt'
-				},
-				{
-					title: 'collapse',
-					titleKey: 'Collapse Groups',
-					command: 'collapseGroup',
-					iconCssClass: 'fas fa-compress'
-				},
-				{
-					title: 'cleargroup',
-					titleKey: 'Clear Groups',
-					command: 'cleargroup',
-					iconCssClass: 'fas fa-eraser'
-				}
-				],
-				onCommand: (e, args) => {
-					if (args.command === 'toggle-preheader') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
-					}
-					if (args.command === 'exportAsPDF') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.exportAsPDF();
-					}
-					if (args.command === 'expandGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.expandAllGroups();
-					}
-					if (args.command === 'collapseGroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.collapseAllGroups();
-					}
-					if (args.command === 'cleargroup') {
-						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-						this.clearGrouping();
-					}
-				},
-				onColumnsChanged: (e, args) => {
-					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-				},
-			},
-			draggableGrouping: {
-				dropPlaceHolderText: 'Drop a column header here to group by the column',
-				// groupIconCssClass: 'fa fa-outdent',
-				deleteIconCssClass: 'fa fa-times',
-				onGroupChanged: (e, args) => this.onGroupChanged(args && args.groupColumns),
-				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-			}
-		};
-		let repoArray = [];
-		this.columnDefinitions = [];
-		this.dataset = [];
-		const collectionJSON: any = {
-			'from_date': new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd'),
-			'to_date': new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd'),
-			'pageSize': value.pageSize,
-			'pageIndex': value.pageIndex,
-			'classId': value.fee_value,
-			'secId': value.hidden_value,
-			'login_id': value.login_id,
-			'orderBy': value.orderBy,
-			'downloadAll': true,
-		};
-		this.columnDefinitions = [
-			{
-				id: 'srno',
-				name: 'SNo.',
-				field: 'srno',
-				sortable: true,
-				width: 1
-			},
-			{
-				id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true, width: 4,
-				filterable: true,
-				formatter: this.checkDateFormatter,
-				grouping: {
-					getter: 'invoice_created_date',
-					formatter: (g) => {
-						return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
-				width: 4
-			},
-			{
-				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true, width: 6,
-				grouping: {
-					getter: 'stu_full_name',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false
-				},
-			},
-			{
-				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true, width: 4,
-				filterable: true,
-				grouping: {
-					getter: 'stu_class_name',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			},
-			{
-				id: 'invoice_no',
-				name: 'Invoice No.',
-				field: 'invoice_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'receipt_no',
-				name: 'Receipt No.',
-				field: 'receipt_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'fh_amount',
-				name: 'Fee Amount',
-				field: 'fh_amount',
-				sortable: true,
-				filterable: true,
-				// formatter: this.checkFeeFormatter,
-				// groupTotalsFormatter: this.sumTotalsFormatter
-			},
-			{
-				id: 'refund_status',
-				name: 'Refund Status',
-				field: 'refund_status',
-				sortable: true,
-				filterable: true
-			},
-			{
-				id: 'refund_date',
-				name: 'Refund Date',
-				field: 'refund_date',
-				sortable: true, width: 4,
-				filterable: true,
-				formatter: this.checkDateFormatter,
-				grouping: {
-					getter: 'refund_date',
-					formatter: (g) => {
-						if (g.value !== '-') {
-							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-						} else {
-							return '-';
-						}
-						
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-				
-			}];
-		this.feeService.getBulkSecurityDepositReport(collectionJSON).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.common.showSuccessErrorMessage(result.message, 'success');
-				repoArray = result.data.reportData;
-				this.totalRecords = Number(result.data.totalRecords);
-				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
-				let index = 0;
-				for (const item of repoArray) {
-					const obj: any = {};
-					obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-						(index + 1);
-					obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
-						(index + 1);
-					obj['invoice_created_date'] = repoArray[Number(index)]['invoice_created_date'];
-					obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
-						repoArray[Number(index)]['stu_admission_no'] : '-';
-					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-					if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
-						obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
-							repoArray[Number(index)]['stu_sec_name'];
-					} else {
-						obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
-					}
-					obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
-						repoArray[Number(index)]['invoice_no'] : '-';
-					obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
-						repoArray[Number(index)]['receipt_no'] : '-';
-					obj['fh_amount'] = item['fh_amount'] ?
-						Number(item['fh_amount']) : 0;
-					obj['refund_date'] = item['fsd_created_date'] ? item['fsd_created_date'] : '-';
-					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Expired' : 'Pending';
-					this.dataset.push(obj);
-					index++;
-				}
-
-				const obj3: any = {};
-				obj3['id'] = 'footer';
-				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
-				obj3['invoice_created_date'] = this.common.htmlToText('');
-				obj3['stu_admission_no'] = '';
-				obj3['stu_full_name'] = '';
-				obj3['stu_class_name'] = '';
-				obj3['invoice_no'] = '';
-				obj3['receipt_no'] = '';
-				obj3['fh_amount'] =
-					new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
-				obj3['refund_date'] = this.common.htmlToText('');
-				obj3['refund_status'] = '';	
-				this.dataset.push(obj3);					
-
-
-				this.tableFlag = true;
-			} else {
-				this.tableFlag = true;
-			}
-		});
-	}
-
 	getSecurityDeposit(event) {
-		this.dataset = [];
+		console.log('event', event);
 		if (event.value === 1) {
 			this.activeReport = 1;
 			
@@ -1028,10 +744,8 @@ export class SecurityDepositReportComponent implements OnInit {
 	}
 
 	generate() {
-		if (this.activeReport == 1) {
-			this.getSecurityFeeReport(this.reportFilterForm.value);
-		} else {
-			this.getBulkSecurityFeeReport(this.reportFilterForm.value);
-		}
+		
+		this.getDropoutReport(this.reportFilterForm.value);
+		
 	}
 }
