@@ -4,6 +4,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { FeeService } from 'projects/fee/src/app/_services';
 import { ProcesstypeService, CommonAPIService, SisService } from '../../_services';
 import { DatePipe } from '@angular/common';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { PreviewDocumentComponent } from '../../student-master/documents/preview-document/preview-document.component';
 
 @Component({
 	selector: 'app-account-details-theme-two',
@@ -15,6 +17,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() viewOnly = false;
 	@Input() feeDet: any;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
+	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	accountsForm: FormGroup;
 	feeOtherCategory: any[] = [];
 	feeStructureArray: any[] = [];
@@ -30,12 +33,14 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
 	reasonArr: any[] = [];
+	concessionArray: any[] = [];
 	lastRecordId;
 	loginId: any;
 	terminateStatus: any;
 	hostelStatus: any;
 	existFlag = false;
 	conStatus: any;
+	concession_document: any;
 	hostelTerminateFlag = false;
 	@Input() editFlag = true;
 	@Input() permissionFlag = false;
@@ -43,6 +48,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	validateFlag = false;
 	slabModel: any;
 	conDesc: string;
+	conDescFlag = false;;
 	currentImage: any;
 	documentsArray: any[] = [];
 	finalDocumentArray: any[] = [];
@@ -55,7 +61,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService,
 		public processtypeService: ProcesstypeService,
-		public sisService: SisService
+		public sisService: SisService,
+		private dialog: MatDialog,
 
 	) { }
 
@@ -107,6 +114,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	renderData() {
+		this.concessionArray = [];
 		this.stoppageArray = [];
 		this.slabArray = [];
 		this.accountsForm.reset();
@@ -116,6 +124,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.terminationFlag = false;
 		this.existFlag = false;
 		this.conStatus = this.feeDet.accd_fcg_status;
+		this.concession_document = this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
+		this.concessionArray.push({
+			ed_docreq_id: 0,
+			imgName: this.concession_document
+		});
+		this.concessionArray.push(this.concession_document);
 		if (this.feeDet.accd_login_id) {
 			if (this.feeDet.accd_is_transport === 'Y') {
 				this.transportFlag = true;
@@ -127,7 +141,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			} else {
 				this.modeFlag = false;
 			}
-			if (this.feeDet.accd_is_terminate === 'Y' && this.transportFlag && this.modeFlag) {
+			if (this.feeDet.accd_is_terminate === 'Y' && this.transportFlag) {
 				this.terminationFlag = true;
 				this.terminateStatus = 'Terminate Transport Facility';
 			} else {
@@ -149,6 +163,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.enableMode(this.feeDet.accd_transport_mode);
 			this.getStoppages(this.feeDet.accd_tr_id);
 			this.getSlab(this.feeDet.accd_tsp_id);
+			this.conDescFlag = this.feeDet.accd_fcg_id ? true : false;
+			console.log('ghjhyyyugy', this.conDescFlag);
 			this.accountsForm.patchValue({
 				accd_id: this.feeDet.accd_id,
 				accd_login_id: this.feeDet.accd_login_id,
@@ -175,7 +191,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_ses_id: this.feeDet.ses_id,
 				accd_status: this.feeDet.accd_status
 			});
-			this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
+			//this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 			this.slabModel = this.feeDet.accd_ts_id;
 		} else {
 			this.accountsForm.reset();
@@ -189,9 +205,11 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 	setDescription(event) {
 		this.conDesc = '';
+		this.conDescFlag = false;
 		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
 		if (cindex !== -1) {
 			this.conDesc = this.conGroupArray[cindex].fcg_description;
+			this.conDescFlag = true;
 		}
 	}
 	getFeeOtherCategory() {
@@ -529,5 +547,25 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		};
 		reader.readAsDataURL(files);
+	}
+	previewImage(imgArray, index) {
+		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				imageArray: imgArray,
+				index: index
+			},
+			height: '100vh',
+			width: '100vh'
+		});
+	}
+	checkThumbnail(url: any) {
+		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+			url.match(/gif/) || url.match(/jpeg/) ||
+			url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+			url.match(/GIF/) || url.match(/JPEG/)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

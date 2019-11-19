@@ -179,6 +179,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 		if (this.context && this.context.studentdetails &&
 			this.context.studentdetails.studentdetailsform &&
 			this.context.studentdetails.studentdetailsform.valid) {
+				console.log(this.context.studentdetails.studentdetailsform.value);
 			this.sisService.addStudentInformation(this.context.studentdetails.studentdetailsform.value).subscribe((result1: any) => {
 				if (result1.status === 'ok') {
 				}

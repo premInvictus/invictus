@@ -52,8 +52,8 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 	feePeriod: any[] = [];
 	UserArray: any[] = [];
 	invoicepagelength = 1000;
-	invoicepagesize = 10;
-	invoicepagesizeoptions = [10, 25, 50, 100];
+	invoicepagesize = 100;
+	invoicepagesizeoptions = [100, 300, 500, 1000];
 	invoiceCreationForm: FormGroup;
 	invoiceSearchForm: FormGroup;
 	classArray: any[] = [];
@@ -301,7 +301,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 				srno: (this.searchparam.pageSize * this.searchparam.pageIndex) + (index + 1),
 				admno: element.inv_process_usr_no,
 				studentname: element.au_full_name,
-				classsection: element.class_name + ' - ' + element.sec_name,
+				classsection: element.class_name + (element.sec_name? ' - ' + element.sec_name:""),
 				invoiceno: element.inv_invoice_no,
 				inv_id: element.inv_id,
 				feeperiod: element.fp_name,
@@ -404,7 +404,7 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			to_date: '',
 			status: '',
 			pageIndex: '0',
-			pageSize: '10'
+			pageSize: this.invoicepagesize
 		});
 	}
 	advanceSearchToggle() {
@@ -453,9 +453,9 @@ export class InvoiceCreationBulkComponent implements OnInit, AfterViewInit, OnDe
 			}
 		});
 
-		dialogRef.afterClosed().subscribe(result => {
-			this.getInvoice(this.invoiceSearchForm.value);
-		});
+		// dialogRef.afterClosed().subscribe(result => {
+		// 	this.getInvoice(this.invoiceSearchForm.value);
+		// });
 	}
 
 	openFilterDialog() {

@@ -437,6 +437,7 @@ export class SchoolDashboardComponent implements OnInit {
 		
 		this.cumcurrentTab  = event.index;
 		if (!(this.cumcurrentTab)) {
+			this.currentTabIndex = 0;			
 			this.getFeeProjectionReport();
 			this.getFeeReceiptReport();
 			this.getFeeOutstanding();

@@ -1,21 +1,25 @@
-<div class="row remove-top-margin">
-    <div class="col-12">
-      <ng-container *ngIf="settingsArray.length > 0">
+<div class="row remove-top-margin" style="padding-top:10px">
+  <div class="col-12">
+    <ng-container *ngIf="settingsArray.length > 0">
       <div class="container-box__grey">
-        <app-student-details-theme-two #studentdetails [belongToForm]="formname" [config]="config" [configSetting]="settingsArray"></app-student-details-theme-two>
+        <app-student-details-theme-two #studentdetails [belongToForm]="formname" [config]="config"
+          [configSetting]="settingsArray"></app-student-details-theme-two>
         <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
           <ng-container *ngFor="let tab of formsTab; let i=index">
-          <mat-tab [disabled]="checkFormEnabled(i)">
-            <ng-template mat-tab-label>
-              <div>
-                <span>{{tab.label}}</span>
-              </div>
-            </ng-template>
-            <app-dynamic-content-theme-two *ngIf="studentdetails" [type]="tab.component" [studentdetails]="studentdetails" [belongToForm]="formname" [config]="config" [currentStudentDataId]="currentStudentDataId" [configSetting]="settingsArray"></app-dynamic-content-theme-two>
-          </mat-tab>
-        </ng-container>
+            <mat-tab [disabled]="checkFormEnabled(i)">
+              <ng-template mat-tab-label>
+                <div>
+                  <span>{{tab.label}}</span>
+                </div>
+              </ng-template>
+              <app-dynamic-content-theme-two *ngIf="studentdetails" [type]="tab.component"
+                [studentdetails]="studentdetails" [belongToForm]="formname" [config]="config"
+                [currentStudentDataId]="currentStudentDataId" [configSetting]="settingsArray">
+              </app-dynamic-content-theme-two>
+            </mat-tab>
+          </ng-container>
         </mat-tab-group>
       </div>
-      </ng-container>
-    </div>
+    </ng-container>
   </div>
+</div>

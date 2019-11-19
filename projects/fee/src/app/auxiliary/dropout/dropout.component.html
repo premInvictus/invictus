@@ -60,6 +60,10 @@
                     <td mat-cell *matCellDef="let item" class="text-nowrap text-left text-capitalize">
                       {{item.stu_full_name}} </td>
                   </ng-container>
+                  <ng-container matColumnDef="stu_security_session">
+                    <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
+                    <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_security_session}} </td>
+                  </ng-container>
                   <ng-container matColumnDef="stu_class_name">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Class </th>
                     <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize"> {{item.stu_class_name}}
@@ -72,10 +76,7 @@
                       <p [innerHtml]="item?.stu_security_amt"> </p>
                     </td>
                   </ng-container>
-                  <ng-container matColumnDef="stu_security_session">
-                    <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
-                    <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_security_session}} </td>
-                  </ng-container>
+                 
                   <ng-container matColumnDef="security_status">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Status </th>
                     <!-- {{item.security_status}} -->
@@ -101,8 +102,15 @@
                     <td colspan="11">No Record Found</td>
                   </tr>
                 </table>
-                <mat-paginator [hidden]="!(DROP_OUT_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
-                  [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons></mat-paginator>
+                <mat-paginator [hidden]="!(DROP_OUT_ELEMENT_DATA.length > 0)" #paginator [pageSize]="100"
+                  [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons></mat-paginator>
+              </div>              
+            </div>
+            <div class="text-center" *ngIf="DROP_OUT_ELEMENT_DATA.length == 0">
+              <div>
+                <img
+                  src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/fee_transaction_entry.png' />
+                <p>No Dropout Collection Found</p>
               </div>
             </div>
 
@@ -152,28 +160,28 @@
                       <td mat-cell *matCellDef="let item" class="text-nowrap text-left text-capitalize">
                         {{item.stu_full_name}} </td>
                     </ng-container>
+                    <ng-container matColumnDef="stu_security_session">
+                      <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
+                      <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_security_session}} </td>
+                    </ng-container>
                     <ng-container matColumnDef="stu_class_name">
                       <th mat-header-cell *matHeaderCellDef width="10%"> Class </th>
                       <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize"> {{item.stu_class_name}}
                       </td>
                     </ng-container>
                     <ng-container matColumnDef="stu_security_amt">
-                      <th mat-header-cell *matHeaderCellDef width="10%"> Security Amount (<span><i
+                      <th mat-header-cell *matHeaderCellDef width="10%"> Outstanding Amount (<span><i
                             class="fas fa-rupee-sign"></i></span>)</th>
                       <td mat-cell *matCellDef="let item" class="text-nowrap">
                         <p [innerHtml]="item?.stu_security_amt"> </p>
                       </td>
                     </ng-container>
-                    <ng-container matColumnDef="stu_security_session">
-                      <th mat-header-cell *matHeaderCellDef width="10%"> Year </th>
-                      <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.stu_security_session}} </td>
-                    </ng-container>
-                    <ng-container matColumnDef="security_status">
+                    
+                    <!-- <ng-container matColumnDef="security_status">
                       <th mat-header-cell *matHeaderCellDef width="10%"> Status </th>
-                      <!-- {{item.security_status}} -->
                       <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize"> <span
                           *ngIf="!(item.srno==='Total')">Pending</span> </td>
-                    </ng-container>
+                    </ng-container> -->
                     <!-- <ng-container matColumnDef="action">
                       <th mat-header-cell *matHeaderCellDef width="10%"> Action </th>
                       <td mat-cell *matCellDef="let item" class="text-nowrap">
@@ -193,11 +201,17 @@
                       <td colspan="11">No Record Found</td>
                     </tr>
                   </table>
-                  <mat-paginator [hidden]="!(DROP_OUT_ZERO_ELEMENT_DATA.length > 0)" #zeroPaginator [pageSize]="10"
-                    [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons></mat-paginator>
+                  <mat-paginator [hidden]="!(DROP_OUT_ZERO_ELEMENT_DATA.length > 0)" #zeroPaginator [pageSize]="100"
+                    [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons></mat-paginator>
                 </div>
               </div>
-
+              <div class="text-center" *ngIf="DROP_OUT_ZERO_ELEMENT_DATA.length == 0">
+                <div>
+                  <img
+                    src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/fee_transaction_entry.png' />
+                  <p>No Dropout Collection Found</p>
+                </div>
+              </div>
           </mat-tab>
         </mat-tab-group>
 

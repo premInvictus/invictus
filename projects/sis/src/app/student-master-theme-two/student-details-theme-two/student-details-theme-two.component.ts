@@ -353,7 +353,8 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			epd_parent_type: this.studentdetails.parentinfo.length > 0 ? this.studentdetails.parentinfo[0].epd_parent_type : '',
 			mi_emergency_contact_name: this.studentdetails.medicalinfo.length > 0 ?
 				this.studentdetails.medicalinfo[0].mi_emergency_contact_name : '',
-			mi_emergency_contact_no: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : ''
+			mi_emergency_contact_no: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_emergency_contact_no : '',
+			mi_blood_group: this.studentdetails.medicalinfo.length > 0 ? this.studentdetails.medicalinfo[0].mi_blood_group : '',
 		});
 	}
 	uploadImage(fileName, au_profileimage) {

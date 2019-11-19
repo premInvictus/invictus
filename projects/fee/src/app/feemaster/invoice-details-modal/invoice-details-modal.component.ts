@@ -301,7 +301,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 
 						this.class_name = this.invoiceDetails.class_name;
 						this.section_name = this.invoiceDetails.sec_name;
-						if (this.section_name !== ' ') {
+						if (this.section_name !== '') {
 							this.class_sec = this.class_name + ' - ' + this.section_name;
 						} else {
 							this.class_sec = this.class_name;
