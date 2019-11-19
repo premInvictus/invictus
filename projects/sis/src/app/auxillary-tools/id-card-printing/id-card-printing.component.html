@@ -173,14 +173,29 @@
     <div class="col-6 col-padding-left-eight remove-col-padding-right">
       <div *ngIf="radioOne.checked" class="container-box__white">
         <div *ngIf="showIdCard">
-          <div *ngIf="idCardSettings?.ps_card_style == '1'" id="card1">
-            <app-idcard-style1 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style1>
+          <div *ngIf="idCardSettings?.ps_card_style == '1'">
+            <div style="display:block;">
+              <div style="page-break-before:always">
+                <app-idcard-style1 [studentDetails]="studentDetails" id="card1" [idCardConfig]="idCardSettings">
+                </app-idcard-style1>
+              </div>
+            </div>
           </div>
           <div *ngIf="idCardSettings?.ps_card_style == '2'" id="card2">
-            <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style2>
+            <div style="display:block;">
+              <div style="page-break-before:always">
+                <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings">
+                </app-idcard-style2>
+              </div>
+            </div>
           </div>
           <div *ngIf="idCardSettings?.ps_card_style == '3'" id="card3">
-            <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings"></app-idcard-style3>
+            <div style="display:block;">
+              <div style="page-break-before:always">
+                <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardSettings">
+                </app-idcard-style3>
+              </div>
+            </div>
           </div>
           <div class="row margin-bottom-10">
             <div class="col-12 text-center">

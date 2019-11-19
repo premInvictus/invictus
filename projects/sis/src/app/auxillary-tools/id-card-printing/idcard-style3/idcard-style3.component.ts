@@ -83,7 +83,7 @@ export class IdcardStyle3Component implements OnInit, OnChanges {
 		} else {
 			this.showBackSide = false;
 		}
-		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.schoolLogo : 'https://via.placeholder.com/50';
+		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.school_logo : 'https://via.placeholder.com/50';
 		this.container_box_idheader = this.idCardConfig.ps_header_fore_color;
 		this.container_box_idheader_bgColor = this.idCardConfig.ps_header_back_color;
 		this.studentNameForeColor = this.idCardConfig.ps_student_fore_color;
