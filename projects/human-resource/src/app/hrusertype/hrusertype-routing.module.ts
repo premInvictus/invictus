@@ -14,7 +14,7 @@ const routes: Routes = [
 			{ path: 'employee', loadChildren:  '../employee-master/employee-master.module#EmployeeMasterModule' },
 			{ path: 'payroll-master', loadChildren:  '../payroll-master/payroll-master.module#PayrollMasterModule' },
 			{ path: 'auxillaries', loadChildren:  '../hr-auxiliaries/auxiliaries.module#AuxiliariesModule' },
-			{ path: 'reports', loadChildren:  '../hr-reports/reports.module#ReportsModule' },
+			{ path: 'reports', loadChildren:  '../reports/reports.module#ReportsModule' },
 			{ path: 'configure', loadChildren:  '../hr-configure/hr-configure.module#HrConfigureModule' },
 		]
 	}
@@ -26,3 +26,4 @@ const routes: Routes = [
 	providers: [AuthGuard]
 })
 export class HrusertypeRoutingModule { }
+ 

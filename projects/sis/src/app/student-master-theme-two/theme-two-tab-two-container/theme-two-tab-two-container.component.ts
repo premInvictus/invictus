@@ -116,7 +116,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		});
 	}
 	ngOnChanges() { }
-	saveForm() {
+	saveForm() { 
 		for (const item of this.educationDetails) {
 			item.eed_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
 		}

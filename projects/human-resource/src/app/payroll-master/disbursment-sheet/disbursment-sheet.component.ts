@@ -206,7 +206,8 @@ export class DisbursmentSheetComponent implements OnInit {
 	getAllEmployee() {
 		//this.displayedSalaryComputeColumns.push('emp_salary_heads', 'emp_allowances', 'emp_total_earnings', 'emp_deductions', 'emp_present_days', 'emp_salary_payable', 'emp_pay_mode', 'emp_total', 'emp_status']
 		let inputJson = {
-			'month_id': this.searchForm.value.month_id
+			'month_id': this.searchForm.value.month_id,
+			'emp_status': 'live'
 		};
 		this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
 

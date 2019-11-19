@@ -209,7 +209,7 @@ export class CommonAPIService {
 
 	getAllEmployee(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee/getAll', value);
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
 	}
 
 	getEmployeeDetail(value) {
