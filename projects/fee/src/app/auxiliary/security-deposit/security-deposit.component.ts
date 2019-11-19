@@ -24,7 +24,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginatorbulk') paginatorbulk: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	displayedColumns: string[] =
-		['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_class_name', 'stu_security_amt', 'stu_security_session', 'security_status', 'action'];
+		['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_class_name', 'au_status', 'stu_security_amt',  'stu_security_session', 'security_status', 'action'];
 	SECURITY_DEPOST_ELEMENT_DATA: SecurityDepositElement[] = [];
 	dataSource = new MatTableDataSource<SecurityDepositElement>(this.SECURITY_DEPOST_ELEMENT_DATA);
 
@@ -48,7 +48,8 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 	totalRecords: number;
 	bulkTotalRecords: number;
 	currentUser: any;
-	grandTotal = 0;
+	grandSecurityTotal:any;
+	grandBulkTotal:any;
 	currentTab = 0;
 	constructor(public feeService: FeeService,
 		public sisService: SisService,
@@ -81,7 +82,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 			'inv_process_type': '',
 			'inv_process_usr_no': '',
 			'invoice_no': '',
-			'pageSize': '10',
+			'pageSize': '100',
 			'pageIndex': '0',
 			'au_full_name': '',
 			'from_date': '',
@@ -127,6 +128,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 
 
 	getSecurityDepositListAll() {
+		this.grandSecurityTotal = 0;
 		this.formGroupArray = [];
 		this.SECURITY_DEPOST_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<SecurityDepositElement>(this.SECURITY_DEPOST_ELEMENT_DATA);
@@ -136,14 +138,17 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 				let total = 0;
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.totalRecords);
+				this.grandSecurityTotal = Number(result.data.total_amount).toLocaleString('en-IN');
 				for (const item of temparray) {
 					this.SECURITY_DEPOST_ELEMENT_DATA.push({
 						srno: pos,
 						stu_enrollment_no: item && item.au_admission_no ? this.getProcessName(item.inv_process_type) + item.au_admission_no : '',
 						stu_full_name: item && item.au_full_name ? item.au_full_name : '',
-						stu_class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						stu_class_name: item.sec_name  ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						stu_security_amt: item && item.invg_fh_amount ? Number(item.invg_fh_amount).toLocaleString('en-IN') : '',
 						stu_security_session: item && item.fsd_ses_name ? item.fsd_ses_name : this.getUserSession(item.flgr_ses_id),
+						au_status : item && item.au_status ? item.au_status  : '0',
+						au_process_type : item && item.au_process_type ? item.au_process_type : '4',
 						security_status: item && item.fsd_status ? item.fsd_status : '1',
 						action: item,
 					});
@@ -161,10 +166,11 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 					stu_security_amt: '<b>' + total.toLocaleString('en-IN') + '</b>',
 					stu_security_session: '',
 					security_status: '',
+					au_status : '',
+					au_process_type : '',
 					action: ''
 				}
 				this.SECURITY_DEPOST_ELEMENT_DATA.push(lastRow);
-				this.grandTotal = this.grandTotal + total;
 
 				this.dataSource = new MatTableDataSource<SecurityDepositElement>(this.SECURITY_DEPOST_ELEMENT_DATA);
 				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
@@ -175,6 +181,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 
 
 	getBulkSecurityDepositListAll() {
+		this.grandBulkTotal = 0;
 		this.formGroupArray = [];
 		this.BULK_SECURITY_DEPOST_ELEMENT_DATA = [];
 		this.bulkDataSource = new MatTableDataSource<SecurityDepositBulkElement>(this.BULK_SECURITY_DEPOST_ELEMENT_DATA);
@@ -184,15 +191,18 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 				let total = 0;
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.bulkTotalRecords = Number(result.data.totalRecords);
+				this.grandBulkTotal = Number(result.data.total_amount).toLocaleString('en-IN');
 				for (const item of temparray) {
 					this.BULK_SECURITY_DEPOST_ELEMENT_DATA.push({
 						srno: pos,
-						stu_enrollment_no: item && item.au_admission_no ? this.getProcessName('4') + item.au_admission_no : '',
-						stu_full_name: item && item.au_full_name ? item.au_full_name : '',
-						stu_class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						stu_enrollment_no: item && item.fsd_enrollment_no ? this.getProcessName('4') + item.fsd_enrollment_no : '',
+						stu_full_name: item && item.fsd_stu_name ? item.fsd_stu_name : '',
+						stu_class_name: item.sec_id  ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						stu_security_amt: item && item.fsd_security_amt ? Number(item.fsd_security_amt).toLocaleString('en-IN') : '',
 						stu_security_session: item && item.fsd_ses_name ? item.fsd_ses_name : '',
 						security_status: item && item.fsd_status ? item.fsd_status : '',
+						au_status : item && item.au_status ? item.au_status : '0',
+						au_process_type : item && item.au_process_type ? item.au_process_type : '4',
 						action: item,
 					});
 					total = total + Number(item && item.fsd_security_amt ? item.fsd_security_amt : 0)
@@ -208,11 +218,13 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 					stu_security_amt: '<b>' + total.toLocaleString('en-IN') + '</b>',
 					stu_security_session: '',
 					security_status: '',
+					au_status : '',
+					au_process_type : '',
 					action: ''
 				}
 				this.BULK_SECURITY_DEPOST_ELEMENT_DATA.push(lastRow);
 				
-				this.grandTotal = this.grandTotal + total;
+				
 				
 				this.bulkDataSource = new MatTableDataSource<SecurityDepositBulkElement>(this.BULK_SECURITY_DEPOST_ELEMENT_DATA);
 				this.bulkDataSource.paginator.length = this.paginatorbulk.length = this.bulkTotalRecords;
@@ -224,10 +236,12 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 	changeTab(event) {
 		console.log('change tab', event.index);
 		this.currentTab = event.index;
-
-		if (this.currentTab) {
+		
+		if (!this.currentTab) {
+			this.grandBulkTotal = 0;
 			this.getBulkSecurityDepositListAll();
 		} else {
+			this.grandSecurityTotal = 0;
 			this.getSecurityDepositListAll();
 		}
 	}
@@ -278,6 +292,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 			
 			inputJson['fsd_enrollment_no'] = 1;
 			inputJson['fsd_enrollment_no'] = item.au_admission_no;
+			inputJson['fsd_stu_name'] = item.au_full_name;
 			inputJson['fsd_login_id'] = item.au_login_id;
 			inputJson['fsd_class_id'] = item.au_class_id;
 			inputJson['fsd_security_amt'] = item.invg_fh_amount;
@@ -299,6 +314,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 
 			inputJson['fsd_id'] = item.fsd_id;
 			inputJson['fsd_enrollment_no'] = item.fsd_enrollment_no;
+			inputJson['fsd_stu_name'] = item.au_full_name;
 			inputJson['fsd_login_id'] = item.fsd_login_id;
 			inputJson['fsd_class_id'] = item.fsd_class_id;
 			inputJson['fsd_security_amt'] = item.fsd_security_amt;
@@ -336,6 +352,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Uploaded Successfully', 'success');
 					this.myInputVariable.nativeElement.value = '';
+					this.getBulkSecurityDepositListAll();
 				} else {
 					this.common.showSuccessErrorMessage('Error While Uploading File', 'error');
 					this.myInputVariable.nativeElement.value = '';
@@ -360,10 +377,10 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 		var inputJson = {};
 		if (this.currentTab) {
 			inputJson['fsd_id'] = item.fsd_id;
-			inputJson['fsd_in_system_status'] = 1;
+			inputJson['fsd_in_system_status'] = item.fsd_in_system_status ? item.fsd_in_system_status : 0;
 		} else {
 			inputJson['fsd_id'] = item.fsd_id;
-			inputJson['fsd_in_system_status'] = 0;
+			inputJson['fsd_in_system_status'] = item.fsd_in_system_status ? item.fsd_in_system_status : 0;
 		}
 		this.feeService.viewReceipt(inputJson).subscribe((result: any) => {
 			if (result.status === 'ok') {

@@ -3,6 +3,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-transaction-modal',
 	templateUrl: './transaction-modal.component.html',
@@ -223,6 +224,7 @@ export class TransactionModalComponent implements OnInit {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
 					this.dialogRef.close();
+					this.transactionOk.emit(this.feeData);
 				} else {
 					this.common.showSuccessErrorMessage(result.messsage, 'error');
 					this.reset();
@@ -283,9 +285,12 @@ export class TransactionModalComponent implements OnInit {
 			this.feeService.insertFeeTransaction(this.feeTransactionForm2.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+					window.open(result.data, '_blank');
 					this.common.showSuccessErrorMessage(result.message, 'success');
-					this.dialogRef.close();
+					this.dialogRef.close();					
 					this.reset();
+					this.transactionOk.emit(this.feeData);
 				} else {
 					this.common.showSuccessErrorMessage(result.messsage, 'error');
 					this.reset();
