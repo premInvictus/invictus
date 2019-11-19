@@ -351,7 +351,7 @@ export class AdminReturnComponent implements OnInit {
 						var salary_payable = 0;
 						total_earnings = item.emp_salary_detail && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_total_earning : 0;
 
-						total_earnings = Number(total_earnings) + Number(total_deductions);
+						total_earnings = Number(total_earnings);
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions));

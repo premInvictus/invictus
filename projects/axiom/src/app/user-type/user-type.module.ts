@@ -14,7 +14,6 @@ import { LoadingModule } from 'ngx-loading';
 import { TabsModule } from 'ngx-bootstrap';
 import { TreeviewModule } from 'ngx-treeview';
 import { SharedModule } from '../shared-module/share-module.module';
-import { UserCredentialComponent } from './user-credential/user-credential.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -34,8 +33,7 @@ import { UserCredentialComponent } from './user-credential/user-credential.compo
 	],
 	declarations: [
 		SchoolComponent,
-		SchoolDashboardComponent,
-		UserCredentialComponent
+		SchoolDashboardComponent
 	],
 	providers: []
 })

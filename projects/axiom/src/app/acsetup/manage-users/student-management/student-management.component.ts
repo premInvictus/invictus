@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { BreadCrumbService, UserAccessMenuService, NotificationService } from '../../../_services/index';
+import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService, CommonAPIService } from '../../../_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { Element } from './student.model';
+import { ChangePasswordModalComponent } from '../change-password-modal/change-password-modal.component';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+
 
 @Component({
 	selector: 'app-student-management',
@@ -25,7 +28,7 @@ export class StudentManagementComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
 
-	displayedColumns = ['position', 'userId', 'name', 'class', 'section', 'mobile', 'email', 'action'];
+	displayedColumns = ['position', 'userId', 'name', 'class', 'section', 'mobile', 'email', 'status', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 
@@ -33,7 +36,11 @@ export class StudentManagementComponent implements OnInit {
 		private fbuild: FormBuilder,
 		private qelementService: QelementService,
 		private notif: NotificationService,
-		private breadCrumbService: BreadCrumbService) { }
+		private breadCrumbService: BreadCrumbService,
+		private smartService: SmartService,
+		private common: CommonAPIService,
+		public dialog: MatDialog
+	) { }
 
 	ngOnInit() {
 		this.homeUrl = this.breadCrumbService.getUrl();
@@ -41,6 +48,24 @@ export class StudentManagementComponent implements OnInit {
 		this.buildForm();
 		this.getUser();
 		this.tableCollection = true;
+	}
+	toggleStatus(au_login_id, status) {
+		console.log(status);
+		if (status === '1') {
+			status = '0';
+		} else {
+			status = '1';
+		}
+		this.qelementService.changeUserStatus({ au_login_id: au_login_id, au_status: status }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getUser();
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			},
+		);
 	}
 	applyFilter(filterValue: string) {
 		filterValue = filterValue.trim(); // Remove whitespace
@@ -58,63 +83,51 @@ export class StudentManagementComponent implements OnInit {
 		});
 
 	}
-	/*getUser() {
+	getUser() {
 		this.studentdetailArray = [];
 		this.ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		const param: any = {};
-		param.tgam_config_type = '1';
 		if (this.Filter_form.value.au_class_id) {
-			param.tgam_axiom_config_id = this.Filter_form.value.au_class_id;
+			param.class_id = this.Filter_form.value.au_class_id;
 		}
 		if (this.Filter_form.value.au_sec_id) {
-			param.tgam_global_sec_id = this.Filter_form.value.au_sec_id;
+			param.sec_id = this.Filter_form.value.au_sec_id;
 		}
 		param.role_id = '4';
-		param.status = 1;
-		if (this.Filter_form.valid) {
-
-			this.smartService.getSmartToAxiom(param).subscribe((result1: any) => {
-				if (result1 && result1.status === 'ok') {
-					this.common.getMasterStudentDetail({ class_id: result1.data[0].tgam_global_config_id,
-						sec_id: result1.data[0].tgam_global_sec_id, role_id: '4', enrollment_type: '4' }).subscribe(
-						(result: any) => {
-							if (result && result.status === 'ok') {
-								(result: any) => {
-									if (result && result.status === 'ok') {
-										this.studentdetailArray = result.data;
-										let ind = 1;
-										for (const t of this.studentdetailArray) {
-											// tslint:disable-next-line:max-line-length
-											this.ELEMENT_DATA.push({ 
-												position: ind, userId: t.au_username, 
-												name: t.au_full_name, class: t.class_name, 
-												section: t.sec_name, 
-												mobile: t.au_mobile, 
-												email: t.au_email, 
-												action: t 
-											});
-											ind++;
-										}
-										this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-										this.dataSource.paginator = this.paginator;
-										this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-										this.dataSource.sort = this.sort;
-									} else {
-										this.tableCollection = false;
-										this.notif.showSuccessErrorMessage('No records found', 'error');
-									}
-				
-								}
-							}
-						}
-					);
+		param.enrollment_type = '4';
+		this.common.getMasterStudentDetail(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.studentdetailArray = result.data;
+					let ind = 1;
+					for (const t of this.studentdetailArray) {
+						// tslint:disable-next-line:max-line-length
+						this.ELEMENT_DATA.push({
+							position: ind,
+							userId: t.au_username,
+							name: t.au_full_name,
+							class: t.class_name,
+							section: t.sec_name,
+							mobile: t.au_mobile,
+							email: t.au_email,
+							status: t.au_status === '1' ? true : false,
+							action: t
+						});
+						ind++;
+					}
+					this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+					this.dataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.dataSource.sort = this.sort;
+					this.tableCollection = true;
+				} else {
+					this.tableCollection = false;
+					this.notif.showSuccessErrorMessage('No records found', 'error');
 				}
-			})
-		}
-		this.tableCollection = true;
-	}*/
-	getUser() {
+			}
+		);
+	}
+	/*getUser() {
 		this.studentdetailArray = [];
 		this.ELEMENT_DATA = [];
 		const param: any = {};
@@ -137,7 +150,16 @@ export class StudentManagementComponent implements OnInit {
 						let ind = 1;
 						for (const t of this.studentdetailArray) {
 							// tslint:disable-next-line:max-line-length
-							this.ELEMENT_DATA.push({ position: ind, userId: t.au_username, name: t.au_full_name, class: t.class_name, section: t.sec_name, mobile: t.au_mobile, email: t.au_email, action: t });
+							this.ELEMENT_DATA.push({ 
+								position: ind, 
+								userId: t.au_username, 
+								name: t.au_full_name, 
+								class: t.class_name, 
+								section: t.sec_name,
+								mobile: t.au_mobile, 
+								email: t.au_email, 
+								status: t.au_status === '1' ? true : false,
+								action: t });
 							ind++;
 						}
 						this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -153,7 +175,7 @@ export class StudentManagementComponent implements OnInit {
 			);
 		}
 		this.tableCollection = true;
-	}
+	}*/
 	deleteStu(value) {
 		this.studentdetailArray.filter(item => {
 			if (value === item.au_login_id) {
@@ -176,8 +198,10 @@ export class StudentManagementComponent implements OnInit {
 	}
 
 
+	// changed for smart module
 	getClass() {
-		this.qelementService.getClass().subscribe(
+		this.classArray = [];
+		this.smartService.getClass({ class_status: '1' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
@@ -187,19 +211,31 @@ export class StudentManagementComponent implements OnInit {
 	}
 
 	getSectionsByClass(): void {
-		this.qelementService.getSectionsByClass(this.Filter_form.value.au_class_id).subscribe(
+		this.sectionArray = [];
+		this.smartService.getSectionsByClass({ class_id: this.Filter_form.value.au_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
-				} else {
-					this.sectionArray = [];
 				}
 			}
 		);
 	}
+	// end
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
-	deleteComCancel() {  }
+	deleteComCancel() { }
+	openchangepasswordmodal(au_login_id) {
+		const dialogRef = this.dialog.open(ChangePasswordModalComponent, {
+			width: '500px',
+			data: {au_login_id: au_login_id}
+		  });
+	  
+		  dialogRef.afterClosed().subscribe(result => {
+			if(result.changed === '1') {
+				this.notif.showSuccessErrorMessage('Updated Successfully', 'success');
+			}
+		  });
+	}
 
 }
 

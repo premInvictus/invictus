@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
-import { UserCredentialComponent } from './user-credential/user-credential.component';
+import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential/user-credential.component';
 import { AuthGuard } from '../_guards/auth.guard';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 import { MakePaymentComponent } from './../student-fee/make-payment/make-payment.component';

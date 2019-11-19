@@ -1,5 +1,17 @@
 <form [formGroup]="reportFilterForm">
+
+
+
   <div class="row">
+    <div class="col-2">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Security Deposit</mat-label>
+        <mat-select formControlName="sd_type_value" [placeholder]="valueLabel" (selectionChange)="getSecurityDeposit($event)">
+          <mat-option [value]="1">Current Session</mat-option>
+          <mat-option [value]="2">Previous Session</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <div class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Class</mat-label>
@@ -10,7 +22,7 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <div *ngIf="filterFlag" class="col-2">
+    <!-- <div *ngIf="filterFlag" class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Section</mat-label>
         <mat-select formControlName="hidden_value" [placeholder]="valueLabel">
@@ -18,12 +30,12 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
-    <div *ngIf="filterFlag" class="col-2">
+    </div> -->
+    <!-- <div *ngIf="filterFlag" class="col-2">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>From Date</mat-label>
         <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
-        (blur)="getFromDate($event.target.value)" />
+          (blur)="getFromDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
@@ -32,22 +44,22 @@
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>To Date</mat-label>
         <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
-        (blur)="getToDate($event.target.value)" />
+          (blur)="getToDate($event.target.value)" />
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
-    </div>
-    <div *ngIf="filterFlag" class="col-4">
+    </div> -->
+    <div *ngIf="filterFlag" class="col-2">
       <div class="margin-top-10">
-        <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
+        <!-- <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">
           filter
         </button>
         <button class="sort-bt" mat-raised-button (click)="openSort()">
           sort
-        </button>
+        </button> -->
         &nbsp;
         <button class="btn-success text-uppercase" mat-raised-button
-          (click)="getSecurityFeeReport(reportFilterForm.value)">
+          (click)="generate()">
           generate
         </button>
       </div>
@@ -63,6 +75,6 @@
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-      No Records Found
+    No Records Found
   </div>
 </div>

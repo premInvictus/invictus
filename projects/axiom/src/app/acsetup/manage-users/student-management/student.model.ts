@@ -6,5 +6,6 @@ export interface Element {
 	section: string;
 	mobile: string;
 	email: string;
+	status: any;
 	action: any;
 }

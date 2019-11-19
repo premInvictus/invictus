@@ -215,7 +215,7 @@ export class PrintIdCardComponent implements OnInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="../../../../../../assets/css/idcardstyle1.css">' +
-			'<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
+			'<link rel="stylesheet" href=""' +
 			'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
 			'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
 		popupWin.document.close();

@@ -45,10 +45,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "1", name: 'Master' },
 		{ id: "2", name: 'Salary Compopnent' },
 		{ id: "3", name: 'Salary Structure' },
+		{ id: "4", name: 'Leave Management' },
 	];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
+	];
+	proportionatedArray = [
+		{ id: "1", name: 'Yes' },
+		{ id: "2", name: 'No' },
 	];
 	formatTypeArray = [
 		{ id: "1", name: 'Addition' },
@@ -109,6 +114,16 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: '',
 				name: '',
 				ss_component_type: ''
+			})
+		},
+		{
+			formGroup: this.fbuild.group({
+				id: '',
+				name: '',
+				count: '',
+				leave_percentage: '',
+				proportionated_leave: '',
+				status: ''
 			})
 		},
 		];
@@ -223,6 +238,33 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+	getLeaveManagement() {
+		this.CONFIG_ELEMENT_DATA = [];
+		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+		this.commonService.getLeaveManagement().subscribe((result: any) => {
+			if (result) {
+				if (this.configValue === '4') {
+					let pos = 1;
+					for (const item of result) {
+						this.CONFIG_ELEMENT_DATA.push({
+							position: pos,
+							name: item.leave_name,
+							count: item.leave_count,
+							leave_percentage: item.leave_percentage,
+							leave_proportionated: item.leave_proportionated,
+							status: item.leave_status,
+							action: item
+						});
+						pos++;
+					}
+					this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+					this.configDataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.configDataSource.sort = this.sort;
+				}
+			}
+		});
+	}
 	resetForm(value) {
 		this.formGroupArray[value - 1].formGroup.reset();
 		this.setupUpdateFlag = false;
@@ -308,6 +350,16 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				ss_component_type: tableName
 			});
 		}
+		else if (Number(this.configValue) === 4) {
+			this.setupUpdateFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				id: value.leave_id,
+				name: value.leave_name,
+				count: value.leave_count,
+				leave_percentage: value.leave_percentage,
+				proportionated_leave: value.leave_proportionated,
+			});
+		}
 	}
 	loadConfiguration(event) {
 		this.searchtoggle = false;
@@ -334,6 +386,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.getSalaryComponent();
 			this.getSalaryStructure();
 			this.displayedColumns = ['position', 'name', 'component_type', 'status', 'action'];
+			this.configFlag = true;
+		} else if (Number(this.configValue) === 4) {
+			this.getLeaveManagement();
+			this.displayedColumns = ['position', 'name', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
 			this.configFlag = true;
 		}
 	}
@@ -406,6 +462,16 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						ss_status: '1'
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
+					break;
+				case '4':
+					this.setupDetails = {
+						leave_name: this.formGroupArray[value - 1].formGroup.value.name,
+						leave_count: this.formGroupArray[value - 1].formGroup.value.count,
+						leave_percentage: this.formGroupArray[value - 1].formGroup.value.leave_percentage,
+						leave_proportionated: this.getName(this.formGroupArray[value - 1].formGroup.value.proportionated_leave, this.proportionatedArray),
+						leave_status: '1'
+					};
+					this.addEntry(this.setupDetails, 'insertLeaveManagement', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
 			}
 		}
@@ -532,6 +598,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.resetForm(this.configValue);
 				} else if (this.configValue === '3') {
 					this.getSalaryStructure();
+					this.resetForm(this.configValue);
+				}
+				else if (this.configValue === '4') {
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Inserted Successfully', 'success');

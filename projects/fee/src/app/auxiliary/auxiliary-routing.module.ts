@@ -7,6 +7,8 @@ import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywi
 import { AddFamilyComponent } from './add-family/add-family.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
 import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
+import { SecurityDepositComponent } from './security-deposit/security-deposit.component';
+import { DropoutComponent } from './dropout/dropout.component';
 
 
 const routes: Routes = [
@@ -18,6 +20,8 @@ const routes: Routes = [
 	{ path: 'familywise-fee-receipt', component: FamilywiseFeeRecieptComponent},
 	{ path: 'family-information', component: FamilyInformationComponent},
 	{ path: 'family-transaction-entry', component: FamilyTransactionEntryComponent},
+	{ path: 'security-deposit', component: SecurityDepositComponent},
+	{ path: 'dropout', component: DropoutComponent},
 ];
 
 @NgModule({
