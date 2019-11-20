@@ -347,4 +347,7 @@ export class CommonAPIService {
 	getDepartmentLeave() {
 		return this.http.get(environment.apiHRUrl + '/department-leave/getDepartmentLeave');
 	}
+	getCommunication() {
+		return this.http.get(environment.apiHRUrl + '/communication/getCommunication');
+	}
 }
