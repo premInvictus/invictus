@@ -24,7 +24,8 @@ import 'jspdf-autotable';
 	styleUrls: ['./drop-out-report.component.css']
 })
 export class DropoutReportComponent implements OnInit {
-
+	totalRow: any;
+	gridHeight : any;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -76,6 +77,16 @@ export class DropoutReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<center><b>' + this.totalRow[columnId] + '<b></center>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -279,8 +290,8 @@ export class DropoutReportComponent implements OnInit {
 				field: 'fh_amount',
 				sortable: true,
 				filterable: true,
-				formatter: this.checkFeeFormatter,
-				groupTotalsFormatter: this.sumTotalsFormatter
+				// formatter: this.checkFeeFormatter,
+				// groupTotalsFormatter: this.sumTotalsFormatter
 			},
 			{
 				id: 'refund_date',
@@ -347,6 +358,32 @@ export class DropoutReportComponent implements OnInit {
 					this.dataset.push(obj);
 					index++;
 				}
+				this.totalRow = {};
+				const obj3: any = {};
+				obj3['id'] = 'footer';
+				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['invoice_created_date'] = this.common.htmlToText('');
+				obj3['stu_admission_no'] = '';
+				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
+				obj3['invoice_no'] = '';
+				obj3['receipt_no'] = '';
+				obj3['fh_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
+				obj3['refund_date'] = this.common.htmlToText('');
+				obj3['refund_status'] = '';
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));	
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+				//this.dataset.push(obj3);
+
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;

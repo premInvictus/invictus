@@ -38,6 +38,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	firstHeaderArray: any[] = [];
 	secondHeaderArray: any[] = [];
 	configArray: any[] = [];
+	departmentArray: any[] = [];
+	leaveManagementArray: any[] = [];
+	dptFormGroupArray: any[] = [];
 	configFlag = false;
 	calculationFlag = false;
 	multipleDropdownName: any;
@@ -46,6 +49,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "2", name: 'Salary Compopnent' },
 		{ id: "3", name: 'Salary Structure' },
 		{ id: "4", name: 'Leave Management' },
+		{ id: "5", name: 'Department Wise Leave' },
 	];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
@@ -69,7 +73,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private erpCommonService: ErpCommonService,
-		public commonService: CommonAPIService
+		public commonService: CommonAPIService,
+		public sisService: SisService,
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -126,12 +131,29 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				status: ''
 			})
 		},
+		{
+			formGroup: this.fbuild.group({
+				id: '',
+				department_id: '',
+				departmentwise_leave: '',
+				status: ''
+			})
+		},
 		];
 	}
 	getGenre(that) {
 
 	}
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+			} else {
+				this.departmentArray = [];
+			}
 
+		});
+	}
 	// get genre list
 	getConfiguration(event) {
 		if (this.formGroupArray[this.configValue - 1].formGroup.value.type === '6') {
@@ -239,10 +261,12 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getLeaveManagement() {
+		this.leaveManagementArray = [];
 		this.CONFIG_ELEMENT_DATA = [];
 		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
 		this.commonService.getLeaveManagement().subscribe((result: any) => {
 			if (result) {
+				this.leaveManagementArray = result;
 				if (this.configValue === '4') {
 					let pos = 1;
 					for (const item of result) {
@@ -253,6 +277,37 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							leave_percentage: item.leave_percentage,
 							leave_proportionated: item.leave_proportionated,
 							status: item.leave_status,
+							action: item
+						});
+						pos++;
+					}
+					this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+					this.configDataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.configDataSource.sort = this.sort;
+				}
+			}
+		});
+	}
+	getleaveDepartment() {
+		this.CONFIG_ELEMENT_DATA = [];
+		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+		this.commonService.getDepartmentLeave().subscribe((result: any) => {
+			if (result) {
+				if (this.configValue === '5') {
+					let pos = 1;
+					const tableName = {};
+					for (const item of result) {
+						let tableName = '';
+						for (const det of item.departmentwise_leave) {
+							tableName = tableName + det.leave_name + ' : ' + + det.leave_credit_count + ',';
+						}
+						tableName = tableName.substring(0, tableName.length - 1)
+						this.CONFIG_ELEMENT_DATA.push({
+							position: pos,
+							name: item.department_id.name,
+							leave_credit_count: tableName,
+							status: item.departmentwise_leave_status,
 							action: item
 						});
 						pos++;
@@ -298,10 +353,19 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			if (value.ss_status === '1') {
 				return true;
 			}
+		} else if (Number(this.configValue) === 4) {
+			if (value.leave_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 5) {
+			if (value.departmentwise_leave_status === '1') {
+				return true;
+			}
 		}
 	}
 
 	formEdit(value: any) {
+		this.dptFormGroupArray = [];
 		if (Number(this.configValue) === 1) {
 			this.setupUpdateFlag = true;
 			if (value.type.calculation_type) {
@@ -349,15 +413,34 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				name: value.ss_name,
 				ss_component_type: tableName
 			});
-		}
-		else if (Number(this.configValue) === 4) {
+		} else if (Number(this.configValue) === 4) {
 			this.setupUpdateFlag = true;
+			if (value.leave_proportionated === 'Yes') {
+				value.leave_proportionated = '1';
+			} else {
+				value.leave_proportionated = '2';
+			}
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				id: value.leave_id,
 				name: value.leave_name,
 				count: value.leave_count,
 				leave_percentage: value.leave_percentage,
 				proportionated_leave: value.leave_proportionated,
+			});
+		} else if (Number(this.configValue) === 5) {
+			this.setupUpdateFlag = true;
+			for (let j = 0; j < value.departmentwise_leave.length; j++) {
+				this.dptFormGroupArray.push({
+					formGroup: this.fbuild.group({
+						leave_id: value.departmentwise_leave[j]['leave_id'],
+						leave_name: value.departmentwise_leave[j]['leave_name'],
+						leave_credit_count: value.departmentwise_leave[j]['leave_credit_count']
+					})
+				});
+			}
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				id: value.dept_id,
+				department_id: value.department_id.id,
 			});
 		}
 	}
@@ -392,6 +475,25 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['position', 'name', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
 			this.configFlag = true;
 		}
+		else if (Number(this.configValue) === 5) {
+			this.getDepartment();
+			this.getLeaveManagement();
+			this.getleaveDepartment();
+			this.displayedColumns = ['position', 'name', 'leave_credit_count', 'status', 'action'];
+			this.configFlag = true;
+		}
+	}
+	getDepartmentLeave() {
+		this.dptFormGroupArray = [];
+		for (let j = 0; j < this.leaveManagementArray.length; j++) {
+			this.dptFormGroupArray.push({
+				formGroup: this.fbuild.group({
+					leave_id: this.leaveManagementArray[j]['leave_id'],
+					leave_name: this.leaveManagementArray[j]['leave_name'],
+					leave_credit_count: ''
+				})
+			});
+		}
 	}
 	getCalculationValue(event) {
 		if (event.value === '2') {
@@ -416,6 +518,14 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			case '3':
 				data.ss_status = '5';
 				this.deleteEntry(data, 'updateSalaryStructure', 'data');
+				break;
+			case '4':
+				data.leave_status = '5';
+				this.deleteEntry(data, 'updateLeaveManagement', 'data');
+				break;
+			case '5':
+				data.departmentwise_leave_status = '5';
+				this.deleteEntry(data, 'updateDepartmentLeave', 'data');
 				break;
 		}
 	}
@@ -471,7 +581,23 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						leave_proportionated: this.getName(this.formGroupArray[value - 1].formGroup.value.proportionated_leave, this.proportionatedArray),
 						leave_status: '1'
 					};
-					this.addEntry(this.setupDetails, 'insertLeaveManagement', this.formGroupArray[value - 1].formGroup.value.type);
+					this.addEntry(this.setupDetails, 'insertLeaveManagement', 'data');
+					break;
+				case '5':
+					let temp_arr = [];
+					for (var i = 0; i < this.leaveManagementArray.length; i++) {
+						temp_arr.push(this.dptFormGroupArray[i].formGroup.value);
+					}
+					this.setupDetails = {
+						department_id: {
+							id: this.formGroupArray[value - 1].formGroup.value.department_id,
+							name: this.getDepartmentName(this.formGroupArray[value - 1].formGroup.value.department_id)
+						},
+						departmentwise_leave: temp_arr,
+						departmentwise_leave_status: '1'
+					};
+					console.log(this.setupDetails);
+					this.addEntry(this.setupDetails, 'insertDepartmentLeave', 'data');
 					break;
 			}
 		}
@@ -526,6 +652,34 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.updateEntry(this.setupDetails, 'updateSalaryStructure', this.formGroupArray[value - 1].formGroup.value.type);
 					this.setupUpdateFlag = false;
 					break;
+				case '4':
+					this.setupDetails = {
+						leave_name: this.formGroupArray[value - 1].formGroup.value.name,
+						leave_count: this.formGroupArray[value - 1].formGroup.value.count,
+						leave_percentage: this.formGroupArray[value - 1].formGroup.value.leave_percentage,
+						leave_proportionated: this.getName(this.formGroupArray[value - 1].formGroup.value.proportionated_leave, this.proportionatedArray),
+						leave_status: '1',
+						leave_id: this.formGroupArray[value - 1].formGroup.value.id
+					};
+					this.updateEntry(this.setupDetails, 'updateLeaveManagement', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
+					break;
+				case '5':
+					let temp_arr = [];
+					for (var i = 0; i < this.leaveManagementArray.length; i++) {
+						temp_arr.push(this.dptFormGroupArray[i].formGroup.value);
+					}
+					this.setupDetails = {
+						department_id: {
+							id: this.formGroupArray[value - 1].formGroup.value.department_id,
+							name: this.getDepartmentName(this.formGroupArray[value - 1].formGroup.value.department_id)
+						},
+						departmentwise_leave: temp_arr,
+						departmentwise_leave_status: '1',
+						dept_id: this.formGroupArray[value - 1].formGroup.value.id
+					};
+					this.updateEntry(this.setupDetails, 'updateDepartmentLeave', 'data');
+					break;
 			}
 		}
 	}
@@ -555,8 +709,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.getSalaryComponent();
 				}
 			});
-		}
-		else if (Number(this.configValue) === 3) {
+		} else if (Number(this.configValue) === 3) {
 			if (value.ss_status === '1') {
 				value.ss_status = '0';
 			} else {
@@ -566,6 +719,30 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				if (result) {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
 					this.getSalaryStructure();
+				}
+			});
+		} else if (Number(this.configValue) === 4) {
+			if (value.leave_status === '1') {
+				value.leave_status = '0';
+			} else {
+				value.leave_status = '1';
+			}
+			this.commonService.updateLeaveManagement(value).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getLeaveManagement();
+				}
+			});
+		} else if (Number(this.configValue) === 5) {
+			if (value.departmentwise_leave_status === '1') {
+				value.departmentwise_leave_status = '0';
+			} else {
+				value.departmentwise_leave_status = '1';
+			}
+			this.commonService.updateDepartmentLeave(value).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getleaveDepartment();
 				}
 			});
 		}
@@ -579,6 +756,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.getSalaryComponent();
 				} else if (this.configValue === '3') {
 					this.getSalaryStructure();
+				} else if (this.configValue === '4') {
+					this.getLeaveManagement();
+				} else if (this.configValue === '5') {
+					this.dptFormGroupArray = [];
+					this.getleaveDepartment();
 				}
 				this.commonService.showSuccessErrorMessage('Delete Successfully', 'success');
 			}
@@ -599,8 +781,12 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '3') {
 					this.getSalaryStructure();
 					this.resetForm(this.configValue);
-				}
-				else if (this.configValue === '4') {
+				} else if (this.configValue === '4') {
+					this.getLeaveManagement();
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '5') {
+					this.getleaveDepartment();
+					this.dptFormGroupArray = [];
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Inserted Successfully', 'success');
@@ -624,6 +810,13 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '3') {
 					this.getSalaryStructure();
 					this.resetForm(this.configValue);
+				} else if (this.configValue === '4') {
+					this.getLeaveManagement();
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '5') {
+					this.getleaveDepartment();
+					this.dptFormGroupArray = [];
+					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Updated Successfully', 'success');
 			} else {
@@ -637,6 +830,13 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			return this.congigArray[findIndex].name;
 		}
 	}
+	getDepartmentName(dept_id) {
+		const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dept_id));
+		if (findIndex !== -1) {
+			return this.departmentArray[findIndex].dept_name;
+		}
+	}
+
 	gettypeName(type_id) {
 		const findIndex = this.typeArray.findIndex(f => Number(f.id) === Number(type_id));
 		if (findIndex !== -1) {

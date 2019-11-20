@@ -24,7 +24,8 @@ import 'jspdf-autotable';
 	styleUrls: ['./security-deposit-report.component.css']
 })
 export class SecurityDepositReportComponent implements OnInit {
-
+	gridHeight: any;
+	totalRow: any;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -76,6 +77,16 @@ export class SecurityDepositReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+
+	updateTotalRow(grid: any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<center><b>' + this.totalRow[columnId] + '<b></center>';
+		}
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
@@ -257,22 +268,22 @@ export class SecurityDepositReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'invoice_no',
-				name: 'Invoice No.',
-				field: 'invoice_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'receipt_no',
-				name: 'Receipt No.',
-				field: 'receipt_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
+			// {
+			// 	id: 'invoice_no',
+			// 	name: 'Invoice No.',
+			// 	field: 'invoice_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
+			// {
+			// 	id: 'receipt_no',
+			// 	name: 'Receipt No.',
+			// 	field: 'receipt_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
 			{
 				id: 'fh_amount',
 				name: 'Fee Amount',
@@ -329,7 +340,7 @@ export class SecurityDepositReportComponent implements OnInit {
 					obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 						repoArray[Number(index)]['stu_admission_no'] : '-';
 					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-					if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
+					if (repoArray[Number(index)]['stu_sec_name']) {
 						obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 					} else {
@@ -341,11 +352,12 @@ export class SecurityDepositReportComponent implements OnInit {
 						repoArray[Number(index)]['receipt_no'] : '-';
 					obj['fh_amount'] = item['fh_amount'] ?
 						Number(item['fh_amount']) : 0;
-					obj['refund_date'] = item['fsd_created_date'] ? item['fsd_created_date'] : '-';
-					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Expired' : 'Pending';
+					obj['refund_date'] = item['fsd_status'] === '2' ? item['fsd_created_date'] : '-';
+					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Forfeited' : 'Active';
 					this.dataset.push(obj);
 					index++;
 				}
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
 				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
@@ -358,7 +370,20 @@ export class SecurityDepositReportComponent implements OnInit {
 				obj3['fh_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
 				obj3['refund_date'] = this.common.htmlToText('');
 				obj3['refund_status'] = '';	
-				this.dataset.push(obj3);
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
+				//this.dataset.push(obj3);
+
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+
 				console.log(obj3);
 				this.tableFlag = true;
 			} else {
@@ -381,10 +406,12 @@ export class SecurityDepositReportComponent implements OnInit {
 
 	collapseAllGroups() {
 		this.dataviewObj.collapseAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 
 	expandAllGroups() {
 		this.dataviewObj.expandAllGroups();
+		this.updateTotalRow(this.angularGrid.slickGrid);
 	}
 	onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
@@ -903,22 +930,22 @@ export class SecurityDepositReportComponent implements OnInit {
 					collapsed: false,
 				},
 			},
-			{
-				id: 'invoice_no',
-				name: 'Invoice No.',
-				field: 'invoice_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
-			{
-				id: 'receipt_no',
-				name: 'Receipt No.',
-				field: 'receipt_no',
-				sortable: true,
-				filterable: true,
-				formatter: this.checkReceiptFormatter
-			},
+			// {
+			// 	id: 'invoice_no',
+			// 	name: 'Invoice No.',
+			// 	field: 'invoice_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
+			// {
+			// 	id: 'receipt_no',
+			// 	name: 'Receipt No.',
+			// 	field: 'receipt_no',
+			// 	sortable: true,
+			// 	filterable: true,
+			// 	formatter: this.checkReceiptFormatter
+			// },
 			{
 				id: 'fh_amount',
 				name: 'Fee Amount',
@@ -975,7 +1002,7 @@ export class SecurityDepositReportComponent implements OnInit {
 					obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 						repoArray[Number(index)]['stu_admission_no'] : '-';
 					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
-					if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
+					if (repoArray[Number(index)]['stu_sec_name']) {
 						obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 							repoArray[Number(index)]['stu_sec_name'];
 					} else {
@@ -987,12 +1014,12 @@ export class SecurityDepositReportComponent implements OnInit {
 						repoArray[Number(index)]['receipt_no'] : '-';
 					obj['fh_amount'] = item['fh_amount'] ?
 						Number(item['fh_amount']) : 0;
-					obj['refund_date'] = item['fsd_created_date'] ? item['fsd_created_date'] : '-';
-					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Expired' : 'Pending';
+					obj['refund_date'] = item['fsd_status'] === '2' ? item['fsd_created_date'] : '-';
+					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Forfeited' : 'Active';
 					this.dataset.push(obj);
 					index++;
 				}
-
+				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
 				obj3['srno'] = this.common.htmlToText('<b>Grand Total</b>');
@@ -1006,9 +1033,19 @@ export class SecurityDepositReportComponent implements OnInit {
 					new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
 				obj3['refund_date'] = this.common.htmlToText('');
 				obj3['refund_status'] = '';	
-				this.dataset.push(obj3);					
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
+			//	this.dataset.push(obj3);					
 
-
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
 				this.tableFlag = true;
 			} else {
 				this.tableFlag = true;
