@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
 import { AdminReturnComponent } from './admin-return/admin-return.component';
 import { HrSharedModule } from '../hr-shared/hr-shared.module';
+import { HrEmpMarkAttendanceComponent } from './hr-emp-mark-attendance/hr-emp-mark-attendance.component';
 
 @NgModule({
   imports: [
@@ -11,6 +12,6 @@ import { HrSharedModule } from '../hr-shared/hr-shared.module';
     AuxiliariesRoutingModule,
     HrSharedModule 
   ],
-  declarations: [AdminReturnComponent]
+  declarations: [AdminReturnComponent, HrEmpMarkAttendanceComponent]
 })
 export class AuxiliariesModule { }
