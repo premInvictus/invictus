@@ -23,6 +23,8 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('zeroPaginator') zeroPaginator: MatPaginator;
 	@ViewChild('transactionModal') transactionModal;
+	dropoutTotal :any;
+	dropoutZeroTotal :any;
 	displayedColumns: string[] = [];
 	displayedZeroColumns:string[] = [];
 	DROP_OUT_ELEMENT_DATA: DropoutElement[] = [];
@@ -138,6 +140,7 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 				let total = 0;
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.reportData.length);
+				this.dropoutTotal = Number(result.data.total_amount).toLocaleString('en-IN');
 				for (const item of temparray) {
 					this.DROP_OUT_ELEMENT_DATA.push({
 						srno: pos,
@@ -153,17 +156,17 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 
-				var lastRow = {
-					srno: 'Total',
-					stu_enrollment_no: '',
-					stu_full_name: '',
-					stu_class_name: '',
-					stu_security_amt: '<b>' + Number(total).toLocaleString('en-IN') + '</b>',
-					stu_security_session: '',
-					security_status: '',
-					action: ''
-				}
-				this.DROP_OUT_ELEMENT_DATA.push(lastRow);
+				// var lastRow = {
+				// 	srno: 'Total',
+				// 	stu_enrollment_no: '',
+				// 	stu_full_name: '',
+				// 	stu_class_name: '',
+				// 	stu_security_amt: '<b>' + Number(total).toLocaleString('en-IN') + '</b>',
+				// 	stu_security_session: '',
+				// 	security_status: '',
+				// 	action: ''
+				// }
+				// this.DROP_OUT_ELEMENT_DATA.push(lastRow);
 				
 
 				this.dataSource = new MatTableDataSource<DropoutElement>(this.DROP_OUT_ELEMENT_DATA);
@@ -185,6 +188,7 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 				let total = 0;
 				const temparray = result.data.reportData ? result.data.reportData : [];
 				this.totalRecords = Number(result.data.reportData.length);
+				this.dropoutZeroTotal = Number(result.data.total_amount).toLocaleString('en-IN');
 				for (const item of temparray) {
 					this.DROP_OUT_ZERO_ELEMENT_DATA.push({
 						srno: pos,
@@ -200,17 +204,17 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 
-				var lastRow = {
-					srno: 'Total',
-					stu_enrollment_no: '',
-					stu_full_name: '',
-					stu_class_name: '',
-					stu_security_amt: '<b>' + Number(total).toLocaleString('en-IN') + '</b>',
-					stu_security_session: '',
-					security_status: '',
-					action: ''
-				}
-				this.DROP_OUT_ZERO_ELEMENT_DATA.push(lastRow);
+				// var lastRow = {
+				// 	srno: 'Total',
+				// 	stu_enrollment_no: '',
+				// 	stu_full_name: '',
+				// 	stu_class_name: '',
+				// 	stu_security_amt: '<b>' + Number(total).toLocaleString('en-IN') + '</b>',
+				// 	stu_security_session: '',
+				// 	security_status: '',
+				// 	action: ''
+				// }
+				// this.DROP_OUT_ZERO_ELEMENT_DATA.push(lastRow);
 				
 
 				this.zeroDataSource = new MatTableDataSource<DropoutZeroElement>(this.DROP_OUT_ZERO_ELEMENT_DATA);
