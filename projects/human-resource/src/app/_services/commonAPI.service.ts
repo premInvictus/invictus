@@ -336,4 +336,15 @@ export class CommonAPIService {
 	getLeaveManagement() {
 		return this.http.get(environment.apiHRUrl + '/leave-management/getLeaveManagement');
 	}
+	insertDepartmentLeave(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/department-leave/insertDepartmentLeave', value);
+	}
+	updateDepartmentLeave(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/department-leave/updateDepartmentLeave', value);
+	}
+	getDepartmentLeave() {
+		return this.http.get(environment.apiHRUrl + '/department-leave/getDepartmentLeave');
+	}
 }
