@@ -325,4 +325,15 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/admin-return/insertAdminReturn', value);
 	}
+	insertLeaveManagement(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/leave-management/insertLeaveManagement', value);
+	}
+	updateLeaveManagement(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/leave-management/updateLeaveManagement', value);
+	}
+	getLeaveManagement() {
+		return this.http.get(environment.apiHRUrl + '/leave-management/getLeaveManagement');
+	}
 }
