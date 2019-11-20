@@ -101,5 +101,10 @@
     "../projects/human-resource/src/app/employee-master/employee-master.module.ts",
     "../projects/human-resource/src/app/payroll-master/payroll-master.module.ts",
     "../projects/human-resource/src/app/hrusertype/hrusertype.module.ts",
+    "../projects/miscellaneous/src/app/misc-configure/misc-configure.module.ts",
+    "../projects/miscellaneous/src/app/misc-reports/reports.module.ts",    
+    "../projects/miscellaneous/src/app/file-management/file-management.module.ts",
+    "../projects/miscellaneous/src/app/communication/communication.module.ts",
+    "../projects/miscellaneous/src/app/miscusertype/miscusertype.module.ts"
   ]
 }
