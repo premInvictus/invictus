@@ -241,20 +241,20 @@
                                                             *ngFor="let item of leaveManagementArray; let i= index;">
                                                             <form [formGroup]="dptFormGroupArray[i].formGroup">
                                                                 <div class="row">
-                                                                <div class="col-6 middle">
-                                                                    {{dptFormGroupArray[i].formGroup.value.leave_name}}
+                                                                    <div class="col-6 heading-center">
+                                                                        {{dptFormGroupArray[i].formGroup.value.leave_name}}
+                                                                    </div>
+                                                                    <div class="col-6 heading-center">
+                                                                        <mat-form-field class="form-field"
+                                                                            appearance="outline">
+                                                                            <input type="number" matInput
+                                                                                placeholder="Leave Count"
+                                                                                class="text-capitalize" type="text"
+                                                                                formControlName="leave_credit_count"
+                                                                                required>
+                                                                        </mat-form-field>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="col-6">
-                                                                    <mat-form-field class="form-field"
-                                                                        appearance="outline">
-                                                                        <input type="number" matInput
-                                                                            placeholder="Leave Count"
-                                                                            class="text-capitalize" type="text"
-                                                                            formControlName="leave_credit_count"
-                                                                            required>
-                                                                    </mat-form-field>
-                                                                </div>
-                                                            </div>
                                                             </form>
                                                         </div>
                                                     </ng-container>
@@ -375,20 +375,20 @@
                                                                             </ng-container>
 
                                                                             <ng-container
-                                                                            matColumnDef="leave_credit_count">
-                                                                            <th mat-header-cell *matHeaderCellDef
-                                                                                mat-sort-header>
-                                                                                Department Wise leave 
-                                                                            </th>
-                                                                            <td class="left" mat-cell
-                                                                                *matCellDef="let item">
-                                                                                <span
-                                                                                    *ngIf="item.leave_credit_count">{{ item.leave_credit_count }}</span>
-                                                                                <span
-                                                                                    *ngIf="!item.leave_credit_count">-</span>
-                                                                            </td>
-                                                                        </ng-container>
-                                                                            
+                                                                                matColumnDef="leave_credit_count">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Department Wise leave
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.leave_credit_count">{{ item.leave_credit_count }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.leave_credit_count">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+
                                                                             <ng-container
                                                                                 matColumnDef="calculation_type">
                                                                                 <th mat-header-cell *matHeaderCellDef

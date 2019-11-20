@@ -114,6 +114,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		});
 	}
 	renderData() {
+		this.conStatus = '';
 		this.concessionArray = [];
 		this.stoppageArray = [];
 		this.slabArray = [];
@@ -123,8 +124,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.modeFlag = false;
 		this.terminationFlag = false;
 		this.existFlag = false;
-		this.conStatus = this.feeDet.accd_fcg_status;
 		this.concession_document = this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
+		this.documentPath = this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
 		this.concessionArray.push({
 			ed_docreq_id: 0,
 			imgName: this.concession_document
@@ -163,8 +164,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.enableMode(this.feeDet.accd_transport_mode);
 			this.getStoppages(this.feeDet.accd_tr_id);
 			this.getSlab(this.feeDet.accd_tsp_id);
-			this.conDescFlag = this.feeDet.accd_fcg_id ? true : false;
-			console.log('ghjhyyyugy', this.conDescFlag);
+			if (this.feeDet.accd_fcg_id > 0) {
+				this.conStatus = this.feeDet.accd_fcg_status;
+				this.conDescFlag = true;
+			} else {
+				this.conDescFlag = false;
+			}
 			this.accountsForm.patchValue({
 				accd_id: this.feeDet.accd_id,
 				accd_login_id: this.feeDet.accd_login_id,
@@ -191,7 +196,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_ses_id: this.feeDet.ses_id,
 				accd_status: this.feeDet.accd_status
 			});
-			//this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
+			this.setDesc({ value: this.feeDet.accd_fcg_id });
 			this.slabModel = this.feeDet.accd_ts_id;
 		} else {
 			this.accountsForm.reset();
@@ -211,6 +216,20 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.conDesc = this.conGroupArray[cindex].fcg_description;
 			this.conDescFlag = true;
 		}
+	}
+	setDesc(event) {
+		console.log('sss');
+		this.conDesc = '';
+		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 0 }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.conGroupArray = result.data;
+				const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
+				if (cindex !== -1) {
+					this.conDesc = this.conGroupArray[cindex].fcg_description;
+				}
+			}
+		});
+
 	}
 	getFeeOtherCategory() {
 		this.feeService.getFeeOthers({}).subscribe((result: any) => {
@@ -400,7 +419,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			console.log('ekekekekek', this.accountsForm.value.accd_fcg_id);
 			if (!this.accountsForm.value.accd_reason_id ||
 				!this.accountsForm.value.accd_remark_id) {
 				this.validateFlag = false;
@@ -441,7 +459,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
-					// this.getFeeAccount(this.feeLoginId);
+					 this.renderData();
 				}
 			});
 		}
@@ -478,6 +496,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			};
 			this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.renderData();
 				}
 			});
 		}

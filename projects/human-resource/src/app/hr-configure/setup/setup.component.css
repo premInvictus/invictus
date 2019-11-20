@@ -13,3 +13,8 @@
     text-align: left !important;
     padding-left: 5px !important;
 }
+.heading-center{
+    line-height: 4;
+    text-align: center;
+}
+
