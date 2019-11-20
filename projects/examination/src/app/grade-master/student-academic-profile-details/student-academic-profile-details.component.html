@@ -1,17 +1,46 @@
-<app-student-academic-profile [loginId]="lastRecordId" (next)="next($event)"
-(prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"></app-student-academic-profile>
+<app-student-academic-profile [loginId]="lastRecordId" (next)="next($event)" (prev)="prev($event)"
+  (first)="first($event)" (last)="last($event)" (key)="key($event)"></app-student-academic-profile>
 <div class="row">
   <div class="col-7">
     <mat-card class="card-height-400">
-      <div class="row">
-        <div class="col-6">
-          <span class="font-bold font-size-20">Performance</span>
+      <mat-card-title>
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Performance</span>
+          </div>
+          <div class="col-6 text-right">
+            <button mat-button><span>Year Wise</span></button>
+            <button mat-button class="margin-left-10 btn-blue font-white"><span>Current Session</span></button>
+          </div>
         </div>
-        <div class="col-6 text-right">
-          <button mat-button><span>Year Wise</span></button>
-          <button mat-button class="margin-left-10 btn-blue font-white"><span>Current Session</span></button>
+      </mat-card-title>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-12">
+            <mat-tab-group (selectedTabChange)="tabChanged($event)">
+              <mat-tab *ngFor="let tab of termsArray; let index = index" [label]="tab.name">
+                <ng-template matTabContent>
+                  <div class="container-outline__dashyellow background-white" *ngIf="!performanceNoRecord">
+                    <app-common-dynamic-chart [options]="sessionwisePerformance">
+                    </app-common-dynamic-chart>
+                  </div>
+                </ng-template>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
         </div>
-      </div>
+        <ng-container *ngIf="performanceNoRecord">
+          <div class="text-center">
+            <img
+              [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+              height="150px">
+            <br><br>
+            <span class="font-size-20 font-bold font-color-brown">
+              No Record Found
+            </span>
+          </div>
+        </ng-container>
+      </mat-card-content>
     </mat-card>
   </div>
   <div class="col-5 remove-col-padding-left">
@@ -29,7 +58,7 @@
             <span class="font-bold font-size-14">{{currentExam?.eaw_created_date | date: 'd-MMM-y' }}</span>
           </div>
         </div>
-        <div class="row"> 
+        <div class="row">
           <div class="col-5">
             <span class="font-size-14">Activity Name</span> <span class="float-right">:</span>
           </div>
@@ -70,15 +99,13 @@
           </div>
         </div>
         <div class="row margin-top-10">
-            <div class="col-12 remove-col-padding">
-              <span class="font-size-14 font-bold">Badges</span>
-              <div class="text-left margin-top-15">
-                <img
-                  [src]="getbadges(currentExam?.eaw_event_level)"
-                  height="55px">
-              </div>
+          <div class="col-12 remove-col-padding">
+            <span class="font-size-14 font-bold">Badges</span>
+            <div class="text-left margin-top-15">
+              <img [src]="getbadges(currentExam?.eaw_event_level)" height="55px">
             </div>
           </div>
+        </div>
         <div class="row">
           <div class="col-12 text-right">
             <span><button mat-button class="side" [disabled]="examPre" (click)="examNavigate(currentExamIndex-1)">
@@ -90,7 +117,7 @@
             </span>
           </div>
         </div>
-       
+
       </mat-card-content>
       <ng-container *ngIf="!defaultskill">
         <div class="text-center">
@@ -152,7 +179,7 @@
                     <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                      <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="margin-left-15 ver-line-divider"></span>
                     <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
@@ -176,8 +203,8 @@
                     <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                      <span class="margin-left-15 ver-line-divider"></span>
-                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -200,8 +227,8 @@
                     <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                      <span class="margin-left-15 ver-line-divider"></span>
-                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -224,8 +251,8 @@
                     <span class="font-skyblue font-size-14">{{item.era_doj | date : 'dd-MMM-y'}}</span><span
                       class="margin-left-15 ver-line-divider"></span><span
                       class="font-skyblue font-size-14 margin-left-10">{{item.era_ar_name}}</span>
-                      <span class="margin-left-15 ver-line-divider"></span>
-                      <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
+                    <span class="margin-left-15 ver-line-divider"></span>
+                    <span class="font-size-12 margin-left-10">{{item.era_teachers_remark}}</span>
                   </div>
                 </div>
               </div>
@@ -245,4 +272,4 @@
       </ng-container>
     </mat-card>
   </div>
-</div> 
+</div>
