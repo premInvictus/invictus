@@ -7,5 +7,8 @@ export interface ConfigElement {
 	calculation_type: any;
 	component_type: any;
 	value: any;
-	type:any;
+	type: any;
+	count: any;
+	leave_percentage: any;
+	leave_proportionated: any;
 }

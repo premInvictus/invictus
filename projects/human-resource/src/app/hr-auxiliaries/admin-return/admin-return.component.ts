@@ -204,7 +204,8 @@ export class AdminReturnComponent implements OnInit {
 		this.displayedSalaryComputeColumns = ['emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
 		this.salaryComputeDataSource = new MatTableDataSource<AdminReturnElement>(this.SALARY_COMPUTE_ELEMENT);
 		let inputJson = {
-			'month_id': this.searchForm.value.month_id
+			'month_id': this.searchForm.value.month_id,
+			'emp_status': 'live'
 		};
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 			this.displayedSalaryComputeColumns.push('emp_present_days', 'emp_salary_payable');

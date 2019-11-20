@@ -12,7 +12,6 @@
                     </div>
                     <div class="row">
                         <div class="col-3 col-mobile-view-add-ques">
-
                             <div class="left-side-box">
                                 <div class="left-side-box-content">
                                     <div>
@@ -170,6 +169,56 @@
                                                 </div>
                                             </form>
                                         </div>
+                                        <div *ngIf="configValue == '4'">
+                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Name</mat-label>
+                                                            <input matInput placeholder="Enter Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="name"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('name').value | capitalize"
+                                                                required>
+                                                            <mat-error>Please Enter Name</mat-error>
+                                                        </mat-form-field>
+
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Leave Count</mat-label>
+                                                            <input matInput placeholder="Enter Count"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="count"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="">
+                                                            <mat-error>Please Enter Count </mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>% of Leave carry forward</mat-label>
+                                                            <input matInput placeholder="Enter Value"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="leave_percentage"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="">
+                                                            <mat-error>Please Enter % of leave</mat-error>
+                                                        </mat-form-field>
+
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Proportionated leave on Joined Date</mat-label>
+                                                            <mat-select (selectionChange)="getCalculationValue($event)"
+                                                                placeholder="Proportionated leave on Joined Date"
+                                                                formControlName="proportionated_leave">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of proportionatedArray"
+                                                                    [value]="item.id">
+                                                                    {{item.name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                         <div class="text-center margin-top-15">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                                                 (click)="addConfiguration(configValue)">Add</button>
@@ -237,6 +286,50 @@
                                                                                         *ngIf="!item.component_type">-</span>
                                                                                 </td>
                                                                             </ng-container>
+
+                                                                            <ng-container matColumnDef="count">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Leave Count
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.count">{{ item.count }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.count">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+
+
+                                                                            <ng-container matColumnDef="leave_percentage">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Leave Count
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.leave_percentage">{{ item.leave_percentage }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.leave_percentage">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+
+                                                                            <ng-container matColumnDef="leave_proportionated">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Leave Count
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.leave_proportionated">{{ item.leave_proportionated }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.leave_proportionated">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+
                                                                             <ng-container
                                                                                 matColumnDef="calculation_type">
                                                                                 <th mat-header-cell *matHeaderCellDef

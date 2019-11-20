@@ -6,6 +6,8 @@ export interface SecurityDepositElement {
 	stu_security_amt: any;
 	stu_security_session: any;
 	security_status:any;
+	au_status : any;
+	au_process_type: any;
 	action: any;
 }
 
@@ -18,5 +20,7 @@ export interface SecurityDepositBulkElement {
 	stu_security_amt: any;
 	stu_security_session: any;
 	security_status:any;
+	au_status : any;
+	au_process_type: any;
 	action: any;
 }

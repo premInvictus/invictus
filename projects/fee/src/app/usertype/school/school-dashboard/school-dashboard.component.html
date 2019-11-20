@@ -1,272 +1,292 @@
-<div >
-    <div class="row">
-        <div class="col-12 ">
-            <mat-card class="card-content__container">
-                <mat-card-title>
-                    <div class="row">
-                        <div class="col-11 col-sm-7 col-lg-8">
-                            <h1>Fee Collection</h1>
-                        </div>
-                        <div class="col-1 col-lg-2 col-sm-2"></div>
-                        <div class="col-12 col-lg-2 col-sm-3 text-right" *ngIf="currentTabIndex === 0">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-select [(value)]="months" (selectionChange)="getFeeProjectionReportMonthly()">
-                                    <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
-                                        style="font-size: 14px;">
-                                        {{item.fm_name}}
-                                    </mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
+<div>
+
+    <mat-tab-group (selectedTabChange)="changeTab($event)" class="padding-8">
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <div>
+                    <span>Current Session</span>
+                </div>
+            </ng-template>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
+                <div>
+                    <span>Cumulative Session</span>
+                </div>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
+
+
+</div>
+
+<div class="row" *ngIf="!(cumcurrentTab)">
+    <div class="col-12 ">
+        <mat-card class="card-content__container">
+            <mat-card-title>
+                <div class="row">
+                    <div class="col-11 col-sm-7 col-lg-8">
+                        <h1>Fee Collection</h1>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <mat-tab-group class="fee-dashboard-tabgroup" animationDuration="2000ms" (selectedIndexChange)="projectiontab($event)">
-                                <mat-tab class="fee-dashboard-tab" label="Month Wise">
-                                    <ng-template matTabContent>
-                                        <div >
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 col-sm-6 ">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
-                                                                [options]="feeprojectionlinechart">
-                                                            </app-common-dynamic-chart>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <!-- <div class="col-6 ">
-                                                            <div class="legend-box legend-green" style="display: inline-block">
-                                                            </div>
-                                                            <span
-                                                                class="font-size-14 middle-align">&nbsp;Projected</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalprojected | number}}</b>
-                                                            </h2>
-                                                        </div> -->
-                                                        <div class="col-12 ">
-                                                            <div class="legend-box legend-green"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span
-                                                                class="font-size-14 middle-align">&nbsp;Collection</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalreceived | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
+                    <div class="col-1 col-lg-2 col-sm-2"></div>
+                    <div class="col-12 col-lg-2 col-sm-3 text-right" *ngIf="currentTabIndex === 0">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-select [(value)]="months" (selectionChange)="getFeeProjectionReportMonthly()">
+                                <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
+                                    style="font-size: 14px;">
+                                    {{item.fm_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <mat-tab-group class="fee-dashboard-tabgroup" animationDuration="2000ms"
+                            (selectedIndexChange)="projectiontab($event)">
+                            <mat-tab class="fee-dashboard-tab" label="Month Wise">
+                                <ng-template matTabContent>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6 col-sm-6 ">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                            [options]="feeprojectionlinechart">
+                                                        </app-common-dynamic-chart>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <div class="legend-box legend-cheque"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cheque</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcheque | indianCurrency}}</b>
-                                                            </h2>
+                                                <div class="row">
+                                                    <!-- <div class="col-6 ">
+                                                                    <div class="legend-box legend-green" style="display: inline-block">
+                                                                    </div>
+                                                                    <span
+                                                                        class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                                    <h2 class="margin-top-10 font-medium"><i
+                                                                            class="fas fa-rupee-sign font-size-24"></i>
+                                                                        <b>&nbsp;{{totalprojected | number}}</b>
+                                                                    </h2>
+                                                                </div> -->
+                                                    <div class="col-12 ">
+                                                        <div class="legend-box legend-green"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4" style="text-align: center">
-                                                            <div class="legend-box legend-cashatbank"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cash At
-                                                                Bank</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
-                                                        <div class="col-4" style="text-align: right">
-                                                            <div class="legend-box legend-cash"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cash</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcash | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Collection</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalreceived | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <app-common-dynamic-chart
-                                                                *ngIf="feeprojectiondonutchartflag"
-                                                                [options]="feeprojectiondonutchart">
-                                                            </app-common-dynamic-chart>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="legend-box legend-cheque"
+                                                            style="display: inline-block">
                                                         </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcheque | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-4">
-                                                            <div class="legend-box legend-paymentgateway"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Payment
-                                                                Gateway</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
-                                                            </h2>
+                                                    <div class="col-4" style="text-align: center">
+                                                        <div class="legend-box legend-cashatbank"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4 " style="text-align: center">
-                                                            <div class="legend-box legend-netbanking"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Net
-                                                                Banking</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalimps | indianCurrency}}</b>
-                                                            </h2>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash
+                                                            At
+                                                            Bank</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4" style="text-align: right">
+                                                        <div class="legend-box legend-cash"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4 " style="text-align: right">
-                                                            <div class="legend-box legend-others"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Debit/Credit
-                                                                Card</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totaldccard | indianCurrency}}</b>
-                                                            </h2>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcash | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectiondonutchartflag"
+                                                            [options]="feeprojectiondonutchart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="legend-box legend-paymentgateway"
+                                                            style="display: inline-block">
                                                         </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Payment
+                                                            Gateway</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-netbanking"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Net
+                                                            Banking</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalimps | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: right">
+                                                        <div class="legend-box legend-others"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                            Card</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totaldccard | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </ng-template>
-                                </mat-tab>
-                                <mat-tab label="Year Wise">
-                                    <ng-template matTabContent>
-                                        <div class="margin-top-20">
-                                            <div class="row">
-                                                <div class="col-12 col-lg-6 col-sm-6">
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <!-- <div class="padding-15" id="containerone"></div> -->
-                                                            <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
-                                                                [options]="feeprojectionlinechart">
-                                                            </app-common-dynamic-chart>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row">
-                                                        <!-- <div class="col-6 ">
-                                                            <div class="legend-box legend-green" style="display: inline-block">
-                                                            </div>
-                                                            <span
-                                                                class="font-size-14 middle-align">&nbsp;Projected</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalprojected | number}}</b>
-                                                            </h2>
-                                                        </div> -->
-                                                        <div class="col-12">
-                                                            <div class="legend-box legend-green"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span
-                                                                class="font-size-14 middle-align">&nbsp;Collection</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalreceived | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                            <mat-tab label="Year Wise">
+                                <ng-template matTabContent>
+                                    <div class="margin-top-20">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <!-- <div class="padding-15" id="containerone"></div> -->
+                                                        <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                            [options]="feeprojectionlinechart">
+                                                        </app-common-dynamic-chart>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
-                                                    <div class="row">
-                                                        <div class="col-4 ">
-                                                            <div class="legend-box legend-cheque"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cheque</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcheque | indianCurrency}}</b>
-                                                            </h2>
+                                                <div class="row">
+                                                    <!-- <div class="col-6 ">
+                                                                    <div class="legend-box legend-green" style="display: inline-block">
+                                                                    </div>
+                                                                    <span
+                                                                        class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                                    <h2 class="margin-top-10 font-medium"><i
+                                                                            class="fas fa-rupee-sign font-size-24"></i>
+                                                                        <b>&nbsp;{{totalprojected | number}}</b>
+                                                                    </h2>
+                                                                </div> -->
+                                                    <div class="col-12">
+                                                        <div class="legend-box legend-green"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4 " style="text-align: center">
-                                                            <div class="legend-box legend-cashatbank"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cash At
-                                                                Bank</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
-                                                        <div class="col-4  " style="text-align: right">
-                                                            <div class="legend-box legend-cash"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Cash</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalcash | indianCurrency}}</b>
-                                                            </h2>
-                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Collection</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalreceived | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-12">
-                                                            <app-common-dynamic-chart
-                                                                *ngIf="feeprojectiondonutchartflag"
-                                                                [options]="feeprojectiondonutchart">
-                                                            </app-common-dynamic-chart>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
+                                                <div class="row">
+                                                    <div class="col-4 ">
+                                                        <div class="legend-box legend-cheque"
+                                                            style="display: inline-block">
                                                         </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcheque | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
-                                                    <div class="row">
-                                                        <div class="col-4 ">
-                                                            <div class="legend-box legend-paymentgateway"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Payment
-                                                                Gateway</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
-                                                            </h2>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-cashatbank"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4 " style="text-align: center">
-                                                            <div class="legend-box legend-netbanking"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Net
-                                                                Banking</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totalimps | indianCurrency}}</b>
-                                                            </h2>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash
+                                                            At
+                                                            Bank</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4  " style="text-align: right">
+                                                        <div class="legend-box legend-cash"
+                                                            style="display: inline-block">
                                                         </div>
-                                                        <div class="col-4 " style="text-align: right">
-                                                            <div class="legend-box legend-others"
-                                                                style="display: inline-block">
-                                                            </div>
-                                                            <span class="font-size-14 middle-align">&nbsp;Debit/Credit
-                                                                Card</span>
-                                                            <h2 class="margin-top-10 font-medium"><i
-                                                                    class="fas fa-rupee-sign font-size-24"></i>
-                                                                <b>&nbsp;{{totaldccard | indianCurrency}}</b>
-                                                            </h2>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcash | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectiondonutchartflag"
+                                                            [options]="feeprojectiondonutchart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-4 ">
+                                                        <div class="legend-box legend-paymentgateway"
+                                                            style="display: inline-block">
                                                         </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Payment
+                                                            Gateway</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-netbanking"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Net
+                                                            Banking</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalimps | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: right">
+                                                        <div class="legend-box legend-others"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                            Card</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totaldccard | indianCurrency}}</b>
+                                                        </h2>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </ng-template>
-                                </mat-tab>
-                            </mat-tab-group>
-                        </div>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                        </mat-tab-group>
                     </div>
-                </mat-card-title>
-                <mat-card-content>
-                </mat-card-content>
-            </mat-card>
-            <div class="margin-top-10">
+                </div>
+            </mat-card-title>
+            <mat-card-content>
+            </mat-card-content>
+        </mat-card>
+        <div class="margin-top-10">
             <mat-card class="card-content__container">
                 <mat-card-title>
                     <div class="row">
@@ -307,7 +327,8 @@
                                             <div class="col-12 col-lg-4 col-sm-6">
                                                 <div class="legend-box legend-onemonth" style="display: inline-block">
                                                 </div>
-                                                <span class="font-size-14 middle-align">&nbsp; Between 2 to 3
+                                                <span class="font-size-14 middle-align">&nbsp; Between 2 to
+                                                    3
                                                     months</span>
                                                 <h2 class="margin-top-10 font-medium"><i
                                                         class="fas fa-rupee-sign font-size-24"></i>
@@ -343,7 +364,277 @@
                 <mat-card-content>
                 </mat-card-content>
             </mat-card>
-            </div>
         </div>
+    </div>
+</div>
+
+
+<div class="row" *ngIf="cumcurrentTab">
+    <div class="col-12 ">
+        <mat-card class="card-content__container">
+            <mat-card-title>
+                <div class="row">
+                    <div class="col-11 col-sm-7 col-lg-8">
+                        <h1>Fee Collection</h1>
+                    </div>
+                    <div class="col-1 col-lg-2 col-sm-2"></div>
+                    <div class="col-12 col-lg-2 col-sm-3 text-right" *ngIf="currentTabIndex === 0">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-select [(value)]="months" (selectionChange)="getFeeProjectionReportMonthly()">
+                                <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
+                                    style="font-size: 14px;">
+                                    {{item.fm_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <mat-tab-group class="fee-dashboard-tabgroup" animationDuration="2000ms"
+                            (selectedIndexChange)="projectiontab($event)">
+                            <mat-tab class="fee-dashboard-tab" label="Month Wise">
+                                <ng-template matTabContent>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6 col-sm-6 ">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                            [options]="feeprojectionlinechart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <!-- <div class="col-6 ">
+                                                                        <div class="legend-box legend-green" style="display: inline-block">
+                                                                        </div>
+                                                                        <span
+                                                                            class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                                            <b>&nbsp;{{totalprojected | number}}</b>
+                                                                        </h2>
+                                                                    </div> -->
+                                                    <div class="col-12 ">
+                                                        <div class="legend-box legend-green"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Collection</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalreceived | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="legend-box legend-cheque"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcheque | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4" style="text-align: center">
+                                                        <div class="legend-box legend-cashatbank"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash
+                                                            At
+                                                            Bank</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4" style="text-align: right">
+                                                        <div class="legend-box legend-cash"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcash | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectiondonutchartflag"
+                                                            [options]="feeprojectiondonutchart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-4">
+                                                        <div class="legend-box legend-paymentgateway"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Payment
+                                                            Gateway</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-netbanking"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Net
+                                                            Banking</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalimps | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: right">
+                                                        <div class="legend-box legend-others"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                            Card</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totaldccard | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                            <mat-tab label="Year Wise">
+                                <ng-template matTabContent>
+                                    <div class="margin-top-20">
+                                        <div class="row">
+                                            <div class="col-12 col-lg-6 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <!-- <div class="padding-15" id="containerone"></div> -->
+                                                        <app-common-dynamic-chart *ngIf="feeprojectionlinechartflag"
+                                                            [options]="feeprojectionlinechart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <!-- <div class="col-6 ">
+                                                                        <div class="legend-box legend-green" style="display: inline-block">
+                                                                        </div>
+                                                                        <span
+                                                                            class="font-size-14 middle-align">&nbsp;Projected</span>
+                                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                                            <b>&nbsp;{{totalprojected | number}}</b>
+                                                                        </h2>
+                                                                    </div> -->
+                                                    <div class="col-12">
+                                                        <div class="legend-box legend-green"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Collection</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalreceived | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-lg-6 col-sm-6 ver-line-divider">
+                                                <div class="row">
+                                                    <div class="col-4 ">
+                                                        <div class="legend-box legend-cheque"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cheque</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcheque | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-cashatbank"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash
+                                                            At
+                                                            Bank</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcashatbank | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4  " style="text-align: right">
+                                                        <div class="legend-box legend-cash"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Cash</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalcash | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <app-common-dynamic-chart *ngIf="feeprojectiondonutchartflag"
+                                                            [options]="feeprojectiondonutchart">
+                                                        </app-common-dynamic-chart>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-4 ">
+                                                        <div class="legend-box legend-paymentgateway"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Payment
+                                                            Gateway</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalpgateway | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: center">
+                                                        <div class="legend-box legend-netbanking"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Net
+                                                            Banking</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totalimps | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="col-4 " style="text-align: right">
+                                                        <div class="legend-box legend-others"
+                                                            style="display: inline-block">
+                                                        </div>
+                                                        <span class="font-size-14 middle-align">&nbsp;Debit/Credit
+                                                            Card</span>
+                                                        <h2 class="margin-top-10 font-medium"><i
+                                                                class="fas fa-rupee-sign font-size-24"></i>
+                                                            <b>&nbsp;{{totaldccard | indianCurrency}}</b>
+                                                        </h2>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+            </mat-card-title>
+            <mat-card-content>
+            </mat-card-content>
+        </mat-card>
+
     </div>
 </div>

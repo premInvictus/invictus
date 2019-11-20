@@ -129,7 +129,7 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 	getDropoutListAll() {
 		this.formGroupArray = [];
 		this.DROP_OUT_ELEMENT_DATA = [];
-		this.displayedColumns = ['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_class_name', 'stu_security_amt', 'stu_security_session', 'security_status', 'action'];
+		this.displayedColumns = ['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_security_session','stu_class_name', 'stu_security_amt',  'security_status', 'action'];
 		this.dataSource = new MatTableDataSource<DropoutElement>(this.DROP_OUT_ELEMENT_DATA);
 		this.filterForm.value['showZero'] = false;
 		this.feeService.getDropoutStudentList(this.filterForm.value).subscribe((result: any) => {
@@ -143,8 +143,8 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 						srno: pos,
 						stu_enrollment_no: item && item.au_admission_no ? this.getProcessName(item.flgr_process_type) + item.au_admission_no : '',
 						stu_full_name: item && item.au_full_name ? item.au_full_name : '',
-						stu_class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
-						stu_security_amt: item && item.inv_fee_amount ? Number(item.inv_fee_amount).toLocaleString('en-IN') : '',
+						stu_class_name: item.sec_name ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						stu_security_amt: item && item.inv_fee_amount ? Number(item.inv_fee_amount).toLocaleString('en-IN') : 0,
 						stu_security_session: item && item.flgr_ses_id ? this.getUserSession(item.flgr_ses_id) : '',
 						security_status: item && item.inv_paid_status ? item.inv_paid_status : '',
 						action: item,
@@ -176,7 +176,7 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 	getZeroDropoutListAll() {
 		this.formGroupArray = [];
 		this.DROP_OUT_ZERO_ELEMENT_DATA = [];
-		this.displayedZeroColumns = ['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_class_name', 'stu_security_amt', 'stu_security_session', 'security_status'];
+		this.displayedZeroColumns = ['srno', 'stu_enrollment_no', 'stu_full_name', 'stu_security_session', 'stu_class_name', 'stu_security_amt'];
 		this.zeroDataSource = new MatTableDataSource<DropoutZeroElement>(this.DROP_OUT_ZERO_ELEMENT_DATA);
 		this.filterForm.value['showZero'] = true;
 		this.feeService.getDropoutStudentList(this.filterForm.value).subscribe((result: any) => {
@@ -190,8 +190,8 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 						srno: pos,
 						stu_enrollment_no: item && item.au_admission_no ? this.getProcessName(item.flgr_process_type) + item.au_admission_no : '',
 						stu_full_name: item && item.au_full_name ? item.au_full_name : '',
-						stu_class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
-						stu_security_amt: item && item.inv_fee_amount ? Number(item.inv_fee_amount).toLocaleString('en-IN') : '',
+						stu_class_name: item.sec_name ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+						stu_security_amt: item && item.inv_fee_amount ? Number(item.inv_fee_amount).toLocaleString('en-IN') : 0,
 						stu_security_session: item && item.flgr_ses_id ? this.getUserSession(item.flgr_ses_id) : '',
 						security_status: item && item.inv_paid_status ? item.inv_paid_status : '',
 						action: item,
@@ -256,6 +256,11 @@ export class DropoutComponent implements OnInit, AfterViewInit {
 		} else {
 			this.getDropoutListAll();
 		}
+	}
+
+	approveFTR(item) {
+		this.getDropoutListAll();
+		this.getZeroDropoutListAll();
 	}
 	
 }
