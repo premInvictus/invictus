@@ -1,0 +1,128 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Mark Attendance</span>
+          </div>
+        </div>
+        <div class="col-6 text-right">
+          <form [formGroup]="firstForm">
+            <div class="top-card-title-form">
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateChange)="resetForm()"
+                  formControlName="entry_date">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
+                appearance="outline">
+                <mat-label>Department</mat-label>
+                <mat-select formControlName="dept_id" required placeholder="Select Department">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of departmentArray" [value]="item.dept_id">
+                    {{item.dept_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                <mat-label>Category</mat-label>
+                <mat-select formControlName="cat_id" (selectionChange)="fetchDetails()" required
+                  placeholder="Select Category">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
+                    {{item.cat_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row " *ngIf="defaultFlag">
+        <div class="col-6 remove-col-padding-left">
+          <form [formGroup]="attendanceForm">
+            <mat-form-field appearance="outline" class="form-field-220">
+              <mat-select formControlName="attendance" (selectionChange)="markStudentAttendance()" required
+                placeholder="Mark all student as">
+                <mat-option value="">Mark all Student as</mat-option>
+                <mat-option *ngFor="let item of attendanceArray" [value]="item.aid">
+                  {{item.a_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </form>
+
+        </div>
+        <div class="col-6 margin-top-25 remove-col-padding-right text-right" *ngIf="defaultFlag">
+          <!-- <span class="font-color-grey margin-bottom-5 margin-left-10 font-size-18 font-bold">On : {{firstForm.value.cw_entry_date | date : 'd-MMM-y'}}</span> -->
+          <i class="fas fa-square font-size-20 font-color-grey margin-left-50"></i><span
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Total Student :
+            {{totalStudent}}</span>
+          <i class="fas fa-square font-size-20 font-color-green margin-left-50"></i><span
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Present :
+            {{presentStudent}}</span>
+          <i class="fas fa-square font-size-20 font-color-red margin-left-50"></i><span
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium margin-right-20">Absent :
+            {{absentStudent}}</span>
+        </div>
+      </div>
+
+      <div class="row">
+        <ng-container *ngFor="let item of studentAttendanceArray;let i=index">
+          <div class="col-2">
+            <div class="row">
+              <div class="col-4 remove-col-padding-right text-center custom-tooltip">
+                <img class="mark-student-img" src="{{item.au_profileimage}}"
+                  (click)="changeStudentAttendanceStatus($event,i)">
+                <div class="">
+                  <i class="fas fa-check-circle mark-student-tick font-size-20 font-color-green"
+                    *ngIf="finalArray[i].attendance === 1"></i>
+                  <i class="fas fa-times-circle mark-student-tick font-size-20 font-color-red" *ngIf="finalArray[i].attendance !== 1
+                  && finalArray[i].attendance !== ''"></i>
+                </div>
+              </div>
+              <div class="col-8 margin-top-5">
+                <span class="font-size-16 fontt-medium">{{item.au_full_name}}</span><br>
+                <span class="font-size-12">Roll No. : {{item.au_roll_no}} </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div style="margin:auto">
+          <table>
+            <tbody *ngIf="finalDivFlag">
+              <tr class="text-center">
+                <td colspan="12">
+                  <img
+                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                  <br><br><br>
+                  <br><span class="font-size-20 font-light font-color-brown">
+                    Please select deperatment and category
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <br>
+      <div class="row margin-top-25" *ngIf="defaultFlag && submitFlag">
+        <div class="col-12 text-center">
+          <button mat-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
