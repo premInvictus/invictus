@@ -295,25 +295,25 @@ export class DropoutReportComponent implements OnInit {
 			},
 			{
 				id: 'refund_date',
-				name: 'Transaction Date',
+				name: 'Session',
 				field: 'refund_date',
 				sortable: true, width: 4,
 				filterable: true,
-				formatter: this.checkDateFormatter,
-				grouping: {
-					getter: 'refund_date',
-					formatter: (g) => {
-						if (g.value !== '-') {
-							return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
-						} else {
-							return '-';
-						}
+				// formatter: this.checkDateFormatter,
+				// grouping: {
+				// 	getter: 'refund_date',
+				// 	formatter: (g) => {
+				// 		if (g.value !== '-') {
+				// 			return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+				// 		} else {
+				// 			return '-';
+				// 		}
 						
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
+				// 	},
+				// 	aggregators: this.aggregatearray,
+				// 	aggregateCollapsed: true,
+				// 	collapsed: false,
+				// },
 				
 			},
 			{
@@ -353,7 +353,7 @@ export class DropoutReportComponent implements OnInit {
 						repoArray[Number(index)]['receipt_no'] : '-';
 					obj['fh_amount'] = item['fh_amount'] ?
 						Number(item['fh_amount']) : 0;
-					obj['refund_date'] = item['flgr_date'] ? item['flgr_date'] : '-';
+					obj['refund_date'] = item['ses_name'] ? item['ses_name'] : '-';
 					obj['refund_status'] = item['fsd_status'] === '2' ? 'Paid' : item['fsd_status'] === '3' ? 'Expired' : 'Pending';
 					this.dataset.push(obj);
 					index++;

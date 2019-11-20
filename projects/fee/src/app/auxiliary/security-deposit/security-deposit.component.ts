@@ -237,7 +237,7 @@ export class SecurityDepositComponent implements OnInit, AfterViewInit {
 		console.log('change tab', event.index);
 		this.currentTab = event.index;
 		
-		if (!this.currentTab) {
+		if (this.currentTab) {
 			this.grandBulkTotal = 0;
 			this.getBulkSecurityDepositListAll();
 		} else {
