@@ -253,6 +253,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getSubjectSubexamMapping', value);
 	}
+	sessionWisePerformance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/sessionWisePerformance', value);
+	}
 	
 }
 
