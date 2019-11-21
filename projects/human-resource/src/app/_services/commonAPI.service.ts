@@ -306,6 +306,18 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-structure/insert', value);
 	}
+	insertAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/insertAttendance', value);
+	}
+	updateAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/updateAttendance', value);
+	}
+	checkAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/checkAttendance', value);
+	}
 	getSalaryStr() {
 		return this.http.get(environment.apiHRUrl + '/salary-structure/getSalaryStructure');
 	}

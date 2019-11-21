@@ -1,6 +1,6 @@
 <div class="text-center">
-      <p style="padding:14px; font-size:18px; font-weight:bold;">Are you confirm to make payment?  
-         <br/> Your Pyament is : &#8377;  {{outStandingAmt | number: '2.'}} </p>
+      <p style="padding:14px; font-size:18px; font-weight:bold;">Do you confirm to make payment?  
+         <br/> Amount payable : &#8377;  {{outStandingAmt | number: '2.'}} </p>
       <div>           
             <form ngNoForm #myFormPost name="myFormPost" id="payForm" action="https://securegw-stage.paytm.in/theia/processTransaction" method="POST">
                <div *ngFor="let input of paytmResult">
