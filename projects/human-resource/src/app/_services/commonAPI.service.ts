@@ -347,4 +347,27 @@ export class CommonAPIService {
 	getDepartmentLeave() {
 		return this.http.get(environment.apiHRUrl + '/department-leave/getDepartmentLeave');
 	}
+	getCommunication() {
+		return this.http.get(environment.apiHRUrl + '/communication/getCommunication');
+	}
+
+	getEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/get',value);
+	}
+
+	insertEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/insert',value);
+	}
+
+	updateEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/update',value);
+	}
+
+	deleteEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/delete',value);
+	}
 }
