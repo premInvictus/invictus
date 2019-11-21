@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService, ProcesstypeExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { StudentAcademicProfileComponent } from '../student-academic-profile/student-academic-profile.component';
 @Component({
   selector: 'app-student-academic-profile-details',
   templateUrl: './student-academic-profile-details.component.html',
   styleUrls: ['./student-academic-profile-details.component.css']
 })
-export class StudentAcademicProfileDetailsComponent implements OnInit {
+export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges {
+  @ViewChild(StudentAcademicProfileComponent) studentAcademicProfile: StudentAcademicProfileComponent;
   activityform: FormGroup;
   awardsform: FormGroup;
   activityArray: any[] = [];
@@ -36,6 +38,13 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
   subjectTeacher: any[] = [];
   lastRecordId: any;
   loginId: any;
+  termsArray: any[] = [];
+  termId = '1';
+  termindex = 0;
+  session: any = {};
+  performanceNoRecord = true;
+  sessionwisePerformance: any = {};
+  performanceTab = 'session';
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -49,6 +58,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
     this.processtypeService.setProcesstype(4);
     this.buildForm();
     this.getActivity();
@@ -57,6 +67,10 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
     this.getEventLevel();
     this.getAuthority();
     this.getStudentLastRecordPerProcessType();
+  }
+  ngOnChanges(){
+    console.log('ngOnchanged', this.loginId);
+    console.log('studentAcademicProfile', this.studentAcademicProfile);
   }
   buildForm() {
     this.activityform = this.fbuild.group({
@@ -75,6 +89,113 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
       eaw_event_level: '0',
       eaw_teacher_remark: '',
     });
+  }
+  tabChanged(event) {
+    console.log('tabChanged',event);
+    this.termindex = event.index;
+    this.termId = this.termsArray[event.index].id;
+    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
+  }
+  getClassTerm(class_id) {
+    this.termsArray = [];
+    console.log('termsArray 1', this.termsArray);
+    this.examService.getClassTerm({class_id: class_id}).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.termsArray = [];
+        result.data.ect_no_of_term.split(',').forEach(element => {
+          console.log(element);
+          this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+        });
+        console.log('termsArray 2', this.termsArray);
+      }
+    });
+  }
+  sessionWisePerformance(studentdetails) {
+    this.performanceNoRecord = true;
+    this.sessionwisePerformance = {};
+    const param: any = {};
+    param.class_id = studentdetails.au_class_id;
+    param.sec_id = studentdetails.au_sec_id;
+    param.login_id = [studentdetails.au_login_id];
+    param.term_id = this.termId;
+    param.ses_id = this.session.ses_id;
+    this.examService.sessionWisePerformance(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        if(result.data.length > 0) {
+          const performanceData = result.data[0];
+          const xcategories: any[] = [];
+          const series: any[] = [];
+          const seriesDataArr: any[] = [];
+          performanceData['sub_mark'].forEach(sub => {
+            if(sub.sub_parent_id === '0') {
+              xcategories.push(sub.sub_name);
+              sub['sub_exam_mark'].forEach(exam => {
+                const sind = series.findIndex(e => exam.exam_name === e.name);
+                if(sind === -1) {
+                  series.push({
+                    name: exam.exam_name,
+                    data: [exam.student_mark_100_per]
+                  });
+                } else {
+                  series[sind]['data'].push(exam.student_mark_100_per);
+                }
+              });
+            }
+          });
+          console.log(xcategories);
+          console.log(series);
+          this.graphData('column', xcategories, series);
+          this.performanceNoRecord = false;
+
+        } else {
+          this.performanceNoRecord = true;
+        }        
+      } else {
+        this.performanceNoRecord = true;
+      }
+    });
+  }
+  graphData(chartType, xcategories, series,) {
+    this.sessionwisePerformance = {
+      chart: {
+        type: chartType,
+        height: '280px',
+      },
+      title: {
+        text: ''
+      },
+      subtitle: {
+        text: ''
+      },
+      xAxis: {
+        categories: xcategories,
+        crosshair: true
+      },
+      yAxis: {
+        labels: {
+          format: '{value}%'
+        },
+        min: 0,
+        title: {
+          text: ''
+        }
+      },
+      tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+          '<td style="padding:0"><b>{point.y} </b></td></tr>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
+      },
+      plotOptions: {
+        column: {
+          pointPadding: 0.2,
+          borderWidth: 0
+        }
+      },
+      series: series
+    };
   }
   getActivity() {
     this.sisService.getActivity().subscribe((result: any) => {
@@ -237,8 +358,18 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
   getStudentLastRecordPerProcessType() {
     this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
       if (result.status === 'ok') {
+        console.log('getStudentLastRecordPerProcessType', result.data);
         this.lastRecordId = result.data[0].last_record;
         this.loginId = result.data[0].au_login_id;
+        this.sisService.getStudentInformation({ au_login_id: result.data[0].last_record, au_status: '1', au_process_type: '4' }).subscribe((result1: any) => {
+          if(result1 && result1.status === 'ok') {
+            this.termsArray = [];
+            this.termId = '1';
+            this.termindex = 0;
+            this.sessionWisePerformance(result1.data[0]);
+            this.getClassTerm(result1.data[0].au_class_id);
+          }
+        });
         this.getSkillsAwards(this.loginId);
         this.getRemarks(this.loginId);
       }
@@ -246,29 +377,29 @@ export class StudentAcademicProfileDetailsComponent implements OnInit {
 
   }
   next(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
+    this.setLoginId(admno);
   }
   prev(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
+    this.setLoginId(admno);
   }
   first(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
+    this.setLoginId(admno);
   }
   last(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
+    this.setLoginId(admno);
   }
   key(admno) {
+    this.setLoginId(admno);
+  }
+  setLoginId(admno) {
     this.loginId = admno;
+    this.termsArray = [];
+    this.termId = '1';
+    this.termindex = 0;
     this.getSkillsAwards(this.loginId);
     this.getRemarks(this.loginId);
+    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
+    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
   }
 
 }

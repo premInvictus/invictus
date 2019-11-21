@@ -7,7 +7,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { PreviewDocumentComponent } from './../../hr-shared/preview-document/preview-document.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MyLeaveElement, SubordinateLeaveElement } from './my-leave.model';
 
@@ -390,7 +390,7 @@ export class MyLeaveComponent implements OnInit {
 	previewImage(imgArray, index) {
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
-				imageArray: imgArray,
+				images: imgArray,
 				index: index
 			},
 			height: '100vh',
