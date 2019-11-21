@@ -172,9 +172,12 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
         crosshair: true
       },
       yAxis: {
+        labels: {
+          format: '{value}%'
+        },
         min: 0,
         title: {
-          text: 'In %'
+          text: ''
         }
       },
       tooltip: {
