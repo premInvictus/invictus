@@ -1,3 +1,35 @@
 ::ng-deep.mat-tab-header {
     border-bottom: none !important;
+    margin-bottom: 0px !important;
+    margin-top: 0px !important;
+}
+::ng-deep.mat-tab-label {
+    height: 30px !important;
+    padding: 0px 0px !important;
+    cursor: pointer;
+    box-sizing: border-box;
+    opacity: .6;
+    min-width: 80px !important;
+    text-align: center;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    position: relative;
+    font-weight: 600;
+    color: #8ec3f2 !important;
+    border: none !important;
+}
+::ng-deep.mat-tab-label.mat-tab-label-active {
+    background: none !important;
+    color: #0063b9 !important;
+}
+.container-outline__dashyellow {
+    padding: 10px 0px 0px 0px !important;
+}
+.card-height-fixed-650 {
+    height: 650px;
+}
+.mat-card-p-b-0 {
+    padding-bottom: 0px !important;
 }

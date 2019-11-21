@@ -40,6 +40,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   loginId: any;
   termsArray: any[] = [];
   termId = '1';
+  termindex = 0;
   session: any = {};
   performanceNoRecord = true;
   sessionwisePerformance: any = {};
@@ -90,17 +91,22 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     });
   }
   tabChanged(event) {
-    console.log(event);
+    console.log('tabChanged',event);
+    this.termindex = event.index;
     this.termId = this.termsArray[event.index].id;
     this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
   }
   getClassTerm(class_id) {
     this.termsArray = [];
+    console.log('termsArray 1', this.termsArray);
     this.examService.getClassTerm({class_id: class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.termsArray = [];
         result.data.ect_no_of_term.split(',').forEach(element => {
+          console.log(element);
           this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
         });
+        console.log('termsArray 2', this.termsArray);
       }
     });
   }
@@ -152,7 +158,8 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   graphData(chartType, xcategories, series,) {
     this.sessionwisePerformance = {
       chart: {
-        type: chartType
+        type: chartType,
+        height: '280px',
       },
       title: {
         text: ''
@@ -167,7 +174,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
       yAxis: {
         min: 0,
         title: {
-          text: ''
+          text: 'In %'
         }
       },
       tooltip: {
@@ -348,51 +355,44 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   getStudentLastRecordPerProcessType() {
     this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
       if (result.status === 'ok') {
+        console.log('getStudentLastRecordPerProcessType', result.data);
         this.lastRecordId = result.data[0].last_record;
         this.loginId = result.data[0].au_login_id;
-        this.getSkillsAwards(this.loginId);
-        this.getRemarks(this.loginId);
-        this.sisService.getStudentInformation({ au_login_id: this.loginId, au_status: '1' }).subscribe((result1: any) => {
+        this.sisService.getStudentInformation({ au_login_id: result.data[0].last_record, au_status: '1', au_process_type: '4' }).subscribe((result1: any) => {
           if(result1 && result1.status === 'ok') {
-            console.log('getStudentLastRecordPerProcessType');
+            this.termsArray = [];
+            this.termId = '1';
+            this.termindex = 0;
             this.sessionWisePerformance(result1.data[0]);
             this.getClassTerm(result1.data[0].au_class_id);
           }
-        })
+        });
+        this.getSkillsAwards(this.loginId);
+        this.getRemarks(this.loginId);
       }
     });
 
   }
   next(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
-    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
-    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
+    this.setLoginId(admno);
   }
   prev(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
-    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
-    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
+    this.setLoginId(admno);
   }
   first(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
-    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
-    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
+    this.setLoginId(admno);
   }
   last(admno) {
-    this.loginId = admno;
-    this.getSkillsAwards(this.loginId);
-    this.getRemarks(this.loginId);
-    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
-    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
+    this.setLoginId(admno);
   }
   key(admno) {
+    this.setLoginId(admno);
+  }
+  setLoginId(admno) {
     this.loginId = admno;
+    this.termsArray = [];
+    this.termId = '1';
+    this.termindex = 0;
     this.getSkillsAwards(this.loginId);
     this.getRemarks(this.loginId);
     this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);

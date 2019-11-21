@@ -2,7 +2,7 @@
   (first)="first($event)" (last)="last($event)" (key)="key($event)"></app-student-academic-profile>
 <div class="row">
   <div class="col-7">
-    <mat-card class="card-height-400">
+    <mat-card class="card-height-400 mat-card-p-b-0">
       <mat-card-title>
         <div class="row">
           <div class="col-6">
@@ -14,13 +14,13 @@
           </div>
         </div>
       </mat-card-title>
-      <mat-card-content>
+      <mat-card-content *ngIf="!performanceNoRecord">
         <div class="row">
           <div class="col-12">
-            <mat-tab-group (selectedTabChange)="tabChanged($event)">
+            <mat-tab-group (selectedTabChange)="tabChanged($event)" [(selectedIndex)]="termindex">
               <mat-tab *ngFor="let tab of termsArray; let index = index" [label]="tab.name">
                 <ng-template matTabContent>
-                  <div class="container-outline__dashyellow background-white" *ngIf="!performanceNoRecord">
+                  <div class="container-outline__dashyellow background-white">
                     <app-common-dynamic-chart [options]="sessionwisePerformance">
                     </app-common-dynamic-chart>
                   </div>
@@ -29,17 +29,17 @@
             </mat-tab-group>
           </div>
         </div>
-        <ng-container *ngIf="performanceNoRecord">
-          <div class="text-center">
-            <img
-              [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-              height="150px">
-            <br><br>
-            <span class="font-size-20 font-bold font-color-brown">
-              No Record Found
-            </span>
-          </div>
-        </ng-container>
+      </mat-card-content>
+      <mat-card-content *ngIf="performanceNoRecord">
+        <div class="text-center">
+          <img
+            [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            height="150px">
+          <br><br>
+          <span class="font-size-20 font-bold font-color-brown">
+            No Record Found
+          </span>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
