@@ -33,3 +33,7 @@
 .mat-card-p-b-0 {
     padding-bottom: 0px !important;
 }
+.performance-active-tab {
+    background-color: #1E88E5 !important;
+    color: #ffffff;
+}

@@ -43,8 +43,10 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
   termindex = 0;
   session: any = {};
   performanceNoRecord = true;
-  sessionwisePerformance: any = {};
+  sessionwisePerformanceData: any = {};
+  yearwisePerformanceData: any = {};
   performanceTab = 'session';
+  currentUserDetails: any = {};
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -68,9 +70,17 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.getAuthority();
     this.getStudentLastRecordPerProcessType();
   }
-  ngOnChanges(){
+  ngOnChanges() {
     console.log('ngOnchanged', this.loginId);
     console.log('studentAcademicProfile', this.studentAcademicProfile);
+  }
+  getPerformance(tabname) {
+    this.performanceTab = tabname;
+    if (tabname === 'year') {
+      this.yearWisePerformance(this.currentUserDetails);
+    } else {
+      this.sessionWisePerformance(this.currentUserDetails);
+    }
   }
   buildForm() {
     this.activityform = this.fbuild.group({
@@ -91,28 +101,75 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     });
   }
   tabChanged(event) {
-    console.log('tabChanged',event);
+    console.log('tabChanged', event);
     this.termindex = event.index;
     this.termId = this.termsArray[event.index].id;
     this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
   }
+  yearWisePerformance(studentdetails) {
+    this.performanceNoRecord = true;
+    const param: any = {};
+    param.login_id = [studentdetails.au_login_id];
+    this.examService.yearWisePerformance(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        if (result.data.length > 0) {
+          const performanceYearDataArr = result.data;
+          const xcategories: any[] = [];
+          const series: any[] = [];
+          const seriesDataArr: any[] = [];
+          performanceYearDataArr.forEach(each => {
+            if (each.sec_name) {
+              xcategories.push(each.class_name + '-' + each.sec_name);
+            } else {
+              xcategories.push(each.class_name);
+            }
+            seriesDataArr.push(this.roundTwoDecimai(each.term_student_total_percentage));
+          });
+          console.log(xcategories);
+          console.log(series);
+          series.push({
+            name: '',
+            showInLegend: false,
+            type: 'column',
+            data: seriesDataArr
+          })
+          series.push({
+            name: '',
+            showInLegend: false,
+            type: 'spline',
+            data: seriesDataArr
+          })
+          this.graphData('', xcategories, series);
+          this.performanceNoRecord = false;
+
+        } else {
+          this.performanceNoRecord = true;
+        }
+      } else {
+        this.performanceNoRecord = true;
+      }
+    });
+  }
   getClassTerm(class_id) {
     this.termsArray = [];
     console.log('termsArray 1', this.termsArray);
-    this.examService.getClassTerm({class_id: class_id}).subscribe((result: any) => {
+    this.examService.getClassTerm({ class_id: class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.termsArray = [];
         result.data.ect_no_of_term.split(',').forEach(element => {
           console.log(element);
-          this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+          this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
         });
         console.log('termsArray 2', this.termsArray);
       }
     });
   }
+  roundTwoDecimai(num) {
+    return Math.round(num * 100) / 100
+  }
   sessionWisePerformance(studentdetails) {
     this.performanceNoRecord = true;
-    this.sessionwisePerformance = {};
+    this.sessionwisePerformanceData = {};
     const param: any = {};
     param.class_id = studentdetails.au_class_id;
     param.sec_id = studentdetails.au_sec_id;
@@ -120,24 +177,24 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     param.term_id = this.termId;
     param.ses_id = this.session.ses_id;
     this.examService.sessionWisePerformance(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
-        if(result.data.length > 0) {
+      if (result && result.status === 'ok') {
+        if (result.data.length > 0) {
           const performanceData = result.data[0];
           const xcategories: any[] = [];
           const series: any[] = [];
           const seriesDataArr: any[] = [];
           performanceData['sub_mark'].forEach(sub => {
-            if(sub.sub_parent_id === '0') {
+            if (sub.sub_parent_id === '0') {
               xcategories.push(sub.sub_name);
               sub['sub_exam_mark'].forEach(exam => {
                 const sind = series.findIndex(e => exam.exam_name === e.name);
-                if(sind === -1) {
+                if (sind === -1) {
                   series.push({
                     name: exam.exam_name,
-                    data: [exam.student_mark_100_per]
+                    data: [this.roundTwoDecimai(exam.student_mark_100_per)]
                   });
                 } else {
-                  series[sind]['data'].push(exam.student_mark_100_per);
+                  series[sind]['data'].push(this.roundTwoDecimai(exam.student_mark_100_per));
                 }
               });
             }
@@ -149,14 +206,14 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
 
         } else {
           this.performanceNoRecord = true;
-        }        
+        }
       } else {
         this.performanceNoRecord = true;
       }
     });
   }
-  graphData(chartType, xcategories, series,) {
-    this.sessionwisePerformance = {
+  graphData(chartType, xcategories, series, ) {
+    this.sessionwisePerformanceData = {
       chart: {
         type: chartType,
         height: '280px',
@@ -192,6 +249,9 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
         column: {
           pointPadding: 0.2,
           borderWidth: 0
+        },
+        series: {
+          pointWidth: 15
         }
       },
       series: series
@@ -294,7 +354,7 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
           if (this.skillAwardsArray[1]) {
             for (const item of this.skillAwardsArray[1]) {
               this.finalActivityArray.push(item);
-              
+
             }
           }
         } else {
@@ -353,7 +413,6 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
         }
       });
     }
-
   }
   getStudentLastRecordPerProcessType() {
     this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
@@ -362,12 +421,13 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
         this.lastRecordId = result.data[0].last_record;
         this.loginId = result.data[0].au_login_id;
         this.sisService.getStudentInformation({ au_login_id: result.data[0].last_record, au_status: '1', au_process_type: '4' }).subscribe((result1: any) => {
-          if(result1 && result1.status === 'ok') {
+          if (result1 && result1.status === 'ok') {
+            this.currentUserDetails = result1.data[0];
             this.termsArray = [];
             this.termId = '1';
             this.termindex = 0;
-            this.sessionWisePerformance(result1.data[0]);
-            this.getClassTerm(result1.data[0].au_class_id);
+            this.sessionWisePerformance(this.currentUserDetails);
+            this.getClassTerm(this.currentUserDetails.au_class_id);
           }
         });
         this.getSkillsAwards(this.loginId);
@@ -396,10 +456,12 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
     this.termsArray = [];
     this.termId = '1';
     this.termindex = 0;
+    this.performanceTab = 'session'
     this.getSkillsAwards(this.loginId);
     this.getRemarks(this.loginId);
-    this.sessionWisePerformance(this.studentAcademicProfile.studentdetails);
-    this.getClassTerm(this.studentAcademicProfile.studentdetails.au_class_id);
+    this.currentUserDetails = this.studentAcademicProfile.studentdetails;
+    this.sessionWisePerformance(this.currentUserDetails);
+    this.getClassTerm(this.currentUserDetails.au_class_id);
   }
 
 }
