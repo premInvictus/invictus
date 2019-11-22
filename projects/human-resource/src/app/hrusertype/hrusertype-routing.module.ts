@@ -16,6 +16,7 @@ const routes: Routes = [
 			{ path: 'auxillaries', loadChildren:  '../hr-auxiliaries/auxiliaries.module#AuxiliariesModule' },
 			{ path: 'reports', loadChildren:  '../hr-reports/reports.module#ReportsModule' },
 			{ path: 'configure', loadChildren:  '../hr-configure/hr-configure.module#HrConfigureModule' },
+			{ path: 'leave-management', loadChildren:  '../leave-management/leave-management.module#LeaveManagementModule' },
 		]
 	}
 ];
