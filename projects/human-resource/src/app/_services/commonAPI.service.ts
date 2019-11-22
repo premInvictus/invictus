@@ -29,7 +29,15 @@ export class CommonAPIService {
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
 	}
-
+	getBloodGroup() {
+		return this.http.get(environment.apiSisUrl + '/bloodGroup/getBloodGroup');
+	}
+	getIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/getPrintSetting', value);
+	}
+	addIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/printSetting', value);
+	}
 	startLoading() {
 		this.loader.startLoading();
 	}
@@ -365,21 +373,21 @@ export class CommonAPIService {
 
 	getEmployeeLeaveData(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee-leave-management/get',value);
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/get', value);
 	}
 
 	insertEmployeeLeaveData(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee-leave-management/insert',value);
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/insert', value);
 	}
 
 	updateEmployeeLeaveData(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee-leave-management/update',value);
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/update', value);
 	}
 
 	deleteEmployeeLeaveData(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/employee-leave-management/delete',value);
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/delete', value);
 	}
 }

@@ -1,16 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { CommonAPIService, SisService } from '../../../_services/index';
-
 @Component({
-	selector: 'app-print-id-card',
-	templateUrl: './print-id-card.component.html',
-	styleUrls: ['./print-id-card.component.scss']
+	selector: 'app-idcard-style1',
+	templateUrl: './idcard-style1.component.html',
+	styleUrls: ['./idcard-style1.component.scss']
 })
-export class PrintIdCardComponent implements OnInit {
-
-	studentDetails: any = {};
-	idCardConfig: any = {};
+export class IdcardStyle1Component implements OnInit, OnChanges {
+	@Input() studentDetails: any;
+	@Input() idCardConfig: any;
+	studentProfileImage: any = 'https://via.placeholder.com/75';
 	schoolInfo: any = {};
 	authSign: any;
 	container_box_idheader: any;
@@ -41,61 +39,21 @@ export class PrintIdCardComponent implements OnInit {
 	showGuardianPhoto = false;
 	showParentMobile = false;
 	showParentName = false;
-	studentProfileImage: any;
-	studentDetailsArray: any[] = [];
-	constructor(public dialogRef: MatDialogRef<PrintIdCardComponent>,
-		@Inject(MAT_DIALOG_DATA) public data,
-		private sisService: SisService,
+	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService) { }
 
 	ngOnInit() {
-		this.studentDetailsArray = [];
-		const param: any = {};
-		if (this.data.adm_no) {
-			if (this.data.enrollment_type === '4') {
-				param.enrollment_type = this.data.enrollment_type,
-					param.admission_no = this.data.adm_no;
-				param.pmap_status = '1';
-			} else if (this.data.enrollment_type === '3') {
-				param.enrollment_type = this.data.enrollment_type,
-					param.provisional_admission_no = this.data.adm_no;
-				param.pmap_status = '1';
-			}
-			this.sisService.printApplication(param).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.studentDetails = result.data[0];
-					if (this.studentDetails.au_profileimage) {
-						this.studentProfileImage = this.studentDetails.au_profileimage;
-					} else {
-						this.studentProfileImage = 'https://via.placeholder.com/150';
-					}
-				}
-			});
-		} else {
-			for (const item of this.data.no) {
-				if (this.data.enrollment_type === '4') {
-					param.enrollment_type = this.data.enrollment_type,
-						param.admission_no = item.no;
-					param.pmap_status = '1';
-				} else if (this.data.enrollment_type === '3') {
-					param.enrollment_type = this.data.enrollment_type,
-						param.provisional_admission_no = item.no;
-					param.pmap_status = '1';
-				}
-				this.sisService.printApplication(param).subscribe((result: any) => {
-					if (result.status === 'ok') {
-						this.studentDetails = {};
-						this.studentDetails = result.data[0];
-						this.studentDetailsArray.push(this.studentDetails);
-					}
-				});
-			}
-		}
-		this.getIdCardSettings();
+	}
+	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
 			+ ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.getSchool();
 		this.getBloodGroup();
+		if (this.studentDetails.au_profileimage) {
+			this.studentProfileImage = this.studentDetails.au_profileimage;
+		} else {
+			this.studentProfileImage = 'https://via.placeholder.com/150';
+		}
 		if (Number(this.idCardConfig.ps_missing_student) === 1 && this.studentProfileImage === 'https://via.placeholder.com/75') {
 			this.dontPrintStatus = true;
 		} else {
@@ -123,7 +81,7 @@ export class PrintIdCardComponent implements OnInit {
 		} else {
 			this.showBackSide = false;
 		}
-		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.schoolLogo : 'https://via.placeholder.com/50';
+		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.school_logo : 'https://via.placeholder.com/50';
 		this.container_box_idheader = this.idCardConfig.ps_header_fore_color;
 		this.container_box_idheader_bgColor = this.idCardConfig.ps_header_back_color;
 		this.studentNameForeColor = this.idCardConfig.ps_student_fore_color;
@@ -180,15 +138,6 @@ export class PrintIdCardComponent implements OnInit {
 			this.showParentName = false;
 		}
 	}
-	getIdCardSettings() {
-		this.sisService.getIdCardPrintSettings({
-			user_type : 'student'
-		}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.idCardConfig = result.data[0];
-			}
-		});
-	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -197,7 +146,7 @@ export class PrintIdCardComponent implements OnInit {
 		});
 	}
 	getBloodGroup() {
-		this.sisService.getBloodGroup().subscribe((result: any) => {
+		this.commonApiService.getBloodGroup().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.bloodGroupArray = result.data;
 			}
@@ -209,17 +158,5 @@ export class PrintIdCardComponent implements OnInit {
 			return this.bloodGroupArray[findex]['bg_name'];
 		}
 	}
-	closeDialog() {
-		this.dialogRef.close();
-	}
-	print() {
-		const printModal2 = document.getElementById('printCard');
-		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-		popupWin.document.open();
-		popupWin.document.write('<html> <link rel="stylesheet" href="../../../../../../assets/css/idcardstyle1.css">' +
-			'<link rel="stylesheet" href=""' +
-			'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
-			'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
-		popupWin.document.close();
-	}
 }
+
