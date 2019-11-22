@@ -248,7 +248,9 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getIdCardSettings() {
-		this.sisService.getIdCardPrintSettings().subscribe((result: any) => {
+		this.sisService.getIdCardPrintSettings({
+			user_type: 'student'
+		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.idCardSettings = result.data[0];
 			}
