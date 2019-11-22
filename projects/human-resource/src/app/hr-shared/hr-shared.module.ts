@@ -13,6 +13,7 @@ import {
 	MatCardModule, MatListModule, MatStepperModule,
 	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule
 } from '@angular/material';
+import { NgxBarcodeModule } from 'ngx-barcode';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
 import { CKEditorModule } from 'ng2-ckeditor';
@@ -37,8 +38,9 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 import { EmployeeCommonComponent } from './../employee-master/employee-common/employee-common.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 const moment = _moment;
-import {PopoverModule} from 'ngx-bootstrap/popover';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -90,7 +92,9 @@ export const MY_FORMATS = {
 		ImageCropperModule,
 		NgxMaskModule.forRoot(),
 		InvictusSharedModule,
-		PopoverModule.forRoot()
+		PopoverModule.forRoot(),
+		NgxBarcodeModule,
+		ColorPickerModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -166,7 +170,9 @@ export const MY_FORMATS = {
 		NoDataComponent, PreviewDocumentComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
-		EmployeeCommonComponent
+		EmployeeCommonComponent,
+		NgxBarcodeModule,
+		ColorPickerModule
 		//EmployeeDetailsComponent
 	],
 	providers: [
@@ -176,8 +182,8 @@ export const MY_FORMATS = {
 	]
 })
 
-export class HrSharedModule { 
-  constructor() {
+export class HrSharedModule {
+	constructor() {
 		const script: any = document.createElement('script');
 		if (!(CKEDITOR.type === '10')) {
 			CKEDITOR.type = '10';
@@ -199,7 +205,7 @@ export class HrSharedModule {
 				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
-				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	}
