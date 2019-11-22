@@ -321,7 +321,7 @@ export class MyLeaveComponent implements OnInit {
 			if (result) {
 				this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
 				this.showFormFlag = false;
-				this.getMyLeave();
+				this.getSubordinateLeave();
 			} else {
 				this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
 			}
@@ -331,6 +331,7 @@ export class MyLeaveComponent implements OnInit {
 	rejectLeave(item) {
 		item.text = this.rejectMessage;
 		this.rejectModal.openModal(item);
+		
 	}
 
 	rejectConfirm(item) {
@@ -341,7 +342,7 @@ export class MyLeaveComponent implements OnInit {
 			if (result) {
 				this.common.showSuccessErrorMessage('Leave Request Reject Successfully', 'success');
 				this.showFormFlag = false;
-				this.getMyLeave();
+				this.getSubordinateLeave();
 			} else {
 				this.common.showSuccessErrorMessage('Error While Reject Leave Request', 'error');
 			}
