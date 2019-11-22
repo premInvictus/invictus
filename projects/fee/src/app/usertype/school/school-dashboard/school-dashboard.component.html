@@ -1,6 +1,6 @@
 <div>
 
-    <mat-tab-group (selectedTabChange)="changeTab($event)" class="padding-8">
+    <mat-tab-group (selectedTabChange)="changeTab($event)" class="padding-tab">
         <mat-tab>
             <ng-template mat-tab-label>
                 <div>
@@ -20,7 +20,7 @@
 
 </div>
 
-<div class="row" *ngIf="!(cumcurrentTab)">
+<div *ngIf="!(cumcurrentTab)">
     <div class="col-12 ">
         <mat-card class="card-content__container">
             <mat-card-title>
