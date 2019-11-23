@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
-	selector: 'app-review-classwork',
+	selector: 'app-review-classwork', 
 	templateUrl: './review-classwork.component.html',
 	styleUrls: ['./review-classwork.component.css']
 })

@@ -10,6 +10,8 @@ import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from './../../hr-shared/preview-document/preview-document.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MyLeaveElement, SubordinateLeaveElement } from './my-leave.model';
+import { LeaveApplicationComponent } from './leave-application/leave-application.component';
+import { Key } from 'protractor';
 
 @Component({
 	selector: 'app-my-leave',
@@ -54,7 +56,6 @@ export class MyLeaveComponent implements OnInit {
 	ngOnInit() {
 		this.getEmployeeDetail();
 		this.buildForm();
-		this.getLeaveType();
 		this.getMyLeave();
 	}
 
@@ -72,15 +73,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	buildForm() {
-		this.leaveForm = this.fbuild.group({
-			'leave_id':'',
-			'leave_type': '',
-			'leave_start_date': '',
-			'leave_end_date': '',
-			'leave_reason': '',
-			'leave_attachment': '',
-			'leave_status' : ''
-		});
+
 	}
 
 	getEmployeeDetail() {
@@ -136,7 +129,7 @@ export class MyLeaveComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.SUBORDINATE_LEAVE_ELEMENT_DATA = [];
 		this.subordinateLeaveDataSource = new MatTableDataSource<SubordinateLeaveElement>(this.SUBORDINATE_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({ 'leave_to': this.currentUser ? this.currentUser.login_id : '', 'leave_status' : '0' }).subscribe((result: any) => {
+		this.common.getEmployeeLeaveData({ 'leave_to': this.currentUser ? this.currentUser.login_id : '', 'leave_status': '0' }).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
 				for (const item of result) {
@@ -175,7 +168,7 @@ export class MyLeaveComponent implements OnInit {
 		fileReader.onload = (e) => {
 			this.uploadImage(file.name, fileReader.result);
 		};
-		fileReader.readAsDataURL(file);		
+		fileReader.readAsDataURL(file);
 	}
 
 	uploadImage(fileName, au_profileimage) {
@@ -196,146 +189,166 @@ export class MyLeaveComponent implements OnInit {
 			this.getMyLeave();
 		}
 	}
-
-	applyForLeave() {		
-		this.showFormFlag = !this.showFormFlag;
-		this.attachmentArray = [];
-		this.reset();
-	}
-
 	reset() {
 		this.leaveForm.reset();
 	}
 
-	submit() {
-		if (this.leaveForm.valid) {
-			const datePipe = new DatePipe('en-in');
-			var inputJson = {};
-			var startDate = datePipe.transform(this.leaveForm.value.leave_start_date, 'yyyy-MM-dd');
-			var endDate = datePipe.transform(this.leaveForm.value.leave_end_date, 'yyyy-MM-dd');
-			var leaveRequestScheduleData = [];
-			var diffDay = this.getDaysDiff();
-			inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
-			inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
-			inputJson['leave_start_date'] = startDate;
-			inputJson['leave_end_date'] = endDate;
-			inputJson['leave_type'] = { "leave_type_id": this.leaveForm.value.leave_type, "leave_type_name": this.getLeaveTypeName(this.leaveForm.value.leave_type) && this.getLeaveTypeName(this.leaveForm.value.leave_type)[0] ? this.getLeaveTypeName(this.leaveForm.value.leave_type)[0] : '' };
-			inputJson['leave_reason'] = this.leaveForm.value.leave_reason;
-			inputJson['leave_attachment'] = this.attachmentArray;
-			inputJson['leave_request_schedule_data'] = [];
-			inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
-			inputJson['leave_status'] = 0;
-			var newStartDate = new Date(startDate);
-			for (let i = 0; i <= diffDay; i++) {
-				leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
-				newStartDate.setDate(newStartDate.getDate() + 1);
-			}
-			inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
-			this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
-					this.showFormFlag = false;
-					this.getMyLeave();
-				} else {
-					this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
-				}
-			});
-		} else {
-			this.common.showSuccessErrorMessage('Please Fill Required Fields', 'error');
+	submit(result, attachment) {
+		const datePipe = new DatePipe('en-in');
+		var inputJson = {};
+		var startDate = datePipe.transform(result.leave_start_date, 'yyyy-MM-dd');
+		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
+		var leaveRequestScheduleData = [];
+		var diffDay = this.getDaysDiff(result);
+		inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
+		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
+		inputJson['leave_start_date'] = startDate;
+		inputJson['leave_end_date'] = endDate;
+		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) && this.getLeaveTypeName(result.leave_type)[0] ? this.getLeaveTypeName(result.leave_type)[0] : '' };
+		inputJson['leave_reason'] = result.leave_reason;
+		inputJson['leave_attachment'] = attachment;
+		inputJson['leave_request_schedule_data'] = [];
+		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
+		inputJson['leave_status'] = 0;
+		var newStartDate = new Date(startDate);
+		for (let i = 0; i <= diffDay; i++) {
+			leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
+			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
+		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
+		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
+				this.showFormFlag = false;
+				this.getMyLeave();
+			} else {
+				this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
+			}
+		});
 
 	}
 
-	update() {
-		if (this.leaveForm.valid) {
-			const datePipe = new DatePipe('en-in');
-			var inputJson = {};
-			var startDate = datePipe.transform(this.leaveForm.value.leave_start_date, 'yyyy-MM-dd');
-			var endDate = datePipe.transform(this.leaveForm.value.leave_end_date, 'yyyy-MM-dd');
-			var leaveRequestScheduleData = [];
-			var diffDay = this.getDaysDiff();
-			inputJson['leave_id'] = this.leaveForm.value.leave_id;
-			inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
-			inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
-			inputJson['leave_start_date'] = startDate;
-			inputJson['leave_end_date'] = endDate;
-			inputJson['leave_type'] = { "leave_type_id": this.leaveForm.value.leave_type, "leave_type_name": this.getLeaveTypeName(this.leaveForm.value.leave_type) && this.getLeaveTypeName(this.leaveForm.value.leave_type)[0] ? this.getLeaveTypeName(this.leaveForm.value.leave_type)[0] : '' };
-			inputJson['leave_reason'] = this.leaveForm.value.leave_reason;
-			inputJson['leave_attachment'] = this.attachmentArray;
-			inputJson['leave_request_schedule_data'] = [];
-			inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
-			inputJson['leave_status'] = this.leaveForm.value.leave_status;
-			var newStartDate = new Date(startDate);
-			for (let i = 0; i <= diffDay; i++) {
-				leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
-				newStartDate.setDate(newStartDate.getDate() + 1);
-			}
-			inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
-			this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
-					this.showFormFlag = false;
-					this.getMyLeave();
-				} else {
-					this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
-				}
-			});
-		} else {
-			this.common.showSuccessErrorMessage('Please Fill Required Fields', 'error');
+	update(result, attachment) {
+		const datePipe = new DatePipe('en-in');
+		var inputJson = {};
+		var startDate = datePipe.transform(result.leave_start_date, 'yyyy-MM-dd');
+		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
+		var leaveRequestScheduleData = [];
+		var diffDay = this.getDaysDiff(result);
+		inputJson['leave_id'] = result.leave_id;
+		inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
+		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
+		inputJson['leave_start_date'] = startDate;
+		inputJson['leave_end_date'] = endDate;
+		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) && this.getLeaveTypeName(result.leave_type)[0] ? this.getLeaveTypeName(result.leave_type)[0] : '' };
+		inputJson['leave_reason'] = result.leave_reason;
+		inputJson['leave_attachment'] = attachment;
+		inputJson['leave_request_schedule_data'] = [];
+		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
+		inputJson['leave_status'] = result.leave_status;
+		var newStartDate = new Date(startDate);
+		for (let i = 0; i <= diffDay; i++) {
+			leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
+			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
+		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
+		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
+				this.showFormFlag = false;
+				this.getMyLeave();
+			} else {
+				this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
+			}
+		});
 	}
-
-
 
 	deleteConfirm(item) {
-			let inputJson = {};			
-			inputJson['leave_id'] = item.leave_id;
-			inputJson['leave_status'] = '5';
-			this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-				if (result) {
-					this.common.showSuccessErrorMessage('Leave Request Delete Successfully', 'success');
-					this.showFormFlag = false;
-					this.getMyLeave();
-				} else {
-					this.common.showSuccessErrorMessage('Error While Delete Leave Request', 'error');
-				}
-			});
-	} 
+		let inputJson = {};
+		inputJson['leave_id'] = item.leave_id;
+		inputJson['leave_status'] = '5';
+		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.common.showSuccessErrorMessage('Leave Request Delete Successfully', 'success');
+				this.showFormFlag = false;
+				this.getMyLeave();
+			} else {
+				this.common.showSuccessErrorMessage('Error While Delete Leave Request', 'error');
+			}
+		});
+	}
 
-	
+
 
 	deleteLeave(item) {
 		this.deleteModal.openModal(item);
 	}
-	
+
 	approveLeave(item) {
 		item.text = this.approveMessage;
 		this.approveModal.openModal(item);
 	}
 
 	approveConfirm(item) {
-		let inputJson = {};			
+		console.log(item);
+		var months = [
+			'', 'January', 'February', 'March', 'April', 'May',
+			'June', 'July', 'August', 'September',
+			'October', 'November', 'December'
+		];
+		let monthJson = {};
+		let employeeArrData = [];
+		let inputJson = {};
 		inputJson['leave_id'] = item.leave_id;
 		inputJson['leave_status'] = '1';
-		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			if (result) {
-				this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-				this.showFormFlag = false;
-				this.getSubordinateLeave();
+		var current, previous;
+		for (const det of item.leave_request_schedule_data) {
+			current = new Date(det.date).getMonth() + 1;
+			if (current === previous) {
+				Object.keys(monthJson).forEach((key: any) => {
+					if (key === 'month_id' && Number(monthJson[key]) === Number(current)) {
+						monthJson['attendance_detail'].emp_leave_granted.leave_count = Number(monthJson['attendance_detail'].emp_leave_granted.leave_count) + 1;
+					}
+				});
+
 			} else {
-				this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
+				monthJson = {
+					"month_id": current,
+					"month_name": months[Number(current)],
+					"attendance_detail": {
+						"emp_leave_granted": {
+							"leave_id": item.leave_type.leave_type_id,
+							"leave_name": item.leave_type.leave_type_name,
+							"leave_count": 1
+						}
+					}
+
+				}
+				employeeArrData.push(monthJson);
+				previous = current;
 			}
-		});
-	} 
+
+			// this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+			// 	if (result) {
+			// 		this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
+			// 		this.showFormFlag = false;
+			// 		this.getSubordinateLeave();
+			// 	} else {
+			// 		this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
+			// 	}
+			// });
+		}
+		console.log(employeeArrData);
+	}
 
 	rejectLeave(item) {
 		item.text = this.rejectMessage;
 		this.rejectModal.openModal(item);
-		
+
 	}
 
 	rejectConfirm(item) {
-		let inputJson = {};			
+		let inputJson = {};
 		inputJson['leave_id'] = item.leave_id;
 		inputJson['leave_status'] = '2';
 		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
@@ -347,22 +360,17 @@ export class MyLeaveComponent implements OnInit {
 				this.common.showSuccessErrorMessage('Error While Reject Leave Request', 'error');
 			}
 		});
-	} 
-	
+	}
 
 	editLeave(item) {
-		this.editFlag = true;
-		console.log('item', item);
-		this.showFormFlag = true;
-
-		this.leaveForm.patchValue({
-			'leave_id' :  item.leave_id,
-			'leave_start_date' : 	item.leave_start_date ? this.common.dateConvertion(item.leave_start_date, 'yyyy-MM-dd') : '',
-			'leave_end_date' : item.leave_end_date ? this.common.dateConvertion(item.leave_end_date, 'yyyy-MM-dd') : '',
-			'leave_type' : item.leave_type.leave_type_id,
-			'leave_reason' : item.leave_reason,
-			'leave_attachment' : item.leave_attachment,
-			'leave_status' : item.leave_status
+		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
+			width: '30%',
+			height: '55%',
+			data: item
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			console.log(dresult);
+			this.update(dresult.data, dresult.attachment);
 		});
 	}
 
@@ -371,10 +379,10 @@ export class MyLeaveComponent implements OnInit {
 		return new Date(mdy[0], mdy[1] - 1, mdy[2]);
 	}
 
-	getDaysDiff() {
+	getDaysDiff(result) {
 		const datePipe = new DatePipe('en-in');
-		var date1 = datePipe.transform(this.leaveForm.value.leave_start_date, 'yyyy-MM-dd');
-		var date2 = datePipe.transform(this.leaveForm.value.leave_end_date, 'yyyy-MM-dd');
+		var date1 = datePipe.transform(result.leave_start_date, 'yyyy-MM-dd');
+		var date2 = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
 		var parsedDate2: any = this.parseDate(date2);
 		var parsedDate1: any = this.parseDate(date1);
 		return Math.round((parsedDate2 - parsedDate1) / (1000 * 60 * 60 * 24));
@@ -398,8 +406,18 @@ export class MyLeaveComponent implements OnInit {
 			width: '100vh'
 		});
 	}
-
-
+	openLeaveApplicationForm() {
+		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
+			width: '30%',
+			height: '55%',
+			data: ''
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult.data) {
+				this.submit(dresult.data, dresult.attachment);
+			}
+		});
+	}
 
 
 }
