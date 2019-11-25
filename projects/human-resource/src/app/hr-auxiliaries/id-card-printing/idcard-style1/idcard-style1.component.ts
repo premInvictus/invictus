@@ -50,7 +50,7 @@ export class IdcardStyle1Component implements OnInit, OnChanges {
 		this.getSchool();
 		this.getBloodGroup();
 		if (this.studentDetails.au_profileimage) {
-			this.studentProfileImage = this.studentDetails.au_profileimage;
+			this.studentProfileImage = this.studentDetails.emp_profile_pic;
 		} else {
 			this.studentProfileImage = 'https://via.placeholder.com/150';
 		}

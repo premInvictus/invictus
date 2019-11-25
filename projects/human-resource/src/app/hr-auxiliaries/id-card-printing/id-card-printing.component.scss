@@ -8,3 +8,18 @@ th.mat-header-cell {
 .cdk-column-name{
     width: 25%;
 }
+.container-printid-portrait {
+    width: 204px !important;
+    height: 324px !important;
+    margin-bottom: 15px !important;
+    margin-right: 15px !important;
+    margin-left: 15px !important;
+    margin-top: 15px !important;
+}
+span.empid-bar-code-span {
+    font-size: 8px;
+    position: relative;
+    top: -3px;
+    font-weight: bold;
+    letter-spacing: 5px;
+}
