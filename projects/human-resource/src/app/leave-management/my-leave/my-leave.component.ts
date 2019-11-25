@@ -44,6 +44,8 @@ export class MyLeaveComponent implements OnInit {
 	editFlag = false;
 	approveMessage = 'Are you sure to Approve !';
 	rejectMessage = 'Are you sure to Reject !';
+	approvedArray: any[] = [];
+	finalapprovedArray: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -290,7 +292,8 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	approveConfirm(item) {
-		console.log(item);
+		this.finalapprovedArray = [];
+		this.approvedArray = [];
 		var months = [
 			'', 'January', 'February', 'March', 'April', 'May',
 			'June', 'July', 'August', 'September',
@@ -307,7 +310,8 @@ export class MyLeaveComponent implements OnInit {
 			if (current === previous) {
 				Object.keys(monthJson).forEach((key: any) => {
 					if (key === 'month_id' && Number(monthJson[key]) === Number(current)) {
-						monthJson['attendance_detail'].emp_leave_granted.leave_count = Number(monthJson['attendance_detail'].emp_leave_granted.leave_count) + 1;
+						monthJson['attendance_detail'].emp_leave_approved.leave_credit_count = Number(monthJson['attendance_detail'].emp_leave_approved.leave_credit_count) + 1;
+						monthJson['attendance_detail'].emp_leave_granted = Number(monthJson['attendance_detail'].emp_leave_granted) + 1;
 					}
 				});
 
@@ -316,29 +320,73 @@ export class MyLeaveComponent implements OnInit {
 					"month_id": current,
 					"month_name": months[Number(current)],
 					"attendance_detail": {
-						"emp_leave_granted": {
+						"emp_leave_approved": {
 							"leave_id": item.leave_type.leave_type_id,
 							"leave_name": item.leave_type.leave_type_name,
-							"leave_count": 1
-						}
+							"leave_credit_count": 1
+						},
+						"emp_leave_granted": 1
 					}
 
 				}
 				employeeArrData.push(monthJson);
 				previous = current;
 			}
-
-			// this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			// 	if (result) {
-			// 		this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-			// 		this.showFormFlag = false;
-			// 		this.getSubordinateLeave();
-			// 	} else {
-			// 		this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
-			// 	}
-			// });
 		}
-		console.log(employeeArrData);
+		if (employeeArrData.length > 0) {
+			var emp_login_id = item.leave_from ? item.leave_from : '';
+			this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
+				var finResult = result ? result : []
+				this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
+				for (const dety of employeeArrData) {
+					const findex = this.approvedArray[0].findIndex(e => Number(e.month_id) === Number(dety.month_id));
+					if (findex !== -1) {
+						if (this.approvedArray[0][findex].attendance_detail.emp_leave_approved) {
+							if (Number(this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
+								this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_credit_count =
+									Number(this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_credit_count) +
+									Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+							} else {
+								this.approvedArray[0][findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
+							}
+
+						} else {
+							this.approvedArray[0][findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
+						}
+						if (this.approvedArray[0][findex].attendance_detail.emp_leave_granted) {
+							this.approvedArray[0][findex].attendance_detail.emp_leave_granted =
+								Number(this.approvedArray[0][findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						} else {
+							this.approvedArray[0][findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						}
+					} else {
+						this.approvedArray[0].push(dety);
+					}
+				}
+				let approvedjson = {};
+				approvedjson = {
+					emp_id: item.leave_emp_detail.emp_id,
+					emp_month_attendance_data: {
+						month_data: this.approvedArray[0]
+					}
+				}
+				console.log(item.leave_emp_detail.emp_id);
+				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+					if (result) {
+						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+							if (approved_result) {
+								this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
+								this.showFormFlag = false;
+								this.getSubordinateLeave();
+							}
+						});
+					} else {
+						this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
+					}
+				});
+			});
+		}
+
 	}
 
 	rejectLeave(item) {
