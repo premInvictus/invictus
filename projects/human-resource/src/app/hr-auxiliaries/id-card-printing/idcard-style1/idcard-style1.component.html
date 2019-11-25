@@ -28,27 +28,42 @@
               'border-bottom-right-radius':'15px'}">
       <div class="row remove-margin">
         <div class="col-8 id-card-col-60 remove-col-padding">
-          <p [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
-            class="id_card_student_info remove-paragraph-bottom-padding"><b>Name
-              :</b>{{studentDetails.emp_name}}
-          </p>
-          <p [ngStyle]="{'font-weight':allContentBold}" class="id_card_student_info remove-paragraph-bottom-padding">
-            <b>Contact No.
-              :</b>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}
-          </p>
+          <table style="width: 100%;">
+            <tbody>
+              <tr [ngStyle]="{'font-weight':allContentBold}"
+                class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                style="text-transform: capitalize !important;">
+                <td style="text-align:right">Mobile no</td>
+                <td>:</td>
+                <td>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}</td>
+              </tr>
+              <tr [ngStyle]="{'font-weight':allContentBold}"
+                class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                style="text-transform: capitalize !important;">
+                <td style="text-align:right">Department</td>
+                <td>:</td>
+                <td>{{studentDetails.emp_department_detail.dpt_name}}</td>
+              </tr>
+              <tr [ngStyle]="{'font-weight':allContentBold}"
+                class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                style="text-transform: capitalize !important;">
+                <td style="text-align:right">Designation</td>
+                <td>:</td>
+                <td>{{studentDetails.emp_designation_detail.des_name}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="col-1 id-card-col-14 remove-col-padding">
           <div class="landscape">
-            <ngx-barcode bc-element-type="img" [bc-value]="studentDetails.au_admission_no" bc-format="CODE128">
+            <ngx-barcode bc-element-type="img" [bc-value]="'000' + studentDetails.emp_id" bc-format="CODE39">
             </ngx-barcode>
+            <span class="empid-bar-code-span-ls">Emp Id: {{'000' + studentDetails.emp_id}}</span>
           </div>
         </div>
         <div class="col-3 remove-col-padding">
-          <div class="text-center">
-            <p [ngStyle]="{'font-weight':allContentBold}"
-              class="id_card_student_minor_info remove-paragraph-bottom-padding">{{sessionPromote}}</p>
-          </div>
-          <div class="text-right"><img class="student-photo--size" [src]="studentProfileImage" alt="student photo">
+          <div class="text-right"><img class="student-photo--size" [src]="studentDetails?.emp_profile_pic ? studentDetails.emp_profile_pic
+            : 'https://via.placeholder.com/75'" alt="student photo">
           </div>
           <div class="text-right"><img class="principal-sign--size" *ngIf="showAuthority" [src]="authSign"
               alt="principal signature">
@@ -70,7 +85,7 @@
   <div>
   </div>
 </div>
-<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide"
+<!-- <div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide"
   style="float:left;object-fit: fill !important;">
   <div class="container-landscape-box__white">
     <div [ngStyle]="{'background': idcardBodyColor}">
@@ -164,16 +179,17 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <div class="container-printid-portrait" *ngIf="showPotrait" style="float:left">
   <div class="container-portrait-box__white">
-    <img class="background-portrait-one" src="/assets/images/employee_card_pt_style1.png">
+    <img class="background-portrait-one" [src]="idCardConfig.ps_template_image ? 
+    idCardConfig.ps_template_image :'/assets/images/employee_card_pt_style1.png'">
     <div id="id_card_portrait_body">
       <div>
         <div class="row remove-margin  school-logo-pt">
           <div class="col-3 remove-col-padding text-center">
-            <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo"
-              src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png">
+            <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+            : 'https://via.placeholder.com/50'">
           </div>
           <div class="col-9 col-padding-school-addr">
             <p [ngStyle]="{'font-weight':allContentBold}" style="color: #fff;
@@ -210,21 +226,21 @@
                 <tr [ngStyle]="{'font-weight':allContentBold}"
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"
                   style="text-transform: capitalize !important;">
-                  <td>Mobile no</td>
+                  <td style="text-align:right">Mobile no</td>
                   <td>:</td>
                   <td>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}</td>
                 </tr>
                 <tr [ngStyle]="{'font-weight':allContentBold}"
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"
                   style="text-transform: capitalize !important;">
-                  <td>Department</td>
+                  <td style="text-align:right">Department</td>
                   <td>:</td>
                   <td>{{studentDetails.emp_department_detail.dpt_name}}</td>
                 </tr>
                 <tr [ngStyle]="{'font-weight':allContentBold}"
                   class="id_card_portrait_student_info remove-paragraph-bottom-padding"
                   style="text-transform: capitalize !important;">
-                  <td>Designation</td>
+                  <td style="text-align:right">Designation</td>
                   <td>:</td>
                   <td>{{studentDetails.emp_designation_detail.des_name}}</td>
                 </tr>
@@ -261,7 +277,7 @@
     </div>
   </div>
 </div>
-<div class="container-printid-portrait" *ngIf="showPotrait && showBackSide" style="float:left">
+<!-- <div class="container-printid-portrait" *ngIf="showPotrait && showBackSide" style="float:left">
   <div class="container-portrait-box__white">
     <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
     <div id="id_card_portrait_body">
@@ -345,4 +361,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
