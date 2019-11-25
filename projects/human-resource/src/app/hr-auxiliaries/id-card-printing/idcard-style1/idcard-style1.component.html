@@ -1,0 +1,348 @@
+<div class="container-printid-landscape" *ngIf="showLandscape" style="float:left">
+  <div>
+    <div id="id_card_header"
+      [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-11px'}">
+      <div class="row remove-margin">
+        <div class="col-3 my-col remove-col-padding text-center">
+          <img *ngIf="showSchoolLogo" class="id-card-school-logo"
+            src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png"
+            alt="school-logo">
+        </div>
+        <div class="col-9 text-center remove-col-padding">
+          <p [ngStyle]="{'font-weight':allContentBold}"
+            class="id-card-school-name text-uppercase remove-paragraph-bottom-padding">
+            {{schoolInfo.school_name}}
+          </p>
+          <p [ngStyle]="{'font-weight':allContentBold, 'font-size': addressFontSize}" *ngIf="stuAddressFlag"
+            class="id-card-school-address remove-paragraph-bottom-padding">{{schoolInfo.school_address}},
+            {{schoolInfo.school_city}},
+            {{schoolInfo.school_state}} -
+          </p>
+          <p [ngStyle]="{'font-weight':allContentBold}"
+            class="id-card-school-contactno remove-paragraph-bottom-padding">Tel No : {{schoolInfo.school_phone}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div id="id_card_body" [ngStyle]="{'background': idcardBodyColor,'border-bottom-left-radius':'15px',
+              'border-bottom-right-radius':'15px'}">
+      <div class="row remove-margin">
+        <div class="col-8 id-card-col-60 remove-col-padding">
+          <p [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
+            class="id_card_student_info remove-paragraph-bottom-padding"><b>Name
+              :</b>{{studentDetails.emp_name}}
+          </p>
+          <p [ngStyle]="{'font-weight':allContentBold}" class="id_card_student_info remove-paragraph-bottom-padding">
+            <b>Contact No.
+              :</b>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}
+          </p>
+        </div>
+        <div class="col-1 id-card-col-14 remove-col-padding">
+          <div class="landscape">
+            <ngx-barcode bc-element-type="img" [bc-value]="studentDetails.au_admission_no" bc-format="CODE128">
+            </ngx-barcode>
+          </div>
+        </div>
+        <div class="col-3 remove-col-padding">
+          <div class="text-center">
+            <p [ngStyle]="{'font-weight':allContentBold}"
+              class="id_card_student_minor_info remove-paragraph-bottom-padding">{{sessionPromote}}</p>
+          </div>
+          <div class="text-right"><img class="student-photo--size" [src]="studentProfileImage" alt="student photo">
+          </div>
+          <div class="text-right"><img class="principal-sign--size" *ngIf="showAuthority" [src]="authSign"
+              alt="principal signature">
+          </div>
+          <div class="text-right">
+            <p [ngStyle]="{'font-weight':allContentBold}"
+              class="id_card_student_minor_info remove-paragraph-bottom-padding">Auth. Signature</p>
+          </div>
+        </div>
+      </div>
+      <div class="row remove-margin">
+        <div class="col-12 text-center">
+          <p [ngStyle]="{'font-weight':allContentBold, 'color':footerFontColor, 'background':footerBgColor}"
+            class="id_card_footer remove-paragraph-bottom-padding">{{idCardConfig.ps_footer}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+  </div>
+</div>
+<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide"
+  style="float:left;object-fit: fill !important;">
+  <div class="container-landscape-box__white">
+    <div [ngStyle]="{'background': idcardBodyColor}">
+      <div class="row remove-margin">
+        <div [ngStyle]="{'font-weight':allContentBold}" class="col-4 text-center remove-col-padding">
+          <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Father</b>
+          </span>
+          <div style="width: 65px;
+                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size"
+              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+              alt="student photo"></div>
+          <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
+              {{  studentDetails && studentDetails.father_honorific === '1' ? 'Mr.' :
+                       studentDetails && studentDetails.father_honorific === '2' ? 'Mrs.' :
+                       studentDetails && studentDetails.father_honorific === '3' ? 'Miss.' :
+                       studentDetails && studentDetails.father_honorific === '4' ? 'Ms.' :
+                       studentDetails && studentDetails.father_honorific === '5' ? 'Mx.' :
+                       studentDetails && studentDetails.father_honorific === '6' ? 'Sir.' :
+                       studentDetails && studentDetails.father_honorific === '7' ? 'Dr.' :
+                       studentDetails && studentDetails.father_honorific === '8' ? 'Lady' : ''
+                       }}
+              {{studentDetails.father_name}}</b>
+          </p>
+          <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
+            {{studentDetails?.father_no}}
+          </p>
+        </div>
+        <div [ngStyle]="{'font-weight':allContentBold}" class="col-4 text-center remove-col-padding">
+          <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Mother</b>
+          </span>
+          <div style="width: 65px;
+                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
+                  '" alt="student photo"></div>
+          <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
+              {{studentDetails && studentDetails.mother_honorific === '1' ? 'Mr.' :
+                       studentDetails && studentDetails.mother_honorific === '2' ? 'Mrs.' :
+                       studentDetails && studentDetails.mother_honorific === '3' ? 'Miss.' :
+                       studentDetails && studentDetails.mother_honorific === '4' ? 'Ms.' :
+                       studentDetails && studentDetails.mother_honorific === '5' ? 'Mx.' :
+                       studentDetails && studentDetails.mother_honorific === '6' ? 'Sir.' :
+                       studentDetails && studentDetails.mother_honorific === '7' ? 'Dr.' :
+                       studentDetails && studentDetails.mother_honorific === '8' ? 'Lady' : ''
+                       }}
+              {{studentDetails.mother_name}}</b>
+          </p>
+          <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
+            {{studentDetails?.mother_no}}
+          </p>
+        </div>
+        <div *ngIf="showGuardianPhoto" [ngStyle]="{'font-weight':allContentBold}"
+          class="col-4 text-center remove-col-padding">
+          <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Guardian Info</b>
+          </span>
+          <div style="width: 65px;
+                    height: 65px;margin:auto"><img *ngIf="showGuardianPhoto" class="parent-photo--size"
+              src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
+          <p class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
+              {{studentDetails && studentDetails.guardian_honorific === '1' ? 'Mr.' :
+                    studentDetails && studentDetails.guardian_honorific === '2' ? 'Mrs.' :
+                    studentDetails && studentDetails.guardian_honorific === '3' ? 'Miss.' :
+                    studentDetails && studentDetails.guardian_honorific === '4' ? 'Ms.' :
+                    studentDetails && studentDetails.guardian_honorific === '5' ? 'Mx.' :
+                    studentDetails && studentDetails.guardian_honorific === '6' ? 'Sir.' :
+                    studentDetails && studentDetails.guardian_honorific === '7' ? 'Dr.' :
+                    studentDetails && studentDetails.guardian_honorific === '8' ? 'Lady' : ''
+                    }}
+              {{studentDetails.guardian_name}}</b>
+          </p>
+          <p class="id_card_student_contact_info remove-paragraph-bottom-padding">9999955555</p>
+        </div>
+      </div>
+      <div class="row remove-margin">
+        <div class="col-12">
+          <p [ngStyle]="{'font-weight':allContentBold}"
+            class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+            {{studentDetails.address1 ? studentDetails.address1 : '-'}}
+          </p>
+          <p [ngStyle]="{'font-weight':allContentBold}"
+            class="id_card_student_addr_info remove-paragraph-bottom-padding new-footer-para-id-card"><b>Disclaimer
+              :</b>
+            Id-Card is school's property. Please return if found.
+          </p>
+        </div>
+      </div>
+      <div class="row remove-margin">
+        <div class="col-12 text-center">
+          <p style="margin-top: none"
+            [ngStyle]="{'font-weight':allContentBold, 'color':footerFontColor, 'background':footerBgColor}"
+            class="id_card_footer remove-paragraph-bottom-padding">{{idCardConfig.ps_footer}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-printid-portrait" *ngIf="showPotrait" style="float:left">
+  <div class="container-portrait-box__white">
+    <img class="background-portrait-one" src="/assets/images/employee_card_pt_style1.png">
+    <div id="id_card_portrait_body">
+      <div>
+        <div class="row remove-margin  school-logo-pt">
+          <div class="col-3 remove-col-padding text-center">
+            <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo"
+              src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png">
+          </div>
+          <div class="col-9 col-padding-school-addr">
+            <p [ngStyle]="{'font-weight':allContentBold}" style="color: #fff;
+                background: transparent;
+                text-align: center;text-align: end;
+    font-weight: bold;" class="id-card-school-name text-uppercase remove-paragraph-bottom-padding">
+              {{schoolInfo.school_name}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row remove-margin">
+          <div class="col-12">
+            <div class="text-center"><img class="student-portrait-photo--size" [src]="studentDetails?.emp_profile_pic ? studentDetails.emp_profile_pic
+              : 'https://via.placeholder.com/75'" alt="student photo"></div><br>
+            <img class="portriat-principal-sign--size" *ngIf="showAuthority" [src]="authSign" alt="principal signature">
+            <div class="text-center">
+              <p [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
+                class="id_card_portrait_student_name text-uppercase remove-paragraph-bottom-padding" style="position: relative;
+                        top: -50px;"><b>
+                  {{studentDetails.emp_name}}
+                </b>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row remove-margin id-card-div-move-pot">
+          <div class="col-12 remove-col-padding text-uppercase">
+            <table style="width: 100%;">
+              <tbody>
+                <tr [ngStyle]="{'font-weight':allContentBold}"
+                  class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                  style="text-transform: capitalize !important;">
+                  <td>Mobile no</td>
+                  <td>:</td>
+                  <td>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}</td>
+                </tr>
+                <tr [ngStyle]="{'font-weight':allContentBold}"
+                  class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                  style="text-transform: capitalize !important;">
+                  <td>Department</td>
+                  <td>:</td>
+                  <td>{{studentDetails.emp_department_detail.dpt_name}}</td>
+                </tr>
+                <tr [ngStyle]="{'font-weight':allContentBold}"
+                  class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                  style="text-transform: capitalize !important;">
+                  <td>Designation</td>
+                  <td>:</td>
+                  <td>{{studentDetails.emp_designation_detail.des_name}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="text-center potrait-bar">
+              <ngx-barcode bc-element-type="img" [bc-value]="'000' + studentDetails.emp_id" bc-format="CODE39">
+              </ngx-barcode>
+              <span class="empid-bar-code-span">Emp Id: {{'000' + studentDetails.emp_id}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row remove-margin">
+          <div class="col-12">
+            <div class="school-info-pt-st1">
+              <p [ngStyle]="{'font-weight':allContentBold}" *ngIf="stuAddressFlag"
+                class="id-card-school-address remove-paragraph-bottom-padding">{{schoolInfo.school_address}},
+                {{schoolInfo.school_city}},
+                {{schoolInfo.school_state}} -
+              </p>
+              <p [ngStyle]="{'font-weight':allContentBold}"
+                class="id-card-school-contactno remove-paragraph-bottom-padding">Tel No : {{schoolInfo.school_phone}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row remove-margin top-portrait-top-footer id_card_portriat_color">
+          <div class="col-12 text-center">
+            <p [ngStyle]="{'font-weight':allContentBold, 'color':footerFontColor, 'background':footerBgColor}"
+              class="id_card_footer remove-paragraph-bottom-padding">{{idCardConfig.ps_footer}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-printid-portrait" *ngIf="showPotrait && showBackSide" style="float:left">
+  <div class="container-portrait-box__white">
+    <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
+    <div id="id_card_portrait_body">
+      <div>
+        <div class="row remove-margin">
+          <div style="width: 55px;
+                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+            <img *ngIf="showParentPhoto" class="parent-portrait-photo--size"
+              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+              alt="student photo">
+          </div>
+          <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name
+                :</b>{{studentDetails.father_name}}
+            </p>
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Relationship:</b> Father</p>
+            <p *ngIf="showParentMobile" class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Tel
+                No
+                :</b> {{studentDetails?.father_no}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row remove-margin">
+          <div style="width: 55px;
+                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+            <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
+                '" alt="student photo">
+          </div>
+          <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name :</b>
+              {{studentDetails.mother_name}}
+            </p>
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Relationship:</b> Mother</p>
+            <p *ngIf="showParentMobile" class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Tel
+                No
+                :</b> {{studentDetails?.mother_no}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showGuardianPhoto">
+        <div class="row remove-margin">
+          <div style="width: 55px;
+                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+            <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size"
+              src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo">
+          </div>
+          <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name
+                :</b>{{studentDetails.guardian_name}}
+            </p>
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Relationship:</b> Guardian
+            </p>
+            <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Tel No :</b> 9199345112</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="row remove-margin sep row">
+          <div class="col-12 remove-col-padding">
+            <p [ngStyle]="{'font-weight':allContentBold}"
+              class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Address :</b>
+              {{studentDetails.address1}}{{studentDetails.address2}}
+            </p>
+            <p [ngStyle]="{'font-weight':allContentBold}"
+              class="id_card_student_addr_info remove-paragraph-bottom-padding"><b>Disclaimer :</b>
+              Id-Card is school's property. Please return if found.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div [ngStyle]="{'background': idcardBodyColor}">
+        <div class="row remove-margin top-portrait-back-footer">
+          <div class="col-12 text-center">
+            <p [ngStyle]="{'font-weight':allContentBold, 'color':footerFontColor, 'background':footerBgColor}"
+              class="id_card_footer remove-paragraph-bottom-padding">{{idCardConfig.ps_footer}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

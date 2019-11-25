@@ -17,6 +17,7 @@ import { EmployeeTabSixContainerComponent } from './employee-tab-six-container/e
 import { EmployeeAttendanceComponent } from './employee-attendance/employee-attendance.component';
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { EmployeeLedgerComponent } from './employee-ledger/employee-ledger.component';
+import { LeaveMasterComponent } from './leave-master/leave-master.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -47,6 +48,7 @@ export const MY_FORMATS = {
 		EmployeeAttendanceComponent,
 		EmployeeLeaveComponent,
 		EmployeeLedgerComponent,
+		LeaveMasterComponent,
 		],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 

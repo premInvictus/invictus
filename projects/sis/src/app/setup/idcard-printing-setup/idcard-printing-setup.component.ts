@@ -147,6 +147,7 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	}
 	saveIdCardSettings() {
 		this.idcardForm.value.ps_auth_sign = this.authImage;
+		this.idcardForm.value.ps_user_type = 'student';
 		this.sisService.addIdCardPrintSettings(this.idcardForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.commonService.showSuccessErrorMessage('Settings Saved', 'success');
@@ -158,7 +159,9 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	}
 	getIdCardSettings() {
 		this.idCardSettings = {};
-		this.sisService.getIdCardPrintSettings().subscribe((result: any) => {
+		this.sisService.getIdCardPrintSettings({
+			user_type: 'student'
+		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.idCardSettings = result.data[0];
 				this.headerforecolor = this.idCardSettings.ps_header_fore_color;

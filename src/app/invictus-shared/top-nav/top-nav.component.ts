@@ -168,6 +168,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			} else if (url === 'hr') {
 				this.defaultProject = 'HRMS';
 				this.projectId = '8';
+			} else if (url === 'misc') {
+				this.defaultProject = 'Miscellaneous';
+				this.projectId = '11';
 			}
 		}
 	}
@@ -287,6 +290,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (Number(pro_id) === 8) {
 			this.proUrl = 'hr';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'hr' }));
+		} if (Number(pro_id) === 11) {
+			this.proUrl = 'misc';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'misc' }));
 		}
 		const saveStateJSON = {
 			pro_url: this.proUrl,
@@ -328,6 +334,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.router.navigate(['/hr']);
 					this.defaultProject = 'HRMS';
 					this.projectId = '8';
+				}
+				if (Number(pro_id) === 11) {
+					this.router.navigate(['/misc']);
+					this.defaultProject = 'Miscellaneous';
+					this.projectId = '11';
 				}
 			}
 		});

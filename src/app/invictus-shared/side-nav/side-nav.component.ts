@@ -56,6 +56,8 @@ export class SideNavComponent implements OnInit, OnChanges {
 					this.router.navigateByUrl('library/school');
 				} else if (url === 'hr') {
 					this.router.navigateByUrl('hr/school');
+				} else if (url === 'misc') {
+					this.router.navigateByUrl('misc/school');
 				}
 			}
 		} else if (this.currentUser.role_id === '3') {

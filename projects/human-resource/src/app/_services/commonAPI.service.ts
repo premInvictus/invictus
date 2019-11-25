@@ -29,7 +29,15 @@ export class CommonAPIService {
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
 	}
-
+	getBloodGroup() {
+		return this.http.get(environment.apiSisUrl + '/bloodGroup/getBloodGroup');
+	}
+	getIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/getPrintSetting', value);
+	}
+	addIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/printSetting', value);
+	}
 	startLoading() {
 		this.loader.startLoading();
 	}
@@ -306,6 +314,18 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-structure/insert', value);
 	}
+	insertAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/insertAttendance', value);
+	}
+	updateAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/updateAttendance', value);
+	}
+	checkAttendance(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/attendance/checkAttendance', value);
+	}
 	getSalaryStr() {
 		return this.http.get(environment.apiHRUrl + '/salary-structure/getSalaryStructure');
 	}
@@ -335,5 +355,39 @@ export class CommonAPIService {
 	}
 	getLeaveManagement() {
 		return this.http.get(environment.apiHRUrl + '/leave-management/getLeaveManagement');
+	}
+	insertDepartmentLeave(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/department-leave/insertDepartmentLeave', value);
+	}
+	updateDepartmentLeave(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/department-leave/updateDepartmentLeave', value);
+	}
+	getDepartmentLeave() {
+		return this.http.get(environment.apiHRUrl + '/department-leave/getDepartmentLeave');
+	}
+	getCommunication() {
+		return this.http.get(environment.apiHRUrl + '/communication/getCommunication');
+	}
+
+	getEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/get', value);
+	}
+
+	insertEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/insert', value);
+	}
+
+	updateEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/update', value);
+	}
+
+	deleteEmployeeLeaveData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/delete', value);
 	}
 }

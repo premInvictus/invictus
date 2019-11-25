@@ -633,8 +633,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/shuffle', value);
 	}
-	getIdCardPrintSettings() {
-		return this.http.get(environment.apiSisUrl + '/configure/getPrintSetting');
+	getIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/getPrintSetting', value);
 	}
 	addIdCardPrintSettings(value) {
 		return this.http.post(environment.apiSisUrl + '/configure/printSetting', value);
