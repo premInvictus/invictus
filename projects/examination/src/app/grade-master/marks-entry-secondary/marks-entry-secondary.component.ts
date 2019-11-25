@@ -223,7 +223,11 @@ export class MarksEntrySecondaryComponent implements OnInit {
     this.tableDivFlag = false;
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
       this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
+      const param: any = {};
+      param.au_class_id = this.paramform.value.eme_class_id;
+      param.au_sec_id = this.paramform.value.eme_sec_id;
+      param.sub_id = this.paramform.value.eme_sub_id;
+      this.examService.getRollNoUser(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
         } else {
