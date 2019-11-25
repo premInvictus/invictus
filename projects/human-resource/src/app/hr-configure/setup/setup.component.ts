@@ -434,7 +434,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					formGroup: this.fbuild.group({
 						leave_id: value.departmentwise_leave[j]['leave_id'],
 						leave_name: value.departmentwise_leave[j]['leave_name'],
-						leave_credit_count: value.departmentwise_leave[j]['leave_credit_count']
+						leave_credit_count: value.departmentwise_leave[j]['leave_credit_count'],
+						leave_proportionated: value.departmentwise_leave[j]['leave_proportionated']
 					})
 				});
 			}
@@ -490,6 +491,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				formGroup: this.fbuild.group({
 					leave_id: this.leaveManagementArray[j]['leave_id'],
 					leave_name: this.leaveManagementArray[j]['leave_name'],
+					leave_proportionated: this.leaveManagementArray[j]['leave_proportionated'],
 					leave_credit_count: ''
 				})
 			});

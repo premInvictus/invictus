@@ -273,7 +273,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				
 			}
 		}
-		// console.log(this.employeeData);
+		 console.log(this.employeeData);
 		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
