@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormArrayName, FormControl } from '@angular/forms';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
 @Component({
 	selector: 'app-idcard-printing-setup',
 	templateUrl: './idcard-printing-setup.component.html',
@@ -20,6 +21,7 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	headerbackcolor: any;
 	stunameforecolor: any;
 	stunamebackcolor: any;
+	schoolLogo: any = '';
 	icarddetforecolor: any;
 	footerforecolor: any;
 	footerbackcolor: any;
@@ -39,7 +41,14 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	authImage: any;
 	showImage = false;
 	hideIfBlankFlag = false;
+	templateImage: any;
+	showTempImage = false;
 	authSignFlag = false;
+	school_logo_image: any;
+	showSchoolImage = false;
+	showWaterImage = false;
+	waterMarkImage: any = '';
+	dialogRef2: MatDialogRef<PreviewDocumentComponent>
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
 		private commonService: CommonAPIService,
@@ -99,6 +108,9 @@ export class IdcardPrintingSetupComponent implements OnInit {
 			ps_hide_photo: '',
 			ps_show_stu_addr: '',
 			ps_hide_stu_bg: '',
+			ps_school_logo: '',
+			ps_template_image: '',
+			ps_watermark_image: ''
 		});
 	}
 	getHeaderForeColorChange($event) {
@@ -145,6 +157,8 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	}
 	saveIdCardSettings() {
 		this.idcardForm.value.ps_auth_sign = this.authImage;
+		this.idcardForm.value.ps_school_logo = this.schoolLogo;
+		this.idcardForm.value.ps_template_image = this.templateImage;
 		this.idcardForm.value.ps_user_type = 'employee';
 		this.commonService.addIdCardPrintSettings(this.idcardForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -170,7 +184,17 @@ export class IdcardPrintingSetupComponent implements OnInit {
 				this.footerforecolor = this.idCardSettings.ps_footer_fore_color;
 				this.footerbackcolor = this.idCardSettings.ps_footer_back_color;
 				this.authImage = this.idCardSettings.ps_auth_sign;
+				this.schoolLogo = this.idCardSettings.ps_school_logo;
+				this.templateImage = this.idCardSettings.ps_template_image;
+				this.waterMarkImage = this.idCardSettings.ps_watermark_image;
+				if (this.templateImage) {
+					this.showTempImage = true;
+				}
+				if (this.waterMarkImage) {
+					this.showWaterImage = true;
+				}
 				this.showImage = true;
+				this.showSchoolImage = true;
 				if (this.idCardSettings.ps_missing_student === '1') {
 					this.hideIfBlankFlag = false;
 				} else {
@@ -213,6 +237,7 @@ export class IdcardPrintingSetupComponent implements OnInit {
 					ps_auth_sign_text: this.idCardSettings.ps_auth_sign_text === '1' ? true : false,
 					ps_show_stu_addr: this.idCardSettings.ps_show_stu_addr === '1' ? true : false,
 					ps_hide_stu_bg: this.idCardSettings.ps_hide_stu_bg === '1' ? true : false,
+					ps_school_logo: this.idCardSettings.ps_school_logo ? this.idCardSettings.ps_school_logo : ''
 				});
 			}
 		});
@@ -242,6 +267,81 @@ export class IdcardPrintingSetupComponent implements OnInit {
 		};
 		reader.readAsDataURL(files);
 	}
+	uploadLogo($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop2(files[i]);
+		}
+	}
+	IterateFileLoop2(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.schoolLogo = result.data[0].file_url;
+					this.showSchoolImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadTempImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop3(files[i]);
+		}
+	}
+	IterateFileLoop3(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.templateImage = result.data[0].file_url;
+					this.showTempImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadWaterImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop4(files[i]);
+		}
+	}
+	IterateFileLoop4(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.waterMarkImage = result.data[0].file_url;
+					this.showWaterImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
 	idCardMissing($event) {
 		if ($event.checked === true) {
 			this.idcardForm.patchValue({
@@ -263,18 +363,18 @@ export class IdcardPrintingSetupComponent implements OnInit {
 			});
 		}
 	}
-	// previewImage(img) {
-	// 	const imgArray: any[] = [];
-	// 	imgArray.push({
-	// 		imgName: img,
-	// 		doc_req_id: ''
-	// 	});
-	// 	this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
-	// 		data: {
-	// 			imageArray: imgArray
-	// 		},
-	// 		height: '70vh',
-	// 		width: '70vh'
-	// 	});
-	// }
+	previewImage(img) {
+		const imgArray: any[] = [];
+		imgArray.push({
+			imgName: img,
+			doc_req_id: ''
+		});
+		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				imageArray: imgArray
+			},
+			height: '70vh',
+			width: '70vh'
+		});
+	}
 }

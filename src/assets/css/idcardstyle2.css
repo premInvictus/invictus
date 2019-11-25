@@ -1,7 +1,16 @@
 .row {display: flex;}
 .margin-top-20 {margin-top: 20px !important}
 .remove-col-padding{padding-left: 0 !important;padding-right: 0 !important;}
-.container-printid-landscape {width: 344px !important;height: 207px !important;margin-left: -8px; margin-top: -8px;}
+    .container-printid-landscape {
+        width: 344px !important;
+        height: 207px !important;
+        margin-left: -8px;
+        /* margin-bottom: 15px; */
+        margin-top: 15px;
+        margin-right: 15px;
+        margin-top: -8px;
+    }
+            
         #id_card_header {padding-bottom: 2px !important;margin-top: 0px !important;padding-top: 10px;}
         img.watermark-image {
             position: absolute;
@@ -56,7 +65,17 @@
             height: 24px !important;
             position: relative;
             top: 54px;
-            left: 87px;
+            left: -7px;
+        }
+        span.empid-bar-code-span-ls2 {
+            font-size: 8px;
+            position: fixed;
+            transform: rotate(270deg);
+            /* top: 29px; */
+            margin-top: 35px;
+            margin-left: -6px;
+            letter-spacing: 3px;
+            font-weight: bold;
         }
         .id-card-school-logo {width: 40px;height: 40px;position: relative;
             top: -6px;}
@@ -131,10 +150,18 @@
             height: 215px !important;
             margin-left: -8px;
             margin-top: -8px;
+            margin-right: 15px;
+        }
+        .principal-sign--size2 {
+            width: 55px;
+            height: 24px;
+            position: relative;
+            left: 160px;
+            top: 79px;
         }
         #id_card_landscape_body {
-            position: absolute;
-            top: 8px;
+            position: relative;
+            top: -92%;
             width: 324px;
         }
         #id_card_portrait_body_style2 {
@@ -170,7 +197,7 @@
             font-size: 14px;
             position: relative;
             font-weight: bold !important;
-            top: 7px;
+            top: -7px;
             left: 4px;
         }
         .id-card-school-name2 {
@@ -236,6 +263,15 @@
             top: -3px;
             font-weight: bold;
             letter-spacing: 5px;
+        }
+        span.empid-bar-code-span-ls {
+            transform: rotate(270deg);
+            position: absolute;
+            font-size: 8px;
+            margin-left: -29px;
+            margin-top: -20px;
+            font-weight: bold;
+            letter-spacing: 3px;
         }
         .school-info-pt-st1 {
             position: relative;
