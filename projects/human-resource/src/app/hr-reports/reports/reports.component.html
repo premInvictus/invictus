@@ -55,7 +55,7 @@
           <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog"
             id="salary_compute_log">
             <ng-container matColumnDef="header-row-first-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> </th>
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="3"> </th>
             </ng-container>
 
             <ng-container matColumnDef="header-row-salary-heads-group">
@@ -67,20 +67,21 @@
             <ng-container matColumnDef="header-row-deductions-group">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Deductions </th>
             </ng-container>
+
+            <!--             
             <ng-container matColumnDef="header-row-three-group">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="3"> </th>
-            </ng-container>
-            <ng-container matColumnDef="header-row-modes-group">
+            </ng-container> -->
+
+            <!-- <ng-container matColumnDef="header-row-modes-group">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="paymentModeArray.length+1"> Modes </th>
             </ng-container>
             <ng-container matColumnDef="header-row-four-group">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['header-row-first-group', 'header-row-salary-heads-group', 'header-row-deductions-group',
-              'header-row-three-group',
-              'header-row-modes-group',
-              'header-row-four-group'
-            ]"></tr>
+            </ng-container> -->
+            <tr mat-header-row
+              *matHeaderRowDef="['header-row-first-group', 'header-row-salary-heads-group', 'header-row-deductions-group']">
+            </tr>
             <!-- <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"  [ngStyle]="{'background-color':element?.colorCode}"> {{element.srno}} </td>
@@ -98,7 +99,15 @@
                 <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
               </td>
             </ng-container>
-            <ng-container matColumnDef="emp_designation">
+            <ng-container matColumnDef="pan">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">PAN </th>
+              <td mat-cell *matCellDef="let element" class="text-left text-nowrap"
+                [ngStyle]="{'background-color':element?.colorCode}">
+                <span class="text-left text-capitalize">{{element?.pan | titlecase}}</span>
+              </td>
+            </ng-container>
+
+            <!-- <ng-container matColumnDef="emp_designation">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Designation</th>
               <td mat-cell *matCellDef="let element" class="text-left text-nowrap"
                 [ngStyle]="{'background-color':element?.colorCode}">
@@ -111,7 +120,7 @@
                 [ngStyle]="{'background-color':element?.colorCode}">
                 <span class="text-center text-capitalize">{{element?.emp_pay_scale | titlecase}} </span>
               </td>
-            </ng-container>
+            </ng-container> -->
             <!-- <ng-container matColumnDef="emp_salary_heads">
               <th mat-header-cell *matHeaderCellDef mat-sort-header  [attr.rowspan]="2">Salary Heads</th>
              
@@ -156,6 +165,7 @@
                 <span *ngIf="element.emp_deductions">{{element?.emp_deductions}} </span>
               </td>
             </ng-container> -->
+            <!-- 
             <ng-container matColumnDef="emp_present_days">
               <th mat-header-cell *matHeaderCellDef width="5%"> Present Days</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
@@ -168,7 +178,6 @@
                     class="fas fa-rupee-sign"></i></span>)
               </th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <!-- {{element?.emp_advance}} -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <input matInput
@@ -191,7 +200,6 @@
                     class="fas fa-rupee-sign"></i></span>)</th>
               <td mat-cell *matCellDef="let element" class="text-center"
                 [ngStyle]="{'background-color':element?.colorCode}">
-                <!-- <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value']}} </span> -->
                 <form [formGroup]="formGroupArray[element.srno - 1]">
                   <mat-form-field class="form-field lib-form">
                     <span *ngIf="element?.emp_modes_data?.mode_data[i]">
@@ -211,7 +219,8 @@
                   </mat-form-field>
                 </form>
               </td>
-            </ng-container>
+            </ng-container> -->
+
             <!-- <ng-container matColumnDef="bank_transfer">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Bank Transfer</th>
               <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">

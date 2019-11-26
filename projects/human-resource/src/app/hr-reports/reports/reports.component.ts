@@ -223,7 +223,7 @@ export class ReportsComponent implements OnInit {
 		let recordArray = [];
 		// this.employeeData = result;
 		this.SALARY_COMPUTE_ELEMENT = [];
-		this.displayedSalaryComputeColumns = ['emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
+		this.displayedSalaryComputeColumns = ['emp_id', 'emp_name','pan'];
 		this.salaryComputeDataSource = new MatTableDataSource<ReportComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 		//this.getSalaryComputeEmployee();
 		let inputJson = {
@@ -240,11 +240,12 @@ export class ReportsComponent implements OnInit {
 				for (let i = 0; i < this.shdcolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shdcolumns[i]['header']);
 				}
-				this.displayedSalaryComputeColumns.push('emp_present_days', 'emp_advance', 'emp_salary_payable');
-				for (let i = 0; i < this.paymentModeArray.length; i++) {
-					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
-				}
-				this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
+
+				// this.displayedSalaryComputeColumns.push('emp_present_days', 'emp_advance', 'emp_salary_payable');
+				// for (let i = 0; i < this.paymentModeArray.length; i++) {
+				// 	this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
+				// }
+				// this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
 				let pos = 1;
 				let recordArray = result;
 
@@ -394,6 +395,7 @@ export class ReportsComponent implements OnInit {
 							emp_name: item.emp_name,
 							emp_salary_compute_month_id: this.searchForm.value.month_id,
 							emp_designation: item.emp_designation_detail.des_name,
+							pan: item.emp_salary_detail.emp_salary_structure.account_docment_detail ? item.emp_salary_detail.emp_salary_structure.account_docment_detail.pan_no : '',
 							emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '',
 							emp_salary_structure: item.emp_salary_detail.emp_salary_structure,
 							emp_salary_heads: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_salary_heads : [],
@@ -696,6 +698,7 @@ export interface ReportComputeElement {
 	emp_name: string;
 	emp_designation: string;
 	emp_pay_scale: string;
+	pan: string;
 	// emp_salary_heads: any;
 	// emp_allowances: any;
 	emp_total_earnings: any;
