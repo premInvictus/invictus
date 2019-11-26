@@ -19,7 +19,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Aadhaar No.</mat-label>
                                         <input matInput formControlName="aadhar" placeholder="Aadhaar No."
-                                            minlength="12" maxlength="14"  [readonly]="viewOnly"
+                                            minlength="12" maxlength="14" [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
@@ -28,7 +28,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PF A/c No.| UAN</mat-label>
                                         <input type="number" formControlName="pf_ac" matInput
-                                            placeholder="PF A/c No.| UAN"  [readonly]="viewOnly"
+                                            placeholder="PF A/c No.| UAN" [readonly]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
@@ -37,7 +37,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI A/c No.</mat-label>
                                         <input type="text" formControlName="esi_ac" matInput placeholder="ESI A/c No."
-                                             [errorStateMatcher]="confirmValidParentMatcher">
+                                            [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -45,8 +45,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Nominee</mat-label>
                                         <input type="text" matInput formControlName="nominee" placeholder="Nominee"
-                                             [readonly]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                            [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -133,6 +132,7 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
+
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category II</mat-label>
                                         <mat-select formControlName="category_3" required placeholder="Category II"
@@ -141,6 +141,21 @@
                                             <mat-option *ngFor="let item of categoryThreeArray"
                                                 [value]="item.config_id">
                                                 {{item.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Supervisor</mat-label>
+                                        <mat-select formControlName="supervisor" required
+                                            placeholder="Select Supervisor"
+                                            [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
+                                                {{item.emp_name}} ({{item.emp_designation_detail.des_name}})
                                             </mat-option>
                                         </mat-select>
                                         <mat-error>

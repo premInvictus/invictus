@@ -42,6 +42,7 @@ export class MyLeaveComponent implements OnInit {
 	currentUser: any;
 	employeeRecord: any;
 	editFlag = false;
+	principal: any;
 	approveMessage = 'Are you sure to Approve !';
 	rejectMessage = 'Are you sure to Reject !';
 	approvedArray: any[] = [];
@@ -60,6 +61,7 @@ export class MyLeaveComponent implements OnInit {
 		this.buildForm();
 		this.getMyLeave();
 		this.getLeaveType();
+		this.getPrincipal();
 	}
 
 	ngAfterViewInit() {
@@ -78,13 +80,24 @@ export class MyLeaveComponent implements OnInit {
 	buildForm() {
 
 	}
+	getPrincipal() {
+		const filterJSON = {
+			"generalFilters": {
+				"emp_designation_detail.des_id": [1]
+			}
+		};
+		this.common.getFilterData(filterJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.principal = result.data[0].emp_login_id;
+			}
+		});
+	}
 
 	getEmployeeDetail() {
 		var emp_login_id = this.currentUser ? this.currentUser.login_id : '';
 		this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
 			var finResult = result ? result : []
 			this.employeeRecord = finResult[0];
-			console.log('employeeRecord', this.employeeRecord);
 		});
 	}
 
@@ -101,7 +114,7 @@ export class MyLeaveComponent implements OnInit {
 		this.common.getEmployeeLeaveData({ 'leave_from': this.currentUser ? this.currentUser.login_id : '' }).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
-				for (const item of result) {					
+				for (const item of result) {
 					var leave_request_schedule_data = item.leave_request_schedule_data;
 					var dataJson = {
 						srno: pos,
@@ -199,7 +212,7 @@ export class MyLeaveComponent implements OnInit {
 		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
-		inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
+		inputJson['leave_to'] = this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal;
 		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
 		inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
@@ -235,7 +248,7 @@ export class MyLeaveComponent implements OnInit {
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
 		inputJson['leave_id'] = result.leave_id;
-		inputJson['leave_to'] = this.employeeRecord['emp_supervisor_id'] ? this.employeeRecord['emp_supervisor_id'] : 5971;
+		inputJson['leave_to'] = this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal;;
 		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
 		inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
