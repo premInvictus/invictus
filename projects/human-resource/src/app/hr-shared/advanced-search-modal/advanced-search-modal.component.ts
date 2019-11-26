@@ -261,13 +261,10 @@ export class AdvancedSearchModalComponent implements OnInit {
     obj['gen_id'] = [];
     obj['emp_salary_detail.emp_organisation_relation_detail.doj'] = [];
     obj['emp_designation_detail.des_id'] = [];
-    obj['emp_department_detail.dept_id'] = [];
+    obj['emp_department_detail.dpt_id'] = [];
     obj['emp_salary_detail.emp_job_detail.category_1.cat_one_id'] = [];
     obj['emp_salary_detail.emp_job_detail.category_2.cat_two_id'] = [];
     obj['emp_salary_detail.emp_job_detail.category_3.cat_three_id'] = [];
-    // obj['cat_one_id'] = [];
-    // obj['cat_one_id'] = [];
-    // obj['cat_one_id'] = [];
     obj['emp_salary_structure.emp_pay_mode.pm_id'] = [];
     obj['emp_salary_structure.emp_pay_scale.ss_id'] = [];
     obj['emp_bank_detail.bnk_detail.bnk_id'] = [];

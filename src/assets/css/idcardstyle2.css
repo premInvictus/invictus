@@ -1,0 +1,402 @@
+.row {display: flex;}
+.margin-top-20 {margin-top: 20px !important}
+.remove-col-padding{padding-left: 0 !important;padding-right: 0 !important;}
+    .container-printid-landscape {
+        width: 344px !important;
+        height: 207px !important;
+        margin-left: -8px;
+        /* margin-bottom: 15px; */
+        margin-top: 15px;
+        margin-right: 15px;
+        margin-top: -8px;
+    }
+            
+        #id_card_header {padding-bottom: 2px !important;margin-top: 0px !important;padding-top: 10px;}
+        img.watermark-image {
+            position: absolute;
+            top: 53px;
+            left: 75px;
+            width: 140px;
+            z-index: 0;
+            opacity: 0.5;
+        }  
+        .container-printid-landscape2 {
+            width: 325px !important;
+            height: 207px !important;
+            margin-top: 38px;
+        }
+        .set-school-head-land {
+            position: relative;
+            top: 26px;
+        }
+        .student-photo--size--style3 {
+            width: 65px;
+            height: 65px;
+            position: relative;
+            top: 5px;
+            left: 10px;
+        }
+        .school-name-pt-st3 {
+            position: relative;
+            top: -13px;
+            left: -15px;
+        }
+        .pt-add-st3 {
+            position: relative;
+            left: -16px;
+            top: -5px;
+        }
+        .text-sign-lan3 {
+            position: relative;
+            left: 110px;
+            top: 34px;
+        }
+        .principal-sign--size {
+            width: 55px;
+            height: 24px;
+            position: relative;
+            left: 105px;
+            top: 36px;
+        }      
+        .landscape-style3 .barcode img {
+            -webkit-transform: rotate(90deg) !important;
+            transform: rotate(90deg) !important;
+            width: 118px !important;
+            height: 24px !important;
+            position: relative;
+            top: 54px;
+            left: -7px;
+        }
+        span.empid-bar-code-span-ls2 {
+            font-size: 8px;
+            position: fixed;
+            transform: rotate(270deg);
+            /* top: 29px; */
+            margin-top: 35px;
+            margin-left: -6px;
+            letter-spacing: 3px;
+            font-weight: bold;
+        }
+        .id-card-school-logo {width: 40px;height: 40px;position: relative;
+            top: -6px;}
+        img {vertical-align: middle;border-style: none;}
+        .text-uppercase {text-transform: uppercase!important;} 
+        .remove-paragraph-bottom-padding {margin-bottom: 0rem !important;}
+        #id_card_body {padding: 4px 8px 0px 8px;border-bottom-left-radius: 15px;
+        border-bottom-right-radius: 15px}
+        .remove-margin {margin-left: 0px !important;margin-right: 0px !important;} 
+        .id_card_student_info {font-size: 12px;}
+        .id-card-col-14 {max-width: 14% !important;flex: 0 0 14% !important;}
+        .landscape .barcode img {-webkit-transform: rotate(90deg);transform: rotate(90deg);
+        width: 118px !important;height: 24px !important;
+        margin-top: 52px;margin-left: -29px !important;}
+        .text-center {text-align: center}
+        .student-photo--size {width: 75px;height: 75px;border: 1px solid #000;}
+        .id_card_footer {font-size: 10px;}
+        /* .principal-sign--size {width: 55px;height: 24px;} */
+        .id-card-school-contactno {font-size: 10px;}
+        p {margin-top: 0;margin-bottom: 1rem;}
+        .id_card_student_minor_info {font-size: 10px;}
+        .id-card-col-60 {max-width: 60% !important;flex: 0 0 60% !important;}
+        /* @media (max-width: 1899px) and (min-width: 1200px)
+        {
+            .custom-col-50 {max-width: 50% !important;flex: 0 0 50% !important;}
+        } */
+        button {display: none}.col-12 {width: 100%;}
+        .my-col {
+            width: 30%;
+        }
+        .text-right {
+            text-align: right!important;
+        }
+        .new-footer-para-id-card {
+            margin-top: 25px;
+        }
+        .container-landscape-box__white {
+            background-color: #ffffff;
+            border-radius: 15px;
+        }
+        .id_card_student_contact_info {
+            font-size: 10px;
+        }
+        .col-4 {
+            flex: 0 0 33.333333%;
+        } 
+        .id_card_student_addr_info {
+            font-size: 11px;
+            position: relative;
+            top: 5px;
+            left: 10px;
+        }
+        .margin-auto {
+            margin: auto !important;
+        }
+        .col-3 {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+        .id_card_footer {
+            font-size: 10px;
+        }
+        .background-landscape-one {
+            width: 324px;
+            height: 204px;
+            border-radius: 15px;
+            z-index: -1;
+            border: 1px solid #013243;
+        }
+        .container-printid-landscape35 {
+            width: 344px !important;
+            height: 215px !important;
+            margin-left: -8px;
+            margin-top: -8px;
+            margin-right: 15px;
+        }
+        .principal-sign--size2 {
+            width: 55px;
+            height: 24px;
+            position: relative;
+            left: 160px;
+            top: 79px;
+        }
+        #id_card_landscape_body {
+            position: relative;
+            top: -92%;
+            width: 324px;
+        }
+        #id_card_portrait_body_style2 {
+            position: absolute;
+            top: 7px;
+            padding: 0 10px 0 10px;
+        }
+        .top-portrait-top-footer-style2 {
+            margin-top: 12px;
+            color: #000 !important;
+        }
+        .background-portrait-one {
+            width: 207px;
+            height: 330px;
+            z-index: -1;
+        }
+        .container-printid-portrait {
+            width: 207px;
+            height: 325px;
+            margin-left: -8px;
+            margin-top: -8px;
+            margin-right: 15px;
+        }
+        img.watermark-image2 {
+            position: absolute;
+            top: 60px;
+            left: 2px;
+            width: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+        .id-card-school-name {
+            font-size: 14px;
+            position: relative;
+            font-weight: bold !important;
+            top: -7px;
+            left: 4px;
+        }
+        .id-card-school-name2 {
+            font-size: 14px;
+            position: relative;
+            font-weight: bold !important;
+            top: 4px !important;
+            left: 11px;
+        }
+        .school-logo-pt {
+            position: relative !important;
+            top: -43px !important;
+        }
+        #id_card_portrait_body_style2 {
+            position: absolute;
+            top: 7px;
+            padding: 0 10px 0 10px;
+        }
+        .id-card-portriat-school-logo-style2 {
+            width: 25px;
+            height: 25px;
+            margin-top: 12px;
+            margin-left: 18px;
+        }
+        .col-padding-school-addr-portrait {
+            padding-left: 10px !important;
+            padding-right: 0px !important;
+        }
+        .col-padding-school-addr {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            padding-top: 2px !important;
+        
+        }
+        .student-portrait-photo--size__style2 {
+            width: 70px;
+            height: 70px;
+            border: 1px solid #01233e;
+            margin-top: 20px;
+        }
+        .id-card-div-move-pot {
+            position: relative;
+            top: -40px;
+            text-align: center;
+        }
+        .id_card_portrait_student_name_style2 {
+            color: #01233e;
+            font-size: 12px;
+            margin-top: -20px;
+        }
+        .id_card_portrait_student_info {
+            font-size: 10px;
+        }
+        .potrait-bar .barcode img {
+            width: 185px;
+            height: 36px;
+            margin-top: 14px;
+            margin-left: -1px;
+        }
+        span.empid-bar-code-span {
+            font-size: 8px;
+            position: relative;
+            top: -3px;
+            font-weight: bold;
+            letter-spacing: 5px;
+        }
+        span.empid-bar-code-span-ls {
+            transform: rotate(270deg);
+            position: absolute;
+            font-size: 8px;
+            margin-left: -29px;
+            margin-top: -20px;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+        .school-info-pt-st1 {
+            position: relative;
+            top: -28px;
+            /* left: 1px; */
+        }
+        .top-portrait-top-footer-style2 {
+            margin-top: 12px;
+            color: #000 !important;
+        }
+        .container-portrait-box__white {
+            background-color: #ffffff;
+            position: relative;
+            border-radius: 15px;
+        }
+        @media (max-width: 1899px) and (min-width: 1200px)
+        {.custom-margin-25 {
+    margin-top: 25px;
+    margin-bottom: 25px;}
+        }
+        @media (max-width: 1899px) and (min-width: 1200px){
+.custom-col-50 {
+    max-width: 50% !important;
+    flex: 0 0 50% !important;
+}
+        }
+        .portriat-principal-sign--size {
+            margin-top: -45px;
+            width: 55px;
+            height: 24px;
+            position: relative;
+            top: 114px;
+            left: 137px;
+        }
+        #id_card_portrait_body {
+            position: absolute;
+            top: 40px;
+            padding: 0 10px 0 10px;
+        }
+        .id-card-school-logo-style-3 {
+            width: 33px;
+            height: 33px;
+            position: relative;
+            left: 15px;
+            top: 17px;
+        }
+        .custom-margin-school-info {
+            position: relative;
+            left: 69px;
+            top: 21px;
+        }
+        .text-sign-lan2 {
+            top: -26px;
+            float: right;
+            position: relative;
+        }
+        
+        .id_card_student_info_style3 {
+            font-size: 14px;
+            color: #2b348f;
+        }
+.id_card_student_minor_info {
+    font-size: 10px;
+}
+.id-card-school-name-style3{
+    font-size: 11.25px;
+}
+
+.principal-sign--size {
+    width: 55px;
+    height: 24px;
+}
+.custom-margin-school-name {
+    margin-left: -10px !important;
+}
+.id_card_portrait_student_name {
+    color: #951d7f;
+    font-size: 12px;
+    margin-top: -10px;
+}
+.sep.row {
+    position: relative;
+    top: 50px;
+}
+.parent-portrait-photo--size {
+    width: 55px;
+    height: 55px;
+}
+.id-card-portriat-school-logo2 {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    left: -6px;
+    top: 12px;
+
+}
+.id-card-portriat-school-logo {
+    width: 50px;
+    height: 50px;
+    position: relative;
+    left: -6px;
+    top: -7px;
+
+}
+
+.parent-photo--size {
+    width: 65px;
+    height: 65px;
+}
+.student-portrait-photo--size {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin-bottom: 11px;
+    position: relative;
+    top: -36px;
+}
+.id-card-portriat-school-logo {
+    width: 30px;
+    height: 30px;
+    margin-top: 8px;
+    position: relative;
+    top: 1px;
+    left: 0px;
+}
+.id-card-school-address {
+    font-size: 10px;
+}

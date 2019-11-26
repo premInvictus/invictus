@@ -1,0 +1,352 @@
+<div class="fee-container-box__grey">
+   <div class="container-box__white card-height-840-lp">
+      <div class="row">
+         <!-- <div class="col-4 text-center">
+             <div class="line-divider"></div>
+          </div> -->
+         <div class="col-12 text-center">
+            <h4 class="text-uppercase text-center"><b>ID Card Printing</b></h4>
+         </div>
+         <!-- <div class="col-4 text-center">
+             <div class="line-divider"></div>
+          </div> -->
+      </div>
+      <form [formGroup]="idcardForm">
+         <div class="row">
+            <div class="col-4">
+               <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Identity Card Style</mat-label>
+                  <mat-select placeholder="Identity Card Style" formControlName="ps_card_style">
+                     <mat-option *ngFor="let item of styleArray" [value]="item.ps_card_style">
+                        {{item.ps_card_style_name}}</mat-option>
+                  </mat-select>
+               </mat-form-field>
+            </div>
+            <div class="col-4">
+               <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Identity Card Layout</mat-label>
+                  <mat-select placeholder="Identity Card Layout" formControlName="ps_card_layout">
+                     <mat-option *ngFor="let item of layoutArray" [value]="item.ps_card_layout">
+                        {{item.ps_card_layout_name}}</mat-option>
+                  </mat-select>
+               </mat-form-field>
+            </div>
+            <div class="col-4">
+               <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>ID Card Block Per Page</mat-label>
+                  <mat-select placeholder="ID Card Block Per Page" formControlName="ps_per_page">
+                     <mat-option [value]="item" *ngFor="let item of pageArray">{{item}}</mat-option>
+                  </mat-select>
+               </mat-form-field>
+            </div>
+         </div>
+         <br>
+         <div class="row">
+            <div class="col-6">
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Print Border</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_border"></mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Print Barcode [Emp Id.]</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_barcode">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+            </div>
+            <div class="col-6">
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Hide Parent Photo From Back Side</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_parent_pic">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Hide Guardian Photo From Back Side</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_guardian_pic">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <br>
+         <div class="row">
+            <div class="col-4">
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Top Header Font Color</mat-label>
+                        <input matInput placeholder="Top Header Font Color" formControlName="ps_header_fore_color"
+                           [value]="headerforecolor" [style.background]="headerforecolor" [cpOKButton]="true"
+                           [cpCancelButton]="true" [cpCancelButton]="true" [cpSaveClickOutside]="true"
+                           [cpCancelButtonClass]="'btn btn-primary btn-xs'" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="headerforecolor" (colorPickerChange)="getHeaderForeColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Top Header Background Color</mat-label>
+                        <input matInput placeholder="Top Header Background Color" formControlName="ps_header_back_color"
+                           [value]="headerbackcolor" [style.background]="headerbackcolor" [cpOKButton]="true"
+                           [cpCancelButton]="true" [cpSaveClickOutside]="true"
+                           [cpCancelButtonClass]="'btn btn-primary btn-xs'" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="headerbackcolor" (colorPickerChange)="getHeaderBackColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Student Name Font Color</mat-label>
+                        <input matInput placeholder="Student Name Font Color" formControlName="ps_student_fore_color"
+                           [value]="stunameforecolor" [style.background]="stunameforecolor" [cpOKButton]="true"
+                           [cpCancelButton]="true" [cpCancelButtonClass]="'btn btn-primary btn-xs'"
+                           [cpSaveClickOutside]="true" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="stunameforecolor" (colorPickerChange)="getStuNameForeColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4">
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Footer Font Color</mat-label>
+                        <input matInput placeholder="Footer Font Color" formControlName="ps_footer_fore_color"
+                           [value]="footerforecolor" [style.background]="footerforecolor" [cpOKButton]="true"
+                           [cpCancelButton]="true" [cpCancelButtonClass]="'btn btn-primary btn-xs'"
+                           [cpSaveClickOutside]="true" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="footerforecolor" (colorPickerChange)="getFooterForeColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Footer Background Color</mat-label>
+                        <input matInput placeholder="Footer Background Color" formControlName="ps_footer_back_color"
+                           [value]="footerbackcolor" [style.background]="footerbackcolor" [cpOKButton]="true"
+                           [cpCancelButton]="true" [cpCancelButtonClass]="'btn btn-primary btn-xs'"
+                           [cpSaveClickOutside]="true" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="footerbackcolor" (colorPickerChange)="getFooterBackColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Student Name </mat-label>
+                        <input matInput placeholder="Student Name Background Color"
+                           formControlName="ps_student_back_color" [value]="stunamebackcolor"
+                           [style.background]="stunamebackcolor" [cpOKButton]="true" [cpCancelButton]="true"
+                           [cpCancelButtonClass]="'btn btn-primary btn-xs'" [cpSaveClickOutside]="true"
+                           [cpOKButtonClass]="'btn btn-primary btn-xs'" [(colorPicker)]="stunamebackcolor"
+                           (colorPickerChange)="getStuNameBackColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+            <div class="col-4">
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>School Address Font Size</mat-label>
+                        <mat-select placeholder="School Address Font Size" formControlName="ps_sch_addr_font_size">
+                           <mat-option *ngFor="let item of addressFontSize" [value]="item">{{item}}</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Imaze Size Layout </mat-label>
+                        <mat-select placeholder="Image Size Layout" formControlName="ps_image_layout_size">
+                           <mat-option [value]="item.id" *ngFor="let item of sizeArray">{{item.name}}</mat-option>
+                        </mat-select>
+                     </mat-form-field>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>ID Card Detail Color </mat-label>
+                        <input matInput placeholder="ID Card Detail Color" formControlName="ps_id_color"
+                           [value]="icarddetforecolor" [style.background]="icarddetforecolor" [cpPosition]="'bottom'"
+                           [cpOKButton]="true" [cpCancelButton]="true" [cpCancelButtonClass]="'btn btn-primary btn-xs'"
+                           [cpSaveClickOutside]="true" [cpOKButtonClass]="'btn btn-primary btn-xs'"
+                           [(colorPicker)]="icarddetforecolor" (colorPickerChange)="getICardForeColorChange($event)">
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <br>
+         <div class="row">
+            <div class="col-6">
+               <div class="row">
+                  <div class="col-8">
+                     <label class="btn-document-label"><span><b>Upload School Logo.</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <button mat-stroked-button class="btn-outline-green">
+                        <label for="file2">Choose File
+                           &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                     <input style="display:none" type="file" accept="image/*" (change)="uploadLogo($event)" id="file2"
+                        formControlName="ps_auth_sign"><br><br>
+                     <div [ngStyle]="{'background' : idcardForm.value.ps_header_back_color}"
+                        style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
+                        <img *ngIf="showSchoolImage"
+                           style="height:100%;width:100%;border:1px solid #646471;border-radius: 4%" [src]="schoolLogo"
+                           (click)="previewImage(schoolLogo)">
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label class="btn-document-label"><span><b>Upload Id card template style</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <button mat-stroked-button class="btn-outline-green">
+                        <label for="file3">Choose File
+                           &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                     <input style="display:none" type="file" accept="image/*" (change)="uploadTempImage($event)"
+                        id="file3" formControlName="ps_auth_sign"><br><br>
+                     <div style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
+                        <img *ngIf="showTempImage"
+                           style="height:100%;width:100%;border:1px solid #646471;border-radius: 4%"
+                           [src]="templateImage" (click)="previewImage(templateImage)">
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8 ">
+                     <label><span><b>Show Authority Two</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_show_authority">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>School Logo</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_sch_logo">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Dont Print ID Card For Missing Employees Photo</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle (change)="idCardMissing($event)" class="inline-form-radio-spacing"
+                        formControlName="ps_missing_student"></mat-slide-toggle>
+                  </div>
+               </div>
+               <div *ngIf="hideIfBlankFlag" class="row">
+                  <div class="col-8">
+                     <label><span><b>Hide Photo If Blank</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_hide_photo">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Auth Sign Text</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle (change)="checkAuthStatus($event)" class="inline-form-radio-spacing"
+                        formControlName="ps_auth_sign_text"></mat-slide-toggle>
+                  </div>
+               </div>
+               <div *ngIf="authSignFlag" class="row">
+                  <div class="col-8">
+                     <label class="btn-document-label"><span><b>Upload Authority Sign.</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <button mat-stroked-button class="btn-outline-green">
+                        <label for="file">Choose File
+                           &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                     <input style="display:none" type="file" accept="image/*" (change)="uploadAuthSign($event)"
+                        id="file" formControlName="ps_auth_sign"><br><br>
+                     <img *ngIf="showImage" style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%"
+                        [src]="authImage" (click)="previewImage(authImage)">
+                  </div>
+               </div>
+               <br>
+            </div>
+            <div class="col-6">
+               <div class="row">
+                  <div class="col-8">
+                     <label class="btn-document-label"><span><b>Upload Water Mark</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <button mat-stroked-button class="btn-outline-green">
+                        <label for="file4">Choose File
+                           &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                     <input style="display:none" type="file" accept="image/*" (change)="uploadWaterImage($event)"
+                        id="file4" formControlName="ps_auth_sign"><br><br>
+                     <div [ngStyle]="{'background' : idcardForm.value.ps_id_color}"
+                        style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
+                        <img *ngIf="showWaterImage" style="height: 100%;
+                                 width: 100%;
+                                 border: 1px solid #646471;
+                                 border-radius: 4%;
+                                 opacity: 0.35;
+                                 z-index: -1;" [src]="waterMarkImage" (click)="previewImage(waterMarkImage)">
+                     </div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>All Content Bold</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-slide-toggle class="inline-form-radio-spacing" formControlName="ps_content_bold">
+                     </mat-slide-toggle>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-8">
+                     <label><span><b>Footer</b></span></label>
+                  </div>
+                  <div class="col-4 text-center">
+                     <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Insert Your Desired Footer Text </mat-label>
+                        <textarea placeholder="Insert your desired footer text" matInput rows="5"
+                           formControlName="ps_footer"></textarea>
+                     </mat-form-field>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <br>
+         <div class="row">
+            <div class="col-12 text-center">
+               <button mat-raised-button class="btn-green" (click)="saveIdCardSettings()">Save Settings</button>
+            </div>
+         </div>
+         <br>
+      </form>
+   </div>
+</div>

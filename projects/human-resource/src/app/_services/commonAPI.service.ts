@@ -29,7 +29,15 @@ export class CommonAPIService {
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
 	}
-
+	getBloodGroup() {
+		return this.http.get(environment.apiSisUrl + '/bloodGroup/getBloodGroup');
+	}
+	getIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/getPrintSetting', value);
+	}
+	addIdCardPrintSettings(value) {
+		return this.http.post(environment.apiSisUrl + '/configure/printSetting', value);
+	}
 	startLoading() {
 		this.loader.startLoading();
 	}

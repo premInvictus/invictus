@@ -54,3 +54,7 @@ button.filter-bt{
   width: 40px !important;
   margin-left: 6px !important;
 }
+
+:host ::ng-deep .slick-footerrow-columns .slick-footerrow-column:first-child{
+  text-align: left !important;
+}

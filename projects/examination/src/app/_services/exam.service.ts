@@ -257,6 +257,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/sessionWisePerformance', value);
 	}
+	yearWisePerformance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/yearWisePerformance', value);
+	}
 	
 }
 

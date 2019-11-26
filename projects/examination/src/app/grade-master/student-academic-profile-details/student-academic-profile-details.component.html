@@ -9,24 +9,34 @@
             <span class="font-bold font-size-20">Performance</span>
           </div>
           <div class="col-6 text-right">
-            <button mat-button><span>Year Wise</span></button>
-            <button mat-button class="margin-left-10 btn-blue font-white"><span>Current Session</span></button>
+            <button mat-button [ngClass]="{'performance-active-tab' : performanceTab == 'year'}" (click)="getPerformance('year')"><span>Year Wise</span></button>
+            <button mat-button [ngClass]="{'performance-active-tab' : performanceTab == 'session'}" (click)="getPerformance('session')"><span>Current Session</span></button>
           </div>
         </div>
       </mat-card-title>
-      <mat-card-content *ngIf="!performanceNoRecord">
+      <mat-card-content *ngIf="!performanceNoRecord && performanceTab == 'session'">
         <div class="row">
           <div class="col-12">
             <mat-tab-group (selectedTabChange)="tabChanged($event)" [(selectedIndex)]="termindex">
               <mat-tab *ngFor="let tab of termsArray; let index = index" [label]="tab.name">
                 <ng-template matTabContent>
                   <div class="container-outline__dashyellow background-white">
-                    <app-common-dynamic-chart [options]="sessionwisePerformance">
+                    <app-common-dynamic-chart [options]="sessionwisePerformanceData">
                     </app-common-dynamic-chart>
                   </div>
                 </ng-template>
               </mat-tab>
             </mat-tab-group>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-content *ngIf="!performanceNoRecord && performanceTab == 'year'">
+        <div class="row">
+          <div class="col-12">
+            <div class="container-outline__dashyellow background-white">
+              <app-common-dynamic-chart [options]="sessionwisePerformanceData">
+              </app-common-dynamic-chart>
+            </div>
           </div>
         </div>
       </mat-card-content>

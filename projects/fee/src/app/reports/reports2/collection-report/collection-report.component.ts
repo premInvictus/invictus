@@ -1712,6 +1712,9 @@ export class CollectionReportComponent implements OnInit {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
+						var payModeArray = result.data.payment_mode_data;
+						console.log('repoArray', repoArray);
+
 						let i = 0;
 						let j = 0;
 						const feeHead: any[] = [];
@@ -1727,44 +1730,52 @@ export class CollectionReportComponent implements OnInit {
 										filterSearchType: FieldType.string,
 										filter: { model: Filters.compoundInputText },
 										sortable: true,
-										width: 90,
+										width: 300,
 										groupTotalsFormatter: this.srnTotalsFormatter
 									}];
 							}
 							if (repoArray[Number(keys)]['modes_arr'].length > 0) {
 								let k = 0;
 								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['modes_arr']) {
-									Object.keys(titem).forEach((key2: any) => {
-										if (key2 === 'pay_name' && Number(keys) === 0) {
-											const feeObj: any = {};
-											this.columnDefinitions.push({
-												id: 'pay_name' + j,
-												name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
-												field: 'pay_name' + j,
-												cssClass: 'amount-report-fee',
-												sortable: true,
-												filterable: true,
-												filterSearchType: FieldType.number,
-												filter: { model: Filters.compoundInput },
-												formatter: this.checkFeeFormatter,
-												groupTotalsFormatter: this.sumTotalsFormatter
-											});
-											feeObj['pay_name' + j] = '';
-											feeHead.push(feeObj);
-											this.feeHeadJSON.push(feeObj);
-											this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
-											j++;
-										}
-										if (key2 === 'pay_name') {
-											obj['id'] = repoArray[Number(keys)]['pay_name'] + keys ;
-											obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
-												repoArray[Number(keys)]['fh_name'] : '-';
-											obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
-											k++;
-										}
-									});
-								}
+								for (const titem of repoArray[Number(keys)]['modes_arr']) {									
+									if (titem && titem.pay_name !== "Other Payment" && titem.pay_name !== "Fine Payment") {
+										Object.keys(titem).forEach((key2: any) => {	
+											var total_row_amt = 0;									
+											if (key2 === 'pay_name' && Number(keys) === 0) {
+												const feeObj: any = {};
+												this.columnDefinitions.push({
+													id: 'pay_name' + j,
+													name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
+													field: 'pay_name' + j,
+													cssClass: 'amount-report-fee',
+													sortable: true,
+													filterable: true,
+													filterSearchType: FieldType.number,
+													filter: { model: Filters.compoundInput },
+													formatter: this.checkFeeFormatter,
+													groupTotalsFormatter: this.sumTotalsFormatter
+												});
+												feeObj['pay_name' + j] = '';
+												feeHead.push(feeObj);
+												this.feeHeadJSON.push(feeObj);
+												this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+												j++;
+											}
+											if (key2 === 'pay_name') {
+												obj['id'] = repoArray[Number(keys)]['pay_name'] + keys ;
+												obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
+													repoArray[Number(keys)]['fh_name'] : '-';
+												obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
+												k++;
+
+												total_row_amt = total_row_amt + titem['total_amount'] ? Number(titem['total_amount']) : 0;
+											}
+
+											
+										});
+									}
+									
+								}								
 							}
 							i++;
 							this.dataset.push(obj);
@@ -1772,7 +1783,7 @@ export class CollectionReportComponent implements OnInit {
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['fh_name'] = 'Grand Total';
+						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');;
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -1784,6 +1795,7 @@ export class CollectionReportComponent implements OnInit {
 								});
 							});
 						});
+						
 						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 350;

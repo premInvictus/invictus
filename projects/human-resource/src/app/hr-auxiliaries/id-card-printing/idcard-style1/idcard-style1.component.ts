@@ -1,14 +1,14 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { CommonAPIService, SisService } from '../../../_services/index';
 @Component({
-	selector: 'app-view-id-card',
-	templateUrl: './view-id-card.component.html',
-	styleUrls: ['./view-id-card.component.scss']
+	selector: 'app-idcard-style1',
+	templateUrl: './idcard-style1.component.html',
+	styleUrls: ['./idcard-style1.component.scss']
 })
-export class ViewIdCardComponent implements OnInit {
-	studentDetails: any = {};
-	idCardConfig: any = {};
+export class IdcardStyle1Component implements OnInit, OnChanges {
+	@Input() studentDetails: any;
+	@Input() idCardConfig: any;
+	studentProfileImage: any = 'https://via.placeholder.com/75';
 	schoolInfo: any = {};
 	authSign: any;
 	container_box_idheader: any;
@@ -39,38 +39,21 @@ export class ViewIdCardComponent implements OnInit {
 	showGuardianPhoto = false;
 	showParentMobile = false;
 	showParentName = false;
-	studentProfileImage: any;
-	constructor(public dialogRef: MatDialogRef<ViewIdCardComponent>,
-		@Inject(MAT_DIALOG_DATA) public data,
-		private sisService: SisService,
+	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService) { }
 
 	ngOnInit() {
-		const param: any = {};
-		if (this.data.enrollment_type === '4') {
-			param.enrollment_type = this.data.enrollment_type,
-				param.admission_no = this.data.adm_no;
-			param.pmap_status = '1';
-		} else if (this.data.enrollment_type === '3') {
-			param.enrollment_type = this.data.enrollment_type,
-				param.provisional_admission_no = this.data.adm_no;
-			param.pmap_status = '1';
-		}
-		this.sisService.printApplication(param).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.studentDetails = result.data[0];
-				if (this.studentDetails.au_profileimage) {
-					this.studentProfileImage = this.studentDetails.au_profileimage;
-				} else {
-					this.studentProfileImage = 'https://via.placeholder.com/150';
-				}
-			}
-		});
-		this.getIdCardSettings();
+	}
+	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
 			+ ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.getSchool();
 		this.getBloodGroup();
+		if (this.studentDetails.au_profileimage) {
+			this.studentProfileImage = this.studentDetails.emp_profile_pic;
+		} else {
+			this.studentProfileImage = 'https://via.placeholder.com/150';
+		}
 		if (Number(this.idCardConfig.ps_missing_student) === 1 && this.studentProfileImage === 'https://via.placeholder.com/75') {
 			this.dontPrintStatus = true;
 		} else {
@@ -98,7 +81,7 @@ export class ViewIdCardComponent implements OnInit {
 		} else {
 			this.showBackSide = false;
 		}
-		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.schoolLogo : 'https://via.placeholder.com/50';
+		this.schoolLogo = this.schoolInfo.school_logo ? this.schoolInfo.school_logo : 'https://via.placeholder.com/50';
 		this.container_box_idheader = this.idCardConfig.ps_header_fore_color;
 		this.container_box_idheader_bgColor = this.idCardConfig.ps_header_back_color;
 		this.studentNameForeColor = this.idCardConfig.ps_student_fore_color;
@@ -155,15 +138,6 @@ export class ViewIdCardComponent implements OnInit {
 			this.showParentName = false;
 		}
 	}
-	getIdCardSettings() {
-		this.sisService.getIdCardPrintSettings({
-			user_type: 'student'
-		}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.idCardConfig = result.data[0];
-			}
-		});
-	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -172,7 +146,7 @@ export class ViewIdCardComponent implements OnInit {
 		});
 	}
 	getBloodGroup() {
-		this.sisService.getBloodGroup().subscribe((result: any) => {
+		this.commonApiService.getBloodGroup().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.bloodGroupArray = result.data;
 			}
@@ -184,7 +158,5 @@ export class ViewIdCardComponent implements OnInit {
 			return this.bloodGroupArray[findex]['bg_name'];
 		}
 	}
-	closeDialog() {
-		this.dialogRef.close();
-	}
 }
+
