@@ -289,6 +289,38 @@ export class ViewGradecardDialogComponent implements OnInit {
     return Math.round(total / temp.length) > 32 ? 'Pass' : 'Fail';
 
   }
+  getPassTotalPercentage(term) {
+    const temp: any[] = [];
+    this.gradePerTermOnScholastic.forEach(element => {
+      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
+      if (tindex === -1) {
+        temp.push(element);
+      }
+    });
+    let total = 0;
+    let totalmainsubject = 0;
+    for (const item of temp) {
+      const currentSub = this.subjectArray.find(e => e.sub_id === item.sub_id);
+      if(currentSub.ess_additional === '0') {
+        total = total + item.grade;
+        totalmainsubject++;
+      }
+    }
+    console.log('temp', temp);
+    console.log('total obtainded percentage', total);
+    console.log('totalmainsubject', totalmainsubject);
+    return this.getTwoDecimalValue(total / totalmainsubject);
+
+  }
+  getTotalMainSubject() {
+    let totalmainsubject = 0;
+    this.subjectArray.forEach(e => {
+      if(e.ess_additional === '0') {
+        totalmainsubject++;
+      }
+    })
+    return totalmainsubject;
+  }
   calculateExamTotal() {
     let gradeMarks = 0;
     this.sexamArray.forEach(element => {
