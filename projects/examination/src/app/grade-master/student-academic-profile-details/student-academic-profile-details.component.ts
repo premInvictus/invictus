@@ -125,8 +125,6 @@ export class StudentAcademicProfileDetailsComponent implements OnInit, OnChanges
             }
             seriesDataArr.push(this.roundTwoDecimai(each.term_student_total_percentage));
           });
-          console.log(xcategories);
-          console.log(series);
           series.push({
             name: '',
             showInLegend: false,

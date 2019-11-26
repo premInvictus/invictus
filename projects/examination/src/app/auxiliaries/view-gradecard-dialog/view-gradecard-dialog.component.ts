@@ -69,22 +69,23 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.getSchool();
     this.getSession();
     this.getAllStudents();
-    this.getSubjectsByClass();
+    this.getStudentSubjects();
+    //this.getSubjectsByClass();
     this.getClassGradeset();
     //this.getExamDetails();
     //this.getGradeCardMark();
 
   }
   getSubjectSubexamMapping() {
-    this.examService.getSubjectSubexamMapping({ssm_class_id: this.data.class_id}).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+    this.examService.getSubjectSubexamMapping({ ssm_class_id: this.data.class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
         this.subjectsubexam_marks_arr = result.data;
       }
     })
   }
   getOneSubjectSubexamMark(class_id, exam_id, se_id, sub_id) {
-    for(let item of this.subjectsubexam_marks_arr) {
-      if(item.ssm_class_id == class_id && item.ssm_exam_id == exam_id && item.ssm_se_id == se_id && item.ssm_sub_id == sub_id) {
+    for (let item of this.subjectsubexam_marks_arr) {
+      if (item.ssm_class_id == class_id && item.ssm_exam_id == exam_id && item.ssm_se_id == se_id && item.ssm_sub_id == sub_id) {
         return Number(item.ssm_sub_mark);
       }
     }
@@ -95,7 +96,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.ere_class_id = this.data.class_id;
     param.ere_sec_id = this.data.sec_id;
     param.ere_term_id = this.data.param.eme_term_id;
-    if(sub_id) {
+    if (sub_id) {
       param.ere_sub_id = sub_id;
     }
     param.ere_remarks_type = this.data.ect_exam_type;
@@ -109,13 +110,13 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   remarkOfSub(sub_id = null) {
     let remarkstr = '';
-    if(sub_id) {
-      if(this.remarksArr.length > 0) {
+    if (sub_id) {
+      if (this.remarksArr.length > 0) {
         const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
         remarkstr = temp.erem_remark;
       }
     } else {
-      if(this.remarksArr.length > 0) {
+      if (this.remarksArr.length > 0) {
         remarkstr = this.remarksArr[0].erem_remark;
       }
     }
@@ -189,15 +190,15 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     })
   }
-  getCalculatedMarksSub(sub_id, exam_id, term){
-    console.log(this.subjectArray);  
+  getCalculatedMarksSub(sub_id, exam_id, term) {
+    console.log(this.subjectArray);
     const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
     let totalscore = 0;
-    if(currentSub.childSub.length > 0) {
+    if (currentSub.childSub.length > 0) {
       currentSub.childSub.forEach(element => {
         totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
       });
-      totalscore = totalscore/currentSub.childSub.length;
+      totalscore = totalscore / currentSub.childSub.length;
     } else {
       totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
     }
@@ -211,9 +212,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.gradeCardMarkArray.forEach(element1 => {
           if (element1.eme_sub_id === sub_id && element1.eme_exam_id === exam_id && element1.eme_subexam_id === element.se_id && Number(element1.eme_term_id) === Number(term)) {
             let per = 0;
-            let oneSubSubexamMark = this.getOneSubjectSubexamMark(this.data.class_id, exam_id, element.se_id,sub_id);
+            let oneSubSubexamMark = this.getOneSubjectSubexamMark(this.data.class_id, exam_id, element.se_id, sub_id);
             oneSubSubexamMark = oneSubSubexamMark === -1 ? element.exam_max_marks : oneSubSubexamMark;
-            if(!isNaN(element1.emem_marks)) {
+            if (!isNaN(element1.emem_marks)) {
               per = (element1.emem_marks / oneSubSubexamMark) * 100;
             }
             percentageArray.push({
@@ -270,7 +271,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     return score;
   }
 
-  getTwoDecimalValue(value){
+  getTwoDecimalValue(value) {
     return Number.parseFloat(value.toFixed(2));
   }
   getPassResult(term) {
@@ -418,16 +419,16 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
         this.getGradeCardMark();
       } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
       }
     });
   }
-  getSubjectsByClass() {
+  getStudentSubjects() {
     this.subjectArray = [];
-    this.smartService.getSubjectsByClass({ class_id: this.data.class_id }).subscribe((result: any) => {
+    this.examService.getStudentSubjects({ au_login_id: this.data.au_login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const temp: any[] = result.data;
-        if(this.data.ect_exam_type === '2') {
+        if (this.data.ect_exam_type === '2') {
           this.getRemarksEntryStudent();
         } else {
           console.log(temp);
@@ -451,7 +452,47 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.subjectArray.forEach(element => {
           if (element.sub_type === '1') {
             this.totalSolasticSubject++;
-          } else if(element.sub_type === '2') {
+          } else if (element.sub_type === '2') {
+            this.hasCoscholasticSub = true;
+          }
+        });
+        this.sflag = true;
+        this.getExamDetails();
+      } else {
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+  getSubjectsByClass() {
+    this.subjectArray = [];
+    this.smartService.getSubjectsByClass({ class_id: this.data.class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const temp: any[] = result.data;
+        if (this.data.ect_exam_type === '2') {
+          this.getRemarksEntryStudent();
+        } else {
+          console.log(temp);
+          console.log(temp.map(e => e.sub_id));
+          this.getRemarksEntryStudent(temp.map(e => e.sub_id));
+        }
+        if (temp.length > 0) {
+          temp.forEach(element => {
+            if (element.sub_parent_id && element.sub_parent_id === '0') {
+              const childSub: any[] = [];
+              for (const item of temp) {
+                if (element.sub_id === item.sub_parent_id) {
+                  childSub.push(item);
+                }
+              }
+              element.childSub = childSub;
+              this.subjectArray.push(element);
+            }
+          });
+        }
+        this.subjectArray.forEach(element => {
+          if (element.sub_type === '1') {
+            this.totalSolasticSubject++;
+          } else if (element.sub_type === '2') {
             this.hasCoscholasticSub = true;
           }
         });
@@ -490,7 +531,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     })
   }
-  closeDialog(){
+  closeDialog() {
     this.dialogRef.close();
   }
 
