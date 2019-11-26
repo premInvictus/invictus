@@ -42,6 +42,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	formGroupArray2: any[] = [];
 	salaryFinalArray: any[] = [];
 	salaryHeadsArray: any[] = [];
+	employeeArray: any[] = [];
 	netSalary: any = 0;
 	totalEarning: any = 0;
 	deduction: any = 0;
@@ -105,6 +106,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				category_1: '',
 				category_2: '',
 				category_3: '',
+				supervisor: '',
 				increment_month: '',
 				contract_period: '',
 				bank_name: '',
@@ -151,6 +153,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			category_1: '',
 			category_2: '',
 			category_3: '',
+			supervisor:'',
 			increment_month: '',
 			contract_period: '',
 			bank_name: '',
@@ -369,6 +372,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			category_2: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? Number(this.employeedetails.emp_salary_detail.emp_job_detail.category_1.cat_id) : '',
 			category_3: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? Number(this.employeedetails.emp_salary_detail.emp_job_detail.category_2.cat_id) : '',
 			increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
+			
 			contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
 			bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id : '',
 			bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
@@ -702,6 +706,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (findIndex !== -1) {
 			return this.designationArray[findIndex].name;
 		}
+	}
+	getAllEpmployeeList() {
+		this.commonAPIService.getAllEmployee({ 'emp_status': 'live' }).subscribe((result: any) => {
+			if (result && result.length > 0) {
+				this.employeeArray = result;
+			}
+		});
 	}
 	getValue(event) {
 		if (this.employeedetails.emp_salary_detail

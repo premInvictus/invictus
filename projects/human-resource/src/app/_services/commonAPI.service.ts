@@ -390,4 +390,7 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee-leave-management/delete', value);
 	}
+	getAllEmployeeLeaveData() {
+		return this.http.get(environment.apiHRUrl + '/employee-leave-management/getAllEmployeeLeaveData');
+	}
 }

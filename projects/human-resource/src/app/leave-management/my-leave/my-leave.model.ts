@@ -2,7 +2,6 @@ export interface MyLeaveElement {
 	srno: any;
 	leave_date: any;
 	leave_type: any;
-	leave_balance: any;
 	leave_no_of_days: any;
 	status: any;
 	leave_reason: any;
@@ -15,7 +14,6 @@ export interface SubordinateLeaveElement {
 	emp_name: any;
 	leave_date: any;
 	leave_type: any;
-	leave_balance: any;
 	leave_no_of_days: any;
 	status: any;
 	leave_reason: any;

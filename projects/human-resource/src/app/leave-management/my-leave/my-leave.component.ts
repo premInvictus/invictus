@@ -30,11 +30,11 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('approveModal') approveModal;
 	@ViewChild('rejectModal') rejectModal;
 	@ViewChild(MatSort) sort: MatSort;
-	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_balance', 'leave_no_of_days', 'leave_reason', 'action'];
+	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'action'];
 	MY_LEAVE_ELEMENT_DATA: MyLeaveElement[] = [];
 	myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 
-	subordinateDisplayedColumns: string[] = ['srno', 'emp_id', 'emp_name', 'leave_date', 'leave_type', 'leave_balance', 'leave_no_of_days', 'leave_reason', 'action'];
+	subordinateDisplayedColumns: string[] = ['srno', 'emp_id', 'emp_name', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'action'];
 	SUBORDINATE_LEAVE_ELEMENT_DATA: SubordinateLeaveElement[] = [];
 	subordinateLeaveDataSource = new MatTableDataSource<SubordinateLeaveElement>(this.SUBORDINATE_LEAVE_ELEMENT_DATA);
 	currentTab = 0;
@@ -59,6 +59,7 @@ export class MyLeaveComponent implements OnInit {
 		this.getEmployeeDetail();
 		this.buildForm();
 		this.getMyLeave();
+		this.getLeaveType();
 	}
 
 	ngAfterViewInit() {
@@ -99,15 +100,13 @@ export class MyLeaveComponent implements OnInit {
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 		this.common.getEmployeeLeaveData({ 'leave_from': this.currentUser ? this.currentUser.login_id : '' }).subscribe((result: any) => {
 			if (result) {
-				for (const item of result) {
-					let pos = 1;
+				let pos = 1;
+				for (const item of result) {					
 					var leave_request_schedule_data = item.leave_request_schedule_data;
-					// for (var j = 0; j < leave_request_schedule_data.length; j++) {
 					var dataJson = {
 						srno: pos,
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_type_name,
-						leave_balance: '',
 						leave_no_of_days: leave_request_schedule_data.length,
 						status: 'Pending',
 						leave_reason: item.leave_reason,
@@ -115,7 +114,6 @@ export class MyLeaveComponent implements OnInit {
 					};
 					this.MY_LEAVE_ELEMENT_DATA.push(dataJson);
 					pos++;
-					// }
 				}
 				this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 				this.myLeaveDataSource.paginator = this.myLeavePaginator;
@@ -143,7 +141,6 @@ export class MyLeaveComponent implements OnInit {
 						emp_name: item.leave_emp_detail.emp_name,
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_type_name,
-						leave_balance: '',
 						leave_no_of_days: leave_request_schedule_data.length,
 						status: 'Pending',
 						leave_reason: item.leave_reason,
@@ -206,7 +203,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
 		inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
-		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) && this.getLeaveTypeName(result.leave_type)[0] ? this.getLeaveTypeName(result.leave_type)[0] : '' };
+		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
@@ -242,7 +239,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
 		inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
-		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) && this.getLeaveTypeName(result.leave_type)[0] ? this.getLeaveTypeName(result.leave_type)[0] : '' };
+		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
@@ -417,7 +414,6 @@ export class MyLeaveComponent implements OnInit {
 			data: item
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
 			this.update(dresult.data, dresult.attachment);
 		});
 	}
@@ -437,7 +433,11 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	getLeaveTypeName(leave_id) {
-		return this.leaveTypeArray.map((f) => (Number(f['leave_id']) == Number(leave_id)) ? f['leave_name'] : '');
+		const findex = this.leaveTypeArray.findIndex(e => Number(e.leave_id) === Number(leave_id));
+		if (findex !== -1) {
+			return this.leaveTypeArray[findex].leave_name;
+		}
+		//return this.leaveTypeArray.map((f) => (Number(f['leave_id']) == Number(leave_id)) ? f['leave_name'] : '');
 	}
 
 	viewAttachment(item) {
