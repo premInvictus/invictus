@@ -22,7 +22,7 @@
                         </ng-template>
                         <div class="col-12 text-right margin-top-10 position-right">
                             <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
-                                (click)="openLeaveApplicationForm()">Apply For Leave 
+                                (click)="openLeaveApplicationForm()">Apply For Leave
                             </button>
                         </div>
                         <div class="row">
@@ -61,12 +61,12 @@
                                             {{item.leave_type}}
                                         </td>
                                     </ng-container>
-                                    <ng-container matColumnDef="leave_balance">
+                                    <!-- <ng-container matColumnDef="leave_balance">
                                         <th mat-header-cell *matHeaderCellDef width="10%"> Leave Balance </th>
                                         <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize">
                                             {{item.leave_balance}}
                                         </td>
-                                    </ng-container>
+                                    </ng-container> -->
                                     <ng-container matColumnDef="leave_no_of_days">
                                         <th mat-header-cell *matHeaderCellDef width="15%"> Leave (No. of Days)</th>
                                         <td mat-cell *matCellDef="let item" class="text-nowrap">
@@ -96,6 +96,7 @@
                                                 style="font-size:16px;color:red"
                                                 (click)="deleteLeave(item?.action)"></i>
                                             <i class="fas fa-file font-color-grey margin-right-15"
+                                                *ngIf="item?.action.leave_attachment.length>0"
                                                 style="font-size:16px;color:black"
                                                 (click)="viewAttachment(item?.action)"></i>
                                         </td>
@@ -185,12 +186,12 @@
                                             {{item.leave_type}}
                                         </td>
                                     </ng-container>
-                                    <ng-container matColumnDef="leave_balance">
+                                    <!-- <ng-container matColumnDef="leave_balance">
                                         <th mat-header-cell *matHeaderCellDef width="10%"> Leave Balance </th>
                                         <td mat-cell *matCellDef="let item" class="text-nowrap text-capitalize">
                                             {{item.leave_balance}}
                                         </td>
-                                    </ng-container>
+                                    </ng-container> -->
                                     <ng-container matColumnDef="leave_no_of_days">
                                         <th mat-header-cell *matHeaderCellDef width="10%"> Leave (No. of Days)</th>
                                         <td mat-cell *matCellDef="let item" class="text-nowrap">
