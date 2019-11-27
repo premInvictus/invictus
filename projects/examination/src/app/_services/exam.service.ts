@@ -269,6 +269,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassStudentSubjects', value);
 	}
+	insertExamSubjectStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertExamSubjectStudent', value);
+	}
+	updateExamSubjectStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateExamSubjectStudent', value);
+	}
 	
 }
 

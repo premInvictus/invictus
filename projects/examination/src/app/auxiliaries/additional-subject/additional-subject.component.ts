@@ -14,8 +14,9 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 })
 export class AdditionalSubjectComponent implements OnInit {
 	displayedColumns: string[] = ['au_admission_no','au_full_name'];
-	studentSubjectArray = [{id: 1, name: 'subject'}, {id: 2, name: 'Additional'}];
-	defaultFlag = false;
+	studentSubjectArray = [{id: '0', name: 'subject'}, {id: '1', name: 'Additional'}];
+	subjectFlag = false;
+	additionalFlag = false;
 	finalDivFlag = true;
 	submitFlag = false;
 	firstForm: FormGroup;
@@ -31,6 +32,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	formgroupArray: any[] = [];
 	finalArray: any[] = [];
 	selectionArray: any[] = [];
+	addselectionArray: any[] = [];
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -47,6 +49,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+
 	}
 
 	buildForm() {
@@ -134,28 +137,16 @@ export class AdditionalSubjectComponent implements OnInit {
 		this.formgroupArray = [];
 		this.ELEMENT_DATA = [];
 		this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
-		this.defaultFlag = false;
+		this.subjectFlag = false;
+		this.additionalFlag = false;
 		this.finalDivFlag = true;
-		this.submitFlag = false;
-	}
-	finalCancel() {
-		this.formgroupArray = [];
-		this.ELEMENT_DATA = [];
-		this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
-		this.defaultFlag = false;
-		this.finalDivFlag = true;
-		this.submitFlag = false;
-		this.firstForm.patchValue({
-			'syl_class_id': '',
-			'syl_section_id': ''
-		});
-	}
-	onSelectChange() {
-		this.submitFlag = true;
+		this.selectionArray = [];
+		console.log(this.selectionArray);
 	}
 	fetchDetails() {
+		this.subjectFlag = false;
+		this.additionalFlag = false;
 		this.finalDivFlag = true;
-		this.defaultFlag = false;
 		this.displayedColumns = 
 		this.formgroupArray = [];
 		this.ELEMENT_DATA = [];
@@ -171,8 +162,6 @@ export class AdditionalSubjectComponent implements OnInit {
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						this.defaultFlag = true;
-						this.finalDivFlag = false;
 						this.studentArray = result.data;
 						for (const item of this.studentArray) {
 							this.ELEMENT_DATA.push({
@@ -182,11 +171,20 @@ export class AdditionalSubjectComponent implements OnInit {
 							});
 							if(item.au_subjects.length > 0) {
 								item.au_subjects.forEach(element => {
-									this.selectionArray.push({ess_login_id: element.ess_login_id, ess_sub_id: element.sub_id});
+									this.selectionArray.push({ess_login_id: element.ess_login_id, ess_sub_id: element.sub_id, ess_ses_id: element.ess_ses_id, ess_additional: element.ess_additional});
+									if(element.ess_additional === '1') {
+										this.addselectionArray.push({ess_login_id: element.ess_login_id, ess_sub_id: element.sub_id, ess_ses_id: element.ess_ses_id, ess_additional: element.ess_additional});
+									}
 								});
 							}
 						}
 						this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+						if(this.firstForm.value.syl_mapping_id === '0') {
+							this.subjectFlag = true;
+						} else {
+							this.additionalFlag = true;
+						}
+						this.finalDivFlag = false;
 					} else {
 						this.studentArray = [];
 						this.ELEMENT_DATA = [];
@@ -196,49 +194,74 @@ export class AdditionalSubjectComponent implements OnInit {
 			);
 	}
 	finalSubmit() {
-		this.finalArray = [];
-		for (const item of this.formgroupArray) {
-			this.finalArray.push(item.formGroup.value);
-		}
-		const checkParam: any = {};
-		checkParam.au_class_id = this.firstForm.value.syl_class_id;
-		checkParam.au_sec_id = this.firstForm.value.syl_section_id;
-		checkParam.au_ses_id = this.session.ses_id;
-		this.examService.checkAdditionalSubjectForClass(checkParam).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.examService.insertAdditionalSubject(this.finalArray).subscribe((result_i: any) => {
-					if (result_i && result_i.status === 'ok') {
-						this.finalCancel();
-						this.commonService.showSuccessErrorMessage('Additional Subject Inserted Successfully', 'success');
-					} else {
-						this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+		if(this.firstForm.value.syl_mapping_id === '0') {
+			if(this.selectionArray.length > 0) {
+				this.examService.insertExamSubjectStudent({insertData: this.selectionArray}).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.commonService.showSuccessErrorMessage(result.message, 'success');
+						this.datareset();
+						this.firstForm.reset();
 					}
 				});
 			}
-		});
+		} else {
+			if(this.addselectionArray.length > 0) {
+				this.examService.updateExamSubjectStudent({updatetData: this.addselectionArray}).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.commonService.showSuccessErrorMessage(result.message, 'success');
+						this.datareset();
+						this.firstForm.reset();
+					}
+				});
+			}
+		}
+		
 	}
 
 	toggleSelection(login_id, sub_id, event) {
 		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
 		if(event.checked) {
 			console.log('true');
-			this.selectionArray.push({ess_login_id: login_id, ess_sub_id: sub_id});
+			this.selectionArray.push({ess_login_id: login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
 		} else {
 			console.log('false');
 			this.selectionArray.splice(sindex, 1);
 		}
 		console.log(this.selectionArray);
 	}
+	toggleAdditionalSelection(login_id, sub_id, event) {
+		const sindex = this.addselectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
+		if(event.checked) {
+			console.log('true');
+			this.addselectionArray.push({ess_login_id: login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
+		} else {
+			console.log('false');
+			this.addselectionArray.splice(sindex, 1);
+		}
+		console.log(this.addselectionArray);
+	}
 	masterToggleSelection(sub_id, event) {
 		if(event.checked) {
 			this.studentArray.forEach(element => {
 				const sindex = this.selectionArray.findIndex(e => e.ess_login_id === element.au_login_id && e.ess_sub_id === sub_id);
 				if(sindex === -1) {
-					this.selectionArray.push({ess_login_id: element.au_login_id, ess_sub_id: sub_id});
+					this.selectionArray.push({ess_login_id: element.au_login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
 				}
 			});			
 		} else {
 			this.selectionArray = this.selectionArray.filter(e => e.ess_sub_id !== sub_id);
+		}
+	}
+	masterToggleAdditionalSelection(sub_id, event) {
+		if(event.checked) {
+			this.addselectionArray.forEach(element => {
+				const sindex = this.addselectionArray.findIndex(e => e.ess_login_id === element.au_login_id && e.ess_sub_id === sub_id);
+				if(sindex === -1) {
+					this.addselectionArray.push({ess_login_id: element.au_login_id, ess_sub_id: sub_id, ess_ses_id: this.session.ses_id, ess_additional: this.firstForm.value.syl_mapping_id});
+				}
+			});			
+		} else {
+			this.addselectionArray = this.addselectionArray.filter(e => e.ess_sub_id !== sub_id);
 		}
 	}
 	isSelected(login_id, sub_id) {
@@ -248,6 +271,29 @@ export class AdditionalSubjectComponent implements OnInit {
 		} else {
 			return true;
 		}
+	}
+	isAdditionalSelected(login_id, sub_id) {
+		const sindex = this.addselectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id && e.ess_additional === '1');
+		if(sindex === -1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	isDisabled(login_id, sub_id) {
+		const sindex = this.selectionArray.findIndex(e => e.ess_login_id === login_id && e.ess_sub_id === sub_id);
+		if(sindex === -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	changeMapping(){
+		this.datareset();
+		this.firstForm.patchValue({
+			syl_class_id: '',
+			syl_section_id: ''
+		})
 	}
 
 }
