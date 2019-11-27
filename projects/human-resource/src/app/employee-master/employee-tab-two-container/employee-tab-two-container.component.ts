@@ -27,10 +27,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	contactsArray: any = {};
 	personalContacts: FormGroup;
 	relationshipArray: any[] = [
-		{ id: 0, name: 'Father' },
-		{ id: 1, name: 'Mother' },
-		{ id: 2, name: 'Guardian' },
-		{ id: 3, name: 'Spouse' }
+		{ id: 1, name: 'Father' },
+		{ id: 2, name: 'Mother' },
+		{ id: 3, name: 'Guardian' },
+		{ id: 4, name: 'Spouse' }
 	];
 	editableStatus = '0';
 	cityId: any;

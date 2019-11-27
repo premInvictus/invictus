@@ -393,4 +393,9 @@ export class CommonAPIService {
 	getAllEmployeeLeaveData() {
 		return this.http.get(environment.apiHRUrl + '/employee-leave-management/getAllEmployeeLeaveData');
 	}
+
+	downloadEmployeeExcel(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/bulkUpdate/downloadEmployeeExcel', value);
+	}
 }
