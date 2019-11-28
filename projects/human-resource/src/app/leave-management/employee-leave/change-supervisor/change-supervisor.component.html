@@ -1,0 +1,21 @@
+<div class="changeSupervisor">
+  <form [formGroup]="supervisionForm">
+    <div class="row margin-top-20">
+      <div class="col-12 text-center">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Changed SuperVisior</mat-label>
+          <mat-select placeholder="Choose reasons" formControlName="change_supervisor" required>
+            <mat-option value="">Please select</mat-option>
+            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name}} ({{item.emp_designation_detail.des_name}})</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+  <div class="row margin-top-20">
+    <div class="col-12 text-center">
+      <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="closemodal()">Cancel</button>
+    </div>
+  </div>
+</div>

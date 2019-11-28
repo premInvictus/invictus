@@ -1,314 +1,69 @@
-<div class="row">
-  <div class="col-12">
-    <mat-card>
-      <form [formGroup]="searchForm">
-        <div class="row">
-          <div class="col-10 margin-top-15">
-            <span class="font-size-24">Employee Reports</span>
-          </div>
-          <div class="col-2">
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Select Tab</mat-label>
-              <mat-select formControlName="tab_id" required>
-                <mat-option value="1">Personal Details</mat-option>
-                <mat-option value="2">Personal Contact</mat-option>
-                <mat-option value="3">Salary Details</mat-option>
-                <mat-option value="4">Remarks</mat-option>
-                <mat-option value="5">Documents</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-        </div>
-      </form>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12 ">
-    <mat-card>
-      <div class="row" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)" class="overflow">
-        <div class="col-12">
-          <div class="row ">
-            <div class="col-9 remove-col-padding-left">
-              <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" (keyup)="applyFilter($event.target.value)" />
-                <mat-icon matPrefix>filter_list</mat-icon>
-              </mat-form-field>
+<div class="fee-container-box__grey">
+  <div class="row">
+    <div class="col-12 col-lg-12 col-md-12 col-sm-12 remove-col-padding">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="reportFlag" *ngIf="reportFlag">
+          <mat-expansion-panel-header class="report-panel-header">
+            <mat-panel-title>
+              <span class="text-uppercase font-size-16 font-white">Reports</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="report-card__container">
+            <div class="row margin-top-20">
+              <div *ngFor="let item of feeReportArray;let i = index" [class]="getClassPerIndex(i)">
+                <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
+                  <div class="report-card-container2">
+                    <div [class]="item.main_text_class">
+                      <img style="width:57px !important; height: 50px !important" [class]="item.report_main_image_class"
+                        [src]="item.report_image" />
+                      <div style="margin-left: -2px !important; margin-top: 15px !important">
+                        <span class="font-dark-blue font-size-14 font-medium">{{item.report_name}}</span>
+                      </div>
+                    </div>
+                    <div [class]="item.report_middle_class">
+                      <div><i [class]="item.report_check_icon_class"></i></div>
+                      <span *ngIf="item.report_check_icon_class !== ''" class="font-white font-size-14 font-medium">
+                        {{item.report_name}}</span>
+                    </div>
+                  </div>
+                </mat-card>
+              </div>
             </div>
-
-            <div class="col-3 text-right remove-col-padding-right" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
-              <!-- <div class="inline-flex btn-spacer text-right margin-bottom-5">
-                <div>
-                  <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                    matTooltip="Download as Pdf" (click)="downloadPdf()" />
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <div class="margin-bottom-30">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="accountFlag" *ngIf="accountFlag">
+            <mat-expansion-panel-header class="report-panel-header">
+              <mat-panel-title>
+                <span class="text-uppercase font-size-16 font-white">{{reportHeader | uppercase}}</span>
+              </mat-panel-title>
+              <div class="change-report-button">
+                <button class="change-bt btn-spacer" mat-raised-button (click)="switchReport()">
+                  change report
+                </button>
+              </div>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-12">
+                <div class="text-center">
                 </div>
               </div>
-              <div class="inline-flex btn-spacer text-right margin-bottom-5">
-                <div>
-                  <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
-                    matTooltip="Export as excel" (click)="downloadExcel()" />
-                </div>
-              </div>-->
             </div>
-
-          </div>
-          <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog"
-            id="salary_compute_log">
-            <ng-container matColumnDef="header-row-first-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> </th>
-            </ng-container>
-
-            <ng-container matColumnDef="header-row-salary-heads-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="shacolumns?.length + 1"> Salary Heads </th>
-            </ng-container>
-            <!-- <ng-container matColumnDef="header-row-second-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
-            </ng-container> -->
-            <ng-container matColumnDef="header-row-deductions-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Deductions </th>
-            </ng-container>
-            <ng-container matColumnDef="header-row-three-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="3"> </th>
-            </ng-container>
-            <ng-container matColumnDef="header-row-modes-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="paymentModeArray.length+1"> Modes </th>
-            </ng-container>
-            <ng-container matColumnDef="header-row-four-group">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
-            </ng-container>
-            <tr mat-header-row *matHeaderRowDef="['header-row-first-group', 'header-row-salary-heads-group', 'header-row-deductions-group',
-              'header-row-three-group',
-              'header-row-modes-group',
-              'header-row-four-group'
-            ]"></tr>
-            <!-- <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
-              <td mat-cell *matCellDef="let element"  [ngStyle]="{'background-color':element?.colorCode}"> {{element.srno}} </td>
-            </ng-container> -->
-            <ng-container matColumnDef="emp_id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                {{element?.emp_id}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="emp_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Emp Name</th>
-              <td mat-cell *matCellDef="let element" class="text-left text-nowrap"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="emp_designation">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Designation</th>
-              <td mat-cell *matCellDef="let element" class="text-left text-nowrap"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-left text-capitalize">{{element?.emp_designation | titlecase}} </span>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="emp_pay_scale">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Pay Scale</th>
-              <td mat-cell *matCellDef="let element" class="text-center text-nowrap"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-center text-capitalize">{{element?.emp_pay_scale | titlecase}} </span>
-              </td>
-            </ng-container>
-            <!-- <ng-container matColumnDef="emp_salary_heads">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header  [attr.rowspan]="2">Salary Heads</th>
-             
-              <td mat-cell *matCellDef="let element">
-                {{element?.emp_salary_heads}}
-              </td>
-            </ng-container> -->
-
-            <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
-
-              <th mat-header-cell *matHeaderCellDef width="5%">{{column?.header}} <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" class="text-center text-nowrap"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-center text-capitalize">{{element?.empShacolumns[i]['value'] | number }} </span>
-              </td>
-            </ng-container>
-            <!-- <ng-container matColumnDef="emp_allowances">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%" [attr.rowspan]="2">Allowances</th>
-              <td mat-cell *matCellDef="let element">
-                {{element?.emp_allowances}}
-              </td>
-            </ng-container> -->
-            <ng-container matColumnDef="emp_total_earnings">
-              <th mat-header-cell *matHeaderCellDef width="5%">Total Earnings<br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" class="text-center text-nowrap"
-                [ngStyle]="{'background-color':element?.colorCode}"> <span
-                  *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings | number )}} </span> </td>
-            </ng-container>
-            <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef">
-              <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.header}} <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" class="text-center"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value'] | number}} </span>
-              </td>
-            </ng-container>
-            <!-- <ng-container matColumnDef="emp_deductions">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Deductions</th>
-              <td mat-cell *matCellDef="let element">
-                <span *ngIf="element.emp_deductions">{{element?.emp_deductions}} </span>
-              </td>
-            </ng-container> -->
-            <ng-container matColumnDef="emp_present_days">
-              <th mat-header-cell *matHeaderCellDef width="5%"> Present Days</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                {{element?.emp_present_days}}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="emp_advance">
-              <th mat-header-cell *matHeaderCellDef width="5%"> Arrear's / Advance <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)
-              </th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <!-- {{element?.emp_advance}} -->
-                <form [formGroup]="formGroupArray[element.srno - 1]">
-                  <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value.advance) ? 'Type Here.' : ''"
-                      formControlName="advance" autocomplete="off" [value]="element?.emp_modes_data.advance"
-                      (blur)="setNetSalary(element, $event)" />
-                  </mat-form-field>
-                </form>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="emp_salary_payable">
-              <th mat-header-cell *matHeaderCellDef width="8%" class="text-nowrap"> Salary Payable <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                {{element?.emp_salary_payable | number }}
-              </td>
-            </ng-container>
-            <ng-container *ngFor="let column of paymentModeArray; let i = index;" [matColumnDef]="column?.pm_id">
-              <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.pm_name}} <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" class="text-center"
-                [ngStyle]="{'background-color':element?.colorCode}">
-                <!-- <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value']}} </span> -->
-                <form [formGroup]="formGroupArray[element.srno - 1]">
-                  <mat-form-field class="form-field lib-form">
-                    <span *ngIf="element?.emp_modes_data?.mode_data[i]">
-                      <input matInput
-                        [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
-                        formControlName="{{paymentModeArray[i]['pm_id']}}"
-                        value="{{element?.emp_modes_data?.mode_data[i]['pm_value']}}" autocomplete="off"
-                        (blur)="setNetTotal(element, $event)" />
-                    </span>
-                    <span *ngIf="!(element?.emp_modes_data?.mode_data[i])">
-                      <input matInput
-                        [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
-                        formControlName="{{paymentModeArray[i]['pm_id']}}" value="0" autocomplete="off"
-                        (blur)="setNetTotal(element, $event)" />
-                    </span>
-
-                  </mat-form-field>
-                </form>
-              </td>
-            </ng-container>
-            <!-- <ng-container matColumnDef="bank_transfer">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Bank Transfer</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <form [formGroup]="formGroupArray[element.srno - 1]">
-                  <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[0]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[0]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[0]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
-                  </mat-form-field>
-                </form>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="cheque_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cash</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <form [formGroup]="formGroupArray[element.srno - 1]">
-                  <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[1]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[1]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[1]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
-                  </mat-form-field>
-                </form>
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="cash_payment">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Cheque</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <form [formGroup]="formGroupArray[element.srno - 1]">
-                  <mat-form-field class="form-field lib-form">
-                    <input matInput
-                      [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[2]['pm_id']]) ? 'Type Here.' : ''"
-                      formControlName="{{paymentModeArray[2]['pm_id']}}" value="{{element?.emp_modes_data?.mode_data[2]['pm_value']}}" autocomplete="off" (blur)="setNetTotal(element, $event)"/>
-                  </mat-form-field>
-                </form>
-              </td>
-            </ng-container> -->
-            <ng-container matColumnDef="emp_total">
-              <th mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Total <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
-                class="text-nowrap">
-                {{element?.emp_total | number}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="balance">
-              <th mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Balance <br />(<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
-                class="text-nowrap">
-                {{element?.balance | number}}
-              </td>
-            </ng-container>
-            <ng-container matColumnDef="emp_status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status</th>
-              <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}} </span>
-              </td>
-            </ng-container>
-
-
-
-            <tr mat-header-row *matHeaderRowDef="displayedSalaryComputeColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedSalaryComputeColumns;">
-            </tr>
-
-          </table>
-
-          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-            <tr *ngIf="SALARY_COMPUTE_ELEMENT.length == 0">
-              <td colspan="8">No Record Found</td>
-            </tr>
-          </table>
-
-        </div>
+            <div class="row">
+              <div class="col-12">
+                <app-emp-details-report (displyRep)="displyRep($event)" [userName]="userName"
+                  *ngIf="reportType === '1'">
+                </app-emp-details-report>
+                <app-emp-salary-report (displyRep)="displyRep($event)" [userName]="userName" *ngIf="reportType === '2'">
+                </app-emp-salary-report>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
       </div>
-      <!-- <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
-        <div class="col-6" *ngIf="!editFlag" style="text-align: right">
-          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()">Confirm and
-            Process</button>
-          <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
-            Reset
-          </button>
-        </div>
-        <div class="col-6">
-          <mat-paginator #paginator [pageSize]="300" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
-          </mat-paginator>
-        </div>
-      </div> -->
-
-      <div class="text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length == 0">
-        <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-          [noDataText]="" [subText]="'No Employee found'"></app-no-data>
-      </div>
-    </mat-card>
-
+    </div>
   </div>
 </div>
-
-<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

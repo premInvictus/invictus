@@ -41,6 +41,7 @@ export class IdcardStyle3Component implements OnInit, OnChanges {
 	showGuardianPhoto = false;
 	showParentMobile = false;
 	showParentName = false;
+	ctr= 0;
 	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService) { }
 
@@ -50,7 +51,8 @@ export class IdcardStyle3Component implements OnInit, OnChanges {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
 			+ ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
 		this.getSchool();
-		this.getBloodGroup();
+		//this.getBloodGroup();
+		this.ctr++;
 		if (this.studentDetails.au_profileimage) {
 			this.studentProfileImage = this.studentDetails.au_profileimage;
 		} else {
@@ -147,13 +149,13 @@ export class IdcardStyle3Component implements OnInit, OnChanges {
 			}
 		});
 	}
-	getBloodGroup() {
-		this.commonApiService.getBloodGroup().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.bloodGroupArray = result.data;
-			}
-		});
-	}
+	// getBloodGroup() {
+	// 	this.commonApiService.getBloodGroup().subscribe((result: any) => {
+	// 		if (result.status === 'ok') {
+	// 			this.bloodGroupArray = result.data;
+	// 		}
+	// 	});
+	// }
 	getBloodGroupName(id) {
 		const findex = this.bloodGroupArray.findIndex(f => f.bg_id === id);
 		if (findex !== -1) {
