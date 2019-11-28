@@ -67,7 +67,8 @@
                             <thead>
                                 <tr class="custom-tr">
                                     <th class="custom-th text-center" width="200px">Scholastic Areas</th>
-                                    <th [attr.colspan]="sexamArray.length + 2" class="custom-th text-center">Term -{{term}}
+                                    <th [attr.colspan]="sexamArray.length + 2" class="custom-th text-center">Term
+                                        -{{term}}
                                         ({{acedemicmarks}} Marks)</th>
                                 </tr>
                                 <tr class="custom-tr">
@@ -82,13 +83,25 @@
                             <tbody>
                                 <ng-container *ngFor="let sub of subjectArray">
                                     <tr class="custom-tr" *ngIf="sub.sub_type == 1">
-                                        <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                        <ng-container *ngIf="sub.ess_additional == 0">
+                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                        </ng-container>
+                                        <ng-container *ngIf="sub.ess_additional == 1">
+                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name}} (Add.)
+                                            </td>
+                                        </ng-container>
                                         <td class="custom-td" *ngFor="let item of sexamArray">
                                             {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
                                         <td class="custom-td">{{calculateTotal(sub.sub_id,term)}}</td>
                                         <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
                                     </tr>
                                 </ng-container>
+                                <tr class="custom-tr">
+                                    <td  class="custom-td">Total({{getTotalMainSubject()}} main subject)</td>
+                                    <td  class="custom-td" [attr.colspan]="sexamArray.length"></td>
+                                    <td  class="custom-td">{{getPassTotalPercentage(data.param.eme_term_id)}}%</td>
+                                    <td  class="custom-td"></td>
+                                </tr>
                             </tbody>
 
                         </table>
