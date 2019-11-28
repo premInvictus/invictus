@@ -6,6 +6,7 @@ import { ReportsComponent } from './reports/reports.component';
 import { HrSharedModule } from '../hr-shared/hr-shared.module';
 import { EmpSalaryReportComponent } from './reports/emp-salary-report/emp-salary-report.component';
 import { EmpDetailsReportComponent } from './reports/emp-details-report/emp-details-report.component';
+import { RepotContainerComponent } from './repot-container/repot-container.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -14,6 +15,6 @@ import { EmpDetailsReportComponent } from './reports/emp-details-report/emp-deta
     AngularSlickgridModule.forRoot()
 
   ],
-  declarations: [ReportsComponent, EmpSalaryReportComponent, EmpDetailsReportComponent]
+  declarations: [ReportsComponent, EmpSalaryReportComponent, EmpDetailsReportComponent, RepotContainerComponent]
 })
 export class ReportsModule { }

@@ -60,7 +60,7 @@ export class ReportsComponent implements OnInit {
 			this.feeReportArray[this.previousIndex].report_check_icon_class = '';
 		}
 		const findex = this.feeReportArray.findIndex(
-			f => Number(f.report_id) === Number(report_id)
+			f => Number(f.report_id) === Number(report_id.value)
 		);
 		if (findex !== -1) {
 			this.feeReportArray[findex].main_text_class =
@@ -70,7 +70,7 @@ export class ReportsComponent implements OnInit {
 			this.feeReportArray[findex].report_check_icon_class =
 				'report-check-icon fas fa-check-circle';
 			this.reportHeader = this.feeReportArray[findex].report_name;
-			this.reportType = report_id;
+			this.reportType = report_id.value;
 		}
 		this.previousIndex = findex;
 		setTimeout(() => this.reportFlag = false, 500);
