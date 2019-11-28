@@ -111,7 +111,7 @@ export class MyLeaveComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.MY_LEAVE_ELEMENT_DATA = [];
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({ 'leave_from': this.currentUser ? this.currentUser.login_id : '' }).subscribe((result: any) => {
+		this.common.getEmployeeLeaveData({ 'leave_status': '1' }).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
 				for (const item of result) {
@@ -220,7 +220,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
-		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
+		inputJson['leave_emp_detail'] = this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {};
 		inputJson['leave_status'] = 0;
 		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
@@ -230,12 +230,12 @@ export class MyLeaveComponent implements OnInit {
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
 		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			if (result) {
+			if (result && result.status === "ok") {
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
 				this.showFormFlag = false;
 				this.getMyLeave();
 			} else {
-				this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
+				this.common.showSuccessErrorMessage('Leave Request of Selected date aleady exist', 'error');
 			}
 		});
 
@@ -257,7 +257,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
-		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
+		inputJson['leave_emp_detail'] = this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {};
 		inputJson['leave_status'] = result.leave_status;
 		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
@@ -267,12 +267,12 @@ export class MyLeaveComponent implements OnInit {
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
 		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			if (result) {
+			if (result && result.status === "ok") {
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
 				this.showFormFlag = false;
 				this.getMyLeave();
 			} else {
-				this.common.showSuccessErrorMessage('Error While Submit Leave Request', 'error');
+				this.common.showSuccessErrorMessage('Leave Request of Selected date aleady exist', 'error');
 			}
 		});
 	}
