@@ -687,6 +687,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	searchOk(event) {
+		console.log(event);
 		this.commonAPIService.getFilterData(event).subscribe((result: any) => {
 			let element: any = {};
 			let recordArray = [];

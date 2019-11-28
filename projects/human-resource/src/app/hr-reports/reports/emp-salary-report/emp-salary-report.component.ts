@@ -27,10 +27,12 @@ import 'jspdf-autotable';
   styleUrls: ['./emp-salary-report.component.scss']
 })
 export class EmpSalaryReportComponent implements OnInit {
+  @ViewChild('searchModal') searchModal;
   sessionArray: any[] = [];
   totalRow: any;
   groupColumns: any[] = [];
   groupLength: any;
+  nodataFlag = false;
   session: any = {};
   columnDefinitions1: Column[] = [];
   exportColumnDefinitions: any[] = [];
@@ -126,6 +128,8 @@ export class EmpSalaryReportComponent implements OnInit {
     this.getAccessionReport('');
     this.getPaymentModes();
     this.getSalaryHeads();
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
   }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -153,21 +157,13 @@ export class EmpSalaryReportComponent implements OnInit {
     });
   }
   getSession() {
-    this.erpCommonService.getSession()
-      .subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            for (const citem of result.data) {
-              this.sessionArray[citem.ses_id] = citem.ses_name;
-            }
-            if (this.session_id) {
-              this.sessionName = this.sessionArray[this.session_id.ses_id];
-            }
-
-          }
-        });
+    this.erpCommonService.getSession().subscribe((result2: any) => {
+      if (result2.status === 'ok') {
+        this.sessionArray = result2.data;
+        this.sessionName = this.getSessionName(this.session.ses_id);
+      }
+    });
   }
-
   getPaymentModes() {
     this.commonAPIService.getMaster({ type_id: "6" }).subscribe((res: any) => {
       if (res) {
@@ -230,6 +226,7 @@ export class EmpSalaryReportComponent implements OnInit {
     this.columnDefinitions = [];
     this.dataset = [];
     this.tableFlag = false;
+    this.nodataFlag = false;
     this.gridOptions = {
       enableDraggableGrouping: true,
       createPreHeaderPanel: true,
@@ -296,7 +293,7 @@ export class EmpSalaryReportComponent implements OnInit {
           if (args.command === 'exportAsPDF') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 
-            //this.exportAsPDF(this.dataset);
+            this.exportAsPDF(this.dataset);
           }
           if (args.command === 'expandGroup') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
@@ -313,7 +310,7 @@ export class EmpSalaryReportComponent implements OnInit {
           if (args.command === 'exportAsExcel') {
             // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 
-            //	this.exportToExcel(this.dataset);
+            this.exportToExcel(this.dataset);
           }
           if (args.command === 'export-csv') {
             this.exportToFile('csv');
@@ -359,108 +356,44 @@ export class EmpSalaryReportComponent implements OnInit {
       {
         id: 'full_name', name: 'Full Name', field: 'full_name', sortable: true,
         filterable: true,
-        filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
-        formatter: this.bookNoFormatter,
-        width: 80,
-        grouping: {
-          getter: 'full_name',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-        groupTotalsFormatter: this.srnTotalsFormatter
+        filterSearchType: FieldType.string
       },
       {
         id: 'pan_no', name: 'PAN No.', field: 'pan_no', sortable: true,
         filterable: true,
         width: 120,
-        filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
-        grouping: {
-          getter: 'pan_no',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
+        filterSearchType: FieldType.string
       },
       {
         id: 'aadhar_no', name: 'Aadhar No.', field: 'aadhar_no', sortable: true,
         filterable: true,
         width: 120,
-        filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
-        grouping: {
-          getter: 'aadhar_no',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
+        filterSearchType: FieldType.string
       },
 
       {
         id: 'pf_acc_no', name: 'PF Acc. No.', field: 'pf_acc_no', sortable: true,
         filterable: true,
         width: 80,
-        filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
-        grouping: {
-          getter: 'pf_acc_no',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false,
-        },
+        filterSearchType: FieldType.string
       },
       {
         id: 'esi_ac_no', name: 'ESI Acc. No.', field: 'esi_ac_no', sortable: true,
         filterable: true,
         width: 80,
-        filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
-        grouping: {
-          getter: 'esi_ac_no',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false,
-        },
+        filterSearchType: FieldType.string
       },
       {
         id: 'nominee_detail', name: 'Nominee', field: 'nominee_detail', sortable: true,
         filterable: true,
         width: 80,
-        filterSearchType: FieldType.number,
-        filter: { model: Filters.compoundInput },
-        grouping: {
-          getter: 'nominee_detail',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false,
-        },
+        filterSearchType: FieldType.number
       },
       {
         id: 'doj', name: 'Date of Joining', field: 'doj', sortable: true,
         filterable: true,
         width: 80,
         filterSearchType: FieldType.number,
-        filter: { model: Filters.compoundInput },
         grouping: {
           getter: 'doj',
           formatter: (g) => {
@@ -476,7 +409,6 @@ export class EmpSalaryReportComponent implements OnInit {
         filterable: true,
         width: 120,
         filterSearchType: FieldType.string,
-        filter: { model: Filters.compoundInput },
         grouping: {
           getter: 'pf_joining_date',
           formatter: (g) => {
@@ -506,31 +438,13 @@ export class EmpSalaryReportComponent implements OnInit {
         id: 'probation_till_date', name: 'Probation', field: 'probation_till_date', sortable: true,
         filterable: true,
         width: 120,
-        filterSearchType: FieldType.number,
-        grouping: {
-          getter: 'probation_till_date',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false,
-        },
+        filterSearchType: FieldType.number
       },
       {
         id: 'confirmation_date', name: 'Confirmation Date', field: 'confirmation_date', sortable: true,
         filterable: true,
         width: 120,
-        filterSearchType: FieldType.number,
-        grouping: {
-          getter: 'confirmation_date',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false,
-        },
+        filterSearchType: FieldType.number
       },
       {
         id: 'category_1', name: 'Category I', field: 'category_1', sortable: true,
@@ -594,7 +508,7 @@ export class EmpSalaryReportComponent implements OnInit {
       },
     ];
 
-    this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+    this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
       if (result && result.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         repoArray = result;
@@ -611,7 +525,7 @@ export class EmpSalaryReportComponent implements OnInit {
               var value = 0;
 
               if (this.shacolumns[i]['header'] === 'Basic Pay') {
-                this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: empBasicPay };
+                this.empShacolumns[i] = { columnDef: this.shacolumns[i]['header'], header: this.shacolumns[i]['header'], value: empBasicPay };
               } else {
                 this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
               }
@@ -686,47 +600,43 @@ export class EmpSalaryReportComponent implements OnInit {
 
           }
           if (index === 0) {
-            for (const item of this.shacolumns) {
-              this.columnDefinitions.push({
-                id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
-                filterable: true,
-                filterSearchType: FieldType.string,
-                filter: { model: Filters.compoundInput },
-                formatter: this.bookNoFormatter,
-                width: 80,
-                grouping: {
-                  getter: item.columnDef,
-                  formatter: (g) => {
-                    return `${g.value}  <span style="color:green">(${g.count})</span>`;
-                  },
-                  aggregators: this.aggregatearray,
-                  aggregateCollapsed: true,
-                  collapsed: false
-                },
-                groupTotalsFormatter: this.srnTotalsFormatter
-              });
+            for (const item of this.empShacolumns) {
+              if (item.columnDef === 'Basic Pay') {
+                this.columnDefinitions.push({
+                  id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  width: 80,
+                  grouping: {
+                    getter: item.columnDef,
+                    formatter: (g) => {
+                      return `${g.value}  <span style="color:green">(${g.count})</span>`;
+                    },
+                    aggregators: this.aggregatearray,
+                    aggregateCollapsed: true,
+                    collapsed: false
+                  }
+                });
+              } else {
+                this.columnDefinitions.push({
+                  id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  width: 80,
+                });
+              }
+
             }
             for (const item of this.empShdcolumns) {
               this.columnDefinitions.push({
                 id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
                 filterable: true,
-                filterSearchType: FieldType.string,
-                filter: { model: Filters.compoundInput },
-                formatter: this.bookNoFormatter,
-                width: 80,
-                grouping: {
-                  getter: item.columnDef,
-                  formatter: (g) => {
-                    return `${g.value}  <span style="color:green">(${g.count})</span>`;
-                  },
-                  aggregators: this.aggregatearray,
-                  aggregateCollapsed: true,
-                  collapsed: false
-                },
-                groupTotalsFormatter: this.srnTotalsFormatter
+                filterSearchType: FieldType.string
               });
             }
           }
+
+
 
           const obj: any = {};
           obj['id'] = (index + 1);
@@ -736,11 +646,16 @@ export class EmpSalaryReportComponent implements OnInit {
           obj['aadhar_no'] = item.emp_salary_detail.account_docment_detail ? item.emp_salary_detail.account_docment_detail.aadhar_no : '';
           obj['esi_ac_no'] = item.emp_salary_detail.account_docment_detail ? item.emp_salary_detail.account_docment_detail.esi_ac_no : '';
           obj['pf_acc_no'] = item.emp_salary_detail.account_docment_detail ? item.emp_salary_detail.account_docment_detail.pf_acc_no : '';
-          obj['doj'] = item.emp_salary_detail.emp_organisation_relation_detail ? item.emp_salary_detail.emp_organisation_relation_detail.doj : '';
-          obj['pf_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ? item.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date : '';
-          obj['esic_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ? item.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date : '';
-          obj['probation_till_date'] = item.emp_salary_detail.emp_organisation_relation_detail ? item.emp_salary_detail.emp_organisation_relation_detail.probation_till_date : '';
-          obj['confirmation_date'] = item.emp_salary_detail.emp_organisation_relation_detail ? item.emp_salary_detail.emp_organisation_relation_detail.confirmation_date : '';
+          obj['doj'] = item.emp_salary_detail.emp_organisation_relation_detail ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'dd-MMM-y') : '';
+          obj['pf_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'dd-MMM-y') : '';
+          obj['esic_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'dd-MMM-y') : '';
+          obj['probation_till_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'dd-MMM-y') : '';
+          obj['confirmation_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.confirmation_date, 'dd-MMM-y') : '';
           obj['nominee_detail'] = item.emp_salary_detail.nominee_detail ? item.emp_salary_detail.nominee_detail.name : '';
           obj['bnk_name'] = item.emp_salary_detail.emp_bank_detail[0] && item.emp_salary_detail.emp_bank_detail[0].bnk_detail ? item.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name : '';
           obj['bnk_ifsc'] = item.emp_salary_detail.emp_bank_detail[0] && item.emp_salary_detail.emp_bank_detail[0].bnk_detail ? item.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '';
@@ -757,12 +672,38 @@ export class EmpSalaryReportComponent implements OnInit {
           for (const item of this.empShdcolumns) {
             obj[item.columnDef] = item.value;
           }
+          obj['net_salary'] = item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_net_salary : 0;
+          obj['total_salary'] = item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_total_earning : 0;
+
           this.dataset.push(obj);
           index++;
         }
+        this.columnDefinitions.push({
+          id: 'net_salary', name: 'Net Salary', field: 'net_salary', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 80,
+          grouping: {
+            getter: 'net_salary',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          }
+        });
+        this.columnDefinitions.push({
+          id: 'total_salary', name: 'Total Earning', field: 'total_salary', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 80
+        });
         this.tableFlag = true;
+        this.nodataFlag = false;
       } else {
         this.tableFlag = true;
+        this.nodataFlag = true;
       }
     });
 
@@ -841,5 +782,738 @@ export class EmpSalaryReportComponent implements OnInit {
     if (totals.group.level > 0) {
       return '<b class="total-footer-report">Sub Total (' + totals.group.value + ') </b>';
     }
+  }
+  onCellClicked(e, args) {
+
+  }
+  onCellChanged(e, args) {
+
+  }
+  exportToExcel(json: any[]) {
+    this.notFormatedCellArray = [];
+    let reportType: any = '';
+    const columns: any[] = [];
+    const columValue: any[] = [];
+    this.exportColumnDefinitions = [];
+    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    for (const item of this.exportColumnDefinitions) {
+      columns.push({
+        key: item.id,
+        width: this.checkWidth(item.id, item.name)
+      });
+      columValue.push(item.name);
+    }
+    this.sessionName = this.getSessionName(this.session.ses_id);
+    reportType = new TitleCasePipe().transform('employee_salary_') + this.sessionName;
+    let reportType2: any = '';
+    reportType2 = new TitleCasePipe().transform('employee salary report: ') + this.sessionName;
+    const fileName = reportType + '.xlsx';
+    const workbook = new Excel.Workbook();
+    const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+      { pageSetup: { fitToWidth: 7 } });
+    worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
+    worksheet.getCell('A1').value =
+      new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+    worksheet.getCell('A1').alignment = { horizontal: 'left' };
+    worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+    worksheet.getCell('A2').value = reportType2;
+    worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+    worksheet.getRow(4).values = columValue;
+    worksheet.columns = columns;
+    if (this.dataviewObj.getGroups().length === 0) {
+      Object.keys(json).forEach(key => {
+        const obj: any = {};
+        for (const item2 of this.exportColumnDefinitions) {
+          obj[item2.id] = this.checkReturn(this.commonAPIService.htmlToText(json[key][item2.id]));
+
+        }
+        worksheet.addRow(obj);
+      });
+    } else {
+      // iterate all groups
+      this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
+    }
+    if (this.totalRow) {
+      worksheet.addRow(this.totalRow);
+    }
+    // style grand total
+    // worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+    //   this.columnDefinitions.forEach(element => {
+    //     cell.font = {
+    //       color: { argb: 'ffffff' },
+    //       bold: true,
+    //       name: 'Arial',
+    //       size: 10
+    //     };
+    //     cell.alignment = { wrapText: true, horizontal: 'center' };
+    //     cell.fill = {
+    //       type: 'pattern',
+    //       pattern: 'solid',
+    //       fgColor: { argb: '439f47' },
+    //       bgColor: { argb: '439f47' }
+    //     };
+    //     cell.border = {
+    //       top: { style: 'thin' },
+    //       left: { style: 'thin' },
+    //       bottom: { style: 'thin' },
+    //       right: { style: 'thin' }
+    //     };
+    //   });
+    // });
+    // style all row of excel
+    worksheet.eachRow((row, rowNum) => {
+      if (rowNum === 1) {
+        row.font = {
+          name: 'Arial',
+          size: 14,
+          bold: true
+        };
+      } else if (rowNum === 2) {
+        row.font = {
+          name: 'Arial',
+          size: 12,
+          bold: true
+        };
+      } else if (rowNum === 4) {
+        row.eachCell((cell) => {
+          cell.font = {
+            name: 'Arial',
+            size: 12,
+            bold: true
+          };
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'bdbdbd' },
+            bgColor: { argb: 'bdbdbd' },
+          };
+          cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' }
+          };
+          cell.alignment = { horizontal: 'center' };
+        });
+      } else if (rowNum > 4 && rowNum <= worksheet._rows.length) {
+        const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
+        if (cellIndex === -1) {
+          row.eachCell((cell) => {
+            cell.font = {
+              name: 'Arial',
+              size: 10,
+            };
+            cell.alignment = { wrapText: true, horizontal: 'center' };
+          });
+          if (rowNum % 2 === 0) {
+            row.eachCell((cell) => {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'ffffff' },
+                bgColor: { argb: 'ffffff' },
+              };
+              cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            });
+          } else {
+            row.eachCell((cell) => {
+              cell.fill = {
+                type: 'pattern',
+                pattern: 'solid',
+                fgColor: { argb: 'ffffff' },
+                bgColor: { argb: 'ffffff' },
+              };
+              cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' }
+              };
+            });
+          }
+
+        }
+      }
+    });
+
+    worksheet.addRow({});
+    if (this.groupColumns.length > 0) {
+      worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+        this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+      worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
+      worksheet.getCell('A' + worksheet._rows.length).font = {
+        name: 'Arial',
+        size: 10,
+        bold: true
+      };
+    }
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    // worksheet.getCell('A' + worksheet._rows.length).value = 'Report Filtered as:' + this.getParamValue();
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'No of records: ' + json.length;
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+      + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+    workbook.xlsx.writeBuffer().then(data => {
+      const blob = new Blob([data], { type: 'application/octet-stream' });
+      saveAs(blob, fileName);
+    });
+  }
+  checkWidth(id, header) {
+    const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+    const max2 = header.toString().length;
+    const max = Math.max.apply(null, res);
+    return max2 > max ? max2 : max;
+  }
+  checkReturn(data) {
+    if (Number(data)) {
+      return Number(data);
+    } else {
+      return data;
+    }
+  }
+  checkGroupLevel(item, worksheet) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        worksheet.addRow({});
+        this.notFormatedCellArray.push(worksheet._rows.length);
+        // style for groupeditem level heading
+        worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+          this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
+        worksheet.getCell('A' + worksheet._rows.length).value = this.commonAPIService.htmlToText(groupItem.title);
+        worksheet.getCell('A' + worksheet._rows.length).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'c8d6e5' },
+          bgColor: { argb: 'ffffff' },
+        };
+        worksheet.getCell('A' + worksheet._rows.length).border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        worksheet.getCell('A' + worksheet._rows.length).font = {
+          name: 'Arial',
+          size: 10,
+          bold: true
+        };
+
+        if (groupItem.groups) {
+          this.checkGroupLevel(groupItem.groups, worksheet);
+          const obj3: any = {};
+          obj3['id'] = '';
+          obj3['srno'] = '';
+          obj3['full_name'] = '';
+          obj3['pan_no'] = '';
+          obj3['aadhar_no'] = '';
+          obj3['esi_ac_no'] = '';
+          obj3['pf_acc_no'] = '';
+          obj3['doj'] = '';
+          obj3['pf_joining_date'] = '';
+          obj3['esic_joining_date'] = '';
+          obj3['probation_till_date'] = '';
+          obj3['confirmation_date'] = '';
+          obj3['nominee_detail'] = '';
+          obj3['bnk_name'] = '';
+          obj3['bnk_ifsc'] = '';
+          obj3['bnk_acc_no'] = '';
+          obj3['incremental_month'] = '';
+          obj3['contact_period'] = '';
+          obj3['category_1'] = '';
+          obj3['category_2'] = '';
+          obj3['supervisor'] = '';
+          obj3['emp_pay_scale'] = '';
+          obj3['net_salary'] = '';
+          obj3['total_salary'] = '';
+
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          // style row having total
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        } else {
+          Object.keys(groupItem.rows).forEach(key => {
+            const obj = {};
+            for (const item2 of this.exportColumnDefinitions) {
+              obj[item2.id] = this.checkReturn(this.commonAPIService.htmlToText(groupItem.rows[key][item2.id]));
+
+            }
+            worksheet.addRow(obj);
+          });
+          const obj3: any = {};
+          obj3['id'] = '';
+          obj3['srno'] = '';
+          obj3['full_name'] = '';
+          obj3['pan_no'] = '';
+          obj3['aadhar_no'] = '';
+          obj3['esi_ac_no'] = '';
+          obj3['pf_acc_no'] = '';
+          obj3['doj'] = '';
+          obj3['pf_joining_date'] = '';
+          obj3['esic_joining_date'] = '';
+          obj3['probation_till_date'] = '';
+          obj3['confirmation_date'] = '';
+          obj3['nominee_detail'] = '';
+          obj3['bnk_name'] = '';
+          obj3['bnk_ifsc'] = '';
+          obj3['bnk_acc_no'] = '';
+          obj3['incremental_month'] = '';
+          obj3['contact_period'] = '';
+          obj3['category_1'] = '';
+          obj3['category_2'] = '';
+          obj3['supervisor'] = '';
+          obj3['emp_pay_scale'] = '';
+          obj3['net_salary'] = '';
+          obj3['total_salary'] = '';
+
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        }
+      }
+    }
+  }
+  getGroupColumns(columns) {
+    let grName = '';
+    for (const item of columns) {
+      for (const titem of this.columnDefinitions) {
+        if (item.getter === titem.id) {
+          grName = grName + titem.name + ',';
+          break;
+        }
+      }
+    }
+    return grName.substring(0, grName.length - 1);
+  }
+  exportAsPDF(json: any[]) {
+    const headerData: any[] = [];
+    this.pdfrowdata = [];
+    this.levelHeading = [];
+    this.levelTotalFooter = [];
+    this.levelSubtotalFooter = [];
+    this.exportColumnDefinitions = [];
+    this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+    let reportType: any = '';
+    this.sessionName = this.getSessionName(this.session.ses_id);
+    reportType = new TitleCasePipe().transform('Employee Salary Report: ') + this.sessionName;
+    const doc = new jsPDF('p', 'mm', 'a0');
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 22,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.autoTable({
+      head: [[reportType]],
+      margin: { top: 0 },
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    const rowData: any[] = [];
+    for (const item of this.exportColumnDefinitions) {
+      headerData.push(item.name);
+    }
+    if (this.dataviewObj.getGroups().length === 0) {
+      Object.keys(this.dataset).forEach((key: any) => {
+        const arr: any[] = [];
+        for (const item2 of this.exportColumnDefinitions) {
+          arr.push(this.commonAPIService.htmlToText(this.dataset[key][item2.id]));
+        }
+        rowData.push(arr);
+        this.pdfrowdata.push(arr);
+      });
+    } else {
+      // iterate all groups
+      this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
+    }
+    if (this.totalRow) {
+      const arr: any[] = [];
+      for (const item of this.exportColumnDefinitions) {
+        arr.push(this.totalRow[item.id]);
+      }
+      rowData.push(arr);
+      this.pdfrowdata.push(arr);
+    }
+    doc.levelHeading = this.levelHeading;
+    doc.levelTotalFooter = this.levelTotalFooter;
+    doc.levelSubtotalFooter = this.levelSubtotalFooter;
+    doc.autoTable({
+      head: [headerData],
+      body: this.pdfrowdata,
+      startY: doc.previousAutoTable.finalY + 0.5,
+      tableLineColor: 'black',
+      didDrawPage: function (data) {
+        doc.setFontStyle('bold');
+
+      },
+      willDrawCell: function (data) {
+        const doc = data.doc;
+        const rows = data.table.body;
+
+        // level 0
+        const lfIndex = doc.levelTotalFooter.findIndex(item => item === data.row.index);
+        if (lfIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(0, 62, 120);
+        }
+
+        // level more than 0
+        const lsfIndex = doc.levelSubtotalFooter.findIndex(item => item === data.row.index);
+        if (lsfIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(229, 136, 67);
+        }
+
+        // group heading
+        const lhIndex = doc.levelHeading.findIndex(item => item === data.row.index);
+        if (lhIndex !== -1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#5e666d');
+          doc.setFillColor('#c8d6e5');
+        }
+
+        // // grand total
+        // if (data.row.index === rows.length - 1) {
+        //   doc.setFontStyle('bold');
+        //   doc.setFontSize('18');
+        //   doc.setTextColor('#ffffff');
+        //   doc.setFillColor(67, 160, 71);
+        // }
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#c8d6e5',
+        textColor: '#5e666d',
+        fontSize: 18,
+      },
+      alternateRowStyles: {
+        fillColor: '#f1f4f7'
+      },
+      useCss: true,
+      styles: {
+        fontSize: 18,
+        cellWidth: 'auto',
+        textColor: 'black',
+        lineColor: '#89a8c8',
+      },
+      theme: 'grid'
+    });
+    if (this.groupColumns.length > 0) {
+      doc.autoTable({
+        // tslint:disable-next-line:max-line-length
+        head: [['Groupded As:  ' + this.getGroupColumns(this.groupColumns)]],
+        didDrawPage: function (data) {
+
+        },
+        headStyles: {
+          fontStyle: 'bold',
+          fillColor: '#ffffff',
+          textColor: 'black',
+          halign: 'left',
+          fontSize: 20,
+        },
+        useCss: true,
+        theme: 'striped'
+      });
+    }
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['No of records: ' + json.length]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['Generated On: '
+        + new DatePipe('en-in').transform(new Date(), 'd-MMM-y')]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.autoTable({
+      // tslint:disable-next-line:max-line-length
+      head: [['Generated By: ' + new TitleCasePipe().transform(this.currentUser.full_name)]],
+      didDrawPage: function (data) {
+
+      },
+      headStyles: {
+        fontStyle: 'bold',
+        fillColor: '#ffffff',
+        textColor: 'black',
+        halign: 'left',
+        fontSize: 20,
+      },
+      useCss: true,
+      theme: 'striped'
+    });
+    doc.save(reportType + '_' + new Date() + '.pdf');
+  }
+  checkGroupLevelPDF(item, doc, headerData) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        // add and style for groupeditem level heading
+        this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+        this.levelHeading.push(this.pdfrowdata.length - 1);
+        if (groupItem.groups) {
+          this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+          const levelArray: any[] = [];
+          const obj3: any = {};
+
+          obj3['id'] = '';
+          obj3['srno'] = '';
+          obj3['full_name'] = '';
+          obj3['pan_no'] = '';
+          obj3['aadhar_no'] = '';
+          obj3['esi_ac_no'] = '';
+          obj3['pf_acc_no'] = '';
+          obj3['doj'] = '';
+          obj3['pf_joining_date'] = '';
+          obj3['esic_joining_date'] = '';
+          obj3['probation_till_date'] = '';
+          obj3['confirmation_date'] = '';
+          obj3['nominee_detail'] = '';
+          obj3['bnk_name'] = '';
+          obj3['bnk_ifsc'] = '';
+          obj3['bnk_acc_no'] = '';
+          obj3['incremental_month'] = '';
+          obj3['contact_period'] = '';
+          obj3['category_1'] = '';
+          obj3['category_2'] = '';
+          obj3['supervisor'] = '';
+          obj3['emp_pay_scale'] = '';
+          obj3['net_salary'] = '';
+          obj3['total_salary'] = '';
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+
+        } else {
+          const rowData: any[] = [];
+          Object.keys(groupItem.rows).forEach(key => {
+            const arr: any = [];
+            for (const item2 of this.columnDefinitions) {
+              arr.push(this.commonAPIService.htmlToText(groupItem.rows[key][item2.id]));
+
+            }
+            rowData.push(arr);
+            this.pdfrowdata.push(arr);
+          });
+          const levelArray: any[] = [];
+          const obj3: any = {};
+          obj3['id'] = '';
+          obj3['srno'] = '';
+          obj3['full_name'] = '';
+          obj3['pan_no'] = '';
+          obj3['aadhar_no'] = '';
+          obj3['esi_ac_no'] = '';
+          obj3['pf_acc_no'] = '';
+          obj3['doj'] = '';
+          obj3['pf_joining_date'] = '';
+          obj3['esic_joining_date'] = '';
+          obj3['probation_till_date'] = '';
+          obj3['confirmation_date'] = '';
+          obj3['nominee_detail'] = '';
+          obj3['bnk_name'] = '';
+          obj3['bnk_ifsc'] = '';
+          obj3['bnk_acc_no'] = '';
+          obj3['incremental_month'] = '';
+          obj3['contact_period'] = '';
+          obj3['category_1'] = '';
+          obj3['category_2'] = '';
+          obj3['supervisor'] = '';
+          obj3['emp_pay_scale'] = '';
+          obj3['net_salary'] = '';
+          obj3['total_salary'] = '';
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+        }
+      }
+    }
+  }
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
+  searchOk($event) {
+    this.getAccessionReport($event);
   }
 }
