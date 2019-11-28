@@ -222,6 +222,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
 		inputJson['leave_status'] = 0;
+		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
 		for (let i = 0; i <= diffDay; i++) {
 			leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
@@ -258,6 +259,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] = { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] };
 		inputJson['leave_status'] = result.leave_status;
+		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
 		for (let i = 0; i <= diffDay; i++) {
 			leaveRequestScheduleData.push({ "date": datePipe.transform(newStartDate, 'yyyy-MM-dd'), "type": "full", "time_from": "", "time_to": "", "status": { "status_name": "pending", "created_by": this.currentUser ? this.currentUser.login_id : '' } })
