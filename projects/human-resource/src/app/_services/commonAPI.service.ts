@@ -398,4 +398,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/bulkUpdate/downloadEmployeeExcel', value);
 	}
+
+	uploadEmployeeExcel(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/bulkUpdate/uploadEmployeeExcel', value);
+	}
 }

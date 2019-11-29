@@ -30,15 +30,15 @@ export class BulkUpdatesComponent implements OnInit {
 			formData.append('module' , 'auxillary');
 			formData.append('component', component);
 			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
-			// this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
-			// 	if (result.status === 'ok') {
-			// 		this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
-			// 		this.myInputVariable.nativeElement.value = '';
-			// 	} else {
-			// 		this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
-			// 		this.myInputVariable.nativeElement.value = '';
-			// 	}
-			// });
+			this.commonAPIService.uploadEmployeeExcel(formData).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+					this.myInputVariable.nativeElement.value = '';
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+					this.myInputVariable.nativeElement.value = '';
+				}
+			});
 		}
 	}
 
@@ -58,15 +58,15 @@ export class BulkUpdatesComponent implements OnInit {
 			formData.append('module' , 'auxillary');
 			formData.append('component', component);
 			const options = { content: formData,  module : 'auxillary', component : this.uploadComponent };
-			// this.sisService.uploadBulkDocuments(formData).subscribe((result: any) => {
-			// 	if (result.status === 'ok') {
-			// 		this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
-			// 		this.myInputVariable.nativeElement.value = '';
-			// 	} else {
-			// 		this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
-			// 		this.myInputVariable.nativeElement.value = '';
-			// 	}
-			// });
+			this.commonAPIService.uploadEmployeeExcel(formData).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
+					this.myInputVariable.nativeElement.value = '';
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
+					this.myInputVariable.nativeElement.value = '';
+				}
+			});
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose one zip file and one excel file', 'error');
 			this.myInputVariable.nativeElement.value = '';
