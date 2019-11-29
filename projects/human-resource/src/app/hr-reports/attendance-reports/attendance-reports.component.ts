@@ -18,7 +18,8 @@ export class AttendanceReportsComponent implements OnInit {
   entry_date = new Date();
   firstForm: FormGroup;
   attendanceReport: FormGroup;
-  classArray: any[] = [];
+  employeeArray: any[] = [];
+  employeeAttendanceArray: any[] = [];
   sectionArray: any[] = [];
   studentArray: any[] = [];
   departmentArray: any[] = [];
@@ -68,7 +69,7 @@ export class AttendanceReportsComponent implements OnInit {
   getAllEmployee() {
     this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
       if (result && result.length > 0) {
-        console.log(result);
+        this.employeeArray = result;
       }
     });
   }
@@ -81,11 +82,28 @@ export class AttendanceReportsComponent implements OnInit {
       ]
     };
     var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
-    console.log(no_of_days);
+    let dateArray = [];
+    var date;
+    for (let i = 0; i <= no_of_days; i++) {
+      date = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + i;
+      if (i !== 0) {
+        dateArray.push({
+          date: date,
+          attendance: ''
+        });
+      }
+    }
+    for (let item of this.employeeArray) {
+      this.employeeAttendanceArray.push({
+        emp_id: item.emp_id,
+        emp_name: item.emp_name,
+        attendance_array: dateArray
+      });
+    }
     this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.monthEntryAvailable = true;
-        this.att_id = res.data[0].att_id;
+        this.att_id = res.data;
         console.log(this.att_id);
       } else {
         this.monthEntryAvailable = false;
