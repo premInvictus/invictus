@@ -67,7 +67,7 @@
                             <thead>
                                 <tr class="custom-tr">
                                     <th class="custom-th text-center" width="200px">Scholastic Areas</th>
-                                    <th [attr.colspan]="sexamArray.length + 2" class="custom-th text-center">Term
+                                    <th [attr.colspan]="sexamArray.length + 4" class="custom-th text-center">Term
                                         -{{term}}
                                         ({{acedemicmarks}} Marks)</th>
                                 </tr>
@@ -78,6 +78,8 @@
                                         <br>({{item.exam_weightage}})</th>
                                     <th class="custom-th text-center">Marks Obtained<br>({{acedemicmarks}})</th>
                                     <th class="custom-th text-center">Grade</th>
+                                    <th class="custom-th text-center">Average</th>
+                                    <th class="custom-th text-center">Highest</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -94,12 +96,16 @@
                                             {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
                                         <td class="custom-td">{{calculateTotal(sub.sub_id,term)}}</td>
                                         <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
+                                        <td class="custom-td">{{getClassAverage(sub.sub_id)}}</td>
+                                        <td class="custom-td">{{getClassHighest(sub.sub_id)}}</td>
                                     </tr>
                                 </ng-container>
                                 <tr class="custom-tr">
                                     <td  class="custom-td">Total({{getTotalMainSubject()}} main subject)</td>
                                     <td  class="custom-td" [attr.colspan]="sexamArray.length"></td>
                                     <td  class="custom-td">{{getPassTotalPercentage(data.param.eme_term_id)}}%</td>
+                                    <td  class="custom-td"></td>
+                                    <td  class="custom-td"></td>
                                     <td  class="custom-td"></td>
                                 </tr>
                             </tbody>

@@ -46,6 +46,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   remarksArr: any[] = [];
   hasCoscholasticSub = false;
   subjectsubexam_marks_arr: any[] = [];
+  classHighestArr: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -63,6 +64,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
     }
+    this.getClassHighestAndAverage();
     this.getSubjectSubexamMapping();
     this.ctForClass();
     this.getGlobalSetting();
@@ -75,6 +77,43 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark();
 
+  }
+  getClassHighestAndAverage() {
+    this.classHighestArr = [];
+    const param: any = {};
+    param.class_id = this.data.class_id;
+    param.sec_id = this.data.sec_id;
+    param.term_id = this.data.param.eme_term_id;
+    this.examService.getClassHighestAndAverage(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.classHighestArr = result.data;
+        console.log('classHighestArr', this.classHighestArr)
+      }
+    })
+  }
+  getClassAverage(sub_id) {
+    if(this.classHighestArr.length > 0) {
+      let average = 0;
+      this.classHighestArr.forEach(element => {
+        if(element.sub_id === sub_id) {
+          average = element.avg;
+        }
+      });
+      return average;
+    }
+    return  '-';
+  }
+  getClassHighest(sub_id) {
+    if(this.classHighestArr.length > 0) {
+      let average = 0;
+      this.classHighestArr.forEach(element => {
+        if(element.sub_id === sub_id) {
+          average = element.max;
+        }
+      });
+      return average;
+    }
+    return '-';
   }
   getSubjectSubexamMapping() {
     this.examService.getSubjectSubexamMapping({ ssm_class_id: this.data.class_id }).subscribe((result: any) => {
