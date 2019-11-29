@@ -507,7 +507,7 @@ export class EmpSalaryReportComponent implements OnInit {
         },
       },
     ];
-
+   // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
     this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
       if (result && result.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

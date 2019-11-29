@@ -111,7 +111,7 @@ export class MyLeaveComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.MY_LEAVE_ELEMENT_DATA = [];
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({ 'leave_status': '1' }).subscribe((result: any) => {
+		this.common.getEmployeeLeaveData({ 'leave_from': this.currentUser ? this.currentUser.login_id : '', 'leave_status': '' }).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
 				for (const item of result) {

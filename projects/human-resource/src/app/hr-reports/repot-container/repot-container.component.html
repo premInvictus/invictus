@@ -56,6 +56,8 @@
               <div class="col-12">
                 <app-reports (displyRep)="displyRep($event)" *ngIf="reportType === '1'">
                 </app-reports>
+                <app-attendance-reports (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
+                </app-attendance-reports>
               </div>
             </div>
           </mat-expansion-panel>
