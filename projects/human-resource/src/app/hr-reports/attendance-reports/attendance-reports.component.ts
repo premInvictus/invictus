@@ -20,7 +20,7 @@ export class AttendanceReportsComponent implements OnInit {
   attendanceReport: FormGroup;
   employeeArray: any[] = [];
   employeeAttendanceArray: any[] = [];
-  sectionArray: any[] = [];
+  attendanceArray: any[] = [];
   studentArray: any[] = [];
   departmentArray: any[] = [];
   currentUser: any;
@@ -37,10 +37,11 @@ export class AttendanceReportsComponent implements OnInit {
   monthEntryAvailable = false;
   att_id: any;
   defaultsrc: any;
-  attendanceArray: any[] = [
-    { aid: 0, a_name: 'Absent' },
-    { aid: 1, a_name: 'Present' },
-  ];
+
+  // attendanceArray: any[] = [
+  //   { aid: 0, a_name: 'Absent' },
+  //   { aid: 1, a_name: 'Present' },
+  // ];
   requiredAll = true;
   employeeCatDeptAvail = false;
   constructor(
@@ -103,8 +104,8 @@ export class AttendanceReportsComponent implements OnInit {
     this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.monthEntryAvailable = true;
-        this.att_id = res.data;
-        console.log(this.att_id);
+        this.attendanceArray = res.data;
+        console.log(this.attendanceArray);
       } else {
         this.monthEntryAvailable = false;
       }
@@ -117,4 +118,16 @@ export class AttendanceReportsComponent implements OnInit {
     // Here January is 0 based
     // return new Date(year, month+1, 0).getDate();
   };
+  getAttendance(emp_id, date) {
+    const findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
+    if (findex !== -1) {
+      const findex2 = this.attendanceArray[findex].employeeList.findIndex(f => (f.emp_id) === (emp_id));
+      if (findex2 !== -1) {
+        return this.attendanceArray[findex].employeeList[findex2].attendance;
+      } else {
+        return 5;
+      }
+    }
+
+  }
 }
