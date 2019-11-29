@@ -51,7 +51,7 @@ export class EmpDetailsReportComponent implements OnInit {
   dataArr: any[] = [];
   schoolInfo: any;
   sessionName: any;
-  nodataFlag= false;
+  nodataFlag = false;
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -483,8 +483,8 @@ export class EmpDetailsReportComponent implements OnInit {
       }
 
     ];
-
-    this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
+   // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+     this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
       if (result && result.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         repoArray = result;
@@ -1368,6 +1368,6 @@ export class EmpDetailsReportComponent implements OnInit {
   }
   openSearchDialog = (data) => { this.searchModal.openModal(data); }
   searchOk($event) {
-		this.getAccessionReport($event);
-	}
+    this.getAccessionReport($event);
+  }
 }

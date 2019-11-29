@@ -1,0 +1,25 @@
+<form [formGroup]="attendanceReport">
+  <div class="row">
+    <div class="col-2">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Select Month</mat-label>
+        <mat-select formControlName="month_id" required (selectionChange)="getEmployeeAttendance()">
+          <mat-option value="1">January</mat-option>
+          <mat-option value="2">February</mat-option>
+          <mat-option value="3">March</mat-option>
+          <mat-option value="4">April</mat-option>
+          <mat-option value="5">May</mat-option>
+          <mat-option value="6">June</mat-option>
+          <mat-option value="7">July</mat-option>
+          <mat-option value="8">August</mat-option>
+          <mat-option value="9">September</mat-option>
+          <mat-option value="10">October</mat-option>
+          <mat-option value="11">November</mat-option>
+          <mat-option value="12">December</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-10 ">
+    </div>
+  </div>
+</form>

@@ -1,0 +1,102 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material';
+import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
+import { DatePipe, TitleCasePipe } from '@angular/common';
+
+@Component({
+  selector: 'app-attendance-reports',
+  templateUrl: './attendance-reports.component.html',
+  styleUrls: ['./attendance-reports.component.scss']
+})
+export class AttendanceReportsComponent implements OnInit {
+  submitFlag = false;
+  defaultFlag = false;
+  finalDivFlag = true;
+  entry_date = new Date();
+  firstForm: FormGroup;
+  attendanceReport: FormGroup;
+  classArray: any[] = [];
+  sectionArray: any[] = [];
+  studentArray: any[] = [];
+  departmentArray: any[] = [];
+  currentUser: any;
+  session: any;
+  formgroupArray: any[] = [];
+  finalArray: any[] = [];
+  studentAttendanceArray: any[] = [];
+  presentFlag: any[] = [];
+  absentFlag: any[] = [];
+  totalStudent = 0;
+  presentStudent = 0;
+  categoryOneArray: any[] = [];
+  absentStudent = 0;
+  monthEntryAvailable = false;
+  att_id: any;
+  defaultsrc: any;
+  attendanceArray: any[] = [
+    { aid: 0, a_name: 'Absent' },
+    { aid: 1, a_name: 'Present' },
+  ];
+  requiredAll = true;
+  employeeCatDeptAvail = false;
+  constructor(
+    public dialog: MatDialog,
+    private fbuild: FormBuilder,
+    private smartService: SmartService,
+    public commonAPIService: CommonAPIService,
+    public axiomService: AxiomService,
+    public sisService: SisService
+  ) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
+  }
+
+  ngOnInit() {
+    this.buildForm();
+    this.getAllEmployee();
+  }
+
+  buildForm() {
+    this.attendanceReport = this.fbuild.group({
+      month_id: ''
+    });
+
+  }
+  getAllEmployee() {
+    this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+      if (result && result.length > 0) {
+        console.log(result);
+      }
+    });
+  }
+
+  getEmployeeAttendance() {
+    const checkifMonthEntry: any = {
+      "$and": [
+        { "ses_id": this.session.ses_id },
+        { "month_id": new Date(this.attendanceReport.value.month_id).getMonth() + 1 }
+      ]
+    };
+    var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
+    console.log(no_of_days);
+    this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.monthEntryAvailable = true;
+        this.att_id = res.data[0].att_id;
+        console.log(this.att_id);
+      } else {
+        this.monthEntryAvailable = false;
+      }
+    });
+  }
+  getDaysInMonth(month, year) {
+    // Here January is 1 based
+    //Day 0 is the last day in the previous month
+    return new Date(year, month, 0).getDate();
+    // Here January is 0 based
+    // return new Date(year, month+1, 0).getDate();
+  };
+}
