@@ -1,5 +1,5 @@
 <form [formGroup]="reportFilterForm">
-  <!-- <div class="row">  
+  <div class="row">  
     <div class="col-6">
       <div class="margin-top-10 margin-bottom-10">
         <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
@@ -11,7 +11,7 @@
         </button>
       </div>
     </div>
-  </div> -->
+  </div>
 </form>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
   <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
@@ -20,8 +20,9 @@
     (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length === 0">
+<div style="width: 100% !important; overflow: auto !important" *ngIf="nodataFlag">
   <div class="text-center margin-top-20" style="margin-bottom:20px !important">
     No Records Found
   </div>
 </div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

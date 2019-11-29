@@ -144,7 +144,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     this.buildForm();
   }
   getWings() {
-    this.commonAPIService.getAllWing({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '1' }).subscribe((res: any) => {
       if (res) {
         this.wingArray = [];
         this.wingArray = res;
@@ -160,7 +160,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getDesignation() {
-    this.commonAPIService.getAllDesignation({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '2' }).subscribe((res: any) => {
       if (res) {
         this.designationArray = [];
         this.designationArray = res;
@@ -184,7 +184,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getCategoryTwo() {
-    this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '4' }).subscribe((res: any) => {
       if (res) {
         this.categoryTwoArray = [];
         this.categoryTwoArray = res;
@@ -192,7 +192,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getCategoryThree() {
-    this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '5' }).subscribe((res: any) => {
       if (res) {
         this.categoryThreeArray = [];
         this.categoryThreeArray = res;
