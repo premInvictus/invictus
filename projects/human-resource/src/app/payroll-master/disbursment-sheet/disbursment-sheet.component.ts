@@ -40,6 +40,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	sessionArray: any[] = [];
 	sessionName: any;
 	session_id;
+	searchByFilter = false;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -101,6 +102,8 @@ export class DisbursmentSheetComponent implements OnInit {
 		// 	pm_name: 'Cheque Payment',
 		// },
 	];
+
+	filterJson = {};
 
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
@@ -201,6 +204,29 @@ export class DisbursmentSheetComponent implements OnInit {
 				//this.getAllEmployee();
 			}
 		});
+	}
+
+	checkForFilter() {
+		console.log('searchByFilter--', this.searchByFilter);
+		if (!this.searchByFilter) {
+			this.searchWithoutFilter();
+		} else {
+			console.log(Object.keys(this.filterJson).length);
+			if (Object.keys(this.filterJson).length === 0) {
+				this.searchModal.openModal();
+			} else {
+				this.searchOk(this.filterJson);
+			}
+			
+		}
+	}
+
+	searchWithoutFilter() {
+		if (this.searchForm.value.month_id) {
+			this.getAllEmployee();
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please Choose Pay Month', 'error');
+		}
 	}
 
 	getAllEmployee() {
@@ -444,12 +470,22 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 	openFilter() {
-		this.searchModal.openModal();
+		this.searchByFilter = true;
+		if (this.searchForm.value.month_id) {	
+				this.searchModal.openModal();
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please Choose Pay Month', 'error');
+		}
 	}
 
 	resetAll() {
 		this.buildForm();
 		this.getSalaryHeads();
+		this.searchByFilter = false;
+		this.SALARY_COMPUTE_ELEMENT = [];
+		this.filterJson = {};
+		this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
+		this.employeeData = [];
 	}
 
 	save() {
@@ -496,18 +532,18 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 
 	searchOk(event) {
+		this.filterJson = event;
 		var emp_ids = [];
 		this.commonAPIService.getFilterData(event).subscribe((results: any) => {
-			if (results) {
-				console.log('result', results);
-				for (var i = 0; i < results.length; i++) {
-					emp_ids.push(results[i]['emp_id']);
+			if (results && results.data) {
+				for (var i = 0; i < results.data.length; i++) {
+					emp_ids.push(results.data[i]['emp_id']);
 
 				}
-				console.log(emp_ids);
 				if (emp_ids.length > 0) {
 					let inputJson = {
-						'emp_ids': emp_ids
+						'emp_ids': emp_ids,
+						'month_id' : this.searchForm.value.month_id
 					};
 					this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
 
@@ -573,8 +609,6 @@ export class DisbursmentSheetComponent implements OnInit {
 										}
 			
 			
-										console.log('item', item);
-										console.log(this.shacolumns[i]['data']);
 										if (item.emp_salary_structure.emp_salary_heads) {
 											for (var j = 0; j < item.emp_salary_structure.emp_salary_heads.length; j++) {
 												if (item.emp_salary_structure.emp_salary_heads && item.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
@@ -647,24 +681,12 @@ export class DisbursmentSheetComponent implements OnInit {
 								}
 			
 			
-								// for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
-								// 	var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-								// 	var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
-								// 	if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-								// 		emp_present_days = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
-			
-								// 	} else {
-								// 		emp_present_days = 0;
-								// 	}
-								// }
-			
 								emp_present_days = item.emp_present_days;
 			
 								var salary_payable = 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
 								emp_present_days = emp_present_days ? emp_present_days : 0;
 			
-								console.log(total_earnings, total_deductions, emp_present_days, Number(no_of_days));
 								salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
 			
 								var modeTotal = 0;

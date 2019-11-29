@@ -289,7 +289,8 @@ export class EmpDetailsReportComponent implements OnInit {
     if (value) {
       accessionJSON = value;
     } else {
-      accessionJSON = { "withoutFilter": true }
+      //"withoutFilter": true
+      accessionJSON = {  }
     }
 
     this.columnDefinitions = [
@@ -485,9 +486,9 @@ export class EmpDetailsReportComponent implements OnInit {
     ];
    // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
      this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
-      if (result && result.length > 0) {
+      if (result && result.data.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-        repoArray = result;
+        repoArray = result.data;
         let index = 0;
         for (const item of repoArray) {
           const obj: any = {};
