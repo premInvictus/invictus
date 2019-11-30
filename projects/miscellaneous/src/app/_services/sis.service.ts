@@ -101,4 +101,79 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/gender');
 	}
+
+	getTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
+	}
+
+	saveTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/insertNotificationTemplate', value);
+	}
+
+	updateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/updateNotificationTemplate', value);
+	}
+	getMasterStudentDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
+	getClass(value) {
+		const param: any = {};
+		if (value.role_id === '3' || value.role_id === '1') {
+			param.login_id = value.login_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
+	}
+	insertEmailScheduler(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/insertEmailScheduler', value);
+	}
+
+	insertEmailData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/insertEmailData', value);
+	}
+
+	sendEmail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/sendEmail', value);
+	}
+
+	getNotificationEmail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/getNotificationEmail', value);
+	}
+
+	insertSMSScheduler(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationSMS/insertSMSScheduler', value);
+	}
+
+	insertSMSData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationSMS/insertSMSData', value);
+	}
+
+	sendSMS(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationSMS/sendSMS', value);
+	}
+
+	getNotificationSMS(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/notificationSMS/getNotificationSMS', value);
+	}
+
+	deleteNotificationEmail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationEmails/deleteEmailScheduler', value);
+	}
+	deleteNotificationSMS(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationSMS/deleteSMSScheduler', value);
+	}
 }

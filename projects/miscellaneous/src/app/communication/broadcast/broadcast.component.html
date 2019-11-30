@@ -1,0 +1,184 @@
+<div *ngIf="!showComposeMessage">
+    <div class="row">
+        <div class="col-12 ">
+            <mat-card class="card-top-title__container">
+                <div class="row">
+                    <div class="col-6">
+                        <h1 class="remove-bottom-margin font-size-24">Broadcast</h1>
+                    </div>
+                    <div class="col-6">
+                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
+                            (click)="composeMessage()">Compose</button>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="mat-card" style="min-height: 500px;">
+                <div class="row">
+                    <div class="col-2">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>From Date</mat-label>
+                            <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                formControlName="contract_from_date" />
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-2">
+                        <mat-form-field appearance="outline" class="form-field">
+                            <mat-label>To Date</mat-label>
+                            <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                formControlName="contract_to_date" (blur)="getToDate($event.target.value)" />
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-8 float-right">
+                        <mat-tab-group [(selectedIndex)]="currentTab" (selectedTabChange)="changeTab($event)" class="padding-8 float-right">
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <div>
+                                        <span>SMS</span>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <div>
+                                        <span>Email</span>
+                                    </div>
+                                </ng-template>
+                            </mat-tab>
+                        </mat-tab-group>
+                    </div>
+                </div>
+                <div class="col-12" [hidden]="!(USER_ELEMENT_DATA.length > 0 && currentTab === 1)">
+                    <mat-form-field class="form-feild">
+                        <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
+                    </mat-form-field>
+                    <table mat-table [dataSource]="scheduleEmailDataSource" matSort class="table-100 text-center">
+                        <!-- <ng-container matColumnDef="select">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="checkAllUserList($event)"></mat-checkbox>
+                                    </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <mat-checkbox [value]="element.select" [checked]="allUserSelectFlag" (change)="prepareSelectedRowData($event, element.au_login_id)"></mat-checkbox>
+                                    </td>
+                                </ng-container> -->
+                        <!-- Checkbox Column -->
+                        <ng-container matColumnDef="no">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                S. No.
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.no }}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="user_type">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                User Type
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span class="text-left">{{element?.user_type | titlecase}}</span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="send_by">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Send By
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span class="text-left">{{element?.send_by | titlecase}}</span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="send_to">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Send To
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span class="text-left">{{element?.send_to | titlecase}}</span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="schedule_date">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                               Date
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element?.schedule_date | date : 'dd-MMM-y'}}
+                            </td>
+                        </ng-container>
+                        <!-- Admission Column -->
+                        <ng-container matColumnDef="message">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Message
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <span class="text-left">{{ element?.message | titlecase}}</span>
+                            </td>
+                        </ng-container>
+                        <!-- Student Column -->
+                        <ng-container matColumnDef="attachment">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Attachment
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.attachment }}
+                            </td>
+                        </ng-container>                       
+                        
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Status
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.status}}
+                            </td>
+                        </ng-container>
+                        <!-- Promote Column -->
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                Action
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <!-- <button *ngIf="element.status === 'Scheduled'" mat-raised-button class="btn-neutral" (click)="editEmail(element)">Edit</button>&nbsp;<br> -->
+                                <i *ngIf="element.status === 'Scheduled'" style="cursor: pointer;"
+                                    class="material-icons modify-icon" (click)="editEmail(element)">
+                                    create
+                                </i>
+                                <i class="material-icons view-icon inline-form-table-icon-spacing"
+                                    style="cursor: pointer;" (click)="viewEmail(element)">
+                                    visibility
+                                </i>
+                                <i *ngIf="element.status === 'Scheduled'"
+                                    class="material-icons delete-icon inline-form-table-icon-spacing"
+                                    style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                    delete
+                                </i>
+                                <!-- <button mat-raised-button class="btn-neutral-dull" (click)="viewEmail(element)">View</button>&nbsp;<br> -->
+                                <!-- <button *ngIf="element.status === 'Scheduled'" mat-raised-button class="btn-danger" (click)="openDeleteDialog(element)">Delete</button>&nbsp;<br> -->
+                                <!-- <button *ngIf="element.status === 'Scheduled' && isExistUserAccessMenu('283')" mat-raised-button class="btn-neutral" (click)="editEmail(element)">Edit</button>&nbsp;<br>
+                                        <button *ngIf="isExistUserAccessMenu('282')" mat-raised-button class="btn-neutral-dull" (click)="viewEmail(element)">View</button>&nbsp;<br>
+                                        <button *ngIf="element.status === 'Scheduled' && isExistUserAccessMenu('284')" mat-raised-button class="btn-danger" (click)="openDeleteDialog(element)">Delete</button>&nbsp;<br> -->
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
+                        </tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
+                        </tr>
+                    </table>
+                    <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                        <tr *ngIf="USER_ELEMENT_DATA.length == 0">
+                          <td colspan="6">No Record Found</td>
+                        </tr>
+                      </table>
+                      <mat-paginator #paginator  [pageSizeOptions]=[5,10,20] [pageSize]="10"  showFirstLastButtons></mat-paginator>
+                </div>
+
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<app-compose-message *ngIf="showComposeMessage"></app-compose-message>

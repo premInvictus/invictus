@@ -1,0 +1,195 @@
+<div>
+    <div class="row">
+        <div class="col-12 ">
+            <mat-card class="card-top-title__container">
+                <div class="row">
+                    <div class="col-6">
+                        <h1 class="remove-bottom-margin font-size-24">New Message</h1>
+                    </div>
+                    <div class="col-6">
+                        <button mat-raised-button class="float-right btn-danger btn-consolidate btn-spacer"
+                            (click)="back()">Back</button>
+                    </div>
+
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="mat-card" style="min-height: 700px;">
+                <form [formGroup]="messageForm">
+                    <div class="row">
+                        <div class="col-2">
+                            <mat-form-field class="form-field" appearance="outline">
+                                <mat-label> Message Type </mat-label>
+                                <mat-select formControlName="messageType" (selectionChange)="getTemplate()">
+                                    <mat-option value="E" placeholder="Message Type">Mail</mat-option>
+                                    <mat-option value="S" placeholder="Message Type">SMS</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3">
+                            <mat-form-field class="form-field" appearance="outline">
+                                <mat-label> Select Template </mat-label>
+                                <mat-select formControlName="messageTemplate" (selectionChange)="editTemplate($event)">
+                                    <mat-option *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">
+                                        {{item?.tpl_title}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3">
+                            <mat-form-field class="form-field" appearance="outline">
+                                <mat-label> Title </mat-label>
+                                <input matInput placeholder="Title" type="input" formControlName="messageTitle"
+                                    autocomplete="false" />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="message-container">
+                        <div class="row">
+                            <div class="col-12 border-bottom">
+                                <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
+                                padding: 10px;" />
+                                <div class="user-chips">
+                                    <button *ngFor="let item of selectedUserArr" mat-stroked-button
+                                        class="custom-entry-button margin-left-10">
+                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
+                                        <i class="fas fa-times-circle custom-entry-btn-icon"
+                                            (click)="deleteUser(i, item)"></i>
+                                    </button>
+                                </div>
+                                <span class="three-dot">
+                                    <i class="fa fa-ellipsis-v" aria-hidden="true"
+                                        style="cursor: pointer; z-index: 99999;"
+                                        (click)="showUserContextMenu =!showUserContextMenu "></i>
+                                </span>
+                                <div *ngIf="showUserContextMenu" class="user-context-menu">
+                                    <ul class="user-type-menu" *ngIf="!showClass && !showUser">
+                                        <li (click)="getUser('4')">Student/Parent</li>
+                                        <li (click)="getUser('3')">Teacher</li>
+                                        <li (click)="getUser('2')">Staff</li>
+                                    </ul>
+                                    <div *ngIf="showClass">
+                                        <ul class="class-menu">
+                                            <li>
+                                                <div style="width:100%; float:left;">
+                                                    <div style="width: 50%; float:left">
+                                                        <section class="example-section">
+                                                            <mat-checkbox (change)="selectAllClass($event)"
+                                                                class="example-margin">
+                                                                Select All
+                                                            </mat-checkbox>
+                                                        </section>
+                                                    </div>
+                                                    <div style="width: 50%; float:right">
+                                                        <a href="javascript:void(0)" style="float:right"
+                                                            (click)="generateUserList()">Next</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li *ngFor="let ing of classDataArr; let i = index">
+                                                <section class="example-section">
+                                                    <mat-checkbox [checked]="ing.checked"
+                                                        (change)="updateClassCheck(i, $event)">
+                                                        {{ing.class_name}}
+                                                    </mat-checkbox>
+                                                </section>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div *ngIf="showUser">
+                                        <ul class="user-menu">
+                                            <li>
+                                                <div style="width:100%; float:left;">
+                                                    <div style="width: 50%; float:left">
+                                                        <section class="example-section">
+                                                            <mat-checkbox (change)="selectAllUser($event)"
+                                                                class="example-margin">
+                                                                Select All
+                                                            </mat-checkbox>
+                                                        </section>
+                                                    </div>
+                                                    <div style="width: 50%; float:right">
+                                                        <a href="javascript:void(0)" style="float:right"
+                                                            (click)="done()">Done</a>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li *ngFor="let ing of userDataArr; let i = index">
+                                                <section class="example-section">
+                                                    <mat-checkbox [checked]="ing.checked"
+                                                        (change)="updateUserCheck(i, $event)">
+                                                        {{ing.au_full_name}}
+                                                    </mat-checkbox>
+                                                </section>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <!-- </mat-form-field> -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 border-bottom">
+                                <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                <input matInput placeholder="Subject" type="input" formControlName="messageSubject"
+                                    style="width: 90%;
+                                padding: 10px;" />
+                                <!-- </mat-form-field> -->
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="notification-aatachment-btn-sis">
+                                    <label for="attachment"><i
+                                            class="fas fa-cloud-upload-alt upload-icon-bulk color-blue"></i><br />Choose
+                                        File</label>
+                                    <input style="display: none;" id="attachment" type="file" multiple name="upload"
+                                        (change)="fileChangeEvent($event)">
+                                </div>
+                                <ul class="preview-attachment-base">
+                                    <li *ngFor="let item of attachmentArray" class="preview-attachment">
+                                        <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgName"
+                                            (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                        <img *ngIf="!checkThumbnail(item.imgName)"
+                                            src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                            (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="col-3 template-check-box">
+                            <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                                (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
+                                    class="fa fa-caret-up float-right margin-top-10"></i></button> &nbsp;
+                            <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                                [matMenuTriggerFor]="menu2" (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
+                                    class="fa fa-caret-up float-right margin-top-10"
+                                    (click)="openMyMenu()"></i></button> &nbsp; -->
+                            <mat-menu #menu2="matMenu" overlapTrigger="false">
+                                <span (mouseleave)="closeMyMenu()">
+                                    <button mat-menu-item (click)="scheduleForLater()">Schedule For Later</button>
+                                </span>
+                            </mat-menu>
+                            <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"><b>Save as template</b>
+                            </mat-checkbox>
+                            <mat-checkbox (change)="updateTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>
+                            </mat-checkbox>
+                        </div>
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+
+    </div>
+</div>
