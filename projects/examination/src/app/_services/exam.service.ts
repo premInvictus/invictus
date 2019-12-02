@@ -281,6 +281,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassHighestAndAverage', value);
 	}
+	getStudentAttendence(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getStudentAttendence', value);
+	}
 	
 }
 
