@@ -83,7 +83,7 @@ export class AttendanceReportsComponent implements OnInit {
       ]
     };
     var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
-    let dateArray = [];
+    const dateArray: any[] = [];
     var date;
     for (let i = 0; i <= no_of_days; i++) {
       date = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + i;
@@ -101,11 +101,14 @@ export class AttendanceReportsComponent implements OnInit {
         attendance_array: dateArray
       });
     }
+    console.log('no');
+    // console.log(this.employeeAttendanceArray);
     this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
       if (res && res.status === 'ok') {
+        console.log('yes');
         this.monthEntryAvailable = true;
         this.attendanceArray = res.data;
-        console.log(this.attendanceArray);
+        this.assignAttendance(JSON.stringify(this.attendanceArray));
       } else {
         this.monthEntryAvailable = false;
       }
@@ -118,16 +121,48 @@ export class AttendanceReportsComponent implements OnInit {
     // Here January is 0 based
     // return new Date(year, month+1, 0).getDate();
   };
-  getAttendance(emp_id, date) {
-    const findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
-    if (findex !== -1) {
-      const findex2 = this.attendanceArray[findex].employeeList.findIndex(f => (f.emp_id) === (emp_id));
-      if (findex2 !== -1) {
-        return this.attendanceArray[findex].employeeList[findex2].attendance;
-      } else {
-        return 5;
+
+
+  // getAttendance(emp_id, date) {
+  //   console.log('emp', emp_id);
+  //   console.log('date', date);
+  //   console.log(this.attendanceArray);
+  //   let findex: any = '';
+  //   findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
+  //   if (findex !== -1) {
+  //     console.log('findex', findex);
+  //     let findex2: any = '';
+  //     findex2 = this.attendanceArray[findex].employeeList.findIndex(f => Number(f.emp_id) === Number(this.attendanceArray[findex].emp_id));
+  //     console.log('findex2', findex2);
+  //     if (findex2 !== -1) {
+  //       console.log('findex33', this.attendanceArray[findex].employeeList[findex2].attendance);
+  //       return this.attendanceArray[findex].employeeList[findex2].attendance;
+  //     } else {
+  //       return 5;
+  //     }
+  //   }
+  //   else {
+  //     return 10;
+  //   }
+  // }
+  assignAttendance(value) {
+    const array: any[] = JSON.parse(value);
+    for (let item of this.employeeAttendanceArray) {
+      for (let dety of item.attendance_array) {
+        const findex = array.findIndex(f => f.entrydate === dety.date);
+        if (findex !== -1) {
+          const findex2 = array[findex].employeeList.findIndex(f => Number(f.emp_id) === Number(item.emp_id));
+          if (findex2 !== -1) {
+            console.log(item.emp_id + 'jkkk' + array[findex].employeeList[findex2].attendance);
+            let att: any = '';
+            if (array[findex].employeeList[findex2].emp_id === item.emp_id) {
+              att = array[findex].employeeList[findex2].attendance;
+              dety.attendance = att;
+            }
+          }
+        }
       }
     }
-
+    console.log(this.employeeAttendanceArray);
   }
 }
