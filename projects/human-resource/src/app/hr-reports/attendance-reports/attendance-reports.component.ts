@@ -18,8 +18,9 @@ export class AttendanceReportsComponent implements OnInit {
   entry_date = new Date();
   firstForm: FormGroup;
   attendanceReport: FormGroup;
-  classArray: any[] = [];
-  sectionArray: any[] = [];
+  employeeArray: any[] = [];
+  employeeAttendanceArray: any[] = [];
+  attendanceArray: any[] = [];
   studentArray: any[] = [];
   departmentArray: any[] = [];
   currentUser: any;
@@ -36,10 +37,11 @@ export class AttendanceReportsComponent implements OnInit {
   monthEntryAvailable = false;
   att_id: any;
   defaultsrc: any;
-  attendanceArray: any[] = [
-    { aid: 0, a_name: 'Absent' },
-    { aid: 1, a_name: 'Present' },
-  ];
+
+  // attendanceArray: any[] = [
+  //   { aid: 0, a_name: 'Absent' },
+  //   { aid: 1, a_name: 'Present' },
+  // ];
   requiredAll = true;
   employeeCatDeptAvail = false;
   constructor(
@@ -68,7 +70,7 @@ export class AttendanceReportsComponent implements OnInit {
   getAllEmployee() {
     this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
       if (result && result.length > 0) {
-        console.log(result);
+        this.employeeArray = result;
       }
     });
   }
@@ -81,12 +83,29 @@ export class AttendanceReportsComponent implements OnInit {
       ]
     };
     var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
-    console.log(no_of_days);
+    let dateArray = [];
+    var date;
+    for (let i = 0; i <= no_of_days; i++) {
+      date = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + i;
+      if (i !== 0) {
+        dateArray.push({
+          date: date,
+          attendance: ''
+        });
+      }
+    }
+    for (let item of this.employeeArray) {
+      this.employeeAttendanceArray.push({
+        emp_id: item.emp_id,
+        emp_name: item.emp_name,
+        attendance_array: dateArray
+      });
+    }
     this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.monthEntryAvailable = true;
-        this.att_id = res.data[0].att_id;
-        console.log(this.att_id);
+        this.attendanceArray = res.data;
+        console.log(this.attendanceArray);
       } else {
         this.monthEntryAvailable = false;
       }
@@ -99,4 +118,16 @@ export class AttendanceReportsComponent implements OnInit {
     // Here January is 0 based
     // return new Date(year, month+1, 0).getDate();
   };
+  getAttendance(emp_id, date) {
+    const findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
+    if (findex !== -1) {
+      const findex2 = this.attendanceArray[findex].employeeList.findIndex(f => (f.emp_id) === (emp_id));
+      if (findex2 !== -1) {
+        return this.attendanceArray[findex].employeeList[findex2].attendance;
+      } else {
+        return 5;
+      }
+    }
+
+  }
 }
