@@ -104,6 +104,17 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter Subject Color</mat-label>
+                                                            <input type="color" matInput
+                                                                placeholder="Enter Subject Color"
+                                                                class="text-capitalize" formControlName="sub_color"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_color').value | capitalize">
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
                                                     <div class="col-12  remove-col-padding">
                                                         <mat-checkbox formControlName="sub_timetable"
                                                             [checked]="formGroupArray[configValue-1].formGroup.get('sub_timetable').value === '1' ? 'checked':''">
@@ -113,6 +124,15 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
+                                                    <div class="col-12  remove-col-padding">
+                                                        <mat-checkbox formControlName="sub_isexam"
+                                                            [checked]="formGroupArray[configValue-1].formGroup.get('sub_isexam').value === '1' ? 'checked':''">
+                                                            Is this a
+                                                            Exam subject ? {{formGroupArray[configValue-1].formGroup.get('sub_isexam').value}}
+                                                        </mat-checkbox>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="formGroupArray[configValue-1].formGroup.get('sub_isexam').value === true">
                                                     <div class="col-12">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Subject Type</mat-label>
@@ -130,19 +150,6 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
-
-                                                <div class="row">
-                                                    <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Enter Subject Color</mat-label>
-                                                            <input type="color" matInput
-                                                                placeholder="Enter Subject Color"
-                                                                class="text-capitalize" formControlName="sub_color"
-                                                                [value]="formGroupArray[configValue-1].formGroup.get('sub_color').value | capitalize">
-                                                        </mat-form-field>
-                                                    </div>
-                                                </div>
-
 
                                                 <div class="row">
                                                     <div class="col-12">
@@ -739,6 +746,20 @@
                                                                                         *ngIf="item.sub_timetable=='1'">Yes</span>
                                                                                     <span
                                                                                         *ngIf="item.sub_timetable=='0'">No</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue == '3'"
+                                                                                matColumnDef="sub_isexam">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Is Exam Subject
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.sub_isexam=='1'">Yes</span>
+                                                                                    <span
+                                                                                        *ngIf="item.sub_isexam=='0'">No</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '3'"

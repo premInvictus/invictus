@@ -20,10 +20,8 @@ export class CommonAPIService {
 	}
 	UserAccessMenu: any[] = [];
 	showLoading = new Subject();
-	employeeData = new Subject();
 	reRenderForm = new Subject();
-	renderTab = new Subject();
-	tabChange = new Subject();
+	composeMessageSubject = new Subject();
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;

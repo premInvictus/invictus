@@ -152,6 +152,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sub_order: '',
 				sub_status: '',
 				sub_timetable: '',
+				sub_isexam: '',
 				sub_type_id: '',
 				sub_color: '#000000'
 			})
@@ -313,6 +314,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							name: item.sub_name,
 							sub_code: item.sub_code,
 							sub_timetable: item.sub_timetable,
+							sub_isexam: item.sub_isexam === '1' ? true : false,
 							sub_color: item.sub_color,
 							sub_type: item.sub_type,
 							sub_type_name: that.getSubjectTypeName(item.sub_type),
@@ -788,6 +790,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sub_status: value.sub_status,
 				sub_code: value.sub_code,
 				sub_timetable: value.sub_timetable,
+				sub_isexam: value.sub_isexam === '1' ? true : false,
 				sub_type_id: value.sub_type,
 				sub_color: value.sub_color
 			});
@@ -851,7 +854,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 3) {
 			this.getSubjectType(this);
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable', 'sub_type_name', 'sub_color', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable','sub_isexam', 'sub_type_name', 'sub_color', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);

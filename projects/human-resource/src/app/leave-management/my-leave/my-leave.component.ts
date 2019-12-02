@@ -43,6 +43,7 @@ export class MyLeaveComponent implements OnInit {
 	employeeRecord: any;
 	editFlag = false;
 	principal: any;
+	deleteMessage = 'Are you sure to Delete !';
 	approveMessage = 'Are you sure to Approve !';
 	rejectMessage = 'Are you sure to Reject !';
 	approvedArray: any[] = [];
@@ -481,6 +482,8 @@ export class MyLeaveComponent implements OnInit {
 			}
 		});
 	}
+	deleteCancel() {
 
+	}
 
 }

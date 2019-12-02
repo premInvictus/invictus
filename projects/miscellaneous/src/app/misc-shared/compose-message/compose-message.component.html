@@ -4,7 +4,7 @@
             <mat-card class="card-top-title__container">
                 <div class="row">
                     <div class="col-6">
-                        <h1 class="remove-bottom-margin font-size-24">New Message</h1>
+                        <h1 class="remove-bottom-margin font-size-24">New Message </h1>
                     </div>
                     <div class="col-6">
                         <button mat-raised-button class="float-right btn-danger btn-consolidate btn-spacer"
@@ -20,6 +20,7 @@
             <mat-card class="mat-card" style="min-height: 700px;">
                 <form [formGroup]="messageForm">
                     <div class="row">
+                           
                         <div class="col-2">
                             <mat-form-field class="form-field" appearance="outline">
                                 <mat-label> Message Type </mat-label>
@@ -41,7 +42,7 @@
                         <div class="col-3">
                             <mat-form-field class="form-field" appearance="outline">
                                 <mat-label> Title </mat-label>
-                                <input matInput placeholder="Title" type="input" formControlName="messageTitle"
+                                <input matInput placeholder="Title" type="input" formControlName="messageTitle" 
                                     autocomplete="false" />
                             </mat-form-field>
                         </div>
@@ -55,7 +56,7 @@
                                 <div class="user-chips">
                                     <button *ngFor="let item of selectedUserArr" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
-                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
+                                        <span class="custom-btn-text">{{item?.email}}</span>
                                         <i class="fas fa-times-circle custom-entry-btn-icon"
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
@@ -137,16 +138,17 @@
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="Subject" type="input" formControlName="messageSubject"
                                     style="width: 90%;
-                                padding: 10px;" />
+                                padding: 10px;"/>
                                 <!-- </mat-form-field> -->
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12" style="min-height: 400px;">
                                 <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-12">
                                 <div class="notification-aatachment-btn-sis">
@@ -156,9 +158,10 @@
                                     <input style="display: none;" id="attachment" type="file" multiple name="upload"
                                         (change)="fileChangeEvent($event)">
                                 </div>
+                                
                                 <ul class="preview-attachment-base">
                                     <li *ngFor="let item of attachmentArray" class="preview-attachment">
-                                        <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgName"
+                                        <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
                                             (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
                                         <img *ngIf="!checkThumbnail(item.imgName)"
                                             src="https://icons-for-free.com/free-icons/png/512/2109135.png"
@@ -169,18 +172,22 @@
                             </div>
                         </div>
                         <div class="col-3 template-check-box">
-                            <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                            <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
-                                    class="fa fa-caret-up float-right margin-top-10"></i></button> &nbsp;
+                                    class="fa fa-caret-up float-right margin-top-10"></i></button> 
+                            <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                                    (click)="sendEmailSchedule()" style="margin-left:0 !important">Update Email <i
+                                        class="fa fa-caret-up float-right margin-top-10"></i></button> 
+                                        &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 [matMenuTriggerFor]="menu2" (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
                                     class="fa fa-caret-up float-right margin-top-10"
                                     (click)="openMyMenu()"></i></button> &nbsp; -->
-                            <mat-menu #menu2="matMenu" overlapTrigger="false">
+                            <!-- <mat-menu #menu2="matMenu" overlapTrigger="false">
                                 <span (mouseleave)="closeMyMenu()">
                                     <button mat-menu-item (click)="scheduleForLater()">Schedule For Later</button>
                                 </span>
-                            </mat-menu>
+                            </mat-menu> -->
                             <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"><b>Save as template</b>
                             </mat-checkbox>
                             <mat-checkbox (change)="updateTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>

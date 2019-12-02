@@ -12,7 +12,7 @@
                 <div class="col-12">
                     <div class="row">
                         <div class="col-12">
-                            <div class="header" [innerHTML]="header" style="height: 80px; display: inline-flex;"></div>
+                            <div class="header" [innerHTML]="header" style="height: 80px; display:contents;"></div>
                         </div>
                     </div>
                 </div>
@@ -101,12 +101,12 @@
                                     </tr>
                                 </ng-container>
                                 <tr class="custom-tr">
-                                    <td  class="custom-td">Total({{getTotalMainSubject()}} main subject)</td>
-                                    <td  class="custom-td" [attr.colspan]="sexamArray.length"></td>
-                                    <td  class="custom-td">{{getPassTotalPercentage(data.param.eme_term_id)}}%</td>
-                                    <td  class="custom-td"></td>
-                                    <td  class="custom-td"></td>
-                                    <td  class="custom-td"></td>
+                                    <td class="custom-td">Total({{getTotalMainSubject()}} main subject)</td>
+                                    <td class="custom-td" [attr.colspan]="sexamArray.length"></td>
+                                    <td class="custom-td">{{getPassTotalPercentage(data.param.eme_term_id)}}%</td>
+                                    <td class="custom-td"></td>
+                                    <td class="custom-td"></td>
+                                    <td class="custom-td"></td>
                                 </tr>
                             </tbody>
 
@@ -304,25 +304,24 @@
                 </div>
             </div>
             <div class="row" *ngIf="data.ect_exam_type == 2">
-                <div class="col-3"></div>
-                <div class="col-6">
+                <div class="col-12">
 
                     <div style="margin-top: 15px; text-align: center; width: 100%;">
                         <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
-                            <thead>
+                            <tbody>
                                 <tr>
                                     <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Marks
                                         Range </th>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let item of GradeSet">
-                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                    <td *ngFor="let item of GradeSet"
+                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
                                         {{item.egs_range_start}} - {{item.egs_range_end}}
                                     </td>
-                                    <td style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                </tr>
+                                <tr>
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                    </th>
+                                    <td *ngFor="let item of GradeSet"
+                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
                                         {{item.egs_grade_name | titlecase}}</td>
                                 </tr>
 
@@ -330,7 +329,6 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-3"></div>
             </div>
             <br>
             <div class="">
