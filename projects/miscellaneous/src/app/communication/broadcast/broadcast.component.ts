@@ -16,22 +16,13 @@ export class BroadcastComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	showComposeMessage = false;
 	broadcastForm: FormGroup;
-	displayedColumns: string[] = [
-		'no',
-		'user_type',		
-		'schedule_date',
-		'subject',
-		'attachment',
-		'send_by',
-		'status',
-		'action'
-	];
+	displayedColumns: string[] = []
 	renderForm:any = {};
-	scheduleEmailData: any[] = [];
+	scheduleMessageData: any[] = [];
 	USER_ELEMENT_DATA: any[] = [];
 	selectedUserArr: any[] = [];
 	allUserSelectFlag = false;
-	scheduleEmailDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 	currentTab = 1;
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Deactivate Email Schedule ?';
@@ -45,13 +36,13 @@ export class BroadcastComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.scheduleEmailDataSource.sort = this.sort;
+		this.scheduleMessageDataSource.sort = this.sort;
 		this.buildForm();
 		this.getEmailScheduleData();
 	}
 
 	ngAfterViewInit() {
-		this.scheduleEmailDataSource.sort = this.sort;
+		this.scheduleMessageDataSource.sort = this.sort;
 	}
 
 	buildForm() {
@@ -67,54 +58,82 @@ export class BroadcastComponent implements OnInit {
 
 
 	getEmailScheduleData() {
-		this.scheduleEmailData = [];
+		this.scheduleMessageData = [];
 		this.USER_ELEMENT_DATA = [];
+		this.displayedColumns = [
+			'no',
+			'user_type',		
+			'schedule_date',
+			'subject',
+			'attachment',
+			'send_by',
+			'status',
+			'action'
+		];
 		this.sisService.getNotificationEmail('').subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
-				this.scheduleEmailData = result.data;
+				this.scheduleMessageData = result.data;
+				this.prepareDataSource();
+			}
+		});
+	}
+
+	getSMSScheduleData() {
+		this.scheduleMessageData = [];
+		this.USER_ELEMENT_DATA = [];
+		this.displayedColumns = [
+			'no',
+			'user_type',		
+			'schedule_date',
+			'subject',
+			'send_by',
+			'status',
+			'action'
+		];
+		this.sisService.getNotificationSMS('').subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
 			}
 		});
 	}
 
 	prepareDataSource() {
-		this.scheduleEmailDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
-
+		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
-		for (let i = 0; i < this.scheduleEmailData.length; i++) {
+		for (let i = 0; i < this.scheduleMessageData.length; i++) {
 			const tempObj = {};
-			tempObj['ns_id'] = this.scheduleEmailData[i]['ns_id'];
+			tempObj['ns_id'] = this.scheduleMessageData[i]['ns_id'];
 			tempObj['no'] = counter;
-			tempObj['subject'] = this.scheduleEmailData[i]['ns_title'];
-			//tempObj['class'] = this.scheduleEmailData[i]['class_name'] + ' - ' + this.scheduleEmailData[i]['sec_name'];
-			tempObj['schedule_date'] = this.scheduleEmailData[i]['ns_created_date'];
-			//tempObj['schedule_time'] = this.scheduleEmailData[i]['ns_schedule_time'];
-			if (this.scheduleEmailData[i]['not_receivers'] === 'S') {
+			tempObj['subject'] = this.scheduleMessageData[i]['ns_title'];
+			//tempObj['class'] = this.scheduleMessageData[i]['class_name'] + ' - ' + this.scheduleMessageData[i]['sec_name'];
+			tempObj['schedule_date'] = this.scheduleMessageData[i]['ns_created_date'];
+			//tempObj['schedule_time'] = this.scheduleMessageData[i]['ns_schedule_time'];
+			if (this.scheduleMessageData[i]['not_receivers'] === 'S') {
 				tempObj['user_type'] = 'Student';
-			} else if (this.scheduleEmailData[i]['not_receivers'] === 'P') {
+			} else if (this.scheduleMessageData[i]['not_receivers'] === 'P') {
 				tempObj['user_type'] = 'Parent';
-			} else if (this.scheduleEmailData[i]['not_receivers'] === 'T') {
+			} else if (this.scheduleMessageData[i]['not_receivers'] === 'T') {
 				tempObj['user_type'] = 'Teacher';
 			}
-			tempObj['send_by'] = this.scheduleEmailData[i]['created_by'];
-			tempObj['send_to'] = this.scheduleEmailData[i]['au_full_name'] + ', ' + (this.scheduleEmailData[i]['class_name'] && this.scheduleEmailData[i]['sec_name'] ? this.scheduleEmailData[i]['class_name'].toUpperCase() + ' - ' + this.scheduleEmailData[i]['sec_name'].toUpperCase() : this.scheduleEmailData[i]['class_name']).toUpperCase()
-			tempObj['attachment'] = JSON.parse(this.scheduleEmailData[i]['ns_attachments']) && JSON.parse(this.scheduleEmailData[i]['ns_attachments']).length > 0 ? this.scheduleEmailData[i]['ns_attachments'] : '';
+			tempObj['send_by'] = this.scheduleMessageData[i]['created_by'];
+			//tempObj['send_to'] = this.scheduleMessageData[i]['au_full_name'] + ', ' + (this.scheduleMessageData[i]['class_name'] && this.scheduleMessageData[i]['sec_name'] ? this.scheduleMessageData[i]['class_name'].toUpperCase() + ' - ' + this.scheduleMessageData[i]['sec_name'].toUpperCase() : this.scheduleMessageData[i]['class_name']).toUpperCase()
+			tempObj['attachment'] = JSON.parse(this.scheduleMessageData[i]['ns_attachments']) && JSON.parse(this.scheduleMessageData[i]['ns_attachments']).length > 0 ? this.scheduleMessageData[i]['ns_attachments'] : '';
 
-			tempObj['status'] = this.scheduleEmailData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleEmailData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Failed';
-			tempObj['receiver_contact'] = this.scheduleEmailData[i]['not_receiver_contact'];
-			tempObj['tpl_id'] = this.scheduleEmailData[i]['tpl_id'];
-			tempObj['tpl_title'] = this.scheduleEmailData[i]['tpl_title'];
-			tempObj['body'] = this.scheduleEmailData[i]['ns_desc'] ? this.scheduleEmailData[i]['ns_desc'] : '';
-			tempObj['user_data'] = this.scheduleEmailData[i]['user_data'] ? this.scheduleEmailData[i]['user_data'] : [];
+			tempObj['status'] = this.scheduleMessageData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleMessageData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Failed';
+			tempObj['receiver_contact'] = this.scheduleMessageData[i]['not_receiver_contact'];
+			tempObj['tpl_id'] = this.scheduleMessageData[i]['tpl_id'];
+			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];
+			tempObj['body'] = this.scheduleMessageData[i]['ns_desc'] ? this.scheduleMessageData[i]['ns_desc'] : '';
+			tempObj['user_data'] = this.scheduleMessageData[i]['user_data'] ? this.scheduleMessageData[i]['user_data'] : [];
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
-		this.scheduleEmailDataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
-		//this.scheduleEmailDataSource.sort = this.sort;
-		this.scheduleEmailDataSource.paginator = this.paginator;
+		this.scheduleMessageDataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
+		this.scheduleMessageDataSource.paginator = this.paginator;
 		if (this.sort) {
 			this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-			this.scheduleEmailDataSource.sort = this.sort;
+			this.scheduleMessageDataSource.sort = this.sort;
 		}
 	}
 
@@ -141,13 +160,11 @@ export class BroadcastComponent implements OnInit {
 		}
 	}
 
-	scheduleEmail() {
-		this.router.navigate(['../../notifications/email'], { queryParams: {}, relativeTo: this.route });
-	}
+	
 
 
 	applyFilterUser(filterValue: string) {
-		this.scheduleEmailDataSource.filter = filterValue.trim().toLowerCase();
+		this.scheduleMessageDataSource.filter = filterValue.trim().toLowerCase();
 	}
 
 	// editEmail(element) {
@@ -163,12 +180,6 @@ export class BroadcastComponent implements OnInit {
 		element.messageType = messageType;
 		this.renderForm = {addMode:false, editMode:true, formData: element, viewMode : false};
 		this.showComposeMessage = true;
-		 
-		
-		// this.router.navigate(['../../communication/compose-message'], { queryParams: {}, relativeTo: this.route });
-		// this.commonAPIService.composeMessageSubject.next(renderForm);
-		
-		
 	}
 
 	deleteEmail(element) {
@@ -185,6 +196,8 @@ export class BroadcastComponent implements OnInit {
 
 		if (this.currentTab) {
 			this.getEmailScheduleData();
+		} else {
+			this.getSMSScheduleData();
 		}
 	}
 
@@ -195,9 +208,16 @@ export class BroadcastComponent implements OnInit {
 		
 	}
 
-	resetComposeMessage() {
+	resetComposeMessage(messageType) {
 		this.showComposeMessage = false;
-		this.getEmailScheduleData();
+		if (messageType === 'S') {
+			this.currentTab = 0;
+			this.getSMSScheduleData();			
+		} else {
+			this.currentTab = 1;
+			this.getEmailScheduleData();
+		}
+		
 	}
 
 	previewImage(imgArray, index) {

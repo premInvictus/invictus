@@ -53,10 +53,18 @@
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
                                 padding: 10px;" />
-                                <div class="user-chips">
-                                    <button *ngFor="let item of selectedUserArr" mat-stroked-button
+                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'E'">
+                                    <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
                                         <span class="custom-btn-text">{{item?.email}}</span>
+                                        <i class="fas fa-times-circle custom-entry-btn-icon"
+                                            (click)="deleteUser(i, item)"></i>
+                                    </button>
+                                </div>
+                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'S'">
+                                    <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
+                                        class="custom-entry-button margin-left-10">
+                                        <span class="custom-btn-text">{{item?.au_full_name}} - {{item?.mobile}}</span>
                                         <i class="fas fa-times-circle custom-entry-btn-icon"
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
@@ -122,7 +130,7 @@
                                                 <section class="example-section">
                                                     <mat-checkbox [checked]="ing.checked"
                                                         (change)="updateUserCheck(i, $event)">
-                                                        {{ing.au_full_name}}
+                                                        {{ing.au_full_name | titlecase}}
                                                     </mat-checkbox>
                                                 </section>
                                             </li>
@@ -149,7 +157,7 @@
                             </div>
                         </div>
                         
-                        <div class="row">
+                        <div class="row" *ngIf="messageForm.value.messageType === 'E'">
                             <div class="col-12">
                                 <div class="notification-aatachment-btn-sis">
                                     <label for="attachment"><i
@@ -173,10 +181,10 @@
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
+                                (click)="sendEmailSchedule()" style="margin-left:0 !important">Send Message<i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button> 
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                    (click)="sendEmailSchedule()" style="margin-left:0 !important">Update Email <i
+                                    (click)="sendEmailSchedule()" style="margin-left:0 !important">Update Message <i
                                         class="fa fa-caret-up float-right margin-top-10"></i></button> 
                                         &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
