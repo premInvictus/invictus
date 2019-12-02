@@ -144,7 +144,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     this.buildForm();
   }
   getWings() {
-    this.commonAPIService.getAllWing({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '1' }).subscribe((res: any) => {
       if (res) {
         this.wingArray = [];
         this.wingArray = res;
@@ -160,7 +160,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getDesignation() {
-    this.commonAPIService.getAllDesignation({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '2' }).subscribe((res: any) => {
       if (res) {
         this.designationArray = [];
         this.designationArray = res;
@@ -184,7 +184,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getCategoryTwo() {
-    this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '4' }).subscribe((res: any) => {
       if (res) {
         this.categoryTwoArray = [];
         this.categoryTwoArray = res;
@@ -192,7 +192,7 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getCategoryThree() {
-    this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
+    this.commonAPIService.getMaster({ type_id: '5' }).subscribe((res: any) => {
       if (res) {
         this.categoryThreeArray = [];
         this.categoryThreeArray = res;
@@ -258,16 +258,16 @@ export class AdvancedSearchModalComponent implements OnInit {
     const obj: any = {};
     obj['emp_status'] = [];
     obj['emp_wing_detail.wing_id'] = [];
-    obj['gen_id'] = [];
     obj['emp_salary_detail.emp_organisation_relation_detail.doj'] = [];
+    obj['gen_id'] = [];
     obj['emp_designation_detail.des_id'] = [];
     obj['emp_department_detail.dpt_id'] = [];
-    obj['emp_salary_detail.emp_job_detail.category_1.cat_one_id'] = [];
+    obj['emp_category_detail.cat_id'] = [];
     obj['emp_salary_detail.emp_job_detail.category_2.cat_two_id'] = [];
     obj['emp_salary_detail.emp_job_detail.category_3.cat_three_id'] = [];
-    obj['emp_salary_structure.emp_pay_mode.pm_id'] = [];
-    obj['emp_salary_structure.emp_pay_scale.ss_id'] = [];
-    obj['emp_bank_detail.bnk_detail.bnk_id'] = [];
+    obj['emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id'] = [];
+    obj['emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id'] = [];
+    obj['emp_salary_detail.emp_bank_detail.bnk_detail.bnk_id'] = [];
     obj['user'] = JSON.parse(localStorage.getItem('currentUser'));
     obj['contract_from_date'] = '';
     obj['contract_to_date'] = '';
@@ -281,12 +281,21 @@ export class AdvancedSearchModalComponent implements OnInit {
     for (const item of this.formGroupArray) {
       dataArr.push(item.formGroup.value);
     }
-    if (this.generalFilterForm.value.from_date || this.generalFilterForm.value.to_date) {
-      this.generalFilterForm.patchValue({
-        from_date: new DatePipe('en-in').transform(this.generalFilterForm.value.from_date, 'yyyy-MM-dd'),
-        to_date: new DatePipe('en-in').transform(this.generalFilterForm.value.to_date, 'yyyy-MM-dd')
+    if (this.generalFilterForm.value.contract_from_date) {
+      this.generalFilterForm.patchValue({        
+        'contract_from_date' : [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_from_date, 'yyyy-MM-dd')],
       });
     }
+
+    if (this.generalFilterForm.value.contract_to_date) {
+      this.generalFilterForm.patchValue({        
+        'contract_to_date' : [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_to_date, 'yyyy-MM-dd')],
+      });
+    }
+
+    //delete this.generalFilterForm.value.contract_from_date;
+    
+
     this.searchOk.emit({
       filters: dataArr,
       generalFilters: this.generalFilterForm.value

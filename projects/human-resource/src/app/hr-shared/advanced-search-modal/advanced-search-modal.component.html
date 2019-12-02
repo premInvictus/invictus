@@ -75,8 +75,8 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Wing </mat-label>
               <mat-select formControlName="emp_wing_detail.wing_id" multiple>
-                <mat-option placeholder="Wing" *ngFor="let item of wingArray" [value]="item.wing_id">
-                  {{item.wing_name}}</mat-option>
+                <mat-option placeholder="Wing" *ngFor="let item of wingArray" [value]="item.config_id">
+                  {{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -102,15 +102,15 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Designation </mat-label>
               <mat-select formControlName="emp_designation_detail.des_id" multiple>
-                <mat-option *ngFor="let item of designationArray" [value]="item.des_id" placeholder="Designation">
-                  {{item.des_name}}</mat-option>
+                <mat-option *ngFor="let item of designationArray" [value]="item.config_id" placeholder="Designation">
+                  {{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-4">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Department </mat-label>
-              <mat-select formControlName="emp_department_detail.dept_id" multiple>
+              <mat-select formControlName="emp_department_detail.dpt_id" multiple>
                 <mat-option *ngFor="let item of departmentArray" [value]="item.dept_id" placeholder="Department">
                   {{item.dept_name}}</mat-option>
               </mat-select>
@@ -119,7 +119,7 @@
           <div class="col-4">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Category I </mat-label>
-              <mat-select formControlName="emp_salary_detail.emp_job_detail.category_1.cat_one_id" multiple>
+              <mat-select formControlName="emp_category_detail.cat_id" multiple>
                 <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id" placeholder="Category I">
                   {{item.cat_name}}</mat-option>
               </mat-select>
@@ -129,8 +129,8 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Category II </mat-label>
               <mat-select formControlName="emp_salary_detail.emp_job_detail.category_2.cat_two_id" multiple>
-                <mat-option *ngFor="let item of categoryTwoArray" [value]="item.cat_id" placeholder="Category II">
-                  {{item.cat_name}}</mat-option>
+                <mat-option *ngFor="let item of categoryTwoArray" [value]="item.config_id" placeholder="Category II">
+                  {{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -138,15 +138,15 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Category III </mat-label>
               <mat-select formControlName="emp_salary_detail.emp_job_detail.category_3.cat_three_id" multiple>
-                <mat-option *ngFor="let item of categoryThreeArray" [value]="item.cat_id" placeholder="Category III">
-                  {{item.cat_name}}</mat-option>
+                <mat-option *ngFor="let item of categoryThreeArray" [value]="item.config_id" placeholder="Category III">
+                  {{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-4">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Scale </mat-label>
-              <mat-select formControlName="emp_salary_structure.emp_pay_scale.ss_id" multiple>
+              <mat-select formControlName="emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id" multiple>
                 <mat-option *ngFor="let item of scaleArray" [value]="item.ss_id" placeholder="Scale">
                   {{item?.ss_name}}</mat-option>
               </mat-select>
@@ -155,7 +155,7 @@
           <div class="col-4">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label> Pay mode </mat-label>
-              <mat-select formControlName="emp_salary_structure.emp_pay_mode.pm_id" multiple>
+              <mat-select formControlName="emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id" multiple>
                 <mat-option *ngFor="let item of paymentModeArray" [value]="item.pm_id" placeholder="Payment Mode">
                   {{item.pm_name}}</mat-option>
               </mat-select>
@@ -164,7 +164,7 @@
           <div class="col-4">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Bank Name </mat-label>
-              <mat-select formControlName="emp_bank_detail.bnk_detail.bnk_id" multiple>
+              <mat-select formControlName="emp_salary_detail.emp_bank_detail.bnk_detail.bnk_id" multiple>
                 <mat-option *ngFor="let item of bankArray" [value]="item.tb_id" placeholder="Bank Name">
                   {{item.tb_name}}</mat-option>
               </mat-select>
@@ -181,16 +181,16 @@
         <div class="row">
           <div class="col-4">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Contract From Date</mat-label>
+              <mat-label>Joining From Date</mat-label>
               <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="contract_from_date"
-                (blur)="getFromDate($event.target.value)" />
+                 />
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="col-4">
             <mat-form-field appearance="outline" class="form-field">
-              <mat-label>Contract To Date</mat-label>
+              <mat-label>Joining To Date</mat-label>
               <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="contract_to_date"
                 (blur)="getToDate($event.target.value)" />
               <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
