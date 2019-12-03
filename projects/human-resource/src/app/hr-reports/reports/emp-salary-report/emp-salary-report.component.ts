@@ -125,7 +125,7 @@ export class EmpSalaryReportComponent implements OnInit {
     this.getSchool();
     this.buildForm();
     const value = { "filters": [{ "filter_type": "", "filter_value": "", "type": "" }], "generalFilters": { "type_id": null, "genre.genre_name": null, "category_id": null, "reserv_status": null, "source": null, "language_details.lang_code": null, "user": localStorage.getItem('currentUser'), "from_date": "", "to_date": "", "rfid": "" }, "search_from": "master" };
-    this.getAccessionReport('');
+    this.getSalaryReport('');
     this.getPaymentModes();
     this.getSalaryHeads();
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -218,9 +218,7 @@ export class EmpSalaryReportComponent implements OnInit {
           }
         });
   }
-  getAccessionReport(value: any) {
-
-
+  getSalaryReport(value: any) {
     this.dataArr = [];
     this.aggregatearray = [];
     this.columnDefinitions = [];
@@ -343,7 +341,7 @@ export class EmpSalaryReportComponent implements OnInit {
       accessionJSON = value;
     } else {
       // "withoutFilter": true
-      accessionJSON = { };
+      accessionJSON = {};
     }
 
     this.columnDefinitions = [
@@ -508,9 +506,11 @@ export class EmpSalaryReportComponent implements OnInit {
         },
       },
     ];
-   // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+    // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
     this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
       if (result && result.data.length > 0) {
+        const salaryHead: any[] = [];
+        const deductionHead: any[] = [];
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         repoArray = result.data;
         let index = 0;
@@ -592,16 +592,14 @@ export class EmpSalaryReportComponent implements OnInit {
                       this.shdcolumns[i]['value'] = 0;
                       this.empShdcolumns[i]['value'] = 0;
                     }
-
                   }
                 }
               }
-
             }
-
           }
           if (index === 0) {
             for (const item of this.empShacolumns) {
+              salaryHead.push(item.columnDef);
               if (item.columnDef === 'Basic Pay') {
                 this.columnDefinitions.push({
                   id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
@@ -629,6 +627,7 @@ export class EmpSalaryReportComponent implements OnInit {
 
             }
             for (const item of this.empShdcolumns) {
+              deductionHead.push(item.columnDef);
               this.columnDefinitions.push({
                 id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
                 filterable: true,
@@ -700,6 +699,53 @@ export class EmpSalaryReportComponent implements OnInit {
           filterSearchType: FieldType.string,
           width: 80
         });
+
+        this.totalRow = {};
+        const obj3: any = {};
+        obj3['id'] = 'footer';
+        obj3['srno'] = '';
+        obj3['full_name'] = '';
+        obj3['pan_no'] = '';
+        obj3['aadhar_no'] = '';
+        obj3['esi_ac_no'] = '';
+        obj3['pf_acc_no'] = '';
+        obj3['doj'] = '';
+        obj3['pf_joining_date'] = '';
+        obj3['esic_joining_date'] = '';
+        obj3['probation_till_date'] = '';
+        obj3['confirmation_date'] = '';
+        obj3['nominee_detail'] = '';
+        obj3['bnk_name'] = '';
+        obj3['bnk_ifsc'] = '';
+        obj3['bnk_acc_no'] = '';
+        obj3['incremental_month'] = '';
+        obj3['contact_period'] = '';
+        obj3['category_1'] = '';
+        obj3['category_2'] = 'Grand Total';
+        obj3['supervisor'] = '';
+        obj3['emp_pay_scale'] = '';
+        // obj3['Basic Pay'] = this.dataset.map(t => t['Basic Pay']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        Object.keys(salaryHead).forEach(key2 => {
+          Object.keys(this.dataset).forEach(key3 => {
+            Object.keys(this.dataset[key3]).forEach(key4 => {
+              if (key4 === salaryHead[key2]) {
+                obj3[salaryHead[key2]] = this.dataset.map(t => t[salaryHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
+              }
+            });
+          });
+        });
+        Object.keys(deductionHead).forEach(key2 => {
+          Object.keys(this.dataset).forEach(key3 => {
+            Object.keys(this.dataset[key3]).forEach(key4 => {
+              if (key4 === deductionHead[key2]) {
+                obj3[deductionHead[key2]] = this.dataset.map(t => t[deductionHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
+              }
+            });
+          });
+        });
+        obj3['net_salary'] = this.dataset.map(t => t['net_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        obj3['total_salary'] = this.dataset.map(t => t['total_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        this.totalRow = obj3;
         this.tableFlag = true;
         this.nodataFlag = false;
       } else {
@@ -1515,6 +1561,6 @@ export class EmpSalaryReportComponent implements OnInit {
   }
   openSearchDialog = (data) => { this.searchModal.openModal(data); }
   searchOk($event) {
-    this.getAccessionReport($event);
+    this.getSalaryReport($event);
   }
 }
