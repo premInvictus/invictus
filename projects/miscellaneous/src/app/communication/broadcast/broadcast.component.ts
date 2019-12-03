@@ -4,6 +4,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { DatePipe } from '@angular/common';
 import { PreviewDocumentComponent } from '../../misc-shared/preview-document/preview-document.component';
 @Component({
 	selector: 'app-broadcast',
@@ -47,8 +48,8 @@ export class BroadcastComponent implements OnInit {
 
 	buildForm() {
 		this.broadcastForm = this.fbuild.group({
-			contract_from_date: '',
-			contract_to_date: ''
+			from_date: '',
+			to_date: ''
 		});
 	}
 
@@ -70,7 +71,11 @@ export class BroadcastComponent implements OnInit {
 			'status',
 			'action'
 		];
-		this.commonAPIService.getMessage({msg_type : 'E'}).subscribe((result: any) => {
+		var inputJson = {};
+		inputJson['msg_type'] = 'E';
+		inputJson['from_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.from_date, 'yyyy-MM-dd');
+		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
+		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -90,7 +95,11 @@ export class BroadcastComponent implements OnInit {
 			'status',
 			'action'
 		];
-		this.commonAPIService.getMessage({msg_type : 'S'}).subscribe((result: any) => {
+		var inputJson = {};
+		inputJson['msg_type'] = 'S';
+		inputJson['from_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.from_date, 'yyyy-MM-dd');
+		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
+		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -167,13 +176,6 @@ export class BroadcastComponent implements OnInit {
 		this.scheduleMessageDataSource.filter = filterValue.trim().toLowerCase();
 	}
 
-	// editEmail(element) {
-	// 	this.router.navigate(['../../notifications/email'], { queryParams: { schedule_id: element.ns_id }, relativeTo: this.route });
-	// }
-
-	// viewEmail(element) {
-	// 	this.router.navigate(['../../notifications/email'], { queryParams: { view_schedule_id: element.ns_id }, relativeTo: this.route });
-	// }
 
 	editMessage(element) {
 		var messageType = this.currentTab == 1 ? 'E' : 'S';
@@ -201,8 +203,15 @@ export class BroadcastComponent implements OnInit {
 		}
 	}
 
+	getMessage() {
+		if (this.currentTab) {
+			this.getEmailScheduleData();
+		} else {
+			this.getSMSScheduleData();
+		}
+	}
+
 	composeMessage() {
-		console.log('in new');
 		this.showComposeMessage = true;
 		var messageType = this.currentTab == 1 ? 'E' : 'S';
 		this.renderForm = {addMode:true, editMode:false, messageType: messageType, formData:'', viewMode : false,};
@@ -222,7 +231,6 @@ export class BroadcastComponent implements OnInit {
 	}
 
 	previewImage(imgArray, index) {
-		console.log('imgArray--', imgArray);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
 				images: imgArray ? imgArray : [],
