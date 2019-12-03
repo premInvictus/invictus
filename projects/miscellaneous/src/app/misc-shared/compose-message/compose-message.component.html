@@ -56,7 +56,7 @@
                                 <div class="user-chips" *ngIf="messageForm.value.messageType === 'E'">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
-                                        <span class="custom-btn-text">{{item?.email}}</span>
+                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
                                         <i class="fas fa-times-circle custom-entry-btn-icon"
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
@@ -64,7 +64,7 @@
                                 <div class="user-chips" *ngIf="messageForm.value.messageType === 'S'">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
-                                        <span class="custom-btn-text">{{item?.au_full_name}} - {{item?.mobile}}</span>
+                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
                                         <i class="fas fa-times-circle custom-entry-btn-icon"
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
@@ -181,10 +181,10 @@
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="sendEmailSchedule()" style="margin-left:0 !important">Send Message<i
+                                (click)="sendMessage()" style="margin-left:0 !important">Send Message<i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button> 
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                    (click)="sendEmailSchedule()" style="margin-left:0 !important">Update Message <i
+                                    (click)="sendMessage()" style="margin-left:0 !important">Update Message <i
                                         class="fa fa-caret-up float-right margin-top-10"></i></button> 
                                         &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
@@ -198,13 +198,15 @@
                             </mat-menu> -->
                             <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"><b>Save as template</b>
                             </mat-checkbox>
-                            <mat-checkbox (change)="updateTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>
+                            <mat-checkbox (change)="saveTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>
                             </mat-checkbox>
                         </div>
                     </div>
                 </form>
             </mat-card>
         </div>
-
     </div>
 </div>
+
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage"
+(deleteOk)="sendSMS($event)" (deleteCancel)="cancelSendSMS()"></app-delete-modal>

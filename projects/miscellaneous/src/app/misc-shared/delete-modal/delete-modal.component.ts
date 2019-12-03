@@ -18,9 +18,10 @@ export class DeleteModalComponent implements OnInit {
 	}
 	openModal(data) {
 		this.inputData = data;
-
-		if (! (this.inputData && this.inputData.text)) {
-			this.inputData.text = 'Delete ';
+		console.log('this.inputData', this.inputData);
+		if (!(this.inputData && this.inputData.delTitle && this.inputData.delMessage)) {
+			this.inputData.delTitle = 'Delete ';
+			this.inputData.delMessage = 'Do you wish to delete ? ';
 		}
 		this.dialogRef = this.dialog.open(this.deleteModal, {
 			'height': '30vh',
@@ -31,6 +32,8 @@ export class DeleteModalComponent implements OnInit {
 		});
 	}
 	delete() {
+		delete this.inputData['delTitle'];
+		delete this.inputData['delMessage'];
 		this.deleteOk.emit(this.inputData);
 	}
 

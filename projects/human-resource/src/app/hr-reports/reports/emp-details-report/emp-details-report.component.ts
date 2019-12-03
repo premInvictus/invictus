@@ -51,6 +51,7 @@ export class EmpDetailsReportComponent implements OnInit {
   dataArr: any[] = [];
   schoolInfo: any;
   sessionName: any;
+  gridHeight: any;
   nodataFlag = false;
   alphabetJSON = {
     1: 'A',
@@ -538,6 +539,15 @@ export class EmpDetailsReportComponent implements OnInit {
               item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : ''
           this.dataset.push(obj);
           index++;
+        }
+        if (this.dataset.length <= 5) {
+          this.gridHeight = 300;
+        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+          this.gridHeight = 400;
+        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+          this.gridHeight = 550;
+        } else if (this.dataset.length > 20) {
+          this.gridHeight = 750;
         }
         this.tableFlag = true;
         this.nodataFlag = false;

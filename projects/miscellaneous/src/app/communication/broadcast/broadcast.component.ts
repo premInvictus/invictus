@@ -25,7 +25,7 @@ export class BroadcastComponent implements OnInit {
 	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 	currentTab = 1;
 	@ViewChild('deleteModal') deleteModal;
-	deleteMessage = 'Are you sure, you want to Deactivate Email Schedule ?';
+	deleteMessage = 'Are you sure, you want to Delete Message ?';
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -70,7 +70,7 @@ export class BroadcastComponent implements OnInit {
 			'status',
 			'action'
 		];
-		this.sisService.getNotificationEmail('').subscribe((result: any) => {
+		this.commonAPIService.getMessage({msg_type : 'E'}).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -90,7 +90,7 @@ export class BroadcastComponent implements OnInit {
 			'status',
 			'action'
 		];
-		this.sisService.getNotificationSMS('').subscribe((result: any) => {
+		this.commonAPIService.getMessage({msg_type : 'S'}).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -103,29 +103,29 @@ export class BroadcastComponent implements OnInit {
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
 			const tempObj = {};
-			tempObj['ns_id'] = this.scheduleMessageData[i]['ns_id'];
+			tempObj['msg_id'] = this.scheduleMessageData[i]['msg_id'];
 			tempObj['no'] = counter;
-			tempObj['subject'] = this.scheduleMessageData[i]['ns_title'];
+			tempObj['subject'] = this.scheduleMessageData[i]['msg_subject'];
 			//tempObj['class'] = this.scheduleMessageData[i]['class_name'] + ' - ' + this.scheduleMessageData[i]['sec_name'];
-			tempObj['schedule_date'] = this.scheduleMessageData[i]['ns_created_date'];
-			//tempObj['schedule_time'] = this.scheduleMessageData[i]['ns_schedule_time'];
-			if (this.scheduleMessageData[i]['not_receivers'] === 'S') {
+			tempObj['schedule_date'] = this.scheduleMessageData[i]['msg_created_date'];
+			if (this.scheduleMessageData[i]['msg_receivers'] === 'Student') {
 				tempObj['user_type'] = 'Student';
-			} else if (this.scheduleMessageData[i]['not_receivers'] === 'P') {
+			} else if (this.scheduleMessageData[i]['msg_receivers'] === 'Parent') {
 				tempObj['user_type'] = 'Parent';
-			} else if (this.scheduleMessageData[i]['not_receivers'] === 'T') {
+			} else if (this.scheduleMessageData[i]['msg_receivers'] === 'Teacher') {
 				tempObj['user_type'] = 'Teacher';
+			} else if (this.scheduleMessageData[i]['msg_receivers'] === 'Staff') {
+				tempObj['user_type'] = 'Staff';
 			}
-			tempObj['send_by'] = this.scheduleMessageData[i]['created_by'];
-			//tempObj['send_to'] = this.scheduleMessageData[i]['au_full_name'] + ', ' + (this.scheduleMessageData[i]['class_name'] && this.scheduleMessageData[i]['sec_name'] ? this.scheduleMessageData[i]['class_name'].toUpperCase() + ' - ' + this.scheduleMessageData[i]['sec_name'].toUpperCase() : this.scheduleMessageData[i]['class_name']).toUpperCase()
-			tempObj['attachment'] = JSON.parse(this.scheduleMessageData[i]['ns_attachments']) && JSON.parse(this.scheduleMessageData[i]['ns_attachments']).length > 0 ? this.scheduleMessageData[i]['ns_attachments'] : '';
+			tempObj['send_by'] = this.scheduleMessageData[i]['msg_created_by'] ? this.scheduleMessageData[i]['msg_created_by']['login_name'] : '';
+			tempObj['attachment'] = this.scheduleMessageData[i]['msg_attachment'] ? this.scheduleMessageData[i]['msg_attachment'] : '';
 
 			tempObj['status'] = this.scheduleMessageData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleMessageData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Failed';
 			tempObj['receiver_contact'] = this.scheduleMessageData[i]['not_receiver_contact'];
-			tempObj['tpl_id'] = this.scheduleMessageData[i]['tpl_id'];
+			tempObj['tpl_id'] = this.scheduleMessageData[i]['msg_template_id'];
 			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];
-			tempObj['body'] = this.scheduleMessageData[i]['ns_desc'] ? this.scheduleMessageData[i]['ns_desc'] : '';
-			tempObj['user_data'] = this.scheduleMessageData[i]['user_data'] ? this.scheduleMessageData[i]['user_data'] : [];
+			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
+			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
@@ -202,9 +202,10 @@ export class BroadcastComponent implements OnInit {
 	}
 
 	composeMessage() {
+		console.log('in new');
 		this.showComposeMessage = true;
-		var messageType = this.currentTab == 1 ? 'Email' : 'SMS';
-		var renderForm = {addMode:true, editMode:false, messageType: 'E', formData:'', viewMode : false,};
+		var messageType = this.currentTab == 1 ? 'E' : 'S';
+		this.renderForm = {addMode:true, editMode:false, messageType: messageType, formData:'', viewMode : false,};
 		
 	}
 
@@ -221,10 +222,10 @@ export class BroadcastComponent implements OnInit {
 	}
 
 	previewImage(imgArray, index) {
-		console.log('imgArray--', JSON.parse(imgArray));
+		console.log('imgArray--', imgArray);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
-				images: imgArray ? JSON.parse(imgArray) : [],
+				images: imgArray ? imgArray : [],
 				index: index
 			},
 			height: '70vh',

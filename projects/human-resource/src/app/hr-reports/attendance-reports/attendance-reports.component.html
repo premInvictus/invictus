@@ -20,6 +20,28 @@
       </mat-form-field>
     </div>
     <div class="col-10 ">
+      <div class="margin-top-10 margin-bottom-10">
+        <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
+          filter
+        </button>
+        &nbsp;
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="getAllEmployee('')">
+          reset
+        </button>
+      </div>
     </div>
   </div>
 </form>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="nodataFlag">
+  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
+    No Records Found
+  </div>
+</div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
