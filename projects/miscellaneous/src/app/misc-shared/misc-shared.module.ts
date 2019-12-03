@@ -35,8 +35,10 @@ import { NoDataComponent } from './no-data/no-data.component';
 import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.component';
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
+import { ComposeMessageComponent } from './compose-message/compose-message.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -108,6 +110,8 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		ComposeMessageComponent,
+		PreviewDocumentComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -118,6 +122,8 @@ export const MY_FORMATS = {
 		PublishModalComponent,
 		UnpublishModalComponent,
 		AdvancedSearchModalComponent,
+		ComposeMessageComponent,
+		PreviewDocumentComponent,
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -159,6 +165,8 @@ export const MY_FORMATS = {
 		NoDataComponent, 
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		ComposeMessageComponent,
+		PreviewDocumentComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -23,9 +23,10 @@ export class PreviewDocumentComponent implements OnInit {
 		} else {
 			this.data.index = 0;
 		}
+		console.log('this.data', this.data)
 		for (const item of this.data.images) {
-			if (item.file_url) {
-				this.finalImageArray.push(item.file_url);
+			if (item.imgUrl) {
+				this.finalImageArray.push(item.imgUrl);
 			}
 		}
 	}

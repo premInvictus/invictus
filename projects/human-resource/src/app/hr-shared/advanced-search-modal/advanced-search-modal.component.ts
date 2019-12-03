@@ -100,18 +100,18 @@ export class AdvancedSearchModalComponent implements OnInit {
           type: 'text',
           placeholder: 'Search employee by Employee Name'
         },
-        {
-          id: 'join_date',
-          name: 'Join Date',
-          placeholder: 'Search employee by Joined Date',
-          type: 'text',
-        },
-        {
-          id: 'left_date',
-          name: 'Left Date',
-          placeholder: 'Search employee by  Left Date',
-          type: 'text',
-        }
+        // {
+        //   id: 'doj',
+        //   name: 'Join Date',
+        //   placeholder: 'Search employee by Joined Date',
+        //   type: 'text',
+        // },
+        // {
+        //   id: 'left_date',
+        //   name: 'Left Date',
+        //   placeholder: 'Search employee by  Left Date',
+        //   type: 'text',
+        // }
       ];
     
       this.monthArray = [

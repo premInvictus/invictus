@@ -7,6 +7,9 @@ import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/materia
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MessageComponent } from './message/message.component';
 import { NotificationComponent } from './notification/notification.component';
+import { BroadcastComponent } from './broadcast/broadcast.component';
+
+
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -28,7 +31,8 @@ export const MY_FORMATS = {
 	],
 	declarations: [
 		MessageComponent,
-		NotificationComponent
+		NotificationComponent,
+		BroadcastComponent
 		],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
