@@ -1,0 +1,48 @@
+<form [formGroup]="paramform">
+  <div class="row ">
+      <div class="col-12 remove-col-padding-right">
+          <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Month</mat-label>
+              <mat-select placeholder="Month" formControlName="fm_id" (selectionChange)="resetDataset()"
+                   required>
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Class</mat-label>
+              <mat-select placeholder="Class" formControlName="class_id"
+                  (selectionChange)="getSectionsByClass(); resetDataset()" required>
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Section</mat-label>
+              <mat-select placeholder="Section" formControlName="sec_id"
+                  (selectionChange)="resetDataset()" required>
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>         
+          <button class="btn-success margin-top-15" style="margin-left: 15px;" mat-raised-button (click)="submit()">Submit</button>
+      </div>
+  </div>
+</form>
+<br>
+<div *ngIf="tableFlag && dataset.length > 0">
+    <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)">
+    </angular-slickgrid>
+</div>
+<div *ngIf="dataset.length == 0">
+    <div class="text-center">
+        <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            [noDataText]="" [subText]="'Please select all required field'">
+        </app-no-data>
+    </div>
+</div>
+<br>

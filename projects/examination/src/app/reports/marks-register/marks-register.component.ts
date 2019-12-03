@@ -255,6 +255,7 @@ export class MarksRegisterComponent implements OnInit {
               });
             }
           });
+          //console.log(this.responseMarksArray);
         }
       })
     } else {
