@@ -2,6 +2,14 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService, FeeService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import {
+  GridOption, Column, AngularGridInstance, Grouping, Aggregators,
+  FieldType,
+  Filters,
+  Formatters,
+  DelimiterType,
+  FileType
+} from 'angular-slickgrid';
 
 @Component({
   selector: 'app-student-attendence',
@@ -17,10 +25,80 @@ export class StudentAttendenceComponent implements OnInit {
   sectionArray: any[] = [];
   studentArray: any[] = [];
   monthArray: any[] = [];
+
+  columnDefinitions: Column[] = [];
+  gridOptions: GridOption = {};
+  dataset: any[] = [];
+  angularGrid: AngularGridInstance;
+  dataviewObj: any;
+  gridObj: any;
+  gridHeight: any;
+  tableFlag = false;
+  totalRow: any;
   ngOnInit() {
     this.buildForm();
     this.getClass();
     this.getFeeMonths();
+
+    this.gridOptions = {
+      enableDraggableGrouping: false,
+      createPreHeaderPanel: true,
+      showPreHeaderPanel: false,
+      enableHeaderMenu: true,
+      preHeaderPanelHeight: 40,
+      enableFiltering: true,
+      enableSorting: true,
+      enableColumnReorder: true,
+      createFooterRow: true,
+      showFooterRow: true,
+      footerRowHeight: 35,
+      enableExcelCopyBuffer: true,
+      fullWidthRows: true,
+      enableAutoTooltip: true,
+      enableCellNavigation: true,
+      headerMenu: {
+        iconColumnHideCommand: 'fas fa-times',
+        iconSortAscCommand: 'fas fa-sort-up',
+        iconSortDescCommand: 'fas fa-sort-down',
+        title: 'Sort'
+      },
+      exportOptions: {
+        sanitizeDataExport: true,
+        exportWithFormatter: true
+      },
+      gridMenu: {
+        customItems: [{
+          title: 'pdf',
+          titleKey: 'Export as PDF',
+          command: 'exportAsPDF',
+          iconCssClass: 'fas fa-download'
+        },
+        {
+          title: 'excel',
+          titleKey: 'Export Excel',
+          command: 'exportAsExcel',
+          iconCssClass: 'fas fa-download'
+        }
+        ],
+        onCommand: (e, args) => {
+          if (args.command === 'exportAsPDF') {
+            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+            //this.exportAsPDF(this.dataset);
+          }
+          if (args.command === 'exportAsExcel') {
+            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+            //this.exportToExcel(this.dataset);
+          }
+          if (args.command === 'export-csv') {
+            //this.exportToFile('csv');
+          }
+        },
+        onColumnsChanged: (e, args) => {
+          console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+          this.updateTotalRow(this.angularGrid.slickGrid);
+        },
+      }
+    };
   }
   constructor(
     private fbuild: FormBuilder,
@@ -83,11 +161,102 @@ export class StudentAttendenceComponent implements OnInit {
     }
   }
   submit() {
+    this.resetDataset();
     this.examService.getStudentAttendence(this.paramform.value).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      if (result && result.status === 'ok') {
         console.log(result.data);
+        this.prepareDataSource(result.data);
       }
     })
+  }
+  resetDataset() {
+    this.dataset = [];
+    this.columnDefinitions = [];
+    this.tableFlag = false;
+  }
+  angularGridReady(angularGrid: AngularGridInstance) {
+		this.angularGrid = angularGrid;
+		const grid = angularGrid.slickGrid; // grid object
+		this.updateTotalRow(angularGrid.slickGrid);
+	}
+  updateTotalRow(grid: any) {
+		//console.log('this.groupColumns', this.groupColumns);
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx].id;
+			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
+	}
+  iconFormatter(row, cell, value, columnDef, dataContext) {
+    if (value !== '-') {
+      if (value === '1') {
+        return "<i class='fas fa-check' style='color:green'></i>";
+      } else if (value === 'h') {
+        return '<i class="fas fa-hospital-symbol" style="color:orange"></i>';
+      } else {
+        return "<i class='fas fa-times' style='color:red'></i>";
+      }
+    } else {
+      return "-";
+    }
+  }
+  prepareDataSource(value) {
+    this.columnDefinitions = [
+      { id: 'au_admission_no', name: 'Admission no', field: 'au_admission_no', sortable: true, filterable: true, resizable: false },
+      { id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: false },
+    ];
+    for (let index = 1; index <= value.no_of_days_in_month; index++) {
+      this.columnDefinitions.push({
+        id: index.toString(), name: index.toString(), field: index.toString(), sortable: true, filterable: true, resizable: false, formatter: this.iconFormatter
+      });
+    }
+    this.columnDefinitions.push(
+      { id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: false }
+    );
+    this.columnDefinitions.push(
+      { id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: false }
+    );
+
+    for (let i = 0; i < value.attendence.length; i++) {
+      const tempObj = {};
+      tempObj['id'] = i;
+      tempObj['au_admission_no'] = value.attendence[i]['au_admission_no'];
+      tempObj['au_full_name'] = value.attendence[i]['au_full_name'];
+      tempObj['present'] = value.attendence[i]['present'];
+      tempObj['absent'] = value.attendence[i]['absent'];
+      for (let key in value.attendence[i]['attendence']) {
+        tempObj[key] = value.attendence[i]['attendence'][key];
+      }
+      this.dataset.push(tempObj);
+    }
+    const blankTempObj = {};
+		blankTempObj['id'] = value.attendence.length;
+		blankTempObj['au_admission_no'] = 'Grand Total';
+    blankTempObj['au_full_name'] = '';
+    blankTempObj['present'] = '';
+    blankTempObj['absent'] = '';
+    for (let index = 1; index <= value.no_of_days_in_month; index++) {
+      let totalpresent = 0;
+      for (let i = 0; i < value.attendence.length; i++) {
+        if( value.attendence[i]['attendence'][index] === '1') {
+          totalpresent++;
+        }
+      }
+      blankTempObj[index.toString()] = totalpresent;
+    }
+		this.totalRow = blankTempObj;
+    console.log('dataset  ', this.dataset);
+    if (this.dataset.length > 20) {
+      this.gridHeight = 750;
+    } else if (this.dataset.length > 10) {
+      this.gridHeight = 550;
+    } else if (this.dataset.length > 5) {
+      this.gridHeight = 400;
+    } else {
+      this.gridHeight = 300;
+    }
+    this.tableFlag = true;
   }
 
 }

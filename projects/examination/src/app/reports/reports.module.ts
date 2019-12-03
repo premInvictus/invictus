@@ -8,13 +8,17 @@ import { RecordAssessmentsComponent } from './record-assessments/record-assessme
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { ReportComponent } from './report/report.component';
 import { StudentAttendenceComponent } from './student-attendence/student-attendence.component';
+import { AngularSlickgridModule } from 'angular-slickgrid';
+import { TranslateService } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     ReportsRoutingModule,
-    ExamSharedModule
+    ExamSharedModule,
+    AngularSlickgridModule.forRoot()
   ],
-  declarations: [MarksRegisterComponent, PerformanceReportsComponent, RecordAssessmentsComponent, ReportComponent, StudentAttendenceComponent]
+  declarations: [MarksRegisterComponent, PerformanceReportsComponent, RecordAssessmentsComponent, ReportComponent, StudentAttendenceComponent],
+  providers: [TranslateService]
 })
 export class ReportsModule { }
