@@ -45,6 +45,7 @@ export class AttendanceReportsComponent implements OnInit {
   studentArray: any[] = [];
   departmentArray: any[] = [];
   currentUser: any;
+  gridHeight: any;
   session: any;
   monthEntryAvailable = false;
   att_id: any;
@@ -474,6 +475,15 @@ export class AttendanceReportsComponent implements OnInit {
       }
       obj3['total'] = '';
       this.totalRow = obj3;
+      if (this.dataset.length <= 5) {
+        this.gridHeight = 300;
+      } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+        this.gridHeight = 400;
+      } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+        this.gridHeight = 550;
+      } else if (this.dataset.length > 20) {
+        this.gridHeight = 750;
+      }
       this.tableFlag = true;
       this.nodataFlag = false;
     } else {

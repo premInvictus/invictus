@@ -52,6 +52,7 @@ export class EmpSalaryReportComponent implements OnInit {
   schoolInfo: any;
   sessionName: any;
   employeeData: any;
+  gridHeight: any;
   salaryHeadsArr: any[] = [];
   shacolumns = [];
   empShacolumns = [];
@@ -745,6 +746,15 @@ export class EmpSalaryReportComponent implements OnInit {
         });
         obj3['net_salary'] = this.dataset.map(t => t['net_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
         obj3['total_salary'] = this.dataset.map(t => t['total_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        if (this.dataset.length <= 5) {
+          this.gridHeight = 300;
+        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+          this.gridHeight = 400;
+        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+          this.gridHeight = 550;
+        } else if (this.dataset.length > 20) {
+          this.gridHeight = 750;
+        }
         this.totalRow = obj3;
         this.tableFlag = true;
         this.nodataFlag = false;
