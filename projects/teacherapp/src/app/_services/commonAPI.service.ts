@@ -88,4 +88,19 @@ export class CommonAPIService {
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
 	}
+
+	insertMessage(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/insert', value);
+	}
+
+	updateMessage(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/update', value);
+	}
+
+	getMessage(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
+	}
 }

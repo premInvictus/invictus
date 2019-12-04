@@ -2,45 +2,25 @@
     <div class="row">
         <div class="col-12 ">
             <mat-card class="card-top-title__container">
-                <form [formGroup]="broadcastForm">
-                    <div class="row">
-                        <div class="col-8">
-                            <h1 class="remove-bottom-margin font-size-24">Broadcast</h1>
-                        </div>
-                        <!-- <div class="col-6">
-                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
-                            (click)="composeMessage()">Compose</button>
-                    </div> -->
-
-                        <div class="col-2">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>From Date</mat-label>
-                                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                    formControlName="from_date" (dateChange)="getMessage()" />
-                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                <mat-datepicker #picker></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-2">
-                            <mat-form-field appearance="outline" class="form-field">
-                                <mat-label>To Date</mat-label>
-                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
-                                    formControlName="to_date" (dateChange)="getMessage()" />
-                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                                <mat-datepicker #picker1></mat-datepicker>
-                            </mat-form-field>
-                        </div>
-
-                    </div>
-                </form>
-            </mat-card>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <mat-card class="mat-card" style="min-height: 500px;">
                 <!-- <form [formGroup]="broadcastForm"> -->
                 <div class="row">
+                    <div class="col-6">
+                        <h1 class="remove-bottom-margin font-size-24" style="margin-top: 10px;">Messages</h1>
+                    </div>
+                    <div class="col-4 text-right" style="border: 1px solid #ccc; padding:5px; ">
+                        <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                                class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                                    class="fas fa-chevron-down"></i></span></a>
+                        <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                            (keyup.enter)="search()">
+                            Search
+                        </button>
+                    </div>
+                    <div class="col-2">
+                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
+                            (click)="composeMessage()" style="height:48px;">Compose</button>
+                    </div>
+
                     <!-- <div class="col-2">
                             <mat-form-field appearance="outline" class="form-field">
                                 <mat-label>From Date</mat-label>
@@ -59,45 +39,20 @@
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
                         </div> -->
-                    <div class="col-10">
-                        <mat-tab-group [(selectedIndex)]="currentTab" (selectedTabChange)="changeTab($event)"
-                            class="padding-8">
-                            <mat-tab>
-                                <ng-template mat-tab-label>
-                                    <div>
-                                        <span>SMS</span>
-                                    </div>
-                                </ng-template>
-                            </mat-tab>
-                            <mat-tab>
-                                <ng-template mat-tab-label>
-                                    <div>
-                                        <span>Email</span>
-                                    </div>
-                                </ng-template>
-                            </mat-tab>
-                        </mat-tab-group>
-                    </div>
-                    <div class="col-2 float-right" style="margin-top: 19px;">
-                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
-                            (click)="composeMessage()" style="height:48px;">Compose</button>
-                    </div>
+
                 </div>
                 <!-- </form> -->
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="mat-card" style="min-height: 500px;">               
                 <div class="col-12" [hidden]="!(USER_ELEMENT_DATA.length > 0)">
                     <mat-form-field class="form-feild">
                         <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
                     </mat-form-field>
                     <table mat-table [dataSource]="scheduleMessageDataSource" matSort class="table-100 text-center">
-                        <!-- <ng-container matColumnDef="select">
-                                    <th mat-header-cell *matHeaderCellDef>
-                                        <mat-checkbox (change)="checkAllUserList($event)"></mat-checkbox>
-                                    </th>
-                                    <td mat-cell *matCellDef="let element">
-                                        <mat-checkbox [value]="element.select" [checked]="allUserSelectFlag" (change)="prepareSelectedRowData($event, element.au_login_id)"></mat-checkbox>
-                                    </td>
-                                </ng-container> -->
-                        <!-- Checkbox Column -->
                         <ng-container matColumnDef="no">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
                                 S. No.
@@ -106,14 +61,14 @@
                                 {{ element.no }}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="user_type">
+                        <!-- <ng-container matColumnDef="user_type">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 User Type
                             </th>
                             <td mat-cell *matCellDef="let element" class="text-left">
                                 <span class="text-left">{{element?.user_type | titlecase}}</span>
                             </td>
-                        </ng-container>
+                        </ng-container> -->
                         <ng-container matColumnDef="send_by">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 Sent By
@@ -134,8 +89,9 @@
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%">
                                 Message
                             </th>
-                            <td mat-cell *matCellDef="let element">
-                                <span class="text-left">{{ element?.subject | titlecase}}</span>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <a class="black-link" href="javascript:void(0)" (click)="viewMessage(element)"><span
+                                        class="text-left">{{ element?.subject | titlecase}}</span></a>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="attachment">
@@ -150,25 +106,26 @@
                             </td>
                         </ng-container>
 
-                        <ng-container matColumnDef="status">
+                        <!-- <ng-container matColumnDef="status">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 Status
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element.status}}
                             </td>
-                        </ng-container>
+                        </ng-container> -->
                         <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 Action
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <i class="far fa-edit table-edit-icon" style="cursor: pointer;color:#1E88E5; font-size: 24px;"
-                                    (click)="editMessage(element)"></i>
-                                <i class="material-icons delete-icon inline-form-table-icon-spacing"
-                                    style="cursor: pointer;" (click)="openDeleteDialog(element)">
-                                    delete
-                                </i>
+                                <span *ngIf="msg_type === 'C'">
+                                    <i class="material-icons delete-icon inline-form-table-icon-spacing"
+                                        style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                        delete
+                                    </i>
+                                </span>
+                                <span *ngIf="msg_type !== 'C'">-</span>
                             </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
@@ -206,3 +163,4 @@
     (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>
+<app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>
