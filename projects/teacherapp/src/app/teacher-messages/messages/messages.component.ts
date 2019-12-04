@@ -24,7 +24,8 @@ export class MessagesComponent implements OnInit {
 	selectedUserArr: any[] = [];
 	allUserSelectFlag = false;
 	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
-	currentTab = 1;
+	
+	showViewMessage = false;
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
 	constructor(
@@ -143,7 +144,7 @@ export class MessagesComponent implements OnInit {
 
 
 	editMessage(element) {
-		var messageType = this.currentTab == 1 ? 'E' : 'S';
+		var messageType = element.messageType;
 		element.messageType = messageType;
 		this.renderForm = {addMode:false, editMode:true, formData: element, viewMode : false};
 		this.showComposeMessage = true;
@@ -167,7 +168,7 @@ export class MessagesComponent implements OnInit {
 
 	composeMessage() {
 		this.showComposeMessage = true;
-		var messageType = this.currentTab == 1 ? 'E' : 'S';
+		var messageType = 'C';
 		this.renderForm = {addMode:true, editMode:false, messageType: messageType, formData:'', viewMode : false,};
 		
 	}
@@ -201,6 +202,10 @@ export class MessagesComponent implements OnInit {
 
 	deleteCancel() {
 		
+	}
+
+	viewMessage() {
+		this.showViewMessage = !this.showViewMessage;
 	}
 }
 

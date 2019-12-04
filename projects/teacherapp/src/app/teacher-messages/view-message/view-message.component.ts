@@ -28,7 +28,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	currentFile: any;
 	fileCounter = 0;
 	currentReceivers = '';
-	attachmentArray: any[] = [];
+
 	classDataArr: any[] = [];
 	showUser = false;
 	showClass = false;
@@ -41,6 +41,230 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	currentUser: any;
 	showUserContextMenu = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
+
+	exampleShips: any[] = [
+		{
+			'ircs': 'V7QV6',
+			'vesselName': 'KYOWA ORCHID',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675368',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WECH',
+			'vesselName': 'MANULANI',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675370',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WDB5483',
+			'vesselName': 'FREEDOM',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675382',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'C6VT5',
+			'vesselName': 'CORAL',
+			'countryCode': 'BF',
+			'vesselId': 'IMO8675394',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'CQOD',
+			'vesselName': 'AUTORACER',
+			'countryCode': 'PO',
+			'vesselId': 'IMO8675409',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'OJIL',
+			'vesselName': 'ESTRADEN',
+			'countryCode': 'FI',
+			'vesselId': 'IMO8675411',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'ELXJ7',
+			'vesselName': 'VIKING CHANCE',
+			'countryCode': 'LI',
+			'vesselId': 'IMO8675423',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WDC6923',
+			'vesselName': 'HONOR',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675435',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WGAX',
+			'vesselName': 'INDEPENDENCE II',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675447',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WDE9586',
+			'vesselName': 'ENDURANCE',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675459',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WDC6925',
+			'vesselName': 'INTEGRITY',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675461',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WX6809',
+			'vesselName': 'LADY LUCK',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675473',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WX6800',
+			'vesselName': 'LADY LIBERTY',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675485',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WX6811',
+			'vesselName': 'LUCKY LADY',
+			'countryCode': 'NO',
+			'vesselId': 'IMO8675497',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'LADH4',
+			'vesselName': 'HUAL FAVORITA',
+			'countryCode': 'NO',
+			'vesselId': 'IMO8675502',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'WQVY',
+			'vesselName': 'PATRIOT',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675514',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'LADG4',
+			'vesselName': 'HUAL MARGARITA',
+			'countryCode': 'NO',
+			'vesselId': 'IMO8675526',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		},
+		{
+			'ircs': 'KXEP',
+			'vesselName': 'COMET',
+			'countryCode': 'US',
+			'vesselId': 'IMO8675538',
+			'vesselStatus': 'S',
+			'grossTonnage': 1,
+			'hullNumber': undefined,
+			'vesselType': 'A21',
+			'jonesActEligible': false,
+			'disabledDate': undefined
+		}
+	];
+
+	attachmentArray: any[] = [{
+		imgName: "Screenshot from 2019-09-11 15-34-07.png",
+		imgUrl: "https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/document/document_screenshot%20from%202019-09-11%2015-34-07_1575371858.png"
+	}];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -492,11 +716,11 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	cancelSendMessage() {
-		
+
 	}
 
 	searchOk(event) {
-	
+
 	}
 
 	deleteCancel() {

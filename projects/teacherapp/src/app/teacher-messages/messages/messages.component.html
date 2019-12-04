@@ -1,4 +1,4 @@
-<div *ngIf="!showComposeMessage">
+<div *ngIf="!showComposeMessage && !showViewMessage">
     <div class="row">
         <div class="col-12 ">
             <mat-card class="card-top-title__container">
@@ -7,16 +7,17 @@
                     <div class="col-6">
                         <h1 class="remove-bottom-margin font-size-24" style="margin-top: 10px;">Messages</h1>
                     </div>
-                    <div class="col-4 text-right" style="border: 1px solid #ccc; padding:5px; ">
-                        <a class="cursor-pointer" (click)="openSearchDialog({})"><span
-                                class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
-                                    class="fas fa-chevron-down"></i></span></a>
-                        <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                    <div class="col-5" style="border: 1px solid #ccc; padding:5px; ">
+                        <input style="float:left; width: 80%;
+                        margin-top: 10px;" matInput placeholder="Search Message" id="search_book" type="text"
+                            formControlName="search" (keydown.enter)="searchMessage($event);$event.stopPropagation()"
+                            autocomplete="off" />
+                        <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
                             (keyup.enter)="search()">
                             Search
                         </button>
                     </div>
-                    <div class="col-2">
+                    <div class="col-1">
                         <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
                             (click)="composeMessage()" style="height:48px;">Compose</button>
                     </div>
@@ -47,7 +48,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <mat-card class="mat-card" style="min-height: 500px;">               
+            <mat-card class="mat-card" style="min-height: 500px;">
                 <div class="col-12" [hidden]="!(USER_ELEMENT_DATA.length > 0)">
                     <mat-form-field class="form-feild">
                         <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
@@ -161,6 +162,10 @@
 
 <app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm"
     (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
+
+<app-view-message *ngIf="showViewMessage" [reRenderForm]="renderForm"
+(backToBroadcast)="resetComposeMessage(messageType)"></app-view-message>
+
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>
 <app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>
