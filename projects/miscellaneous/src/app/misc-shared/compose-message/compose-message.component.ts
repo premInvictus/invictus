@@ -44,7 +44,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	viewMode = false;
 	formData = {};
 	currentUser: any;
-	msgMultipleCount = 1;
+	msgMultipleCount = 0;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private fbuild: FormBuilder,
@@ -791,6 +791,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		}		
 	}
 
+	onBodyChange(event) {
+		this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
+		this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 1 : 0));
+	}
+
 	sendSMS(inputJson) {
 		this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
 			if (result) {
@@ -804,6 +809,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	checkValidation() {
+		this.msgMultipleCount = 0;
 		var validationStatus = false;
 		if (this.messageForm.value.messageSubject === '') {
 			validationStatus = false;
@@ -855,5 +861,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	back() {
 		this.backToBroadcast.emit(this.messageForm.value.messageType);
+	}
+
+	cancelSendSMS() {
+
 	}
 }

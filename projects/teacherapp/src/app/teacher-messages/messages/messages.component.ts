@@ -5,18 +5,18 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from '../../misc-shared/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
 @Component({
-	selector: 'app-broadcast',
-	templateUrl: './broadcast.component.html',
-	styleUrls: ['./broadcast.component.scss']
+	selector: 'app-messages',
+	templateUrl: './messages.component.html',
+	styleUrls: ['./messages.component.scss']
 })
-export class BroadcastComponent implements OnInit {
+export class MessagesComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild('searchModal') searchModal;
 	showComposeMessage = false;
-	broadcastForm: FormGroup;
 	displayedColumns: string[] = []
 	renderForm:any = {};
 	scheduleMessageData: any[] = [];
@@ -38,67 +38,31 @@ export class BroadcastComponent implements OnInit {
 
 	ngOnInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
-		this.buildForm();
-		this.getEmailScheduleData();
+		this.getMessages();
 	}
 
 	ngAfterViewInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
 	}
 
-	buildForm() {
-		this.broadcastForm = this.fbuild.group({
-			from_date: '',
-			to_date: ''
-		});
-	}
 
 	openDeleteDialog = (data) => {
-		this.deleteModal.openModal(data);
+		this.deleteModal.openDeleteModal(data);
 	}
 
 
-	getEmailScheduleData() {
+	getMessages() {
 		this.scheduleMessageData = [];
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
-			'no',
-			'user_type',		
+			'no',		
 			'schedule_date',
 			'subject',
 			'attachment',
 			'send_by',
-			'status',
 			'action'
 		];
 		var inputJson = {};
-		inputJson['msg_type'] = 'E';
-		inputJson['from_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.from_date, 'yyyy-MM-dd');
-		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
-		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
-			if (result && result.data && result.data[0]) {
-				this.scheduleMessageData = result.data;
-				this.prepareDataSource();
-			}
-		});
-	}
-
-	getSMSScheduleData() {
-		this.scheduleMessageData = [];
-		this.USER_ELEMENT_DATA = [];
-		this.displayedColumns = [
-			'no',
-			'user_type',		
-			'schedule_date',
-			'subject',
-			'send_by',
-			'status',
-			'action'
-		];
-		var inputJson = {};
-		inputJson['msg_type'] = 'S';
-		inputJson['from_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.from_date, 'yyyy-MM-dd');
-		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
@@ -115,7 +79,6 @@ export class BroadcastComponent implements OnInit {
 			tempObj['msg_id'] = this.scheduleMessageData[i]['msg_id'];
 			tempObj['no'] = counter;
 			tempObj['subject'] = this.scheduleMessageData[i]['msg_subject'];
-			//tempObj['class'] = this.scheduleMessageData[i]['class_name'] + ' - ' + this.scheduleMessageData[i]['sec_name'];
 			tempObj['schedule_date'] = this.scheduleMessageData[i]['msg_created_date'];
 			if (this.scheduleMessageData[i]['msg_receivers'] === 'Student') {
 				tempObj['user_type'] = 'Student';
@@ -135,6 +98,8 @@ export class BroadcastComponent implements OnInit {
 			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];
 			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
 			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
+			tempObj['msg_type'] = this.scheduleMessageData[i]['msg_type'] ? this.scheduleMessageData[i]['msg_type'] : '';
+			
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
@@ -188,11 +153,7 @@ export class BroadcastComponent implements OnInit {
 		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
-				if (this.currentTab) {
-					this.getEmailScheduleData();
-				} else {
-					this.getSMSScheduleData();
-				}
+				this.getMessages();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Error while deleting message', 'error');
 			}
@@ -200,22 +161,8 @@ export class BroadcastComponent implements OnInit {
 
 	} 
 
-	changeTab(event) {
-		this.currentTab = event.index;
-
-		if (this.currentTab) {
-			this.getEmailScheduleData();
-		} else {
-			this.getSMSScheduleData();
-		}
-	}
-
 	getMessage() {
-		if (this.currentTab) {
-			this.getEmailScheduleData();
-		} else {
-			this.getSMSScheduleData();
-		}
+		this.getMessages();
 	}
 
 	composeMessage() {
@@ -227,20 +174,20 @@ export class BroadcastComponent implements OnInit {
 
 	resetComposeMessage(messageType) {
 		this.showComposeMessage = false;
-		if (messageType === 'S') {
-			this.currentTab = 0;
-			this.getSMSScheduleData();			
-		} else {
-			this.currentTab = 1;
-			this.getEmailScheduleData();
-		}
+		// }
+		this.getMessages();
 		
 	}
 
 	previewImage(imgArray, index) {
+		var updatedImageArr = [];
+		for (var i=0; i<imgArray.length;i++) {
+			updatedImageArr.push({file_url : imgArray[i]['imgUrl'], file_name : imgArray[i]['imgName'] })
+		}
+
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
-				images: imgArray ? imgArray : [],
+				images: updatedImageArr ? updatedImageArr : [],
 				index: index
 			},
 			height: '70vh',
@@ -248,7 +195,12 @@ export class BroadcastComponent implements OnInit {
 		});
 	}
 
+	searchOk(event) {
+	
+	}
+
 	deleteCancel() {
 		
 	}
 }
+
