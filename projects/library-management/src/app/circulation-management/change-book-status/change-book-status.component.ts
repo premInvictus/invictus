@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { SisService } from '../../_services';
+import { SisService, SmartService } from '../../_services';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
@@ -12,14 +12,70 @@ import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
 export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 	reasonArray: any[] = [];
 	@ViewChild(BarecodeScannerLivestreamComponent) barecodeScanner: BarecodeScannerLivestreamComponent;
+	@ViewChild('searchModal') searchModal;
 	bookData: any[] = [];
 	gridView = true;
 	barcodeValue;
 	enteredVal: any = false;
 	changeStatusForm: FormGroup;
 	searchForm: FormGroup;
+	sectionArray: any[] = [];
 	currentUser: any;
+	classArray: any[] = [];
+	booktypeArray: any[] = [{
+		type_id: '1',
+		type_name: 'General',
+	},
+	{
+		type_id: '2',
+		type_name: 'Reference',
+	},
+	{
+		type_id: '3',
+		type_name: 'Periodical',
+	},
+	{
+		type_id: '4',
+		type_name: 'Sample',
+	}];
+	filterArray: any[] = [
+		{
+			filter_type: '1',
+			filter_name: 'Book Type'
+		},
+		{
+			filter_type: '2',
+			filter_name: 'Status'
+		},
+		{
+			filter_type: '3',
+			filter_name: 'Source'
+		},
+		{
+			filter_type: '4',
+			filter_name: 'Location'
+		}
+	];
+	sourceArray: any[] = [
+		{
+			type_id: 'Purchased',
+			type_name: 'Purchased',
+		},
+		{
+			type_id: 'Donated',
+			type_name: 'Donated',
+		},
+		{
+			type_id: 'Gifted',
+			type_name: 'Gifted',
+		},
+		{
+			type_id: 'Specimen',
+			type_name: 'Specimen',
+		}
+	];
 	constructor(private sis: SisService, private common: ErpCommonService,
+		private smart: SmartService,
 		private notif: CommonAPIService,
 		private fbuild: FormBuilder) { }
 	statusArray: any[] = [
@@ -48,15 +104,46 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getReasons();
 		this.buildForm();
+		this.getClass();
+	}
+	getSectionByClass($event) {
+		this.sis.getSectionsByClass({
+			'class_id': $event.value
+		}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.sectionArray = [];
+				this.sectionArray = res.data;
+			}
+		});
 	}
 	ngAfterViewInit() {
 		this.barecodeScanner.start();
 	}
+	getClass() {
+		this.smart.getClass({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.classArray = [];
+				this.classArray = res.data;
+			}
+		});
+	}
+	openSearchDialog = (data) => this.searchModal.openModal(data);
 	buildForm() {
 		this.changeStatusForm = this.fbuild.group({
 			'changed_to': '',
 			'reason_id': '',
-			'reason_desc': ''
+			'reason_desc': '',
+			'location_type': '',
+			'location_class_id': '',
+			'location_sec_id': '',
+			'location_class_name': '',
+			'location_sec_name': '',
+			'stack': '',
+			'row': '',
+			'source': '',
+			'category_id': '',
+			'filters': ''
+
 		});
 		this.searchForm = this.fbuild.group({
 			search: '',
@@ -79,6 +166,12 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		const inputJson = {
 			'filters': [{ 'filter_type': 'reserv_id', 'filter_value': Number(this.barcodeValue), 'type': 'number' }],
 			'search_from': 'master',
+			'generalFilters': {
+				"reserv_status": [
+					"available",
+					"flagged"
+				],
+			},
 			'search_type': 'cbs'
 		};
 		this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
@@ -102,12 +195,19 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		});
 	}
 	searchBook($event) {
+		this.bookData = [];
 		if ($event.target.value) {
+			this.bookData = [];
 			this.enteredVal = true;
-			const inputJson = {
-				'filters': [{ 'filter_type': 'reserv_id', 'filter_value': Number($event.target.value), 'type': 'number' }],
-				'search_from': 'master',
-				'search_type': 'cbs'
+			let inputJson = {
+				'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
+				'generalFilters': {
+					"reserv_status": [
+						"available",
+						"flagged"
+					],
+				},
+				search_from: 'master'
 			};
 			this.common.getReservoirDataBasedOnFilter(inputJson).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
@@ -133,6 +233,24 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			});
 		}
 	}
+	searchOk($event) {
+		this.bookData = [];
+		let i = 0;
+		if ($event) {
+			this.common.getReservoirDataBasedOnFilter({
+				filters: $event.filters,
+				generalFilters: $event.generalFilters,
+				search_from: 'master'
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					for (const item of res.data.resultData) {
+						item.book_container_class = 'book-title-container-default';
+						this.bookData.push(item);
+					}
+				}
+			});
+		}
+	}
 	intitiateSearch() {
 		document.getElementById('search_book').focus();
 	}
@@ -143,7 +261,61 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		this.bookData[index].book_container_class = 'book-title-container-default';
 	}
 	changeReservoirStatus() {
-		if (this.changeStatusForm.valid) {
+		let valid = false;
+		if (this.changeStatusForm.value.filters === '1') {
+			if (this.changeStatusForm.value.category_id
+				&& this.changeStatusForm.value.reason_id
+				&& this.changeStatusForm.value.reason_desc) {
+				valid = true;
+			} else {
+				valid = false
+			}
+		}
+		else if (this.changeStatusForm.value.filters === '2') {
+			if (this.changeStatusForm.value.changed_to
+				&& this.changeStatusForm.value.reason_id
+				&& this.changeStatusForm.value.reason_desc) {
+				valid = true;
+			} else {
+				valid = false
+			}
+		}
+		else if (this.changeStatusForm.value.filters === '3') {
+			if (this.changeStatusForm.value.source
+				&& this.changeStatusForm.value.reason_id
+				&& this.changeStatusForm.value.reason_desc) {
+				valid = true;
+			} else {
+				valid = false
+			}
+		}
+		else if (this.changeStatusForm.value.filters === '4') {
+			if (this.changeStatusForm.value.location_type) {
+				if (this.changeStatusForm.value.location_type === 'class') {
+					if (this.changeStatusForm.value.location_class_id &&
+						this.changeStatusForm.value.location_sec_id
+						&& this.changeStatusForm.value.reason_id
+						&& this.changeStatusForm.value.reason_desc) {
+						valid = true;
+					} else {
+						valid = false
+					}
+				}
+				if (this.changeStatusForm.value.location_type === 'library') {
+					if (this.changeStatusForm.value.row &&
+						this.changeStatusForm.value.stack
+						&& this.changeStatusForm.value.reason_id
+						&& this.changeStatusForm.value.reason_desc) {
+						valid = true;
+					} else {
+						valid = false
+					}
+				}
+			} else {
+				valid = false;
+			}
+		}
+		if (valid) {
 			const bookId: any[] = [];
 			for (const item of this.bookData) {
 				bookId.push(Number(item.reserv_id));
@@ -164,8 +336,35 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			});
 		}
 	}
+	resetFilters() {
+		this.changeStatusForm.patchValue({
+			'changed_to': '',
+			'reason_id': '',
+			'reason_desc': '',
+			'location_type': '',
+			'location_class_id': '',
+			'location_sec_id': '',
+			'location_class_name': '',
+			'location_sec_name': '',
+			'stack': '',
+			'row': '',
+			'source': '',
+			'category_id': '',
+		});
+	}
 
 	removeBookFromList(index) {
-		this.bookData.splice(index,1);
+		this.bookData.splice(index, 1);
+	}
+	setClassLocation(event) {
+		this.changeStatusForm.patchValue({
+			'location_class_name': event ? event : ''
+		});
+	}
+
+	setSectionLocation(event) {
+		this.changeStatusForm.patchValue({
+			'location_sec_name': event ? event : ''
+		});
 	}
 }

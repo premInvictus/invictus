@@ -9,13 +9,17 @@
           <div class="search-container">
             <form [formGroup]="searchForm">
               <div class="row remove-top-margin">
-                <div class="col-12">
+                <div class="col-6">
                   <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Search Any Book By ID" id="search_book" type="number"
+                    <input matInput placeholder="Search Any Book By ID" id="search_book" type="text"
                       formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()"
                       autocomplete="off" />
                   </mat-form-field>
                   <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
+                </div>
+                <div class="col-6 margin-top-10  text-right">
+                  <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog()">Advanced Search
+                    <i class="fas fa-chevron-down"></i></span>
                 </div>
               </div>
             </form>
@@ -54,7 +58,8 @@
               </i>
             </div>
             <div class="book-container">
-              <img class="book-cover-img" [src]="item.images_links.thumbnail ? item.images_links.thumbnail : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png' " />
+              <img class="book-cover-img"
+                [src]="(item.images_links && item.images_links.thumbnail) ? item.images_links.thumbnail : 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_cover.png' " />
               <div [class]="item.book_container_class">
                 <div class="book-title-content text-center" style="padding: 3px !important">
                   <div class="book-first-content" (click)="showSecondDetailDiv(i); $event.stopPropagation();">
@@ -65,12 +70,12 @@
                     <div class="font-size-12 margin-top-15 font-medium">
                       <b>BOOK ID</b>: {{item.reserv_id}}
                     </div>
-                    <span class="font-size-16 font-medium"><b>{{item.title ? item.title : ''}}</b></span><br />
+                    <span class="font-size-16 font-medium"><b>{{item.title ? (item.title | truncatetext : 25) : ''}}</b></span><br />
                     <span class="font-size-14 font-medium">{{item.authors}}</span>
-                    <div class="font-size-14 margin-top-15 font-medium">
+                    <div class="font-size-14  font-medium">
                       <b>Location</b>: {{item.location}}
                     </div>
-                    <div class="font-size-14 margin-top-10 font-medium">
+                    <div class="font-size-14  font-medium">
                       <b>{{item.reserv_flagged_status.status ? (item.reserv_flagged_status.status | capitalize) : (item.reserv_status | capitalize)}}</b>
                     </div>
                   </div>
@@ -86,20 +91,107 @@
 <div class="row" *ngIf="bookData.length > 0">
   <div class="col-12">
     <mat-card>
-      <form [formGroup]="changeStatusForm">
+      <form [formGroup]="changeStatusForm" novalidate>
         <div class="row">
           <div class="col-3"></div>
           <div class="col-6">
             <div class="row">
-              <div class="col-6">
+              <div class="col-4">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Filters</mat-label>
+                  <mat-select placeholder="Filters" formControlName="filters" (selectionChange)="resetFilters()">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of filterArray" [value]="item.filter_type">
+                      {{item.filter_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '1'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Book Type</mat-label>
+                  <mat-select placeholder="Book Type" formControlName="category_id"
+                    [required]="changeStatusForm?.value?.filters === '1'">
+                    <mat-option *ngFor="let item of booktypeArray" [value]="item.type_id" required>
+                      {{item.type_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '2'">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Change to</mat-label>
-                  <mat-select formControlName="changed_to" placeholder="Change to" required>
+                  <mat-select formControlName="changed_to" placeholder="Change to"
+                    [required]="changeStatusForm?.value?.filters === '2'">
                     <mat-option *ngFor="let item of statusArray" [value]="item.type_id">{{item.type_name}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div class="col-6">
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '3'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Source</mat-label>
+                  <mat-select placeholder="Book Type" placeholder="Source" formControlName="source"
+                    [required]="changeStatusForm?.value?.filters === '3'">
+                    <mat-option *ngFor="let item of sourceArray" [value]="item.type_id">
+                      {{item.type_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '4'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Location Type</mat-label>
+                  <mat-select placeholder="Location Type" formControlName="location_type"
+                    [required]="changeStatusForm?.value?.filters === '4'">
+                    <mat-option value="class">Class Library</mat-option>
+                    <mat-option value="library">Master Library</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.location_type=='class'
+              && changeStatusForm?.value?.filters === '4'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Class</mat-label>
+                  <mat-select placeholder="Class" formControlName="location_class_id"
+                    [required]="changeStatusForm?.value?.filters === '4' && changeStatusForm?.value?.location_type === 'class'"
+                    (selectionChange)="getSectionByClass($event)">
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id"
+                      (click)="setClassLocation(item?.class_name)">
+                      {{item.class_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf=" changeStatusForm?.value?.filters === '4'
+              && changeStatusForm?.value?.location_type=='class'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Section</mat-label>
+                  <mat-select placeholder="Section" formControlName="location_sec_id"
+                    [required]="changeStatusForm?.value?.filters === '4' && changeStatusForm?.value?.location_type === 'class'">
+                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id"
+                      (click)="setSectionLocation(item?.sec_name)">
+                      {{item.sec_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '4'
+              && changeStatusForm?.value?.location_type=='library'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Stack</mat-label>
+                  <input matInput placeholder="Stack" formControlName="stack"
+                    [required]="changeStatusForm?.value?.filters === '4' && changeStatusForm?.value?.location_type === 'library'" />
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters === '4'
+              && changeStatusForm?.value?.location_type=='library'">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Row</mat-label>
+                  <input matInput placeholder="Row" formControlName="row" type="text"
+                    [required]="changeStatusForm?.value?.filters === '4' && changeStatusForm?.value?.location_type === 'library'" />
+                </mat-form-field>
+              </div>
+              <div class="col-4" *ngIf="changeStatusForm?.value?.filters">
                 <mat-form-field class="form-field" appearance="outline" placeholder="Reason to Change">
                   <mat-label>Reason To Change</mat-label>
                   <mat-select formControlName="reason_id" required>
@@ -109,7 +201,7 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="changeStatusForm?.value?.filters">
               <div class="col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Remarks</mat-label>
@@ -118,7 +210,7 @@
               </div>
             </div>
             <br />
-            <div class="row text-center">
+            <div class="row text-center" *ngIf="changeStatusForm?.value?.filters">
               <div class="col-12">
                 <button mat-raised-button class="btn-success-green" (click)="changeReservoirStatus()">
                   Submit
@@ -136,3 +228,4 @@
     </mat-card>
   </div>
 </div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
