@@ -1,21 +1,11 @@
 <form [formGroup]="attendanceReport">
   <div class="row">
     <div class="col-2">
-      <mat-form-field class="form-field" appearance="outline">
-        <mat-label>Select Month</mat-label>
-        <mat-select formControlName="month_id" required (selectionChange)="getEmployeeAttendance()">
-          <mat-option value="1">January</mat-option>
-          <mat-option value="2">February</mat-option>
-          <mat-option value="3">March</mat-option>
-          <mat-option value="4">April</mat-option>
-          <mat-option value="5">May</mat-option>
-          <mat-option value="6">June</mat-option>
-          <mat-option value="7">July</mat-option>
-          <mat-option value="8">August</mat-option>
-          <mat-option value="9">September</mat-option>
-          <mat-option value="10">October</mat-option>
-          <mat-option value="11">November</mat-option>
-          <mat-option value="12">December</mat-option>
+      <mat-form-field appearance="outline">
+        <mat-label>Month</mat-label>
+        <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getEmployeeAttendance()" required>
+          <mat-option value="">Please select</mat-option>
+          <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -39,9 +29,12 @@
     (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
   </angular-slickgrid>
 </div>
-<div style="width: 100% !important; overflow: auto !important" *ngIf="nodataFlag">
-  <div class="text-center margin-top-20" style="margin-bottom:20px !important">
-    No Records Found
+<div *ngIf="nodataFlag">
+  <div class="text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+      [noDataText]="" [subText]="'Please select all required field'">
+    </app-no-data>
   </div>
 </div>
 <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

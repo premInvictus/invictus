@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AxiomService, SmartService, SisService, CommonAPIService } from '../../_services';
+import { AxiomService, SmartService, SisService, CommonAPIService,FeeService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
@@ -63,7 +63,7 @@ export class AttendanceReportsComponent implements OnInit {
   totalRow: any;
   requiredAll = true;
   employeeCatDeptAvail = false;
-  nodataFlag = false;
+  nodataFlag = true;
   dataArr: any[] = [];
   groupColumns: any[] = [];
   groupLength: any;
@@ -72,6 +72,7 @@ export class AttendanceReportsComponent implements OnInit {
   holidayArray: any[] = [];
   sessionName: any;
   schoolInfo: any;
+  monthArray: any[] = [];
   notFormatedCellArray: any[] = [];
   alphabetJSON = {
     1: 'A',
@@ -127,6 +128,7 @@ export class AttendanceReportsComponent implements OnInit {
     public axiomService: AxiomService,
     public sisService: SisService,
     private erpCommonService: ErpCommonService,
+    public feeService: FeeService
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
@@ -136,6 +138,7 @@ export class AttendanceReportsComponent implements OnInit {
     this.buildForm();
     this.getSchool();
     this.getSession();
+    this.getFeeMonths();
     this.getAllEmployee('');
   }
 
@@ -144,6 +147,15 @@ export class AttendanceReportsComponent implements OnInit {
       month_id: ''
     });
 
+  }
+  getFeeMonths() {
+    this.monthArray = [];
+    this.feeService.getFeeMonths({}).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.monthArray = result.data;
+      } else {
+      }
+    });
   }
   angularGridReady(angularGrid: AngularGridInstance) {
     this.angularGrid = angularGrid;
@@ -168,12 +180,14 @@ export class AttendanceReportsComponent implements OnInit {
       this.commonAPIService.getFilterData(value).subscribe((result: any) => {
         if (result && result.data.length > 0) {
           this.employeeArray = result.data;
+          this.getEmployeeAttendance();
         }
       });
     } else {
       this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
         if (result && result.length > 0) {
           this.employeeArray = result;
+          this.getEmployeeAttendance();
         }
       });
     }
@@ -204,6 +218,8 @@ export class AttendanceReportsComponent implements OnInit {
   getEmployeeAttendance() {
     this.attendanceArray = [];
     this.employeeAttendanceArray = [];
+    this.dataset = [];
+    this.columnDefinitions = [];
     this.holidayArray = [];
     var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
     const inputJson: any = {};
@@ -249,17 +265,17 @@ export class AttendanceReportsComponent implements OnInit {
         };
         this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
           if (res && res.status === 'ok') {
-            this.monthEntryAvailable = true;
             this.attendanceArray = res.data;
             this.getAttendanceReport('');
-            this.getSumByEmplyoeewise('');
           } else {
-            this.dataset = [];
-            this.columnDefinitions = [];
-            this.monthEntryAvailable = false;
+            this.attendanceArray = [];
+            this.getAttendanceReport('');
           }
         });
+      } else {
+        this.nodataFlag = true;
       }
+
     });
   }
   getDaysInMonth(month, year) {
@@ -438,6 +454,11 @@ export class AttendanceReportsComponent implements OnInit {
             filterable: true,
             filterSearchType: FieldType.string
           });
+          this.columnDefinitions.push({
+            id: 'total_absent', name: 'Total Absent', field: 'total_absent', sortable: true,
+            filterable: true,
+            filterSearchType: FieldType.string
+          });
         }
         const obj: any = {};
         obj['id'] = (index + 1);
@@ -453,6 +474,7 @@ export class AttendanceReportsComponent implements OnInit {
             obj[date] = this.getAttendance(item.emp_id, dateFormate);
           }
           obj['total'] = this.getSumByEmplyoeewise(item.emp_id);
+          obj['total_absent'] = this.getAbsentSum(item.emp_id);
         }
         this.dataset.push(obj);
         index++;
@@ -474,6 +496,7 @@ export class AttendanceReportsComponent implements OnInit {
         }
       }
       obj3['total'] = '';
+      obj3['total_absent'] = '';
       this.totalRow = obj3;
       if (this.dataset.length <= 5) {
         this.gridHeight = 300;
@@ -596,6 +619,30 @@ export class AttendanceReportsComponent implements OnInit {
       'total': total,
     });
     return present;
+  }
+  getAbsentSum(emp_id) {
+    let totalArray = [];
+    var present = 0;
+    var absent = 0;
+    var total = 0;
+    for (let item of this.attendanceArray) {
+      for (let dety of item.employeeList) {
+        if (dety.emp_id === emp_id) {
+          if (dety.attendance === 1) {
+            present++;
+          } else if (dety.attendance === 0) {
+            absent++;
+          }
+          total++;
+        }
+      }
+    }
+    totalArray.push({
+      'present': present,
+      'absent': absent,
+      'total': total,
+    });
+    return absent;
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];
