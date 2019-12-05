@@ -402,7 +402,7 @@ export class EmpDetailsReportComponent implements OnInit {
         filterSearchType: FieldType.string
       },
       {
-        id: 'address', name: 'Address', field: 'address', sortable: true,
+        id: 'address', name: 'Per. Address', field: 'address', sortable: true,
         filterable: true,
         width: 120,
         filterSearchType: FieldType.string,
