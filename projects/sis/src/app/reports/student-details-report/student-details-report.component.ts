@@ -190,7 +190,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
+			{ id: 'admission_no', name: 'Erl.No.', field: 'admission_no', sortable: true, filterable: true,
 			groupTotalsFormatter: this.srnTotalsFormatter  },
 			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
 			groupTotalsFormatter: this.countTotalsFormatter },
