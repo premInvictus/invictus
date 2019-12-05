@@ -495,8 +495,8 @@ export class AttendanceReportsComponent implements OnInit {
           }
         }
       }
-      obj3['total'] = '';
-      obj3['total_absent'] = '';
+      obj3['total'] = this.dataset.map(t => t['total']).reduce((acc, val) => Number(acc) + Number(val), 0);
+      obj3['total_absent'] = this.dataset.map(t => t['total_absent']).reduce((acc, val) => Number(acc) + Number(val), 0);
       this.totalRow = obj3;
       if (this.dataset.length <= 5) {
         this.gridHeight = 300;
