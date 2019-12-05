@@ -30,6 +30,7 @@ import 'jspdf-autotable';
 export class EmpDetailsReportComponent implements OnInit {
   @ViewChild('searchModal') searchModal;
   sessionArray: any[] = [];
+  documentArray: any[] = [];
   totalRow: any;
   groupColumns: any[] = [];
   groupLength: any;
@@ -109,6 +110,12 @@ export class EmpDetailsReportComponent implements OnInit {
   subjectDataArray: any[] = [];
   session_id: any;
   employeeData: any;
+  documentsArray: any[] = [
+    { docreq_id: 1, docreq_name: "Id & Address Proof", docreq_alias: "Id", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 2, docreq_name: "Education", docreq_alias: "Education", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
+  ];
   @Input() userName: any = '';
   constructor(translate: TranslateService,
     private commonAPIService: CommonAPIService,
@@ -140,8 +147,8 @@ export class EmpDetailsReportComponent implements OnInit {
         columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
       }
     }
-
   }
+
   buildForm() {
     this.reportFilterForm = this.fbuild.group({
       'class_value': '',
@@ -170,6 +177,7 @@ export class EmpDetailsReportComponent implements OnInit {
   }
   getAccessionReport(value: any) {
     this.dataArr = [];
+    this.documentArray = [];
     this.aggregatearray = [];
     this.columnDefinitions = [];
     this.dataset = [];
@@ -291,7 +299,7 @@ export class EmpDetailsReportComponent implements OnInit {
       accessionJSON = value;
     } else {
       //"withoutFilter": true
-      accessionJSON = {  }
+      accessionJSON = {}
     }
 
     this.columnDefinitions = [
@@ -485,13 +493,25 @@ export class EmpDetailsReportComponent implements OnInit {
       }
 
     ];
-   // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-     this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
+
+    // this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+    this.commonAPIService.getFilterData(accessionJSON).subscribe((result: any) => {
       if (result && result.data.length > 0) {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
         repoArray = result.data;
         let index = 0;
         for (const item of repoArray) {
+          if (index === 0) {
+            for (const dety of this.documentsArray) {
+              this.columnDefinitions.push({
+                id: dety.docreq_alias, name: dety.docreq_name, field: dety.docreq_alias, sortable: true,
+                filterable: true,
+                filterSearchType: FieldType.string,
+                formatter: this.iconFormatter
+              });
+            }
+          }
+          this.documentArray = item.emp_document_detail && item.emp_document_detail.document_data ? item.emp_document_detail.document_data : [];
           const obj: any = {};
           obj['id'] = (index + 1);
           obj['srno'] = (index + 1);
@@ -505,38 +525,45 @@ export class EmpDetailsReportComponent implements OnInit {
           obj['whatsup_no'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.whatsup_no : '-';
           obj['email_id'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.email_id : '-';
           obj['address'] = item.emp_personal_detail.address_detail ? item.emp_personal_detail.address_detail.address : '-';
-          obj['city'] = item.emp_personal_detail.address_detail && item.emp_personal_detail.address_detail.city &&
-            item.emp_personal_detail.address_detail.state ? item.emp_personal_detail.address_detail.city.cit_name + ',' +
+          obj['city'] = item.emp_personal_detail.address_detail && item.emp_personal_detail.address_detail.city.cit_name &&
+            item.emp_personal_detail.address_detail.state.sta_name ? item.emp_personal_detail.address_detail.city.cit_name + ',' +
             item.emp_personal_detail.address_detail.state.sta_name + ' - ' + item.emp_personal_detail.address_detail.pin : '-';
           obj['res_address'] = item.emp_personal_detail.residential_address_detail ? item.emp_personal_detail.residential_address_detail.address : '-';
-          obj['res_city'] = item.emp_personal_detail.residential_address_detail && item.emp_personal_detail.residential_address_detail.city &&
-            item.emp_personal_detail.residential_address_detail.state ? item.emp_personal_detail.residential_address_detail.city.cit_name + ',' +
+          obj['res_city'] = item.emp_personal_detail.residential_address_detail && item.emp_personal_detail.residential_address_detail.city.cit_name &&
+            item.emp_personal_detail.residential_address_detail.state.sta_name ? item.emp_personal_detail.residential_address_detail.city.cit_name + ',' +
             item.emp_personal_detail.residential_address_detail.state.sta_name + ' - ' + item.emp_personal_detail.residential_address_detail.pin : '-';
           obj['relationship'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-            item.emp_personal_contact.relationship_personal_detail.rel_category.rel_name : '',
+            item.emp_personal_contact.relationship_personal_detail.rel_category.rel_name : '-',
             obj['contact_name'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_full_name : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_full_name : '-',
             obj['occupation'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_occupation : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_occupation : '-',
             obj['education'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_education : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_education : '-',
             obj['contact_mobile'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail &&
               item.emp_personal_contact.relationship_personal_detail.rel_contact_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no : '-',
             obj['contact_email'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail &&
               item.emp_personal_contact.relationship_personal_detail.rel_contact_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email : '-',
             obj['contact_organisation'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_organisation : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_organisation : '-',
             obj['contact_designation'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_designation : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_designation : '-',
             obj['contact_address'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_address_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.address : '',
-            obj['contact_city'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_address_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.city + ',' + item.emp_personal_contact.relationship_personal_detail.rel_address_detail.state + ',' +
-              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin : '',
+              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.address : '-',
+            obj['contact_city'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_address_detail
+              && item.emp_personal_contact.relationship_personal_detail.rel_address_detail.city ?
+              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.city + ',' +
+              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.state + ',' +
+              item.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin : '-',
             obj['reference'] = item.emp_personal_contact && item.emp_personal_contact.relationship_personal_detail.rel_reference_detail ?
-              item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : ''
+              item.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name : '-'
+          for (const item of this.documentArray) {
+            for (const detz of item.files_data) {
+              obj[item.document_name] = detz.file_url;
+            }
+          }
           this.dataset.push(obj);
           index++;
         }
@@ -558,7 +585,13 @@ export class EmpDetailsReportComponent implements OnInit {
     });
 
   }
-
+  iconFormatter(row, cell, value, columnDef, dataContext) {
+    if (value) {
+      return "<i class='fas fa-check' style='color:green'></i>";
+    } else {
+      return "<i class='fas fa-times' style='color:red'></i>";
+    }
+  }
   clearGroupsAndSelects() {
     this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
     this.clearGrouping();
