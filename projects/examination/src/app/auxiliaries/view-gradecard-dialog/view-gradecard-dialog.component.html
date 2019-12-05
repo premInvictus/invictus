@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="studentDetails">
+                <div class="col-5" *ngIf="studentDetails">
                     <table>
                         <tr>
                             <td><span>Roll no.</span></td>
@@ -54,7 +54,26 @@
                         </tr>
                     </table>
                 </div>
-                <div class="col-6 text-right">
+                <div class="col-4" *ngIf="studentDetails">
+                    <table>
+                        <tr>
+                            <td><span>No. of Days Present</span></td>
+                            <td><span>:</span></td>
+                            <td>{{totalpresentday}}</td>
+                        </tr>
+                        <tr>
+                            <td><span>Total Working Days</span></td>
+                            <td><span>:</span></td>
+                            <td>{{totalworkingdays}}</td>
+                        </tr>
+                        <tr>
+                            <td><span>Attendance(%)</span></td>
+                            <td><span>:</span></td>
+                            <td>{{attendenceInPercent}}%</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-3 text-right">
                     <img style="width: 120px; height: 140px" [src]="defaultsrc"
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
                     <!-- <div [ngStyle]="{'background-image': 'url(' + defaultsrc + ')', 'height':'140px', 'width': '120px'}"></div> -->

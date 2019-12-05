@@ -281,11 +281,26 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassHighestAndAverage', value);
 	}
+	getTermStudentAttendence(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermStudentAttendence', value);
+	}
+	getTermWorkingAndHoliday(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermWorkingAndHoliday', value);
+	}
 	getStudentAttendence(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getStudentAttendence', value);
 	}
-	
+	insertClassTermDate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertClassTermDate', value);
+	}
+	getClassTermDate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getClassTermDate', value);
+	}
 }
 
 

@@ -47,6 +47,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   hasCoscholasticSub = false;
   subjectsubexam_marks_arr: any[] = [];
   classHighestArr: any[] = [];
+  totalworkingdays = 0;
+  totalpresentday = 0;
+  attendenceInPercent = 0;
 
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -72,11 +75,36 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.getSession();
     this.getAllStudents();
     this.getStudentSubjects();
-    //this.getSubjectsByClass();
+    this.getTermWorkingAndHoliday();
     this.getClassGradeset();
     //this.getExamDetails();
-    //this.getGradeCardMark();
+    //this.getGradeCardMark(); 
 
+  }
+  getTermStudentAttendence() {
+
+  }
+  getTermWorkingAndHoliday() {
+    const param: any = {};
+    param.class_id = this.data.class_id;
+    param.term_id = this.data.param.eme_term_id;
+    this.examService.getTermWorkingAndHoliday(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        const termholidays = result.data;
+        this.totalworkingdays = termholidays.betweendays.length - Object.keys(termholidays.holidaysunday).length;
+        const param: any = {};
+        param.from = termholidays.termStart;
+        param.to = termholidays.termEnd;
+        param.au_login_id = this.data.au_login_id;
+        this.examService.getTermStudentAttendence(param).subscribe((result1: any) => {
+          if(result1 && result1.status === 'ok') {
+            const termAttendence = result1.data;
+            this.totalpresentday = termAttendence.length;
+            this.attendenceInPercent = this.getTwoDecimalValue(this.totalworkingdays / this.totalpresentday * 100);
+          }
+        })
+      }
+    })
   }
   getClassHighestAndAverage() {
     this.classHighestArr = [];
