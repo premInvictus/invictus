@@ -17,6 +17,7 @@ export class MessagesComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('searchModal') searchModal;
 	showComposeMessage = false;
+	searchForm: FormGroup;
 	displayedColumns: string[] = []
 	renderForm:any = {};
 	scheduleMessageData: any[] = [];
@@ -24,7 +25,7 @@ export class MessagesComponent implements OnInit {
 	selectedUserArr: any[] = [];
 	allUserSelectFlag = false;
 	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
-	
+	currentUser = {};
 	showViewMessage = false;
 	@ViewChild('deleteModal') deleteModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
@@ -35,15 +36,24 @@ export class MessagesComponent implements OnInit {
 		private sisService: SisService,
 		private router: Router,
 		private dialog: MatDialog
-	) { }
+	) { 
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+	}
 
 	ngOnInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
+		this.buildForm();
 		this.getMessages();
 	}
 
 	ngAfterViewInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
+	}
+
+	buildForm() {
+		this.searchForm = this.fbuild.group({
+			search: ''
+		});
 	}
 
 
@@ -63,7 +73,9 @@ export class MessagesComponent implements OnInit {
 			'send_by',
 			'action'
 		];
-		var inputJson = {};
+		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
+		var inputJson = {'$or': [ { 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, {'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id']} ]};
+		console.log('inputJson--', inputJson);
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
@@ -100,6 +112,7 @@ export class MessagesComponent implements OnInit {
 			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
 			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
 			tempObj['msg_type'] = this.scheduleMessageData[i]['msg_type'] ? this.scheduleMessageData[i]['msg_type'] : '';
+			tempObj['action'] =  this.scheduleMessageData[i];
 			
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
@@ -174,7 +187,9 @@ export class MessagesComponent implements OnInit {
 	}
 
 	resetComposeMessage(messageType) {
+		console.log('fgfj');
 		this.showComposeMessage = false;
+		this.showViewMessage = false;
 		// }
 		this.getMessages();
 		
@@ -204,8 +219,10 @@ export class MessagesComponent implements OnInit {
 		
 	}
 
-	viewMessage() {
+	viewMessage(element) {
 		this.showViewMessage = !this.showViewMessage;
+		this.renderForm = {addMode:false, editMode:false, messageType: element.msg_type, formData:element, viewMode : false,};
+
 	}
 }
 

@@ -32,7 +32,8 @@ const routes: Routes = [
 				path: 'library',
 				loadChildren: '../library/library.module#LibraryModule'
 			},
-			{ path: 'user-credential', component: UserCredentialComponent }
+			{ path: 'user-credential', component: UserCredentialComponent },
+			{ path: 'communication', loadChildren: '../student-messages/student-messages.module#StudentMessagesModule' }
 		]
 	},
 	{

@@ -403,4 +403,19 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/bulkUpdate/uploadEmployeeExcel', value);
 	}
+
+	insertMessage(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/insert', value);
+	}
+
+	updateMessage(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/update', value);
+	}
+
+	getMessage(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
+	}
 }
