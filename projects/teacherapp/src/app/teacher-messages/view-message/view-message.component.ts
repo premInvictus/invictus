@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
-
+import { ckconfig } from './../../shared-module/config/ckeditorconfig';
 @Component({
 	selector: 'app-view-message',
 	templateUrl: './view-message.component.html',
@@ -18,9 +18,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	deleteMessage = '';
 	ckeConfig: any;
 	messageForm: FormGroup;
-	scheduleForm: FormGroup;
-	sendForm: FormGroup;
-	userListForm: FormGroup;
+	searchForm: FormGroup;
 	editTemplateFlag = false;
 	userDataArr: any[] = [];
 	multipleFileArray: any[] = [];
@@ -28,7 +26,6 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	currentFile: any;
 	fileCounter = 0;
 	currentReceivers = '';
-	attachmentArray: any[] = [];
 	classDataArr: any[] = [];
 	showUser = false;
 	showClass = false;
@@ -40,12 +37,19 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	formData = {};
 	currentUser: any;
 	showUserContextMenu = false;
+	showComposeMessage = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
+	messagesData :any[] = [];
+	renderForm = {};
+	ckconfig: any;
+	showReply = false;
+	attachmentArray: any[] = [];
+	currentRowIndex = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
 		private dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -57,22 +61,45 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges() {
+
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		if (this.reRenderForm.editMode) {
-			this.setFormData(this.reRenderForm.formData);
-		} else if (this.reRenderForm.addMode) {
-			//this.buildForm();
+
+		console.log('reRenderForm--', this.reRenderForm);
+		this.reRenderForm.formData.action['showReplyBox'] = false;
+		this.messagesData.push(this.reRenderForm.formData.action);
+		console.log('this.reRenderForm.formData.action.msg_thread--', this.reRenderForm.formData.action.msg_thread);
+		if (this.reRenderForm.formData.action.msg_thread && this.reRenderForm.formData.action.msg_thread.length > 0) {
+			console.log('in--');
+			for (var i=0; i< this.reRenderForm.formData.action.msg_thread.length; i++) {
+				this.reRenderForm.formData.action.msg_thread[i]['showReplyBox'] = false;
+				this.messagesData.push(this.reRenderForm.formData.action.msg_thread[i]);
+				console.log('in--1');
+			}
+			
 		}
+
+		console.log('this.messagesData--', this.messagesData);
+		// if (this.reRenderForm.editMode) {
+		// 	this.setFormData(this.reRenderForm.formData);
+		// } else if (this.reRenderForm.addMode) {
+		// 	//this.buildForm();
+		// }
 
 	}
 
 
 	buildForm() {
+		this.ckeConfig = ckconfig;
+		this.ckeConfig.height = 200;
+		this.ckeConfig.toolbarLocation = 'bottom';
 		this.selectedUserArr = [];
 		this.messageForm = this.fbuild.group({
 			messageTo: '',
 			messageSubject: '',
 			messageBody: ''
+		});
+		this.searchForm = this.fbuild.group({
+			search: ''
 		});
 	}
 
@@ -114,6 +141,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	getUser(role_id) {
+		console.log('role_id--', role_id);
 		this.classDataArr = [];
 		if (role_id === '2') {
 			this.currentReceivers = 'Staff';
@@ -129,20 +157,20 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	getClass() {
-		// this.sisService.getClass({}).subscribe((result: any) => {
-		// 	if (result && result.data && result.data[0]) {
-		// 		var result = result.data;
-		// 		for (var i = 0; i < result.length; i++) {
-		// 			var inputJson = {
-		// 				class_id: result[i]['class_id'],
-		// 				class_name: result[i]['class_name'],
-		// 				checked: false,
-		// 			}
-		// 			this.classDataArr.push(inputJson);
-		// 		}
-		// 		this.showClass = true;
-		// 	}
-		// });
+		this.erpCommonService.getClass({}).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				var result = result.data;
+				for (var i = 0; i < result.length; i++) {
+					var inputJson = {
+						class_id: result[i]['class_id'],
+						class_name: result[i]['class_name'],
+						checked: false,
+					}
+					this.classDataArr.push(inputJson);
+				}
+				this.showClass = true;
+			}
+		});
 	}
 
 	generateUserList() {
@@ -156,7 +184,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		if (this.currentReceivers === 'Teacher') {
 			inputJson['role_id'] = '3';
 			this.userDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -185,7 +213,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		} if (this.currentReceivers === 'Staff') {
 			inputJson['role_id'] = '2';
 			this.userDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -215,7 +243,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 			inputJson['class_ids'] = checkedClassIds[0];
 			inputJson['pmap_status'] = '1';
 			this.userDataArr = [];
-			this.sisService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -278,7 +306,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 			this.multipleFileArray.push(fileJson);
 			this.fileCounter++;
 			if (this.fileCounter === this.currentFileChangeEvent.target.files.length) {
-				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				this.erpCommonService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
 						for (const item of result.data) {
 							const findex2 = this.attachmentArray.findIndex(f => f.imgUrl === item.file_url);
@@ -381,6 +409,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 
 			}
 		}
+		this.showUserContextMenu = false;
 	}
 
 	deleteUser(i) {
@@ -424,7 +453,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 
 			if (this.editMode) {
 				inputJson['msg_id'] = this.formData['msg_id'];
-				this.commonAPIService.updateMessage(inputJson).subscribe((result: any) => {
+				this.erpCommonService.updateMessage(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Message has been updated Successfully', 'success');
 						this.back();
@@ -434,7 +463,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 					}
 				});
 			} else {
-				this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
+				this.erpCommonService.insertMessage(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
 						this.back();
@@ -492,11 +521,11 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	cancelSendMessage() {
-		
+
 	}
 
 	searchOk(event) {
-	
+
 	}
 
 	deleteCancel() {
@@ -504,6 +533,66 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	back() {
-		this.backToBroadcast.emit(this.messageForm.value.messageType);
+		this.backToBroadcast.emit('');
+	}
+
+	getPermission() {
+		return false;
+	}
+
+	composeMessage() {
+		this.showComposeMessage = !this.showComposeMessage;
+		this.renderForm = {addMode:true, editMode:false, messageType: 'C', formData:'', viewMode : false,};
+	}
+
+	resetComposeMessage() {
+		this.showComposeMessage = !this.showComposeMessage;
+	}
+
+	showReplyBox(i) {
+		
+		this.messagesData[i]['showReplyBox'] = true;
+	}
+
+	discardMessage(i) {
+		this.messagesData[i]['showReplyBox'] = false;
+	}
+
+	replyMessage(item) {
+		console.log('item--', item);
+		var threadData = item.msg_thread.length > 0 ? item.msg_thread : [];
+		var msgThreadJson = {   
+			"msg_id" : item.msg_id,
+			"msg_from" : this.currentUser.login_id, 
+			"msg_to" : this.selectedUserArr,  
+			"msg_created_by" : {"login_id" : this.currentUser.login_id , "login_name" : this.currentUser.full_name},
+			"msg_subject" : 'Rep : '+item.msg_subject,
+			"msg_description" : this.messageForm.value.messageBody,
+			"msg_type" : "C",
+			"msg_status" : {"status_id" : "1" , "status_name" : "pending"},
+			"msg_attachment" : this.attachmentArray,
+			"status" : [{ "status_name" : "pending" , "created_by" : this.currentUser.login_id }],
+			"msg_thread" : [],
+			"msg_created_date" : new Date()					
+		};
+		threadData.push(msgThreadJson);
+
+		item.msg_thread = threadData;
+		var replyJson = item;
+
+
+
+		console.log('replyJson--', replyJson);
+
+		this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
+			if (result) {
+				this.commonAPIService.showSuccessErrorMessage('Message has been Replied Successfully', 'success');
+				this.back();
+				this.resetForm();
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error While Replying Message', 'error');
+			}
+		});
+		
 	}
 }

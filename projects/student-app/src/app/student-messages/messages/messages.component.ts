@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -32,8 +32,8 @@ export class MessagesComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
-		private commonAPIService: CommonAPIService,
-		private sisService: SisService,
+		private commonAPIService:CommonAPIService,
+		private commonErpService: ErpCommonService,
 		private router: Router,
 		private dialog: MatDialog
 	) { 
@@ -73,10 +73,10 @@ export class MessagesComponent implements OnInit {
 			'send_by',
 			'action'
 		];
-		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
 		var inputJson = {'$or': [ { 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, {'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id']} ]};
+		 //{'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
 		console.log('inputJson--', inputJson);
-		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
+		this.commonErpService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -112,7 +112,7 @@ export class MessagesComponent implements OnInit {
 			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
 			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
 			tempObj['msg_type'] = this.scheduleMessageData[i]['msg_type'] ? this.scheduleMessageData[i]['msg_type'] : '';
-			tempObj['action'] =  this.scheduleMessageData[i];
+			tempObj['action'] = this.scheduleMessageData[i];
 			
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
@@ -164,7 +164,7 @@ export class MessagesComponent implements OnInit {
 	}
 
 	deleteMessageFunc(element) {
-		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
+		this.commonErpService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
 				this.getMessages();

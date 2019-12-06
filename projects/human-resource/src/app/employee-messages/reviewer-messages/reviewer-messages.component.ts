@@ -5,13 +5,13 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
 @Component({
-	selector: 'app-messages',
-	templateUrl: './messages.component.html',
-	styleUrls: ['./messages.component.scss']
+	selector: 'app-reviewer-messages',
+	templateUrl: './reviewer-messages.component.html',
+	styleUrls: ['./reviewer-messages.component.scss']
 })
-export class MessagesComponent implements OnInit {
+export class ReviewerMessagesComponent implements OnInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@ViewChild(MatSort) sort: MatSort;
@@ -73,8 +73,7 @@ export class MessagesComponent implements OnInit {
 			'send_by',
 			'action'
 		];
-		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
-		var inputJson = {'$or': [ { 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, {'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id']} ]};
+		var inputJson = {};
 		console.log('inputJson--', inputJson);
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {

@@ -263,7 +263,7 @@
                                 (click)="composeMessage()" *ngIf="getPermission()">Reject</button>
                             <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 (click)="composeMessage()" *ngIf="getPermission()">Resolve</button>
-                            <button mat-raised-button class="btn-basic btn-consolidate btn-spacer" style="margin-left:10px;" 
+                            <button mat-raised-button class="btn-basic btn-consolidate btn-spacer" style="margin-left:10px;"
                                 (click)="showReplyBox(i)"
                                 *ngIf="item?.msg_type === 'C' && !(item?.showReplyBox)">Reply</button>
                         </div>

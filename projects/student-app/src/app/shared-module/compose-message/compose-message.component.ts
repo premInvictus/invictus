@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -46,7 +46,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
 		private dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -131,7 +131,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	getClass() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.erpCommonService.getClass({}).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				var result = result.data;
 				for (var i = 0; i < result.length; i++) {
@@ -158,7 +158,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		if (this.currentReceivers === 'Teacher') {
 			inputJson['role_id'] = '3';
 			this.userDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -187,7 +187,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		} if (this.currentReceivers === 'Staff') {
 			inputJson['role_id'] = '2';
 			this.userDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -217,7 +217,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['class_ids'] = checkedClassIds[0];
 			inputJson['pmap_status'] = '1';
 			this.userDataArr = [];
-			this.sisService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -280,7 +280,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.multipleFileArray.push(fileJson);
 			this.fileCounter++;
 			if (this.fileCounter === this.currentFileChangeEvent.target.files.length) {
-				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				this.erpCommonService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
 						for (const item of result.data) {
 							const findex2 = this.attachmentArray.findIndex(f => f.imgUrl === item.file_url);
@@ -428,7 +428,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 			if (this.editMode) {
 				inputJson['msg_id'] = this.formData['msg_id'];
-				this.commonAPIService.updateMessage(inputJson).subscribe((result: any) => {
+				this.erpCommonService.updateMessage(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Message has been updated Successfully', 'success');
 						this.back();
@@ -438,7 +438,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					}
 				});
 			} else {
-				this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
+				this.erpCommonService.insertMessage(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
 						this.back();

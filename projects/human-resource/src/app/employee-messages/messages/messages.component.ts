@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../hr-shared/preview-document/preview-document.component';
 @Component({
 	selector: 'app-messages',
 	templateUrl: './messages.component.html',

@@ -284,4 +284,6 @@ export class CommonAPIService {
 		return this.searchDashboardData ;
 	}
 
+	
+
 }

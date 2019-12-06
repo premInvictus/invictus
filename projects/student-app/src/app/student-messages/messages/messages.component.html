@@ -120,13 +120,13 @@
                                 Action
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <span *ngIf="msg_type === 'C'">
+                                <span *ngIf="element?.msg_type === 'C'">
                                     <i class="material-icons delete-icon inline-form-table-icon-spacing"
                                         style="cursor: pointer;" (click)="openDeleteDialog(element)">
                                         delete
                                     </i>
                                 </span>
-                                <span *ngIf="msg_type !== 'C'">-</span>
+                                <span *ngIf="element?.msg_type !== 'C'">-</span>
                             </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
