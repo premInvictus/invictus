@@ -19,49 +19,15 @@
         <div class="col-12">
             <mat-card class="mat-card" style="min-height: 700px;">
                 <form [formGroup]="messageForm">
-                    <div class="row">
-
-                        <div class="col-2">
-                            <mat-form-field class="form-field" appearance="outline">
-                                <mat-label> Message Type </mat-label>
-                                <mat-select formControlName="messageType" (selectionChange)="getTemplate()">
-                                    <mat-option value="E" placeholder="Message Type">Mail</mat-option>
-                                    <mat-option value="S" placeholder="Message Type">SMS</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field class="form-field" appearance="outline">
-                                <mat-label> Select Template </mat-label>
-                                <mat-select formControlName="messageTemplate" (selectionChange)="editTemplate($event)">
-                                    <mat-option *ngFor="let item of templateDataArr" value="{{item?.tpl_id}}">
-                                        {{item?.tpl_title}}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-                        </div>
-                        <div class="col-3">
-                            <mat-form-field class="form-field" appearance="outline">
-                                <mat-label> Title </mat-label>
-                                <input matInput placeholder="Title" type="input" formControlName="messageTitle"
-                                    autocomplete="false" />
-                            </mat-form-field>
-                        </div>
-                    </div>
                     <div class="message-container">
                         <div class="row">
                             <div class="col-12 border-bottom">
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                
                                 <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
-                                padding: 10px;" />
-                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'E'">
-                                    <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
-                                        class="custom-entry-button margin-left-10">
-                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
-                                        <i class="fas fa-times-circle custom-entry-btn-icon"
-                                            (click)="deleteUser(i, item)"></i>
-                                    </button>
-                                </div>
-                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'S'">
+                                padding: 10px;     min-height: 40px;
+    overflow-y: auto;" />
+                                <div class="user-chips">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
                                         <span class="custom-btn-text">{{item?.au_full_name}}</span>
@@ -153,15 +119,11 @@
 
                         <div class="row">
                             <div class="col-12" style="min-height: 400px;">
-                                <ckeditor [config]="ckeConfig" formControlName="messageBody" (change)="onBodyChange($event)" ></ckeditor>
+                                <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
                             </div>
                         </div>
 
-                        <div class="row character-count-section" *ngIf="messageForm.value.messageType==='S'">
-                            1 SMS has maximum 160 character <span class="round-orange-button"> {{ msgMultipleCount | number}} SMS </span>
-                        </div>
-
-                        <div class="row" *ngIf="messageForm.value.messageType === 'E'">
+                        <div class="row">
                             <div class="col-12">
                                 <div class="notification-aatachment-btn-sis">
                                     <label for="attachment"><i
@@ -182,6 +144,7 @@
                                 </ul>
 
                             </div>
+                            
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
@@ -191,19 +154,6 @@
                                 (click)="sendMessage()" style="margin-left:0 !important">Update Message <i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button>
                             &nbsp;
-                            <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                [matMenuTriggerFor]="menu2" (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
-                                    class="fa fa-caret-up float-right margin-top-10"
-                                    (click)="openMyMenu()"></i></button> &nbsp; -->
-                            <!-- <mat-menu #menu2="matMenu" overlapTrigger="false">
-                                <span (mouseleave)="closeMyMenu()">
-                                    <button mat-menu-item (click)="scheduleForLater()">Schedule For Later</button>
-                                </span>
-                            </mat-menu> -->
-                            <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"><b>Save as template</b>
-                            </mat-checkbox>
-                            <mat-checkbox (change)="saveTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>
-                            </mat-checkbox>
                         </div>
                     </div>
                 </form>
@@ -212,5 +162,7 @@
     </div>
 </div>
 
-<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendSMS($event)"
-    (deleteCancel)="cancelSendSMS()"></app-delete-modal>
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendMessage($event)"
+    (deleteCancel)="cancelSendMessage()"></app-delete-modal>
+
+    <app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>

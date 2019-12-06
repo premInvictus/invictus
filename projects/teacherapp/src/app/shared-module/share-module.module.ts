@@ -56,6 +56,8 @@ import { BookReserveRequestConfirmationComponent } from './book-reserve-request-
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
 import * as _moment from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { ComposeMessageComponent } from './compose-message/compose-message.component';
+import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -131,7 +133,9 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent
 	],
 	exports: [
 		DeleteModalComponent,
@@ -184,7 +188,9 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent
 	],
 	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
 		ImageViewerComponent,
@@ -192,7 +198,9 @@ export const MY_FORMATS = {
 		AssignmentAttachmentDialogComponent,
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent],
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent],
 		providers: [
 			{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 	

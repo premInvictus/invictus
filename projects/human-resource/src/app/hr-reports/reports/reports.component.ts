@@ -49,32 +49,39 @@ export class ReportsComponent implements OnInit {
 		return 'report-card mat-card';
 	}
 	executeReport(report_id) {
-		this.reportTypeArray = [];
-		this.reportFlag = true;
-		this.accountFlag = false;
-		this.reportType = '';
-		if (this.previousIndex >= 0) {
-			this.feeReportArray[this.previousIndex].main_text_class = 'text-left inline-flex margin-top-5 icon-spacer';
-			this.feeReportArray[this.previousIndex].report_main_image_class = '';
-			this.feeReportArray[this.previousIndex].report_middle_class = 'inline-flex';
-			this.feeReportArray[this.previousIndex].report_check_icon_class = '';
+		if (report_id.value) {
+			this.reportTypeArray = [];
+			this.reportFlag = true;
+			this.accountFlag = false;
+			this.reportType = '';
+			if (this.previousIndex >= 0) {
+				this.feeReportArray[this.previousIndex].main_text_class = 'text-left inline-flex margin-top-5 icon-spacer';
+				this.feeReportArray[this.previousIndex].report_main_image_class = '';
+				this.feeReportArray[this.previousIndex].report_middle_class = 'inline-flex';
+				this.feeReportArray[this.previousIndex].report_check_icon_class = '';
+			}
+			const findex = this.feeReportArray.findIndex(
+				f => Number(f.report_id) === Number(report_id.value)
+			);
+			if (findex !== -1) {
+				this.feeReportArray[findex].main_text_class =
+					'text-left inline-flex main-text-container';
+				this.feeReportArray[findex].report_main_image_class = 'report-main-image';
+				this.feeReportArray[findex].report_middle_class = 'report-middle inline-flex';
+				this.feeReportArray[findex].report_check_icon_class =
+					'report-check-icon fas fa-check-circle';
+				this.reportHeader = this.feeReportArray[findex].report_name;
+				this.reportType = report_id.value;
+			}
+			this.previousIndex = findex;
+			setTimeout(() => this.reportFlag = false, 500);
+			setTimeout(() => this.accountFlag = true, 500);
+		} else {
+			this.reportTypeArray = [];
+			this.reportFlag = true;
+			this.accountFlag = false;
+			this.reportType = '';
 		}
-		const findex = this.feeReportArray.findIndex(
-			f => Number(f.report_id) === Number(report_id.value)
-		);
-		if (findex !== -1) {
-			this.feeReportArray[findex].main_text_class =
-				'text-left inline-flex main-text-container';
-			this.feeReportArray[findex].report_main_image_class = 'report-main-image';
-			this.feeReportArray[findex].report_middle_class = 'report-middle inline-flex';
-			this.feeReportArray[findex].report_check_icon_class =
-				'report-check-icon fas fa-check-circle';
-			this.reportHeader = this.feeReportArray[findex].report_name;
-			this.reportType = report_id.value;
-		}
-		this.previousIndex = findex;
-		setTimeout(() => this.reportFlag = false, 500);
-		setTimeout(() => this.accountFlag = true, 500);
 	}
 	switchReport() {
 		this.accountFlag = false;

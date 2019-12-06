@@ -12,7 +12,7 @@
                 <div class="row remove-top-margin">
                   <div class="col-6">
                     <mat-form-field class="lib-form form-field">
-                      <input matInput placeholder="Search Any Book.." formControlName="search"  autocomplete="off" />
+                      <input matInput placeholder="Search Any Book.." formControlName="search" autocomplete="off" />
                     </mat-form-field>
                   </div>
                   <div class="col-6 margin-top-10  text-right">
@@ -55,16 +55,19 @@
                 </ng-container>
                 <ng-container matColumnDef="book_name">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Book name</th>
-                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.book_name | titlecase | truncatetext: 30}}
+                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5">
+                    {{item.book_name.toString() | titlecase | truncatetext: 30}}
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="author">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="mar-left-5"> Author </th>
-                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.authors | titlecase | truncatetext: 30}} </td>
+                  <td mat-cell *matCellDef="let item" class="text-left mar-left-5">
+                    {{item.authors | titlecase | truncatetext: 30}} </td>
                 </ng-container>
                 <ng-container matColumnDef="publisher">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header class="mar-left-5"> &nbsp;&nbsp;Publisher </th>
-                  <td mat-cell *matCellDef="let item"> {{item.publisher | titlecase | truncatetext: 20}} </td>
+                  <td mat-cell *matCellDef="let item"> {{item.publisher.toString() | titlecase | truncatetext: 20}}
+                  </td>
                 </ng-container>
                 <ng-container matColumnDef="location">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 10px"> &nbsp;&nbsp;Location </th>
@@ -78,9 +81,9 @@
                   <th mat-header-cell *matHeaderCellDef mat-sort-header> &nbsp;&nbsp;Action </th>
                   <td mat-cell *matCellDef="let item">
                     <span><i class="fas fa-edit font-color-grey margin-right-15"
-                      *ngIf="item.action.reserv_status !== 'archived'"
-                        (click)="editReserv(item.book_no)"></i></span>
-                    <span *ngIf="item.action.reserv_status === 'available' || item.action.reserv_status === 'flagged'" class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                        *ngIf="item.action.reserv_status !== 'archived'" (click)="editReserv(item.book_no)"></i></span>
+                    <span *ngIf="item.action.reserv_status === 'available' || item.action.reserv_status === 'flagged'"
+                      class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
                         (click)="openDeleteModal(item.book_no)"></i></span>
                   </td>
                 </ng-container>
@@ -140,8 +143,7 @@
                 <div class="book-cover-img-2">
                   <div class="text-center">
                     <label for="file-input">
-                      <img [src]="bookImage ? bookImage : '/assets/images/book_placeholder.png'"
-                      style="width: 160px;
+                      <img [src]="bookImage ? bookImage : '/assets/images/book_placeholder.png'" style="width: 160px;
                       height: 230px;
                       border-radius: 5px;
                       opacity: 1;">
@@ -152,128 +154,126 @@
               </div>
             </div>
             <div class="col-11">
-                <div class="row ">
-                    <div class="col-12">
-                        <div class="row">
-                                      
-                              <div class="col-1">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>ISBN Code</mat-label>
-                                  <input matInput placeholder="ISBN Code" formControlName="isbn" type="text" id="isbn_id"
-                                    tabindex="1" (blur)="getBooksBasedOnISBN($event);$event.stopPropagation()"
-                                    (keydown.enter)="getBooksBasedOnISBN($event);$event.stopPropagation()" />
-                                </mat-form-field>
-                              </div>
+              <div class="row ">
+                <div class="col-12">
+                  <div class="row">
 
-                              <div class="col-3">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Title</mat-label>
-                                    <input matInput placeholder="Title" formControlName="title" required tabindex="2" />
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-1">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>ISBN Code</mat-label>
+                        <input matInput placeholder="ISBN Code" formControlName="isbn" type="text" id="isbn_id"
+                          tabindex="1" (blur)="getBooksBasedOnISBN($event);$event.stopPropagation()"
+                          (keydown.enter)="getBooksBasedOnISBN($event);$event.stopPropagation()" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Sub-Title</mat-label>
-                                    <input matInput placeholder="Subtitle" tabindex="3" formControlName="subtitle" />
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-3">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Title</mat-label>
+                        <input matInput placeholder="Title" formControlName="title" required tabindex="2" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Author</mat-label>
-                                    <input matInput placeholder="Author" formControlName="authors" required tabindex="4" />
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Sub-Title</mat-label>
+                        <input matInput placeholder="Subtitle" tabindex="3" formControlName="subtitle" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Kind/ Genre</mat-label>
-                                    <mat-select formControlName="genre_id" tabindex="5">
-                                      <mat-option *ngFor="let item of genreArray" [value]="item.genre_name">
-                                        {{item.genre_name}}
-                                      </mat-option>
-                                    </mat-select>
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Author</mat-label>
+                        <input matInput placeholder="Author" formControlName="authors" required tabindex="4" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-1">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Pages</mat-label>
-                                    <input matInput placeholder="Pages" tabindex="6" formControlName="page_count"
-                                      type="number" />
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Kind/ Genre</mat-label>
+                        <mat-select formControlName="genre_id" tabindex="5">
+                          <mat-option *ngFor="let item of genreArray" [value]="item.genre_name">
+                            {{item.genre_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-1">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Price</mat-label>
-                                    <input matInput placeholder="Price" formControlName="price" type="number" step="0.01"
-                                      tabindex="7"/>
-                                  </mat-form-field>
-                                </div>
-                          
-                              <div class="col-2">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Publisher</mat-label>
-                                  <input matInput placeholder="Publisher" tabindex="8" formControlName="publisher"/>
-                                </mat-form-field>
-                              </div>
+                    <div class="col-1">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Pages</mat-label>
+                        <input matInput placeholder="Pages" tabindex="6" formControlName="page_count" type="number" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Published Date</mat-label>
-                                    <input matInput placeholder="Published Date" tabindex="9" formControlName="publishedDate"
-                                    >
-                                  </mat-form-field>
-                              </div>
-                                                        
-                              <div class="col-2">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Tag</mat-label>
-                                  <input matInput placeholder="Tag" tabindex="10" formControlName="tags" />
-                                </mat-form-field>
-                              </div>
+                    <div class="col-1">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Price</mat-label>
+                        <input matInput placeholder="Price" formControlName="price" type="number" step="0.01"
+                          tabindex="7" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Volume Info</mat-label>
-                                    <input matInput placeholder="Volume Info" tabindex="11" formControlName="volumeInfo" />
-                                  </mat-form-field>
-                              </div>
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Publisher</mat-label>
+                        <input matInput placeholder="Publisher" tabindex="8" formControlName="publisher" />
+                      </mat-form-field>
+                    </div>
 
-                              <div class="col-2">
-                                  <mat-form-field class="form-field" appearance="outline">
-                                    <mat-label>Language</mat-label>
-                                    <mat-select formControlName="lang_id"  tabindex="12">
-                                      <mat-option *ngFor="let item of languageArray" [value]="item.lang_code">
-                                        {{item.lang_name}}
-                                      </mat-option>
-                                    </mat-select>
-                                  </mat-form-field>
-                              </div>
-                          
-                              <div class="col-2">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Print Type</mat-label>
-                                  <mat-select placeholder="Print Type" formControlName="type_id" tabindex="13">
-                                    <mat-option *ngFor="let item of typeArray" [value]="item.type_id">
-                                      {{item.type_name}}
-                                    </mat-option>
-                                  </mat-select>
-                                </mat-form-field>
-                              </div>
-                          
-                              <div class="col-8">
-                                <mat-form-field class="form-field" appearance="outline">
-                                  <mat-label>Description</mat-label>
-                                  <textarea matInput rows="3" formControlName="description" tabindex="14"></textarea>
-                                </mat-form-field>
-                              </div>
-                           </div>
-                      </div>
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Published Date</mat-label>
+                        <input matInput placeholder="Published Date" tabindex="9" formControlName="publishedDate">
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Tag</mat-label>
+                        <input matInput placeholder="Tag" tabindex="10" formControlName="tags" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Volume Info</mat-label>
+                        <input matInput placeholder="Volume Info" tabindex="11" formControlName="volumeInfo" />
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Language</mat-label>
+                        <mat-select formControlName="lang_id" tabindex="12">
+                          <mat-option *ngFor="let item of languageArray" [value]="item.lang_code">
+                            {{item.lang_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-2">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Print Type</mat-label>
+                        <mat-select placeholder="Print Type" formControlName="type_id" tabindex="13">
+                          <mat-option *ngFor="let item of typeArray" [value]="item.type_id">
+                            {{item.type_name}}
+                          </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-8">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Description</mat-label>
+                        <textarea matInput rows="3" formControlName="description" tabindex="14"></textarea>
+                      </mat-form-field>
+                    </div>
+                  </div>
                 </div>
-             </div> 
+              </div>
+            </div>
           </div>
           <div class="row">
             <div class="col-12">
@@ -337,7 +337,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Class</mat-label>
                     <mat-select placeholder="Class" formControlName="location_class_id" tabindex="20">
-                      <mat-option *ngFor="let item of classArray" [value]="item.class_id" (click)="setClassLocation(item?.class_name)">
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id"
+                        (click)="setClassLocation(item?.class_name)">
                         {{item.class_name}}
                       </mat-option>
                     </mat-select>
@@ -347,7 +348,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
                     <mat-select placeholder="Section" formControlName="location_sec_id" tabindex="21">
-                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id"  (click)="setSectionLocation(item?.sec_name)">
+                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id"
+                        (click)="setSectionLocation(item?.sec_name)">
                         {{item.sec_name}}
                       </mat-option>
                     </mat-select>
@@ -407,7 +409,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Vendor ID</mat-label>
                     <input matInput placeholder="Vendor ID" formControlName="vendor_id" tabindex="24"
-                      (blur)="getVenderDetails($event);$event.stopPropagation()" (keydown.enter)="getVenderDetails($event);$event.stopPropagation()" type="number" />
+                      (blur)="getVenderDetails($event);$event.stopPropagation()"
+                      (keydown.enter)="getVenderDetails($event);$event.stopPropagation()" type="number" />
                   </mat-form-field>
                 </div>
                 <div class="col-2">
@@ -461,14 +464,13 @@
                 <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>P O No</mat-label>
-                    <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25"/>
+                    <input matInput placeholder="P O No" formControlName="vendor_po_no" tabindex="25" />
                   </mat-form-field>
                 </div>
                 <div class="col-1">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Invoice No.</mat-label>
-                    <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" tabindex="26"
-                      />
+                    <input matInput placeholder="Invoice No." formControlName="vendor_invoice_no" tabindex="26" />
                   </mat-form-field>
                 </div>
               </div>
