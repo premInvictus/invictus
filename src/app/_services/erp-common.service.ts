@@ -509,6 +509,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
 	}
 
+	getLastMessageRecord(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
+	}
+
 }
 
 

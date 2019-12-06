@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonAPIService, ErpCommonService } from 'src/app/_services';
+import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -19,7 +19,7 @@ export class MessagesComponent implements OnInit {
 	showComposeMessage = false;
 	searchForm: FormGroup;
 	displayedColumns: string[] = []
-	renderForm:any = {};
+	renderForm: any = {};
 	scheduleMessageData: any[] = [];
 	USER_ELEMENT_DATA: any[] = [];
 	selectedUserArr: any[] = [];
@@ -32,11 +32,11 @@ export class MessagesComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
-		private commonAPIService:CommonAPIService,
-		private commonErpService: ErpCommonService,
+		private commonAPIService: CommonAPIService,
+		private erpCommonService: ErpCommonService,
 		private router: Router,
 		private dialog: MatDialog
-	) { 
+	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 	}
 
@@ -66,17 +66,17 @@ export class MessagesComponent implements OnInit {
 		this.scheduleMessageData = [];
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
-			'no',		
+			// 'no',
 			'schedule_date',
 			'subject',
-			'attachment',
+			// 'attachment',
 			'send_by',
-			'action'
+			// 'action'
 		];
-		var inputJson = {'$or': [ { 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, {'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id']} ]};
-		 //{'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
+		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
+		var inputJson = { '$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
 		console.log('inputJson--', inputJson);
-		this.commonErpService.getMessage(inputJson).subscribe((result: any) => {
+		this.erpCommonService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
 				this.prepareDataSource();
@@ -104,16 +104,16 @@ export class MessagesComponent implements OnInit {
 			}
 			tempObj['send_by'] = this.scheduleMessageData[i]['msg_created_by'] ? this.scheduleMessageData[i]['msg_created_by']['login_name'] : '';
 			tempObj['attachment'] = this.scheduleMessageData[i]['msg_attachment'] ? this.scheduleMessageData[i]['msg_attachment'] : '';
-
-			tempObj['status'] = this.scheduleMessageData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleMessageData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Failed';
-			tempObj['receiver_contact'] = this.scheduleMessageData[i]['not_receiver_contact'];
+			tempObj['status'] = this.scheduleMessageData[i]['status']['status_name'];
+			tempObj['receiver_contact'] = this.scheduleMessageData[i]['msg_to'];
 			tempObj['tpl_id'] = this.scheduleMessageData[i]['msg_template_id'];
 			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];
 			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
 			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
 			tempObj['msg_type'] = this.scheduleMessageData[i]['msg_type'] ? this.scheduleMessageData[i]['msg_type'] : '';
 			tempObj['action'] = this.scheduleMessageData[i];
-			
+			tempObj['msg_status'] = this.scheduleMessageData[i]['msg_status'] && this.scheduleMessageData[i]['msg_status'] && this.scheduleMessageData[i]['msg_status']['status_name'] ? this.scheduleMessageData[i]['msg_status']['status_name'] : '';
+
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
@@ -148,7 +148,7 @@ export class MessagesComponent implements OnInit {
 		}
 	}
 
-	
+
 
 
 	applyFilterUser(filterValue: string) {
@@ -159,12 +159,12 @@ export class MessagesComponent implements OnInit {
 	editMessage(element) {
 		var messageType = element.messageType;
 		element.messageType = messageType;
-		this.renderForm = {addMode:false, editMode:true, formData: element, viewMode : false};
+		this.renderForm = { addMode: false, editMode: true, formData: element, viewMode: false };
 		this.showComposeMessage = true;
 	}
 
 	deleteMessageFunc(element) {
-		this.commonErpService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
+		this.erpCommonService.updateMessage({ 'msg_id': element.msg_id, 'msg_status': { status_id: '5', status_name: 'delete' } }).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
 				this.getMessages();
@@ -173,7 +173,7 @@ export class MessagesComponent implements OnInit {
 			}
 		});
 
-	} 
+	}
 
 	getMessage() {
 		this.getMessages();
@@ -182,8 +182,8 @@ export class MessagesComponent implements OnInit {
 	composeMessage() {
 		this.showComposeMessage = true;
 		var messageType = 'C';
-		this.renderForm = {addMode:true, editMode:false, messageType: messageType, formData:'', viewMode : false,};
-		
+		this.renderForm = { addMode: true, editMode: false, messageType: messageType, formData: '', viewMode: false, };
+
 	}
 
 	resetComposeMessage(messageType) {
@@ -192,13 +192,13 @@ export class MessagesComponent implements OnInit {
 		this.showViewMessage = false;
 		// }
 		this.getMessages();
-		
+
 	}
 
 	previewImage(imgArray, index) {
 		var updatedImageArr = [];
-		for (var i=0; i<imgArray.length;i++) {
-			updatedImageArr.push({file_url : imgArray[i]['imgUrl'], file_name : imgArray[i]['imgName'] })
+		for (var i = 0; i < imgArray.length; i++) {
+			updatedImageArr.push({ file_url: imgArray[i]['imgUrl'], file_name: imgArray[i]['imgName'] })
 		}
 
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
@@ -212,16 +212,16 @@ export class MessagesComponent implements OnInit {
 	}
 
 	searchOk(event) {
-	
+
 	}
 
 	deleteCancel() {
-		
+
 	}
 
 	viewMessage(element) {
 		this.showViewMessage = !this.showViewMessage;
-		this.renderForm = {addMode:false, editMode:false, messageType: element.msg_type, formData:element, viewMode : false,};
+		this.renderForm = { addMode: false, editMode: false, messageType: element.msg_type, formData: element, viewMode: false, };
 
 	}
 }

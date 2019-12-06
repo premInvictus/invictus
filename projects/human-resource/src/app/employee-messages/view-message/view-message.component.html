@@ -38,16 +38,16 @@
             <mat-card class="mat-card" style="height: 60px;margin:0;padding: 0;">
                 <div class="accordian-header-controls">
                     <div class="back">
-                        <i class="fas fa-arrow-left" (click)="back()"></i>
+                        <i class="fas fa-arrow-left" (click)="back()" style="cursor:pointer"></i>
                     </div>
-                    <div class="accordian-pagination-controls" *ngIf="messagesData.length > 0">
+                    <!-- <div class="accordian-pagination-controls" *ngIf="messagesData.length > 0">
                         <mat-paginator #paginator [length]="messagesData.length" [pageIndex]="0" [pageSize]="10">
                         </mat-paginator>
-                    </div>
+                    </div> -->
                 </div>
             </mat-card>
             <mat-accordion displayMode="flat" multi class="mat-table">
-                <mat-expansion-panel *ngFor="let item of messagesData; let i= index;">
+                <mat-expansion-panel *ngFor="let item of messagesData; let i= index;" (opened)="readMessage(item)">
                     <mat-expansion-panel-header class="mat-row">
                         <div class="message-header">
                             <div class="circle-thumbnail">
@@ -67,7 +67,13 @@
                                             </span>
                                         
                                     </span> -->
-                                    <span>{{item?.msg_created_by?.login_name}}</span>
+                                    <span *ngIf="item?.msg_status && item?.msg_status?.status_name === 'unread'">
+                                        <b><span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span></b>
+                                    </span>
+                                    <span *ngIf="item?.msg_status && item?.msg_status?.status_name !== 'unread'">
+                                        <span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span>
+                                    </span>
+                                    
                                     <!-- 12458-Gaurav Kumar , X-A -->
                                 </span> <br>
                                 <span class="profile-to-detail">To:
@@ -258,11 +264,11 @@
                         </div>
                         <div class="message-action-buttons">
                             <button mat-raised-button class="btn-success btn-consolidate btn-spacer"
-                                (click)="composeMessage()" *ngIf="getPermission()">Approve</button>
+                                (click)="approveMessage(item)" *ngIf="getPermission(item) && item?.status?.status_name === 'pending'">Approve</button>
                             <button mat-raised-button class="btn-danger btn-consolidate btn-spacer"
-                                (click)="composeMessage()" *ngIf="getPermission()">Reject</button>
+                                (click)="rejectMessage(item)" *ngIf="getPermission(item)">Reject</button>
                             <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="composeMessage()" *ngIf="getPermission()">Resolve</button>
+                                (click)="resolveMessage(item)" *ngIf="getPermission(item)">Resolve</button>
                             <button mat-raised-button class="btn-basic btn-consolidate btn-spacer" style="margin-left:10px;" 
                                 (click)="showReplyBox(i)"
                                 *ngIf="item?.msg_type === 'C' && !(item?.showReplyBox)">Reply</button>
