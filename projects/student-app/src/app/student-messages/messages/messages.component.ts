@@ -74,7 +74,7 @@ export class MessagesComponent implements OnInit {
 			// 'action'
 		];
 		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
-		var inputJson = { '$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
+		var inputJson = { 'status.status_name' : 'approved','$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
 		console.log('inputJson--', inputJson);
 		this.erpCommonService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
