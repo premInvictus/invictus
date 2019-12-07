@@ -135,7 +135,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							srno: pos,
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
-							emp_designation: item.emp_designation_detail.des_name,
+							emp_designation: item.emp_designation_detail.name,
 							emp_bol: total_leave_closing_balance,
 							emp_present: no_of_days,
 							emp_balance_leaves: curr_total_leave_closing_balance,

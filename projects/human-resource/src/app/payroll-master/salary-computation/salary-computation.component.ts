@@ -396,8 +396,8 @@ export class SalaryComputationComponent implements OnInit {
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_salary_compute_month_id: this.searchForm.value.month_id,
-							emp_designation: item.emp_designation_detail.des_name,
-							emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '',
+							emp_designation: item.emp_designation_detail.name,
+							emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name : '',
 							emp_salary_structure: item.emp_salary_detail.emp_salary_structure,
 							emp_salary_heads: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_salary_heads : [],
 							emp_allowances: '',
@@ -434,8 +434,8 @@ export class SalaryComputationComponent implements OnInit {
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
 							emp_salary_compute_month_id: this.searchForm.value.month_id,
-							emp_designation: item.emp_designation_detail.des_name,
-							emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '',
+							emp_designation: item.emp_designation_detail.name,
+							emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name : '',
 							emp_salary_structure: item.emp_salary_detail.emp_salary_structure,
 							emp_salary_heads: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_salary_heads : [],
 							emp_allowances: '',
@@ -901,7 +901,7 @@ export class SalaryComputationComponent implements OnInit {
 							} else {
 								editableStatus = false;
 							}
-		
+		 
 		
 		
 							if (editableStatus) {
@@ -922,8 +922,8 @@ export class SalaryComputationComponent implements OnInit {
 									emp_id: item.emp_id,
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
-									emp_designation: item.emp_designation_detail.des_name,
-									emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '',
+									emp_designation: item.emp_designation_detail.name,
+									emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name : '',
 									emp_salary_structure: item.emp_salary_detail.emp_salary_structure,
 									emp_salary_heads: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_salary_heads : [],
 									emp_allowances: '',
@@ -960,8 +960,8 @@ export class SalaryComputationComponent implements OnInit {
 									emp_id: item.emp_id,
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
-									emp_designation: item.emp_designation_detail.des_name,
-									emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '',
+									emp_designation: item.emp_designation_detail.name,
+									emp_pay_scale: item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name : '',
 									emp_salary_structure: item.emp_salary_detail.emp_salary_structure,
 									emp_salary_heads: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_salary_heads : [],
 									emp_allowances: '',

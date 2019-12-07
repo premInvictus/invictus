@@ -47,7 +47,7 @@ export class EmployeeLeaveComponent implements OnInit {
           var dataJson = {
             srno: pos,
             leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
-            leave_type: item.leave_type.leave_type_name,
+            leave_type: item.leave_type.leave_name,
             leave_no_of_days: leave_request_schedule_data.length,
             status: 'Pending',
             leave_reason: item.leave_reason,
