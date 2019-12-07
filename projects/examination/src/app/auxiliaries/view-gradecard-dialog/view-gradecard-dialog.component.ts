@@ -342,47 +342,67 @@ export class ViewGradecardDialogComponent implements OnInit {
     return Number.parseFloat(value.toFixed(2));
   }
   getPassResult(term) {
-    const temp: any[] = [];
+    let temp: any[] = [];
     this.gradePerTermOnScholastic.forEach(element => {
-      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
+      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && Number(e.term) === Number(element.term) && e.grade === element.grade && Number(element.term) === Number(term));
       if (tindex === -1) {
         temp.push(element);
       }
     });
     let total = 0;
+    temp = temp.filter((thing, index, self) => {
+      const _thing = JSON.stringify(thing);
+      return index === self.findIndex((t) => {
+        return JSON.stringify(t) === _thing
+      })
+    })
     for (const item of temp) {
-      total = total + item.grade;
+      if(item.term === term) {
+        total = total + item.grade;
+      }
     }
     return Math.round(total / temp.length) > 32 ? 'Pass' : 'Fail';
 
   }
   getPassTotalPercentage(term) {
-    const temp: any[] = [];
+    let temp: any[] = [];
+    //console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
     this.gradePerTermOnScholastic.forEach(element => {
-      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
+      const tindex = temp.findIndex(e => e.sub_id === element.sub_id && Number(e.term) === Number(element.term) && e.grade === element.grade && Number(element.term) === Number(term));
       if (tindex === -1) {
         temp.push(element);
       }
     });
     let total = 0;
     let totalmainsubject = 0;
+    temp = temp.filter((thing, index, self) => {
+      const _thing = JSON.stringify(thing);
+      return index === self.findIndex((t) => {
+        return JSON.stringify(t) === _thing
+      })
+    })
+    console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
+    console.log('term temp', temp);
     for (const item of temp) {
-      const currentSub = this.subjectArray.find(e => e.sub_id === item.sub_id);
-      if(currentSub.ess_additional === '0') {
-        total = total + item.grade;
-        totalmainsubject++;
+      if(item.term === term) {
+        const currentSub = this.subjectArray.find(e => e.sub_id === item.sub_id);
+        if(currentSub.ess_additional === '0' && currentSub.sub_parent_id === '0') {
+          total = total + item.grade;
+          totalmainsubject++;
+        }
       }
     }
-    console.log('temp', temp);
-    console.log('total obtainded percentage', total);
-    console.log('totalmainsubject', totalmainsubject);
+    //console.log('temp', temp);
+    //console.log('total obtainded percentage', total);
+    //console.log('totalmainsubject', totalmainsubject);
     return this.getTwoDecimalValue(total / totalmainsubject);
 
   }
   getTotalMainSubject() {
     let totalmainsubject = 0;
+    console.log('in getTotalMainSubject subjectArray',this.subjectArray)
     this.subjectArray.forEach(e => {
-      if(e.ess_additional === '0') {
+      if(e.ess_additional === '0' && e.sub_parent_id === '0') {
         totalmainsubject++;
       }
     })
@@ -402,6 +422,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     });
     return this.getTwoDecimalValue(gradeMarks);
   }
+
   calculateGrade(sub_id, term) {
     let gradeMarks = 0;
     this.sexamArray.forEach(element => {
@@ -409,7 +430,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     });
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
     const grade = this.getTwoDecimalValue(gradeMarks);
-    if (Number(term) === Number(this.data.param.eme_term_id)) {
+    if (Number(term) <= Number(this.data.param.eme_term_id)) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
         sub_id: sub_id,
@@ -545,6 +566,7 @@ export class ViewGradecardDialogComponent implements OnInit {
               }
               element.childSub = childSub;
               this.subjectArray.push(element);
+              console.log('this.subjectArray', this.subjectArray);
             }
           });
         }
@@ -562,9 +584,9 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     });
   }
-  getSubjectsByClass() {
+  /*getSubjectsByClass() {
     this.subjectArray = [];
-    this.smartService.getSubjectsByClass({ class_id: this.data.class_id }).subscribe((result: any) => {
+    this.smartService.getSubjectsByClass({ class_id: this.data.class_id, sub_isexam: '1' }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const temp: any[] = result.data;
         if (this.data.ect_exam_type === '2') {
@@ -598,10 +620,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.sflag = true;
         this.getExamDetails();
       } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
-  }
+  }*/
 
   getSession() {
     this.sisService.getSession().subscribe((result: any) => {
