@@ -141,6 +141,8 @@ export class StudentDashboardComponent implements OnInit {
 							this.secName = resutl1.data[0].sec_name;
 							this.dob = resutl1.data[0].au_dob;
 							this.phoneNumber = resutl1.data[0].au_mobile;
+							this.currentUser['class_id'] = resutl1.data[0] && resutl1.data[0]['class_id'] ? resutl1.data[0]['class_id'] : '';
+							localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
 						}
 					})
 					this.getOverallPerformance();

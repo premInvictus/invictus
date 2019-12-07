@@ -50,6 +50,9 @@ import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-s
 import { BookDetailComponent } from './book-detail/book-detail.component';
 import { BookReserveRequestConfirmationComponent } from './book-reserve-request-confirmation/book-reserve-request-confirmation.component';
 import { BookDetailsModalComponent } from './book-details-modal/book-details-modal.component';
+import { ComposeMessageComponent } from './compose-message/compose-message.component';
+import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
+import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -106,7 +109,10 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 		AdvancedSearchModalComponent,
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent,
+		DeleteModalComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -150,12 +156,20 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 		AdvancedSearchModalComponent,
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent,
+		DeleteModalComponent,
+		CKEditorModule
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
 		BookReserveRequestConfirmationComponent,
-		BookDetailsModalComponent]
+		BookDetailsModalComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent,
+		DeleteModalComponent
+	]
 })
 export class SharedModuleModule {
 	constructor() {
