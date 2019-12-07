@@ -64,15 +64,7 @@ export class MessagesComponent implements OnInit {
 
 	getMessages() {
 		this.scheduleMessageData = [];
-		this.USER_ELEMENT_DATA = [];
-		this.displayedColumns = [
-			// 'no',
-			'schedule_date',
-			'subject',
-			// 'attachment',
-			'send_by',
-			// 'action'
-		];
+		
 		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
 		var inputJson = { '$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
 		console.log('inputJson--', inputJson);
@@ -85,6 +77,15 @@ export class MessagesComponent implements OnInit {
 	}
 
 	prepareDataSource() {
+		this.USER_ELEMENT_DATA = [];
+		this.displayedColumns = [
+			// 'no',
+			'schedule_date',
+			'subject',
+			// 'attachment',
+			'send_by',
+			// 'action'
+		];
 		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
@@ -191,6 +192,9 @@ export class MessagesComponent implements OnInit {
 		this.showComposeMessage = false;
 		this.showViewMessage = false;
 		// }
+		this.searchForm.patchValue({
+			'search' : messageType
+		});
 		this.getMessages();
 
 	}
@@ -222,6 +226,41 @@ export class MessagesComponent implements OnInit {
 	viewMessage(element) {
 		this.showViewMessage = !this.showViewMessage;
 		this.renderForm = { addMode: false, editMode: false, messageType: element.msg_type, formData: element, viewMode: false, };
+
+	}
+
+	searchMessage(event) {
+		var filterValue = '';
+		this.scheduleMessageData = [];
+		this.USER_ELEMENT_DATA = [];
+		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+		
+		this.displayedColumns = [
+			// 'no',
+			'schedule_date',
+			'subject',
+			// 'attachment',
+			'send_by',
+			// 'action'
+		];
+		if (event && event.target && event.target.value) {
+			filterValue = event.target.value;
+		} else {
+			filterValue = this.searchForm.value.search;
+		}
+		if (filterValue) {
+			var filterJson = { filter_value: filterValue };
+			this.commonAPIService.getMessage(filterJson).subscribe((result: any) => {
+				if (result && result.data && result.data[0]) {
+					this.showViewMessage = false;
+					this.scheduleMessageData = result.data;
+					this.prepareDataSource();
+				}
+			});
+		} else {
+			this.showViewMessage = false;
+			this.getMessage();
+		}
 
 	}
 }

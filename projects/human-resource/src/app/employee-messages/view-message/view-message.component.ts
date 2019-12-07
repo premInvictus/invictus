@@ -45,6 +45,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	showReply = false;
 	attachmentArray: any[] = [];
 	currentRowIndex = 0;
+	filterValue = '';
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -520,7 +521,8 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	back() {
-		this.backToBroadcast.emit('');
+		var filterValue = this.filterValue ?  this.filterValue : '';
+		this.backToBroadcast.emit(filterValue);
 	}
 
 	getPermission(item) {
@@ -662,5 +664,15 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 
 			});
 		}
+	}
+
+	searchMessage(event) {
+		var filterValue = '';
+		if (event && event.target && event.target.value) {
+			this.filterValue = event.target.value;
+		} else {
+			this.filterValue = this.searchForm.value.search;
+		}
+		this.back();
 	}
 }

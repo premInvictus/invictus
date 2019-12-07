@@ -224,5 +224,40 @@ export class MessagesComponent implements OnInit {
 		this.renderForm = { addMode: false, editMode: false, messageType: element.msg_type, formData: element, viewMode: false, };
 
 	}
+
+	searchMessage(event) {
+		var filterValue = '';
+		this.scheduleMessageData = [];
+		this.USER_ELEMENT_DATA = [];
+		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+		
+		this.displayedColumns = [
+			// 'no',
+			'schedule_date',
+			'subject',
+			// 'attachment',
+			'send_by',
+			// 'action'
+		];
+		if (event && event.target && event.target.value) {
+			filterValue = event.target.value;
+		} else {
+			filterValue = this.searchForm.value.search;
+		}
+		if (filterValue) {
+			var filterJson = { filter_value: filterValue };
+			this.erpCommonService.getMessage(filterJson).subscribe((result: any) => {
+				if (result && result.data && result.data[0]) {
+					this.showViewMessage = false;
+					this.scheduleMessageData = result.data;
+					this.prepareDataSource();
+				}
+			});
+		} else {
+			this.showViewMessage = false;
+			this.getMessage();
+		}
+
+	}
 }
 
