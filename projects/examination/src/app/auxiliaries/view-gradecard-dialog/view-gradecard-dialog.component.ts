@@ -358,6 +358,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getPassTotalPercentage(term) {
     const temp: any[] = [];
+    console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
     this.gradePerTermOnScholastic.forEach(element => {
       const tindex = temp.findIndex(e => e.sub_id === element.sub_id && e.term === element.term && e.grade === element.grade);
       if (tindex === -1) {
@@ -373,9 +374,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         totalmainsubject++;
       }
     }
-    console.log('temp', temp);
-    console.log('total obtainded percentage', total);
-    console.log('totalmainsubject', totalmainsubject);
+    //console.log('temp', temp);
+    //console.log('total obtainded percentage', total);
+    //console.log('totalmainsubject', totalmainsubject);
     return this.getTwoDecimalValue(total / totalmainsubject);
 
   }

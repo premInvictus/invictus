@@ -108,5 +108,7 @@
     "../projects/miscellaneous/src/app/communication/communication.module.ts",
     "../projects/miscellaneous/src/app/miscusertype/miscusertype.module.ts",
     "../projects/teacherapp/src/app/teacher-messages/teacher-messages.module.ts",
+    "../projects/inventory/src/app/inventory-shared/inventory-shared.module.ts",
+    "../projects/inventory/src/app/inventoryusertype/inventoryusertype.module.ts"
   ]
 }

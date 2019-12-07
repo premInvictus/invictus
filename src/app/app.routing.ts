@@ -12,6 +12,7 @@ import { TeacherAppSharedModule } from 'projects/teacherapp/src/app/app.module';
 import { HrSharedAppModule } from 'projects/human-resource/src/app/app.module';
 import { LibrarySharedAppModule } from 'projects/library-management/src/app/app.module';
 import { MiscellaneousSharedAppModule } from 'projects/miscellaneous/src/app/app.module';
+import { InventorySharedAppModule } from 'projects/inventory/src/app/app.module';
 const appRoutes: Routes = [
 		{path: 'login', loadChildren: 'src/app/login/login.module#LoginModule'},
 		{path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -26,6 +27,7 @@ const appRoutes: Routes = [
 		{path: 'admin', canActivate: [AuthGuard], loadChildren: 'projects/admin-app/src/app/app.module#AdminAppSharedModule'},
 		{path: 'hr', canActivate: [AuthGuard], loadChildren: 'projects/human-resource/src/app/app.module#HrSharedAppModule'},
 		{path: 'misc', canActivate: [AuthGuard], loadChildren: 'projects/miscellaneous/src/app/app.module#MiscellaneousSharedAppModule'},
+		{path: 'inventory', canActivate: [AuthGuard], loadChildren: 'projects/inventory/src/app/app.module#InventorySharedAppModule'},
 		{ path: '**', redirectTo: 'login'}
 ];
 
@@ -41,7 +43,8 @@ const appRoutes: Routes = [
 			TeacherAppSharedModule.forRoot(),
 			HrSharedAppModule.forRoot(),
 			LibrarySharedAppModule.forRoot(),
-			MiscellaneousSharedAppModule.forRoot()
+			MiscellaneousSharedAppModule.forRoot(),
+			InventorySharedAppModule.forRoot()
 		],
 	})
 	export class AppRoutingModule { }
