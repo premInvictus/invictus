@@ -516,10 +516,10 @@ export class EmpDetailsReportComponent implements OnInit {
           obj['id'] = (index + 1);
           obj['srno'] = (index + 1);
           obj['full_name'] = item.emp_name ? new CapitalizePipe().transform(item.emp_name) : '-';
-          obj['designation'] = item.emp_designation_detail ? new CapitalizePipe().transform(item.emp_designation_detail.des_name) : '-';
+          obj['designation'] = item.emp_designation_detail ? new CapitalizePipe().transform(item.emp_designation_detail.name) : '-';
           obj['employee_type'] = item.emp_category_detail ? new CapitalizePipe().transform(item.emp_category_detail.cat_name) : '-';
           obj['department'] = item.emp_department_detail ? new CapitalizePipe().transform(item.emp_department_detail.dpt_name) : '-';
-          obj['wing'] = item.emp_wing_detail ? new CapitalizePipe().transform(item.emp_wing_detail.wing_name) : '-';
+          obj['wing'] = item.emp_wing_detail ? new CapitalizePipe().transform(item.emp_wing_detail.name) : '-';
           obj['pri_mobile'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.primary_mobile_no : '-';
           obj['sec_mobile'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.secondary_mobile_no : '-';
           obj['whatsup_no'] = item.emp_personal_detail.contact_detail ? item.emp_personal_detail.contact_detail.whatsup_no : '-';

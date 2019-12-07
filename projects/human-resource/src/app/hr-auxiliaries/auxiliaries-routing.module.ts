@@ -7,7 +7,7 @@ import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 
 const routes: Routes = [
   { path: 'admin-return', component: AdminReturnComponent },
-  { path: 'mark-attendance', component: HrEmpMarkAttendanceComponent },
+  { path: 'mark-attendence', component: HrEmpMarkAttendanceComponent },
   { path: 'id-card-printing', component: IdCardPrintingComponent },
   { path: 'bulk-updates', component: BulkUpdatesComponent },
 ];
