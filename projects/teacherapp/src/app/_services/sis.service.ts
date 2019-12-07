@@ -111,4 +111,12 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getUser', param);
 	}
+	getClass(value) {
+		const param: any = {};
+		if (value.role_id === '3' || value.role_id === '1') {
+			param.login_id = value.login_id;
+		}
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
+	}
 }

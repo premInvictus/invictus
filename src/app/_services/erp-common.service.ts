@@ -484,6 +484,36 @@ export class ErpCommonService {
 		return this.http.post(environment.apiAxiomUrl + '/users/reset_password', value);
 	}
 
+	insertMessage(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/insert', value);
+	}
+
+	updateMessage(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/update', value);
+	}
+
+	getMessage(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
+	}
+
+	uploadDocuments(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
+	}
+	
+	getMasterStudentDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
+	}
+
+	getLastMessageRecord(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
+	}
+
 }
 
 

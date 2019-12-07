@@ -120,7 +120,7 @@ export class MyLeaveComponent implements OnInit {
 					var dataJson = {
 						srno: pos,
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
-						leave_type: item.leave_type.leave_type_name,
+						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
 						status: 'Pending',
 						leave_reason: item.leave_reason,
@@ -154,7 +154,7 @@ export class MyLeaveComponent implements OnInit {
 						emp_id: item.leave_emp_detail.emp_id,
 						emp_name: item.leave_emp_detail.emp_name,
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
-						leave_type: item.leave_type.leave_type_name,
+						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
 						status: 'Pending',
 						leave_reason: item.leave_reason,
@@ -335,7 +335,7 @@ export class MyLeaveComponent implements OnInit {
 					"attendance_detail": {
 						"emp_leave_approved": {
 							"leave_id": item.leave_type.leave_type_id,
-							"leave_name": item.leave_type.leave_type_name,
+							"leave_name": item.leave_type.leave_name,
 							"leave_credit_count": 1
 						},
 						"emp_leave_granted": 1

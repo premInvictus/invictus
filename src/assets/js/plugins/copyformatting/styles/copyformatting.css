@@ -35,7 +35,7 @@ html.cke_copyformatting_active {
 }
 
 .cke_screen_reader_only {
-	position: absolute;
+	/*position: absolute;*/
 	clip: rect(1px, 1px, 1px, 1px);
 	padding: 0;
 	border: 0;

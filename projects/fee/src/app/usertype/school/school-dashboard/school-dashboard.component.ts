@@ -145,7 +145,7 @@ export class SchoolDashboardComponent implements OnInit {
 					this.ClassWiseFeeOutstandingCalculation(xcategories, projectedSeries);
 				} else {
 					this.norecordflag = true;
-					this.common.showSuccessErrorMessage('No Record Found', 'error');
+					//this.common.showSuccessErrorMessage('No Record Found', 'error');
 				}
 			}
 		});
@@ -245,7 +245,7 @@ export class SchoolDashboardComponent implements OnInit {
 					this.FeeReceiptReportCalculation(this.totalcash,
 						this.totalcashatbank, this.totalcheque, this.totaldccard, this.totalimps, this.totalpgateway);
 				} else {
-					this.common.showSuccessErrorMessage('No Record Found', 'error');
+					//this.common.showSuccessErrorMessage('No Record Found', 'error');
 				}
 			} else {
 				this.common.showSuccessErrorMessage(result.message, 'error');
@@ -308,7 +308,7 @@ export class SchoolDashboardComponent implements OnInit {
 					this.FeeProjectionReportCalculation(xcategories, projectedSeries, receivedSeries);
 				} else {
 					this.norecordflag = true;
-					this.common.showSuccessErrorMessage('No Record Found', 'error');
+					//this.common.showSuccessErrorMessage('No Record Found', 'error');
 				}
 			} else {
 				this.common.showSuccessErrorMessage(result.message, 'error');

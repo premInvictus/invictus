@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -47,6 +47,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService,
+		private smartService: SmartService,
 		private dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -98,6 +99,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						email: this.formData['user_data'][i]['email'],
 						au_full_name: this.formData['user_data'][i]['au_full_name'],
 						mobile: this.formData['user_data'][i]['mobile'],
+						au_admission_no : this.formData['user_data'][i]['au_admission_no']
 					};
 					this.selectedUserArr.push(inputJson);
 				}
@@ -131,20 +133,20 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	getClass() {
-		// this.sisService.getClass({}).subscribe((result: any) => {
-		// 	if (result && result.data && result.data[0]) {
-		// 		var result = result.data;
-		// 		for (var i = 0; i < result.length; i++) {
-		// 			var inputJson = {
-		// 				class_id: result[i]['class_id'],
-		// 				class_name: result[i]['class_name'],
-		// 				checked: false,
-		// 			}
-		// 			this.classDataArr.push(inputJson);
-		// 		}
-		// 		this.showClass = true;
-		// 	}
-		// });
+		this.smartService.getClassByTeacherId({ teacher_id: this.currentUser.login_id }).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				var result = result.data;
+				for (var i = 0; i < result.length; i++) {
+					var inputJson = {
+						class_id: result[i]['class_id'],
+						class_name: result[i]['class_name'],
+						checked: false,
+					}
+					this.classDataArr.push(inputJson);
+				}
+				this.showClass = true;
+			}
+		});
 	}
 
 	generateUserList() {
@@ -173,6 +175,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no : result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -202,6 +205,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no : result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -228,7 +232,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
-							em_admission_no: result.data[i]['em_admission_no'],
+							au_admission_no: result.data[i]['em_admission_no'],
 							au_role_id: '4',
 							checked: false,
 						}
@@ -367,22 +371,38 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.showUser = false;
 		this.showClass = false;
 		for (let i = 0; i < this.userDataArr.length; i++) {
-			if (this.userDataArr[i]['checked']) {
-				var inputJson = {
-					login_id: this.userDataArr[i]['au_login_id'],
-					class_id: this.userDataArr[i]['class_id'],
-					sec_id: this.userDataArr[i]['sec_id'],
-					class_name: this.userDataArr[i]['class_name'],
-					sec_name: this.userDataArr[i]['sec_name'],
-					email: this.userDataArr[i]['au_email'],
-					au_full_name: this.userDataArr[i]['au_full_name'],
-					mobile: this.userDataArr[i]['au_mobile'],
-					role_id: this.userDataArr[i]['au_role_id'],
-				};
-				this.selectedUserArr.push(inputJson);
+			if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
+				if (this.userDataArr[i]['checked']) {
+					var inputJson = {
+						login_id: this.userDataArr[i]['au_login_id'],
+						class_id: this.userDataArr[i]['class_id'],
+						sec_id: this.userDataArr[i]['sec_id'],
+						class_name: this.userDataArr[i]['class_name'],
+						sec_name: this.userDataArr[i]['sec_name'],
+						email: this.userDataArr[i]['au_email'],
+						au_full_name: this.userDataArr[i]['au_full_name'],
+						mobile: this.userDataArr[i]['au_mobile'],
+						role_id: this.userDataArr[i]['au_role_id'],
+						au_admission_no : this.userDataArr[i]['au_admission_no']
+					};
+					this.selectedUserArr.push(inputJson);
+				}
+			}
+			
+		}
 
+		this.showUserContextMenu = false;
+	}
+
+	checkAlreadyExists(item) {
+		var flag = false;
+		for (var i=0; i<this.selectedUserArr.length;i++) {
+			if(this.selectedUserArr[i]['login_id'] === item.au_login_id) {
+				flag = true;
+				break;
 			}
 		}
+		return flag;
 	}
 
 	deleteUser(i) {
@@ -404,8 +424,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"email": this.selectedUserArr[i]['email'],
 					"mobile": this.selectedUserArr[i]['mobile'],
 					"role_id": this.selectedUserArr[i]['role_id'],
-					"msg_status": { "status_id": "1", "status_name": "pending" },
-					"msg_sent_date_time": ""
+					"msg_status": { "status_id": 1, "status_name": "unread" },
+					"msg_sent_date_time": new Date()
 				}
 				msgToArr.push(userJson);
 			}
@@ -419,6 +439,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
+				"msg_status": { "status_id": 1, "status_name": "unread" },
 				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []

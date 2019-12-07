@@ -1,0 +1,132 @@
+<ng-template #searchModal>
+  <div class="row remove-modal-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="dialog-title-container ">
+        <span class="font-size-24 font-white">Advanced Search</span>
+        <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+          cancel
+        </i>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <ng-container *ngFor="let form of formGroupArray;let i = index;">
+        <form [formGroup]="formGroupArray[i].formGroup">
+          <div [class]="i == 0 ? 'row margin-top-30' : 'row'">
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Choose your filter..</mat-label>
+                <mat-select formControlName="filter_type" (selectionChange)="setPlaceHolder($event.value, i)">
+                  <mat-option *ngFor="let item of filterArray" [value]="item.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-7">
+              <div>
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>
+                        {{placeholder[i] ? placeholder[i] : 'Select a filter type'}}</mat-label>
+                      <input matInput [placeholder]="placeholder[i] ? placeholder[i] : 'Select a filter type'"
+                        [type]="fieldType[i]" formControlName="filter_value"
+                        [readonly]="!(formGroupArray[i].formGroup.value.filter_type)" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="addNewFilter(i);$event.stopPropagation()"
+                    [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
+                      <span style="color:#fff !important">Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center" *ngIf="i !== 0">
+              <div class="margin-top-15" (click)="deleteForm(i)">
+                <i class="fas fa-trash font-size-20 font-color-red"></i>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <div class="float-left">
+            <span class="font-size-16"><b>General Filters</b></span>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="generalFilterForm">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Book Status </mat-label>
+              <mat-select formControlName="reserv_status" multiple>
+                <mat-option *ngFor="let item of statusArray" placeholder="Book Status" [value]="item.type_id">
+                  {{item.type_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Genre </mat-label>
+              <mat-select formControlName="genre.genre_name" multiple>
+                <mat-option placeholder="Genre" *ngFor="let item of genreArray" [value]="item.genre_name">
+                  {{item.genre_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Language </mat-label>
+              <mat-select formControlName="language_details.lang_code" multiple>
+                <mat-option placeholder="Languages" *ngFor="let item of languageArray" [value]="item.lang_code">
+                  {{item.lang_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Type </mat-label>
+              <mat-select formControlName="category_id" multiple>
+                <mat-option *ngFor="let item of booktypeArray" [value]="item.type_id" placeholder="Type">
+                  {{item.type_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Binding </mat-label>
+              <mat-select formControlName="type_id" multiple>
+                <mat-option *ngFor="let item of typeArray" [value]="item.type_id" placeholder="Binding">
+                  {{item.type_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Source </mat-label>
+                <mat-select formControlName="source" multiple>
+                  <mat-option *ngFor="let item of sourceArray" [value]="item.type_id" placeholder="Source">
+                    {{item.type_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+        </div>
+      </form>
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</ng-template>

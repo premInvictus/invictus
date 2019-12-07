@@ -190,7 +190,8 @@ export const MY_FORMATS = {
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
-		MessagesAdvancedSearchModalComponent
+		MessagesAdvancedSearchModalComponent,
+		CKEditorModule
 	],
 	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
 		ImageViewerComponent,

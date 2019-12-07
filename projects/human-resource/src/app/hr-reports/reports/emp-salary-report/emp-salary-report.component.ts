@@ -663,8 +663,8 @@ export class EmpSalaryReportComponent implements OnInit {
           obj['bnk_acc_no'] = item.emp_salary_detail.emp_bank_detail[0] && item.emp_salary_detail.emp_bank_detail[0].bnk_detail ? item.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '';
           obj['incremental_month'] = item.emp_salary_detail.emp_incremental_month_detail ? item.emp_salary_detail.emp_incremental_month_detail.month_data : '';
           obj['contact_period'] = item.emp_salary_detail.emp_job_detail ? item.emp_salary_detail.emp_job_detail.contact_period : '';
-          obj['category_1'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_1 ? item.emp_salary_detail.emp_job_detail.category_1.cat_name : '';
-          obj['category_2'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_2 ? item.emp_salary_detail.emp_job_detail.category_2.cat_name : '';
+          obj['category_1'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_1 ? item.emp_salary_detail.emp_job_detail.category_1.name : '';
+          obj['category_2'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_2 ? item.emp_salary_detail.emp_job_detail.category_2.name : '';
           obj['supervisor'] = item.emp_supervisor ? item.emp_supervisor.name : '';
           obj['emp_pay_scale'] = item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '';
           for (const item of this.empShacolumns) {
