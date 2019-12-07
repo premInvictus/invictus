@@ -5,7 +5,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
-import { ckconfig } from './../../shared-module/config/ckeditorconfig';
+import { ckconfig } from '../../shared-module/config/ckeditorconfig';
 @Component({
 	selector: 'app-view-message',
 	templateUrl: './view-message.component.html',
@@ -39,7 +39,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	showUserContextMenu = false;
 	showComposeMessage = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
-	messagesData :any[] = [];
+	messagesData: any[] = [];
 	renderForm = {};
 	ckconfig: any;
 	showReply = false;
@@ -63,28 +63,14 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-		
-		console.log('this.currentUser--', this.currentUser);
-		console.log('reRenderForm--', this.reRenderForm);
 		this.reRenderForm.formData.action['showReplyBox'] = false;
 		this.messagesData.push(this.reRenderForm.formData.action);
-
 		if (this.reRenderForm.formData.action.msg_thread && this.reRenderForm.formData.action.msg_thread.length > 0) {
-			for (var i=0; i< this.reRenderForm.formData.action.msg_thread.length; i++) {
-				this.reRenderForm.formData.action.msg_thread[i]['showRepyBox'] = false;
+			for (var i = 0; i < this.reRenderForm.formData.action.msg_thread.length; i++) {
+				this.reRenderForm.formData.action.msg_thread[i]['showReplyBox'] = false;
 				this.messagesData.push(this.reRenderForm.formData.action.msg_thread[i]);
 			}
-			
 		}
-
-		console.log('this.messagesData--', this.messagesData);
-		// if (this.reRenderForm.editMode) {
-		// 	this.setFormData(this.reRenderForm.formData);
-		// } else if (this.reRenderForm.addMode) {
-		// 	//this.buildForm();
-		// }
-
 	}
 
 
@@ -156,20 +142,20 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	getClass() {
-		// this.sisService.getClass({}).subscribe((result: any) => {
-		// 	if (result && result.data && result.data[0]) {
-		// 		var result = result.data;
-		// 		for (var i = 0; i < result.length; i++) {
-		// 			var inputJson = {
-		// 				class_id: result[i]['class_id'],
-		// 				class_name: result[i]['class_name'],
-		// 				checked: false,
-		// 			}
-		// 			this.classDataArr.push(inputJson);
-		// 		}
-		// 		this.showClass = true;
-		// 	}
-		// });
+		this.erpCommonService.getClass({}).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				var result = result.data;
+				for (var i = 0; i < result.length; i++) {
+					var inputJson = {
+						class_id: result[i]['class_id'],
+						class_name: result[i]['class_name'],
+						checked: false,
+					}
+					this.classDataArr.push(inputJson);
+				}
+				this.showClass = true;
+			}
+		});
 	}
 
 	generateUserList() {
@@ -198,6 +184,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no: result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -227,6 +214,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no: result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -253,7 +241,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
-							em_admission_no: result.data[i]['em_admission_no'],
+							au_admission_no: result.data[i]['em_admission_no'],
 							au_role_id: '4',
 							checked: false,
 						}
@@ -445,7 +433,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
-				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
 			}
@@ -535,13 +523,18 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		this.backToBroadcast.emit('');
 	}
 
-	getPermission() {
-		return false;
+	getPermission(item) {
+		if (this.currentUser.role_id === '2' && item.msg_type === 'C') {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	composeMessage() {
 		this.showComposeMessage = !this.showComposeMessage;
-		this.renderForm = {addMode:true, editMode:false, messageType: 'C', formData:'', viewMode : false,};
+		this.renderForm = { addMode: true, editMode: false, messageType: 'C', formData: '', viewMode: false, };
 	}
 
 	resetComposeMessage() {
@@ -549,7 +542,6 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	showReplyBox(i) {
-		
 		this.messagesData[i]['showReplyBox'] = true;
 	}
 
@@ -557,40 +549,118 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 		this.messagesData[i]['showReplyBox'] = false;
 	}
 
-	replyMessage(item) {
-		console.log('item--', item);
-		var threadData = item.msg_thread.length > 0 ? item.msg_thread : [];
-		var msgThreadJson = {   
-					"msg_id" : item.msg_id,
-					"msg_from" : this.currentUser.login_id, 
-					"msg_to" : this.selectedUserArr,  
-					"msg_created_by" : {"login_id" : this.currentUser.login_id , "login_name" : this.currentUser.full_name},
-					"msg_subject" : 'Rep : '+item.msg_subject,
-					"msg_description" : this.messageForm.value.messageBody,
-					"msg_type" : "C",
-					"msg_status" : {"status_id" : "1" , "status_name" : "pending"},
-					"msg_attachment" : this.attachmentArray,
-					"status" : [{ "status_name" : "pending" , "created_by" : this.currentUser.login_id }],
-					"msg_thread" : [],
-					"msg_created_date" : new Date()					
-		};
+	replyMessage(item) {		
+		this.erpCommonService.getLastMessageRecord({}).subscribe((result: any) => {
+			if (result) {
+				console.log('item--', item, result);
+				if (this.reRenderForm.formData.action) {
+					delete item.showReplyBox;
+				}
+				//var threadData = item.msg_thread.length > 0 ? item.msg_thread : [];
+				var msgThreadJson = {
+					"msg_id": result,
+					"msg_from": this.currentUser.login_id,
+					"msg_to": this.selectedUserArr,
+					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
+					"msg_subject": 'Rep : ' + item.msg_subject,
+					"msg_description": this.messageForm.value.messageBody,
+					"msg_type": "C",
+					"msg_status": { "status_id": "1", "status_name": "unread" },
+					"msg_attachment": this.attachmentArray,
+					"status": { "status_id": "1", "status_name": "pending", "created_by": this.currentUser.login_id },
+					"msg_thread": [],
+					"msg_created_date": new Date(),
+					"is_replied" : true
+				};
+				this.reRenderForm.formData.action.msg_thread.push(msgThreadJson);
+				
+				//item.msg_thread = threadData;
+				item.msg_status = { "status_id": "1", "status_name": "unread" };
+				//this.reRenderForm.formData.action.msg_thread = threadData;
+				var replyJson = this.reRenderForm.formData.action;
 
-		threadData.push(msgThreadJson);
+				//console.log('replyJson--', replyJson);
+				
+				this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Message has been Replied Successfully', 'success');
+						this.back();
+						this.resetForm();
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Replying Message', 'error');
+					}
+				});
 
-		item.msg_thread = threadData;
-		var replyJson = item;
+			}
+		});
+	}
 
-		console.log('replyJson--', replyJson);
+	approveMessage(item) {
+		item.status = { status_id: '2', status_name: 'approved' };
+		if (this.reRenderForm.formData.action) {
+			delete item.showReplyBox;
+		}
+
+		var replyJson = this.reRenderForm.formData.action;
 
 		this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
 			if (result) {
-				this.commonAPIService.showSuccessErrorMessage('Message has been Replied Successfully', 'success');
+				this.commonAPIService.showSuccessErrorMessage('Message has been Approved Successfully', 'success');
 				this.back();
 				this.resetForm();
 			} else {
-				this.commonAPIService.showSuccessErrorMessage('Error While Replying Message', 'error');
+				this.commonAPIService.showSuccessErrorMessage('Error While Approving Message', 'error');
 			}
 		});
-		
+	}
+
+	resolveMessage(item) {
+		item.status = { status_id: '3', status_name: 'resolved' };
+		if (this.reRenderForm.formData.action) {
+			delete item.showReplyBox;
+		}
+
+		var replyJson = this.reRenderForm.formData.action;
+
+		this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
+			if (result) {
+				this.commonAPIService.showSuccessErrorMessage('Message has been Approved Successfully', 'success');
+				this.back();
+				this.resetForm();
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error While Approving Message', 'error');
+			}
+		});
+
+	}
+	rejectMessage(item) {
+		item.status = { status_id: '4', status_name: 'rejected' };
+		if (this.reRenderForm.formData.action) {
+			delete item.showReplyBox;
+		}
+
+		var replyJson = this.reRenderForm.formData.action;
+
+		this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
+			if (result) {
+				this.commonAPIService.showSuccessErrorMessage('Message has been Approved Successfully', 'success');
+				this.back();
+				this.resetForm();
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error While Approving Message', 'error');
+			}
+		});
+	}
+
+	readMessage(item) {
+		if (item && item.msg_status && item.msg_status && (item.msg_status['status_name'] === 'unread')) {
+			item.msg_status = { status_id: '2', status_name: 'read' };
+			delete this.reRenderForm.formData.action.showReplyBox;
+			var replyJson = this.reRenderForm.formData.action;
+			console.log('replyJson--', replyJson);
+			this.erpCommonService.updateMessage(replyJson).subscribe((result: any) => {
+
+			});
+		}
 	}
 }

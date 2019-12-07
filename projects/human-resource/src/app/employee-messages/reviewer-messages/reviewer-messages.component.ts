@@ -66,15 +66,14 @@ export class ReviewerMessagesComponent implements OnInit {
 		this.scheduleMessageData = [];
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
-			'no',		
+			// 'no',		
 			'schedule_date',
 			'subject',
-			'attachment',
+			// 'attachment',
 			'send_by',
-			'action'
+			// 'action'
 		];
 		var inputJson = {};
-		console.log('inputJson--', inputJson);
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.scheduleMessageData = result.data;
@@ -103,15 +102,15 @@ export class ReviewerMessagesComponent implements OnInit {
 			}
 			tempObj['send_by'] = this.scheduleMessageData[i]['msg_created_by'] ? this.scheduleMessageData[i]['msg_created_by']['login_name'] : '';
 			tempObj['attachment'] = this.scheduleMessageData[i]['msg_attachment'] ? this.scheduleMessageData[i]['msg_attachment'] : '';
-
-			tempObj['status'] = this.scheduleMessageData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleMessageData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Failed';
-			tempObj['receiver_contact'] = this.scheduleMessageData[i]['not_receiver_contact'];
+			tempObj['status'] = this.scheduleMessageData[i]['status']['status_name'];
+			tempObj['receiver_contact'] = this.scheduleMessageData[i]['msg_to'];
 			tempObj['tpl_id'] = this.scheduleMessageData[i]['msg_template_id'];
 			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];
 			tempObj['body'] = this.scheduleMessageData[i]['msg_description'] ? this.scheduleMessageData[i]['msg_description'] : '';
 			tempObj['user_data'] = this.scheduleMessageData[i]['msg_to'] ? this.scheduleMessageData[i]['msg_to'] : [];
 			tempObj['msg_type'] = this.scheduleMessageData[i]['msg_type'] ? this.scheduleMessageData[i]['msg_type'] : '';
 			tempObj['action'] =  this.scheduleMessageData[i];
+			tempObj['msg_status'] = this.scheduleMessageData[i]['msg_status'] && this.scheduleMessageData[i]['msg_status'] && this.scheduleMessageData[i]['msg_status']['status_name'] ? this.scheduleMessageData[i]['msg_status']['status_name'] : '' ;
 			
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;

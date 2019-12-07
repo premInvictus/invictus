@@ -55,6 +55,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getUser();
 	}
 
 	ngOnChanges() {
@@ -98,6 +99,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						email: this.formData['user_data'][i]['email'],
 						au_full_name: this.formData['user_data'][i]['au_full_name'],
 						mobile: this.formData['user_data'][i]['mobile'],
+						au_admission_no : this.formData['user_data'][i]['au_admission_no']
 					};
 					this.selectedUserArr.push(inputJson);
 				}
@@ -115,147 +117,60 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.messageForm.reset();
 	}
 
-	getUser(role_id) {
+	getUser() {
 		this.classDataArr = [];
-		if (role_id === '2') {
-			this.currentReceivers = 'Staff';
-			this.generateUserList();
-		} else if (role_id === '3') {
-			this.currentReceivers = 'Teacher';
-			this.generateUserList();
-		} else if (role_id === '4') {
-			this.currentReceivers = 'Student';
-			this.getClass();
-		}
+		this.generateUserList();
+		// if (role_id === '2') {
+		// 	this.currentReceivers = 'Staff';
+		// 	this.generateUserList();
+		// } else if (role_id === '3') {
+		// 	this.currentReceivers = 'Teacher';
+		// 	this.generateUserList();
+		// } else if (role_id === '4') {
+		// 	this.currentReceivers = 'Student';
+		// 	this.getClass();
+		// }
 
-	}
-
-	getClass() {
-		this.erpCommonService.getClass({}).subscribe((result: any) => {
-			if (result && result.data && result.data[0]) {
-				var result = result.data;
-				for (var i = 0; i < result.length; i++) {
-					var inputJson = {
-						class_id: result[i]['class_id'],
-						class_name: result[i]['class_name'],
-						checked: false,
-					}
-					this.classDataArr.push(inputJson);
-				}
-				this.showClass = true;
-			}
-		});
 	}
 
 	generateUserList() {
-		var checkedClassIds = [];
-		for (var i = 0; i < this.classDataArr.length; i++) {
-			if (this.classDataArr[i]['checked']) {
-				checkedClassIds.push(this.classDataArr[i]['class_id']);
-			}
-		}
+		var checkedClassIds = [];		
 		const inputJson = {};
-		if (this.currentReceivers === 'Teacher') {
-			inputJson['role_id'] = '3';
-			this.userDataArr = [];
-			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-					for (var i = 0; i < result.data.length; i++) {
-						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_email: result.data[i]['au_email'],
-							au_mobile: result.data[i]['au_mobile'],
-							au_profileimage: result.data[i]['au_profileimage'],
-							au_role_id: '3',
-							checked: false,
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
-						}
-						this.userDataArr.push(inputJson);
+		inputJson['role_id'] = '3';
+		inputJson['class_id'] = this.currentUser.class_id ? this.currentUser.class_id : '';
+		this.userDataArr = [];
+		
+		this.erpCommonService.getTeacher(inputJson).subscribe((result: any) => {
+			var userData = [];
+			if (result && result.data && result.data[0]['au_login_id']) {
+				for (var i = 0; i < result.data.length; i++) {
+					var inputJson = {
+						au_login_id: result.data[i]['au_login_id'],
+						au_full_name: result.data[i]['au_full_name'],
+						au_email: result.data[i]['au_email'],
+						au_mobile: result.data[i]['au_mobile'],
+						au_profileimage: result.data[i]['au_profileimage'],
+						au_role_id: '3',
+						checked: false,
+						class_name: result.data[i]['class_name'],
+						sec_name: result.data[i]['sec_name'],
+						class_id: result.data[i]['class_id'],
+						sec_id: result.data[i]['sec_id'],
+						au_admission_no : result.data[i]['au_admission_no'],
 					}
-					this.showUser = true;
-					this.showClass = false;
-				} else {
-					this.showUser = false;
-					this.showClass = true;
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					userData.push(inputJson);
 				}
-			});
-		} if (this.currentReceivers === 'Staff') {
-			inputJson['role_id'] = '2';
-			this.userDataArr = [];
-			this.erpCommonService.getUser(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-					for (var i = 0; i < result.data.length; i++) {
-						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_email: result.data[i]['au_email'],
-							au_mobile: result.data[i]['au_mobile'],
-							au_profileimage: result.data[i]['au_profileimage'],
-							au_role_id: '2',
-							checked: false,
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
-						}
-						this.userDataArr.push(inputJson);
-					}
-					this.showUser = true;
-					this.showClass = false;
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-					this.showUser = false;
-					this.showClass = true;
-				}
-			});
-		} else {
-			inputJson['class_ids'] = checkedClassIds[0];
-			inputJson['pmap_status'] = '1';
-			this.userDataArr = [];
-			this.erpCommonService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-					for (var i = 0; i < result.data.length; i++) {
-						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_profileimage: result.data[i]['au_profileimage'],
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
-							em_admission_no: result.data[i]['em_admission_no'],
-							au_role_id: '4',
-							checked: false,
-						}
-						if (result.data[i]['active_parent'] === 'F') {
-							inputJson['au_email'] = result.data[i]['father_email'] ? result.data[i]['father_email'] : '';
-							inputJson['au_mobile'] = result.data[i]['father_contact_no'] ? result.data[i]['father_contact_no'] : '';
-						}
-						if (result.data[i]['active_parent'] === 'M') {
-							inputJson['au_email'] = result.data[i]['mother_email'] ? result.data[i]['mother_email'] : '';
-							inputJson['au_mobile'] = result.data[i]['mother_contact_no'] ? result.data[i]['mother_contact_no'] : '';
-						}
-						if (result.data[i]['active_parent'] === 'G') {
-							inputJson['au_email'] = result.data[i]['guardian_email'] ? result.data[i]['guardian_email'] : '';
-							inputJson['au_mobile'] = result.data[i]['guardian_contact_no'] ? result.data[i]['guardian_contact_no'] : '';
-						}
 
-						this.userDataArr.push(inputJson);
-					}
-					this.showUser = true;
-					this.showClass = false;
-				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-					this.showUser = false;
-					this.showClass = true;
-				}
-			});
-		}
+				this.userDataArr = this.uniqueUserArray(userData);
+
+				this.showUser = true;
+				this.showClass = false;
+			} else {
+				this.showUser = false;
+				this.showClass = true;
+				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+			}
+		});
 
 	}
 
@@ -344,6 +259,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.userDataArr.map((item) => {
 				item.checked = false;
 			});
+			
 		}
 	}
 
@@ -367,24 +283,59 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.showUser = false;
 		this.showClass = false;
 		for (let i = 0; i < this.userDataArr.length; i++) {
-			if (this.userDataArr[i]['checked']) {
-				var inputJson = {
-					login_id: this.userDataArr[i]['au_login_id'],
-					class_id: this.userDataArr[i]['class_id'],
-					sec_id: this.userDataArr[i]['sec_id'],
-					class_name: this.userDataArr[i]['class_name'],
-					sec_name: this.userDataArr[i]['sec_name'],
-					email: this.userDataArr[i]['au_email'],
-					au_full_name: this.userDataArr[i]['au_full_name'],
-					mobile: this.userDataArr[i]['au_mobile'],
-					role_id: this.userDataArr[i]['au_role_id'],
-				};
-				this.selectedUserArr.push(inputJson);
+			if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
+				if (this.userDataArr[i]['checked']) {
+					var inputJson = {
+						login_id: this.userDataArr[i]['au_login_id'],
+						class_id: this.userDataArr[i]['class_id'],
+						sec_id: this.userDataArr[i]['sec_id'],
+						class_name: this.userDataArr[i]['class_name'],
+						sec_name: this.userDataArr[i]['sec_name'],
+						email: this.userDataArr[i]['au_email'],
+						au_full_name: this.userDataArr[i]['au_full_name'],
+						mobile: this.userDataArr[i]['au_mobile'],
+						role_id: this.userDataArr[i]['au_role_id'],
+						au_admission_no : this.userDataArr[i]['au_admission_no']
+					};
+					this.selectedUserArr.push(inputJson);
+				}
+			}
+			
+		}
+		this.showUserContextMenu = false;
+	}
 
+	checkAlreadyExists(item) {
+		var flag = false;
+		for (var i=0; i<this.selectedUserArr.length;i++) {
+			if(this.selectedUserArr[i]['login_id'] === item.au_login_id) {
+				flag = true;
+				break;
+			}
+		}
+		return flag;
+	}
+
+	uniqueUserArray(userDataArr) {
+		var distinctUserArr = [];
+		for(var i=0; i<userDataArr.length;i++) {	
+			if (!(this.checkForDuplicateUser(distinctUserArr,userDataArr[i]))) {
+				distinctUserArr.push(userDataArr[i]);
+			}			
+		}
+		return distinctUserArr;
+	}
+
+	checkForDuplicateUser(distinctArr, item) {
+		var flag = false;
+		for (var i=0; i< distinctArr.length;i++) {
+			if (distinctArr[i]['au_login_id'] === item['au_login_id']) {
+				flag = true;
+				break;
 			}
 		}
 
-		this.showUserContextMenu = false;
+		return flag;
 	}
 
 	deleteUser(i) {
@@ -406,8 +357,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"email": this.selectedUserArr[i]['email'],
 					"mobile": this.selectedUserArr[i]['mobile'],
 					"role_id": this.selectedUserArr[i]['role_id'],
-					"msg_status": { "status_id": "1", "status_name": "pending" },
-					"msg_sent_date_time": ""
+					"msg_status": { "status_id": "1", "status_name": "unread" },
+					"msg_sent_date_time": new Date()
 				}
 				msgToArr.push(userJson);
 			}
@@ -422,6 +373,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
 				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				"msg_status": { "status_id": 1, "status_name": "unread" },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
 			}
@@ -500,7 +452,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	searchOk(event) {
-		
+
 	}
 
 	back() {

@@ -12,8 +12,8 @@
                         margin-top: 10px;" matInput placeholder="Search Message" id="search_book" type="text"
                             formControlName="search" (keydown.enter)="searchMessage($event);$event.stopPropagation()"
                             autocomplete="off" />
-                        <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
-                            (keyup.enter)="search()">
+                        <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10"
+                            (click)="search()" (keyup.enter)="search()">
                             Search
                         </button>
                     </div>
@@ -54,14 +54,14 @@
                         <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
                     </mat-form-field>
                     <table mat-table [dataSource]="scheduleMessageDataSource" matSort class="table-100 text-center">
-                        <ng-container matColumnDef="no">
+                        <!-- <ng-container matColumnDef="no">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
                                 S. No.
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 {{ element.no }}
                             </td>
-                        </ng-container>
+                        </ng-container> -->
                         <!-- <ng-container matColumnDef="user_type">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 User Type
@@ -75,27 +75,62 @@
                                 Sent By
                             </th>
                             <td mat-cell *matCellDef="let element" class="text-left">
-                                <span class="text-left">{{element?.send_by | titlecase}}</span>
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b><span class="text-left">{{element?.send_by | titlecase}}</span></b>
+                                </span>
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    <span class="text-left">{{element?.send_by | titlecase}}</span>
+                                </span>
+
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="schedule_date">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
                                 Date
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                {{element?.schedule_date | date : 'dd-MMM-y'}}
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b>{{element?.schedule_date | date : 'dd-MMM-y'}}</b>
+                                </span>
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    {{element?.schedule_date | date : 'dd-MMM-y'}}
+                                </span>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="subject">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="82%">
                                 Message
                             </th>
                             <td mat-cell *matCellDef="let element" class="text-left">
-                                <a class="black-link" href="javascript:void(0)" (click)="viewMessage(element)"><span
-                                        class="text-left">{{ element?.subject | titlecase}}</span></a>
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b><a class="black-link" href="javascript:void(0)"
+                                            (click)="viewMessage(element)"><span
+                                                class="text-left">{{ element?.subject | titlecase}}</span></a>
+                                    </b>
+                                </span>
+
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    <a class="black-link" href="javascript:void(0)" (click)="viewMessage(element)"><span
+                                            class="text-left">{{ element?.subject | titlecase}}</span></a>
+
+                                </span>
+                                <div style="float:right">
+                                    <span *ngIf="element?.attachment?.length > 0"
+                                        (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                            aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                    <span *ngIf="element?.attachment?.length > 0 && element?.msg_type === 'C'"
+                                        class="separator"> </span>
+                                    <span *ngIf="element?.msg_type === 'C'">
+                                        <i class="material-icons delete-icon inline-form-table-icon-spacing"
+                                            style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                            delete
+                                        </i>
+                                    </span>
+                                </div>
+
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="attachment">
+                        <!-- <ng-container matColumnDef="attachment">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
                                 Attachment
                             </th>
@@ -105,7 +140,7 @@
                                         aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
                                 <span *ngIf="element?.attachment?.length == 0">-</span>
                             </td>
-                        </ng-container>
+                        </ng-container> -->
 
                         <!-- <ng-container matColumnDef="status">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
@@ -115,20 +150,23 @@
                                 {{element.status}}
                             </td>
                         </ng-container> -->
-                        <ng-container matColumnDef="action">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
-                                Action
+                        <!-- <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <span *ngIf="msg_type === 'C'">
+                                <span *ngIf="element?.attachment?.length > 0"
+                                    (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                        aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                <span *ngIf="element?.attachment?.length > 0 && element?.msg_type === 'C'"
+                                    class="separator"> </span>
+                                <span *ngIf="element?.msg_type === 'C'">
                                     <i class="material-icons delete-icon inline-form-table-icon-spacing"
                                         style="cursor: pointer;" (click)="openDeleteDialog(element)">
                                         delete
                                     </i>
                                 </span>
-                                <span *ngIf="msg_type !== 'C'">-</span>
                             </td>
-                        </ng-container>
+                        </ng-container> -->
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
                         </tr>
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
@@ -164,7 +202,7 @@
     (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
 
 <app-view-message *ngIf="showViewMessage" [reRenderForm]="renderForm"
-(backToBroadcast)="resetComposeMessage(messageType)"></app-view-message>
+    (backToBroadcast)="resetComposeMessage(messageType)"></app-view-message>
 
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>
