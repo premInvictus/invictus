@@ -155,7 +155,7 @@
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
-                                                {{item.emp_name}} ({{item.emp_designation_detail.des_name}})
+                                                {{item.emp_name}} ({{item.emp_designation_detail.name}})
                                             </mat-option>
                                         </mat-select>
                                         <mat-error>

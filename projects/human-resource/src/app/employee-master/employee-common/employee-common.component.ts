@@ -177,61 +177,61 @@ export class EmployeeCommonComponent implements OnInit {
 		});
 	}
 	getEmployeeDetail(emp_id) {
-		this.previousB = true;
-		this.nextB = true;
-		this.firstB = true;
-		this.lastB = true;
-		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result_r: any) => {
-			let result = result_r[0];
-			// console.log(result);
-			if (result) {
-				let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
-				let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
-				let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
-				let emp_category_id = result.emp_category_detail ? result.emp_category_detail.cat_id : '';
-				let emp_wing_id =result.emp_wing_detail ? result.emp_wing_detail.config_id : '';
-				
-				this.employeeDetailsForm.patchValue({
-					emp_profile_pic: result.emp_profile_pic,
-					emp_id: result.emp_id,
-					emp_name: result.emp_name,
-					emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
-					emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
-					emp_department_id: emp_department_id ? emp_department_id.toString() : '',
-					emp_category_id: emp_category_id ? emp_category_id.toString() : '',
-					emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
-					emp_status: result.emp_status
-				});
-				if (result.emp_profile_pic) {
-					this.defaultsrc = result.emp_profile_pic
-				} else {
-					this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
-				}
-				this.navigation_record = result.navigation;
-			}
+		if (emp_id) {
+			this.previousB = true;
+			this.nextB = true;
+			this.firstB = true;
+			this.lastB = true;
+			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+				if (result) {
+					let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
+					let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
+					let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
+					let emp_category_id = result.emp_category_detail ? result.emp_category_detail.cat_id : '';
+					let emp_wing_id = result.emp_wing_detail ? result.emp_wing_detail.config_id : '';
 
-			if (this.navigation_record) {
+					this.employeeDetailsForm.patchValue({
+						emp_profile_pic: result.emp_profile_pic,
+						emp_id: result.emp_id,
+						emp_name: result.emp_name,
+						emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
+						emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
+						emp_department_id: emp_department_id ? emp_department_id.toString() : '',
+						emp_category_id: emp_category_id ? Number(emp_category_id) : '',
+						emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
+						emp_status: result.emp_status
+					});
+					if (result.emp_profile_pic) {
+						this.defaultsrc = result.emp_profile_pic
+					} else {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+					}
+					this.navigation_record = result.navigation;
+				}
 
-				if (this.navigation_record.first_record &&
-					this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
-					this.viewOnly) {
-					this.firstB = false;
+				if (this.navigation_record) {
+
+					if (this.navigation_record.first_record &&
+						this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
+						this.viewOnly) {
+						this.firstB = false;
+					}
+					if (this.navigation_record.last_record &&
+						this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_id &&
+						this.viewOnly) {
+						this.lastB = false;
+					}
+					if (this.navigation_record.next_record && this.viewOnly) {
+						this.nextB = false;
+					}
+					if (this.navigation_record.prev_record && this.viewOnly) {
+						this.previousB = false;
+					}
 				}
-				if (this.navigation_record.last_record &&
-					this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_id &&
-					this.viewOnly) {
-					this.lastB = false;
-				}
-				if (this.navigation_record.next_record && this.viewOnly) {
-					this.nextB = false;
-				}
-				if (this.navigation_record.prev_record && this.viewOnly) {
-					this.previousB = false;
-				}
-			}
-			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
-			inputElem.select();
-		});
+				const inputElem = <HTMLInputElement>this.myInput.nativeElement;
+				inputElem.select();
+			});
+		}
 	}
 
 	setActionControls(data) {
