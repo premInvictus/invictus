@@ -350,18 +350,29 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     });
     let total = 0;
+    let totalmainsubject = 0;
     temp = temp.filter((thing, index, self) => {
       const _thing = JSON.stringify(thing);
       return index === self.findIndex((t) => {
         return JSON.stringify(t) === _thing
       })
     })
+    //console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
+    //console.log('term temp', temp);
+    //console.log('this.subjectArray', this.subjectArray);
     for (const item of temp) {
-      if(item.term === term) {
-        total = total + item.grade;
+      if(Number(item.term) === Number(term)) {
+        const currentSub = this.subjectArray.find(e => e.sub_id === item.sub_id);
+        if(currentSub.ess_additional === '0' && currentSub.sub_parent_id === '0' && currentSub.sub_type === '1') {
+          total = total + item.grade;
+          totalmainsubject++;
+        }
       }
     }
-    return Math.round(total / temp.length) > 32 ? 'Pass' : 'Fail';
+    //console.log('total',total);
+    //console.log('totalmainsubject',totalmainsubject);
+    //console.log('total percentage',total / totalmainsubject);
+    return this.getTwoDecimalValue(total / totalmainsubject) > 32 ? 'Pass' : 'Fail';
 
   }
   getPassTotalPercentage(term) {
@@ -381,20 +392,17 @@ export class ViewGradecardDialogComponent implements OnInit {
         return JSON.stringify(t) === _thing
       })
     })
-    console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
-    console.log('term temp', temp);
+    //console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
+    //console.log('term temp', temp);
     for (const item of temp) {
       if(item.term === term) {
         const currentSub = this.subjectArray.find(e => e.sub_id === item.sub_id);
-        if(currentSub.ess_additional === '0' && currentSub.sub_parent_id === '0') {
+        if(currentSub.ess_additional === '0' && currentSub.sub_parent_id === '0' && currentSub.sub_type === '1') {
           total = total + item.grade;
           totalmainsubject++;
         }
       }
     }
-    //console.log('temp', temp);
-    //console.log('total obtainded percentage', total);
-    //console.log('totalmainsubject', totalmainsubject);
     return this.getTwoDecimalValue(total / totalmainsubject);
 
   }
@@ -402,7 +410,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     let totalmainsubject = 0;
     console.log('in getTotalMainSubject subjectArray',this.subjectArray)
     this.subjectArray.forEach(e => {
-      if(e.ess_additional === '0' && e.sub_parent_id === '0') {
+      if(e.ess_additional === '0' && e.sub_parent_id === '0' && e.sub_type === '1') {
         totalmainsubject++;
       }
     })
