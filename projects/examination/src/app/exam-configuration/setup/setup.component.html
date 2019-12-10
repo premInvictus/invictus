@@ -29,6 +29,7 @@
                             <mat-option value="5">Activities</mat-option>
                             <mat-option value="6">Report Card (Print)</mat-option>
                             <mat-option value="7">Class Term Grade</mat-option>
+                            <mat-option value="8">Class Term Date</mat-option>
                           </mat-select>
                         </mat-form-field>
                       </div>
@@ -405,7 +406,7 @@
                           <div class="col-12">
                             <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Terms</mat-label>
-                              <mat-select formControlName="ect_term_id" placeholder="Select Section"
+                              <mat-select formControlName="ect_term_id" placeholder="Select Term"
                                 [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
                                 <mat-option *ngFor="let item of termArray" [value]="item.term_id">
                                   {{item.term_name}}
@@ -463,6 +464,61 @@
 
                       </form>
                     </div>
+                    <div *ngIf="configValue == '8'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Class</mat-label>
+                              <mat-select formControlName="etd_class_id" placeholder="Select Class" (selectionChange)="getClassTerm()"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                  {{item.class_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Class Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Terms</mat-label>
+                              <mat-select formControlName="etd_term" placeholder="Select Term"
+                                [disabled]="editFlag" [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of classTermArray" [value]="item.id">
+                                  {{item.name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Term Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>From Date</mat-label>
+                              <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="etd_start">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                          </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>To Date</mat-label>
+                              <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="etd_end">
+                              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                              <mat-datepicker #picker1></mat-datepicker>
+                          </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
 
                     <div class="text-center margin-top-15">
                       <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
@@ -518,7 +574,7 @@
                                           <span *ngIf="!item.name">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '7'" matColumnDef="term_name">
+                                      <ng-container *ngIf="configValue == '7' || configValue == '8'" matColumnDef="term_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Terms
                                         </th>
@@ -675,6 +731,25 @@
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span *ngIf="item.activity_description">{{ item.activity_description }}</span>
                                           <span *ngIf="!item.activity_description">-</span>
+                                        </td>
+                                      </ng-container>
+
+                                      <ng-container *ngIf="configValue == '8'" matColumnDef="term_start">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Term From
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.term_start">{{ item.term_start | date:'d-MMM-y' }}</span>
+                                          <span *ngIf="!item.term_start">-</span>
+                                        </td>
+                                      </ng-container>
+                                      <ng-container *ngIf="configValue == '8'" matColumnDef="term_end">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          Term To
+                                        </th>
+                                        <td class="left" mat-cell *matCellDef="let item">
+                                          <span *ngIf="item.term_end">{{ item.term_end | date:'d-MMM-y' }}</span>
+                                          <span *ngIf="!item.term_end">-</span>
                                         </td>
                                       </ng-container>
 

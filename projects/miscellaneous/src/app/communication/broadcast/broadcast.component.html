@@ -2,43 +2,66 @@
     <div class="row">
         <div class="col-12 ">
             <mat-card class="card-top-title__container">
-                <div class="row">
-                    <div class="col-6">
-                        <h1 class="remove-bottom-margin font-size-24">Broadcast</h1>
-                    </div>
-                    <div class="col-6">
+                <form [formGroup]="broadcastForm">
+                    <div class="row">
+                        <div class="col-8">
+                            <h1 class="remove-bottom-margin font-size-24">Broadcast</h1>
+                        </div>
+                        <!-- <div class="col-6">
                         <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
                             (click)="composeMessage()">Compose</button>
+                    </div> -->
+
+                        <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>From Date</mat-label>
+                                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                    formControlName="from_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>To Date</mat-label>
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                    formControlName="to_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+
                     </div>
-                </div>
+                </form>
             </mat-card>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <mat-card class="mat-card" style="min-height: 500px;">
-                <form [formGroup]="broadcastForm">
+                <!-- <form [formGroup]="broadcastForm"> -->
                 <div class="row">
-                    <div class="col-2">
-                        <mat-form-field appearance="outline" class="form-field">
-                            <mat-label>From Date</mat-label>
-                            <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                formControlName="from_date" (dateChange)="getMessage()"/>
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-2">
-                        <mat-form-field appearance="outline" class="form-field">
-                            <mat-label>To Date</mat-label>
-                            <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
-                                formControlName="to_date" (dateChange)="getMessage()" />
-                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                            <mat-datepicker #picker1></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                    <div class="col-8 float-right">
-                        <mat-tab-group [(selectedIndex)]="currentTab" (selectedTabChange)="changeTab($event)" class="padding-8 float-right">
+                    <!-- <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>From Date</mat-label>
+                                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                    formControlName="from_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>To Date</mat-label>
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                    formControlName="to_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div> -->
+                    <div class="col-10">
+                        <mat-tab-group [(selectedIndex)]="currentTab" (selectedTabChange)="changeTab($event)"
+                            class="padding-8">
                             <mat-tab>
                                 <ng-template mat-tab-label>
                                     <div>
@@ -55,8 +78,12 @@
                             </mat-tab>
                         </mat-tab-group>
                     </div>
+                    <div class="col-2 float-right" style="margin-top: 19px;">
+                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
+                            (click)="composeMessage()" style="height:48px;">Compose</button>
+                    </div>
                 </div>
-                </form>
+                <!-- </form> -->
                 <div class="col-12" [hidden]="!(USER_ELEMENT_DATA.length > 0)">
                     <mat-form-field class="form-feild">
                         <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
@@ -89,7 +116,7 @@
                         </ng-container>
                         <ng-container matColumnDef="send_by">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
-                                Send By
+                                Sent By
                             </th>
                             <td mat-cell *matCellDef="let element" class="text-left">
                                 <span class="text-left">{{element?.send_by | titlecase}}</span>
@@ -97,7 +124,7 @@
                         </ng-container>
                         <ng-container matColumnDef="schedule_date">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
-                               Date
+                                Date
                             </th>
                             <td mat-cell *matCellDef="let element">
                                 {{element?.schedule_date | date : 'dd-MMM-y'}}
@@ -116,11 +143,13 @@
                                 Attachment
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <span *ngIf="element?.attachment?.length > 0" (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip" aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                <span *ngIf="element?.attachment?.length > 0"
+                                    (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                        aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
                                 <span *ngIf="element?.attachment?.length == 0">-</span>
                             </td>
-                        </ng-container>                       
-                        
+                        </ng-container>
+
                         <ng-container matColumnDef="status">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                                 Status
@@ -134,9 +163,9 @@
                                 Action
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <i class="fas fa-edit" style="cursor: pointer;color:#1E88E5; font-size: 24px;" (click)="editMessage(element)"></i>
-                                <i 
-                                    class="material-icons delete-icon inline-form-table-icon-spacing"
+                                <i class="far fa-edit table-edit-icon" style="cursor: pointer;color:#1E88E5; font-size: 24px;"
+                                    (click)="editMessage(element)"></i>
+                                <i class="material-icons delete-icon inline-form-table-icon-spacing"
                                     style="cursor: pointer;" (click)="openDeleteDialog(element)">
                                     delete
                                 </i>
@@ -147,12 +176,25 @@
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
                         </tr>
                     </table>
-                    <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-                        <tr *ngIf="USER_ELEMENT_DATA.length == 0">
-                          <td colspan="6">No Record Found</td>
-                        </tr>
-                      </table>
-                      <mat-paginator #paginator  [pageSizeOptions]=[5,10,20] [pageSize]="10"  showFirstLastButtons></mat-paginator>
+
+                    <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="10" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+                <!-- <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                    <tr *ngIf="USER_ELEMENT_DATA.length == 0">
+                        <td colspan="6">No Record Found</td>
+                    </tr>
+                </table> -->
+
+                <div class="text-center" *ngIf="USER_ELEMENT_DATA.length == 0">
+
+                    <div class=" smart-das-icon">
+                        <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/smart-dashboard.png"
+                            class="smart-icon-img" />
+                        <br>
+                        <span class="desc-span-smart-dash">No Message Record Found</span><br>
+                    </div>
+
                 </div>
 
             </mat-card>
@@ -160,6 +202,7 @@
     </div>
 </div>
 
-<app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm" (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
-<app-delete-modal #deleteModal [deleteMessage]="deleteMessage"
-(deleteOk)="deleteEmail($event)" (deleteCancel)="deleteCancel()"></app-delete-modal>
+<app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm"
+    (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
+    (deleteCancel)="deleteCancel()"></app-delete-modal>

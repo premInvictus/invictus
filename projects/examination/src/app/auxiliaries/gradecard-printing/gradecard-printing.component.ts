@@ -23,7 +23,7 @@ export class GradecardPrintingComponent implements OnInit {
   classArray: any[] = [];
   subjectArray: any[] = [];
   sectionArray: any[] = [];
-  termsArray: any[] = [];
+  termsArray: any[] = []; 
   examArray: any[] = [];
   gradeCardMarkArray: any[] = [];
   studentArray: any[] = [];

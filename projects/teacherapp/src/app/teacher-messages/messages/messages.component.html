@@ -1,0 +1,209 @@
+<div *ngIf="!showComposeMessage && !showViewMessage">
+    <div class="row">
+        <div class="col-12 ">
+            <mat-card class="card-top-title__container">
+                <form [formGroup]="searchForm">
+                <div class="row">
+                    <div class="col-6">
+                        <h1 class="remove-bottom-margin font-size-24" style="margin-top: 10px;">Messages</h1>
+                    </div>
+                    <div class="col-5" style="border: 1px solid #ccc; padding:5px; ">
+                        <input style="float:left; width: 80%;
+                        margin-top: 10px;" matInput placeholder="Search Message" id="search_book" type="text"
+                            formControlName="search" (keydown.enter)="searchMessage($event);$event.stopPropagation()"
+                            autocomplete="off" />
+                        <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10"
+                            (click)="searchMessage()" (keyup.enter)="searchMessage()">
+                            Search
+                        </button>
+                    </div>
+                    <div class="col-1">
+                        <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
+                            (click)="composeMessage()" style="height:48px;">Compose</button>
+                    </div>
+
+                    <!-- <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>From Date</mat-label>
+                                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                    formControlName="from_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-2">
+                            <mat-form-field appearance="outline" class="form-field">
+                                <mat-label>To Date</mat-label>
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                    formControlName="to_date" (dateChange)="getMessage()" />
+                                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                                <mat-datepicker #picker1></mat-datepicker>
+                            </mat-form-field>
+                        </div> -->
+
+                </div>
+                </form>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="mat-card" style="min-height: 500px;">
+                <div class="col-12" [hidden]="!(USER_ELEMENT_DATA.length > 0)">
+                    <mat-form-field class="form-feild">
+                        <input matInput (keyup)="applyFilterUser($event.target.value)" placeholder="Filter" />
+                    </mat-form-field>
+                    <table mat-table [dataSource]="scheduleMessageDataSource" matSort class="table-100 text-center">
+                        <!-- <ng-container matColumnDef="no">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                                S. No.
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.no }}
+                            </td>
+                        </ng-container> -->
+                        <!-- <ng-container matColumnDef="user_type">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                                User Type
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span class="text-left">{{element?.user_type | titlecase}}</span>
+                            </td>
+                        </ng-container> -->
+                        <ng-container matColumnDef="send_by">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                                Sent By
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b><span class="text-left">{{element?.send_by | titlecase}}</span></b>
+                                </span>
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    <span class="text-left">{{element?.send_by | titlecase}}</span>
+                                </span>
+
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="schedule_date">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
+                                Date
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b>{{element?.schedule_date | date : 'dd-MMM-y'}}</b>
+                                </span>
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    {{element?.schedule_date | date : 'dd-MMM-y'}}
+                                </span>
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="subject">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="82%">
+                                Message
+                            </th>
+                            <td mat-cell *matCellDef="let element" class="text-left">
+                                <span *ngIf="element?.msg_status === 'unread'">
+                                    <b><a class="black-link" href="javascript:void(0)"
+                                            (click)="viewMessage(element)"><span
+                                                class="text-left">{{ element?.subject | titlecase}}</span></a>
+                                    </b>
+                                </span>
+
+                                <span *ngIf="element?.msg_status !== 'unread'">
+                                    <a class="black-link" href="javascript:void(0)" (click)="viewMessage(element)"><span
+                                            class="text-left">{{ element?.subject | titlecase}}</span></a>
+
+                                </span>
+                                <div style="float:right">
+                                    <span *ngIf="element?.attachment?.length > 0"
+                                        (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                            aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                    <span *ngIf="element?.attachment?.length > 0 && element?.msg_type === 'C'"
+                                        class="separator"> </span>
+                                    <span *ngIf="element?.msg_type === 'C'">
+                                        <i class="material-icons delete-icon inline-form-table-icon-spacing"
+                                            style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                            delete
+                                        </i>
+                                    </span>
+                                </div>
+
+                            </td>
+                        </ng-container>
+                        <!-- <ng-container matColumnDef="attachment">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                                Attachment
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <span *ngIf="element?.attachment?.length > 0"
+                                    (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                        aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                <span *ngIf="element?.attachment?.length == 0">-</span>
+                            </td>
+                        </ng-container> -->
+
+                        <!-- <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                                Status
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                {{element.status}}
+                            </td>
+                        </ng-container> -->
+                        <!-- <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
+                            </th>
+                            <td mat-cell *matCellDef="let element">
+                                <span *ngIf="element?.attachment?.length > 0"
+                                    (click)="previewImage(element?.attachment, 0)"><i class="fa fa-paperclip"
+                                        aria-hidden="true" style="color:#1E88E5;font-size: 24px;"></i></span>
+                                <span *ngIf="element?.attachment?.length > 0 && element?.msg_type === 'C'"
+                                    class="separator"> </span>
+                                <span *ngIf="element?.msg_type === 'C'">
+                                    <i class="material-icons delete-icon inline-form-table-icon-spacing"
+                                        style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                        delete
+                                    </i>
+                                </span>
+                            </td>
+                        </ng-container> -->
+                        <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
+                        </tr>
+                        <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns">
+                        </tr>
+                    </table>
+
+                    <mat-paginator #paginator [pageSizeOptions]=[5,10,20] [pageSize]="10" showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+                <!-- <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                    <tr *ngIf="USER_ELEMENT_DATA.length == 0">
+                        <td colspan="6">No Record Found</td>
+                    </tr>
+                </table> -->
+
+                <div class="text-center" *ngIf="USER_ELEMENT_DATA.length == 0">
+
+                    <div class=" smart-das-icon">
+                        <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/smart-dashboard.png"
+                            class="smart-icon-img" />
+                        <br>
+                        <span class="desc-span-smart-dash">No Message Record Found</span><br>
+                    </div>
+
+                </div>
+
+            </mat-card>
+        </div>
+    </div>
+</div>
+
+<app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm"
+    (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
+
+<app-view-message *ngIf="showViewMessage" [reRenderForm]="renderForm"
+    (backToBroadcast)="resetComposeMessage(messageType)"></app-view-message>
+
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
+    (deleteCancel)="deleteCancel()"></app-delete-modal>
+<app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>

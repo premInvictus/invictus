@@ -1,0 +1,300 @@
+<div *ngIf="!showComposeMessage">
+    <div class="row">
+
+        <div class="col-12 ">
+            <mat-card class="card-top-title__container">
+                <form [formGroup]="searchForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <h1 class="remove-bottom-margin font-size-24" style="margin-top: 10px;">Messages </h1>
+                        </div>
+
+                        <div class="col-5" style="border: 1px solid #ccc; padding:5px; ">
+                            <input style="float:left; width: 80%;
+                                        margin-top: 10px;" matInput placeholder="Search Message" id="search_book"
+                                type="text" formControlName="search"
+                                (keydown.enter)="searchMessage($event);$event.stopPropagation()" autocomplete="off" />
+                            <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10"
+                                (click)="searchMessage()" (keyup.enter)="searchMessage()">
+                                Search
+                            </button>
+                        </div>
+                        <div class="col-1">
+                            <button mat-raised-button class="float-right btn-primary btn-consolidate btn-spacer"
+                                (click)="composeMessage()" style="height:48px;">Compose</button>
+                        </div>
+
+
+
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <!-- [pageSizeOptions]="[5, 10, 25, 100]" -->
+            <mat-card class="mat-card" style="height: 60px;margin:0;padding: 0;">
+                <div class="accordian-header-controls">
+                    <div class="back">
+                        <i class="fas fa-arrow-left" (click)="back()" style="cursor:pointer"></i>
+                    </div>
+                    <!-- <div class="accordian-pagination-controls" *ngIf="messagesData.length > 0">
+                        <mat-paginator #paginator [length]="messagesData.length" [pageIndex]="0" [pageSize]="10">
+                        </mat-paginator>
+                    </div> -->
+                </div>
+            </mat-card>
+            <mat-accordion displayMode="flat" multi class="mat-table">
+                <mat-expansion-panel *ngFor="let item of messagesData; let i= index;" (opened)="readMessage(item)" [expanded]="i==messagesData.length -1 ? true : false">
+                    <mat-expansion-panel-header class="mat-row">
+                        <div class="message-header">
+                            <div class="circle-thumbnail">
+                                <label for="image" class="main-label-img">
+                                    <img class="student-pic--imgone student-pic__circle sis-student-pic__size"
+                                        src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/hr/auxilliary/profile/Syllabus%20Management.png">
+                                </label>
+                            </div>
+                            <div class="profile-detail">
+                                <span class="profie-name-detail">
+                                    <!-- <span *ngIf="currentUser?.role_id === '3'">{{currentUser?.full_name}} {{item?.subject}}</span> -->
+                                    <!-- <span *ngIf="currentUser?.role_id === '4'">
+                                            <span *ngFor="let titem of item?.user_data" class="to-user-data">
+                                                    <span *ngIf="titem?.login_id === currentUser?.login_id" >
+                                                    {{titem?.admission_no}} - {{currentUser?.full_name}} , {{titem?.class_name}} <span *ngIf="titem?.sec_name"> - {{titem?.sec_name}} </span>   {{item?.subject}}
+                                                    </span>
+                                            </span>
+                                        
+                                    </span> -->
+                                    <span *ngIf="item?.msg_status && item?.msg_status?.status_name === 'unread'">
+                                        <b><span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span></b>
+                                    </span>
+                                    <span *ngIf="item?.msg_status && item?.msg_status?.status_name !== 'unread'">
+                                        <span>{{item?.msg_created_by?.login_name}} {{item?.msg_subject}}</span>
+                                    </span>
+
+                                    <!-- 12458-Gaurav Kumar , X-A -->
+                                </span> <br>
+                                <span class="profile-to-detail">To:
+                                    <span *ngFor="let titem of item?.msg_to" class="to-user-data">
+                                        {{titem?.au_full_name}} ,
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="message-utility-detail">
+                                <span class="message-utility-detail-attachment"
+                                    *ngIf="item?.msg_attachment?.length > 0">
+                                    <i class="fa fa-paperclip" aria-hidden="true"
+                                        style="color:#1E88E5;font-size: 18px;">
+                                    </i>
+                                </span>
+                                <span *ngIf="item?.msg_status && item?.msg_status?.status_name === 'unread'">
+                                    <span
+                                        class="message-utility-detail-time"><b>{{item?.msg_created_date | date:'d MMM , y'}}</b>
+                                    </span>
+                                </span>
+                                <span *ngIf="item?.msg_status && item?.msg_status?.status_name !== 'unread'">
+                                    <span
+                                        class="message-utility-detail-time">{{item?.msg_created_date | date:'d MMM , y'}}
+                                    </span>
+                                </span>
+
+                            </div>
+                        </div>
+
+                        <!-- <span>{{item.vesselId}}</span>
+                        <span>{{item.vesselStatus}}</span>
+                        <span>{{item.ircs}}</span> -->
+                    </mat-expansion-panel-header>
+                    <div class="message-content">
+                        <div class="message-description">
+                            <p [innerHtml]="item?.msg_description">
+                        </div>
+                        <div class="message-attachment">
+                            <ul class="preview-attachment-base">
+                                <li *ngFor="let aitem of item?.msg_attachment" class="preview-attachment">
+                                    <img class="attachment-thumbnail" *ngIf="checkThumbnail(aitem.imgName)"
+                                        [src]="aitem.imgUrl" (click)="previewImage(item?.attachment, i)" height="145px"
+                                        width="150px">
+                                    <img class="attachment-thumbnail" *ngIf="!checkThumbnail(aitem.imgName)"
+                                        src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                        (click)="previewImage(item?.attachment, i)" height="100px" width="100px">
+                                    <div class="overlay">
+                                        <a [href]="aitem?.imgUrl" class="icon" title="User Profile" download>
+                                            <i class="fa fa-download"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="reply-message-section" *ngIf="item?.showReplyBox">
+                            <form [formGroup]="messageForm">
+                                <div class="message-container">
+                                    <div class="row">
+                                        <div class="col-12 border-bottom">
+                                            <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                            <div class="to-section">
+                                                <span class="to-abbr" style="float: left"><b>To</b>&nbsp;</span>
+                                                <!-- <input matInput placeholder="" type="input"
+                                                    formControlName="messageTo" style="width:90%; float:left"/> -->
+                                                <div class="user-chips">
+                                                    <button *ngFor="let item of selectedUserArr; let i= index;"
+                                                        mat-stroked-button class="custom-entry-button margin-left-10">
+                                                        <span class="custom-btn-text">{{item?.au_full_name}}</span>
+                                                        <i class="fas fa-times-circle custom-entry-btn-icon"
+                                                            (click)="deleteUser(i, item)"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <span class="three-dot">
+                                                <i class="fa fa-ellipsis-v" aria-hidden="true"
+                                                    style="cursor: pointer; z-index: 99999;"
+                                                    (click)="showUserContextMenu =!showUserContextMenu "></i>
+                                            </span>
+                                            <div *ngIf="showUserContextMenu" class="user-context-menu">
+                                                <ul class="user-type-menu" *ngIf="!showClass && !showUser">
+                                                    <li (click)="getUser('4')">Student/Parent</li>
+                                                    <li (click)="getUser('3')">Teacher</li>
+                                                    <li (click)="getUser('2')">Staff</li>
+                                                </ul>
+                                                <div *ngIf="showClass">
+                                                    <ul class="class-menu">
+                                                        <li>
+                                                            <div style="width:100%; float:left;">
+                                                                <div style="width: 50%; float:left">
+                                                                    <section class="example-section">
+                                                                        <mat-checkbox (change)="selectAllClass($event)"
+                                                                            class="example-margin">
+                                                                            Select All
+                                                                        </mat-checkbox>
+                                                                    </section>
+                                                                </div>
+                                                                <div style="width: 50%; float:right">
+                                                                    <a href="javascript:void(0)" style="float:right"
+                                                                        (click)="generateUserList()">Next</a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li *ngFor="let ing of classDataArr; let i = index">
+                                                            <section class="example-section">
+                                                                <mat-checkbox [checked]="ing.checked"
+                                                                    (change)="updateClassCheck(i, $event)">
+                                                                    {{ing.class_name}}
+                                                                </mat-checkbox>
+                                                            </section>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div *ngIf="showUser">
+                                                    <ul class="user-menu">
+                                                        <li>
+                                                            <div style="width:100%; float:left;">
+                                                                <div style="width: 50%; float:left">
+                                                                    <section class="example-section">
+                                                                        <mat-checkbox (change)="selectAllUser($event)"
+                                                                            class="example-margin">
+                                                                            Select All
+                                                                        </mat-checkbox>
+                                                                    </section>
+                                                                </div>
+                                                                <div style="width: 50%; float:right">
+                                                                    <a href="javascript:void(0)" style="float:right"
+                                                                        (click)="done()">Done</a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li *ngFor="let ing of userDataArr; let i = index">
+                                                            <section class="example-section">
+                                                                <mat-checkbox [checked]="ing.checked"
+                                                                    (change)="updateUserCheck(i, $event)">
+                                                                    {{ing.au_full_name | titlecase}}
+                                                                </mat-checkbox>
+                                                            </section>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="row">
+                                        <div class="col-12 border-bottom">
+                                            <input matInput placeholder="Rep : " type="input"
+                                                formControlName="messageSubject" style="width: 90%;
+                                                    padding: 10px;" />
+                                        </div>
+                                    </div> -->
+
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <ul class="preview-attachment-base-reply">
+                                                <li *ngFor="let item of attachmentArray" class="preview-attachment">
+                                                    <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                                        (click)="previewImage(attachmentArray, i)" height="145px"
+                                                        width="150px">
+                                                    <img *ngIf="!checkThumbnail(item.imgName)"
+                                                        src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                                        (click)="previewImage(attachmentArray, i)" height="145px"
+                                                        width="150px">
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 template-check-box">
+                                        <div class="reply-controls">
+                                            <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                                                (click)="replyMessage(item)" style="margin-left:0 !important">Send
+                                                Message<i class="fa fa-caret-up float-right margin-top-10"></i>
+                                            </button> &nbsp;
+                                            <button mat-raised-button class="btn-danger btn-consolidate btn-spacer"
+                                                (click)="discardMessage(i)" style="margin-left:5px !important">Discard
+                                                Message<i class="fa fa-caret-up float-right margin-top-10"></i>
+                                            </button>
+                                            <div class="reply-attachment">
+                                                <label for="attachment"><i class="fa fa-paperclip" aria-hidden="true"
+                                                        style="font-size: 18px;">
+                                                    </i></label>
+                                                <input style="display: none;" id="attachment" type="file" multiple
+                                                    name="upload" (change)="fileChangeEvent($event)">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="message-action-buttons">
+                            <button mat-raised-button class="btn-success btn-consolidate btn-spacer"
+                                (click)="approveMessage(item)"
+                                *ngIf="getPermission(item) && item?.status?.status_name === 'pending'">Approve</button>
+                            <button mat-raised-button class="btn-danger btn-consolidate btn-spacer"
+                                (click)="rejectMessage(item)" *ngIf="getPermission(item)">Reject</button>
+                            <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                                (click)="resolveMessage(item)" *ngIf="getPermission(item)">Resolve</button>
+                            <button mat-raised-button class="btn-basic btn-consolidate btn-spacer"
+                                style="margin-left:10px;" (click)="showReplyBox(i)"
+                                *ngIf="item?.msg_type === 'C' && !(item?.showReplyBox)">Reply</button>
+                        </div>
+
+                    </div>
+                </mat-expansion-panel>
+
+            </mat-accordion>
+        </div>
+    </div>
+</div>
+
+<app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm"
+    (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
+
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendMessage($event)"
+    (deleteCancel)="cancelSendMessage()"></app-delete-modal>
+
+<app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>

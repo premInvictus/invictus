@@ -32,11 +32,20 @@ export class GradecardSettingComponent implements OnInit {
 			height: '300',
 			width: '100%',
 			// tslint:disable-next-line:max-line-length
-			extraPlugins: '',
-			scayt_multiLanguageMod: true,
+			extraPlugins: 'uploadimage,uploadfile,simpleImageUpload',
+      scayt_multiLanguageMod: true,
+      filebrowserUploadMethod: 'form',
+      uploadUrl: 'http://localhost/axiom-backend/uploadS3.php',
+      imageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
+			filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
-				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
+        ['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
+         
+          { name: 'UploadImage', items: ['UploadImage'] },
+          { name: 'UploadFile', items: [ 'UploadFile' ] },
+					{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
+      ]
 			],
 			removeDialogTabs: 'image:advanced;image:Link'
 		};

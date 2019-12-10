@@ -116,7 +116,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 		if (this.shufflesortform.valid) {
 			this.resetTableAndSelection();
 			this.shufflesortform.value.pmap_status = '1';
-			this.shufflesortform.value.enrollment_type = ['3', '4'];
+			this.shufflesortform.value.enrollment_type = '4';
 			this.sisService.getMasterStudentDetail(this.shufflesortform.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.sorttableflag = true;

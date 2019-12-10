@@ -184,14 +184,21 @@ export class BroadcastComponent implements OnInit {
 		this.showComposeMessage = true;
 	}
 
-	deleteEmail(element) {
-		this.sisService.deleteNotificationEmail({ 'ns_id': element.ns_id }).subscribe((result: any) => {
-			if (result.status = 'ok') {
-				this.getEmailScheduleData();
+	deleteMessageFunc(element) {
+		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
+			if (result) {
+				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
+				if (this.currentTab) {
+					this.getEmailScheduleData();
+				} else {
+					this.getSMSScheduleData();
+				}
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Error while deleting message', 'error');
 			}
 		});
 
-	} rr
+	} 
 
 	changeTab(event) {
 		this.currentTab = event.index;
@@ -239,5 +246,9 @@ export class BroadcastComponent implements OnInit {
 			height: '70vh',
 			width: '70vh'
 		});
+	}
+
+	deleteCancel() {
+		
 	}
 }

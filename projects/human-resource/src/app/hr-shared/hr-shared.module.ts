@@ -42,7 +42,8 @@ import { ColorPickerModule } from 'ngx-color-picker';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
-
+import { ComposeMessageComponent } from './compose-message/compose-message.component';
+import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -116,6 +117,8 @@ export const MY_FORMATS = {
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
@@ -129,6 +132,8 @@ export const MY_FORMATS = {
 		PreviewDocumentComponent,
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -172,7 +177,10 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
 		NgxBarcodeModule,
-		ColorPickerModule
+		ColorPickerModule,
+		ComposeMessageComponent,
+		MessagesAdvancedSearchModalComponent,
+		CKEditorModule
 		//EmployeeDetailsComponent
 	],
 	providers: [

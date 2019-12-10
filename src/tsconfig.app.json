@@ -106,6 +106,9 @@
     "../projects/miscellaneous/src/app/misc-reports/reports.module.ts",    
     "../projects/miscellaneous/src/app/file-management/file-management.module.ts",
     "../projects/miscellaneous/src/app/communication/communication.module.ts",
-    "../projects/miscellaneous/src/app/miscusertype/miscusertype.module.ts"
+    "../projects/miscellaneous/src/app/miscusertype/miscusertype.module.ts",
+    "../projects/teacherapp/src/app/teacher-messages/teacher-messages.module.ts",
+    "../projects/student-app/src/app/student-messages/student-messages.module.ts",
+    "../projects/human-resource/src/app/employee-messages/employee-messages.module.ts"
   ]
 }

@@ -20,7 +20,7 @@
             <mat-card class="mat-card" style="min-height: 700px;">
                 <form [formGroup]="messageForm">
                     <div class="row">
-                           
+
                         <div class="col-2">
                             <mat-form-field class="form-field" appearance="outline">
                                 <mat-label> Message Type </mat-label>
@@ -42,7 +42,7 @@
                         <div class="col-3">
                             <mat-form-field class="form-field" appearance="outline">
                                 <mat-label> Title </mat-label>
-                                <input matInput placeholder="Title" type="input" formControlName="messageTitle" 
+                                <input matInput placeholder="Title" type="input" formControlName="messageTitle"
                                     autocomplete="false" />
                             </mat-form-field>
                         </div>
@@ -146,17 +146,21 @@
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="Subject" type="input" formControlName="messageSubject"
                                     style="width: 90%;
-                                padding: 10px;"/>
+                                padding: 10px;" />
                                 <!-- </mat-form-field> -->
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="col-12" style="min-height: 400px;">
-                                <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
+                                <ckeditor [config]="ckeConfig" formControlName="messageBody" (change)="onBodyChange($event)" ></ckeditor>
                             </div>
                         </div>
-                        
+
+                        <div class="row character-count-section" *ngIf="messageForm.value.messageType==='S'">
+                            1 SMS has maximum 160 character <span class="round-orange-button"> {{ msgMultipleCount | number}} SMS </span>
+                        </div>
+
                         <div class="row" *ngIf="messageForm.value.messageType === 'E'">
                             <div class="col-12">
                                 <div class="notification-aatachment-btn-sis">
@@ -166,7 +170,7 @@
                                     <input style="display: none;" id="attachment" type="file" multiple name="upload"
                                         (change)="fileChangeEvent($event)">
                                 </div>
-                                
+
                                 <ul class="preview-attachment-base">
                                     <li *ngFor="let item of attachmentArray" class="preview-attachment">
                                         <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
@@ -182,11 +186,11 @@
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 (click)="sendMessage()" style="margin-left:0 !important">Send Message<i
-                                    class="fa fa-caret-up float-right margin-top-10"></i></button> 
+                                    class="fa fa-caret-up float-right margin-top-10"></i></button>
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                    (click)="sendMessage()" style="margin-left:0 !important">Update Message <i
-                                        class="fa fa-caret-up float-right margin-top-10"></i></button> 
-                                        &nbsp;
+                                (click)="sendMessage()" style="margin-left:0 !important">Update Message <i
+                                    class="fa fa-caret-up float-right margin-top-10"></i></button>
+                            &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 [matMenuTriggerFor]="menu2" (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
                                     class="fa fa-caret-up float-right margin-top-10"
@@ -208,5 +212,5 @@
     </div>
 </div>
 
-<app-delete-modal #deleteModal [deleteMessage]="deleteMessage"
-(deleteOk)="sendSMS($event)" (deleteCancel)="cancelSendSMS()"></app-delete-modal>
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendSMS($event)"
+    (deleteCancel)="cancelSendSMS()"></app-delete-modal>
