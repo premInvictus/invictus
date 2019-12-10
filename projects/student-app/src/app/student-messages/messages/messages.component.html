@@ -13,7 +13,7 @@
                             formControlName="search" (keydown.enter)="searchMessage($event);$event.stopPropagation()"
                             autocomplete="off" />
                         <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10"
-                            (click)="search()" (keyup.enter)="search()">
+                            (click)="searchMessage()" (keyup.enter)="searchMessage()">
                             Search
                         </button>
                     </div>

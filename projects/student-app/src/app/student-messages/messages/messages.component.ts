@@ -74,7 +74,7 @@ export class MessagesComponent implements OnInit {
 			// 'action'
 		];
 		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
-		var inputJson = { '$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
+		var inputJson = { 'status.status_name' : 'approved','$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
 		console.log('inputJson--', inputJson);
 		this.erpCommonService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
@@ -222,6 +222,41 @@ export class MessagesComponent implements OnInit {
 	viewMessage(element) {
 		this.showViewMessage = !this.showViewMessage;
 		this.renderForm = { addMode: false, editMode: false, messageType: element.msg_type, formData: element, viewMode: false, };
+
+	}
+
+	searchMessage(event) {
+		var filterValue = '';
+		this.scheduleMessageData = [];
+		this.USER_ELEMENT_DATA = [];
+		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
+		
+		this.displayedColumns = [
+			// 'no',
+			'schedule_date',
+			'subject',
+			// 'attachment',
+			'send_by',
+			// 'action'
+		];
+		if (event && event.target && event.target.value) {
+			filterValue = event.target.value;
+		} else {
+			filterValue = this.searchForm.value.search;
+		}
+		if (filterValue) {
+			var filterJson = { filter_value: filterValue };
+			this.erpCommonService.getMessage(filterJson).subscribe((result: any) => {
+				if (result && result.data && result.data[0]) {
+					this.showViewMessage = false;
+					this.scheduleMessageData = result.data;
+					this.prepareDataSource();
+				}
+			});
+		} else {
+			this.showViewMessage = false;
+			this.getMessage();
+		}
 
 	}
 }
