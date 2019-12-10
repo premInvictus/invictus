@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {UserAccessMenuService, NotificationService} from '../../../../_services/index';
+import { UserAccessMenuService, NotificationService } from '../../../../_services/index';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AdminService} from '../../../../user-type/admin/services/admin.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AdminService } from '../../../../user-type/admin/services/admin.service';
 
 @Component({
 	selector: 'app-student-dashboard-management',
@@ -22,7 +22,7 @@ export class StudentDashboardManagementComponent implements OnInit {
 		hasCollapseExpand: true,
 		decoupleChildFromParent: false,
 		maxHeight: 400
-});
+	});
 
 	constructor(
 		private router: Router,
@@ -33,20 +33,21 @@ export class StudentDashboardManagementComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.getProjectList();
+		//this.getProjectList();
+		this.getModuleList();
 		this.getAssignedModuleList();
 	}
 	isExistAssignedModuleList(mod_id) {
 		this.assignedModuleArray.filter(mitem => {
 			if (mitem.menu_mod_id === mod_id) {
 				return true;
-		}
+			}
 		});
 		return false;
-}
+	}
 	getAssignedModuleList() {
 		this.assignedModuleArray = [];
-		this.userAccessMenuService.getUserAccessMenu({role_id: '4'}).subscribe(
+		this.userAccessMenuService.getUserAccessMenu({ role_id: '4' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.assignedModuleArray = result.data;
@@ -56,21 +57,23 @@ export class StudentDashboardManagementComponent implements OnInit {
 	}
 	getProjectList() {
 		this.adminService.getProjectList({}).subscribe(
-			(result: any ) => {
+			(result: any) => {
 				if (result && result.status === 'ok') {
-						this.projectsArray = result.data;        }
+					this.projectsArray = result.data;
+				}
 			});
 	}
 	onFilterChange(value: string) {
-		}
-	getModuleList(pro_id) {
-		this.current_Pro_id = pro_id;
+	}
+	getModuleList() {
+		//this.current_Pro_id = pro_id;
 		this.moduleItems = [];
-		this.adminService.getModuleList({role_id: 4, pro_id: pro_id}).subscribe(
+		//, pro_id: pro_id
+		this.adminService.getModuleList({ role_id: 4 }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
-						this.moduleArray = result.data;
-						for (const moditem of this.moduleArray) {
+					this.moduleArray = result.data;
+					for (const moditem of this.moduleArray) {
 						const mitem: any = {};
 						mitem.text = moditem.mod_name;
 						mitem.value = moditem.mod_id;
@@ -97,18 +100,19 @@ export class StudentDashboardManagementComponent implements OnInit {
 			});
 	}
 	submitModule() {
-		if (this.current_Pro_id) {
-		const menuRelation: any = {pro_id: this.current_Pro_id, menuRelation: this.moduleValues};
+		//this.current_Pro_id = 1;
+		// if (this.current_Pro_id) {
+		const menuRelation: any = { pro_id: 1, menuRelation: this.moduleValues };
 		this.adminService.addUserAccessMenu(menuRelation).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.notif.showSuccessErrorMessage('Submitted Successfully', 'success');
-					this.router.navigate(['../student-management'], {relativeTo : this.route});
+					this.router.navigate(['../student-management'], { relativeTo: this.route });
 				} else {
 					this.notif.showSuccessErrorMessage('Faild to Submit', 'error');
-					}
+				}
 			});
-		}
+		// }
 	}
 
 }

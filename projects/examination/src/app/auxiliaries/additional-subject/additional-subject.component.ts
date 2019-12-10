@@ -77,7 +77,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
-		this.smartService.getSubjectsByClass({ class_id : this.firstForm.value.syl_class_id, sec_id: this.firstForm.value.syl_section_id })
+		this.smartService.getSubjectsByClass({ class_id : this.firstForm.value.syl_class_id, sec_id: this.firstForm.value.syl_section_id, sub_isexam: '1'})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

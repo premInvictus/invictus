@@ -15,7 +15,7 @@
                                 type="text" formControlName="search"
                                 (keydown.enter)="searchMessage($event);$event.stopPropagation()" autocomplete="off" />
                             <button style="float:right" mat-button class="btn-spacer btn-lib-search margin-left-10"
-                                (click)="search()" (keyup.enter)="search()">
+                                (click)="searchMessage()" (keyup.enter)="searchMessage()">
                                 Search
                             </button>
                         </div>
@@ -47,7 +47,7 @@
                 </div>
             </mat-card>
             <mat-accordion displayMode="flat" multi class="mat-table">
-                <mat-expansion-panel *ngFor="let item of messagesData; let i= index;" (opened)="readMessage(item)">
+                <mat-expansion-panel *ngFor="let item of messagesData; let i= index;" (opened)="readMessage(item)" [expanded]="i==messagesData.length -1 ? true : false">
                     <mat-expansion-panel-header class="mat-row">
                         <div class="message-header">
                             <div class="circle-thumbnail">
