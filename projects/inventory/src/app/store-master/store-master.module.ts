@@ -10,6 +10,8 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { RecordMasterComponent } from './record-master/record-master.component';
 import { VendorMasterComponent } from './vendor-master/vendor-master.component';
 import { ProcurementMasterComponent } from './procurement-master/procurement-master.component';
+import { AddVendorDialog } from './vendor-master/add-vendor-dialog/add-vendor-dialog.component';
+
 
 const moment = _moment;
 
@@ -33,9 +35,10 @@ export const MY_FORMATS = {
 	declarations: [
 		RecordMasterComponent,
 		VendorMasterComponent,
-		ProcurementMasterComponent
+		ProcurementMasterComponent,
+		AddVendorDialog
 	],
-	entryComponents: [],
+	entryComponents: [AddVendorDialog],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 	{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]
