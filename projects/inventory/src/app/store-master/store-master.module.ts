@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-
+import { StoreMasterRoutingModule } from './store-master-routing.module';
 import { InventorySharedModule } from '../inventory-shared/inventory-shared.module';
 import * as _moment from 'moment';
-import { StoreMasterRoutingModule } from './store-master-routing.module';
+
 import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { RecordMasterComponent } from './record-master/record-master.component';
@@ -28,9 +28,9 @@ export const MY_FORMATS = {
 };
 @NgModule({
 	imports: [
-		CommonModule,
-		InventorySharedModule,
-		StoreMasterRoutingModule
+		CommonModule,		
+		StoreMasterRoutingModule,
+		InventorySharedModule
 	],
 	declarations: [
 		RecordMasterComponent,
