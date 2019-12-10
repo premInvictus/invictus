@@ -37,7 +37,7 @@ export class RecordMasterComponent implements OnInit {
   }
   buildForm(){
     this.paramform = this.fbuild.group({
-
+      searchId:''
     });
   }
   getRowSpan(col, index) {    

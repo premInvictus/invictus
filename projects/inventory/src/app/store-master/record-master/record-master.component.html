@@ -1,16 +1,36 @@
 <div class="row">
   <div class="col-12">
     <mat-card>
-      <form [formGroup]="paramform">
         <div class="row">
           <div class="col-6 remove-col-padding-left margin-top-15">
             <span class="font-size-24">Record Master</span>
           </div>
-          <div class="col-6 remove-col-padding-right text-right">
-            search input box
-          </div>
+          <div class="col-6">
+              <div class="search-container">
+                <form [formGroup]="paramform">
+                  <div class="row remove-top-margin">
+    
+                    <div class="col-8">
+                      <mat-form-field class="lib-form form-field">
+                        <input matInput placeholder="Search By Item Name or Item No" formControlName="searchId"  autocomplete="off" />
+                      </mat-form-field>
+                    </div>
+    
+                    <div class="col-4 margin-top-10  text-right">
+                      <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                          class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                            class="fas fa-chevron-down"></i></span></a>
+                      <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                        (keyup.enter)="search()">
+                        Search
+                      </button>
+                    </div>
+    
+                  </div>
+                </form>
+              </div>
+            </div>
         </div>
-      </form>
     </mat-card>
   </div>
 </div>
