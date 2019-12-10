@@ -3,17 +3,24 @@ CKEDITOR.plugins.add( 'simpleImageUpload', {
         var fileDialog = $('<input type="file" name="image" id="image">');
         
         fileDialog.on('change', function (e) {
+	
             var uploadUrl = editor.config.uploadUrl;
 			var file = fileDialog[0].files[0];
 			var imageData = new FormData();
 			imageData.append('file', file);
+
+			$.ajaxSetup({
+			    beforeSend: function(xhr) {
+				xhr.setRequestHeader('Prefix', 'xavier');
+			    }
+			});
 
 			$.ajax({
 				url: uploadUrl,
 				type: 'POST',
 				contentType: false,
 				processData: false,
-				data: imageData,
+				data: imageData
 			}).done(function(done) {
 				var ele = editor.document.createElement('img');
 				ele.setAttribute('src', done);

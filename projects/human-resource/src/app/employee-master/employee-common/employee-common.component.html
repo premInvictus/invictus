@@ -16,7 +16,7 @@
   </div>
   <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')" (click)="openDeleteDialog()">
-      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
+      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span> 
     </button>
   </div>
   <div class="row remove-top-margin">
@@ -114,7 +114,7 @@
                     <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
                       {{item.cat_name}}
                     </mat-option>
-                  </mat-select>
+                  </mat-select> 
                   <mat-error>
                     This field is required
                   </mat-error>
@@ -126,7 +126,7 @@
                   <mat-select formControlName="emp_department_id" placeholder="Department" required
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.dept_id}}" *ngFor="let item of departmentArray">{{item?.dept_name}}
+                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
