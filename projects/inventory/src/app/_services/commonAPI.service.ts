@@ -203,5 +203,25 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/get', value);
 	}
+
+	getMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
+	}
+
+	getLocation(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/location/getAll', value);
+	}
+
+	insertLocation(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/location/insert', value);
+	}
+
+	updateLocation(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/location/update', value);
+	}
 	
 }
