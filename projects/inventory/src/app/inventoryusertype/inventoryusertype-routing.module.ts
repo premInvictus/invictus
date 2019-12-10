@@ -10,7 +10,12 @@ const routes: Routes = [
 	},
 	{
 		path: 'school', canActivate: [AuthGuard], component: ProjectComponent, children: [
-			{ path: '', component: SchoolDashboardComponent }
+			{ path: '', component: SchoolDashboardComponent },
+			{ path: 'store-master', loadChildren:  '../store-master/store-master.module#StoreMasterModule' },
+			{ path: 'auxiliaries', loadChildren:  '../inventory-auxiliaries/auxiliaries.module#AuxiliariesModule' },
+			{ path: 'reports', loadChildren:  '../inventory-reports/reports.module#ReportsModule' },
+			{ path: 'configuration', loadChildren:  '../inventory-configuration/configuration.module#ConfigurationModule' },
+			{ path: 'circulation-management', loadChildren:  '../inventory-circulation-management/circulation-management.module#CirculationManagementModule' }
 		]
 	}
 ];
