@@ -135,17 +135,27 @@ export class EmployeeCommonComponent implements OnInit {
 		this.getEmployeeDetail(this.employeedetails.emp_id);
 	}
 
+	// getDepartment() {
+	// 	this.sisService.getDepartment({}).subscribe((result: any) => {
+	// 		if (result && result.status == 'ok') {
+	// 			this.departmentArray = result.data;
+	// 		} else {
+	// 			this.departmentArray = [];
+	// 		}
+
+	// 	});
+	// }
 	getDepartment() {
-		this.sisService.getDepartment({}).subscribe((result: any) => {
-			if (result && result.status == 'ok') {
-				this.departmentArray = result.data;
+		this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+			if (result) {
+				this.departmentArray = result;
 			} else {
 				this.departmentArray = [];
 			}
 
 		});
 	}
-	
+
 	getDesignation() {
 		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
 			if (result) {
@@ -171,18 +181,25 @@ export class EmployeeCommonComponent implements OnInit {
 		this.nextB = true;
 		this.firstB = true;
 		this.lastB = true;
-		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result: any) => {
-			//console.log('result', result);
+		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result_r: any) => {
+			let result = result_r[0];
+			// console.log(result);
 			if (result) {
+				let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
+				let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
+				let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
+				let emp_category_id = result.emp_category_detail ? result.emp_category_detail.cat_id : '';
+				let emp_wing_id =result.emp_wing_detail ? result.emp_wing_detail.config_id : '';
+				
 				this.employeeDetailsForm.patchValue({
 					emp_profile_pic: result.emp_profile_pic,
 					emp_id: result.emp_id,
 					emp_name: result.emp_name,
-					emp_honorific_id: result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '',
-					emp_designation_id: result.emp_designation_detail ? result.emp_designation_detail.des_id : '',
-					emp_department_id: result.emp_department_detail ? result.emp_department_detail.dpt_id : '',
-					emp_category_id: result.emp_category_detail ? Number(result.emp_category_detail.cat_id) : '',
-					emp_wing_id: result.emp_wing_detail ? result.emp_wing_detail.wing_id : '',
+					emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
+					emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
+					emp_department_id: emp_department_id ? emp_department_id.toString() : '',
+					emp_category_id: emp_category_id ? emp_category_id.toString() : '',
+					emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
 					emp_status: result.emp_status
 				});
 				if (result.emp_profile_pic) {

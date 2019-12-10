@@ -69,6 +69,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "4", name: 'Category One' },
 		{ id: "5", name: 'Category Two' },
 		{ id: "6", name: 'Payment Mode' },
+		{ id: "7", name: 'Department' }
 	];
 	constructor(
 		private fbuild: FormBuilder,
@@ -83,9 +84,6 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 	}
-
-
-
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
 		this.configDataSource.paginator = this.paginator;
