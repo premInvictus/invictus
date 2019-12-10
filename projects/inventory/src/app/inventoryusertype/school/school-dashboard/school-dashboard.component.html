@@ -1,24 +1,358 @@
 <div class="row">
-  <div class="col-12">
-    <!-- class="add-padding-dashboard-smart" -->
-    <div>
-      <mat-card class="smart-dashboard-mat-card">
+    <div class="col-12">
+      <mat-card>
         <div class="row">
-          <div class="col-12">
-            <div class="text-center">
-              <div class="smart-das-icon">
-                <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/smart-dashboard.png"
-                  class="smart-icon-img" />
-                <br>
-                <span class="abbr-span">"Inventory"</span><br><br>
-                <span class="desc-span-smart-dash"></span><br><br>
-                <!-- <span class="desc-span-smart-dash">Click on File System button to Add/View File System</span><br>
-                <button mat-raised-button class="view-syllabus-dashboard" (click)="viewFileSystem()">View File System</button> -->
-              </div>
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Inventory</span>
+          </div>
+          <div class="col-6">
+            <div class="search-container">
+              <form [formGroup]="searchForm">
+                <div class="row remove-top-margin">
+  
+                  <div class="col-8">
+                    <mat-form-field class="lib-form form-field">
+                      <input matInput placeholder="Search Any Item By Name or Code" formControlName="searchId"  autocomplete="off" />
+                    </mat-form-field>
+                  </div>
+  
+                  <div class="col-4 margin-top-10  text-right">
+                    <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                        class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                          class="fas fa-chevron-down"></i></span></a>
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                      (keyup.enter)="search()">
+                      Search
+                    </button>
+                  </div>
+  
+                </div>
+              </form>
             </div>
           </div>
         </div>
       </mat-card>
     </div>
   </div>
-</div>
+  <div class="row">
+    <div class="col-3 ">
+      <mat-card class="card-border-blue">
+        <div class="row">
+          <div class="col-8">
+            <span class="font-size-18 font-medium">Items Added</span>
+            <div class="margin-top-15">
+              <span class="font-size-14 font-bold font-skyblue">{{dashboardReservoirData?.books_added}}</span>
+              <span class="opacity-7 "> Items added to the Inventory</span>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <img src="/assets/images/Library/dashbook1.svg" />
+            <img class="lib-dash-small-icon" src="/assets/images/Library/round-add-button.svg" />
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-3 remove-col-padding">
+      <mat-card class="card-border-red">
+        <div class="row">
+          <div class="col-8">
+            <span class="font-size-18 font-medium">Items Flagged</span>
+            <div class="margin-top-15">
+              <span class="font-size-14 font-bold font-color-red">{{dashboardReservoirData?.books_flagged}}</span>
+              <span class="opacity-7 "> Items damaged in the Inventory</span>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <img src="/assets/images/Library/dashbook2.svg" />
+            <img class="lib-dash-small-icon" src="/assets/images/Library/round-add-button1.svg" />
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-3 remove-col-padding-right">
+      <mat-card class="card-border-green">
+        <div class="row">
+          <div class="col-8">
+            <span class="font-size-18 font-medium">Items Availiable</span>
+            <div class="margin-top-15">
+              <span class="font-size-14 font-bold font-color-green">{{dashboardReservoirData?.books_available}}</span>
+              <span class="opacity-7 "> Items availiable in the Inventory</span>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <img src="/assets/images/Library/dashbook3.svg" />
+            <img class="lib-dash-small-icon" src="/assets/images/Library/round-add-button2.svg" />
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-3">
+      <mat-card class="card-border-gold">
+        <div class="row">
+          <div class="col-8">
+            <span class="font-size-18 font-medium">Items Issued</span>
+            <div class="margin-top-15">
+              <span class="font-size-14 font-bold font-color-gold">{{dashboardReservoirData?.books_issued}}</span>
+              <span class="opacity-7 "> Items issued to the Inventory</span>
+            </div>
+          </div>
+          <div class="col-4 text-right">
+            <img src="/assets/images/Library/dashbook4.svg" />
+            <img class="lib-dash-small-icon" src="/assets/images/Library/round-add-button3.svg" />
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4 remove-col-padding-right">
+      <mat-card class="mat-card-509">
+        <div class="row">
+          <div class="col-12">
+            <span class="font-bold font-size-20">Issued Items</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="font-size-24 text-center">
+              <!-- <div class="margin-top-15per"> Chart will goes Here</div> -->
+              <app-common-dynamic-chart *ngIf="issuedItemChartFlag" [options]="issuedBookchart"
+                class="chart-content-card">
+              </app-common-dynamic-chart>
+              <div class="row"  *ngIf="issuedItemChartFlag">
+                <div class="col-6">
+                  <div class="labeldiv">
+                    <div class="teacher-pink-gradiant"></div> <span class="chart-label">Teachers : <span
+                        class="chart-label-count">{{issuedToTeacher}}</span></span>
+                  </div>
+                  <div class="labeldiv">
+                    <div class="student-violet-gradiant"></div> <span class="chart-label">Students : <span
+                        class="chart-label-count">{{issuedToStudent}}</span></span>
+                  </div>
+                </div>
+                <div class="col-4">
+                  <div class="labeldiv2">
+                    <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span
+                        class="chart-label-count">{{issuedToStaff}}</span></span>
+                  </div>
+                  <div class="labeldiv2">
+                    <div class="reissue-gray-gradiant"></div> <span class="chart-label">Reissued : <span
+                        class="chart-label-count">{{reissued}} </span></span>
+                  </div>
+                </div>
+              </div>
+  
+              <div class="row" *ngIf="!issuedItemChartFlag">
+                <div class="col-12">
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
+                        [noDataText]="" [subText]="'No Item Issued'"></app-no-data>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+    <div class="col-8">
+      <mat-card>
+        <div class="row">
+          <div class="col-6">
+            <span class="font-bold font-size-20">Due Today</span>
+          </div>
+          <div class="col-6 text-right margin-top-8">
+            <span class="font-size-16">Today : </span>
+            <span class="font-size-16 font-color-red font-bold"> {{dashboardDueInventoryData?.total_due_count}}
+              Items</span>
+          </div>
+        </div>
+        <div class="row remove-top-margin">
+          <div class="col-12">
+            <span class=" opacity-7 font-bold font-size-14">{{currentDate | date : 'EEEE dd-MMM-yyyy'}}</span>
+          </div>
+        </div>
+        <div class="row remove-top-margin">
+          <div class="col-12">
+            <mat-tab-group class="library-dash-group">
+              <mat-tab label="Class Wise">
+                <div class="row tab-content-card">
+                  <div class="col-12">
+                    <table class="table-100" *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['class']">
+                      <tbody>
+                        <ng-container *ngFor="let item of dashboardDueInventoryData['class']">
+                          <tr *ngIf="item?.dueCount > 0">
+                            <th class="font-bold padding-8">{{item?.class_name}}</th>
+                            <th class="font-color-red padding-8">{{item?.dueCount}} Items</th>
+                          </tr>
+                        </ng-container>
+                        <tr class="background-dash-grand" *ngIf="dashboardDueInventoryData?.class_total_due_count > 0">
+                          <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
+                          <th class="font-color-red padding-8 font-size-18">
+                            <span>{{dashboardDueInventoryData?.class_total_due_count}} Items</span></th>
+                          <th></th>
+                        </tr>
+                        <!-- <tr *ngIf="dashboardDueInventoryData?.class_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+  
+                  </div>
+  
+                  <div class="col-12" *ngIf="dashboardDueInventoryData?.class_total_due_count == 0">
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                        [noDataText]="" [subText]="'No Due Items'"></app-no-data>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Teacher Wise">
+                <div class="row tab-content-card">
+                  <div class="col-12">
+                    <table class="table-100" *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['teacher']">
+                      <tbody>
+                        <ng-container *ngFor="let item of dashboardDueInventoryData['teacher']">
+                          <tr>
+                            <th class="font-bold padding-8">{{item?.au_full_name}}</th>
+                            <th class="font-color-red padding-8">{{item?.due_count}} Items</th>
+                            <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
+                          </tr>
+                        </ng-container>
+                        <tr class="background-dash-grand" *ngIf="dashboardDueInventoryData['teacher'].length > 0">
+                          <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
+                          <th class="font-color-red padding-8 font-size-18">
+                            <span>{{dashboardDueInventoryData?.teacher_total_due_count}} Items</span></th>
+                          <th></th>
+                        </tr>
+                        <!-- <tr *ngIf="dashboardDueInventoryData?.teacher_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                    <div class="col-12" *ngIf="dashboardDueInventoryData?.teacher_total_due_count == 0">
+                      <div class="text-center">
+                        <app-no-data
+                          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                          [noDataText]="" [subText]="'No Due Items'"></app-no-data>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Staff Wise">
+                <div class="row tab-content-card">
+                  <div class="col-12">
+                    <table class="table-100" *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['staff']">
+                      <tbody>
+                        <ng-container *ngFor="let item of dashboardDueInventoryData['staff']">
+                          <tr>
+                            <th class="font-bold padding-8">{{item?.au_full_name}}</th>
+                            <th class="font-color-red padding-8">{{item?.due_count}} Items</th>
+                            <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
+                          </tr>
+                        </ng-container>
+  
+                        <tr class="background-dash-grand" *ngIf="dashboardDueInventoryData['staff'].length > 0">
+                          <th class="font-bold padding-8 font-size-18 separationwidth"><span>Grand Total</span></th>
+                          <th class="font-color-red padding-8 font-size-18">
+                            <span>{{dashboardDueInventoryData?.staff_total_due_count}} Items</span></th>
+                          <th></th>
+                        </tr>
+                        <!-- <tr *ngIf="dashboardDueInventoryData?.staff_total_due_count == 0">
+                          <td class="text-center" colspan="2">No Record Found</td>
+                        </tr> -->
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="col-12" *ngIf="dashboardDueInventoryData?.staff_total_due_count == 0">
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                        [noDataText]="" [subText]="'No Due Items'"></app-no-data>
+                    </div>
+                  </div>
+                </div>
+              </mat-tab>
+              <mat-tab label="Over Due">
+                <div class="row tab-content-card">
+                  <div class="col-12 remove-col-padding">
+                    <table class="table-100 custom-table"
+                      *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['all'].length > 0">
+                      <thead>
+                        <tr class="custom-tr text-center">
+                          <th class="custom-th">Sr No.</th>
+                          <th class="custom-th">Item Code</th>
+                          <th class="custom-th">Item Name</th>
+                          <th class="custom-th">Issued To</th>
+                          <th class="custom-th">Issued On</th>
+  
+                          <th class="custom-th">Due On</th>
+                          <th class="custom-th">Late by</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let item of dashboardDueInventoryData['all'] | slice:0:7; let i = index;">
+                          <!-- <ng-container *ngFor="let subitem of item.reserv_user_logs; let j = index;"> -->
+                          <!-- <tr class="custom-tr" *ngIf="getMainLoopLength(i)+j+1 <= 8"> -->
+                          <tr class="custom-tr">
+                            <!-- <td class="custom-td"><span *ngIf="i > 0">{{ getMainLoopLength(i)+j+1}}</span><span
+                                *ngIf="i === 0">{{j+1}}</span></td> -->
+                            <td class="custom-td"><span>{{i+1}}</span></td>
+                            <td class="custom-td">
+                              <span class="font-skyblue cursor-pointer"
+                                (click)="openItemModal(item?.reserv_user_logs?.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
+                            </td>
+                            <td class="custom-td text-left text-capitalize"><span>{{item?.reserv_user_logs?.title}}</span>
+                            </td>
+                            <td class="custom-td text-left text-capitalize">{{item?.user_full_name}}</td>
+                            <td class="custom-td">{{item?.reserv_user_logs?.issued_on | date: 'd-MMM-y'}}</td>
+                            <td class="custom-td">{{item?.reserv_user_logs?.due_date | date: 'd-MMM-y'}}</td>
+                            <td class="custom-td"><span
+                                class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
+                                Days</span></td>
+                          </tr>
+                          <!-- </tr> -->
+                          <!-- </ng-container> -->
+                        </ng-container>
+  
+                      </tbody>
+                    </table>
+                    <!-- <table class="table-100 custom-table"
+                      *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['all'].length  == 0">
+                      <tr class="custom-tr text-center">
+                        <td class="text-center" colspan="2">No Book Due Till Today</td>
+                      </tr>
+                    </table> -->
+                    <div class="col-12"
+                      *ngIf="dashboardDueInventoryData && dashboardDueInventoryData['all'].length  == 0">
+  
+                      <div class="text-center">
+                        <app-no-data
+                          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_due_books.png'"
+                          [noDataText]="" [subText]="'No Due Items'"></app-no-data>
+                      </div>
+                    </div>
+                    <!-- <div class="text-center" >
+                      <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;"
+                        (click)="viewAllDue()">
+                        View All
+                      </button>
+                    </div> -->
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+  
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
+  
+  <!-- <app-book-details-modal #bookDet></app-book-details-modal> -->
