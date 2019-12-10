@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { AddVendorDialog } from './add-vendor-dialog/add-vendor-dialog.component';
+
 @Component({
   selector: 'app-vendor-master',
   templateUrl: './vendor-master.component.html',
@@ -15,13 +16,14 @@ export class VendorMasterComponent implements OnInit {
   currentVendorId: any;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  // @ViewChild('deleteModalRef') deleteModalRef;
+  @ViewChild('deleteModalRef') deleteModalRef;
   vendorListData: any = [];
 
   VENDOR_LIST_ELEMENT: VendorListElement[] = [];
   vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
   displayedVendorListColumns: string[] = ['srno', 'ven_id','ven_name' , 'ven_category', 'ven_address', 'ven_contact', 'ven_email','action'];
-  
+  vendorDetailFlag = false;
+  currentVendorDetail:any;
   pageEvent: any;
 
   constructor(public dialog: MatDialog, 
@@ -38,11 +40,11 @@ export class VendorMasterComponent implements OnInit {
     
   }
 
-  // openModal = (data) => this.deleteModalRef.openModal(data);
+  openModal = (data) => this.deleteModalRef.openModal(data);
 
-	// deleteComCancel() { 
-  //   this.deleteModalRef.close();
-  // }
+	deleteComCancel() { 
+    this.deleteModalRef.close();
+  }
 
   openAddVendorDialog(): void {
     const dialogRef = this.dialog.open(AddVendorDialog, {
@@ -162,6 +164,11 @@ export class VendorMasterComponent implements OnInit {
 
   applyFilterVendor(filterValue: string) {
 		this.vendorlistdataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  showVendorDetail(element) {
+     this.vendorDetailFlag = !this.vendorDetailFlag;
+     this.currentVendorDetail = element;
   }
 
 }
