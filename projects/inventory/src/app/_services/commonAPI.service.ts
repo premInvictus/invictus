@@ -233,4 +233,13 @@ export class CommonAPIService {
 		return this.http.post(environment.apiInvUrl + '/requistion-master/insertRequistionMaster', value);
 	}
 
+	insertMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/insert', value);
+	}
+	updateMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/update', value);
+	}
+	
 }

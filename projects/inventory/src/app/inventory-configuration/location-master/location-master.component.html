@@ -134,7 +134,7 @@
                             <span><i class="fas fa-edit font-color-grey margin-right-15"
                                 (click)="edit(element, true)"></i></span>
                             <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
-                                (click)="openDeleteDialog(element);"></i></span>
+                                (click)="openDeleteDialog({});deleteLocationModel(element)"></i></span>
                           </td>
                         </ng-container>
 
