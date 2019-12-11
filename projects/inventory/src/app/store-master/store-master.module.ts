@@ -11,6 +11,7 @@ import { RecordMasterComponent } from './record-master/record-master.component';
 import { VendorMasterComponent } from './vendor-master/vendor-master.component';
 import { ProcurementMasterComponent } from './procurement-master/procurement-master.component';
 import { AddVendorDialog } from './vendor-master/add-vendor-dialog/add-vendor-dialog.component';
+import { MessageModalComponent } from './message-modal/message-modal.component';
 
 
 const moment = _moment;
@@ -36,9 +37,10 @@ export const MY_FORMATS = {
 		RecordMasterComponent,
 		VendorMasterComponent,
 		ProcurementMasterComponent,
-		AddVendorDialog
+		AddVendorDialog,
+		MessageModalComponent
 	],
-	entryComponents: [AddVendorDialog],
+	entryComponents: [AddVendorDialog,MessageModalComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 	{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]

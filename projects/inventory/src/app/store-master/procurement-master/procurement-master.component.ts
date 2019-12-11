@@ -9,17 +9,29 @@ import { CommonAPIService, SisService, AxiomService } from '../../_services';
   styleUrls: ['./procurement-master.component.css']
 })
 export class ProcurementMasterComponent implements OnInit {
+  @ViewChild('deleteModal') deleteModal;
+  @ViewChild('messageModal') messageModal;
+  submitParam: any = {};
   createRequistionForm: FormGroup;
+  finalRequistionForm: FormGroup;
   itemArray: any[] = [];
   itemCode: any;
   itemCodeArray: any[] = [];
   finalRequistionArray: any[] = [];
+  finalSubmitArray: any = {};
+  UpdateFlag = false;
+  update_id: any;
+  currentUser: any;
+  session: any;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
     public axiomService: AxiomService,
     public sisService: SisService,
-  ) { }
+  ) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.session = JSON.parse(localStorage.getItem('session'));
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -33,6 +45,10 @@ export class ProcurementMasterComponent implements OnInit {
       item_units: ''
 
     });
+    this.finalRequistionForm = this.fbuild.group({
+      intended_use: '',
+    });
+
   }
 
   filterItem($event) {
@@ -56,7 +72,7 @@ export class ProcurementMasterComponent implements OnInit {
       item_units: item.item_units.name
     });
   }
-  additem() {
+  additemss() {
     if (this.createRequistionForm.valid) {
       console.log(this.createRequistionForm.value);
     } else {
@@ -66,88 +82,114 @@ export class ProcurementMasterComponent implements OnInit {
 
 
 
-  // Add syllabus list function
-  // addDetailsList() {
-  //   if (this.createRequistionForm.valid) {
-  //     const sindex = this.itemCodeArray.findIndex(f => f.item_code === this.createRequistionForm.value.item_code);
-  //     if (sindex !== -1) {
-  //      // this.openMessageModal();
-  //     } else {
-  //       if (this.createRequistionForm.value.sd_ctr_id === '1') {
-  //         this.itemCodeArray.push({
-  //           item_code: this.createRequistionForm.value.item_code,
-  //         });
-  //       }
-  //       this.finalRequistionArray.push(this.createRequistionForm.value);
-  //     }
-  //     for (let i = 0; i < this.finalSyllabusArray.length; i++) {
-  //       let sd_period_teacher: any = '';
-  //       let sd_period_test: any = '';
-  //       let sd_period_revision: any = '';
+  // Add item list function
 
-  //       if (this.finalSyllabusArray[i].sd_ctr_id === '1') {
-  //         sd_period_teacher = this.finalSyllabusArray[i].sd_period_req;
-  //       } else if (this.finalSyllabusArray[i].sd_ctr_id === '2') {
-  //         sd_period_test = this.finalSyllabusArray[i].sd_period_req;
-  //       } else {
-  //         sd_period_revision = this.finalSyllabusArray[i].sd_period_req;
-  //       }
-  //       const spannArray: any[] = [];
-  //       spannArray.push({
-  //         sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
-  //         sd_st_id: this.finalSyllabusArray[i].sd_st_id,
-  //         sd_period_req: this.finalSyllabusArray[i].sd_period_req,
-  //         sd_period_teacher: sd_period_teacher,
-  //         sd_period_test: sd_period_test,
-  //         sd_period_revision: sd_period_revision,
-  //         sd_ctr_id: this.finalSyllabusArray[i].sd_ctr_id,
-  //         sd_desc: this.finalSyllabusArray[i].sd_desc,
-  //       });
-  //       for (let j = i + 1; j < this.finalSyllabusArray.length; j++) {
-  //         let sd_period_teacher1: any = '';
-  //         let sd_period_test1: any = '';
-  //         let sd_period_revision1: any = '';
-  //         if (this.finalSyllabusArray[i].sd_topic_id === this.finalSyllabusArray[j].sd_topic_id) {
-  //           if (this.finalSyllabusArray[j].sd_ctr_id === '1') {
-  //             sd_period_teacher1 = this.finalSyllabusArray[j].sd_period_req;
-  //           } else if (this.finalSyllabusArray[j].sd_ctr_id === '2') {
-  //             sd_period_test1 = this.finalSyllabusArray[j].sd_period_req;
-  //           } else {
-  //             sd_period_revision1 = this.finalSyllabusArray[j].sd_period_req;
-  //           }
-  //           spannArray.push({
-  //             sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
-  //             sd_st_id: this.finalSyllabusArray[j].sd_st_id,
-  //             sd_period_req: this.finalSyllabusArray[j].sd_period_req,
-  //             sd_period_teacher: sd_period_teacher1,
-  //             sd_period_test: sd_period_test1,
-  //             sd_period_revision: sd_period_revision1,
-  //             sd_ctr_id: this.finalSyllabusArray[j].sd_ctr_id,
-  //             sd_desc: this.finalSyllabusArray[j].sd_desc,
-  //           });
-  //         }
-  //       }
-  //       const findex = this.finalSpannedArray.findIndex(f => f.sd_topic_id === this.finalSyllabusArray[i].sd_topic_id);
-  //       if (findex === -1) {
-  //         this.finalSpannedArray.push({
-  //           sd_topic_id: this.finalSyllabusArray[i].sd_topic_id,
-  //           details: spannArray,
-  //           total: this.finalSyllabusArray[i].sd_period_req
-  //         });
-  //         this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
-  //       } else {
-  //         this.finalSpannedArray[findex].total = this.finalSpannedArray[findex].total + this.finalSyllabusArray[i].sd_period_req;
-  //         this.totalPeriodTempCount = this.totalPeriodTempCount + this.finalSyllabusArray[i].sd_period_req;
-  //       }
-  //     }
-  //     this.syllabusDetailForm.patchValue({
-  //       'sd_st_id': '',
-  //       'sd_period_req': '',
-  //       'sd_desc': ''
-  //     });
-  //   } else {
-  //     this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
-  //   }
-  // }
+  addList() {
+    console.log('itemCodeArray', this.itemCodeArray);
+    if (this.createRequistionForm.valid) {
+      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
+      if (sindex !== -1) {
+        this.openMessageModal();
+      } else {
+        this.itemCodeArray.push({
+          item_code: this.createRequistionForm.value.item_code,
+        });
+        this.finalRequistionArray.push(this.createRequistionForm.value);
+      }
+      this.resetForm();
+    } else {
+      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
+  }
 
+  // Edit item list function
+
+  editList(value) {
+    this.UpdateFlag = true;
+    this.update_id = value;
+    this.createRequistionForm.patchValue({
+      'item_code': this.finalRequistionArray[value].item_code,
+      'item_name': this.finalRequistionArray[value].item_name,
+      'item_desc': this.finalRequistionArray[value].item_desc,
+      'item_quantity': this.finalRequistionArray[value].item_quantity,
+      'item_units': this.finalRequistionArray[value].item_units
+    });
+  }
+
+  // update item list function
+
+  updateList() {
+    if (this.createRequistionForm.valid) {
+      this.UpdateFlag = false;
+      this.finalRequistionArray[this.update_id] = this.createRequistionForm.value;
+      this.resetForm();
+    } else {
+      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
+  }
+
+  // delete item list function
+
+  deleteList(value) {
+    this.finalRequistionArray.splice(value, 1);
+  }
+
+  resetForm() {
+    this.createRequistionForm = this.fbuild.group({
+      item_code: '',
+      item_name: '',
+      item_desc: '',
+      item_quantity: '',
+      item_units: ''
+    });
+  }
+  finalCancel() {
+    this.finalRequistionArray = [];
+    this.resetForm();
+  }
+  //  Open Final Submit Modal function
+  openMessageModal() {
+    this.submitParam.text = 'Add';
+    this.messageModal.openModal(this.submitParam);
+  }
+  //  Open Final Submit Modal function
+  openSubmitModal() {
+    if (this.finalRequistionForm.valid) {
+      this.submitParam.text = 'Create Requisition Request';
+      this.deleteModal.openModal(this.submitParam);
+    } else {
+      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
+  }
+  finalSubmit($event) {
+    if ($event) {
+      this.finalSubmitArray['rm_item_details'] = this.finalRequistionArray;
+      this.finalSubmitArray['rm_intended_use'] = this.finalRequistionForm.value.intended_use;
+      this.finalSubmitArray['rm_source'] = 'PR';
+      this.finalSubmitArray['rm_type'] = 'PR';
+      this.finalSubmitArray['rm_created'] = {
+        created_by: Number(this.currentUser.login_id),
+        created_date: ''
+      }
+      this.finalSubmitArray['rm_updated'] = {
+        updated_by: Number(this.currentUser.login_id),
+        update_date: ''
+      }
+      this.finalSubmitArray['rm_approved'] = {
+        approved_by: '',
+        approved_date: ''
+      }
+      this.finalSubmitArray['rm_status'] = '0';
+      this.finalSubmitArray['rm_session'] = this.session.ses_id;
+      this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
+        if (result) {
+          this.commonService.showSuccessErrorMessage('Requistion Request Generated Successfylly', 'success');
+          this.finalSubmitArray = [];
+          this.finalRequistionArray = [];
+        } else {
+          this.commonService.showSuccessErrorMessage('Error While Generating Request', 'error');
+        }
+      });
+    }
+  }
 }
