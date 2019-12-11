@@ -223,5 +223,13 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiInvUrl + '/location/update', value);
 	}
+	insertMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/insert', value);
+	}
+	updateMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/update', value);
+	}
 	
 }

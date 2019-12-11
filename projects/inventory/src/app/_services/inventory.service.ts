@@ -11,7 +11,7 @@ export class InventoryService {
 
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
-		this.service.startLoading();
+		//this.service.startLoading();
     //return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
     return of({status: 'ok', data: [
       {position: 1, item_code: '123456', item_name: 'black board chalk1', item_units_name: 'boxes', item_desc: 'One of the most used school stationery is Dustless Chalk. It does not crowd the room with the dust and', item_location: [{location_id:'1', location_name: 'class X - Almirah 01', item_stocks: '150'}, {location_id:'2', location_name: 'class X - Almirah 02', item_stocks: '250'}, {location_id:'3', location_name: 'class X - Almirah 03', item_stocks: '350'}]},
