@@ -223,5 +223,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiInvUrl + '/location/update', value);
 	}
-	
+	getItemsFromMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/configuration/getItemsFromMaster', value);
+	}
+
 }
