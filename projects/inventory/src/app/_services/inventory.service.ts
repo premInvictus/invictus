@@ -11,7 +11,7 @@ export class InventoryService {
 
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
-    this.service.startLoading();
+		//this.service.startLoading();
     //return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
     return of({
       status: 'ok', data: [
