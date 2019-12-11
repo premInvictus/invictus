@@ -42,7 +42,8 @@ export class ProcurementMasterComponent implements OnInit {
       item_name: '',
       item_desc: '',
       item_quantity: '',
-      item_units: ''
+      item_units: '',
+      item_status: ''
 
     });
     this.finalRequistionForm = this.fbuild.group({
@@ -57,8 +58,8 @@ export class ProcurementMasterComponent implements OnInit {
       if ($event.target.value !== '' && $event.target.value.length >= 3) {
         this.itemArray = [];
         this.commonService.getItemsFromMaster({ item_name: $event.target.value }).subscribe((result: any) => {
-          if (result) {
-            this.itemArray = result;
+          if (result && result.status === 'ok') {
+            this.itemArray = result.data;
           }
         });
       }
@@ -85,7 +86,6 @@ export class ProcurementMasterComponent implements OnInit {
   // Add item list function
 
   addList() {
-    console.log('itemCodeArray', this.itemCodeArray);
     if (this.createRequistionForm.valid) {
       const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
       if (sindex !== -1) {
@@ -94,6 +94,7 @@ export class ProcurementMasterComponent implements OnInit {
         this.itemCodeArray.push({
           item_code: this.createRequistionForm.value.item_code,
         });
+        this.createRequistionForm.value.item_status = '0';
         this.finalRequistionArray.push(this.createRequistionForm.value);
       }
       this.resetForm();
@@ -186,6 +187,7 @@ export class ProcurementMasterComponent implements OnInit {
           this.commonService.showSuccessErrorMessage('Requistion Request Generated Successfylly', 'success');
           this.finalSubmitArray = [];
           this.finalRequistionArray = [];
+          this.itemCodeArray = [];
         } else {
           this.commonService.showSuccessErrorMessage('Error While Generating Request', 'error');
         }
