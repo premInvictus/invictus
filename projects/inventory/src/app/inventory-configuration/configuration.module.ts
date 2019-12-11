@@ -11,6 +11,7 @@ import { BranchTransferComponent } from './branch-transfer/branch-transfer.compo
 import { CategoriesComponent } from './categories/categories.component';
 import { ItemCodeGenerationComponent } from './item-code-generation/item-code-generation.component';
 import { LocationMasterComponent } from './location-master/location-master.component';
+import { SetupComponent } from './setup/setup.component';
 
 const moment = _moment;
 
@@ -35,7 +36,8 @@ export const MY_FORMATS = {
 		BranchTransferComponent,
 		CategoriesComponent,
 		ItemCodeGenerationComponent,
-		LocationMasterComponent
+		LocationMasterComponent,
+		SetupComponent
 	],
 	entryComponents: [],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
