@@ -210,7 +210,6 @@ export class EmployeeCommonComponent implements OnInit {
 				}
 
 				if (this.navigation_record) {
-
 					if (this.navigation_record.first_record &&
 						this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
 						this.viewOnly) {
