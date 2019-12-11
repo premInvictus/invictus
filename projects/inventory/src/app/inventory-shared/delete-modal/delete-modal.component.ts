@@ -7,6 +7,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 })
 export class DeleteModalComponent implements OnInit {
 	inputData: any = {'text':''};
+	@Input() inputText;
 	@Input() deleteMessage;
 	@Output() deleteOk = new EventEmitter<any>();
 	@Output() deleteCancel = new EventEmitter<any>();
