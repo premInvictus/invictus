@@ -272,7 +272,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					let pos = 1;
 					for (const item of result.data) {
 						that.CONFIG_ELEMENT_DATA.push({
-							position: pos,
+							position: item.sec_id,
 							name: item.sec_name,
 							order: item.sec_order,
 							action: item
