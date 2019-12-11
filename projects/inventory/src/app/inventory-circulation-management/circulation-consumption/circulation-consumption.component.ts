@@ -44,7 +44,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	ITEM_LOG_LIST_ELEMENT: ItemLogListElement[] = [];
 	itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
-	displayedItemLogListColumns: string[] = ['srno', 'item_id', 'title', 'author', 'publisher', 'issued_on', 'due_date', 'returned_on', 'fine'];
+	displayedItemLogListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_nature', 'item_location', 'issued_quantity', 'due_date', 'returned_on'];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -136,23 +136,8 @@ export class CirculationConsumptionComponent implements OnInit {
 				for (let i=0; i< settings.length;i++) {
 					if (settings[i]['gs_alias'] === 'library_user_setting') {
 						this.settingData = JSON.parse(settings[i]['gs_value']);
-						console.log('settingData', this.settingData);
-						// this.formGroupArray[this.configValue-1].formGroup.patchValue({
-						// 	'item_issued_limit_staff': settingData['item_issued_limit_staff'],
-						// 	'item_return_days_staff': settingData['item_return_days_staff'],
-						// 	'item_request_for_staff': settingData['item_request_for_staff'],
-						// 	'item_issued_limit_teacher': settingData['item_issued_limit_teacher'],
-						// 	'item_return_days_teacher': settingData['item_return_days_teacher'],
-						// 	'item_request_for_teacher': settingData['item_request_for_teacher'],
-						// 	'item_issued_limit_student': settingData['item_issued_limit_student'],
-						// 	'item_return_days_student': settingData['item_return_days_student'],
-						// 	'item_request_for_student': settingData['item_request_for_student'],
-						// 	'class_item_issue_for_student' : settingData['class_item_issue_for_student'],
-						// });
 					}
-				}
-				
-				
+				}				
 			}
 		});
 	}
@@ -280,9 +265,9 @@ export class CirculationConsumptionComponent implements OnInit {
 
 				} else {
 					const inputJson = {
-						'item_id': Number(this.returnIssueItemsForm.value.scanItemId),
-						'reserv_status': ['available'],
-						'user_login_id': this.userData.au_login_id,
+						'item_code': Number(this.returnIssueItemsForm.value.scanItemId),
+						'item_status': 'active',
+						//'user_login_id': this.userData.au_login_id,
 					};
 					const date = new Date();
 					if (this.searchForm.value.user_role_id === '4') {
@@ -308,17 +293,13 @@ export class CirculationConsumptionComponent implements OnInit {
 						
 					}
 					
-					this.erpCommonService.searchReservoirByStatus(inputJson).subscribe((result: any) => {
-						if (result && result.status === 'ok') {
-
+					this.erpCommonService.searchItemByStatus(inputJson).subscribe((result: any) => {
+						if (result) {
 							console.log('result', result);
-							if (result && result.data && result.data.resultData[0]) {
-								delete result.data.resultData[0]['_id'];
-								console.log('date', date);
-								result.data.resultData[0]['due_date'] = date;
-								// result.data.resultData[0]['issued_on'] = '';
-								// result.data.resultData[0]['returned_on'] = '';
-								this.itemData.push(result.data.resultData[0]);
+							if (result && result[0]) {
+								delete result[0]['_id'];
+								result[0]['due_date'] = date;
+								this.itemData.push(result[0]);
 								this.setDueDate(this.itemData.length - 1, date);
 								this.returnIssueItemsForm.controls['scanItemId'].setValue('');
 							}
@@ -354,13 +335,13 @@ export class CirculationConsumptionComponent implements OnInit {
 		}
 		
 		const inputJson = {
-			user_login_id: this.userData.au_login_id,
-			user_role_id: this.userData.au_role_id,
-			log: true
+			user_login_id: Number(this.userData.au_login_id),
+			user_role_id: Number(this.userData.au_role_id),
+			//'user_inv_logs.item_status' : 'issued'
 		};
-		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.itemLogData = result.data;
+		this.erpCommonService.getUserItemsData(inputJson).subscribe((result: any) => {
+			if (result) {
+				this.itemLogData = result[0].user_inv_logs;
 				this.finIssueItem = [];
 				this.userHaveItemsData = true;
 				this.itemsReadTillDate = 0;
@@ -372,37 +353,44 @@ export class CirculationConsumptionComponent implements OnInit {
 				let pos = 1;
 				recordArray = this.itemLogData;
 				const returnedCount = 0;
-				for (const item of recordArray) {
 
-					let aval = '';
-					for (const avalue of item.reserv_user_logs.authors) {
-						aval += avalue + ',';
-					}
+				console.log('recordArray--', recordArray);
+				for (const item of recordArray) {
 
 					element = {
 						srno: pos,
-						item_id: item.reserv_user_logs.item_id,
-						title: item.reserv_user_logs.title,
-						author:  item.reserv_user_logs.authors[0],
-						publisher: item.reserv_user_logs.publisher,
-						issued_on: item.reserv_user_logs.issued_on,
-						due_date: item.reserv_user_logs.due_date,
-						returned_on: item.reserv_user_logs.returned_on,
-						fine: item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '',
+						item_code: item.item_code ? item.item_code : 0,
+						item_name: item.item_name ? item.item_name : '',
+						item_nature:  item.item_nature ? item.item_nature : '',
+						item_category: item.item_category ? item.item_category : '',
+						item_reorder_level: item.item_reorder_level ? item.item_reorder_level : '',
+						item_units: item.item_units ? item.item_units : '',
+						item_desc: item.item_desc ? item.item_desc : '',
+						item_status: item.item_status ? item.item_status : '',
+						due_date: item.due_date ? item.due_date : '',
+						returned_on: item.returned_on ? item.returned_on : '',
+						issued_on : item.issued_on ? item.issued_on : ''
 					};
-					if (item.reserv_user_logs.returned_on) {
+					if (item.returned_on) {
 						this.itemsReadTillDate++;
 					}
 
-					if (item.reserv_user_logs.reserv_status === 'issued') {
+					if (item.item_status === 'issued') {
 						this.issueItemData.push(item);
 						this.finIssueItem.push(item);
 					}
+
+					console.log('this.issueItemData--', this.issueItemData);
+
+					console.log('element--', element);
 
 					this.ITEM_LOG_LIST_ELEMENT.push(element);
 					pos++;
 
 				}
+
+				console.log('this.issueItemData--', this.issueItemData);
+
 				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 				this.itemLoglistdataSource.paginator = this.paginator;
 				if (this.sort) {
@@ -410,9 +398,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.itemLoglistdataSource.sort = this.sort;
 				}
 
-
-
-
+				console.log('ITEM_LOG_LIST_ELEMENT--', this.ITEM_LOG_LIST_ELEMENT, this.itemLoglistdataSource);
 			} else {
 				this.userHaveItemsData = false;
 				this.itemLogData = [];
@@ -424,13 +410,13 @@ export class CirculationConsumptionComponent implements OnInit {
 			}
 		});
 
-		this.erpCommonService.getUserOutstandingFine(inputJson).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.stuOutStandingFine = result.data;
-			} else {
-				this.stuOutStandingFine = 0;
-			}
-		});
+		// this.erpCommonService.getUserOutstandingFine(inputJson).subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		this.stuOutStandingFine = result.data;
+		// 	} else {
+		// 		this.stuOutStandingFine = 0;
+		// 	}
+		// });
 	}
 
 	saveIssueReturn() {
@@ -438,19 +424,14 @@ export class CirculationConsumptionComponent implements OnInit {
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		
 		for (let i = 0; i < itemData.length; i++) {
-			if (itemData[i]['reserv_status'] === 'issued') {
-				//itemData[i]['due_date'] <= this.common.dateConvertion(new Date(), 'yyyy-MM-dd') || 
-
-				console.log(itemData[i]['due_date'] , this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd'));
+			if (itemData[i]['item_status'] === 'issued') {
 				if (this.common.dateConvertion(itemData[i]['due_date'],'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
 							itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 							itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
 							itemData[i]['fdue_date'] = itemData[i]['fdue_date'];
 							itemData[i]['reissue_status'] = 1;
-							console.log('in available jh');
 						} else {
-							console.log('in available');
-							itemData[i]['reserv_status'] = 'available';
+							itemData[i]['item_status'] = 'active';
 							itemData[i]['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
 							itemData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 							for (let j=0; j< this.finIssueItem.length;j++) {
@@ -461,10 +442,9 @@ export class CirculationConsumptionComponent implements OnInit {
 							
 						}
 						updateditemData.push(itemData[i]);
-			} else if (itemData[i]['reserv_status'] === 'available' || itemData[i]['reserv_status'] === 'reserved') {
-				if (itemData[i]['fdue_date']) {
-					
-					itemData[i]['reserv_status'] = 'issued';
+			} else if (itemData[i]['item_status'] === 'active' || itemData[i]['item_status'] === 'reserved') {
+				if (itemData[i]['fdue_date']) {					
+					itemData[i]['item_status'] = 'issued';
 					itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
 					itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					this.finIssueItem.push(itemData[i]);
@@ -472,12 +452,15 @@ export class CirculationConsumptionComponent implements OnInit {
 				}
 			}
     }
-    
+	
+	
 
 		var limitFlag = this.checkForIssueItemLimit();
+
 		if (!limitFlag) {
 			const inputJson = {
-				reservoir_data: updateditemData,
+				user_inv_session: this.session_id,
+				user_inv_logs: updateditemData,
 				user_login_id: this.userData.au_login_id,
 				user_admission_no: this.userData.em_admission_no,
 				user_role_id: this.userData.au_role_id,
@@ -489,7 +472,7 @@ export class CirculationConsumptionComponent implements OnInit {
 			};
 			
 			if (!this.userHaveItemsData) {
-				this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
+				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.itemData = [];
 						this.issueItemData = [];
@@ -500,7 +483,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.common.showSuccessErrorMessage(result.message, result.status);
 				});
 			} else {
-				this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
+				this.erpCommonService.updateUserItemData(inputJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.itemData = [];
 						this.issueItemData = [];
@@ -528,15 +511,12 @@ export class CirculationConsumptionComponent implements OnInit {
 
 	checkForIssueItemLimit() {
 		let flag = false;
-		//parseInt(this.settingData['item_return_days_staff'], 10)
-		console.log('this.finIssueItem.length', this.finIssueItem , this.finIssueItem.length);
 		if (this.searchForm.value.user_role_id === '4') {
 			if (this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_student'], 10)) {
 				flag = true;
 			}
 			
 		} else if (this.searchForm.value.user_role_id === '3') {
-			console.log(this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_teacher'], 10));
 			if (this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_teacher'], 10)) {
 				flag = true;
 			}
@@ -556,12 +536,10 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	checkForIssueItem(searchItemId) {
-		console.log('this.itemLogData', this.itemLogData);
 		let flag = { 'status': false, 'index': '' };
 		for (let i = 0; i < this.itemLogData.length; i++) {
 			if (Number(this.itemLogData[i]['reserv_user_logs']['item_id']) === Number(searchItemId) && this.itemLogData[i]['reserv_user_logs']['issued_on'] !== '') {
 				flag = { 'status': true, 'index': i.toString() };
-
 				break;
 			}
 		}
@@ -687,7 +665,6 @@ export class CirculationConsumptionComponent implements OnInit {
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
 		let totRow = this.length+this.itemLogData.length+5;
-		console.log(worksheet._rows.length, this.currentUser, totRow);
 		
 		worksheet.mergeCells('A'+totRow+':'+'B'+totRow);
 		worksheet.getCell('A'+totRow+':'+'B'+totRow).value = 'Report Generated By : ' +this.currentUser.full_name;

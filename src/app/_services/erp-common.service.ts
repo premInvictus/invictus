@@ -514,6 +514,26 @@ export class ErpCommonService {
 		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
 	}
 
+	getUserItemsData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/getAll', value);
+	}
+
+	searchItemByStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/configuration/get', value);
+	}
+
+	insertUserItemData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/insert', value);
+	}
+
+	updateUserItemData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/insert', value);
+	}
+
 }
 
 
