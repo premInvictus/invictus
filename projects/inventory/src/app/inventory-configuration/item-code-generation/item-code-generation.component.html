@@ -1,3 +1,163 @@
-<p>
-  item-code-generation works!
-</p>
+<div>
+  <div class="row">
+    <div class="col-12 ">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6">
+            <h1 class="remove-bottom-margin font-size-24">Item Code Generation</h1>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row margin-top-20">
+    <div class="col-12 ">
+      <mat-card class="card-content__container card-height-650">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-3 remove-col-padding custom-col-27">
+              <form [formGroup]="itemCodeForm">
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Item Name</mat-label>
+                      <input matInput formControlName="item_name" placeholder="Item Name" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Nature</mat-label>
+                      <mat-select formControlName="item_nature" placeholder="Nature" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of natureArray" [value]="item.config_id">{{item.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Category</mat-label>
+                      <mat-select formControlName="item_category" placeholder="Category" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of categoryArray" [value]="item.config_id">{{item.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Reorder Level</mat-label>
+                      <input matInput formControlName="item_reorder_level" placeholder="Reorder Level" type="number"
+                        required>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Units</mat-label>
+                      <mat-select formControlName="item_units" placeholder="Units" required>
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of unitsArray" [value]="item.config_id">{{item.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 margin-top-25">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Item Description</mat-label>
+                      <textarea matInput formControlName="item_desc" placeholder="Item Description" rows="6"
+                        required></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="text-center ">
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success-green"
+                    (click)="saveForm()">Submit</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success-green"
+                    (click)="saveForm()">Update</button>
+                  <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
+                    (click)="cancelForm()">Cancel</button>
+                  <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
+                    (click)="resetForm()">Reset</button>
+                </div>
+              </form>
+            </div>
+            <div class="col-1 fee-custom-col-8">
+              <div class="vertical-line-divider2"></div>
+            </div>
+            <div class="col-8 custom-col-64">
+              <div class="row">
+                <div class="col-12">
+                  <div [hidden]="ITEM_MASTER_DATA.length == 0">
+                    <mat-form-field>
+                      <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                        placeholder="Filter">
+                      <mat-icon matPrefix>filter_list</mat-icon>
+                    </mat-form-field>
+                    <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+                      <ng-container matColumnDef="sno">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                        <td mat-cell *matCellDef="let item"> {{item.sno}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Code </th>
+                        <td mat-cell *matCellDef="let item"> {{item.code}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </th>
+                        <td mat-cell *matCellDef="let item"> {{item.name | titlecase}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="nature">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nature </th>
+                        <td mat-cell *matCellDef="let item"> {{getNatureName(item.nature)}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="category">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+                        <td mat-cell *matCellDef="let item"> {{getCategoryName(item.category)}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="reorder">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Reorder Level </th>
+                        <td mat-cell *matCellDef="let item"> {{item.reorder + ' ' + getUnitsName(item.units)}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="desc">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>Description </th>
+                        <td mat-cell *matCellDef="let item"> {{item.desc | capitalize}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef> Action </th>
+                        <td mat-cell *matCellDef="let item">
+                          <ul class="inline-flex margin-top-10">
+                            <li><i class="material-icons icon-edit" (click)="editItem(item.action)">create</i>
+                            </li>
+                            <li><i class="material-icons icon-danger" (click)="openDeleteDialog(item.action)">delete</i>
+                            </li>
+                          </ul>
+                        </td>
+                      </ng-container>
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                    </table>
+                    <div *ngIf="ITEM_MASTER_DATA.length == 0" class="no-records">
+                      No records found
+                    </div>
+                    <mat-paginator [hidden]="ITEM_MASTER_DATA.length < 1" #paginator [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-delete-modal #delete (deleteOk)="deleteItem($event)" (deleteCancel)="cancel($event)"></app-delete-modal>

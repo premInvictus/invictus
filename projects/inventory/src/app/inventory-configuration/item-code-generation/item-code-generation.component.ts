@@ -1,15 +1,246 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
+import { InventoryService, CommonAPIService } from '../../_services';
+import { MatTableDataSource, MatPaginator } from '@angular/material';
 
 @Component({
   selector: 'app-item-code-generation',
   templateUrl: './item-code-generation.component.html',
   styleUrls: ['./item-code-generation.component.css']
 })
-export class ItemCodeGenerationComponent implements OnInit {
-
-  constructor() { }
+export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
+  itemCodeForm: FormGroup;
+  natureArray: any[] = [];
+  categoryArray: any[] = [];
+  unitsArray: any[] = [];
+  updateFlag = false;
+  ITEM_MASTER_DATA: any[] = [];
+  datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+  @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('delete') deleteModal;
+  displayedColumns = ['sno', 'code', 'name', 'nature', 'category', 'reorder', 'desc', 'action'];
+  constructor(private fbuild: FormBuilder,
+    private service: InventoryService,
+    private common: CommonAPIService) { }
 
   ngOnInit() {
+    this.buildform();
+    this.getItemCategory();
+    this.getItemNature();
+    this.getItemUnits();
+    this.getAllItemsFromMaster();
+  }
+  ngAfterViewInit() {
+    this.datasource.paginator = this.paginator;
+  }
+  buildform() {
+    this.itemCodeForm = this.fbuild.group({
+      "item_name": "",
+      "item_session": "",
+      "item_nature": "",
+      "item_category": "",
+      "item_reorder_level": "",
+      "item_units": "",
+      "item_desc": "",
+      "item_status": "",
+      "item_code": ""
+    });
+  }
+  getItemNature() {
+    this.service.getDroppableFromMaster({
+      type_id: '8'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.natureArray = res;
+      } else {
+        this.natureArray = [];
+      }
+    });
+  }
+  getItemCategory() {
+    this.service.getDroppableFromMaster({
+      type_id: '9'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.categoryArray = res;
+      } else {
+        this.categoryArray = [];
+      }
+    });
+  }
+  openDeleteDialog(data) {
+    this.deleteModal.openModal(data);
+  }
+  getItemUnits() {
+    this.service.getDroppableFromMaster({
+      type_id: '10'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.unitsArray = res;
+      } else {
+        this.unitsArray = [];
+      }
+    });
+  }
+  getAllItemsFromMaster() {
+    this.ITEM_MASTER_DATA = [];
+    this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+    this.service.getAllItemsFromMaster({
+      'item_status': 'active'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        let ind = 0;
+        for (const item of res) {
+          this.ITEM_MASTER_DATA.push({
+            "sno": ind + 1,
+            "code": item.item_code,
+            "name": item.item_name,
+            "session": item.item_session,
+            "nature": item.item_nature.id,
+            "category": item.item_category.id,
+            "reorder": item.item_reorder_level,
+            "units": item.item_units.id,
+            "desc": item.item_desc,
+            "status": item.item_status,
+            "action": item
+          });
+          ind++;
+        }
+        this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+        this.datasource.paginator = this.paginator;
+      }
+    });
+  }
+  getNatureName(id) {
+    const findex = this.natureArray.findIndex(f => Number(f.config_id) === Number(id));
+    if (findex !== -1) {
+      return this.natureArray[findex]['name'];
+    }
+  }
+  getCategoryName(id) {
+    const findex = this.categoryArray.findIndex(f => Number(f.config_id) === Number(id));
+    if (findex !== -1) {
+      return this.categoryArray[findex]['name'];
+    }
+  }
+  getUnitsName(id) {
+    const findex = this.unitsArray.findIndex(f => Number(f.config_id) === Number(id));
+    if (findex !== -1) {
+      return this.unitsArray[findex]['name'];
+    }
+  }
+  resetForm() {
+    this.itemCodeForm.reset();
+  }
+  cancelForm() {
+    this.updateFlag = false;
+    this.resetForm();
+  }
+  saveForm() {
+    if (this.itemCodeForm.valid) {
+      if (!this.updateFlag) {
+        let inputJSON = {};
+        inputJSON['item_code'] = '';
+        inputJSON['item_name'] = this.itemCodeForm.value.item_name;
+        inputJSON['item_nature'] = {
+          name: this.getNatureName(this.itemCodeForm.value.item_nature),
+          id: this.itemCodeForm.value.item_nature
+        };
+        inputJSON['item_category'] = {
+          name: this.getCategoryName(this.itemCodeForm.value.item_category),
+          id: this.itemCodeForm.value.item_category
+        };
+        inputJSON['item_units'] = {
+          name: this.getUnitsName(this.itemCodeForm.value.item_units),
+          id: this.itemCodeForm.value.item_units
+        };
+        inputJSON['item_reorder_level'] = this.itemCodeForm.value.item_reorder_level;
+        inputJSON['item_desc'] = this.itemCodeForm.value.item_desc;
+        inputJSON['item_status'] = 'active';
+        inputJSON['item_location'] = {
+          location_id: 0,
+          item_qty: 0
+        };
+        this.service.insertItemsMaster(inputJSON).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.common.showSuccessErrorMessage('Item generated successfully', 'success');
+            this.getAllItemsFromMaster();
+            this.itemCodeForm.reset();
+          } else {
+            this.common.showSuccessErrorMessage('Duplicate item cannot be generated', 'error');
+            this.getAllItemsFromMaster();
+            this.itemCodeForm.reset();
+          }
+        });
+      } else {
+        let inputJSON = {};
+        inputJSON['item_code'] = this.itemCodeForm.value.item_code;
+        inputJSON['item_name'] = this.itemCodeForm.value.item_name;
+        inputJSON['item_nature'] = {
+          name: this.getNatureName(this.itemCodeForm.value.item_nature),
+          id: this.itemCodeForm.value.item_nature
+        };
+        inputJSON['item_category'] = {
+          name: this.getCategoryName(this.itemCodeForm.value.item_category),
+          id: this.itemCodeForm.value.item_category
+        };
+        inputJSON['item_units'] = {
+          name: this.getUnitsName(this.itemCodeForm.value.item_units),
+          id: this.itemCodeForm.value.item_units
+        };
+        inputJSON['item_reorder_level'] = this.itemCodeForm.value.item_reorder_level;
+        inputJSON['item_desc'] = this.itemCodeForm.value.item_desc;
+        this.service.updateItemsMaster(inputJSON).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.common.showSuccessErrorMessage('Item Updated successfully', 'success');
+            this.getAllItemsFromMaster();
+            this.updateFlag = false;
+            this.itemCodeForm.reset();
+          } else {
+            this.common.showSuccessErrorMessage('Item cannot be updated', 'error');
+            this.itemCodeForm.reset();
+            this.updateFlag = false;
+          }
+        });
+      }
+    } else {
+      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
+  }
+  editItem(val) {
+    this.itemCodeForm.patchValue({
+      "item_name": val.item_name,
+      "item_nature": val.item_nature.id,
+      "item_category": val.item_category.id,
+      "item_reorder_level": val.item_reorder_level,
+      "item_units": val.item_units.id,
+      "item_desc": val.item_desc,
+      "item_code": val.item_code
+    });
+    this.updateFlag = true;
+  }
+  deleteItem($event) {
+    if ($event) {
+      let inputJSON = {};
+      inputJSON['item_code'] = $event['item_code'];
+      inputJSON['item_status'] = 'deleted';
+      this.service.updateItemsMaster(inputJSON).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.common.showSuccessErrorMessage('Item Deleted successfully', 'success');
+          this.getAllItemsFromMaster();
+          this.itemCodeForm.reset();
+        } else {
+          this.common.showSuccessErrorMessage('Error to delete', 'error');
+          this.itemCodeForm.reset();
+          this.updateFlag = false;
+        }
+      });
+    }
+  }
+  cancel($event) {
+    if ($event) {
+      this.deleteModal.closeDialog();
+    }
   }
 
 }
