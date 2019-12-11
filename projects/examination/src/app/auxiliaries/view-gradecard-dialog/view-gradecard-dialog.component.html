@@ -268,18 +268,20 @@
             </ng-template>
 
             <div class="row" *ngIf="resultdivflag && data.ect_exam_type == 2">
-                <div class="col-6">
+                <div class="col-12">
                     <table>
                         <thead>
                             <tr><br></tr>
                             <tr>
-                                <th>Class Teacher's Remarks</th>
-                                <th>: {{remarkOfSub() | titlecase}}</th>
+                                <td width="20%" valign="top">Class Teacher's Remarks</td>
+                                <td width="1%" valign="top">:</td>
+                                <td>{{remarkOfSub() | titlecase}}</td>
                             </tr>
                             <tr><br></tr>
                             <tr class="margin-top-10">
-                                <th style="text-align: left">Result</th>
-                                <th>: {{getPassResult(data.param.eme_term_id)}}</th>
+                                <td style="text-align: left">Result</td>
+                                <td >:</td>
+                                <td>{{getPassResult(data.param.eme_term_id)}}</td>
                             </tr>
                         </thead>
                     </table>

@@ -298,7 +298,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.itemData.push(this.issueItemData[Number(issueItemStatus.index)]);
 					var itemCode = this.issueItemData[Number(issueItemStatus.index)]['item_code'];
 					this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '' }));
-					
+
 
 					console.log('this.itemData', this.itemData, issueItemStatus);
 					// if (this.itemData[Number(issueItemStatus.index)]['user_inv_logs']) {
@@ -384,7 +384,12 @@ export class CirculationConsumptionComponent implements OnInit {
 			user_role_id: Number(this.userData.au_role_id),
 			//'user_inv_logs.item_status' : 'issued'
 		};
+		this.userHaveItemsData = false;
+		this.itemLogData = [];
+		this.issueItemData = [];
+		this.itemsReadTillDate = 0;
 		this.ITEM_LOG_LIST_ELEMENT = [];
+		this.finIssueItem = [];
 		this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 		this.erpCommonService.getUserItemsData(inputJson).subscribe((result: any) => {
 			if (result && result.length > 0) {
@@ -435,8 +440,6 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 					this.itemLoglistdataSource.sort = this.sort;
 				}
-
-				console.log('itemLoglistdataSource--', this.itemLoglistdataSource);
 
 			} else {
 				this.userHaveItemsData = false;
@@ -676,7 +679,7 @@ export class CirculationConsumptionComponent implements OnInit {
 			key: 'returned_on',
 			width: this.checkWidth('returned_on', 'Returned On')
 		});
-		
+
 
 		reportType2 = new TitleCasePipe().transform(this.userData.au_full_name + ' itemlogreport_') + this.sessionName;
 		reportType = new TitleCasePipe().transform(this.userData.au_full_name + ' Item Log report: ') + this.sessionName;
@@ -704,7 +707,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		worksheet.getCell('B5').value = 'Item Name';
 		worksheet.getCell('C5').value = 'Nature';
 		worksheet.getCell('D5').value = 'Location';
-		worksheet.getCell('E5').value = 'Issued Quantity';		
+		worksheet.getCell('E5').value = 'Issued Quantity';
 		worksheet.getCell('F5').value = 'Issued On';
 		worksheet.getCell('G5').value = 'Due Date';
 		worksheet.getCell('H5').value = 'Returned On';
@@ -725,7 +728,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		for (const item of this.itemLogData) {
 			const prev = this.length + 1;
 			const obj: any = {};
-			
+
 			this.length++;
 			worksheet.getCell('A' + this.length).value = item.item_code;
 			worksheet.getCell('B' + this.length).value = item.item_name;

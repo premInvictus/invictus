@@ -34,8 +34,8 @@
                               <mat-label>Location Type</mat-label>
                               <mat-select formControlName="location_type_id" placeholder="Select Type" required>
                                 <mat-option value="">Please select</mat-option>
-                                <mat-option *ngFor="let item of locationTypeArr" value="item.ltype_id">
-                                  {{item.ltype_name}}
+                                <mat-option *ngFor="let item of locationTypeArray" value="{{item.config_id}}">
+                                  {{item.name}}
                                 </mat-option>
                               </mat-select>
                               <mat-error>Please Choose Location Type</mat-error>
