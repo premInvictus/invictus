@@ -114,14 +114,16 @@ export class LocationMasterComponent implements OnInit {
 	}
 
 	save() {
-		console.log(this.locationForm);
 		var inputJson = {
 			location_id: this.locationForm.value.location_id ? this.locationForm.value.location_id : 0,
 			location_parent_id: this.locationForm.value.location_parent_id ? this.locationForm.value.location_parent_id : 0,
 			location_type_id: this.locationForm.value.location_type_id ? this.locationForm.value.location_type_id : 0,
 			location_name: this.locationForm.value.location_name ? this.locationForm.value.location_name : '',
-			location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1
+			location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1,
+			location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id)+this.locationForm.value.location_name  : this.locationForm.value.location_name,
 		}
+
+		console.log(inputJson.location_hierarchy);
 
 		if (this.locationForm.value.location_id) {
 			this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
@@ -172,6 +174,22 @@ export class LocationMasterComponent implements OnInit {
 
 	applyFilterLocation(filterValue: string) {
 		this.configDataSource.filter = filterValue.trim().toLowerCase();
+	}
+
+	getLocationHierarchy(location_parent_id) {
+		var hierarchy_name = '';
+		if (location_parent_id) {
+			for (const item of this.locationArray) {
+				if (Number(item.location_id) === Number(location_parent_id)) {
+					hierarchy_name = item.location_hierarchy + "-";
+					if (item.location_parent_id > 0) {
+						this.getLocationHierarchy(item.location_parent_id);
+					}
+					 
+				}
+			}
+		}
+		return hierarchy_name;
 	}
 
 	deleteLocation(data) {

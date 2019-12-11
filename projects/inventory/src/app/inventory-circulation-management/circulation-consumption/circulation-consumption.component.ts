@@ -16,12 +16,12 @@ import html2canvas from 'html2canvas';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-circulation-consumption',
-  templateUrl: './circulation-consumption.component.html',
-  styleUrls: ['./circulation-consumption.component.css']
+	selector: 'app-circulation-consumption',
+	templateUrl: './circulation-consumption.component.html',
+	styleUrls: ['./circulation-consumption.component.css']
 })
 export class CirculationConsumptionComponent implements OnInit {
-
+	formGroupArray = [];
 	searchForm: FormGroup;
 	returnIssueItemsForm: FormGroup;
 	userData: any = '';
@@ -37,10 +37,11 @@ export class CirculationConsumptionComponent implements OnInit {
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-	@ViewChild('itemDet')itemDet;
-	finIssueItem : any = [];
+	@ViewChild('itemDet') itemDet;
+	finIssueItem: any = [];
 	minDate = new Date();
-	stuOutStandingFine = 0;
+	//stuOutStandingFine = 0;
+	//allLocationData:any [] = [];
 	ITEM_LOG_LIST_ELEMENT: ItemLogListElement[] = [];
 	itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -95,6 +96,8 @@ export class CirculationConsumptionComponent implements OnInit {
 	schoolInfo: any;
 	length: any;
 	settingData: any;
+	allLocationData: any[] = [];
+	locationData: any[] = [];
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -103,7 +106,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		private erpCommonService: ErpCommonService
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.session_id = JSON.parse(localStorage.getItem('session'));
+		this.session_id = JSON.parse(localStorage.getItem('session'))['ses_id'];
 	}
 	openItemModal(item_no) {
 		this.itemDet.openModal(item_no);
@@ -113,6 +116,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		this.getSession();
 		this.getSchool();
 		this.getGlobalSetting();
+		this.getAllLocation();
 	}
 
 	buildForm() {
@@ -133,11 +137,11 @@ export class CirculationConsumptionComponent implements OnInit {
 		this.erpCommonService.getGlobalSetting({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const settings = result.data;
-				for (let i=0; i< settings.length;i++) {
+				for (let i = 0; i < settings.length; i++) {
 					if (settings[i]['gs_alias'] === 'library_user_setting') {
 						this.settingData = JSON.parse(settings[i]['gs_value']);
 					}
-				}				
+				}
 			}
 		});
 	}
@@ -151,7 +155,7 @@ export class CirculationConsumptionComponent implements OnInit {
 							this.sessionArray[citem.ses_id] = citem.ses_name;
 						}
 						if (this.session_id) {
-							this.sessionName = this.sessionArray[this.session_id.ses_id];
+							this.sessionName = this.sessionArray[this.session_id];
 						}
 
 					}
@@ -172,7 +176,6 @@ export class CirculationConsumptionComponent implements OnInit {
 		if (this.searchForm && this.searchForm.value.searchId) {
 			const au_role_id = this.searchForm.value.user_role_id;
 			const au_admission_no = this.searchForm.value.searchId;
-			
 			if (au_role_id === '4') {
 				this.erpCommonService.getStudentInformation({ 'admission_no': au_admission_no, 'au_role_id': au_role_id }).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -224,13 +227,50 @@ export class CirculationConsumptionComponent implements OnInit {
 		}
 	}
 
+	getAllLocation() {
+		this.erpCommonService.getFilterLocation({}).subscribe((result: any) => {
+			this.locationData = [];
+			if (result) {
+				for (var i = 0; i < result.length; i++) {
+					this.locationData.push(result[i]);
+				}
+			}
+		});
+	}
+
+	getFilterLocation(event) {
+		var inputJson = { 'filter': event.target.value };
+		if (event.target.value.length > 2) {
+			this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
+				this.allLocationData = [];
+				if (result) {
+					for (var i = 0; i < result.length; i++) {
+						this.allLocationData.push(result[i]);
+					}
+				}
+			});
+		}
+	}
+
+	setLocationId(locationDetails, i) {
+		this.formGroupArray[i].patchValue({
+			location_id: locationDetails.location_id,
+			item_location: locationDetails.location_name,
+		});
+
+		this.itemData[i]['item_location'] = locationDetails.location_id;
+	}
+
+	setIssuedQuantity(item, i) {
+		this.itemData[i]['issued_quantity'] = this.formGroupArray[i].value.issued_quantity;
+	}
+
 	searchItemData() {
 		if (this.returnIssueItemsForm && this.returnIssueItemsForm.value.scanItemId) {
 			const itemAlreadyAddedStatus = this.checkItemAlreadyAdded(this.returnIssueItemsForm.value.scanItemId);
 			if (!itemAlreadyAddedStatus) {
 				const issueItemStatus = this.checkForIssueItem(this.returnIssueItemsForm.value.scanItemId);
 				if (issueItemStatus.status) {
-					// console.log(this.itemLogData[Number(issueItemStatus.index)]['reserv_user_logs']);	
 					const date = new Date();
 					if (this.searchForm.value.user_role_id === '4') {
 						if (this.settingData['item_return_days_student']) {
@@ -238,30 +278,35 @@ export class CirculationConsumptionComponent implements OnInit {
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
+
 					} else if (this.searchForm.value.user_role_id === '3') {
 						if (this.settingData['item_return_days_teacher']) {
 							date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_teacher'], 10));
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
+
 					} else if (this.searchForm.value.user_role_id === '2') {
 						if (this.settingData['item_return_days_staff']) {
 							date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_staff'], 10));
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
-					}
-					if (this.itemLogData[Number(issueItemStatus.index)]['reserv_user_logs']) {
-						this.itemLogData[Number(issueItemStatus.index)]['reserv_user_logs']['due_date'] = date;
-						this.itemLogData[Number(issueItemStatus.index)]['reserv_user_logs']['fdue_date'] = date;
-						
-					}
-									
 
-					this.itemData.push(this.itemLogData[Number(issueItemStatus.index)]['reserv_user_logs']);
+					}
+
+					this.itemData.push(this.issueItemData[Number(issueItemStatus.index)]);
+					var itemCode = this.issueItemData[Number(issueItemStatus.index)]['item_code'];
+					this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '' }));
+					
+
+					console.log('this.itemData', this.itemData, issueItemStatus);
+					// if (this.itemData[Number(issueItemStatus.index)]['user_inv_logs']) {
+					// 	this.itemData[Number(issueItemStatus.index)]['user_inv_logs']['due_date'] = date;
+					// 	this.itemData[Number(issueItemStatus.index)]['user_inv_logs']['fdue_date'] = date;
+
+					// }
+					// this.itemData.push(this.itemData[Number(issueItemStatus.index)]['user_inv_logs']);
 
 				} else {
 					const inputJson = {
@@ -276,35 +321,35 @@ export class CirculationConsumptionComponent implements OnInit {
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
+
 					} else if (this.searchForm.value.user_role_id === '3') {
 						if (this.settingData['item_return_days_teacher']) {
 							date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_teacher'], 10));
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
+
 					} else if (this.searchForm.value.user_role_id === '2') {
 						if (this.settingData['item_return_days_staff']) {
 							date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_staff'], 10));
 						} else {
 							date.setDate(date.getDate() + 7);
 						}
-						
+
 					}
-					
+
 					this.erpCommonService.searchItemByStatus(inputJson).subscribe((result: any) => {
 						if (result) {
-							console.log('result', result);
 							if (result && result[0]) {
 								delete result[0]['_id'];
 								result[0]['due_date'] = date;
+								this.formGroupArray.push(this.fbuild.group({ item_code: result[0]['item_code'], item_location: '', issued_quantity: '' }));
 								this.itemData.push(result[0]);
+
 								this.setDueDate(this.itemData.length - 1, date);
 								this.returnIssueItemsForm.controls['scanItemId'].setValue('');
 							}
 						} else {
-							// this.itemData = [];
 							this.returnIssueItemsForm.controls['scanItemId'].setValue('');
 							this.common.showSuccessErrorMessage('No Record Found', 'error');
 						}
@@ -333,43 +378,43 @@ export class CirculationConsumptionComponent implements OnInit {
 		if (this.returnIssueItemsForm && this.returnIssueItemsForm.value.scanItemId) {
 			this.returnIssueItemsForm.controls['scanItemId'].setValue('');
 		}
-		
+
 		const inputJson = {
 			user_login_id: Number(this.userData.au_login_id),
 			user_role_id: Number(this.userData.au_role_id),
 			//'user_inv_logs.item_status' : 'issued'
 		};
+		this.ITEM_LOG_LIST_ELEMENT = [];
+		this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 		this.erpCommonService.getUserItemsData(inputJson).subscribe((result: any) => {
-			if (result) {
-				this.itemLogData = result[0].user_inv_logs;
+			if (result && result.length > 0) {
+				//this.itemData = result[0].user_inv_logs;
 				this.finIssueItem = [];
 				this.userHaveItemsData = true;
 				this.itemsReadTillDate = 0;
 				let element: any = {};
 				let recordArray = [];
-				this.ITEM_LOG_LIST_ELEMENT = [];
-				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
-
 				let pos = 1;
-				recordArray = this.itemLogData;
+				recordArray = result[0].user_inv_logs;
+				this.itemLogData = recordArray;
 				const returnedCount = 0;
-
-				console.log('recordArray--', recordArray);
 				for (const item of recordArray) {
 
 					element = {
 						srno: pos,
 						item_code: item.item_code ? item.item_code : 0,
 						item_name: item.item_name ? item.item_name : '',
-						item_nature:  item.item_nature ? item.item_nature : '',
+						item_nature: item.item_nature ? item.item_nature : '',
 						item_category: item.item_category ? item.item_category : '',
 						item_reorder_level: item.item_reorder_level ? item.item_reorder_level : '',
 						item_units: item.item_units ? item.item_units : '',
 						item_desc: item.item_desc ? item.item_desc : '',
 						item_status: item.item_status ? item.item_status : '',
+						item_location: item.item_location ? item.item_location : '',
+						issued_quantity: item.issued_quantity ? item.issued_quantity : '',
 						due_date: item.due_date ? item.due_date : '',
 						returned_on: item.returned_on ? item.returned_on : '',
-						issued_on : item.issued_on ? item.issued_on : ''
+						issued_on: item.issued_on ? item.issued_on : ''
 					};
 					if (item.returned_on) {
 						this.itemsReadTillDate++;
@@ -380,17 +425,10 @@ export class CirculationConsumptionComponent implements OnInit {
 						this.finIssueItem.push(item);
 					}
 
-					console.log('this.issueItemData--', this.issueItemData);
-
-					console.log('element--', element);
-
 					this.ITEM_LOG_LIST_ELEMENT.push(element);
 					pos++;
 
 				}
-
-				console.log('this.issueItemData--', this.issueItemData);
-
 				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 				this.itemLoglistdataSource.paginator = this.paginator;
 				if (this.sort) {
@@ -398,7 +436,8 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.itemLoglistdataSource.sort = this.sort;
 				}
 
-				console.log('ITEM_LOG_LIST_ELEMENT--', this.ITEM_LOG_LIST_ELEMENT, this.itemLoglistdataSource);
+				console.log('itemLoglistdataSource--', this.itemLoglistdataSource);
+
 			} else {
 				this.userHaveItemsData = false;
 				this.itemLogData = [];
@@ -409,57 +448,53 @@ export class CirculationConsumptionComponent implements OnInit {
 				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 			}
 		});
-
-		// this.erpCommonService.getUserOutstandingFine(inputJson).subscribe((result: any) => {
-		// 	if (result && result.status === 'ok') {
-		// 		this.stuOutStandingFine = result.data;
-		// 	} else {
-		// 		this.stuOutStandingFine = 0;
-		// 	}
-		// });
 	}
 
 	saveIssueReturn() {
 		const updateditemData = [];
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
-		
 		for (let i = 0; i < itemData.length; i++) {
 			if (itemData[i]['item_status'] === 'issued') {
-				if (this.common.dateConvertion(itemData[i]['due_date'],'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
-							itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-							itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
-							itemData[i]['fdue_date'] = itemData[i]['fdue_date'];
-							itemData[i]['reissue_status'] = 1;
-						} else {
-							itemData[i]['item_status'] = 'active';
-							itemData[i]['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
-							itemData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-							for (let j=0; j< this.finIssueItem.length;j++) {
-								if (this.finIssueItem[j]['reserv_user_logs']['item_id'] === itemData[i]['item_id']) {
-									this.finIssueItem.splice(j,1);
-								}
-							}
-							
+				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
+					itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
+					itemData[i]['fdue_date'] = itemData[i]['fdue_date'];
+					itemData[i]['reissue_status'] = 1;
+					itemData[i]['issued_quantity'] = itemData[i]['issued_quantity'];
+				} else {
+					itemData[i]['item_status'] = 'active';
+					itemData[i]['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
+					itemData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+
+					console.log('finIssueItem--', this.finIssueItem);
+
+					for (let j = 0; j < this.finIssueItem.length; j++) {
+						if (this.finIssueItem[j]['item_code'] === itemData[i]['item_code']) {
+							this.finIssueItem.splice(j, 1);
 						}
-						updateditemData.push(itemData[i]);
+					}
+
+				}
+				updateditemData.push(itemData[i]);
 			} else if (itemData[i]['item_status'] === 'active' || itemData[i]['item_status'] === 'reserved') {
-				if (itemData[i]['fdue_date']) {					
+				if (itemData[i]['fdue_date']) {
 					itemData[i]['item_status'] = 'issued';
+					itemData[i]['issued_quantity'] = itemData[i]['issued_quantity'];
 					itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
 					itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					this.finIssueItem.push(itemData[i]);
 					updateditemData.push(itemData[i]);
 				}
 			}
-    }
-	
-	
+		}
+
+
 
 		var limitFlag = this.checkForIssueItemLimit();
 
 		if (!limitFlag) {
 			const inputJson = {
-				user_inv_session: this.session_id,
+				user_inv_session: Number(this.session_id),
 				user_inv_logs: updateditemData,
 				user_login_id: this.userData.au_login_id,
 				user_admission_no: this.userData.em_admission_no,
@@ -470,62 +505,64 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-			
+			console.log('this.userHaveItemsData--', this.userHaveItemsData);
 			if (!this.userHaveItemsData) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.itemData = [];
+						this.resetAll();
 						this.issueItemData = [];
 						this.resetIssueReturn();
 						this.getUserIssueReturnLogData();
-	
+
 					}
-					this.common.showSuccessErrorMessage(result.message, result.status);
+					this.common.showSuccessErrorMessage('Item Inserted Successfully', 'ok');
 				});
 			} else {
 				this.erpCommonService.updateUserItemData(inputJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.itemData = [];
+						this.resetAll();
 						this.issueItemData = [];
 						this.resetIssueReturn();
 						this.getUserIssueReturnLogData();
-	
+
 					}
-					this.common.showSuccessErrorMessage(result.message, result.status);
+					this.common.showSuccessErrorMessage('Item Updated Successfully', 'ok');
 				});
 			}
 		} else {
 			if (this.searchForm.value.user_role_id === '4') {
-				this.common.showSuccessErrorMessage('More than '+this.settingData['item_issued_limit_student']+' Item Cannot be Issued to Student', 'error');
+				this.common.showSuccessErrorMessage('More than ' + this.settingData['item_issued_limit_student'] + ' Item Cannot be Issued to Student', 'error');
 			} else if (this.searchForm.value.user_role_id === '3') {
-				this.common.showSuccessErrorMessage('More than '+this.settingData['item_issued_limit_teacher']+' Item Cannot be Issued to Teacher', 'error');				
+				this.common.showSuccessErrorMessage('More than ' + this.settingData['item_issued_limit_teacher'] + ' Item Cannot be Issued to Teacher', 'error');
 			} else if (this.searchForm.value.user_role_id === '2') {
-				this.common.showSuccessErrorMessage('More than '+this.settingData['item_issued_limit_staff']+' Item Cannot be Issued to Staff', 'error');				
+				this.common.showSuccessErrorMessage('More than ' + this.settingData['item_issued_limit_staff'] + ' Item Cannot be Issued to Staff', 'error');
 			}
-			
+
 		}
 
-		
+
 
 	}
 
 	checkForIssueItemLimit() {
 		let flag = false;
 		if (this.searchForm.value.user_role_id === '4') {
-			if (this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_student'], 10)) {
+			if (this.finIssueItem.length > parseInt(this.settingData['item_issued_limit_student'], 10)) {
 				flag = true;
 			}
-			
+
 		} else if (this.searchForm.value.user_role_id === '3') {
-			if (this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_teacher'], 10)) {
+			if (this.finIssueItem.length > parseInt(this.settingData['item_issued_limit_teacher'], 10)) {
 				flag = true;
 			}
-			
+
 		} else if (this.searchForm.value.user_role_id === '2') {
-			if (this.finIssueItem.length >  parseInt(this.settingData['item_issued_limit_staff'], 10)) {
+			if (this.finIssueItem.length > parseInt(this.settingData['item_issued_limit_staff'], 10)) {
 				flag = true;
 			}
-			
+
 		}
 		return flag;
 
@@ -536,9 +573,10 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	checkForIssueItem(searchItemId) {
+		console.log('this.itemData', this.itemData, searchItemId)
 		let flag = { 'status': false, 'index': '' };
-		for (let i = 0; i < this.itemLogData.length; i++) {
-			if (Number(this.itemLogData[i]['reserv_user_logs']['item_id']) === Number(searchItemId) && this.itemLogData[i]['reserv_user_logs']['issued_on'] !== '') {
+		for (let i = 0; i < this.issueItemData.length; i++) {
+			if (this.issueItemData[i] && Number(this.issueItemData[i]['item_code']) === Number(searchItemId) && this.issueItemData[i]['issued_on'] !== '') {
 				flag = { 'status': true, 'index': i.toString() };
 				break;
 			}
@@ -549,7 +587,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	checkItemAlreadyAdded(value) {
 		let flag = false;
 		for (let i = 0; i < this.itemData.length; i++) {
-			if (Number(this.itemData[i]['item_id']) === Number(value)) {
+			if (this.itemData[i] && Number(this.itemData[i]['item_code']) === Number(value)) {
 				flag = true;
 				break;
 			}
@@ -558,7 +596,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	resetIssueReturn() {
-		this.itemData = [];		
+		this.itemData = [];
 		this.finIssueItem = [];
 		this.returnIssueItemsForm.reset();
 		this.returnIssueItemsForm.controls['scanItemId'].setValue('');
@@ -577,14 +615,23 @@ export class CirculationConsumptionComponent implements OnInit {
 		this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 	}
 
+	getLocationName(location_id) {
+		for (const item of this.locationData) {
+			if (Number(item.location_id) === Number(location_id)) {
+				return item.location_hierarchy;
+			}
+		}
+	}
+
 	applyFilterItemLog(filterValue: string) {
 		this.itemLoglistdataSource.filter = filterValue.trim().toLowerCase();
 	}
 
+
 	// check the max  width of the cell
 	checkWidth(id, header) {
-		
-		const res = this.itemLogData.map((f) => f.reserv_user_logs[id] !== '-' && f.reserv_user_logs[id] ? f.reserv_user_logs[id].toString().length : 1);
+
+		const res = this.itemLogData.map((f) => f.id !== '-' && f.id ? f.id.toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
 		return max2 > max ? max2 : max;
@@ -593,24 +640,29 @@ export class CirculationConsumptionComponent implements OnInit {
 
 
 	downloadExcel() {
+		console.log(this.itemLogData);
 		let reportType: any = '';
 		let reportType2: any = '';
 		const columns: any = [];
 		columns.push({
-			key: 'item_id',
-			width: this.checkWidth('item_id', 'Item No.')
+			key: 'item_code',
+			width: this.checkWidth('item_code', 'Item Code')
 		});
 		columns.push({
-			key: 'title',
-			width: this.checkWidth('title', 'Item Name')
+			key: 'item_name',
+			width: this.checkWidth('item_name', 'Item Name')
 		});
 		columns.push({
-			key: 'author',
-			width: this.checkWidth('authors', 'Author')
+			key: 'item_nature',
+			width: this.checkWidth('item_nature', 'Nature')
 		});
 		columns.push({
-			key: 'publisher',
-			width: this.checkWidth('publisher', 'Publisher')
+			key: 'item_location',
+			width: this.checkWidth('item_location', 'Location')
+		});
+		columns.push({
+			key: 'issued_quantity',
+			width: this.checkWidth('issued_quantity', 'Issued Quantity')
 		});
 		columns.push({
 			key: 'issued_on',
@@ -624,13 +676,10 @@ export class CirculationConsumptionComponent implements OnInit {
 			key: 'returned_on',
 			width: this.checkWidth('returned_on', 'Returned On')
 		});
-		columns.push({
-			key: 'fine',
-			width: this.checkWidth('fine', 'Fine') ? this.checkWidth('fine', 'Fine') : 10
-		});
+		
 
 		reportType2 = new TitleCasePipe().transform(this.userData.au_full_name + ' itemlogreport_') + this.sessionName;
-		reportType = new TitleCasePipe().transform(this.userData.au_full_name+' Item Log report: ') + this.sessionName;
+		reportType = new TitleCasePipe().transform(this.userData.au_full_name + ' Item Log report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -643,56 +692,54 @@ export class CirculationConsumptionComponent implements OnInit {
 		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Item Log report: ') + this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
-		worksheet.getCell('A3').value = 'Admission No : ' +this.userData.em_admission_no;
+		worksheet.getCell('A3').value = 'Admission No : ' + this.userData.em_admission_no;
 		worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('C3:D3');
-		worksheet.getCell('C3').value = 'Name : ' +this.userData.au_full_name;
+		worksheet.getCell('C3').value = 'Name : ' + this.userData.au_full_name;
 		worksheet.getCell(`C3`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('E3:F3');
-		worksheet.getCell('E3').value = 'Class : ' +this.userData.class_name+'     '+'Section: '+this.userData.sec_name;
+		worksheet.getCell('E3').value = 'Class : ' + this.userData.class_name + '     ' + 'Section: ' + this.userData.sec_name;
 		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
-		worksheet.getCell('A5').value = 'Item No.';
+		worksheet.getCell('A5').value = 'Item Code';
 		worksheet.getCell('B5').value = 'Item Name';
-		worksheet.getCell('C5').value = 'Author';
-		worksheet.getCell('D5').value = 'Publisher';
-		worksheet.getCell('E5').value = 'Issued On';
-		worksheet.getCell('F5').value = 'Due Date';
-		worksheet.getCell('G5').value = 'Returned On';
-		worksheet.getCell('H5').value = 'Fine';
-		
-		
+		worksheet.getCell('C5').value = 'Nature';
+		worksheet.getCell('D5').value = 'Location';
+		worksheet.getCell('E5').value = 'Issued Quantity';		
+		worksheet.getCell('F5').value = 'Issued On';
+		worksheet.getCell('G5').value = 'Due Date';
+		worksheet.getCell('H5').value = 'Returned On';
+		worksheet.getCell('I5').value = 'Fine';
+
+
 
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
-		let totRow = this.length+this.itemLogData.length+5;
-		
-		worksheet.mergeCells('A'+totRow+':'+'B'+totRow);
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).value = 'Report Generated By : ' +this.currentUser.full_name;
-		worksheet.getCell('A'+totRow+':'+'B'+totRow).alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A'+(totRow+1)+':'+'B'+(totRow+1));
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).value = 'No. of Records : ' +this.itemLogData.length;
-		worksheet.getCell('A'+(totRow+1)+':'+'B'+(totRow+1)).alignment = { horizontal: 'left' };
+		let totRow = this.length + this.itemLogData.length + 5;
+
+		worksheet.mergeCells('A' + totRow + ':' + 'B' + totRow);
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).value = 'Report Generated By : ' + this.currentUser.full_name;
+		worksheet.getCell('A' + totRow + ':' + 'B' + totRow).alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A' + (totRow + 1) + ':' + 'B' + (totRow + 1));
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).value = 'No. of Records : ' + this.itemLogData.length;
+		worksheet.getCell('A' + (totRow + 1) + ':' + 'B' + (totRow + 1)).alignment = { horizontal: 'left' };
 		for (const item of this.itemLogData) {
 			const prev = this.length + 1;
 			const obj: any = {};
-			let aval = '';
-			for (const avalue of item.reserv_user_logs.authors) {
-				aval += avalue + ',';
-			}
-
+			
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.reserv_user_logs.item_id;
-			worksheet.getCell('B' + this.length).value = item.reserv_user_logs.title;
-			worksheet.getCell('C' + this.length).value = aval.slice(0, -1);
-			worksheet.getCell('D' + this.length).value = item.reserv_user_logs.publisher;
-			worksheet.getCell('E' + this.length).value = item.reserv_user_logs.issued_on;
-			worksheet.getCell('F' + this.length).value = item.reserv_user_logs.due_date;
-			worksheet.getCell('G' + this.length).value = item.reserv_user_logs.returned_on ? item.reserv_user_logs.returned_on : '-';
-			worksheet.getCell('H' + this.length).value = item.reserv_user_logs.fine ? item.reserv_user_logs.fine : '-';
+			worksheet.getCell('A' + this.length).value = item.item_code;
+			worksheet.getCell('B' + this.length).value = item.item_name;
+			worksheet.getCell('C' + this.length).value = item.item_nature.name;
+			worksheet.getCell('D' + this.length).value = this.getLocationName(item.item_location);
+			worksheet.getCell('D' + this.length).value = item.issued_quantity;
+			worksheet.getCell('E' + this.length).value = item.issued_on;
+			worksheet.getCell('F' + this.length).value = item.due_date;
+			worksheet.getCell('G' + this.length).value = item.returned_on ? item.returned_on : '-';
+			worksheet.getCell('H' + this.length).value = item.fine ? item.reserv_user_logs.fine : '-';
 
 			worksheet.addRow(obj);
 		}
-		
+
 
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
@@ -716,8 +763,8 @@ export class CirculationConsumptionComponent implements OnInit {
 					bold: true
 				};
 			}
-			
-			if (rowNum === totRow || rowNum === (totRow+1)) {
+
+			if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 14,
@@ -747,7 +794,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum >= 5 && rowNum <= this.itemLogData.length+5) {
+			if (rowNum >= 5 && rowNum <= this.itemLogData.length + 5) {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 
@@ -781,7 +828,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					};
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
-			} else if (rowNum === totRow || rowNum === (totRow+1)) {
+			} else if (rowNum === totRow || rowNum === (totRow + 1)) {
 				row.font = {
 					name: 'Arial',
 					size: 12,
@@ -835,7 +882,7 @@ export class CirculationConsumptionComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.autoTable({
-			head: [['Admission No : ' + this.userData.em_admission_no + '    Name : ' +this.userData.au_full_name + '     Class : ' +this.userData.class_name+'     '+' Section: '+this.userData.sec_name]],
+			head: [['Admission No : ' + this.userData.em_admission_no + '    Name : ' + this.userData.au_full_name + '     Class : ' + this.userData.class_name + '     ' + ' Section: ' + this.userData.sec_name]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -869,7 +916,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [['Report Generated By : ' +this.currentUser.full_name]],
+			head: [['Report Generated By : ' + this.currentUser.full_name]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -884,7 +931,7 @@ export class CirculationConsumptionComponent implements OnInit {
 			theme: 'striped'
 		});
 		doc.autoTable({
-			head: [['No. of Records : ' +this.itemLogData.length]],
+			head: [['No. of Records : ' + this.itemLogData.length]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -907,6 +954,7 @@ export class CirculationConsumptionComponent implements OnInit {
 
 		doc.save('itemLog_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
 	}
+
 
 }
 
