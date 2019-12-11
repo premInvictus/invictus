@@ -61,12 +61,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "2", name: 'Deducation' },
 	];
 	typeArray = [
-		{ id: "1", name: 'Wing Master' },
-		{ id: "2", name: 'Designation Master' },
-		{ id: "4", name: 'Category One' },
-		{ id: "5", name: 'Category Two' },
-		{ id: "6", name: 'Payment Mode' },
-		{ id: "7", name: 'Department' }
+		{ id: "8", name: 'Nature' },
+		{ id: "9", name: 'Categories' },
+		{ id: "10", name: 'Units' }
 	];
 	constructor(
 		private fbuild: FormBuilder,
