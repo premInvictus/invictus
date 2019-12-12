@@ -18,12 +18,12 @@ export class EmployeeLeaveComponent implements OnInit {
 	employeeData: any;
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	session_id;
-	allEmployeeData:any[] = [];
-	tmpAllEmployeeData:any;
+	allEmployeeData: any[] = [];
+	tmpAllEmployeeData: any;
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	leave_opening_balance = 0;
 	//'leave_opening_balance',
-	displayedEmployeeColumns: string[] = ['srno', 'month_name',  'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
+	displayedEmployeeColumns: string[] = ['srno', 'month_name', 'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -45,19 +45,19 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	getAllEmployee() {
 		this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-			
+
 			this.tmpAllEmployeeData = result;
 		});
 	}
 
 	getFilterEmployee(event) {
 		var tempArr = [];
-		if (event.target.value.length > 2) {			
+		if (event.target.value.length > 2) {
 			this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
 				this.tmpAllEmployeeData = result;
 				if (this.tmpAllEmployeeData && (event.target.value.length > 2)) {
-					for(var i=0; i<this.tmpAllEmployeeData.length;i++) {
-						if(this.tmpAllEmployeeData[i]['emp_name'].toLowerCase().includes(event.target.value)) {
+					for (var i = 0; i < this.tmpAllEmployeeData.length; i++) {
+						if (this.tmpAllEmployeeData[i]['emp_name'].toLowerCase().includes(event.target.value)) {
 							tempArr.push(this.tmpAllEmployeeData[i]);
 						}
 					}
@@ -65,11 +65,11 @@ export class EmployeeLeaveComponent implements OnInit {
 						this.allEmployeeData = tempArr;
 					}
 				}
-			});			
+			});
 		} else {
 			this.allEmployeeData = []
-		}		
-	} 
+		}
+	}
 
 	getEmployeeDetail() {
 		let inputJson = {}
@@ -94,36 +94,36 @@ export class EmployeeLeaveComponent implements OnInit {
 				var total_leave_granted = 0;
 				var total_leave_closing_balance = 0;
 				var total_lwp = 0;
-				
+
 				this.leave_opening_balance = result.emp_month_attendance_data ? result.emp_month_attendance_data.leave_opening_balance : 0;
 
 				if (result.emp_month_attendance_data && result.emp_month_attendance_data.month_data) {
 					for (var i = 0; i < result.emp_month_attendance_data.month_data.length; i++) {
 						var emp_month = result.emp_month_attendance_data.month_data[i].month_id;
 						var emp_attendance_detail = result.emp_month_attendance_data.month_data[i].attendance_detail;
+						let leave_credited = 0;
+						for (let item of emp_attendance_detail.emp_leave_credited) {
+							leave_credited = leave_credited + item.leave_credit_count;
+						}
 						element = {
 							srno: pos,
-							month_name: result.emp_month_attendance_data.month_data[i].month_name,						
-							leave_credited: emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0,
+							month_name: result.emp_month_attendance_data.month_data[i].month_name,
+							leave_credited: emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? leave_credited.toFixed() : 0,
 							leave_availed: emp_attendance_detail && emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0,
 							leave_granted: emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0,
 							lwp: emp_attendance_detail && emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0,
-							leave_closing_balance: (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
+							leave_closing_balance: (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? Number(leave_credited.toFixed()) : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 						};
-						total_leave_credited = total_leave_credited + parseFloat(emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
+						total_leave_credited = total_leave_credited + Number(leave_credited.toFixed());
 						total_leave_availed = total_leave_availed + parseFloat(emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0);
 						total_leave_granted = total_leave_granted + parseFloat(emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
 						total_lwp = total_lwp + parseFloat(emp_attendance_detail && emp_attendance_detail.emp_lwp ? emp_attendance_detail.emp_lwp : 0);
-						total_leave_closing_balance = total_leave_closing_balance + ( emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
+						total_leave_closing_balance = total_leave_closing_balance + Number(leave_credited.toFixed()) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0)
 						this.EMPLOYEE_ELEMENT.push(element);
-						
 						pos++;
-	
-						
-	
 					}
 				}
-				
+
 
 				var total_closing_balance = Number(this.leave_opening_balance) + Number(total_leave_closing_balance);
 

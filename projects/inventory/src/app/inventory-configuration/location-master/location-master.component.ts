@@ -67,7 +67,7 @@ export class LocationMasterComponent implements OnInit {
 
 	getLocationType() {
 		var inputJson = {};
-		this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '11' }).subscribe((result: any) => {
 			if (result) {
 				this.locationTypeArray = result;
 			} else {
@@ -94,7 +94,7 @@ export class LocationMasterComponent implements OnInit {
 						location_parent_name: item.location_parent_id ? this.getLocationParentName(item.location_parent_id) : '',
 						location_status: item.location_status,
 						location_type_id: item.location_type_id,
-						location_type_name: '',
+						location_type_name: item.location_type_id ? this.getLocationTypeName(item.location_type_id) : '',
 						action: item
 					};
 					this.CONFIG_ELEMENT_DATA.push(element);
@@ -114,14 +114,16 @@ export class LocationMasterComponent implements OnInit {
 	}
 
 	save() {
-		console.log(this.locationForm);
 		var inputJson = {
 			location_id: this.locationForm.value.location_id ? this.locationForm.value.location_id : 0,
 			location_parent_id: this.locationForm.value.location_parent_id ? this.locationForm.value.location_parent_id : 0,
 			location_type_id: this.locationForm.value.location_type_id ? this.locationForm.value.location_type_id : 0,
 			location_name: this.locationForm.value.location_name ? this.locationForm.value.location_name : '',
-			location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1
+			location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1,
+			location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id)+this.locationForm.value.location_name  : this.locationForm.value.location_name,
 		}
+
+		console.log(inputJson.location_hierarchy);
 
 		if (this.locationForm.value.location_id) {
 			this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
@@ -174,6 +176,22 @@ export class LocationMasterComponent implements OnInit {
 		this.configDataSource.filter = filterValue.trim().toLowerCase();
 	}
 
+	getLocationHierarchy(location_parent_id) {
+		var hierarchy_name = '';
+		if (location_parent_id) {
+			for (const item of this.locationArray) {
+				if (Number(item.location_id) === Number(location_parent_id)) {
+					hierarchy_name = item.location_hierarchy + "-";
+					if (item.location_parent_id > 0) {
+						this.getLocationHierarchy(item.location_parent_id);
+					}
+					 
+				}
+			}
+		}
+		return hierarchy_name;
+	}
+
 	deleteLocation(data) {
 		if (this.currentLocationId) {
 			this.currentLocationId['location_status'] = '5';
@@ -196,6 +214,14 @@ export class LocationMasterComponent implements OnInit {
 		for (const item of this.locationArray) {
 			if (Number(item.location_id) === Number(locationId)) {
 				return item.location_name;
+			}
+		}
+	}
+
+	getLocationTypeName(locationTypeId) {
+		for (const item of this.locationTypeArray) {
+			if (Number(item.config_id) === Number(locationTypeId)) {
+				return item.name;
 			}
 		}
 	}
