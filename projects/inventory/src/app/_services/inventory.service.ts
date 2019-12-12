@@ -8,10 +8,10 @@ import { of } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryService {
-
+  private processType;
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
-		//this.service.startLoading();
+    //this.service.startLoading();
     //return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
     return of({
       status: 'ok', data: [
@@ -40,5 +40,20 @@ export class InventoryService {
   updateItemsMaster(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/update', value);
+  }
+  getAllRequistionMaster() {
+    return this.http.get(environment.apiInvUrl + '/requistion-master/getAllRequistionMaster');
+  }
+  updateRequistionMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/updateRequistionMaster', value);
+  }
+  setrequisitionArray(value) {
+    this.processType = value;
+  }
+  getrequisitionArray() {
+    if (this.processType) {
+      return this.processType;
+    }
   }
 }

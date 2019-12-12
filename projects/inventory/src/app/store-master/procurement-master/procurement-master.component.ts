@@ -180,7 +180,7 @@ export class ProcurementMasterComponent implements OnInit {
         approved_by: '',
         approved_date: ''
       }
-      this.finalSubmitArray['rm_status'] = '0';
+      this.finalSubmitArray['rm_status'] = 'pending';
       this.finalSubmitArray['rm_session'] = this.session.ses_id;
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
         if (result) {
