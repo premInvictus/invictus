@@ -223,6 +223,16 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiInvUrl + '/location/update', value);
 	}
+	getItemsFromMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/configuration/getItemsFromMaster', value);
+	}
+
+	insertRequistionMaster(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiInvUrl + '/requistion-master/insertRequistionMaster', value);
+	}
+
 	insertMaster(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/common/insert', value);
