@@ -147,8 +147,9 @@
                     <div *ngIf="ITEM_MASTER_DATA.length == 0" class="no-records">
                       No records found
                     </div>
-                    <mat-paginator [hidden]="ITEM_MASTER_DATA.length < 1" #paginator [pageSize]="10"
-                      [pageSizeOptions]="[5, 10, 25, 100]">
+                    <mat-paginator [hidden]="ITEM_MASTER_DATA.length < 1" #paginator [pageSize]="itempagesize"
+                      [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons
+                      (page)="pageEvent = fetchData($event)">
                     </mat-paginator>
                   </div>
                 </div>
