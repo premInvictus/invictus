@@ -11,7 +11,7 @@ import {
 	MatInputModule, MatFormFieldModule,
 	MatButtonModule, MatIconModule, MatToolbarModule, MatPaginatorModule,
 	MatCardModule, MatListModule, MatStepperModule,
-	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule
+	MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule, MatSortModule, MatProgressBarModule
 } from '@angular/material';
 import { CommonDynamicChartComponent } from './common-dynamic-chart/common-dynamic-chart.component';
 import { ImageViewerModule } from 'ngx-image-viewer';
@@ -21,7 +21,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe, HighlightPipe } from '../_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -37,6 +37,8 @@ import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/a
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
+import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
+import { AddLocationDialog } from './location-search-and-add/add-location-dialog/add-location-dialog.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -88,7 +90,8 @@ export const MY_FORMATS = {
 		ImageCropperModule,
 		NgxMaskModule.forRoot(),
 		InvictusSharedModule,
-		PopoverModule.forRoot()
+		PopoverModule.forRoot(),
+		MatProgressBarModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -108,6 +111,9 @@ export const MY_FORMATS = {
 		UnpublishModalComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		HighlightPipe,
+		LocationSearchAndAddComponent,
+		AddLocationDialog
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -118,6 +124,8 @@ export const MY_FORMATS = {
 		PublishModalComponent,
 		UnpublishModalComponent,
 		AdvancedSearchModalComponent,
+		LocationSearchAndAddComponent,
+		AddLocationDialog
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -159,6 +167,10 @@ export const MY_FORMATS = {
 		NoDataComponent, 
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
+		MatProgressBarModule,
+		HighlightPipe,
+		LocationSearchAndAddComponent,
+		AddLocationDialog
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
