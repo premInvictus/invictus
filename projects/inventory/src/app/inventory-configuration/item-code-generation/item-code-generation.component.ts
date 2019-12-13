@@ -1,12 +1,15 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InventoryService, CommonAPIService } from '../../_services';
-import { MatTableDataSource, MatPaginator } from '@angular/material';
-
+import { MatTableDataSource, MatPaginator, MatPaginatorIntl, PageEvent } from '@angular/material';
+import { MatPaginatorI18n } from '../../inventory-shared/customPaginatorClass';
 @Component({
   selector: 'app-item-code-generation',
   templateUrl: './item-code-generation.component.html',
-  styleUrls: ['./item-code-generation.component.css']
+  styleUrls: ['./item-code-generation.component.css'],
+  providers: [
+    { provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
+  ]
 })
 export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   itemCodeForm: FormGroup;
@@ -15,6 +18,12 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   unitsArray: any[] = [];
   updateFlag = false;
   ITEM_MASTER_DATA: any[] = [];
+  itempagesize = 100;
+  totalRecords: any;
+  pageIndex = 0;
+  pageEvent: PageEvent;
+  pageSize = 100;
+  itempagesizeoptions = [100, 300, 500, 1000];
   datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('delete') deleteModal;
@@ -24,6 +33,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
     private common: CommonAPIService) { }
 
   ngOnInit() {
+    localStorage.removeItem('invoiceBulkRecords');
     this.buildform();
     this.getItemCategory();
     this.getItemNature();
@@ -57,6 +67,12 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  fetchData(event?: PageEvent) {
+		this.pageIndex = event.pageIndex;
+		this.pageSize = event.pageSize;
+		this.getAllItemsFromMaster();
+		return event;
+	}
   getItemCategory() {
     this.service.getDroppableFromMaster({
       type_id: '9'
@@ -85,12 +101,15 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   getAllItemsFromMaster() {
     this.ITEM_MASTER_DATA = [];
     this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
-    this.service.getAllItemsFromMaster({
-      'item_status': 'active'
-    }).subscribe((res: any) => {
-      if (res && res.length > 0) {
+    const json = {
+      page_index: this.pageIndex,
+      page_size: this.pageSize,
+      item_status: 'active'
+    };
+    this.service.getAllItemsFromMaster(json).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
         let ind = 0;
-        for (const item of res) {
+        for (const item of res.data) {
           this.ITEM_MASTER_DATA.push({
             "sno": ind + 1,
             "code": item.item_code,
@@ -106,7 +125,10 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
           });
           ind++;
         }
+        this.totalRecords = Number(res.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+        this.datasource.paginator.length = this.paginator.length = this.totalRecords;
         this.datasource.paginator = this.paginator;
       }
     });

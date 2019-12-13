@@ -531,7 +531,12 @@ export class ErpCommonService {
 
 	updateUserItemData(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiInvUrl + '/inventory-user/insert', value);
+		return this.http.post(environment.apiInvUrl + '/inventory-user/update', value);
+	}
+
+	getFilterLocation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/location/getAll', value);
 	}
 
 }

@@ -63,7 +63,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	typeArray = [
 		{ id: "8", name: 'Nature' },
 		{ id: "9", name: 'Categories' },
-		{ id: "10", name: 'Units' }
+		{ id: "10", name: 'Units' },
+		{ id: "11", name: 'Location Type' },
 	];
 	constructor(
 		private fbuild: FormBuilder,
