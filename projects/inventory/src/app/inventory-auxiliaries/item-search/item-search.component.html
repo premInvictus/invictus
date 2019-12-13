@@ -1,3 +1,107 @@
-<p>
-  item-search works!
-</p>
+<div class="search-book">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Item Search</span>
+          </div>
+          <div class="col-6">
+            <div class="search-container">
+              <form [formGroup]="searchForm">
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="form-field lib-form">
+                      <input matInput [placeholder]="!searchForm.value.search ? 'Search Any Item ..' : ''" type="text"
+                        formControlName="search" id="search_book" autocomplete="off"
+                        (keydown.enter)="getItems($event)" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right">
+                    <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                        class="font-size-12 m    argin-top-15 font-skyblue">Advanced Search <i
+                          class="fas fa-chevron-down"></i></span></a>
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                      (keyup.enter)="search()">
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div [hidden]="ITEM_MASTER_DATA.length == 0">
+              <mat-form-field>
+                <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+              <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('sno',i)"
+                    [style.display]="getRowSpan('sno', i) ? '' : 'none'"> {{item.sno}} </td>
+                </ng-container>
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Code </th>
+                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('code',i)"
+                    [style.display]="getRowSpan('code', i) ? '' : 'none'"> {{item.code}} </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </th>
+                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('name',i)"
+                    [style.display]="getRowSpan('name', i) ? '' : 'none'"> {{item.name | titlecase}} </td>
+                </ng-container>
+                <ng-container matColumnDef="nature">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nature </th>
+                  <td mat-cell *matCellDef="let item; let i = index;" [attr.rowspan]="getRowSpan('nature',i)"
+                    [style.display]="getRowSpan('nature', i) ? '' : 'none'"> {{item.nature}} </td>
+                </ng-container>
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+                  <td mat-cell *matCellDef="let item; let i = index" [attr.rowspan]="getRowSpan('category',i)"
+                    [style.display]="getRowSpan('category', i) ? '' : 'none'"> {{item.category}} </td>
+                </ng-container>
+                <ng-container matColumnDef="reorder">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Reorder Level </th>
+                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('reorder',i)"
+                    [style.display]="getRowSpan('reorder', i) ? '' : 'none'"> {{item.reorder + ' ' + item.units}} </td>
+                </ng-container>
+                <ng-container matColumnDef="location">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Location </th>
+                  <td mat-cell *matCellDef="let item"> {{item.location}} </td>
+                </ng-container>
+                <ng-container matColumnDef="qty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+                  <td mat-cell *matCellDef="let item"> {{item.qty}} </td>
+                </ng-container>
+                <ng-container matColumnDef="desc">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Description </th>
+                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('desc',i)"
+                    [style.display]="getRowSpan('desc', i) ? '' : 'none'"> {{item.desc | capitalize}} </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+              </table>
+              <mat-paginator [hidden]="ITEM_MASTER_DATA.length < 1" #paginator [pageSize]="itempagesize"
+                [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+              </mat-paginator>
+            </div>
+            <div *ngIf="ITEM_MASTER_DATA.length == 0" class="no-records">
+              No records found
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>

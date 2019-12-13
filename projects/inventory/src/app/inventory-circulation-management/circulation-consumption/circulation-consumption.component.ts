@@ -253,12 +253,25 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	setLocationId(locationDetails, i) {
+		var currentLocationStock = 0;
 		this.formGroupArray[i].patchValue({
 			location_id: locationDetails.location_id,
-			item_location: locationDetails.location_name,
+			item_location: locationDetails.location_hierarchy,
+			item_location_hierarchy: locationDetails.location_hierarchy,
 		});
 
+		console.log(this.itemData[i])
+
+		for (var j=0; j<this.itemData[i]['item_location_data'].length;j++) {
+			console.log(Number(this.itemData[i]['item_location_data'][j]['location_id']) , Number(locationDetails.location_id));
+			if (Number(this.itemData[i]['item_location_data'][j]['location_id']) === Number(locationDetails.location_id)) {
+				currentLocationStock = Number(this.itemData[i]['item_location_data'][j]['item_qty']);
+			}
+		}
 		this.itemData[i]['item_location'] = locationDetails.location_id;
+
+
+		this.itemData[i]['current_location_stock'] = currentLocationStock;
 	}
 
 	setIssuedQuantity(item, i) {
@@ -297,7 +310,7 @@ export class CirculationConsumptionComponent implements OnInit {
 
 					this.itemData.push(this.issueItemData[Number(issueItemStatus.index)]);
 					var itemCode = this.issueItemData[Number(issueItemStatus.index)]['item_code'];
-					this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '' }));
+					this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '', item_location_hierarchy:'' }));
 
 
 					console.log('this.itemData', this.itemData, issueItemStatus);
@@ -309,6 +322,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					// this.itemData.push(this.itemData[Number(issueItemStatus.index)]['user_inv_logs']);
 
 				} else {
+					this.formGroupArray = [];
 					const inputJson = {
 						'item_code': Number(this.returnIssueItemsForm.value.scanItemId),
 						'item_status': 'active',
@@ -340,11 +354,36 @@ export class CirculationConsumptionComponent implements OnInit {
 
 					this.erpCommonService.searchItemByStatus(inputJson).subscribe((result: any) => {
 						if (result) {
-							if (result && result[0]) {
-								delete result[0]['_id'];
-								result[0]['due_date'] = date;
-								this.formGroupArray.push(this.fbuild.group({ item_code: result[0]['item_code'], item_location: '', issued_quantity: '' }));
-								this.itemData.push(result[0]);
+							if (result && result.data && result.data[0]) {
+								delete result.data[0]['_id'];
+								result.data[0]['due_date'] = date;
+								
+								this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '' }));
+								var current_stock = 0;
+								if (result.data[0].item_location) {
+									for (var j=0; j<result.data[0].item_location.length; j++) {
+										current_stock = current_stock + Number(result.data[0].item_location[j]['item_qty']);
+									}
+								}
+								var inputJson = {
+									item_category : result.data[0].item_category ? result.data[0].item_category : {id:'',name:''},
+									item_code : result.data[0].item_code ? result.data[0].item_code : 0,
+									item_desc : result.data[0].item_desc ? result.data[0].item_desc : '',
+									item_location : result.data[0].item_location ? result.data[0].item_location : [],
+									item_location_data : result.data[0].item_location ? result.data[0].item_location : [],
+									item_name : result.data[0].item_name ? result.data[0].item_name  : '',
+									item_nature : result.data[0].item_nature ? result.data[0].item_nature : {id:'',name:''},
+									item_reorder_level : result.data[0].item_reorder_level ? result.data[0].item_reorder_level : 0,
+									item_session : result.data[0].item_session ? result.data[0].item_session : '',
+									item_status : result.data[0].item_status ? result.data[0].item_status : '',
+									item_units : result.data[0].item_units ? result.data[0].item_units : {id:'',name:''},
+									current_stock : current_stock ? current_stock : 0,
+									current_location_stock: current_stock ? current_stock : 0
+								};
+
+								console.log('inputJson--',inputJson);
+
+								this.itemData.push(inputJson);
 
 								this.setDueDate(this.itemData.length - 1, date);
 								this.returnIssueItemsForm.controls['scanItemId'].setValue('');
@@ -407,25 +446,25 @@ export class CirculationConsumptionComponent implements OnInit {
 
 					element = {
 						srno: pos,
-						item_code: item.item_code ? item.item_code : 0,
-						item_name: item.item_name ? item.item_name : '',
-						item_nature: item.item_nature ? item.item_nature : '',
-						item_category: item.item_category ? item.item_category : '',
-						item_reorder_level: item.item_reorder_level ? item.item_reorder_level : '',
-						item_units: item.item_units ? item.item_units : '',
-						item_desc: item.item_desc ? item.item_desc : '',
-						item_status: item.item_status ? item.item_status : '',
-						item_location: item.item_location ? item.item_location : '',
-						issued_quantity: item.issued_quantity ? item.issued_quantity : '',
-						due_date: item.due_date ? item.due_date : '',
-						returned_on: item.returned_on ? item.returned_on : '',
-						issued_on: item.issued_on ? item.issued_on : ''
+						item_code: item && item.item_code ? item.item_code : 0,
+						item_name: item && item.item_name ? item.item_name : '',
+						item_nature: item && item.item_nature ? item.item_nature : '',
+						item_category: item && item.item_category ? item.item_category : '',
+						item_reorder_level: item && item.item_reorder_level ? item.item_reorder_level : '',
+						item_units: item && item.item_units ? item.item_units : '',
+						item_desc: item && item.item_desc ? item.item_desc : '',
+						item_status: item && item.item_status ? item.item_status : '',
+						item_location: item && item.item_location ? item.item_location : '',
+						issued_quantity: item && item.issued_quantity ? item.issued_quantity : '',
+						due_date: item && item.due_date ? item.due_date : '',
+						returned_on: item && item.returned_on ? item.returned_on : '',
+						issued_on: item && item.issued_on ? item.issued_on : ''
 					};
-					if (item.returned_on) {
+					if (item && item.returned_on) {
 						this.itemsReadTillDate++;
 					}
 
-					if (item.item_status === 'issued') {
+					if (item && item.item_status === 'issued') {
 						this.issueItemData.push(item);
 						this.finIssueItem.push(item);
 					}
@@ -457,17 +496,20 @@ export class CirculationConsumptionComponent implements OnInit {
 		const updateditemData = [];
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		for (let i = 0; i < itemData.length; i++) {
-			if (itemData[i]['item_status'] === 'issued') {
+			var inputJson = {}			;
+			
+			if (itemData[i]['item_status'] === 'issued') {				
 				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
-					itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-					itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
-					itemData[i]['fdue_date'] = itemData[i]['fdue_date'];
-					itemData[i]['reissue_status'] = 1;
-					itemData[i]['issued_quantity'] = itemData[i]['issued_quantity'];
+					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
+					inputJson['fdue_date'] = itemData[i]['fdue_date'];
+					inputJson['reissue_status'] = 1;
+					inputJson['item_code'] = itemData[i]['item_code'];
+					inputJson['item_location'] = { location_id : itemData[i]['item_location'], item_qty : itemData[i]['issued_quantity']};
 				} else {
-					itemData[i]['item_status'] = 'active';
-					itemData[i]['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
-					itemData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					inputJson['item_status'] = 'active';
+					inputJson['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
+					inputJson['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 
 					console.log('finIssueItem--', this.finIssueItem);
 
@@ -478,20 +520,19 @@ export class CirculationConsumptionComponent implements OnInit {
 					}
 
 				}
-				updateditemData.push(itemData[i]);
+				updateditemData.push(inputJson);
 			} else if (itemData[i]['item_status'] === 'active' || itemData[i]['item_status'] === 'reserved') {
 				if (itemData[i]['fdue_date']) {
-					itemData[i]['item_status'] = 'issued';
-					itemData[i]['issued_quantity'] = itemData[i]['issued_quantity'];
-					itemData[i]['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
-					itemData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					inputJson['item_code'] = itemData[i]['item_code'];
+					inputJson['item_status'] = 'issued';
+					inputJson['item_location'] = { location_id : itemData[i]['item_location'], item_qty : itemData[i]['issued_quantity']};
+					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
+					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					this.finIssueItem.push(itemData[i]);
-					updateditemData.push(itemData[i]);
+					updateditemData.push(inputJson);
 				}
 			}
 		}
-
-
 
 		var limitFlag = this.checkForIssueItemLimit();
 
@@ -508,12 +549,11 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-			console.log('this.userHaveItemsData--', this.userHaveItemsData);
+			console.log('this.userHaveItemsData--', this.userHaveItemsData, inputJson);
 			if (!this.userHaveItemsData) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
+					if (result) {
 						this.itemData = [];
-						this.resetAll();
 						this.issueItemData = [];
 						this.resetIssueReturn();
 						this.getUserIssueReturnLogData();
@@ -523,9 +563,8 @@ export class CirculationConsumptionComponent implements OnInit {
 				});
 			} else {
 				this.erpCommonService.updateUserItemData(inputJson).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
+					if (result) {
 						this.itemData = [];
-						this.resetAll();
 						this.issueItemData = [];
 						this.resetIssueReturn();
 						this.getUserIssueReturnLogData();
@@ -601,6 +640,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	resetIssueReturn() {
 		this.itemData = [];
 		this.finIssueItem = [];
+		this.formGroupArray = [];
 		this.returnIssueItemsForm.reset();
 		this.returnIssueItemsForm.controls['scanItemId'].setValue('');
 
@@ -612,6 +652,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		this.issueItemData = [];
 		this.finIssueItem = [];
 		this.userData = [];
+		this.formGroupArray = [];
 		this.searchForm.controls['searchId'].setValue('');
 		this.returnIssueItemsForm.reset();
 		this.ITEM_LOG_LIST_ELEMENT = [];

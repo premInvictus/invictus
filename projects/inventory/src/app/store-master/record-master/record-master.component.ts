@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommonAPIService, InventoryService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './record-master.model';
-import {MatTableDataSource, MatPaginator, PageEvent} from '@angular/material';
-import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component'
+import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl } from '@angular/material';
+import { MatPaginatorI18n } from '../../inventory-shared/customPaginatorClass';
+import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component';
 
 @Component({
   selector: 'app-record-master',
   templateUrl: './record-master.component.html',
-  styleUrls: ['./record-master.component.css']
+  styleUrls: ['./record-master.component.css'],
+  providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }]
 })
-export class RecordMasterComponent implements OnInit {
+export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
 
   paramform: FormGroup;
   tableDivFlag = false;
@@ -33,12 +35,15 @@ export class RecordMasterComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    localStorage.removeItem('invoiceBulkRecords');
     this.buildForm();
     this.getItemRecordMaster({pageSize: this.pageSize, pageIndex : 0});
   }
   ngAfterViewInit(){
     this.dataSource.paginator = this.paginator;
-    this.paginator.length = this.pageLength;
+  }
+  ngOnDestroy(){
+    localStorage.removeItem('invoiceBulkRecords');
   }
   buildForm(){
     this.paramform = this.fbuild.group({
@@ -131,18 +136,18 @@ export class RecordMasterComponent implements OnInit {
         },[]);
         console.log(DATA);
         this.ELEMENT_DATA = DATA;*/
-
-        console.log(this.ELEMENT_DATA);
-        this.pageLength = parseInt(result.data.totalRecord);
-        this.paginator.length = this.pageLength;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        this.cacheSpan('position', d => d.position);
-        this.cacheSpan('item_code', d => d.item_code);
-        this.cacheSpan('item_name', d => d.item_name);
-        this.cacheSpan('item_desc', d => d.item_desc);
         this.tableDivFlag = true;
         this.tabledataFlag = true;
+        console.log(this.ELEMENT_DATA);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: parseInt(result.data.totalRecord) }));
+        this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.paginator.length = parseInt(result.data.totalRecord);
+        this.dataSource.paginator.length = this.paginator.length;
+        this.dataSource.paginator = this.paginator;
+        //this.cacheSpan('position', d => d.position);
+        //this.cacheSpan('item_code', d => d.item_code);
+        //this.cacheSpan('item_name', d => d.item_name);
+        //this.cacheSpan('item_desc', d => d.item_desc);
       }
     })
   }

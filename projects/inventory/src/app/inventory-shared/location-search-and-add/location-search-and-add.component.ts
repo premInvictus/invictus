@@ -5,18 +5,20 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-
+import { AddLocationDialog } from './add-location-dialog/add-location-dialog.component';
 @Component({
-  selector: 'app-physical-verification',
-  templateUrl: './physical-verification.component.html',
-  styleUrls: ['./physical-verification.component.css']
+  selector: 'app-location-search-and-add',
+  templateUrl: './location-search-and-add.component.html',
+  styleUrls: ['./location-search-and-add.component.css']
 })
-export class PhysicalVerificationComponent implements OnInit {
+export class LocationSearchAndAddComponent implements OnInit {
+
   allLocationData:any [] = [];
   searchForm: FormGroup;
   isLoading = false;
   toHighlight: string = '';
   constructor(
+    public dialog: MatDialog, 
     private route: ActivatedRoute,
 		private router: Router,
 		private fbuild: FormBuilder,
@@ -59,8 +61,17 @@ export class PhysicalVerificationComponent implements OnInit {
 		this.searchForm.patchValue({
 			item_location: locationDetails.location_name,
 		});
-	}
+  }
+  
+  openAddLocationDialog(): void {
+    const dialogRef = this.dialog.open(AddLocationDialog, {
+      width: '350px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //this.getVendorList();
+
+    });
+  }
 
 }
-
-
