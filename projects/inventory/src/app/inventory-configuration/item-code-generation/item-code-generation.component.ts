@@ -23,6 +23,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   pageIndex = 0;
   pageEvent: PageEvent;
   pageSize = 100;
+  currentUser: any = {};
   itempagesizeoptions = [100, 300, 500, 1000];
   datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
   @ViewChild('paginator') paginator: MatPaginator;
@@ -34,6 +35,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     localStorage.removeItem('invoiceBulkRecords');
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildform();
     this.getItemCategory();
     this.getItemNature();
@@ -53,7 +55,9 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
       "item_units": "",
       "item_desc": "",
       "item_status": "",
-      "item_code": ""
+      "item_code": "",
+      "item_created_date": "",
+      "item_updated_date": ""
     });
   }
   getItemNature() {
@@ -68,11 +72,11 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
     });
   }
   fetchData(event?: PageEvent) {
-		this.pageIndex = event.pageIndex;
-		this.pageSize = event.pageSize;
-		this.getAllItemsFromMaster();
-		return event;
-	}
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllItemsFromMaster();
+    return event;
+  }
   getItemCategory() {
     this.service.getDroppableFromMaster({
       type_id: '9'
@@ -179,10 +183,20 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
         inputJSON['item_reorder_level'] = this.itemCodeForm.value.item_reorder_level;
         inputJSON['item_desc'] = this.itemCodeForm.value.item_desc;
         inputJSON['item_status'] = 'active';
-        inputJSON['item_location'] = {
+        inputJSON['item_location'] = [{
           location_id: 0,
           item_qty: 0
-        };
+        }];
+        inputJSON['item_created_date'] = '';
+        inputJSON['item_updated_date'] = '';
+        inputJSON['item_created_by'] = {
+          name: this.currentUser.full_name,
+          id: this.currentUser.login_id
+        }
+        inputJSON['item_updated_by'] = {
+          name: this.currentUser.full_name,
+          id: this.currentUser.login_id
+        }
         this.service.insertItemsMaster(inputJSON).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.common.showSuccessErrorMessage('Item generated successfully', 'success');
@@ -212,6 +226,11 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
         };
         inputJSON['item_reorder_level'] = this.itemCodeForm.value.item_reorder_level;
         inputJSON['item_desc'] = this.itemCodeForm.value.item_desc;
+        inputJSON['item_updated_date'] = this.itemCodeForm.value.item_updated_date;
+        inputJSON['item_updated_by'] = {
+          name: this.currentUser.full_name,
+          id: this.currentUser.login_id
+        }
         this.service.updateItemsMaster(inputJSON).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.common.showSuccessErrorMessage('Item Updated successfully', 'success');
@@ -237,7 +256,8 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
       "item_reorder_level": val.item_reorder_level,
       "item_units": val.item_units.id,
       "item_desc": val.item_desc,
-      "item_code": val.item_code
+      "item_code": val.item_code,
+      "item_updated_date": val.item_updated_date
     });
     this.updateFlag = true;
   }
