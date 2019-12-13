@@ -539,6 +539,16 @@ export class ErpCommonService {
 		return this.http.post(environment.apiInvUrl + '/location/getAll', value);
 	}
 
+	getInventoryPhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/physical-verification/getAll', value);
+	}
+
+	insertInventoryPhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/physical-verification/insert', value);
+	}
+
 }
 
 
