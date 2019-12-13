@@ -49,36 +49,40 @@
           </div> -->
           <div class="row remove-top-margin">
             <div class="col-12">
-              <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag">
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center">
 
                 <!-- Position Column -->
                 <ng-container matColumnDef="position">
                   <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
-                  <td mat-cell *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('position',i)" [style.display]="getRowSpan('position', i) ? '' : 'none'"> {{element.position}}</td>
+                  <td mat-cell *matCellDef="let element;let i = index" > {{element.position}}</td>
                 </ng-container>
 
                 <!-- Name Column -->
                 <ng-container matColumnDef="item_code">
                   <th mat-header-cell *matHeaderCellDef> Item Code </th>
-                  <td mat-cell *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('item_code',i)" [style.display]="getRowSpan('item_code', i) ? '' : 'none'"> {{element.item_code}} </td>
+                  <td mat-cell *matCellDef="let element;let i = index" (click)="openItemDetailsModal(element.item_code)" class="item-code"> {{element.item_code}} </td>
                 </ng-container>
 
                 <!-- Weight Column -->
                 <ng-container matColumnDef="item_name">
                   <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Name </th>
-                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('item_name',i)" [style.display]="getRowSpan('item_name', i) ? '' : 'none'"> {{element.item_name | capitalize}} </td>
+                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" > {{element.item_name | capitalize}} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="item_desc">
                   <th mat-header-cell *matHeaderCellDef class="cell-left"> Description </th>
-                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('item_name',i)" [style.display]="getRowSpan('item_name', i) ? '' : 'none'"> {{element.item_desc | capitalize | truncatetext: '50'}} </td>
+                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" > {{element.item_desc | capitalize | truncatetext: '50'}} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="item_location">
                   <th mat-header-cell *matHeaderCellDef> Location </th>
-                  <td mat-cell *matCellDef="let element"> {{element.item_location | capitalize}} </td>
+                  <td mat-cell *matCellDef="let element"> 
+                    <ng-container *ngFor="let loc of element.item_location; let i=index">
+                      {{loc.location_hierarchy | titlecase}} - <b>{{loc.item_qty}} {{element.item_units_name | capitalize}}</b> <ng-container *ngIf="(i+1) != element.item_location.length">|</ng-container>
+                    </ng-container>
+                  </td>
                 </ng-container>
 
                 <!-- Symbol Column -->

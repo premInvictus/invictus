@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { InventoryService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl } from '@angular/material';
@@ -11,7 +11,7 @@ import { CapitalizePipe } from 'src/app/_pipes';
   styleUrls: ['./item-search.component.css'],
   providers: [{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }]
 })
-export class ItemSearchComponent implements OnInit, AfterViewInit {
+export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   searchForm: FormGroup;
   pageindex = 0;
   pagesize = 10;
@@ -32,6 +32,9 @@ export class ItemSearchComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     localStorage.removeItem('invoiceBulkRecords');
     this.buildForm();
+  }
+  ngOnDestroy(){
+    localStorage.removeItem('invoiceBulkRecords');
   }
   search() { }
   buildForm() {
