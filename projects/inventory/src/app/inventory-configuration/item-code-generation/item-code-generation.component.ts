@@ -68,11 +68,11 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
     });
   }
   fetchData(event?: PageEvent) {
-		this.pageIndex = event.pageIndex;
-		this.pageSize = event.pageSize;
-		this.getAllItemsFromMaster();
-		return event;
-	}
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getAllItemsFromMaster();
+    return event;
+  }
   getItemCategory() {
     this.service.getDroppableFromMaster({
       type_id: '9'
@@ -179,10 +179,10 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
         inputJSON['item_reorder_level'] = this.itemCodeForm.value.item_reorder_level;
         inputJSON['item_desc'] = this.itemCodeForm.value.item_desc;
         inputJSON['item_status'] = 'active';
-        inputJSON['item_location'] = {
+        inputJSON['item_location'] = [{
           location_id: 0,
           item_qty: 0
-        };
+        }];
         this.service.insertItemsMaster(inputJSON).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.common.showSuccessErrorMessage('Item generated successfully', 'success');
