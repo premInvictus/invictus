@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SisService, AxiomService, CommonAPIService } from '../../_services/index';
+import { SisService, AxiomService, CommonAPIService, InventoryService } from '../../_services/index';
 import { ErpCommonService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
 import { FeeService } from 'projects/fee/src/app/_services';
@@ -18,67 +18,17 @@ export class AdvancedSearchModalComponent implements OnInit {
   formGroupArray: any[] = [];
   placeholder: any[] = [];
   fieldType: any[] = [];
-  genderArray: any[] = [];
-  wingArray: any[] = [];
-  monthArray:any[] = [];
-  departmentArray:any[] = [];
-  designationArray:any[] = [];
-  categoryOneArray:any[] = [];
-  categoryTwoArray:any[] = [];
-  categoryThreeArray:any[] = [];
-  scaleArray:any[] = [];
-  bankArray:any[] = [];
+  natureArray: any[] = [];
+  categoryArray: any[] = [];
+  unitsArray: any[] = [];
   currentUser: any = {};
+  allLocationData: any[] = [];
+  isLoading = false;
+  toHighlight: string = '';
+  checkLocationArray: any[] = [];
   constructor(private dialog: MatDialog, private fbuild: FormBuilder,
-    private common: ErpCommonService,
-    private axiomService: AxiomService,
-    private feeService: FeeService,
-    private sisService: SisService,
-    private commonAPIService: CommonAPIService) { }
-
-  statusArray: any[] = [
-    {
-      status_id: 'live',
-      status_name: 'Live',
-    },
-    {
-      status_id: 'left',
-      status_name: 'Left',
-    },
-    {
-      status_id: 'all',
-      status_name: 'All',
-    }
-  ];
-  categoryArray: any[] = [
-    {
-      cat_id: 'teaching',
-      cat_name: 'Teaching',
-    },
-    {
-      cat_id: 'non-teaching',
-      cat_name: 'Non Teaching (Administrative)',
-    },
-    {
-      cat_id: 'class-iv-staff',
-      cat_name: 'Class IV Staff',
-    }
-  ];
-  paymentModeArray:any[] = [
-    {
-      pm_id: '1',
-      pm_name: 'Bank Transfer',
-    },
-    {
-      pm_id: '2',
-      pm_name: 'Cash Payment',
-    },
-    {
-      pm_id: '3',
-      pm_name: 'Cheque Payment',
-    },
-  ]
-  
+    private erpCommonService: ErpCommonService,
+    private service: InventoryService) { }
   filterArray: any[] = [
   ];
   generalFilterForm: FormGroup;
@@ -86,146 +36,67 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   openModal(data) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-      this.filterArray = [
-        {
-          id: 'emp_id',
-          name: 'Emp. Id',
-          type: 'text',
-          placeholder: 'Search employee by Emp. Id'
-        },
-        {
-          id: 'emp_name',
-          name: 'Employee Name',
-          type: 'text',
-          placeholder: 'Search employee by Employee Name'
-        },
-        {
-          id: 'join_date',
-          name: 'Join Date',
-          placeholder: 'Search employee by Joined Date',
-          type: 'text',
-        },
-        {
-          id: 'left_date',
-          name: 'Left Date',
-          placeholder: 'Search employee by  Left Date',
-          type: 'text',
-        }
-      ];
-    
-      this.monthArray = [
-        {month_id : '1' , month_name : 'January'},
-        {month_id : '2' , month_name : 'February'},
-        {month_id : '3' , month_name : 'March'},
-        {month_id : '4' , month_name : 'April'},
-        {month_id : '5' , month_name : 'May'},
-        {month_id : '6' , month_name : 'June'},
-        {month_id : '7' , month_name : 'July'},
-        {month_id : '8' , month_name : 'August'},
-        {month_id : '9' , month_name : 'September'},
-        {month_id : '10' , month_name : 'October'},
-        {month_id : '11' , month_name : 'November'},
-        {month_id : '12' , month_name : 'December'},
-      ]
+    this.getItemNature();
+    this.getItemCategory();
+    this.getItemUnits();
+    this.filterArray = [
+      {
+        id: 'item_code',
+        name: 'Item Code',
+        type: 'text',
+        placeholder: 'Search item by code'
+      },
+      {
+        id: 'item_name',
+        name: 'Item Name',
+        type: 'text',
+        placeholder: 'Search item by Item Name'
+      },
+      {
+        id: 'item_location',
+        name: 'Location',
+        placeholder: 'Search item by location',
+        type: 'autopopulate',
+      }
+    ];
     this.dialogRef = this.dialog.open(this.searchModal, {
       width: '750px',
     });
     this.formGroupArray = [];
-    this.getWings();
-    this.getGender();
-    this.getDesignation();
-    this.getDepartment();
-    this.getCategoryOne();
-    this.getCategoryTwo();
-    this.getCategoryThree();
-    this.getPayScale();
-    this.getBank();
     this.buildForm();
   }
-  getWings() {
-    // this.commonAPIService.getAllWing({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.wingArray = [];
-    //     this.wingArray = res;
-    //   }
-    // });
-  }
-  getGender() {
-    // this.sisService.getGender().subscribe((res: any) => {
-    //   if (res && res.status === 'ok') {
-    //     this.genderArray = [];
-    //     this.genderArray = res.data;
-    //   }
-    // });
-  }
-  getDesignation() {
-    // this.commonAPIService.getAllDesignation({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.designationArray = [];
-    //     this.designationArray = res;
-    //   }
-    // });
-  }
-  getDepartment() {
-    this.sisService.getDepartment({}).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
-        this.departmentArray = [];
-        this.departmentArray = res.data;
-      }
-    });
-  }
-  getCategoryOne() {
-    // this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.categoryOneArray = [];
-    //     this.categoryOneArray = res;
-    //   }
-    // });
-  }
-  getCategoryTwo() {
-    // this.commonAPIService.getCategoryTwo({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.categoryTwoArray = [];
-    //     this.categoryTwoArray = res;
-    //   }
-    // });
-  }
-  getCategoryThree() {
-    // this.commonAPIService.getCategoryThree({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.categoryThreeArray = [];
-    //     this.categoryThreeArray = res;
-    //   }
-    // });
-  }
-
-  getPayScale() {
-    // this.commonAPIService.getSalaryStructure({}).subscribe((res: any) => {
-    //   if (res) {
-    //     this.scaleArray = [];
-    //     this.scaleArray = res;
-    //   }
-    // });
-  }
-
-  getBank() {
-    this.feeService.getBanksAll({}).subscribe((res: any) => {
-      if (res) {
-        this.bankArray = [];
-        this.bankArray = res.data;
-      }
-    });
-  }
-
   setPlaceHolder(val, index) {
+    this.checkLocationArray[index] = false;
     const findex = this.filterArray.findIndex(f => f.id === val);
     if (findex !== -1) {
+      if (this.filterArray[findex].type === 'autopopulate') {
+        this.checkLocationArray[index] = true;
+      } else {
+        this.checkLocationArray[index] = false;
+      }
       this.placeholder[index] = this.filterArray[findex].placeholder;
       this.fieldType[index] = this.filterArray[findex].type;
       this.formGroupArray[index].formGroup.patchValue({
         'type': this.filterArray[findex].type
       });
+    }
+  }
+  getFilterLocation(event) {
+    var inputJson = { 'filter': event.target.value };
+    if (event.target.value && event.target.value.length > 2) {
+      this.toHighlight = event.target.value
+      this.isLoading = true;
+      this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
+        this.allLocationData = [];
+        if (result) {
+          this.isLoading = false;
+          for (var i = 0; i < result.length; i++) {
+            this.allLocationData.push(result[i]);
+          }
+        }
+      });
+    } else {
+      this.allLocationData = [];
     }
   }
   addNewFilter(index) {
@@ -237,11 +108,18 @@ export class AdvancedSearchModalComponent implements OnInit {
         'type': ''
       })
     });
+    this.checkLocationArray.push(false);
+  }
+  setLocationId(locationDetails, i) {
+    this.formGroupArray[i].formGroup.patchValue({
+      filter_value: locationDetails.location_hierarchy,
+    });
   }
   deleteForm(i) {
     const findex = this.formGroupArray.findIndex(f => Number(f.id) === i);
     if (findex !== -1) {
       this.formGroupArray.splice(findex, 1);
+      this.checkLocationArray[findex] = false;
     }
   }
   buildForm() {
@@ -255,25 +133,13 @@ export class AdvancedSearchModalComponent implements OnInit {
         })
       }
     ];
+    this.checkLocationArray.push(false);
     const obj: any = {};
-    obj['emp_status'] = [];
-    obj['emp_wing_detail.wing_id'] = [];
-    obj['gen_id'] = [];
-    obj['emp_salary_detail.emp_organisation_relation_detail.doj'] = [];
-    obj['emp_designation_detail.des_id'] = [];
-    obj['emp_department_detail.dept_id'] = [];
-    obj['emp_salary_detail.emp_job_detail.category_1.cat_one_id'] = [];
-    obj['emp_salary_detail.emp_job_detail.category_2.cat_two_id'] = [];
-    obj['emp_salary_detail.emp_job_detail.category_3.cat_three_id'] = [];
-    // obj['cat_one_id'] = [];
-    // obj['cat_one_id'] = [];
-    // obj['cat_one_id'] = [];
-    obj['emp_salary_structure.emp_pay_mode.pm_id'] = [];
-    obj['emp_salary_structure.emp_pay_scale.ss_id'] = [];
-    obj['emp_bank_detail.bnk_detail.bnk_id'] = [];
+    obj['item_nature.id'] = '';
+    obj['item_category.id'] = '';
     obj['user'] = JSON.parse(localStorage.getItem('currentUser'));
-    obj['contract_from_date'] = '';
-    obj['contract_to_date'] = '';
+    obj['from'] = '';
+    obj['to'] = '';
     this.generalFilterForm = this.fbuild.group(obj);
   }
   closeDialog() {
@@ -301,12 +167,45 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   getFromDate(value) {
     this.generalFilterForm.patchValue({
-      from_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+      from: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
     });
   }
   getToDate(value) {
     this.generalFilterForm.patchValue({
-      to_date: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+      to: new DatePipe('en-in').transform(value, 'yyyy-MM-dd')
+    });
+  }
+  getItemCategory() {
+    this.service.getDroppableFromMaster({
+      type_id: '9'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.categoryArray = res;
+      } else {
+        this.categoryArray = [];
+      }
+    });
+  }
+  getItemNature() {
+    this.service.getDroppableFromMaster({
+      type_id: '8'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.natureArray = res;
+      } else {
+        this.natureArray = [];
+      }
+    });
+  }
+  getItemUnits() {
+    this.service.getDroppableFromMaster({
+      type_id: '10'
+    }).subscribe((res: any) => {
+      if (res && res.length > 0) {
+        this.unitsArray = res;
+      } else {
+        this.unitsArray = [];
+      }
     });
   }
 
