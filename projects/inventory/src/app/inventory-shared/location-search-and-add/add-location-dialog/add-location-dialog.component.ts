@@ -78,6 +78,7 @@ export class AddLocationDialog implements OnInit {
     this.commonAPIService.insertLocation(inputJson).subscribe((result) => {
       if (result) {
         this.commonAPIService.showSuccessErrorMessage('Location Saved Successfully', 'success');
+        this.dialogRef.close({data:result});
         this.resetForm();
       } else {
         this.commonAPIService.showSuccessErrorMessage('Error While Saving Location', 'error');
@@ -104,6 +105,10 @@ export class AddLocationDialog implements OnInit {
 
   resetForm() {
     this.locationForm.reset();
+  }
+
+  onNoClick() {
+    this.dialogRef.close();
   }
 
 }

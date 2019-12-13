@@ -48,7 +48,7 @@
                       <mat-option value="">Please Select Parent Location
                       </mat-option>
                       <mat-option *ngFor="let item of locationArray" [value]="item.location_id">
-                        {{item.location_name}}
+                        {{item.location_hierarchy}}
                       </mat-option>
                     </mat-select>
                     <mat-error>Please Choose Parent Location</mat-error>
@@ -57,16 +57,17 @@
               </div>
             </form>
           </div>
-          <div class="text-center margin-top-15">
-            <button mat-raised-button class="btn-success" (click)="save()">Add</button>
 
-          </div>
-          <div class="text-center margin-top-15">
+          <!-- <div class="text-center margin-top-15">
             <button mat-raised-button class="btn-danger" (click)="resetForm()">Reset</button>
-          </div>
+          </div> -->
         </div>
 
       </div>
+    </div>
+    <div class="margin-top-15">
+      <button mat-raised-button class="btn-success btn-spacer" (click)="save()">Add</button>
+      <button mat-raised-button class="btn-danger btn-spacer" (click)="resetForm()">Reset</button>
     </div>
 
   </div>
