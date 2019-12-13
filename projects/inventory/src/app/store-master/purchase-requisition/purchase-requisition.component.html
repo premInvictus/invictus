@@ -24,15 +24,14 @@
             </div> -->
           <div style="margin-top:15px !important" class="col-12 text-right">
             <span *ngIf="toBePromotedList.length > 0">
-              <i class="fas fa-check" (click)="overallSubmit('approved')"
-                style="cursor:pointer" title="Approved"></i>&nbsp;
-              <i class="fas fa-times" (click)="overallSubmit('reject')"
-                style="cursor:pointer" title="Decline"></i>&nbsp;
-              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                (click)="overallSubmit('hold')" style="cursor:pointer" title="Hold"></i>
-              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                (click)="overallSubmit('esclate')" style="cursor:pointer"
-                title="Esclate"></i>
+              <i class="fas fa-check" (click)="overallSubmit('approved')" style="cursor:pointer"
+                title="Approved"></i>&nbsp;
+              <i class="fas fa-times" (click)="overallSubmit('reject')" style="cursor:pointer"
+                title="Decline"></i>&nbsp;
+              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('hold')"
+                style="cursor:pointer" title="Hold"></i>
+              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('esclate')"
+                style="cursor:pointer" title="Esclate"></i>
             </span>
           </div>
           <div class="row remove-top-margin">
@@ -48,9 +47,9 @@
                   </th>
                   <td mat-cell *matCellDef="let element">
                     <span class="text-center">
-                      <mat-checkbox [value]="element.item_code"
-                        (change)="insertIntoToBePromotedList($event,element.rm_id)"
-                        [checked]="isSelectedP(element.item_code)" [disabled]="isDisabledP(element.item_code)">
+                      <mat-checkbox [value]="element.position.count"
+                        (change)="insertIntoToBePromotedList($event,element.item_code,element.pm_id)"
+                        [checked]="isSelectedP(element.position.count)" [disabled]="isDisabledP(element.count)">
                       </mat-checkbox>
                     </span>
                   </td>
@@ -81,17 +80,17 @@
                 </ng-container>
 
                 <!-- Symbol Column -->
-                <ng-container matColumnDef="rm_intended_use">
+                <ng-container matColumnDef="pm_intended_use">
                   <th mat-header-cell *matHeaderCellDef> Intended Use </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('rm_intended_use',i)"
-                    [style.display]="getRowSpan('rm_intended_use', i) ? '' : 'none'"> {{element.rm_intended_use }} </td>
+                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_intended_use',i)"
+                    [style.display]="getRowSpan('pm_intended_use', i) ? '' : 'none'"> {{element.pm_intended_use }} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
-                <ng-container matColumnDef="rm_id">
+                <ng-container matColumnDef="pm_id">
                   <th mat-header-cell *matHeaderCellDef> Request Id </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('rm_id',i)"
-                    [style.display]="getRowSpan('rm_id', i) ? '' : 'none'"> {{element.rm_id }} </td>
+                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_id',i)"
+                    [style.display]="getRowSpan('pm_id', i) ? '' : 'none'"> {{element.pm_id }} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
@@ -109,15 +108,15 @@
                 <ng-container matColumnDef="action">
                   <th mat-header-cell *matHeaderCellDef> Request By </th>
                   <td mat-cell *matCellDef="let element;let i = index ">
-                    <i class="fas fa-check" (click)="approvedList(element.rm_id,element.item_code,'approved')"
+                    <i class="fas fa-check" (click)="approvedList(element.pm_id,element.item_code,'approved')"
                       style="cursor:pointer" title="Approved"></i>&nbsp;
-                    <i class="fas fa-times" (click)="approvedList(element.rm_id,element.item_code,'reject')"
+                    <i class="fas fa-times" (click)="approvedList(element.pm_id,element.item_code,'reject')"
                       style="cursor:pointer" title="Decline"></i>&nbsp;
                     <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                      (click)="approvedList(element.rm_id,element.item_code,'hold')" style="cursor:pointer"
+                      (click)="approvedList(element.pm_id,element.item_code,'hold')" style="cursor:pointer"
                       title="Hold"></i>
                     <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                      (click)="approvedList(element.rm_id,element.item_code,'esclate')" style="cursor:pointer"
+                      (click)="approvedList(element.pm_id,element.item_code,'esclate')" style="cursor:pointer"
                       title="Esclate"></i>
                   </td>
                 </ng-container>
@@ -155,7 +154,7 @@
                 </thead>
                 <tbody class="text-center" *ngIf="this.requistionArray.length > 0">
                   <ng-container *ngFor="let item of requistionArray;let i=index">
-                    <tr class="custom-tr" *ngFor="let dety of item.rm_item_details;let j = index">
+                    <tr class="custom-tr" *ngFor="let dety of item.pm_item_details;let j = index">
                       <td class="custom-td">
                         {{dety.item_code}}
                       </td>
@@ -165,28 +164,28 @@
                       <td class="custom-td">
                         {{dety.item_quantity}}
                       </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.rm_item_details.length">
-                        {{item.rm_intended_use}}
+                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
+                        {{item.pm_intended_use}}
                       </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.rm_item_details.length">
-                        {{item.rm_id}}
+                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
+                        {{item.pm_id}}
                       </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.rm_item_details.length">
-                        {{item.rm_created.created_date | date:'d-MMM-y'}}
+                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
+                        {{item.pm_created.created_date | date:'d-MMM-y'}}
                       </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.rm_item_details.length">
-                        {{item.rm_created.created_by}}
+                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
+                        {{item.pm_created.created_by}}
                       </td>
                       <td *ngIf="!viewOnly" class="custom-td">
-                        <i class="fas fa-check" (click)="approvedList(item.rm_id,dety.item_code,'approved')"
+                        <i class="fas fa-check" (click)="approvedList(item.pm_id,dety.item_code,'approved')"
                           style="cursor:pointer" title="Approved"></i>&nbsp;
-                        <i class="fas fa-times" (click)="approvedList(item.rm_id,dety.item_code,'reject')"
+                        <i class="fas fa-times" (click)="approvedList(item.pm_id,dety.item_code,'reject')"
                           style="cursor:pointer" title="Decline"></i>&nbsp;
                         <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                          (click)="approvedList(item.rm_id,dety.item_code,'hold')" style="cursor:pointer"
+                          (click)="approvedList(item.pm_id,dety.item_code,'hold')" style="cursor:pointer"
                           title="Hold"></i>
                         <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                          (click)="approvedList(item.rm_id,dety.item_code,'esclate')" style="cursor:pointer"
+                          (click)="approvedList(item.pm_id,dety.item_code,'esclate')" style="cursor:pointer"
                           title="Esclate"></i>
                       </td>
                     </tr>

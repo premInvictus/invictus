@@ -27,7 +27,7 @@ export class PurchaseRequisitionComponent implements OnInit {
   pageLength: number;
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
-  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'rm_intended_use', 'rm_id', 'created_date', 'created_by', 'action'];
+  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'pm_intended_use', 'pm_id', 'created_date', 'created_by', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -64,7 +64,6 @@ export class PurchaseRequisitionComponent implements OnInit {
         if (currentValue != accessor(this.ELEMENT_DATA[j])) {
           break;
         }
-
         count++;
       }
 
@@ -82,31 +81,42 @@ export class PurchaseRequisitionComponent implements OnInit {
   getAllRequistionMaster() {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    this.inventory.getAllRequistionMaster().subscribe((result: any) => {
+    this.inventory.getRequistionMaster({ 'pm_type': "PR" }).subscribe((result: any) => {
       if (result) {
         this.requistionArray = result;
+        let i = 0;
         const DATA = this.requistionArray.reduce((current, next, index) => {
-          next.rm_item_details.forEach(element => {
+
+          next.item_details.forEach(element => {
+            let item_quantity = 0;
+            next.pm_item_details.forEach(dety => {
+              if (dety.item_code === element.item_code) {
+                item_quantity = dety.item_quantity
+              }
+            });
             current.push({
-              position: { 'rm_id': next.rm_id, 'item_code': element.item_code },
+              position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code },
               item_code: element.item_code,
               item_name: element.item_name,
-              item_quantity: element.item_quantity,
-              rm_intended_use: next.rm_intended_use,
-              rm_id: next.rm_id,
-              created_date: next.rm_created.created_date,
-              created_by: next.rm_created.created_by,
-              action: { 'rm_id': next.rm_id, 'item_code': element.item_code }
+              item_quantity: item_quantity,
+              pm_intended_use: next.pm_intended_use,
+              pm_id: next.pm_id,
+              created_date: next.pm_created.created_date,
+              created_by: next.pm_created.created_by,
+              action: { 'pm_id': next.pm_id, 'item_code': element.item_code }
+
             });
+            i++;
           });
           return current;
         }, []);
         this.ELEMENT_DATA = DATA;
+        console.log(this.ELEMENT_DATA);
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         this.pageLength = this.ELEMENT_DATA.length;
         this.dataSource.paginator = this.paginator;
-        this.cacheSpan('rm_intended_use', d => d.rm_intended_use);
-        this.cacheSpan('rm_id', d => d.rm_id);
+        this.cacheSpan('pm_intended_use', d => d.pm_intended_use);
+        this.cacheSpan('pm_id', d => d.pm_id);
         this.cacheSpan('created_date', d => d.created_date);
         this.cacheSpan('created_by', d => d.created_by);
         this.tableDivFlag = true;
@@ -114,18 +124,18 @@ export class PurchaseRequisitionComponent implements OnInit {
       }
     });
   }
-  approvedList(rm_id, item_code, text) {
-    const tindex = this.requistionArray.findIndex(f => Number(f.rm_id) === Number(rm_id));
+  approvedList(pm_id, item_code, text) {
+    const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
     if (tindex !== -1) {
-      const rindex = this.requistionArray[tindex].rm_item_details.findIndex(r => Number(r.item_code) === Number(item_code));
+      const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item_code));
       if (text === 'approved') {
-        this.requistionArray[tindex].rm_item_details[rindex].item_status = 'approved';
+        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
       } else if (text === 'reject') {
-        this.requistionArray[tindex].rm_item_details[rindex].item_status = 'reject';
+        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'reject';
       } else if (text === 'hold') {
-        this.requistionArray[tindex].rm_item_details[rindex].item_status = 'hold';
+        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
       } else if (text === 'esclate') {
-        this.requistionArray[tindex].rm_item_details[rindex].item_status = 'esclate';
+        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
       }
       if (text !== 'approved') {
         this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
@@ -141,19 +151,20 @@ export class PurchaseRequisitionComponent implements OnInit {
       }
     }
   }
-  insertIntoToBePromotedList($event, item) {
+  insertIntoToBePromotedList($event, item_code, pm_id) {
     if ($event.checked === true) {
       this.toBePromotedList.push({
-        item_code: $event.source.value,
-        rm_id: item
+        count: $event.source.value,
+        item_code: item_code,
+        pm_id: pm_id
       });
     } else {
-      const findex = this.toBePromotedList.findIndex(f => f.item_code === $event.source.value && f.rm_id == item);
+      const findex = this.toBePromotedList.findIndex(f => f.item_code === item_code && f.pm_id == pm_id && f.count === $event.source.value);
       this.toBePromotedList.splice(findex, 1);
     }
   }
-  isSelectedP(item_code) {
-    return this.toBePromotedList.findIndex(f => f.item_code === item_code) !== -1 ? true : false;
+  isSelectedP(count) {
+    return this.toBePromotedList.findIndex(f => f.count === count) !== -1 ? true : false;
   }
   isDisabledP(item_code) {
     //return this.promoteStudentListArray.findIndex(f => f.au_login_id === login_id && f.pmap_status === '0') !== -1 ? true : false;
@@ -162,11 +173,14 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.toBePromotedList = [];
     this.allselectedP = this.allselectedP ? false : true;
     if (this.allselectedP) {
+      let i = 0;
       for (const item of this.ELEMENT_DATA) {
         this.toBePromotedList.push({
+          count: i,
           item_code: item.item_code,
-          rm_id: item.rm_id
+          pm_id: item.pm_id
         });
+        i++;
       }
     } else {
       this.toBePromotedList = [];
@@ -175,17 +189,17 @@ export class PurchaseRequisitionComponent implements OnInit {
   overallSubmit(text) {
     if (this.toBePromotedList.length > 0) {
       for (let item of this.toBePromotedList) {
-        const tindex = this.requistionArray.findIndex(f => Number(f.rm_id) === Number(item.rm_id));
+        const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(item.pm_id));
         if (tindex !== -1) {
-          const rindex = this.requistionArray[tindex].rm_item_details.findIndex(r => Number(r.item_code) === Number(item.item_code));
+          const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item.item_code));
           if (text === 'approved') {
-            this.requistionArray[tindex].rm_item_details[rindex].item_status = 'approved';
+            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
           } else if (text === 'reject') {
-            this.requistionArray[tindex].rm_item_details[rindex].item_status = 'reject';
+            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'reject';
           } else if (text === 'hold') {
-            this.requistionArray[tindex].rm_item_details[rindex].item_status = 'hold';
+            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
           } else if (text === 'esclate') {
-            this.requistionArray[tindex].rm_item_details[rindex].item_status = 'esclate';
+            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
           }
         }
       }
@@ -202,7 +216,7 @@ export class PurchaseRequisitionComponent implements OnInit {
       this.inventory.setrequisitionArray(this.requistionArray);
       this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
     }
-    console.log(this.requistionArray);
+    //console.log(this.requistionArray);
   }
 
 }

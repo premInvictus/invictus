@@ -40,9 +40,10 @@ export class ProcurementMasterComponent implements OnInit {
     this.createRequistionForm = this.fbuild.group({
       item_code: '',
       item_name: '',
-      item_desc: '',
+      item_desc: '', 
       item_quantity: '',
       item_units: '',
+      item_price: '',
       item_status: ''
 
     });
@@ -80,9 +81,6 @@ export class ProcurementMasterComponent implements OnInit {
       this.commonService.showSuccessErrorMessage('Please fill all required field', 'error');
     }
   }
-
-
-
   // Add item list function
 
   addList() {
@@ -94,7 +92,7 @@ export class ProcurementMasterComponent implements OnInit {
         this.itemCodeArray.push({
           item_code: this.createRequistionForm.value.item_code,
         });
-        this.createRequistionForm.value.item_status = '0';
+        this.createRequistionForm.value.item_status = 'pending';
         this.finalRequistionArray.push(this.createRequistionForm.value);
       }
       this.resetForm();
@@ -164,24 +162,24 @@ export class ProcurementMasterComponent implements OnInit {
   }
   finalSubmit($event) {
     if ($event) {
-      this.finalSubmitArray['rm_item_details'] = this.finalRequistionArray;
-      this.finalSubmitArray['rm_intended_use'] = this.finalRequistionForm.value.intended_use;
-      this.finalSubmitArray['rm_source'] = 'PR';
-      this.finalSubmitArray['rm_type'] = 'PR';
-      this.finalSubmitArray['rm_created'] = {
+      this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
+      this.finalSubmitArray['pm_intended_use'] = this.finalRequistionForm.value.intended_use;
+      this.finalSubmitArray['pm_source'] = 'PR';
+      this.finalSubmitArray['pm_type'] = 'PR';
+      this.finalSubmitArray['pm_created'] = {
         created_by: Number(this.currentUser.login_id),
         created_date: ''
       }
-      this.finalSubmitArray['rm_updated'] = {
+      this.finalSubmitArray['pm_updated'] = {
         updated_by: Number(this.currentUser.login_id),
         update_date: ''
       }
-      this.finalSubmitArray['rm_approved'] = {
+      this.finalSubmitArray['pm_approved'] = {
         approved_by: '',
         approved_date: ''
       }
-      this.finalSubmitArray['rm_status'] = 'pending';
-      this.finalSubmitArray['rm_session'] = this.session.ses_id;
+      this.finalSubmitArray['pm_status'] = 'pending';
+      this.finalSubmitArray['pm_session'] = this.session.ses_id;
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
         if (result) {
           this.commonService.showSuccessErrorMessage('Requistion Request Generated Successfylly', 'success');

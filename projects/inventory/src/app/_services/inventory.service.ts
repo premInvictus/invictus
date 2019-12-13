@@ -48,6 +48,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/updateRequistionMaster', value);
   }
+  getRequistionMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/getRequistionMaster', value);
+  }
   setrequisitionArray(value) {
     this.processType = value;
   }

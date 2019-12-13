@@ -3,8 +3,8 @@ export interface Element{
     item_code: any;
     item_name: any;
     item_quantity: any,
-    rm_intended_use: any,
-    rm_id: any,
+    pm_intended_use: any,
+    pm_id: any,
     created_date: any,
     action: any,
   }
