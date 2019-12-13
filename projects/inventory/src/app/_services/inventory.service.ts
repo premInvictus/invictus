@@ -37,6 +37,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/searchItemsFromMaster', value);
   }
+  filterItemsFromMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/filterItemsFromMaster', value);
+  }
   insertItemsMaster(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/insert', value);
