@@ -32,6 +32,8 @@ export class DeleteModalComponent implements OnInit {
 			this.inputData.text = 'Action';
 			this.showInvPhysicalVerification = true;
 			this.buildForm();
+		} else {
+			this.showInvPhysicalVerification = false;
 		}
 		this.dialogRef = this.dialog.open(this.deleteModal, {
 			'height': '30vh',
