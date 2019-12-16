@@ -23,6 +23,7 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   pageIndex = 0;
   pageEvent: PageEvent;
   pageSize = 100;
+  @ViewChild('searchModal') searchModal;
   displayedColumns = ['sno', 'code', 'name', 'nature', 'category', 'location', 'qty', 'reorder', 'desc'];
   val: any;
   itempagesizeoptions = [100, 300, 500, 1000];
@@ -33,7 +34,7 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     localStorage.removeItem('invoiceBulkRecords');
     this.buildForm();
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     localStorage.removeItem('invoiceBulkRecords');
   }
   search() { }
@@ -42,6 +43,55 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       search: '',
       page_size: this.pagesize,
       page_index: this.pageindex,
+    });
+  }
+  searchOk($event) {
+    this.ITEM_MASTER_DATA = [];
+    this.spans= [];
+    this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+    const inputJSON = {
+      filters: $event.filters,
+      generalFilters: $event.generalFilters,
+      page_index: this.pageindex,
+      page_size: this.pagesize,
+    };
+    this.service.filterItemsFromMaster(inputJSON).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.itemArray = [];
+        this.itemArray = res.data;
+        const DATA = this.itemArray.reduce((current, next, index) => {
+          next.item_location.forEach(element => {
+            current.push({
+              "sno": index + 1,
+              "code": next.item_code,
+              "name": next.item_name,
+              "session": next.item_session,
+              "nature": next.item_nature.name,
+              "category": next.item_category.name,
+              "location": this.getLocation(element.location_id, next.locs),
+              "qty": this.getQuantity(element.location_id, next.item_location),
+              "reorder": next.item_reorder_level,
+              "units": next.item_units.name,
+              "desc": next.item_desc,
+              "status": next.item_status
+            });
+          });
+          return current;
+        }, []);
+        this.ITEM_MASTER_DATA = DATA;
+        this.cacheSpan('sno', d => d.sno);
+        this.cacheSpan('code', d => d.code);
+        this.cacheSpan('name', d => d.name);
+        this.cacheSpan('nature', d => d.nature);
+        this.cacheSpan('category', d => d.category);
+        this.cacheSpan('reorder', d => d.reorder);
+        this.cacheSpan('desc', d => d.desc);
+        this.totalRecords = Number(res.totalRecords);
+        localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+        this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+        this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+        this.datasource.paginator = this.paginator;
+      }
     });
   }
   ngAfterViewInit() {
@@ -55,8 +105,10 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     }
   }
+  openSearchDialog = (data) => { this.searchForm.patchValue({ search: '' }); this.searchModal.openModal(data); };
   getAllItemsFromMaster() {
     this.ITEM_MASTER_DATA = [];
+    this.spans= [];
     this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
     const json = {
       page_index: this.pageIndex,
@@ -94,8 +146,6 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
         this.cacheSpan('category', d => d.category);
         this.cacheSpan('reorder', d => d.reorder);
         this.cacheSpan('desc', d => d.desc);
-        console.log(this.spans);
-        console.log(this.ITEM_MASTER_DATA);
         this.totalRecords = Number(res.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
