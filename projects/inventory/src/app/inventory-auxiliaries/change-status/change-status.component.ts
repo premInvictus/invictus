@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { InventoryService, CommonAPIService, SisService } from '../../_services';
+import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { element } from '@angular/core/src/render3/instructions';
 
@@ -21,11 +22,15 @@ export class ChangeStatusComponent implements OnInit {
   change_toArray: any[] = [];
   locationArray: any[] = [];
   reasonArray: any[] = [];
+  isLoading = false;
+  toHighlight: string = '';
+  allLocationData: any[] = [];
   constructor(
     private inventoryService: InventoryService, 
     private commonAPIService: CommonAPIService,
     private fbuild: FormBuilder,
     private sisService: SisService,
+    private erpCommonService: ErpCommonService
   ) { }
 
   ngOnInit() {
@@ -37,7 +42,7 @@ export class ChangeStatusComponent implements OnInit {
   }
   getReasons() {
     this.reasonArray = [];
-		this.sisService.getReason({ reason_type: 12 }).subscribe((res: any) => {
+		this.sisService.getReason({ reason_type: 16 }).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.reasonArray = res.data;
 			}
@@ -48,6 +53,7 @@ export class ChangeStatusComponent implements OnInit {
       'change_type': '',
       'change_to': '',
       'change_qty': '',
+      'change_location_name': '',
       'change_location_id': '',
       'location_id': '',
 			'reason_id': '',
@@ -68,6 +74,17 @@ export class ChangeStatusComponent implements OnInit {
       }
     }
   }
+  resetFilter(){
+    this.changeStatusForm.patchValue({
+      change_to: '',
+      change_qty: '',
+      change_location_name: '',
+      change_location_id:'',
+      location_id:'',
+      reason_id:'',
+      reason_desc:''
+    });
+  }
   searchItem(){
     this.itemArray = [];
     const param: any = {};
@@ -80,7 +97,7 @@ export class ChangeStatusComponent implements OnInit {
         this.itemArray = result.data;
         const DATA = this.itemArray.reduce((current, next, index) => {
           const location = next.locs.reduce((current1, next1, index1) => {
-            next1.item_qty = next.item_location[index].item_qty;
+            next1.item_qty = next.item_location[index1].item_qty;
             current1.push(next1);
             return current1;
           },[]);
@@ -101,9 +118,16 @@ export class ChangeStatusComponent implements OnInit {
           })
           return current;
         },[]);
+        var clean = this.locationArray.filter((arr, index, self) =>
+        index === self.findIndex((t) => (t.location_id === arr.location_id)))
+        this.locationArray = clean;
         this.itemData = DATA;
         console.log(this.itemData);
         this.detailsFlag = true;        
+      } else {
+        this.itemData=[];
+        this.locationArray = [];
+        this.detailsFlag = true;  
       }
     })
   }
@@ -132,13 +156,48 @@ export class ChangeStatusComponent implements OnInit {
         return current;
       }, []);
       console.log('sourceLocationFilteredData', sourceLocationFilteredData);
+      const param: any = {};
+      param.filter = this.changeStatusForm.value;
+      param.filterData = sourceLocationFilteredData;
+      this.inventoryService.itemChangeStatus(param).subscribe((result: any) => {
+        if(result.status === 'ok') {
+          console.log(result);
+          this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+          this.searchItem();
+        } else {
+          this.commonAPIService.showSuccessErrorMessage(result.message, 'error')
+        }
+      })
     } else {
       this.commonAPIService.showSuccessErrorMessage('Selected item qty must be less than resulted item current stock', 'error');
     }
   }
-  getPhysicalVerification(locationData) {
-    console.log('locationData--', locationData);
-
+  getFilterLocation(event) {
+    var inputJson = { 'filter': event.target.value };
+    if (event.target.value && event.target.value.length > 2) {
+      this.toHighlight = event.target.value
+      this.isLoading = true;
+      this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
+        this.allLocationData = [];
+        if (result) {
+          this.isLoading = false;
+          for (var i = 0; i < result.length; i++) {
+            this.allLocationData.push(result[i]);
+          }
+        }
+      });
+    } else {
+      this.allLocationData = [];
+    }
+  }
+  setLocationId(locationDetails, i) {
+    if(locationDetails) {
+      console.log(locationDetails);
+      this.changeStatusForm.patchValue({
+        change_location_id: locationDetails.location_id,
+        change_location_name: locationDetails.location_hierarchy
+      })
+    }
   }
 
 }

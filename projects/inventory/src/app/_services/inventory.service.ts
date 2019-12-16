@@ -68,4 +68,8 @@ export class InventoryService {
       return this.processType;
     }
   }
+  itemChangeStatus(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/change-status/itemChangeStatus', value);
+  }
 }
