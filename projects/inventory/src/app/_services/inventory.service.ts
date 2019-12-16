@@ -68,4 +68,8 @@ export class InventoryService {
       return this.processType;
     }
   }
+  getOrderMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMaster', value);
+  }
 }
