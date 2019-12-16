@@ -43,7 +43,7 @@
             <ng-container matColumnDef="item_code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Item Code</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer" (click)="showVendorDetail(element)">{{element?.item_code}} </a>
+                <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.item_code}} </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_name">
@@ -96,8 +96,8 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
               <td mat-cell *matCellDef="let element">
                 <span><i class="fa fa-check-circle font-color-green margin-right-15"
-                    (click)="approveVerification(element, true)"></i></span>
-                <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                    (click)="openApproveModal(element);approveVerification(element, true)"></i></span>
+                <span class="ver-line-divider"><i class="fas fa-times-circle font-color-red margin-left-15"
                     (click)="openModal(element);deleteVerificationModel(element)"></i></span>
               </td>
             </ng-container>
@@ -131,6 +131,9 @@
     </mat-card>
   </div>
 </div>
+<app-delete-modal #approveModalRef [deleteMessage]="'Action'" [inputText]="'Action'"
+  (deleteOk)="approveVerification($event)" (deleteCancel)="approveComCancel()">
+</app-delete-modal>
 <app-delete-modal #deleteModalRef [deleteMessage]="'Action'" [inputText]="'Action'"
   (deleteOk)="deleteVerification($event)" (deleteCancel)="deleteComCancel()">
 </app-delete-modal>

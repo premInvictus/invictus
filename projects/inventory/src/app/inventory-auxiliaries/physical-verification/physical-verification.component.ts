@@ -5,7 +5,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-
+import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component';
 @Component({
   selector: 'app-physical-verification',
   templateUrl: './physical-verification.component.html',
@@ -20,6 +20,7 @@ export class PhysicalVerificationComponent implements OnInit {
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('deleteModalRef') deleteModalRef;
+  @ViewChild('approveModalRef') approveModalRef;
   vendorListData: any = [];
   currentItemCode = 0;
   currentLocationId = 0;
@@ -31,7 +32,8 @@ export class PhysicalVerificationComponent implements OnInit {
     private router: Router,
     private fbuild: FormBuilder,
     private common: CommonAPIService,
-    private erpCommonService: ErpCommonService
+    private erpCommonService: ErpCommonService,
+    public dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -102,6 +104,11 @@ export class PhysicalVerificationComponent implements OnInit {
     });
   }
 
+  openApproveModal(data) {
+    data.text = 'Approve';
+    this.approveModalRef.openModal(data);
+  }
+
   openModal(data) {
     data['from'] = 'inv-physical-verification';
     this.deleteModalRef.openModal(data);
@@ -124,8 +131,21 @@ export class PhysicalVerificationComponent implements OnInit {
       pv_item_stock: data.quantity
     };
     this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result:any) => {
-      this.common.showSuccessErrorMessage('Physical Verification Approve Successfully', 'success');
+      this.common.showSuccessErrorMessage('Physical Verification Updated Successfully', 'success');
       this.getPhysicalVerification({location_id: Number(this.currentLocationId) })
+    });
+  }
+
+  openItemDetailsModal(item_code) {
+    const item: any = {};
+    item.item_code = item_code;
+    const dialogRef = this.dialog.open(InvItemDetailsComponent, {
+      width: '50%',
+      height: '500',
+      data: item
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
 

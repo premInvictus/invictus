@@ -5,7 +5,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-
+import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as XLSX from 'xlsx';
 import * as moment from 'moment/moment';
@@ -103,7 +103,8 @@ export class CirculationConsumptionComponent implements OnInit {
 		private router: Router,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
-		private erpCommonService: ErpCommonService
+		private erpCommonService: ErpCommonService,
+		public dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session_id = JSON.parse(localStorage.getItem('session'))['ses_id'];
@@ -670,6 +671,19 @@ export class CirculationConsumptionComponent implements OnInit {
 	applyFilterItemLog(filterValue: string) {
 		this.itemLoglistdataSource.filter = filterValue.trim().toLowerCase();
 	}
+
+	openItemDetailsModal(item_code) {
+		const item: any = {};
+		item.item_code = item_code;
+		const dialogRef = this.dialog.open(InvItemDetailsComponent, {
+		  width: '50%',
+		  height: '500',
+		  data: item
+		});
+		dialogRef.afterClosed().subscribe(result => {
+		  console.log('The dialog was closed');
+		});
+	  }
 
 
 	// check the max  width of the cell

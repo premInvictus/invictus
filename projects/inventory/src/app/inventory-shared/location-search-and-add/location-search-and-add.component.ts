@@ -55,6 +55,7 @@ export class LocationSearchAndAddComponent implements OnInit {
         }
       });
     } else {
+      this.toHighlight = '';
       this.allLocationData = [];
     }
   }
@@ -82,6 +83,11 @@ export class LocationSearchAndAddComponent implements OnInit {
         this.renderData.emit(result.data);
       }
     });
+  }
+
+  resetSearch() {
+    this.searchForm.reset();
+    this.allLocationData = [];
   }
 
 }
