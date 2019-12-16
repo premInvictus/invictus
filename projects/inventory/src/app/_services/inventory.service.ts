@@ -8,7 +8,7 @@ import { of } from 'rxjs';
   providedIn: 'root'
 })
 export class InventoryService {
-
+  private processType;
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
 		this.service.startLoading();
@@ -48,5 +48,24 @@ export class InventoryService {
   updateItemsMaster(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/update', value);
+  }
+  getAllRequistionMaster() {
+    return this.http.get(environment.apiInvUrl + '/requistion-master/getAllRequistionMaster');
+  }
+  updateRequistionMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/updateRequistionMaster', value);
+  }
+  getRequistionMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/getRequistionMaster', value);
+  }
+  setrequisitionArray(value) {
+    this.processType = value;
+  }
+  getrequisitionArray() {
+    if (this.processType) {
+      return this.processType;
+    }
   }
 }

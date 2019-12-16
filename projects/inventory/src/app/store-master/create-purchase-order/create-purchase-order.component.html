@@ -3,7 +3,7 @@
     <mat-card class="remove-card-padding">
       <div class="col-6 ">
         <div class="top-card-title">
-          <span class="font-size-24 font-medium">Create Requisition Request</span>
+          <span class="font-size-24 font-medium">Create Purchase Order</span>
         </div>
       </div>
     </mat-card>
@@ -14,10 +14,10 @@
     <mat-card class="card-height-850-lp card-height-960">
       <div class="row">
         <div class="col-2 col-ver-line-divider">
-          <form [formGroup]="createRequistionForm" novalidate>
+          <form [formGroup]="createOrderForm" novalidate>
             <div class="row">
               <div class="col-12 ">
-                <mat-form-field class="form-field" appearance="outline"> 
+                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Item Code</mat-label>
                   <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
                     [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
@@ -64,6 +64,14 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input matInput placeholder="Price" type="text" formControlName="item_price" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
               <div class="col-12  text-center">
                 <button *ngIf="!UpdateFlag && !viewOnly" mat-raised-button class="btn-neutral" (click)="addList()">Add
                   to list</button>
@@ -87,6 +95,7 @@
                     <th class="custom-th" rowspan="2">Item Name</th>
                     <th class="custom-th" rowspan="2">Description</th>
                     <th class="custom-th" rowspan="2">Quantity</th>
+                    <th class="custom-th" rowspan="2">Price</th>
                     <th class="custom-th" rowspan="2">Action</th>
                   </tr>
                 </thead>
@@ -103,6 +112,9 @@
                     </td>
                     <td class="custom-td">
                       {{item.item_quantity}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_price}}
                     </td>
                     <td *ngIf="!viewOnly" class="custom-td">
                       <i class="far fa-edit modify-icon" (click)="editList(i)" style="cursor:pointer"
@@ -127,13 +139,80 @@
               </table>
             </div>
           </div>
-          <form [formGroup]="finalRequistionForm" novalidate>
-          <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Intended Use</mat-label>
-              <input matInput placeholder="Intended Use" type="text" formControlName="intended_use" required>
-            </mat-form-field>
-          </div>
+          <form [formGroup]="finalOrderForm" novalidate *ngIf="this.finalRequistionArray.length > 0">
+            <div class="row">
+              <div class="col-6 ">
+                <div class="top-card-title">
+                  <span class="font-size-24 font-medium">Add Vendor</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Vendor ID</mat-label>
+                  <input type="text" matInput placeholder="Vendor ID" formControlName="ven_id" required
+                    (keyup)="filterVendor($event)">
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Vendor Name</mat-label>
+                  <input type="text" matInput placeholder="Vendor Name" formControlName="ven_name" required readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Address</mat-label>
+                  <input type="text" matInput placeholder="Address" formControlName="ven_address" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Contact No.</mat-label>
+                  <input type="text" matInput placeholder="Contact No." formControlName="ven_contact" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input type="text" matInput placeholder="Email" formControlName="ven_email" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Autourised Contact Person</mat-label>
+                  <input type="text" matInput placeholder="Autourised Contact Person"
+                    formControlName="ven_authorised_person_detail_name" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Autourised Contact Number</mat-label>
+                  <input type="text" matInput placeholder="Autourised Contact Number"
+                    formControlName="ven_authorised_person_detail_contact" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Pan No.</mat-label>
+                  <input type="text" matInput placeholder="Pan No." formControlName="ven_pan_no" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>GST No.</mat-label>
+                  <input type="text" matInput placeholder="GST No." formControlName="ven_gst_no" readonly>
+                </mat-form-field>
+              </div>
+            </div>
           </form>
           <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
             <div class="col-12 text-center">
@@ -146,5 +225,5 @@
     </mat-card>
   </div>
 </div>
-<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal> 
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
 <app-message-modal #messageModal></app-message-modal>
