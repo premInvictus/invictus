@@ -169,7 +169,7 @@
                       <span>{{i+1}}</span></td>
                     <td width="5%" class="custom-td"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span class="font-skyblue" (click)="openItemModal(item.item_code)">{{item?.item_code}}</span>
+                      <span class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
                     </td>
                     <td width="25%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
@@ -293,7 +293,7 @@
                 <tr class="custom-tr" *ngIf="item?.item_status === 'issued'">
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
-                    <span class="font-skyblue" (click)="openItemModal(item.item_code)">{{item?.item_code}}</span>
+                    <span class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
                   </td>
                   <td class="custom-td text-left">
                     <span>{{item?.item_name | titlecase | truncatetext: 55}}</span></td>
@@ -360,22 +360,22 @@
             <ng-container matColumnDef="issued_on">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Issue Date</th>
                 <td mat-cell *matCellDef="let element">
-                  <a class="font-skyblue cursor-pointer" (click)="openItemModal(element.item_code)">{{element?.issued_on}}
+                  <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.issued_on}}
                   </a>
                 </td>
               </ng-container>
             <ng-container matColumnDef="item_code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Code</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer" (click)="openItemModal(element.item_code)">{{element?.item_code}}
+                <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element.item_code)">{{element?.item_code}}
                 </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_name">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Name</th>
                 <td mat-cell *matCellDef="let element">
-                  <a class="font-skyblue cursor-pointer">{{element?.item_name | titlecase | truncatetext: 25}}
-                  </a>
+                  {{element?.item_name | titlecase | truncatetext: 25}}
+                  
                 </td>
               </ng-container>
             <ng-container matColumnDef="item_nature">
