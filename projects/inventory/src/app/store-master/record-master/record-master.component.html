@@ -72,7 +72,7 @@
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="item_desc">
                   <th mat-header-cell *matHeaderCellDef class="cell-left"> Description </th>
-                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" > {{element.item_desc | capitalize | truncatetext: '50'}} </td>
+                  <td mat-cell class="cell-left" *matCellDef="let element;let i = index" matTooltip="{{element.item_desc}}" > {{element.item_desc | capitalize | truncatetext: '100'}} </td>
                 </ng-container>
 
                 <!-- Symbol Column -->
