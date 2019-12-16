@@ -4,8 +4,8 @@
       <mat-form-field class="example-full-width">
         <input matInput placeholder="Enter Location" formControlName="item_location" required [matAutocomplete]="auto"
           (keyup)="getFilterLocation($event)" />
-        <span class="float-right" *ngIf="toHighlight">
-          <i class="fas fa-times" style="font-size: 24px;margin-top: -25px;color: #ccc;font-weight: 600;" (click)="resetSearch()"></i>
+        <span class="float-right" *ngIf="toHighlight" style="margin-top: -10px;">
+          <i class="fas fa-times" style="font-size: 18px;color: #ccc;font-weight: 600;" (click)="resetSearch()"></i>
         </span>
       </mat-form-field>
       <mat-progress-bar mode="determinate" value="100" *ngIf="!isLoading">
@@ -23,7 +23,7 @@
 
     </form>
   </div>
-  <div class="col-1 margin-top-25" *ngIf="showAdd">
+  <div class="col-1 margin-top-no" *ngIf="showAdd">
     <button class="btn-success-blue mat-raised-button" (click)="openAddLocationDialog()">
       +
     </button>

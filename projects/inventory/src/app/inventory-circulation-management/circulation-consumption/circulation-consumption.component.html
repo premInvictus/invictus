@@ -87,7 +87,10 @@
               <span class="font-size-16 font-bold float-right">:</span>
             </div>
             <div class="col-8 remove-col-padding-right">
-              <span class="font-size-16 font-bold opacity-7">{{userData?.hou_house_name}}</span>
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.hou_house_name">{{userData?.hou_house_name}}</span>
+                <span *ngIf="!(userData?.hou_house_name)">-</span>
+              </span>
             </div>
           </div>
         </div>
@@ -98,7 +101,10 @@
               <span class="font-size-16 font-bold float-right">:</span>
             </div>
             <div class="col-8 remove-col-padding-right">
-              <span class="font-size-16 font-bold opacity-7">{{userData?.au_mobile}}</span>
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.au_mobile">{{userData?.au_mobile}}</span>
+                <span *ngIf="!(userData?.au_mobile)">-</span>
+              </span>
             </div>
           </div>
         </div>
@@ -109,7 +115,9 @@
               <span class="font-size-16 font-bold float-right">:</span>
             </div>
             <div class="col-4 remove-col-padding-right">
-              <span class="font-size-16 font-bold opacity-7">{{itemsReadTillDate}}</span>
+              <span class="font-size-16 font-bold opacity-7">
+                {{itemsReadTillDate}}
+              </span>
             </div>
           </div>
         </div>
@@ -155,7 +163,7 @@
                   <th class="custom-th">Nature</th>
                   <th class="custom-th">Current Stock</th>
                   <th class="custom-th">Location</th>
-                  <th class="custom-th">Current Location Stock</th>
+                  <th class="custom-th">Stock</th>
                   <th class="custom-th">Issued Quantity</th>
                   <th class="custom-th">Due Date</th>
                   <th class="custom-th">Action</th>
@@ -169,7 +177,8 @@
                       <span>{{i+1}}</span></td>
                     <td width="5%" class="custom-td"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
+                      <span class="font-skyblue cursor-pointer"
+                        (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
                     </td>
                     <td width="25%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
@@ -179,43 +188,44 @@
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{item?.item_nature?.name | titlecase | truncatetext: 45}}</span>
                     </td>
-                    <td width="5%" class="custom-td text-left"
+                    <td width="10%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{item?.current_stock}}</span>
                     </td>
-                    <td width="25%" class="custom-td text-left"
+                    <td width="15%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span *ngIf="!(item?.item_status === 'issued') && formGroupArray?.length > 0">
                         <form [formGroup]="formGroupArray[i]">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Location</mat-label>
-                            <input matInput placeholder="Enter Location" formControlName="item_location" required
-                              [matAutocomplete]="auto" (keyup)="getFilterLocation($event)" />
-                            <mat-autocomplete #auto="matAutocomplete">
-                              <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
-                                (onSelectionChange)="setLocationId(item, i)">
-                                <small>{{item.location_hierarchy | capitalize}}</small>
+                            <mat-select formControlName="item_location">
+                              <mat-option *ngFor="let item of formGroupArray[i].value?.location_data"
+                                [value]="item.location_id" (onSelectionChange)="setLocationId(item, i)">
+                                <small>{{item?.location_hierarchy | capitalize}}</small>
                               </mat-option>
-                            </mat-autocomplete>
+                            </mat-select>
                           </mat-form-field>
                         </form>
                       </span>
-                      <span *ngIf="(item?.item_status === 'issued')">{{getLocationName(item?.item_location?.location_id) | titlecase}}</span>
+                      <span
+                        *ngIf="(item?.item_status === 'issued')">{{getLocationName(item?.item_location?.location_id) | titlecase}}</span>
 
                     </td>
                     <td width="5%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span *ngIf="!(item?.item_status === 'issued')">{{item?.current_location_stock}}</span>
-                      <span *ngIf="item?.item_status === 'issued'">{{item?.item_location?.current_stock[item?.matchIndex]?.item_qty}}</span>
+                      <span
+                        *ngIf="item?.item_status === 'issued'">{{item?.item_location?.current_stock[item?.matchIndex]?.item_qty}}</span>
                     </td>
                     <td width="5%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      
+
                       <span *ngIf="!(item?.item_status === 'issued') && formGroupArray?.length > 0">
                         <form [formGroup]="formGroupArray[i]">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Issued Quantity</mat-label>
-                            <input matInput type="number" placeholder="Issued Quantity" formControlName="issued_quantity" required (blur)="setIssuedQuantity(item, i)"/>
+                            <input matInput type="number" placeholder="Issued Quantity"
+                              formControlName="issued_quantity" required (blur)="setIssuedQuantity(item, i)" />
                           </mat-form-field>
                         </form>
                       </span>
@@ -225,14 +235,18 @@
                     <td width="15%" class="custom-td text-nowrap"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <div class="inline-flex date-width-100">
+                        <div class="inline-flex" *ngIf="(item?.item_status == 'issued')">
+                          {{item?.fdue_date | date : 'd-MMM-y'}}
+                        </div>
                         <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
-                          (dateChange)="setDueDate(i, returnIssueReservoirForm.value.due_date)"
-                          [value]="item?.fdue_date">
+                          (dateChange)="setDueDate(i, item?.due_date)" [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
-                        <div class="inline-flex" [hidden]="(item?.item_status == 'available')">
-                          <i class="fa fa-calendar" *ngIf="!(item?.item_status == 'available')" aria-hidden="true"
+
+                        <div class="inline-flex" [hidden]="(item?.item_status == 'active')">
+                          <i class="fa fa-calendar" *ngIf="!(item?.item_status == 'active')" aria-hidden="true"
                             (click)="picker.open();"></i>
                         </div>
+
                       </div>
                     </td>
                     <td width="5%" class="custom-td"
@@ -293,7 +307,8 @@
                 <tr class="custom-tr" *ngIf="item?.item_status === 'issued'">
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
-                    <span class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
+                    <span class="font-skyblue cursor-pointer"
+                      (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
                   </td>
                   <td class="custom-td text-left">
                     <span>{{item?.item_name | titlecase | truncatetext: 55}}</span></td>
@@ -358,37 +373,42 @@
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
             </ng-container>
             <ng-container matColumnDef="issued_on">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Issue Date</th>
-                <td mat-cell *matCellDef="let element">
-                  <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.issued_on}}
-                  </a>
-                </td>
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Issue Date</th>
+              <td mat-cell *matCellDef="let element">
+                <a class="font-skyblue cursor-pointer"
+                  (click)="openItemDetailsModal(element?.item_code)">{{element?.issued_on}}
+                </a>
+              </td>
+            </ng-container>
             <ng-container matColumnDef="item_code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Code</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element.item_code)">{{element?.item_code}}
+                <a class="font-skyblue cursor-pointer"
+                  (click)="openItemDetailsModal(element.item_code)">{{element?.item_code}}
                 </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Name</th>
-                <td mat-cell *matCellDef="let element">
-                  {{element?.item_name | titlecase | truncatetext: 25}}
-                  
-                </td>
-              </ng-container>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Name</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.item_name | titlecase | truncatetext: 25}}
+
+              </td>
+            </ng-container>
             <ng-container matColumnDef="item_nature">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="30%">Nature</th>
               <td mat-cell *matCellDef="let element" class="text-left">
-                <span class="text-left text-capitalize">{{element?.item_nature?.name | titlecase | truncatetext: 55}}</span>
+                <span
+                  class="text-left text-capitalize">{{element?.item_nature?.name | titlecase | truncatetext: 55}}</span>
                 <span *ngIf="element?.item_nature?.length > 125">...</span>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_location">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Location</th>
               <td mat-cell *matCellDef="let element" class="text-left">
-                <span class="text-left text-capitalize">{{getLocationName(element?.item_location?.location_id) | titlecase | truncatetext: 25}} </span>
+                <span
+                  class="text-left text-capitalize">{{getLocationName(element?.item_location?.location_id) | titlecase | truncatetext: 25}}
+                </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="issued_quantity">
@@ -396,7 +416,7 @@
               <td mat-cell *matCellDef="let element" class="text-left">
                 <span class="text-left text-capitalize">{{element?.item_location?.item_qty}} </span>
               </td>
-            </ng-container>          
+            </ng-container>
             <ng-container matColumnDef="due_date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Due Date</th>
               <td mat-cell *matCellDef="let element">
@@ -408,14 +428,14 @@
               <td mat-cell *matCellDef="let element" class="text-left"> <span
                   *ngIf="element.returned_on">{{(element?.returned_on | date: 'd-MMM-y')}} </span>
                 <span *ngIf="!(element.returned_on)"> - </span> </td>
-            </ng-container>         
-         
+            </ng-container>
+
 
             <tr mat-header-row *matHeaderRowDef="displayedItemLogListColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedItemLogListColumns;">
             </tr>
           </table>
-         
+
           <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons>
           </mat-paginator>
         </div>

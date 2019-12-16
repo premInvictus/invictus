@@ -51,7 +51,7 @@
                                 <mat-option value="">Please Select Parent Location
                                 </mat-option>
                                 <mat-option *ngFor="let item of locationArray" [value]="item.location_id">
-                                  {{item.location_name}}
+                                  {{item.location_hierarchy}}
                                 </mat-option>
                               </mat-select>
                               <mat-error>Please Choose Parent Location</mat-error>
@@ -97,10 +97,17 @@
                             Location Name</th>
                           <td mat-cell *matCellDef="let element">
                             <a class="font-skyblue cursor-pointer"
-                              (click)="showVendorDetail(element)">{{element?.location_name}} (
-                              {{element?.location_id}} ) </a>
+                              (click)="showVendorDetail(element)">{{element?.location_name}} </a>
                           </td>
                         </ng-container>
+                        <ng-container matColumnDef="location_id">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                              Location ID</th>
+                            <td mat-cell *matCellDef="let element">
+                              <a class="font-skyblue cursor-pointer"
+                                (click)="showVendorDetail(element)">{{element?.location_id}}  </a>
+                            </td>
+                          </ng-container>
                         <ng-container matColumnDef="location_parent_name">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                             Location Parent Name</th>
