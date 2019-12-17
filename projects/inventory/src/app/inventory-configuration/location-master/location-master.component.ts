@@ -25,7 +25,7 @@ export class LocationMasterComponent implements OnInit {
 	locationTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource: any = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
-	displayedColumns: any[] = ['srno', 'location_name', 'location_parent_name', 'location_type_name', 'location_status', 'action'];
+	displayedColumns: any[] = ['location_id','location_name','location_hierarchy', 'location_type_name', 'location_status', 'action'];
 	configFlag = false;
 	editFlag = false;
 	currentLocationId: any;
@@ -95,6 +95,7 @@ export class LocationMasterComponent implements OnInit {
 						location_status: item.location_status,
 						location_type_id: item.location_type_id,
 						location_type_name: item.location_type_id ? this.getLocationTypeName(item.location_type_id) : '',
+						location_hierarchy: item.location_hierarchy ? item.location_hierarchy : '',
 						action: item
 					};
 					this.CONFIG_ELEMENT_DATA.push(element);
@@ -114,38 +115,41 @@ export class LocationMasterComponent implements OnInit {
 	}
 
 	save() {
-		var inputJson = {
-			location_id: this.locationForm.value.location_id ? this.locationForm.value.location_id : 0,
-			location_parent_id: this.locationForm.value.location_parent_id ? this.locationForm.value.location_parent_id : 0,
-			location_type_id: this.locationForm.value.location_type_id ? this.locationForm.value.location_type_id : 0,
-			location_name: this.locationForm.value.location_name ? this.locationForm.value.location_name : '',
-			location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1,
-			location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id)+this.locationForm.value.location_name  : this.locationForm.value.location_name,
-		}
-
-		console.log(inputJson.location_hierarchy);
-
-		if (this.locationForm.value.location_id) {
-			this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
-				if (result) {
-					this.commonAPIService.showSuccessErrorMessage('Location Updated Successfully', 'success');
-					this.resetForm();
-					this.getLocation();
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Updating Location', 'error');
-				}
-			});
+		if (this.locationForm.valid) {
+			var inputJson = {
+				location_id: this.locationForm.value.location_id ? this.locationForm.value.location_id : 0,
+				location_parent_id: this.locationForm.value.location_parent_id ? this.locationForm.value.location_parent_id : 0,
+				location_type_id: this.locationForm.value.location_type_id ? this.locationForm.value.location_type_id : 0,
+				location_name: this.locationForm.value.location_name ? this.locationForm.value.location_name : '',
+				location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1,
+				location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id)+this.locationForm.value.location_name  : this.locationForm.value.location_name,
+			}
+	
+			if (this.locationForm.value.location_id) {
+				this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Location Updated Successfully', 'success');
+						this.resetForm();
+						this.getLocation();
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Updating Location', 'error');
+					}
+				});
+			} else {
+				this.commonAPIService.insertLocation(inputJson).subscribe((result) => {
+					if (result) {
+						this.commonAPIService.showSuccessErrorMessage('Location Saved Successfully', 'success');
+						this.resetForm();
+						this.getLocation();
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Error While Saving Location', 'error');
+					}
+				});
+			}
 		} else {
-			this.commonAPIService.insertLocation(inputJson).subscribe((result) => {
-				if (result) {
-					this.commonAPIService.showSuccessErrorMessage('Location Saved Successfully', 'success');
-					this.resetForm();
-					this.getLocation();
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Saving Location', 'error');
-				}
-			});
+			this.commonAPIService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
 		}
+		
 	}
 
 	edit(element) {
@@ -237,7 +241,8 @@ export class LocationMasterComponent implements OnInit {
 export class ConfigElement {
 	location_id: string;
 	location_name: string;
-	location_parent_name: string;
+	//location_parent_name: string;
+	location_hierarchy: string;
 	location_type_name: string;
 	location_status: string;
 	action: any;

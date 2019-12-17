@@ -32,7 +32,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
   update_id: any;
   currentUser: any;
   session: any;
-
+  ven_id: any;
+  pr_type: any;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -51,7 +52,10 @@ export class CreatePurchaseOrderComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
+      console.log('rrr', this.requistionArray);
       for (let item of this.requistionArray) {
+        this.ven_id = item.pm_vendor.ven_id;
+        this.pr_type = item.pr_type;
         for (let dety of item.pm_item_details) {
           if (dety.item_status === 'approved') {
             dety.item_status = 'pending';
@@ -67,9 +71,13 @@ export class CreatePurchaseOrderComponent implements OnInit {
           }
         }
       }
-      console.log('sss', this.finalRequistionArray);
-
     }
+
+    this.finalOrderForm.patchValue({
+      ven_id: this.ven_id,
+    });
+    this.vendor(this.ven_id);
+    console.log('dddd', this.ven_id);
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -233,8 +241,42 @@ export class CreatePurchaseOrderComponent implements OnInit {
       }
     }
   }
+
+  vendor(ven_id) {
+    // keyCode
+    this.resetVendor();
+    if (ven_id !== '') {
+      this.vendorArray = [];
+      this.erpCommonService.getVendor({ ven_id: Number(ven_id) }).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          let vendorDetail: any;
+          vendorDetail = res.data[0];
+          this.finalOrderForm.patchValue({
+            ven_name: vendorDetail.ven_name,
+            ven_address: vendorDetail.ven_address,
+            ven_authorised_person_detail_contact: vendorDetail.ven_authorised_person_detail_contact,
+            ven_authorised_person_detail_name: vendorDetail.ven_authorised_person_detail_name,
+            ven_contact: vendorDetail.ven_contact,
+            ven_email: vendorDetail.ven_email,
+            ven_gst_no: vendorDetail.ven_gst_no,
+            ven_pan_no: vendorDetail.ven_pan_no
+          })
+        }
+      });
+    }
+
+  }
+
   finalSubmit($event) {
     if ($event) {
+      for (let item of this.requistionArray) {
+        for (let dety of item.pm_item_details) {
+          const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
+          if (sindex !== -1) {
+            dety.item_status = 'approved';
+          }
+        }
+      };
       this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
       this.finalSubmitArray['pm_intended_use'] = '';
       this.finalSubmitArray['pm_source'] = 'PO';
@@ -252,21 +294,38 @@ export class CreatePurchaseOrderComponent implements OnInit {
         approved_date: ''
       }
       this.finalSubmitArray['pm_vendor'] = {
-        ven_id: this.finalOrderForm.value.ven_id,
+        ven_id: Number(this.finalOrderForm.value.ven_id),
         ven_name: this.finalOrderForm.value.ven_name
       }
       this.finalSubmitArray['pm_status'] = 'pending';
       this.finalSubmitArray['pm_session'] = this.session.ses_id;
-      this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
-        if (result) {
-          this.commonService.showSuccessErrorMessage('Requistion Request Generated Successfylly', 'success');
-          this.finalSubmitArray = [];
-          this.finalRequistionArray = [];
-          this.itemCodeArray = [];
-        } else {
-          this.commonService.showSuccessErrorMessage('Error While Generating Request', 'error');
-        }
-      });
+      if (this.pr_type === 'PO') {
+        this.inventory.updateRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
+          if (result) {
+            this.commonService.showSuccessErrorMessage('Purchase Order Updated Successfylly', 'success');
+            this.finalSubmitArray = [];
+            this.finalRequistionArray = [];
+            this.itemCodeArray = [];
+            this.requistionArray = [];
+          }
+        });
+      } else {
+        this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
+          if (result) {
+            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+              if (result) {
+                this.commonService.showSuccessErrorMessage('Purchase Order Generated Successfylly', 'success');
+                this.finalSubmitArray = [];
+                this.finalRequistionArray = [];
+                this.itemCodeArray = [];
+                this.requistionArray = [];
+              }
+            });
+          } else {
+            this.commonService.showSuccessErrorMessage('Error While Generating Order', 'error');
+          }
+        });
+      }
     }
   }
 }

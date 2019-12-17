@@ -76,6 +76,7 @@ export class StockReconciliationComponent implements OnInit {
           item_current_stock: item.pv_item_data ? this.getCurrentStock(item.pv_item_data) : '',
           item_verification_date: item.pv_created_date ? item.pv_created_date : '',
           item_available_stock: item.available_stock ? item.available_stock : '',
+          item_units: item.item_units ? item.item_units : '',
           action:item
         };
         this.STOCK_RECONCILIATION_LIST_ELEMENT.push(element);
@@ -114,8 +115,12 @@ export class StockReconciliationComponent implements OnInit {
     });
   }
 
+  approveVerificationModel(element,flag) {
+
+  }
+
   openModal(data) {
-    data['from'] = 'inv-physical-verification';
+    data['from'] = 'inv-physical';
     this.deleteModalRef.openModal(data);
   } 
 
@@ -137,7 +142,7 @@ export class StockReconciliationComponent implements OnInit {
     var inputJson = {
       pv_item_code: Number(data.item_code),
       pv_location_id: Number(data.item_location_id),
-      pv_status: 'not-matched',
+      pv_status: 'cancel',
       pv_item_stock: data.quantity
     };
     this.erpCommonService.updateInventoryStockReconciliation(inputJson).subscribe((result:any) => {

@@ -45,7 +45,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	ITEM_LOG_LIST_ELEMENT: ItemLogListElement[] = [];
 	itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 	// tslint:disable-next-line: max-line-length
-	displayedItemLogListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_nature', 'item_location', 'issued_quantity', 'due_date', 'returned_on'];
+	displayedItemLogListColumns: string[] = ['srno', 'issued_on', 'item_code', 'item_name', 'item_nature', 'item_location', 'issued_quantity', 'due_date', 'returned_on'];
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -229,14 +229,18 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	getAllLocation() {
-		this.erpCommonService.getFilterLocation({}).subscribe((result: any) => {
-			this.locationData = [];
+		let inputJson = {
+		};
+		this.locationData = [];
+		this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
 			if (result) {
 				for (var i = 0; i < result.length; i++) {
 					this.locationData.push(result[i]);
 				}
 			}
 		});
+
+
 	}
 
 	getFilterLocation(event) {
@@ -261,10 +265,7 @@ export class CirculationConsumptionComponent implements OnInit {
 			item_location_hierarchy: locationDetails.location_hierarchy,
 		});
 
-		console.log(this.itemData[i])
-
-		for (var j=0; j<this.itemData[i]['item_location_data'].length;j++) {
-			console.log(Number(this.itemData[i]['item_location_data'][j]['location_id']) , Number(locationDetails.location_id));
+		for (var j = 0; j < this.itemData[i]['item_location_data'].length; j++) {
 			if (Number(this.itemData[i]['item_location_data'][j]['location_id']) === Number(locationDetails.location_id)) {
 				currentLocationStock = Number(this.itemData[i]['item_location_data'][j]['item_qty']);
 			}
@@ -311,24 +312,30 @@ export class CirculationConsumptionComponent implements OnInit {
 
 					this.itemData.push(this.issueItemData[Number(issueItemStatus.index)]);
 					var itemCode = this.issueItemData[Number(issueItemStatus.index)]['item_code'];
-					this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '', item_location_hierarchy:'' }));
 
-
-					console.log('this.itemData', this.itemData, issueItemStatus);
-					// if (this.itemData[Number(issueItemStatus.index)]['user_inv_logs']) {
-					// 	this.itemData[Number(issueItemStatus.index)]['user_inv_logs']['due_date'] = date;
-					// 	this.itemData[Number(issueItemStatus.index)]['user_inv_logs']['fdue_date'] = date;
-
-					// }
-					// this.itemData.push(this.itemData[Number(issueItemStatus.index)]['user_inv_logs']);
+					var locationData = [];
+					this.erpCommonService.getFilterLocation({
+						item_code: itemCode
+					}).subscribe((result: any) => {
+						var locationData = [];
+						if (result) {
+							for (var i = 0; i < result.length; i++) {
+								locationData.push(result[i].location_data);
+								this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '', item_location_hierarchy: '', location_data: locationData }));
+							}
+						} else {
+							this.formGroupArray.push(this.fbuild.group({ item_code: itemCode, item_location: '', issued_quantity: '', item_location_hierarchy: '', location_data: [] }));
+						}
+					});
 
 				} else {
-					this.formGroupArray = [];
 					const inputJson = {
-						'item_code': Number(this.returnIssueItemsForm.value.scanItemId),
-						'item_status': 'active',
-						//'user_login_id': this.userData.au_login_id,
+						"filters":
+
+							[{ "filter_type": "item_code", "filter_value": Number(this.returnIssueItemsForm.value.scanItemId), "type": "text" }],
+						"generalFilters": { "item_nature.id": "", "item_category.id": "" }, "page_index": 0, "page_size": 10
 					};
+
 					const date = new Date();
 					if (this.searchForm.value.user_role_id === '4') {
 						if (this.settingData['item_return_days_student']) {
@@ -358,36 +365,54 @@ export class CirculationConsumptionComponent implements OnInit {
 							if (result && result.data && result.data[0]) {
 								delete result.data[0]['_id'];
 								result.data[0]['due_date'] = date;
-								
-								this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '' }));
+
+								this.erpCommonService.getFilterLocation({ item_code: Number(this.returnIssueItemsForm.value.scanItemId) }).subscribe((results: any) => {
+									var locationData = [];
+									if (results) {
+										for (var i = 0; i < results.length; i++) {
+											locationData.push(results[i].location_data);
+											this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: locationData }));
+										}
+									} else {
+										this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: [] }));
+									}
+								});
+
 								var current_stock = 0;
 								if (result.data[0].item_location) {
-									for (var j=0; j<result.data[0].item_location.length; j++) {
+									for (var j = 0; j < result.data[0].item_location.length; j++) {
 										current_stock = current_stock + Number(result.data[0].item_location[j]['item_qty']);
 									}
 								}
-								var inputJson = {
-									item_category : result.data[0].item_category ? result.data[0].item_category : {id:'',name:''},
-									item_code : result.data[0].item_code ? result.data[0].item_code : 0,
-									item_desc : result.data[0].item_desc ? result.data[0].item_desc : '',
-									item_location : result.data[0].item_location ? result.data[0].item_location : [],
-									item_location_data : result.data[0].item_location ? result.data[0].item_location : [],
-									item_name : result.data[0].item_name ? result.data[0].item_name  : '',
-									item_nature : result.data[0].item_nature ? result.data[0].item_nature : {id:'',name:''},
-									item_reorder_level : result.data[0].item_reorder_level ? result.data[0].item_reorder_level : 0,
-									item_session : result.data[0].item_session ? result.data[0].item_session : '',
-									item_status : result.data[0].item_status ? result.data[0].item_status : '',
-									item_units : result.data[0].item_units ? result.data[0].item_units : {id:'',name:''},
-									current_stock : current_stock ? current_stock : 0,
-									current_location_stock: current_stock ? current_stock : 0
-								};
 
-								console.log('inputJson--',inputJson);
+								if (current_stock > 0) {
+									var inputJson = {
+										item_category: result.data[0].item_category ? result.data[0].item_category : { id: '', name: '' },
+										item_code: result.data[0].item_code ? result.data[0].item_code : 0,
+										item_desc: result.data[0].item_desc ? result.data[0].item_desc : '',
+										item_location: result.data[0].item_location ? result.data[0].item_location : [],
+										item_location_data: result.data[0].item_location ? result.data[0].item_location : [],
+										item_name: result.data[0].item_name ? result.data[0].item_name : '',
+										item_nature: result.data[0].item_nature ? result.data[0].item_nature : { id: '', name: '' },
+										item_reorder_level: result.data[0].item_reorder_level ? result.data[0].item_reorder_level : 0,
+										item_session: result.data[0].item_session ? result.data[0].item_session : '',
+										item_status: result.data[0].item_status ? result.data[0].item_status : '',
+										item_units: result.data[0].item_units ? result.data[0].item_units : { id: '', name: '' },
+										current_stock: current_stock ? current_stock : 0,
+										current_location_stock: current_stock ? current_stock : 0
+									};
 
-								this.itemData.push(inputJson);
+									this.itemData.push(inputJson);
 
-								this.setDueDate(this.itemData.length - 1, date);
-								this.returnIssueItemsForm.controls['scanItemId'].setValue('');
+									this.setDueDate(this.itemData.length - 1, date);
+									this.returnIssueItemsForm.controls['scanItemId'].setValue('');
+								} else {
+									this.returnIssueItemsForm.controls['scanItemId'].setValue('');
+									this.common.showSuccessErrorMessage('No Stock Available', 'error');
+								}
+
+
+
 							}
 						} else {
 							this.returnIssueItemsForm.controls['scanItemId'].setValue('');
@@ -422,7 +447,6 @@ export class CirculationConsumptionComponent implements OnInit {
 		const inputJson = {
 			user_login_id: Number(this.userData.au_login_id),
 			user_role_id: Number(this.userData.au_role_id),
-			//'user_inv_logs.item_status' : 'issued'
 		};
 		this.userHaveItemsData = false;
 		this.itemLogData = [];
@@ -440,40 +464,40 @@ export class CirculationConsumptionComponent implements OnInit {
 				let element: any = {};
 				let recordArray = [];
 				let pos = 1;
-				recordArray = result[0].user_inv_logs;
+				recordArray = result;
 				this.itemLogData = recordArray;
 				const returnedCount = 0;
-				for (const item of recordArray) {
+				for (const k of result) {
+					for (const item of k.user_inv_logs) {
+						element = {
+							srno: pos,
+							item_code: item && item.item_code ? item.item_code : 0,
+							item_name: item && item.item_name ? item.item_name : '',
+							item_nature: item && item.item_nature ? item.item_nature : '',
+							item_category: item && item.item_category ? item.item_category : '',
+							item_reorder_level: item && item.item_reorder_level ? item.item_reorder_level : '',
+							item_units: item && item.item_units ? item.item_units : '',
+							item_desc: item && item.item_desc ? item.item_desc : '',
+							item_status: item && item.item_status ? item.item_status : '',
+							item_location: item && item.item_location ? item.item_location : '',
+							issued_quantity: item && item.issued_quantity ? item.issued_quantity : '',
+							due_date: item && item.due_date ? item.due_date : '',
+							returned_on: item && item.returned_on ? item.returned_on : '',
+							issued_on: item && item.issued_on ? item.issued_on : ''
+						};
+						if (item && item.returned_on) {
+							this.itemsReadTillDate++;
+						}
 
-					element = {
-						srno: pos,
-						item_code: item && item.item_code ? item.item_code : 0,
-						item_name: item && item.item_name ? item.item_name : '',
-						item_nature: item && item.item_nature ? item.item_nature : '',
-						item_category: item && item.item_category ? item.item_category : '',
-						item_reorder_level: item && item.item_reorder_level ? item.item_reorder_level : '',
-						item_units: item && item.item_units ? item.item_units : '',
-						item_desc: item && item.item_desc ? item.item_desc : '',
-						item_status: item && item.item_status ? item.item_status : '',
-						item_location: item && item.item_location ? item.item_location : '',
-						issued_quantity: item && item.issued_quantity ? item.issued_quantity : '',
-						due_date: item && item.due_date ? item.due_date : '',
-						returned_on: item && item.returned_on ? item.returned_on : '',
-						issued_on: item && item.issued_on ? item.issued_on : ''
-					};
-					if (item && item.returned_on) {
-						this.itemsReadTillDate++;
+						if (item && item.item_status === 'issued') {
+							this.issueItemData.push(item);
+							this.finIssueItem.push(item);
+						}
+						this.ITEM_LOG_LIST_ELEMENT.push(element);
+						pos++;
 					}
-
-					if (item && item.item_status === 'issued') {
-						this.issueItemData.push(item);
-						this.finIssueItem.push(item);
-					}
-
-					this.ITEM_LOG_LIST_ELEMENT.push(element);
-					pos++;
-
 				}
+				console.log(this.issueItemData);
 				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 				this.itemLoglistdataSource.paginator = this.paginator;
 				if (this.sort) {
@@ -497,38 +521,44 @@ export class CirculationConsumptionComponent implements OnInit {
 		const updateditemData = [];
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		for (let i = 0; i < itemData.length; i++) {
-			var inputJson = {}			;
-			
-			if (itemData[i]['item_status'] === 'issued') {				
-				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
+			var inputJson = {};
+			if (itemData[i]['item_status'] === 'issued') {
+				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd')) {
 					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
-					inputJson['fdue_date'] = itemData[i]['fdue_date'];
+					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
+					inputJson['fdue_date'] = itemData[i]['due_date'];
 					inputJson['reissue_status'] = 1;
 					inputJson['item_code'] = itemData[i]['item_code'];
-					inputJson['item_location'] = { location_id : itemData[i]['item_location'], item_qty : itemData[i]['issued_quantity']};
+					inputJson['issued_quantity'] = itemData[i]['item_location']['item_qty'];
+					inputJson['item_units'] =  itemData[i]['item_units'];
+					inputJson['item_location'] = { location_id: itemData[i]['item_location']['location_id'], item_qty: itemData[i]['item_location']['item_qty'] };
 				} else {
-					inputJson['item_status'] = 'active';
-					inputJson['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
-					inputJson['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-
-					console.log('finIssueItem--', this.finIssueItem);
-
-					for (let j = 0; j < this.finIssueItem.length; j++) {
-						if (this.finIssueItem[j]['item_code'] === itemData[i]['item_code']) {
-							this.finIssueItem.splice(j, 1);
+					if (itemData[i]['item_nature']['id'] === 41) {
+						inputJson['item_status'] = 'active';
+						inputJson['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
+						inputJson['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+						inputJson['item_code'] = itemData[i]['item_code'];
+						inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
+						inputJson['issued_quantity'] = itemData[i]['item_location']['item_qty'];
+						inputJson['item_location'] = { location_id: itemData[i]['item_location']['location_id'], item_qty: itemData[i]['item_location']['item_qty'] };
+						inputJson['item_units'] =  itemData[i]['item_units'];
+						for (let j = 0; j < this.finIssueItem.length; j++) {
+							if (this.finIssueItem[j]['item_code'] === itemData[i]['item_code']) {
+								this.finIssueItem.splice(j, 1);
+							}
 						}
 					}
-
 				}
 				updateditemData.push(inputJson);
-			} else if (itemData[i]['item_status'] === 'active' || itemData[i]['item_status'] === 'reserved') {
-				if (itemData[i]['fdue_date']) {
+			} else if (itemData[i]['item_status'] === 'active') {
+				if (itemData[i]['due_date']) {
 					inputJson['item_code'] = itemData[i]['item_code'];
 					inputJson['item_status'] = 'issued';
-					inputJson['item_location'] = { location_id : itemData[i]['item_location'], item_qty : itemData[i]['issued_quantity']};
-					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd');
+					inputJson['issued_quantity'] = itemData[i]['item_location']['item_qty'];
+					inputJson['item_location'] = { location_id: itemData[i]['item_location'], item_qty: itemData[i]['item_location']['item_qty'] };
+					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
 					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+					inputJson['item_units'] =  itemData[i]['item_units'];
 					this.finIssueItem.push(itemData[i]);
 					updateditemData.push(inputJson);
 				}
@@ -550,7 +580,6 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-			console.log('this.userHaveItemsData--', this.userHaveItemsData, inputJson);
 			if (!this.userHaveItemsData) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
 					if (result) {
@@ -613,10 +642,10 @@ export class CirculationConsumptionComponent implements OnInit {
 
 	setDueDate(index, date) {
 		this.itemData[index]['fdue_date'] = date;
+		this.itemData[index]['due_date'] = date;
 	}
 
 	checkForIssueItem(searchItemId) {
-		console.log('this.itemData', this.itemData, searchItemId)
 		let flag = { 'status': false, 'index': '' };
 		for (let i = 0; i < this.issueItemData.length; i++) {
 			if (this.issueItemData[i] && Number(this.issueItemData[i]['item_code']) === Number(searchItemId) && this.issueItemData[i]['issued_on'] !== '') {
@@ -676,19 +705,17 @@ export class CirculationConsumptionComponent implements OnInit {
 		const item: any = {};
 		item.item_code = item_code;
 		const dialogRef = this.dialog.open(InvItemDetailsComponent, {
-		  width: '50%',
-		  height: '500',
-		  data: item
+			width: '50%',
+			height: '500',
+			data: item
 		});
 		dialogRef.afterClosed().subscribe(result => {
-		  console.log('The dialog was closed');
 		});
-	  }
+	}
 
 
 	// check the max  width of the cell
 	checkWidth(id, header) {
-
 		const res = this.itemLogData.map((f) => f.id !== '-' && f.id ? f.id.toString().length : 1);
 		const max2 = header.toString().length;
 		const max = Math.max.apply(null, res);
@@ -698,7 +725,6 @@ export class CirculationConsumptionComponent implements OnInit {
 
 
 	downloadExcel() {
-		console.log(this.itemLogData);
 		let reportType: any = '';
 		let reportType2: any = '';
 		const columns: any = [];
@@ -767,8 +793,6 @@ export class CirculationConsumptionComponent implements OnInit {
 		worksheet.getCell('G5').value = 'Due Date';
 		worksheet.getCell('H5').value = 'Returned On';
 		worksheet.getCell('I5').value = 'Fine';
-
-
 
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
@@ -907,7 +931,6 @@ export class CirculationConsumptionComponent implements OnInit {
 
 	downloadPdf() {
 		const doc = new jsPDF('landscape');
-
 		doc.autoTable({
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
 			didDrawPage: function (data) {

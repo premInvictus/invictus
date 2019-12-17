@@ -14,7 +14,7 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 })
 export class AdditionalSubjectComponent implements OnInit {
 	displayedColumns: string[] = ['au_admission_no','au_full_name'];
-	studentSubjectArray = [{id: '0', name: 'subject'}, {id: '1', name: 'Additional'}];
+	studentSubjectArray = [{id: '0', name: 'Subject'}, {id: '1', name: 'Additional'}];
 	subjectFlag = false;
 	additionalFlag = false;
 	finalDivFlag = true;

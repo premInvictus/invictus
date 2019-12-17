@@ -2,16 +2,15 @@
   <div class="col-12">
     <mat-card>
       <div class="row">
-        <div class="col-6 margin-top-15">
+        <div class="col-9 margin-top-15">
           <span class="font-size-24">Stock Reconciliation</span>
         </div>
-        <div class="col-6">
-          <div class="row">
-            <div class="col-12">
+       
+          <div class="col-3">
+            <div>
               <app-location-search-and-add [showAdd]="false" (renderData)="getStockReconciliation($event)"></app-location-search-and-add>
             </div>
           </div>
-        </div>
       </div>
     </mat-card>
   </div>
@@ -82,7 +81,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Current Stock</th>
               <td mat-cell *matCellDef="let element">
 
-                {{element?.item_current_stock}}
+                {{element?.item_current_stock}}  {{element?.item_units?.name}}
                 
               </td>
             </ng-container>
@@ -90,7 +89,7 @@
             <ng-container matColumnDef="item_available_stock">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Available Quantity</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.item_available_stock }} Pcs
+                {{element?.item_available_stock }} {{element?.item_units?.name}}
               </td>
             </ng-container>
 
@@ -98,7 +97,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
               <td mat-cell *matCellDef="let element">
                 <span><i class="fa fa-check-circle font-color-green margin-right-15"
-                    (click)="openApproveModal(element);approveVerification(element, true)"></i></span>
+                    (click)="openApproveModal(element);approveVerificationModel(element, true)"></i></span>
                 <span class="ver-line-divider"><i class="fas fa-times-circle font-color-red margin-left-15"
                     (click)="openModal(element);deleteVerificationModel(element)"></i></span>
               </td>
@@ -114,7 +113,7 @@
               <td colspan="9">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons>
+          <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

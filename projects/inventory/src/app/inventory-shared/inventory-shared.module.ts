@@ -41,6 +41,7 @@ import { InvItemDetailsComponent } from './inv-item-details/inv-item-details.com
 import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
 import { AddLocationDialog } from './location-search-and-add/add-location-dialog/add-location-dialog.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
+import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -117,7 +118,8 @@ export const MY_FORMATS = {
 		InvItemDetailsComponent,
 		HighlightPipe,
 		LocationSearchAndAddComponent,
-		AddLocationDialog
+		AddLocationDialog,
+		InventoryDetailsComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -177,7 +179,8 @@ export const MY_FORMATS = {
 		MatProgressBarModule,
 		HighlightPipe,
 		LocationSearchAndAddComponent,
-		AddLocationDialog
+		AddLocationDialog,
+		InventoryDetailsComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
