@@ -12,7 +12,7 @@ const routes: Routes = [
 	{ path: 'physical-verification', component: PhysicalVerificationComponent },
 	{ path: 'bulk-upload', component: BulkUploadComponent },
 	{ path: 'change-status', component: ChangeStatusComponent },
-	{ path: 'barcode-print', component: BarcodePrintComponent },
+	{ path: 'barcode-printing', component: BarcodePrintComponent },
 	{ path: 'stock-reconciliation', component: StockReconciliationComponent }
 ];
 

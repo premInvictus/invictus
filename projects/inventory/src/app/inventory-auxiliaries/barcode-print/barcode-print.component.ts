@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CommonAPIService, InventoryService } from '../../_services';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-barcode-print',
@@ -25,7 +26,7 @@ export class BarcodePrintComponent implements OnInit {
   constructor(
     private common: ErpCommonService, 
     private fbuild: FormBuilder,
-    private com: CommonAPIService,
+    private commonAPIService: CommonAPIService,
     private inventoryService: InventoryService
     ) { }
 
@@ -51,29 +52,14 @@ export class BarcodePrintComponent implements OnInit {
     }
   }
   printbars() {
-    /*if (this.printformat && Number(this.printformat) === 1) {
-      const barRow = document.getElementById('print-bars').innerHTML;
-      let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-      popupWin.document.open();
-      popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib.css">' +
-        '<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
-        'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
-        '<body onload="window.print()">' + barRow + '</body></html>');
-      popupWin.document.close();
-    }if (this.printformat && Number(this.printformat) === 2) {
-      const barRow = document.getElementById('print-bars2').innerHTML;
-      let popupWin: any = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
-      popupWin.document.open();
-      popupWin.document.write('<html><link rel="stylesheet" href="../../../../../../assets/css/barcode-print-lib2.css">' +
-        '<link rel="stylesheet" href="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/css/bootstrap.min.css"' +
-        'integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">' +
-        '<body onload="window.print()">' + barRow + '</body></html>');
-      popupWin.document.close();
-    } else {
-      this.com.showSuccessErrorMessage('Please select print format', 'error');
-    }*/
     this.inventoryService.generatePdfOfBarcode(this.barCodeArray).subscribe((result: any) => {
-      console.log(result);
+      if(result && result.status == 'ok') {
+        console.log(result.data);
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+				const length = result.data.fileUrl.split('/').length;
+				saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+				//window.open(result.data.fileUrl, '_blank');
+      }
     })
   }
 
