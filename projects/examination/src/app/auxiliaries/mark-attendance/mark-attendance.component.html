@@ -1,3 +1,4 @@
+<div *ngIf="attendanceTheme === '1'">
 <div class="row">
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
@@ -121,3 +122,5 @@
     </mat-card>
   </div>
 </div>
+</div>
+<app-mark-attendance-theme-two *ngIf="attendanceTheme === '2'"></app-mark-attendance-theme-two>

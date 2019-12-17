@@ -31,6 +31,8 @@ export class MarkAttendanceComponent implements OnInit {
 	presentStudent = 0;
 	absentStudent = 0;
 	defaultsrc: any;
+	settings: any[] = [];
+	attendanceTheme = '1';
 	attendanceArray: any[] = [
 		{ aid: 0, a_name: 'Absent' },
 		{ aid: 1, a_name: 'Present' },
@@ -50,7 +52,8 @@ export class MarkAttendanceComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.buildForm();
+		this.getGlobalSetting();
+		this.buildForm();		
 		this.getClass();
 	}
 
@@ -64,6 +67,22 @@ export class MarkAttendanceComponent implements OnInit {
 			attendance: ''
 		});
 	}
+
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_name = ['school_attendance_theme'];
+		this.examService.getGlobalSetting(param).subscribe((result: any) => {
+		  if (result && result.status === 'ok') {
+			this.settings = result.data;
+			this.settings.forEach(element => {
+			  if (element.gs_alias === 'school_attendance_theme') {
+				this.attendanceTheme = element.gs_value;
+			  }
+			});
+		  }
+		})
+	  }
+
 	resetdata() {
 		this.formgroupArray = [];
 		this.studentAttendanceArray = [];
