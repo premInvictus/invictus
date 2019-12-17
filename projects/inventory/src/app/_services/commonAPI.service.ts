@@ -13,6 +13,7 @@ export class CommonAPIService {
 	homeUrl: string;
 	userData: any;
 	menus: any[] = [];
+	itemData: any[] = [];
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
 		private _cookieService: CookieService,
@@ -24,6 +25,7 @@ export class CommonAPIService {
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();
+	data: any = {};
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -241,5 +243,20 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/common/update', value);
 	}
-	
+	setItemData(data) {
+		this.itemData = data;
+	}
+	getItemsData() {
+		return this.itemData;
+	}
+	setData(type, data) {
+		this.data = {
+			type: type,
+			data: data
+		}
+	}
+	getData() {
+		return this.data;
+	}
+
 }
