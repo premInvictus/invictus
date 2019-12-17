@@ -37,7 +37,7 @@
     </div>
   </div>
 </div>
-<div class="row  margin-top-15">
+<div class="row  margin-top-15" id="vendor-detail">
   <div class="col-12">
     <mat-card class="mat-card-108" *ngIf="vendorDetailFlag">
 
@@ -50,7 +50,8 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_id}}
+              <span *ngIf="currentVendorDetail?.ven_id"> {{currentVendorDetail?.ven_id}}</span> 
+              <span *ngIf="!(currentVendorDetail?.ven_id)"> - </span> 
               </span>
             </div>
           </div>
@@ -63,7 +64,8 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_contact}}
+               <span *ngIf="currentVendorDetail?.ven_contact"> {{currentVendorDetail?.ven_contact}}</span>
+               <span *ngIf="!(currentVendorDetail?.ven_contact)"> - </span>
               </span>
             </div>
           </div>
@@ -76,7 +78,9 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_pan_no}}
+                
+                <span *ngIf="currentVendorDetail?.ven_pan_no">{{currentVendorDetail?.ven_pan_no}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_pan_no)"> - </span>
               </span>
             </div>
           </div>
@@ -89,7 +93,8 @@
             </div>
             <div class="col-4 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_authorised_person_detail_name}}
+                <span *ngIf="currentVendorDetail?.ven_authorised_person_detail_name">{{currentVendorDetail?.ven_authorised_person_detail_name}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_authorised_person_detail_name)"> - </span>
               </span>
             </div>
           </div>
@@ -106,7 +111,8 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_name}}
+                <span *ngIf="currentVendorDetail?.ven_name">{{currentVendorDetail?.ven_name}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_name)"> - </span>
               </span>
             </div>
           </div>
@@ -119,7 +125,8 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_email}}
+                <span *ngIf="currentVendorDetail?.ven_email">{{currentVendorDetail?.ven_email}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_email)"> - </span>
               </span>
             </div>
           </div>
@@ -132,7 +139,8 @@
             </div>
             <div class="col-8 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_gst_no}}
+                <span *ngIf="currentVendorDetail?.ven_gst_no">{{currentVendorDetail?.ven_gst_no}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_gst_no)"> - </span>
               </span>
             </div>
           </div>
@@ -145,7 +153,8 @@
             </div>
             <div class="col-4 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_authorised_person_detail_contact}}
+                <span *ngIf="currentVendorDetail?.ven_authorised_person_detail_contact">{{currentVendorDetail?.ven_authorised_person_detail_contact}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_authorised_person_detail_contact)"> - </span>
               </span>
             </div>
           </div>
@@ -161,7 +170,8 @@
             </div>
             <div class="col-11 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
-                {{currentVendorDetail?.ven_address}}
+                <span *ngIf="currentVendorDetail?.ven_address">{{currentVendorDetail?.ven_address}}</span>
+                <span *ngIf="!(currentVendorDetail?.ven_address)"> - </span>
               </span>
             </div>
           </div>
