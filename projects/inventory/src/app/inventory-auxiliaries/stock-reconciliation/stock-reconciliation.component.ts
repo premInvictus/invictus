@@ -66,17 +66,17 @@ export class StockReconciliationComponent implements OnInit {
       for (const item of recordArray) {
         element = {
           srno: pos,
-          item_code: item.item_code,
-          item_name: item.item_name,
-          item_desc: item.item_description,
-          item_nature: item.item_nature.name,
-          item_category: item.item_category.name,
-          item_location: item.location_hierarchy,
-          item_location_id : item.location_id,
+          item_code: item.item_code ? item.item_code : '-',
+          item_name: item.item_name ? item.item_name : '-',
+          item_desc: item.item_description ? item.item_description : '-',
+          item_nature: item.item_nature && item.item_nature.name ? item.item_nature.name : '-',
+          item_category: item.item_category && item.item_category.name ? item.item_category.name : '-',
+          item_location: item.location_hierarchy ? item.location_hierarchy : '-',
+          item_location_id : item.location_id ? item.location_id : '-',
           item_current_stock: item.pv_item_data ? this.getCurrentStock(item.pv_item_data) : '',
-          item_verification_date: item.pv_created_date ? item.pv_created_date : '',
-          item_available_stock: item.available_stock ? item.available_stock : '',
-          item_units: item.item_units ? item.item_units : '',
+          item_verification_date: item.pv_created_date ? item.pv_created_date : '-',
+          item_available_stock: item.available_stock ? item.available_stock : '-',
+          item_units: item.item_units ? item.item_units : '-',
           action:item
         };
         this.STOCK_RECONCILIATION_LIST_ELEMENT.push(element);

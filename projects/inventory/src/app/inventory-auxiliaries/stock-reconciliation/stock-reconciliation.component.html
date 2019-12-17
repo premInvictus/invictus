@@ -36,52 +36,52 @@
           </div>
           <table mat-table [dataSource]="stockReconciliationDataSource" matSort class="table-100 text-center" id="report_table">
             <ng-container matColumnDef="srno">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="2%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
             </ng-container>
             <ng-container matColumnDef="verification_date">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Date</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Date</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer">{{element?.item_verification_date | date: 'd-MMM-y'}} </a>
+                {{element?.item_verification_date | date: 'd-MMM-y'}}
               </td>
             </ng-container>
             <ng-container matColumnDef="item_code">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Item Code</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Code</th>
               <td mat-cell *matCellDef="let element">
                 <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.item_code}} </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Item Name</th>
-              <td mat-cell *matCellDef="let element">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Item Name</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
                 {{element?.item_name | titlecase  }}
               </td>
             </ng-container>
            
             <ng-container matColumnDef="item_nature">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Nature</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Nature</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.item_nature}}
+                {{element?.item_nature | titlecase}}
               </td>
             </ng-container>
             <ng-container matColumnDef="item_category">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Category</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Category</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.item_category}}
+                {{element?.item_category | titlecase}}
               </td>
             </ng-container>
             <ng-container matColumnDef="item_location">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Location</th>
-              <td mat-cell *matCellDef="let element">
-                {{element?.item_location }}
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">Location</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                {{element?.item_location | titlecase }}
               </td>
             </ng-container>
 
             <ng-container matColumnDef="item_current_stock">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Current Stock</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Current Stock</th>
               <td mat-cell *matCellDef="let element">
 
-                {{element?.item_current_stock}}  {{element?.item_units?.name}}
+                {{element?.item_current_stock}}  {{element?.item_units?.name | titlecase}}
                 
               </td>
             </ng-container>
@@ -94,7 +94,7 @@
             </ng-container>
 
             <ng-container matColumnDef="action">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Action</th>
               <td mat-cell *matCellDef="let element">
                 <span><i class="fa fa-check-circle font-color-green margin-right-15"
                     (click)="openApproveModal(element);approveVerificationModel(element, true)"></i></span>
@@ -126,7 +126,7 @@
     <mat-card>
       <div class="text-center">
         <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/physical_verifications.png'"
           [noDataText]="" [subText]="'No Stock Reconciliation Found'"></app-no-data>
       </div>
     </mat-card>

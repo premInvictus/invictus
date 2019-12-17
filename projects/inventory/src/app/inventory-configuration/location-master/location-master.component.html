@@ -87,11 +87,6 @@
                       </div>
                       <table mat-table [dataSource]="configDataSource" matSort class="table-100 text-center"
                         id="report_table">
-                        <!-- <ng-container matColumnDef="srno">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr.
-                            No. </th>
-                          <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                        </ng-container> -->
                         <ng-container matColumnDef="location_name">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
                             Location Name</th>
@@ -106,14 +101,6 @@
                             {{element?.location_id}}
                           </td>
                         </ng-container>
-                        <!-- <ng-container matColumnDef="location_parent_name">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
-                            Location Parent Name</th>
-                          <td mat-cell *matCellDef="let element">
-                            <span *ngIf="element?.location_parent_name">{{element?.location_parent_name}}</span>
-                            <span *ngIf="!(element?.location_parent_name)">-</span>
-                          </td>
-                        </ng-container> -->
                         <ng-container matColumnDef="location_hierarchy">
                           <th mat-header-cell *matHeaderCellDef mat-sort-header width="27%">
                             Location Hierarchy</th>
@@ -134,7 +121,6 @@
                           <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
                             Status</th>
                           <td mat-cell *matCellDef="let element">
-                            <!-- {{element?.location_status}} -->
                             <mat-slide-toggle class="inline-form-radio-spacing"
                               [checked]="element?.location_status === '1' ? true : false" aria-hidden="true"
                               (click)="toggleStatus(element.action)">
@@ -167,6 +153,17 @@
                       </mat-paginator>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="CONFIG_ELEMENT_DATA.length == 0">
+                <div class="col-12">
+                  <mat-card>
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/location_master.png'"
+                        [noDataText]="" [subText]="'No Location Found'"></app-no-data>
+                    </div>
+                  </mat-card>
                 </div>
               </div>
             </div>

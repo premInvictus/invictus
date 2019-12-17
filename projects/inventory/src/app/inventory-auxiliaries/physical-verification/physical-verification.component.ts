@@ -65,15 +65,16 @@ export class PhysicalVerificationComponent implements OnInit {
       for (const item of recordArray) {
         element = {
           srno: pos,
-          item_code: item.item_code,
-          item_name: item.item_name,
-          item_desc: item.item_description,
-          item_nature: item.item_nature.name,
-          item_category: item.item_category.name,
-          item_location: item.location_hierarchy,
-          item_location_id : item.location_id,
+          item_code: item.item_code ? item.item_code : '-',
+          item_name: item.item_name ? item.item_name : '-',
+          item_desc: item.item_description ? item.item_description : '-',
+          item_nature: item.item_nature && item.item_nature.name ? item.item_nature.name : '-',
+          item_category: item.item_category && item.item_category.name ? item.item_category.name : '-',
+          item_location: item.location_hierarchy ? item.location_hierarchy : '-',
+          item_location_id : item.location_id ? item.location_id : '-',
           item_current_stock: item.item_current_stock ? item.item_current_stock : '',
-          last_verification_date: item.pv_item_data && item.pv_item_data.length>0 ? item.pv_item_data[0]['pv_created_date'] : '',
+          item_units: item.item_units ? item.item_units : '-',
+          last_verification_date: item.pv_item_data && item.pv_item_data.length>0 ? item.pv_item_data[0]['pv_created_date'] : '-',
           action:item
         };
         this.PHYSICAL_VERIFICATION_LIST_ELEMENT.push(element);

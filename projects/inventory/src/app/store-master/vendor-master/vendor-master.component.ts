@@ -4,7 +4,7 @@ import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
 
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort } from '@angular/material';
 import { AddVendorDialog } from './add-vendor-dialog/add-vendor-dialog.component';
 import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component';
 
@@ -16,6 +16,7 @@ import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details
 export class VendorMasterComponent implements OnInit {
   currentVendorId: any;
   @ViewChild('paginator') paginator: MatPaginator;
+  @ViewChild('paginatorone') paginatorone: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('deleteModalRef') deleteModalRef;
   vendorListData: any = [];
@@ -220,9 +221,9 @@ export class VendorMasterComponent implements OnInit {
         this.cacheSpan('receipt_date', d => d.receipt_date);
         this.cacheSpan('generated_by', d => d.generated_by)
         this.vendorLogListDataSource = new MatTableDataSource<VendorLogListElement>(this.VENDOR_LOG_LIST_ELEMENT);
-        this.vendorLogListDataSource.paginator = this.paginator;
+        this.vendorLogListDataSource.paginator = this.paginatorone;
         if (this.sort) {
-          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.sort.sortChange.subscribe(() => this.paginatorone.pageIndex = 0);
           this.vendorLogListDataSource.sort = this.sort;
         }
         
@@ -266,6 +267,7 @@ export class VendorMasterComponent implements OnInit {
   
   backToVendorList() {
     this.vendorDetailFlag = false;
+    this.getVendorList();
   }
 
 }
