@@ -738,7 +738,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails.emp_salary_detail
 			&& this.employeedetails.emp_salary_detail.emp_salary_structure
 			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale
-			&& (Number(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) === Number(this.salaryDetails.value.sal_str))) {
+			&& (Number(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id) === Number(this.salaryDetails.value.sal_str))) {
 			if (this.salaryHeadsArray.length > 0) {
 				const findIndex = this.salaryHeadsArray.findIndex(f => Number(f.sc_id) === Number(event));
 				if (findIndex !== -1) {

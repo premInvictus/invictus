@@ -11,7 +11,7 @@ export class InventoryService {
   private processType;
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
-		this.service.startLoading();
+    this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/getItemRecordMaster', value);
     /*return of({
       status: 'ok', data: [
@@ -67,6 +67,10 @@ export class InventoryService {
     if (this.processType) {
       return this.processType;
     }
+  }
+  getOrderMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMaster', value);
   }
   itemChangeStatus(value) {
     this.service.stopLoading();

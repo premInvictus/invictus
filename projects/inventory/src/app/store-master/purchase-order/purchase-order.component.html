@@ -1,0 +1,90 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="col-6 ">
+        <div class="top-card-title">
+          <span class="font-size-24 font-medium">Purchase order</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" [hidden]="!tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <!-- <div class="row">
+              <div class="col-6">
+                <mat-form-field appearance="legacy">
+                  <input matInput (keyup)="applyFilter($event.target.value)">
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+            </div> -->
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag">
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
+                  <td mat-cell *matCellDef="let element;"> {{element.position}}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="po_number">
+                  <th mat-header-cell *matHeaderCellDef> PO Number </th>
+                  <td mat-cell *matCellDef="let element;"> {{element.po_number}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="po_date">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> PO Date </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    {{element.po_date | date:'d-MMM-y' }} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="created_by">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Created By </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    {{element.created_by }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vendor_id">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Vendor ID </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    {{element.vendor_id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vendor_name">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Vendor Name </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    {{element.vendor_name}} </td>
+                </ng-container>
+                <ng-container matColumnDef="vendor_category">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Vendor Category </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    {{element.vendor_category}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
+                  <td mat-cell class="cell-left" *matCellDef="let element;">
+                    <i class="far fa-edit modify-icon" (click)="actionList(element.action,'edit')" style="cursor:pointer"
+                      title="Edit"></i>&nbsp;
+                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                      (click)="actionList(element.action,'delete')" style="cursor:pointer" title="Delete"></i>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+              <mat-paginator #paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+                showFirstLastButtons (page)="changePage($event)"></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
