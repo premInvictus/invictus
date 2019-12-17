@@ -7,6 +7,8 @@ import { ProcurementMasterComponent } from './procurement-master/procurement-mas
 import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-requisition.component';
 import { CreatePurchaseOrderComponent } from './create-purchase-order/create-purchase-order.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
+import { GenerateReceiptComponent } from './generate-receipt/generate-receipt.component';
+import { GoodsReceiptComponent } from './goods-receipt/goods-receipt.component';
 const routes: Routes = [
 	{ path: 'record-master', component: RecordMasterComponent },
 	{ path: 'procurement-master', component: ProcurementMasterComponent },
@@ -14,6 +16,8 @@ const routes: Routes = [
 	{ path: 'purchase-requisition', component: PurchaseRequisitionComponent },
 	{ path: 'create-purchase-order', component: CreatePurchaseOrderComponent },
 	{ path: 'purchase-order', component: PurchaseOrderComponent },
+	{ path: 'generate-receipt', component: GenerateReceiptComponent },
+	{ path: 'goods-receipt', component: GoodsReceiptComponent },
 ];
 
 @NgModule({

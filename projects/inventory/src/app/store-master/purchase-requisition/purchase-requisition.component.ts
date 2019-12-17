@@ -102,7 +102,7 @@ export class PurchaseRequisitionComponent implements OnInit {
               pm_intended_use: next.pm_intended_use,
               pm_id: next.pm_id,
               created_date: next.pm_created.created_date,
-              created_by: next.pm_created.created_by,
+              created_by: next.pm_created.created_by_name,
               action: { 'pm_id': next.pm_id, 'item_code': element.item_code }
 
             });
