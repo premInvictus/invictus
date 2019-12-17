@@ -521,7 +521,7 @@ export class ErpCommonService {
 
 	searchItemByStatus(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiInvUrl + '/configuration/getItemsFromMaster', value);
+		return this.http.post(environment.apiInvUrl + '/configuration/filterItemsFromMaster', value);
 	}
 
 	insertUserItemData(value) {

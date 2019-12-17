@@ -25,7 +25,7 @@ export class LocationMasterComponent implements OnInit {
 	locationTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource: any = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
-	displayedColumns: any[] = ['srno', 'location_name', 'location_parent_name', 'location_type_name', 'location_status', 'action'];
+	displayedColumns: any[] = ['srno', 'location_name','location_id' ,'location_parent_name', 'location_type_name', 'location_status', 'action'];
 	configFlag = false;
 	editFlag = false;
 	currentLocationId: any;

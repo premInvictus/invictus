@@ -15,7 +15,7 @@
 }
 
 .mat-progress-bar {
-    height:2.5px;
+    height:2px;
 }
 
 .green-progress ::ng-deep .mat-progress-bar .mat-progress-bar-fill::before {
@@ -27,7 +27,7 @@
 }
 
 ::ng-deep .mat-autocomplete-panel {
-    margin-top:20px;
+   margin-top:3px;
 }
 
 .margin-top--5 {
@@ -39,6 +39,15 @@
     line-height: 42px !important;
 }
 
-.margin-top-25 {
-    margin-top:25px;
+.margin-top-no {
+    margin-top: 10px !important;
+    margin-left: -7px;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+.mat-raised-button {
+    min-width:48px !important;
 }

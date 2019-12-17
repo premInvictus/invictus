@@ -2,16 +2,14 @@
   <div class="col-12">
     <mat-card>
       <div class="row">
-        <div class="col-6 margin-top-15">
+        <div class="col-9 margin-top-15">
           <span class="font-size-24">Physical Verification</span>
         </div>
-        <div class="col-6">
-          <div class="row">
-            <div class="col-12">
+        <div class="col-3">
+            <div>
               <app-location-search-and-add [showAdd]="false" (renderData)="getPhysicalVerification($event)"></app-location-search-and-add>
             </div>
           </div>
-        </div>
       </div>
     </mat-card>
   </div>
@@ -35,7 +33,8 @@
               </mat-form-field>
             </div>
           </div>
-          <table mat-table [dataSource]="physicalVerificationdataSource" matSort class="table-100 text-center" id="report_table">
+          <table mat-table [dataSource]="physicalVerificationdataSource" matSort class="table-100 text-center"
+            id="report_table">
             <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="5%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
@@ -43,7 +42,8 @@
             <ng-container matColumnDef="item_code">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Item Code</th>
               <td mat-cell *matCellDef="let element">
-                <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.item_code}} </a>
+                <a class="font-skyblue cursor-pointer"
+                  (click)="openItemDetailsModal(element?.item_code)">{{element?.item_code}} </a>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_name">
@@ -87,7 +87,8 @@
             <ng-container matColumnDef="last_verification_date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Last Verification Date</th>
               <td mat-cell *matCellDef="let element">
-                <span *ngIf="element?.last_verification_date">{{element?.last_verification_date | date:'MMM d, y' }} </span>
+                <span *ngIf="element?.last_verification_date">{{element?.last_verification_date | date:'MMM d, y' }}
+                </span>
                 <span *ngIf="!(element?.last_verification_date)">-</span>
               </td>
             </ng-container>
@@ -96,7 +97,7 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Action</th>
               <td mat-cell *matCellDef="let element">
                 <span><i class="fa fa-check-circle font-color-green margin-right-15"
-                    (click)="openApproveModal(element);approveVerification(element, true)"></i></span>
+                    (click)="openApproveModal(element);approveVerificationModel(element, true)"></i></span>
                 <span class="ver-line-divider"><i class="fas fa-times-circle font-color-red margin-left-15"
                     (click)="openModal(element);deleteVerificationModel(element)"></i></span>
               </td>
@@ -112,7 +113,7 @@
               <td colspan="9">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5,10,25,100]" showFirstLastButtons>
+          <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

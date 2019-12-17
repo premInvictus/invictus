@@ -109,6 +109,10 @@ export class PhysicalVerificationComponent implements OnInit {
     this.approveModalRef.openModal(data);
   }
 
+  approveVerificationModel(element,flag) {
+
+  }
+
   openModal(data) {
     data['from'] = 'inv-physical-verification';
     this.deleteModalRef.openModal(data);
