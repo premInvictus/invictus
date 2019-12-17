@@ -40,7 +40,7 @@ export class ProcurementMasterComponent implements OnInit {
     this.createRequistionForm = this.fbuild.group({
       item_code: '',
       item_name: '',
-      item_desc: '', 
+      item_desc: '',
       item_quantity: '',
       item_units: '',
       item_price: '',
@@ -168,14 +168,17 @@ export class ProcurementMasterComponent implements OnInit {
       this.finalSubmitArray['pm_type'] = 'PR';
       this.finalSubmitArray['pm_created'] = {
         created_by: Number(this.currentUser.login_id),
+        created_by_name: this.currentUser.full_name,
         created_date: ''
       }
       this.finalSubmitArray['pm_updated'] = {
         updated_by: Number(this.currentUser.login_id),
+        updated_by_name: this.currentUser.full_name,
         update_date: ''
       }
       this.finalSubmitArray['pm_approved'] = {
         approved_by: '',
+        approved_by_name: '',
         approved_date: ''
       }
       this.finalSubmitArray['pm_status'] = 'pending';

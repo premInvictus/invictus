@@ -199,19 +199,19 @@
                                     <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}} </th>
                                 </tr>
                                 <tr class="custom-tr">
-                                    <th class="custom-th text-center">Subject Name</th>
+                                    <th width="40%" class="custom-th text-center">Subject Name</th>
                                     <!-- <th class="custom-th text-center" *ngFor="let item of sexamArray">
                                         {{item.exam_name | titlecase}}
                                         <br>({{item.exam_weightage}})</th> -->
-                                    <th class="custom-th text-center" width="60px">Grade</th>
-                                    <th class="custom-th text-center">Remark</th>
+                                    <th width="5%" class="custom-th text-center" width="60px">Grade</th>
+                                    <th width="55%" class="custom-th text-center">Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <ng-container *ngFor="let sub of subjectArray">
                                     <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
                                         <tr class="custom-tr" *ngIf="sub.sub_type == 1">
-                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                            <td class="custom-td text-left padding-left-8px">{{sub.sub_name | titlecase}}</td>
                                             <!-- <td class="custom-td" *ngFor="let item of sexamArray">
                                                 {{getGradePoint(getCalculatedMarks(sub.sub_id, item.exam_id,term))}}
                                             </td> -->
