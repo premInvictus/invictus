@@ -21,6 +21,7 @@ export class GenerateReceiptComponent implements OnInit {
   requistionArray: any[] = [];
   finalSubmitArray: any = {};
   finalReceiptArray: any[] = [];
+  setBlankArray: any[] = [];
   itemArray: any[] = [];
   vendorArray: any[] = [];
   itemCode: any;
@@ -80,19 +81,18 @@ export class GenerateReceiptComponent implements OnInit {
           } else {
             this.itemCodeArray.push({
               item_code: dety.item_code,
-            }); 
+            });
             this.finalRequistionArray.push(dety);
           }
           // }
         }
       }
+      this.finalReceiptForm.patchValue({
+        ven_id: this.ven_id,
+        po_no: this.pm_id
+      });
+      this.vendor(this.ven_id);
     }
-
-    this.finalReceiptForm.patchValue({
-      ven_id: this.ven_id,
-      po_no: this.pm_id
-    });
-    this.vendor(this.ven_id);
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -223,6 +223,15 @@ export class GenerateReceiptComponent implements OnInit {
   finalCancel() {
     this.finalRequistionArray = [];
     this.resetForm();
+    if (this.requistionArray.length > 0) {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+      this.inventory.setTabIndex({ 'currentTab': 1 });
+    } else {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+      this.inventory.setTabIndex({ 'currentTab': 2 });
+    }
   }
   //  Open Final Submit Modal function
   openMessageModal() {
@@ -267,7 +276,7 @@ export class GenerateReceiptComponent implements OnInit {
   vendor(ven_id) {
     // keyCode
     this.resetVendor();
-    if (ven_id !== '') {
+    if (ven_id) {
       this.vendorArray = [];
       this.erpCommonService.getVendor({ ven_id: Number(ven_id) }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
@@ -303,7 +312,7 @@ export class GenerateReceiptComponent implements OnInit {
       this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
       this.finalSubmitArray['pm_source'] = this.finalReceiptForm.value.source;
       this.finalSubmitArray['pm_type'] = 'GR';
-      if (this.pm_type === 'PO') {
+      if (this.pm_type !== 'GR') {
         this.finalSubmitArray['pm_created'] = {
           created_by: Number(this.currentUser.login_id),
           created_by_name: this.currentUser.full_name,
@@ -336,7 +345,7 @@ export class GenerateReceiptComponent implements OnInit {
         this.finalReceiptArray.push(this.finalSubmitArray);
         this.inventory.updateRequistionMaster(this.finalReceiptArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Receipt Updated Successfylly', 'success');
+            this.commonService.showSuccessErrorMessage('Receipt Updated Successfully', 'success');
             this.finalSubmitArray = [];
             this.finalRequistionArray = [];
             this.itemCodeArray = [];
@@ -347,11 +356,19 @@ export class GenerateReceiptComponent implements OnInit {
       } else {
         this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Receipt Generated Successfylly', 'success');
+            this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
             this.finalSubmitArray = [];
             this.finalRequistionArray = [];
             this.itemCodeArray = [];
-            this.requistionArray = [];
+            if (this.requistionArray.length > 0) {
+              this.requistionArray = [];
+              this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+              this.inventory.setTabIndex({ 'currentTab': 1 });
+            } else {
+              this.requistionArray = [];
+              this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+              this.inventory.setTabIndex({ 'currentTab': 2 });
+            }
           } else {
             this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
           }

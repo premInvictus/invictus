@@ -20,7 +20,6 @@
   <div class="row remove-top-margin">
     <div class="col-12 pad-left-0">
       <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag">
-
         <ng-container matColumnDef="position">
           <th mat-header-cell *matHeaderCellDef>
             <span class="text-center">
@@ -107,8 +106,16 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator #paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+      <mat-paginator *ngIf="ELEMENT_DATA.length > 0" #paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
         showFirstLastButtons (page)="changePage($event)"></mat-paginator>
     </div>
   </div>
+</div> 
+<div *ngIf="ELEMENT_DATA.length === 0" class="no-records">
+  <div class="text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_requisitions.png'"
+      [noDataText]="'No Record Found'"></app-no-data>
+  </div>
 </div>
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonAPIService, InventoryService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -9,24 +9,25 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ProcurementCommonComponent implements OnInit {
   tabSelectedIndex = 0;
+  tabIndex: any;
   setBlankArray: any[] = [];
   constructor(
     public inventory: InventoryService,
     private commonAPIService: CommonAPIService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public ngZone: NgZone
   ) { }
 
   ngOnInit() {
-    this.commonAPIService.tabChange.subscribe((result: any) => {
-      if (result) {
-        this.tabSelectedIndex = result.currrentTab;
-      }
-    });
+    if (this.inventory.getTabIndex()) {
+      this.tabIndex = this.inventory.getTabIndex();
+      this.tabSelectedIndex = this.tabIndex.currentTab;
+    }
   }
   setTabValue(value) {
     this.tabSelectedIndex = value;
-    this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
+    this.inventory.setTabIndex({ 'currentTab': this.tabSelectedIndex });
   }
   redirectToPage(index) {
     if (index === 'PO') {

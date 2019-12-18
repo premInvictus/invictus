@@ -9,6 +9,7 @@ import { of } from 'rxjs';
 })
 export class InventoryService {
   private processType;
+  private tabIndex;
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
     this.service.startLoading();
@@ -83,5 +84,13 @@ export class InventoryService {
   generatePdfOfBarcode(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/generatePdfOfBarcode', value);
+  }
+  setTabIndex(value) {
+    this.tabIndex = value;
+  }
+  getTabIndex() {
+    if (this.tabIndex) {
+      return this.tabIndex;
+    }
   }
 }

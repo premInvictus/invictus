@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonAPIService, SisService, AxiomService } from '../../_services';
+import { CommonAPIService, InventoryService } from '../../_services';
 
 @Component({
   selector: 'app-procurement-master',
@@ -26,8 +26,9 @@ export class ProcurementMasterComponent implements OnInit {
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
-    public axiomService: AxiomService,
-    public sisService: SisService,
+    public inventory: InventoryService,
+    private router: Router,
+    private route: ActivatedRoute,
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
@@ -73,13 +74,6 @@ export class ProcurementMasterComponent implements OnInit {
       item_desc: item.item_desc,
       item_units: item.item_units.name
     });
-  }
-  additemss() {
-    if (this.createRequistionForm.valid) {
-      console.log(this.createRequistionForm.value);
-    } else {
-      this.commonService.showSuccessErrorMessage('Please fill all required field', 'error');
-    }
   }
   // Add item list function
 
@@ -189,6 +183,8 @@ export class ProcurementMasterComponent implements OnInit {
           this.finalSubmitArray = [];
           this.finalRequistionArray = [];
           this.itemCodeArray = [];
+          this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+          this.inventory.setTabIndex({ 'currentTab': 0 });
         } else {
           this.commonService.showSuccessErrorMessage('Error While Generating Request', 'error');
         }
