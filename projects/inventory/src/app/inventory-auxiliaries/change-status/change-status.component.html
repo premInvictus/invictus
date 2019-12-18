@@ -17,7 +17,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6 margin-top-10  text-right">
-                  <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog($event)">Advanced
+                  <span class="cursor-pointer font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog($event)">Advanced
                     Search
                     <i class="fas fa-chevron-down"></i></span>
                 </div>
@@ -44,7 +44,7 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="itemData.length > 0">
+<div class="row row-m-t-0" *ngIf="itemData.length > 0">
   <div class="col-3 list-item" *ngFor="let itemDetails of itemData; let i = index;">
     <mat-card style="height:auto">
       <div class="list-container">
@@ -157,4 +157,4 @@
     </mat-card>
   </div>
 </div>
-<!-- <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal> -->
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

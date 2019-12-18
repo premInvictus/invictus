@@ -25,6 +25,9 @@ export class ChangeStatusComponent implements OnInit {
   isLoading = false;
   toHighlight: string = '';
   allLocationData: any[] = [];
+
+  @ViewChild('searchModal') searchModal;
+  filterJson: any;
   constructor(
     private inventoryService: InventoryService, 
     private commonAPIService: CommonAPIService,
@@ -40,6 +43,8 @@ export class ChangeStatusComponent implements OnInit {
     this.buildForm();
     this.getReasons();
   }
+  openSearchDialog = (data) => { this.searchForm.patchValue({ search: '' }); this.searchModal.openModal(data); };
+
   getReasons() {
     this.reasonArray = [];
 		this.sisService.getReason({ reason_type: 16 }).subscribe((res: any) => {
@@ -69,8 +74,11 @@ export class ChangeStatusComponent implements OnInit {
   getItems($event) {
     if ($event.target.value) {
       this.val = $event.target.value
-      if (this.val.length >= 3) {
-        this.searchItem();
+      if (this.val.length >= 1) {
+        this.filterJson = {
+          searchData: this.val
+        };
+        this.searchItem(this.filterJson);
       }
     }
   }
@@ -85,51 +93,82 @@ export class ChangeStatusComponent implements OnInit {
       reason_desc:''
     });
   }
-  searchItem(){
-    this.itemArray = [];
-    const param: any = {};
-    const json = {
-      searchData: this.val
+  searchOk($event) {
+    this.filterJson = {
+      filters: $event.filters,
+      generalFilters: $event.generalFilters,
+      //page_index: this.pageIndex,
+      //page_size: this.pageSize,
     };
+    this.searchItem(this.filterJson);
+
+  }
+  searchItem(param){
+    this.itemArray = [];
     this.detailsFlag = false
-    this.inventoryService.searchItemsFromMaster(json).subscribe((result: any) => {
-      if(result && result.status === 'ok'){
-        this.itemArray = result.data;
-        const DATA = this.itemArray.reduce((current, next, index) => {
-          const location = next.locs.reduce((current1, next1, index1) => {
-            next1.item_qty = next.item_location[index1].item_qty;
-            current1.push(next1);
-            return current1;
-          },[]);
-          location.forEach(element => {
-            this.locationArray.push({location_id: element.location_id, location_name: element.location_hierarchy});
-            current.push({
-              item_code: next.item_code,
-              item_name: next.item_name,
-              item_nature: next.item_nature.name,
-              item_category: next.item_category.name,
-              item_desc: next.item_desc,
-              location_hierarchy: element.location_hierarchy,
-              location_name: element.location_name,
-              location_id: element.location_id,
-              item_qty: element.item_qty,
-              item_units_name: next.item_units.name
-            })
-          })
-          return current;
-        },[]);
-        var clean = this.locationArray.filter((arr, index, self) =>
-        index === self.findIndex((t) => (t.location_id === arr.location_id)))
-        this.locationArray = clean;
-        this.itemData = DATA;
-        console.log(this.itemData);
-        this.detailsFlag = true;        
-      } else {
-        this.itemData=[];
-        this.locationArray = [];
-        this.detailsFlag = true;  
-      }
-    })
+    if(param.searchData) {
+      this.inventoryService.searchItemsFromMaster(param).subscribe((result: any) => {
+        if(result && result.status === 'ok'){
+                 this.displayList(result.data);
+        } else {
+          this.itemData=[];
+          this.locationArray = [];
+          this.detailsFlag = true;  
+        }
+      })
+    } else {
+      this.inventoryService.filterItemsFromMaster(param).subscribe((result: any) => {
+        if(result && result.status === 'ok'){
+          this.displayList(result.data);
+        } else {
+          this.itemData=[];
+          this.locationArray = [];
+          this.detailsFlag = true;  
+        }
+      });
+    }
+    
+  }
+  displayList(value){
+    console.log('value',value);
+    this.itemArray = value;
+    const DATA = this.itemArray.reduce((current, next, index) => {
+      // const location = next.locs.reduce((current1, next1, index1) => {
+      //   next1.item_qty = next.item_location[index1].item_qty;
+      //   current1.push(next1);
+      //   return current1;
+      // },[]);
+      const location = next.item_location.reduce((current1, next1, index1) => {
+        next1.location_name = next.locs[index1].location_name;
+        next1.location_hierarchy = next.locs[index1].location_hierarchy;
+        next1.location_status = next.locs[index1].location_status;
+        next1.location_type_id = next.locs[index1].location_type_id;
+        current1.push(next1);
+        return current1;
+      },[]);
+      location.forEach(element => {
+        this.locationArray.push({location_id: element.location_id, location_name: element.location_hierarchy});
+        current.push({
+          item_code: next.item_code,
+          item_name: next.item_name,
+          item_nature: next.item_nature.name,
+          item_category: next.item_category.name,
+          item_desc: next.item_desc,
+          location_hierarchy: element.location_hierarchy,
+          location_name: element.location_name,
+          location_id: element.location_id,
+          item_qty: element.item_qty,
+          item_units_name: next.item_units.name
+        })
+      })
+      return current;
+    },[]);
+    var clean = this.locationArray.filter((arr, index, self) =>
+    index === self.findIndex((t) => (t.location_id === arr.location_id)))
+    this.locationArray = clean;
+    this.itemData = DATA;
+    console.log(this.itemData);
+    this.detailsFlag = true; 
   }
   validation(value): boolean {
     let validation = true;
@@ -163,7 +202,7 @@ export class ChangeStatusComponent implements OnInit {
         if(result.status === 'ok') {
           console.log(result);
           this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-          this.searchItem();
+          this.searchItem(this.filterJson);
         } else {
           this.commonAPIService.showSuccessErrorMessage(result.message, 'error')
         }
