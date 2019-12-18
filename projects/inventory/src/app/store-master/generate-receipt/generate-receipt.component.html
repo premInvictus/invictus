@@ -1,0 +1,275 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="col-6 ">
+        <div class="top-card-title">
+          <span class="font-size-24 font-medium">Generate Receipt</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <div class="row">
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="createOrderForm" novalidate>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Item Code</mat-label>
+                  <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
+                    [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                    (keyup)="filterItem($event)">
+                  <mat-autocomplete #autoGroup="matAutocomplete">
+                    <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
+                      (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
+                      {{item.item_code}} -
+                      {{item.item_name}}</mat-option>
+                  </mat-autocomplete>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Item Name</mat-label>
+                  <input matInput placeholder="Item Name" type="text" formControlName="item_name" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control" formControlName="item_desc" readonly></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Quantity</mat-label>
+                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity" required>
+                </mat-form-field>
+              </div>
+              <div class="col-6 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Units</mat-label>
+                  <input matInput placeholder="Units" type="text" formControlName="item_units" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Price</mat-label>
+                  <input matInput placeholder="Price" type="text" formControlName="item_price" required>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <input matInput placeholder="Enter Location" formControlName="item_location" required
+                    [matAutocomplete]="auto" (keyup)="getFilterLocation($event)" />
+                  <mat-autocomplete flex #auto="matAutocomplete">
+                    <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
+                      (onSelectionChange)="setLocationId(item, i)">
+                      <span [innerHTML]="item.location_hierarchy | capitalize "></span>
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12  text-center">
+                <button *ngIf="!UpdateFlag" mat-raised-button class="btn-neutral" (click)="addList()">Add
+                  to list</button>
+                <button *ngIf="UpdateFlag " mat-raised-button class="btn-neutral" (click)="updateList()">Update</button>
+                <button mat-raised-button class="btn-reset margin-left-10"
+                  *ngIf="this.finalRequistionArray.length === 0" (click)="resetForm()">Reset</button>
+                <button mat-raised-button class="btn-reset margin-left-10" *ngIf="this.finalRequistionArray.length > 0"
+                  (click)="finalCancel()">Cancel</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-10">
+          <div class="row">
+            <div class="col-12 remove-col-padding">
+              <table class="table table-borderd table-stripped custom-table">
+                <thead class="table-skill__head text-center">
+                  <tr class="custom-tr">
+                    <th class="custom-th" rowspan="2">Item Code</th>
+                    <th class="custom-th" rowspan="2">Item Name</th>
+                    <th class="custom-th" rowspan="2">Description</th>
+                    <th class="custom-th" rowspan="2">Quantity</th>
+                    <th class="custom-th" rowspan="2">Price</th>
+                    <th class="custom-th" rowspan="2">Location</th>
+                    <th class="custom-th" rowspan="2">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center" *ngIf="this.finalRequistionArray.length > 0">
+                  <tr class="custom-tr" *ngFor="let item of this.finalRequistionArray;let i = index">
+                    <td class="custom-td">
+                      {{item.item_code}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_name}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_desc}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_quantity}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_price}}
+                    </td>
+                    <td class="custom-td">
+                      {{getLocationName(item.item_location)}}
+                    </td>
+                    <td class="custom-td">
+                      <i class="far fa-edit modify-icon" (click)="editList(i)" style="cursor:pointer"
+                        title="Edit"></i>&nbsp;
+                      <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteList(i)"
+                        style="cursor:pointer" title="Delete"></i>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="this.finalRequistionArray.length === 0" class="no-border">
+                  <tr class="text-center">
+                    <td colspan="9">
+                      <img
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                      <br><br><br>
+                      <br><span class="font-size-20 font-light font-color-brown">
+                        Please Update Item list on Click of Add Button
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <form [formGroup]="finalReceiptForm" novalidate *ngIf="this.finalRequistionArray.length > 0">
+            <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Source</mat-label>
+                  <input matInput placeholder="Source" type="text" formControlName="source">
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Intended Use</mat-label>
+                  <input matInput placeholder="Intended Use" type="text" formControlName="intended_use">
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 ">
+                <div class="top-card-title-new">
+                  <span class="font-size-24 font-medium">Vendor Details</span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field " [ngClass]="opacityClass" appearance="outline">
+                  <mat-label>Vendor ID</mat-label>
+                  <input type="text" matInput placeholder="Vendor ID" formControlName="ven_id" [readonly]="viewOnly"
+                    required (keyup)="filterVendor($event)">
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Vendor Name</mat-label>
+                  <input type="text" matInput placeholder="Vendor Name" formControlName="ven_name" required readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Address</mat-label>
+                  <input type="text" matInput placeholder="Address" formControlName="ven_address" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Contact No.</mat-label>
+                  <input type="text" matInput placeholder="Contact No." formControlName="ven_contact" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Email</mat-label>
+                  <input type="text" matInput placeholder="Email" formControlName="ven_email" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Autourised Contact Person</mat-label>
+                  <input type="text" matInput placeholder="Autourised Contact Person"
+                    formControlName="ven_authorised_person_detail_name" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Autourised Contact Number</mat-label>
+                  <input type="text" matInput placeholder="Autourised Contact Number"
+                    formControlName="ven_authorised_person_detail_contact" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>Pan No.</mat-label>
+                  <input type="text" matInput placeholder="Pan No." formControlName="ven_pan_no" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>GST No.</mat-label>
+                  <input type="text" matInput placeholder="GST No." formControlName="ven_gst_no" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-4 ">
+                <mat-form-field class="form-field opacity-class" appearance="outline">
+                  <mat-label>PO No.</mat-label>
+                  <input type="text" matInput placeholder="PO No." formControlName="po_no" readonly>
+                </mat-form-field>
+              </div>
+              <div class="col-4 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Invoice No.</mat-label>
+                  <input type="text" matInput placeholder="Invoice No." formControlName="invoice_no">
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+          <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+            <div class="col-12 text-center">
+              <button mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+              <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
+<app-message-modal #messageModal></app-message-modal>

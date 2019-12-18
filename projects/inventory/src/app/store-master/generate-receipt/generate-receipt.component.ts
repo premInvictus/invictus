@@ -7,20 +7,20 @@ import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-create-purchase-order',
-  templateUrl: './create-purchase-order.component.html',
-  styleUrls: ['./create-purchase-order.component.css']
+  selector: 'app-generate-receipt',
+  templateUrl: './generate-receipt.component.html',
+  styleUrls: ['./generate-receipt.component.css']
 })
-export class CreatePurchaseOrderComponent implements OnInit {
+export class GenerateReceiptComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('messageModal') messageModal;
   UpdateFlag = false;
   submitParam: any = {};
   createOrderForm: FormGroup;
-  finalOrderForm: FormGroup;
+  finalReceiptForm: FormGroup;
   requistionArray: any[] = [];
   finalSubmitArray: any = {};
-  finalPoArray: any[] = [];
+  finalReceiptArray: any[] = [];
   itemArray: any[] = [];
   vendorArray: any[] = [];
   itemCode: any;
@@ -37,6 +37,11 @@ export class CreatePurchaseOrderComponent implements OnInit {
   pm_type: any;
   pm_id: any;
   created_date: any;
+  allLocationData: any[] = [];
+  isLoading = false;
+  toHighlight: string = '';
+  opacityClass = '';
+  viewOnly = false;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -59,28 +64,35 @@ export class CreatePurchaseOrderComponent implements OnInit {
         this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
         this.pm_type = item.pm_type;
         this.pm_id = item.pm_id;
+        if (this.pm_id) {
+          this.opacityClass = 'opacity-class';
+          this.viewOnly = true;
+        } else {
+          this.opacityClass = '';
+          this.viewOnly = false;
+        }
         for (let dety of item.pm_item_details) {
-          if (dety.item_status === 'approved') {
-            dety.item_status = 'pending';
-            const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
-            if (sindex !== -1) {
-              this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
-            } else {
-              this.itemCodeArray.push({
-                item_code: dety.item_code,
-              });
-              this.finalRequistionArray.push(dety);
-            }
+          // if (dety.item_status === 'approved') {
+          dety.item_status = 'pending';
+          const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
+          if (sindex !== -1) {
+            this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
+          } else {
+            this.itemCodeArray.push({
+              item_code: dety.item_code,
+            });
+            this.finalRequistionArray.push(dety);
           }
+          // }
         }
       }
     }
 
-    this.finalOrderForm.patchValue({
+    this.finalReceiptForm.patchValue({
       ven_id: this.ven_id,
+      po_no: this.pm_id
     });
     this.vendor(this.ven_id);
-    console.log('dddd', this.ven_id);
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -90,9 +102,10 @@ export class CreatePurchaseOrderComponent implements OnInit {
       item_quantity: '',
       item_units: '',
       item_price: '',
+      item_location: '',
       item_status: ''
     });
-    this.finalOrderForm = this.fbuild.group({
+    this.finalReceiptForm = this.fbuild.group({
       ven_id: '',
       ven_name: '',
       ven_address: '',
@@ -101,7 +114,11 @@ export class CreatePurchaseOrderComponent implements OnInit {
       ven_contact: '',
       ven_email: '',
       ven_gst_no: '',
-      ven_pan_no: ''
+      ven_pan_no: '',
+      intended_use: '',
+      source: '',
+      po_no: '',
+      invoice_no: '',
     });
 
   }
@@ -157,7 +174,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
       'item_desc': this.finalRequistionArray[value].item_desc,
       'item_quantity': this.finalRequistionArray[value].item_quantity,
       'item_units': this.finalRequistionArray[value].item_units,
-      'item_price': this.finalRequistionArray[value].item_price
+      'item_price': this.finalRequistionArray[value].item_price,
+      'item_location': this.finalRequistionArray[value].item_location
     });
   }
 
@@ -186,11 +204,12 @@ export class CreatePurchaseOrderComponent implements OnInit {
       item_desc: '',
       item_quantity: '',
       item_units: '',
-      item_price: ''
+      item_price: '',
+      item_location: ''
     });
   }
   resetVendor() {
-    this.finalOrderForm.patchValue({
+    this.finalReceiptForm.patchValue({
       ven_name: '',
       ven_address: '',
       ven_authorised_person_detail_contact: '',
@@ -212,8 +231,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
   }
   //  Open Final Submit Modal function
   openSubmitModal() {
-    if (this.finalOrderForm.valid) {
-      this.submitParam.text = 'Create Purchase Order';
+    if (this.finalReceiptForm.valid) {
+      this.submitParam.text = 'Generate Receipt';
       this.deleteModal.openModal(this.submitParam);
     } else {
       this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
@@ -229,7 +248,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
           if (res && res.status === 'ok') {
             let vendorDetail: any;
             vendorDetail = res.data[0];
-            this.finalOrderForm.patchValue({
+            this.finalReceiptForm.patchValue({
               ven_name: vendorDetail.ven_name,
               ven_address: vendorDetail.ven_address,
               ven_authorised_person_detail_contact: vendorDetail.ven_authorised_person_detail_contact,
@@ -254,7 +273,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
         if (res && res.status === 'ok') {
           let vendorDetail: any;
           vendorDetail = res.data[0];
-          this.finalOrderForm.patchValue({
+          this.finalReceiptForm.patchValue({
             ven_name: vendorDetail.ven_name,
             ven_address: vendorDetail.ven_address,
             ven_authorised_person_detail_contact: vendorDetail.ven_authorised_person_detail_contact,
@@ -281,10 +300,10 @@ export class CreatePurchaseOrderComponent implements OnInit {
         }
       };
       this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
-      this.finalSubmitArray['pm_intended_use'] = '';
-      this.finalSubmitArray['pm_source'] = 'PO';
-      this.finalSubmitArray['pm_type'] = 'PO';
-      if (this.pm_type === 'PR') {
+      this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
+      this.finalSubmitArray['pm_source'] = this.finalReceiptForm.value.source;
+      this.finalSubmitArray['pm_type'] = 'GR';
+      if (this.pm_type === 'PO') {
         this.finalSubmitArray['pm_created'] = {
           created_by: Number(this.currentUser.login_id),
           created_by_name: this.currentUser.full_name,
@@ -302,41 +321,74 @@ export class CreatePurchaseOrderComponent implements OnInit {
         update_date: ''
       }
       this.finalSubmitArray['pm_vendor'] = {
-        ven_id: Number(this.finalOrderForm.value.ven_id),
-        ven_name: this.finalOrderForm.value.ven_name
+        ven_id: Number(this.finalReceiptForm.value.ven_id),
+        ven_name: this.finalReceiptForm.value.ven_name
       }
       this.finalSubmitArray['pm_status'] = 'pending';
       this.finalSubmitArray['pm_session'] = this.session.ses_id;
-      if (this.pm_type === 'PO') {
+      this.finalSubmitArray['pm_details'] = {
+        purchase_order_id: this.finalReceiptForm.value.po_no,
+        invoice_no: this.finalReceiptForm.value.invoice_no,
+      }
+      console.log(this.finalSubmitArray);
+      if (this.pm_type === 'GR') {
         this.finalSubmitArray['pm_id'] = this.pm_id;
-        this.finalPoArray.push(this.finalSubmitArray);
-        this.inventory.updateRequistionMaster(this.finalPoArray).subscribe((result: any) => {
+        this.finalReceiptArray.push(this.finalSubmitArray);
+        this.inventory.updateRequistionMaster(this.finalReceiptArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Purchase Order Updated Successfylly', 'success');
+            this.commonService.showSuccessErrorMessage('Receipt Updated Successfylly', 'success');
             this.finalSubmitArray = [];
             this.finalRequistionArray = [];
             this.itemCodeArray = [];
             this.requistionArray = [];
-            this.finalPoArray = [];
+            this.finalReceiptArray = [];
           }
         });
       } else {
         this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
           if (result) {
-            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-              if (result) {
-                this.commonService.showSuccessErrorMessage('Purchase Order Generated Successfylly', 'success');
-                this.finalSubmitArray = [];
-                this.finalRequistionArray = [];
-                this.itemCodeArray = [];
-                this.requistionArray = [];
-              }
-            });
+            this.commonService.showSuccessErrorMessage('Receipt Generated Successfylly', 'success');
+            this.finalSubmitArray = [];
+            this.finalRequistionArray = [];
+            this.itemCodeArray = [];
+            this.requistionArray = [];
           } else {
-            this.commonService.showSuccessErrorMessage('Error While Generating Order', 'error');
+            this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
           }
         });
       }
+
+    }
+  }
+  getFilterLocation(event) {
+    var inputJson = { 'filter': event.target.value };
+    if (event.target.value && event.target.value.length > 2) {
+      this.toHighlight = event.target.value
+      this.isLoading = true;
+      this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
+        this.allLocationData = [];
+        if (result) {
+          this.isLoading = false;
+          for (var i = 0; i < result.length; i++) {
+            this.allLocationData.push(result[i]);
+          }
+        }
+      });
+    } else {
+      this.allLocationData = [];
+    }
+  }
+  setLocationId(locationDetails, i) {
+    this.createOrderForm.patchValue({
+      item_location: locationDetails.location_hierarchy,
+    });
+  }
+  getLocationName(location_id) {
+    const sindex = this.allLocationData.findIndex(f => Number(f.location_id) === Number(location_id));
+    if (sindex !== -1) {
+      return this.allLocationData[sindex].location_hierarchy;
+    } else {
+      return '-';
     }
   }
 }
