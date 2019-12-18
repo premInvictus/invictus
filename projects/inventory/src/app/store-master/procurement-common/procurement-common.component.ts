@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {CommonAPIService } from '../../_services/index';
+import { CommonAPIService, InventoryService } from '../../_services/index';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-procurement-common',
@@ -10,14 +9,32 @@ import {CommonAPIService } from '../../_services/index';
 })
 export class ProcurementCommonComponent implements OnInit {
   tabSelectedIndex = 0;
+  setBlankArray: any[] = [];
   constructor(
+    public inventory: InventoryService,
     private commonAPIService: CommonAPIService,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.commonAPIService.tabChange.subscribe((result: any) => {
+      if (result) {
+        this.tabSelectedIndex = result.currrentTab;
+      }
+    });
   }
   setTabValue(value) {
     this.tabSelectedIndex = value;
     this.commonAPIService.tabChange.next({ 'currrentTab': this.tabSelectedIndex });
+  }
+  redirectToPage(index) {
+    if (index === 'PO') {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
+    } else if (index === 'GR') {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.router.navigate(['../generate-receipt'], { relativeTo: this.route });
+    }
   }
 }
