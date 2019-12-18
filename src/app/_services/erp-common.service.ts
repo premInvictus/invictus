@@ -559,6 +559,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiInvUrl + '/stock-reconciliation/update', value);
 	}
 
+	getVendorLogDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/vendor/getAll', value);
+	}
+
 }
 
 
