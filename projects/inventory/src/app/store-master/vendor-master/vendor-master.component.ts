@@ -200,14 +200,14 @@ export class VendorMasterComponent implements OnInit {
           next.pm_item_details.forEach(element => {
             current.push({
               "srno": index+1,
-              "receipt_no": '', //next.item_code
-              "receipt_date": '',
-              "generated_by": '',
-              "item_code": element.item_code,
-              "item_name": element.item_name,
-              "quantity": element.item_quantity,
-              "item_units": element.item_units,
-              "description": element.item_desc,
+              "receipt_no": next.pm_id, //next.item_code
+              "receipt_date": next && next.pm_created ? next.pm_created.created_date : '',
+              "generated_by": next && next.pm_created ? next.pm_created.created_by_name : '',
+              "item_code": element.item_code ? element.item_code : '-', 
+              "item_name": element.item_name ? element.item_name : '-',
+              "quantity": element.item_quantity ? element.item_quantity : '-',
+              "item_units": element.item_units ? element.item_units : '',
+              "description": element.item_desc ? element.item_desc : '-',
              
             });
           });
@@ -216,6 +216,7 @@ export class VendorMasterComponent implements OnInit {
         }, []);
 
         this.VENDOR_LOG_LIST_ELEMENT = DATA;
+        console.log(this.VENDOR_LOG_LIST_ELEMENT);
         this.cacheSpan('srno', d => d.srno);
         this.cacheSpan('receipt_no', d => d.receipt_no);
         this.cacheSpan('receipt_date', d => d.receipt_date);

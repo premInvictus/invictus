@@ -328,7 +328,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Receipt Date</th>
                 <td mat-cell *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('receipt_date',i)"
                 [style.display]="getRowSpan('receipt_date', i) ? '' : 'none'">
-                  {{element?.receipt_date}}
+                  {{element?.receipt_date | date:'d-MMM-y'}}
                 </td>
               </ng-container>
               <ng-container matColumnDef="generated_by">
