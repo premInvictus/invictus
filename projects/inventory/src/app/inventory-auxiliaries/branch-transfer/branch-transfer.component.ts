@@ -483,6 +483,12 @@ export class BranchTransferComponent implements OnInit {
             };
             this.service.branchInsert(JSON).subscribe((res: any) => {
               if (res) {
+                this.service.updateMultiple({
+                  inv_item_details: this.item_det.inv_item_details
+                }).subscribe((res: any) => {
+                  if (res) {
+                  }
+                });
               }
             });
             this.goBack();
