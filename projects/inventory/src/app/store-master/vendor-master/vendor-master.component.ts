@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { AddVendorDialog } from './add-vendor-dialog/add-vendor-dialog.component';
+import { InvItemDetailsComponent } from '../../inventory-shared/inv-item-details/inv-item-details.component';
 
 @Component({
   selector: 'app-vendor-master',
@@ -22,10 +23,16 @@ export class VendorMasterComponent implements OnInit {
   VENDOR_LIST_ELEMENT: VendorListElement[] = [];
   vendorlistdataSource = new MatTableDataSource<VendorListElement>(this.VENDOR_LIST_ELEMENT);
   displayedVendorListColumns: string[] = ['srno', 'ven_id','ven_name' , 'ven_category', 'ven_address', 'ven_contact', 'ven_email','action'];
+
+  VENDOR_LOG_LIST_ELEMENT: VendorLogListElement[] = [];
+  vendorLogListDataSource = new MatTableDataSource<VendorLogListElement>(this.VENDOR_LOG_LIST_ELEMENT);
+  displayedVendorLogListColumns: string[] = ['srno', 'receipt_no','receipt_date' , 'generated_by', 'item_code', 'item_name', 'quantity','description'];
+
+
   vendorDetailFlag = false;
   currentVendorDetail:any;
   pageEvent: any;
-
+  spans: any[] = [];
   constructor(public dialog: MatDialog, 
     private fbuild: FormBuilder,
     private common: CommonAPIService, 
@@ -166,9 +173,99 @@ export class VendorMasterComponent implements OnInit {
 		this.vendorlistdataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  applyFilterVendorLog(filterValue: string) {
+    this.vendorLogListDataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   showVendorDetail(element) {
      this.vendorDetailFlag = !this.vendorDetailFlag;
      this.currentVendorDetail = element;
+     this.getVendorLogDetails();
+  }
+
+  getVendorLogDetails() {
+    var inputJson = {
+      'pm_vendor.ven_id' : 1
+    }
+    this.erpCommonService.getVendorLogDetail(inputJson).subscribe((result:any) => {
+      let element: any = {};
+      let recordArray = [];
+      this.VENDOR_LOG_LIST_ELEMENT = [];
+      this.vendorLogListDataSource = new MatTableDataSource<VendorLogListElement>(this.VENDOR_LOG_LIST_ELEMENT);
+      if (result && result.length > 0) {
+        let pos = 1;
+				this.vendorLogListDataSource = recordArray = result;
+        const DATA = recordArray.reduce((current, next, index) => {
+          next.pm_item_details.forEach(element => {
+            current.push({
+              "srno": index+1,
+              "receipt_no": '', //next.item_code
+              "receipt_date": '',
+              "generated_by": '',
+              "item_code": element.item_code,
+              "item_name": element.item_name,
+              "quantity": element.item_quantity,
+              "item_units": element.item_units,
+              "description": element.item_desc,
+             
+            });
+          });
+         
+          return current;
+        }, []);
+
+        this.VENDOR_LOG_LIST_ELEMENT = DATA;
+        this.cacheSpan('srno', d => d.srno);
+        this.cacheSpan('receipt_no', d => d.receipt_no);
+        this.cacheSpan('receipt_date', d => d.receipt_date);
+        this.cacheSpan('generated_by', d => d.generated_by)
+        this.vendorLogListDataSource = new MatTableDataSource<VendorLogListElement>(this.VENDOR_LOG_LIST_ELEMENT);
+        this.vendorLogListDataSource.paginator = this.paginator;
+        if (this.sort) {
+          this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          this.vendorLogListDataSource.sort = this.sort;
+        }
+        
+			} 
+    });
+  }
+
+  cacheSpan(key, accessor) {
+    for (let i = 0; i < this.VENDOR_LOG_LIST_ELEMENT.length;) {
+      let currentValue = accessor(this.VENDOR_LOG_LIST_ELEMENT[i]);
+      let count = 1;
+      for (let j = i + 1; j < this.VENDOR_LOG_LIST_ELEMENT.length; j++) {
+        if (currentValue != accessor(this.VENDOR_LOG_LIST_ELEMENT[j])) {
+          break;
+        }
+        count++;
+      }
+      if (!this.spans[i]) {
+        this.spans[i] = {};
+      }
+      this.spans[i][key] = count;
+      i += count;
+    }
+  }
+
+  getRowSpan(col, index) {
+    return this.spans[index] && this.spans[index][col];
+  }
+
+  openItemDetailsModal(item_code) {
+		const item: any = {};
+		item.item_code = item_code;
+		const dialogRef = this.dialog.open(InvItemDetailsComponent, {
+			width: '50%',
+			height: '500',
+			data: item
+		});
+		dialogRef.afterClosed().subscribe(result => {
+		});
+  }
+  
+  backToVendorList() {
+    this.vendorDetailFlag = false;
   }
 
 }
@@ -182,8 +279,18 @@ export interface VendorListElement {
   ven_address:string;
   ven_contact:string;
   ven_email:string;
- 
+}
 
+
+export interface VendorLogListElement {
+  srno : number;
+  receipt_no : number;
+  receipt_date  : string;
+  generated_by : string;
+  item_code : number;
+  item_name : string;
+  quantity : string;
+  description : string;
 }
 
 

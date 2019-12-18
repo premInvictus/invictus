@@ -40,6 +40,7 @@ import {PopoverModule} from 'ngx-bootstrap/popover';
 import { InvItemDetailsComponent } from './inv-item-details/inv-item-details.component';
 import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
 import { AddLocationDialog } from './location-search-and-add/add-location-dialog/add-location-dialog.component';
+import { NgxBarcodeModule } from 'ngx-barcode';
 import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
 import { MessageModalComponent } from '../store-master/message-modal/message-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
@@ -60,6 +61,7 @@ export const MY_FORMATS = {
 		CommonModule,
 		CommonModule,
 		FormsModule,
+		NgxBarcodeModule,
 		ReactiveFormsModule,
 		MatSlideToggleModule,
 		MatButtonModule,
@@ -139,6 +141,7 @@ export const MY_FORMATS = {
 		FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
+		NgxBarcodeModule,
 		MatButtonModule,
 		MatFormFieldModule,
 		MatRadioModule,
