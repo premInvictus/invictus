@@ -80,7 +80,7 @@ export class GenerateReceiptComponent implements OnInit {
           } else {
             this.itemCodeArray.push({
               item_code: dety.item_code,
-            });
+            }); 
             this.finalRequistionArray.push(dety);
           }
           // }

@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="col-6 ">
+        <div class="top-card-title">
+          <span class="font-size-24 font-medium">Procurement Master</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+        <mat-tab label="Purchase Requisition">
+          <app-purchase-requisition></app-purchase-requisition>
+        </mat-tab>
+        <mat-tab label="Purchase Order">
+          <app-purchase-order></app-purchase-order>
+        </mat-tab>
+        <mat-tab label="Goods Receipt">
+          <app-goods-receipt></app-goods-receipt>
+        </mat-tab>
+        <mat-tab label="Branch Transfer">
+          <!-- <app-purchase-requisition></app-purchase-requisition> -->
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card>
+  </div>
+</div>
