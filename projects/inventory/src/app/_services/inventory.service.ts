@@ -96,6 +96,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/branch-transfer/insert', value);
   }
+  branchInsert(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/branchInsert', value);
+  }
   generatePdfOfBarcode(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/generatePdfOfBarcode', value);
