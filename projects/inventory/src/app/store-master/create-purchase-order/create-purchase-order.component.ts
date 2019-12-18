@@ -19,6 +19,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
   createOrderForm: FormGroup;
   finalOrderForm: FormGroup;
   requistionArray: any[] = [];
+  setBlankArray: any[] = [];
   finalSubmitArray: any = {};
   finalPoArray: any[] = [];
   itemArray: any[] = [];
@@ -80,7 +81,6 @@ export class CreatePurchaseOrderComponent implements OnInit {
       ven_id: this.ven_id,
     });
     this.vendor(this.ven_id);
-    console.log('dddd', this.ven_id);
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -204,6 +204,15 @@ export class CreatePurchaseOrderComponent implements OnInit {
   finalCancel() {
     this.finalRequistionArray = [];
     this.resetForm();
+    if (this.requistionArray.length > 0) {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+    } else {
+      this.inventory.setrequisitionArray(this.setBlankArray);
+      this.commonService.tabChange.next({ 'currrentTab': 1 });
+      this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+    }
+
   }
   //  Open Final Submit Modal function
   openMessageModal() {

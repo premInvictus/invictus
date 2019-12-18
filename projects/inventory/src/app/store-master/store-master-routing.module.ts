@@ -12,7 +12,7 @@ import { GoodsReceiptComponent } from './goods-receipt/goods-receipt.component';
 import { ProcurementCommonComponent } from './procurement-common/procurement-common.component';
 const routes: Routes = [
 	{ path: 'record-master', component: RecordMasterComponent },
-	{ path: 'procurement-common', component: ProcurementMasterComponent },
+	{ path: 'create-procurement-master', component: ProcurementMasterComponent },
 	{ path: 'vendor-master', component: VendorMasterComponent },
 	{ path: 'purchase-requisition', component: PurchaseRequisitionComponent },
 	{ path: 'create-purchase-order', component: CreatePurchaseOrderComponent },
