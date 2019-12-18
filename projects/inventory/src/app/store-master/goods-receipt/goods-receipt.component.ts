@@ -1,17 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Element } from './purchase-order.model';
+import { Element } from './goods-receipt.model';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
+
 @Component({
-  selector: 'app-purchase-order',
-  templateUrl: './purchase-order.component.html',
-  styleUrls: ['./purchase-order.component.css']
+  selector: 'app-goods-receipt',
+  templateUrl: './goods-receipt.component.html',
+  styleUrls: ['./goods-receipt.component.css']
 })
-export class PurchaseOrderComponent implements OnInit {
+export class GoodsReceiptComponent implements OnInit {
   orderArray: any[] = [];
   setArray: any[] = [];
   itemCode: any;
@@ -28,7 +29,7 @@ export class PurchaseOrderComponent implements OnInit {
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
   displayedColumns: string[] = ['position', 'po_number', 'po_date', 'created_by', 'vendor_id', 'vendor_name',
-    'vendor_category', 'action'];
+    'vendor_category', 'vendor_contact', 'vendor_email', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -53,7 +54,7 @@ export class PurchaseOrderComponent implements OnInit {
   getAllOrderMaster() {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-    this.inventory.getOrderMaster({ 'pm_type': "PO" }).subscribe((result: any) => {
+    this.inventory.getOrderMaster({ 'pm_type': "GR" }).subscribe((result: any) => {
       if (result) {
         this.orderArray = result;
         let ind = 0;
@@ -66,6 +67,8 @@ export class PurchaseOrderComponent implements OnInit {
             "vendor_id": item.pm_vendor ? item.pm_vendor.ven_id : '-',
             "vendor_name": item.pm_vendor ? item.pm_vendor.ven_name : '-',
             "vendor_category": item.pm_vendor ? item.pm_vendor.ven_category : '-',
+            "vendor_contact": item.pm_vendor ? item.pm_vendor.ven_contact : '-',
+            "vendor_email": item.pm_vendor ? item.pm_vendor.ven_email : '-',
             "action": item.pm_id
           });
           ind++;
@@ -86,10 +89,6 @@ export class PurchaseOrderComponent implements OnInit {
       } else if (action === 'edit') {
         this.setArray.push(this.orderArray[sindex]);
         this.inventory.setrequisitionArray(this.setArray);
-        this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
-      } else if (action === 'receipt') {
-        this.setArray.push(this.orderArray[sindex]);
-        this.inventory.setrequisitionArray(this.setArray);
         this.router.navigate(['../generate-receipt'], { relativeTo: this.route });
       }
     }
@@ -101,3 +100,4 @@ export class PurchaseOrderComponent implements OnInit {
     }
   }
 }
+
