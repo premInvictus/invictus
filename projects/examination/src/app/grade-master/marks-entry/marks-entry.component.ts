@@ -26,7 +26,7 @@ export class MarksEntryComponent implements OnInit {
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
   classterm: any;
-  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };  
+  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   editFlag = false;
   ngOnInit() {
     this.buildForm();
@@ -121,19 +121,19 @@ export class MarksEntryComponent implements OnInit {
           this.subexamArray = result.data[0].exam_sub_exam_max_marks;
           console.log(this.subexamArray);
           const subexam_id_arr: any[] = [];
-          for(let item of this.subexamArray) {
+          for (let item of this.subexamArray) {
             subexam_id_arr.push(item.se_id);
           }
           const param: any = {};
           param.ssm_class_id = this.paramform.value.eme_class_id;
-          param.ssm_exam_id =this.paramform.value.eme_exam_id;
+          param.ssm_exam_id = this.paramform.value.eme_exam_id;
           param.ssm_se_id = subexam_id_arr;
-          param.ssm_sub_id =this.paramform.value.eme_sub_id;
+          param.ssm_sub_id = this.paramform.value.eme_sub_id;
           this.examService.getSubjectSubexamMapping(param).subscribe((result: any) => {
-            if(result && result.status === 'ok') {
-              for(let item of result.data) {
-                for(let item1 of this.subexamArray) {
-                  if(item.ssm_se_id === item1.se_id) {
+            if (result && result.status === 'ok') {
+              for (let item of result.data) {
+                for (let item1 of this.subexamArray) {
+                  if (item.ssm_se_id === item1.se_id) {
                     item1.exam_max_marks = item.ssm_sub_mark;
                   }
                 }
@@ -195,21 +195,53 @@ export class MarksEntryComponent implements OnInit {
       if (result && result.status === 'ok') {
         this.subSubjectArray = result.data;
         const temp = result.data;
+        let scholastic_subject: any[] = [];
+        let coscholastic_subject: any[] = [];
         if (temp.length > 0) {
+
           temp.forEach(element => {
-            if (element.sub_parent_id && element.sub_parent_id === '0') {
-              const childSub: any[] = [];
-              for (const item of temp) {
-                if (element.sub_id === item.sub_parent_id) {
-                  childSub.push(item);
+            // if (element.sub_parent_id && element.sub_parent_id === '0') {
+            //   const childSub: any[] = [];
+            //   for (const item of temp) {
+            //     if (element.sub_id === item.sub_parent_id) {
+            //       childSub.push(item);
+            //     }
+            //   }
+            //   element.childSub = childSub;
+            //   this.subjectArray.push(element);
+            // }
+            if (element.sub_type === '1') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
                 }
-              }
-              element.childSub = childSub;
-              this.subjectArray.push(element);
+                element.childSub = childSub;
+                scholastic_subject.push(element);
+              }                           
+            } else if (element.sub_type === '2') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                coscholastic_subject.push(element);
+              }              
             }
           });
         }
-        console.log(this.subjectArray);
+
+        for(var i=0; i<scholastic_subject.length;i++) {
+          this.subjectArray.push(scholastic_subject[i]);
+        }
+        for(var i=0; i<coscholastic_subject.length;i++) {
+          this.subjectArray.push(coscholastic_subject[i]);
+        }
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -278,7 +310,7 @@ export class MarksEntryComponent implements OnInit {
       this.tableDivFlag = false;
     }
   }
-  
+
   getSubjectName() {
     for (const item of this.subSubjectArray) {
       if (item.sub_id === this.paramform.value.eme_sub_id) {
@@ -341,30 +373,30 @@ export class MarksEntryComponent implements OnInit {
       return '';
     }
   }
-  cancelForm(){
+  cancelForm() {
     this.editFlag = false;
     this.displayData();
   }
   updateForm(status = '0', savelog = '0') {
     this.editFlag = false;
     console.log('this.marksInputArray.length', this.marksInputArray.length);
-      if (this.marksInputArray.length === this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
-        if (this.paramform.valid && this.marksInputArray.length > 0) {
-          const param: any = {};
-          param.examEntry = this.paramform.value;
-          param.examEntryMapping = this.marksInputArray;
-          param.examEntryStatus = status;
-          param.edit = '1';
-          param.savelog = savelog;
-          this.examService.addMarksEntry(param).subscribe((result: any) => {
-            if (result && result.status === 'ok') {
-              this.displayData();
-            }
-          })
-        }
-      } else {
-        this.commonAPIService.showSuccessErrorMessage('Still few student has empty mark!', 'error');
+    if (this.marksInputArray.length === this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
+      if (this.paramform.valid && this.marksInputArray.length > 0) {
+        const param: any = {};
+        param.examEntry = this.paramform.value;
+        param.examEntryMapping = this.marksInputArray;
+        param.examEntryStatus = status;
+        param.edit = '1';
+        param.savelog = savelog;
+        this.examService.addMarksEntry(param).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+            this.displayData();
+          }
+        })
       }
+    } else {
+      this.commonAPIService.showSuccessErrorMessage('Still few student has empty mark!', 'error');
+    }
   }
 
   saveForm(status = '0', savelog = '0') {
@@ -437,7 +469,7 @@ export class MarksEntryComponent implements OnInit {
   }
   checkEditable(es_id, eme_review_status) {
     console.log('this.responseMarksArray', this.responseMarksArray.length);
-    if(this.editFlag) {
+    if (this.editFlag) {
       return true;
     } else {
       if (this.responseMarksArray.length > 0) {

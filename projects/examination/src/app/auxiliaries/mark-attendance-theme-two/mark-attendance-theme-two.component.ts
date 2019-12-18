@@ -264,7 +264,11 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     this.attendanceThemeTwoForm.reset();
     this.formgroupArray = [];
     this.ELEMENT_DATA = [];
+    this.defaultFlag = false;
     this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.attendanceThemeTwoForm.patchValue({
+      'syl_board_id': 1
+    });
   }
 
 }

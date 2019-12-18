@@ -18,8 +18,7 @@
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Section</mat-label>
-                            <mat-select placeholder="Section" formControlName="eme_sec_id"
-                                 required>
+                            <mat-select placeholder="Section" formControlName="eme_sec_id" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                                 </mat-option>
@@ -30,14 +29,30 @@
                             <mat-select placeholder="Subject" formControlName="eme_sub_id"
                                 (selectionChange)="getExamDetails();resetTableDiv();getRollNoUser()" required>
                                 <mat-option value="">Please select</mat-option>
-                                <ng-container *ngFor="let item of subjectArray">
-                                    <mat-option *ngIf="item.childSub.length == 0" [value]="item.sub_id">
-                                        {{item.sub_name}}</mat-option>
-                                    <mat-optgroup *ngIf="item.childSub.length != 0" [label]="item.sub_name">
-                                        <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id">
-                                            {{item1.sub_name}}</mat-option>
-                                    </mat-optgroup>
-                                </ng-container>
+                                <mat-optgroup label="Scholastic">
+                                    <ng-container *ngFor="let item of subjectArray">
+                                        <mat-optgroup *ngIf="item.sub_type == '1' && item.childSub.length != 0"
+                                            [label]="item.sub_name" class="option-group-parent-type">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                                {{item1.sub_name}}</mat-option>
+                                        </mat-optgroup>
+                                        <mat-option *ngIf="item.sub_type == '1' && item.childSub.length == 0"
+                                            [value]="item.sub_id" class="option-group-child">
+                                            {{item.sub_name}}</mat-option>
+                                    </ng-container>
+                                </mat-optgroup>
+                                <mat-optgroup label="Co-Scholastic">
+                                    <ng-container *ngFor="let item of subjectArray">
+                                        <mat-optgroup *ngIf="item.sub_type == '2' && item.childSub.length != 0"
+                                            [label]="item.sub_name" class="option-group-parent-type">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                                {{item1.sub_name}}</mat-option>
+                                        </mat-optgroup>
+                                        <mat-option *ngIf="item.sub_type == '2' && item.childSub.length == 0"
+                                            [value]="item.sub_id" class="option-group-child">
+                                            {{item.sub_name}}</mat-option>
+                                    </ng-container>
+                                </mat-optgroup>
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
@@ -141,14 +156,19 @@
                 <br>
                 <div class="row margin-top-25">
                     <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
-                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green" (click)="saveForm()">Save</button>
-                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                            (click)="saveForm('1','1')">Save & Submit</button>
-                        <button *ngIf="isAnyoneEditable('0') && isExistUserAccessMenu('475')" mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
+                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green"
+                            (click)="saveForm()">Save</button>
+                        <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green btn-spacer"
+                            style="width: 150px !important" (click)="saveForm('1','1')">Save & Submit</button>
+                        <button *ngIf="isAnyoneEditable('0') && isExistUserAccessMenu('475')" mat-button
+                            class="btn-success-green btn-spacer" style="width: 150px !important"
                             (click)="saveForm('4','1')">Final Publish</button>
-                        <button *ngIf="!editFlag && isExistUserAccessMenu('474')" mat-button class="btn-success-green" (click)="enableEdit()">Update</button>
-                        <button *ngIf="editFlag" mat-button class="btn-success-green" (click)="updateForm()">Save</button>
-                        <button *ngIf="editFlag" mat-button class="btn-success-green btn-spacer" (click)="cancelForm()">Cancel</button>
+                        <button *ngIf="!editFlag && isExistUserAccessMenu('474')" mat-button class="btn-success-green"
+                            (click)="enableEdit()">Update</button>
+                        <button *ngIf="editFlag" mat-button class="btn-success-green"
+                            (click)="updateForm()">Save</button>
+                        <button *ngIf="editFlag" mat-button class="btn-success-green btn-spacer"
+                            (click)="cancelForm()">Cancel</button>
                     </div>
                 </div>
             </div>

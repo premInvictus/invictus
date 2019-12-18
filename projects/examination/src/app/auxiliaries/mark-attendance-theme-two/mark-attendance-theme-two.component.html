@@ -9,22 +9,23 @@
         </div>
         <div class="col-6 text-right">
           <form [formGroup]="attendanceThemeTwoForm" novalidate>
-            <div class="top-card-title-form">              
+            <div class="top-card-title-form">
               <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                 appearance="outline">
                 <mat-label>Class</mat-label>
-                <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass();getClassTerm();" required
-                  placeholder="Select Class">
+                <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass();getClassTerm();"
+                  required placeholder="Select Class">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                     {{item.class_name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-              <mat-form-field class="form-field-150 margin-left-10" appearance="outline" *ngIf="attendanceThemeTwoForm.value.syl_board_id === 1">
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline"
+                *ngIf="attendanceThemeTwoForm.value.syl_board_id === 1">
                 <mat-label>Section</mat-label>
-                <mat-select formControlName="syl_section_id" 
-                  placeholder="Select Section" (selectionChange)="displayData();">
+                <mat-select formControlName="syl_section_id" placeholder="Select Section"
+                  (selectionChange)="displayData();">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                     {{item.sec_name}}
@@ -33,7 +34,8 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                 <mat-label>Term</mat-label>
-                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="displayData();" required>
+                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="displayData();"
+                  required>
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of termsArray" [value]="item?.id">{{item.name}}</mat-option>
                 </mat-select>
@@ -45,53 +47,71 @@
     </mat-card>
   </div>
 </div>
-<div class="row ">
+<div class="row " *ngIf="ELEMENT_DATA.length > 0">
   <div class="col-12">
     <mat-card>
-      <div class ="table-center">
-      <table mat-table [dataSource]="termAttendanceDataSource" class="table-100 text-center" *ngIf="defaultFlag" id="mark_attendance_theme_two">
+      <div class="table-center">
+        <table mat-table [dataSource]="termAttendanceDataSource" class="table-100 text-center"
+          id="mark_attendance_theme_two">
 
-        <ng-container matColumnDef="sr_no">
-          <th mat-header-cell *matHeaderCellDef> Sr No. </th>
-          <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
-        </ng-container>
+          <ng-container matColumnDef="sr_no">
+            <th mat-header-cell *matHeaderCellDef> Sr No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
+          </ng-container>
 
-        <ng-container matColumnDef="au_admission_no">
-          <th mat-header-cell *matHeaderCellDef> Admission No. </th>
-          <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
-        </ng-container>
+          <ng-container matColumnDef="au_admission_no">
+            <th mat-header-cell *matHeaderCellDef> Admission No. </th>
+            <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
+          </ng-container>
 
-        <ng-container matColumnDef="au_full_name">
-          <th mat-header-cell *matHeaderCellDef> Student Name </th>
-          <td mat-cell *matCellDef="let element" class="text-left margin-left-10"> {{element.au_full_name}} </td>
-        </ng-container>
+          <ng-container matColumnDef="au_full_name">
+            <th mat-header-cell *matHeaderCellDef> Student Name </th>
+            <td mat-cell *matCellDef="let element" class="text-left margin-left-10"> {{element.au_full_name}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="overall_attendance">
-          <th mat-header-cell *matHeaderCellDef style="width:20%"> Overall Attendance </th>
-          <td mat-cell *matCellDef="let element">
-            <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-              <input matInput placeholder="Enter Overall Attendance" (change)="onTextChange($event)" type="text" value="{{element.overall_attendance}}" required
-                formControlName="overall_attendance">
-            </form>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="overall_attendance">
+            <th mat-header-cell *matHeaderCellDef style="width:20%"> Overall Attendance </th>
+            <td mat-cell *matCellDef="let element">
+              <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+                <input matInput placeholder="Enter Overall Attendance" (change)="onTextChange($event)" type="text"
+                  value="{{element.overall_attendance}}" required formControlName="overall_attendance">
+              </form>
+            </td>
+          </ng-container>
 
-        <ng-container matColumnDef="present_days">
-          <th mat-header-cell *matHeaderCellDef style="width:20%"> Present Days </th>
-          <td mat-cell *matCellDef="let element">
-            <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-              <input type="number" matInput placeholder="Enter Present Days" (change)="onTextChange($event)" type="text" value="{{element.present_days}}" required
-                formControlName="present_days">
-            </form>
-          </td>
-        </ng-container>
+          <ng-container matColumnDef="present_days">
+            <th mat-header-cell *matHeaderCellDef style="width:20%"> Present Days </th>
+            <td mat-cell *matCellDef="let element">
+              <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+                <input type="number" matInput placeholder="Enter Present Days" (change)="onTextChange($event)"
+                  type="text" value="{{element.present_days}}" required formControlName="present_days">
+              </form>
+            </td>
+          </ng-container>
 
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-      <table class="table-100">
-        <tbody *ngIf="finalDivFlag">
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
+          <div class="col-12 text-center">
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()"
+              *ngIf="!termDataFlag">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="finalUpdate()"
+              *ngIf="termDataFlag">Update</button>
+            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="ELEMENT_DATA.length === 0">
+  <div class="col-12">
+    <mat-card>
+      <table class="table-100" >
+        <tbody>
           <tr class="text-center">
             <td colspan="12">
               <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
@@ -103,14 +123,6 @@
           </tr>
         </tbody>
       </table>
-      <div class="row margin-top-20">
-        <div class="col-12 text-center">
-          <button mat-raised-button class="btn-success-green" (click)="finalSubmit()" *ngIf="!termDataFlag">Submit</button>
-          <button mat-raised-button class="btn-success-green" (click)="finalUpdate()" *ngIf="termDataFlag">Update</button>
-          <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
-        </div>
-      </div>
-    </div>
     </mat-card>
   </div>
-</div> 
+</div>
