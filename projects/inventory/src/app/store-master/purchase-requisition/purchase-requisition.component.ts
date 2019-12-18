@@ -99,7 +99,7 @@ export class PurchaseRequisitionComponent implements OnInit {
               }
             });
             current.push({
-              position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code },
+              position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code, 'item_status': item_status },
               item_code: element.item_code,
               item_name: element.item_name,
               item_status: item_status,
@@ -108,8 +108,7 @@ export class PurchaseRequisitionComponent implements OnInit {
               pm_id: next.pm_id,
               created_date: next.pm_created.created_date,
               created_by: next.pm_created.created_by_name,
-
-              action: { 'pm_id': next.pm_id, 'item_code': element.item_code }
+              action: { 'pm_id': next.pm_id, 'item_code': element.item_code, 'item_status': item_status }
 
             });
             i++;
@@ -216,8 +215,8 @@ export class PurchaseRequisitionComponent implements OnInit {
   isSelectedP(count) {
     return this.toBePromotedList.findIndex(f => f.count === count) !== -1 ? true : false;
   }
-  isDisabledP(item_code) {
-    //return this.promoteStudentListArray.findIndex(f => f.au_login_id === login_id && f.pmap_status === '0') !== -1 ? true : false;
+  isDisabledP(count) {
+    //return this.toBePromotedList.findIndex(f => f.count === count) && f.pmap_status === '0') !== -1 ? true : false;
   }
   checkAllPromotionList() {
     this.toBePromotedList = [];
