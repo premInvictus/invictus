@@ -1,20 +1,8 @@
-<div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="col-6 ">
-        <div class="top-card-title">
-          <span class="font-size-24 font-medium">Purchase Requisition</span>
-        </div>
-      </div>
-    </mat-card>
-  </div>
-</div>
 <div class="row" [hidden]="!tableDivFlag">
   <div class="col-12">
-    <mat-card>
-      <div class="row">
-        <div class="col-12">
-          <!-- <div class="row">
+    <div class="row">
+      <div class="col-12">
+        <!-- <div class="row">
               <div class="col-6">
                 <mat-form-field appearance="legacy">
                   <input matInput (keyup)="applyFilter($event.target.value)">
@@ -22,192 +10,111 @@
                 </mat-form-field>
               </div>
             </div> -->
-          <div style="margin-top:15px !important" class="col-12 text-right">
-            <span *ngIf="toBePromotedList.length > 0">
-              <i class="fas fa-check" (click)="overallSubmit('approved')" style="cursor:pointer"
-                title="Approved"></i>&nbsp;
-              <i class="fas fa-times" (click)="overallSubmit('reject')" style="cursor:pointer"
-                title="Decline"></i>&nbsp;
-              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('hold')"
-                style="cursor:pointer" title="Hold"></i>
-              <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('esclate')"
-                style="cursor:pointer" title="Esclate"></i>
-            </span>
-          </div>
-          <div class="row remove-top-margin">
-            <div class="col-12">
-              <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag">
+        <div style="margin-top:15px !important" class="col-12 text-right">
+          <span *ngIf="toBePromotedList.length > 0">
+            <i class="fas fa-check" (click)="overallSubmit('approved')" style="cursor:pointer"
+              title="Approved"></i>&nbsp;
+            <i class="fas fa-times" (click)="overallSubmit('reject')" style="cursor:pointer" title="Decline"></i>&nbsp;
+            <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('hold')"
+              style="cursor:pointer" title="Hold"></i>
+            <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="overallSubmit('esclate')"
+              style="cursor:pointer" title="Esclate"></i>
+          </span>
+        </div>
+        <div class="row remove-top-margin">
+          <div class="col-12">
+            <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="tabledataFlag">
 
-                <ng-container matColumnDef="position">
-                  <th mat-header-cell *matHeaderCellDef>
-                    <span class="text-center">
-                      <mat-checkbox (change)="$event ? checkAllPromotionList() : null" [checked]="allselectedP">
-                      </mat-checkbox>
-                    </span>
-                  </th>
-                  <td mat-cell *matCellDef="let element">
-                    <span class="text-center">
-                      <mat-checkbox [value]="element.position.count"
-                        (change)="insertIntoToBePromotedList($event,element.item_code,element.pm_id)"
-                        [checked]="isSelectedP(element.position.count)" [disabled]="isDisabledP(element.count)">
-                      </mat-checkbox>
-                    </span>
-                  </td>
-                </ng-container>
-                <!-- <ng-container matColumnDef="position">
+              <ng-container matColumnDef="position">
+                <th mat-header-cell *matHeaderCellDef>
+                  <span class="text-center">
+                    <mat-checkbox (change)="$event ? checkAllPromotionList() : null" [checked]="allselectedP">
+                    </mat-checkbox>
+                  </span>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                  <span class="text-center">
+                    <mat-checkbox [value]="element.position.count"
+                      (change)="insertIntoToBePromotedList($event,element.item_code,element.pm_id)"
+                      [checked]="isSelectedP(element.position.count)" [disabled]="isDisabledP(element.count)">
+                    </mat-checkbox>
+                  </span>
+                </td>
+              </ng-container>
+              <!-- <ng-container matColumnDef="position">
                   <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
                   <td mat-cell *matCellDef="let element;"> {{element.position}}</td>
                 </ng-container> -->
 
-                <!-- Name Column -->
-                <ng-container matColumnDef="item_code">
-                  <th mat-header-cell *matHeaderCellDef> Item Code </th>
-                  <td mat-cell *matCellDef="let element;"> {{element.item_code}} </td>
-                </ng-container>
+              <!-- Name Column -->
+              <ng-container matColumnDef="item_code">
+                <th mat-header-cell *matHeaderCellDef> Item Code </th>
+                <td mat-cell *matCellDef="let element;"> {{element.item_code}} </td>
+              </ng-container>
 
-                <!-- Weight Column -->
-                <ng-container matColumnDef="item_name">
-                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Name </th>
-                  <td mat-cell class="cell-left" *matCellDef="let element;">
-                    {{element.item_name | capitalize}} </td>
-                </ng-container>
+              <!-- Weight Column -->
+              <ng-container matColumnDef="item_name">
+                <th mat-header-cell *matHeaderCellDef class="cell-left"> Item Name </th>
+                <td mat-cell class="cell-left" *matCellDef="let element;">
+                  {{element.item_name | capitalize}} </td>
+              </ng-container>
 
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="item_quantity">
-                  <th mat-header-cell *matHeaderCellDef class="cell-left"> Quantity </th>
-                  <td mat-cell class="cell-left" *matCellDef="let element;">
-                    {{element.item_quantity}} </td>
-                </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="item_quantity">
+                <th mat-header-cell *matHeaderCellDef class="cell-left"> Quantity </th>
+                <td mat-cell class="cell-left" *matCellDef="let element;">
+                  {{element.item_quantity}} </td>
+              </ng-container>
 
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="pm_intended_use">
-                  <th mat-header-cell *matHeaderCellDef> Intended Use </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_intended_use',i)"
-                    [style.display]="getRowSpan('pm_intended_use', i) ? '' : 'none'"> {{element.pm_intended_use }} </td>
-                </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="pm_intended_use">
+                <th mat-header-cell *matHeaderCellDef> Intended Use </th>
+                <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_intended_use',i)"
+                  [style.display]="getRowSpan('pm_intended_use', i) ? '' : 'none'"> {{element.pm_intended_use }} </td>
+              </ng-container>
 
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="pm_id">
-                  <th mat-header-cell *matHeaderCellDef> Request Id </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_id',i)"
-                    [style.display]="getRowSpan('pm_id', i) ? '' : 'none'"> {{element.pm_id }} </td>
-                </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="pm_id">
+                <th mat-header-cell *matHeaderCellDef> Request Id </th>
+                <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('pm_id',i)"
+                  [style.display]="getRowSpan('pm_id', i) ? '' : 'none'"> {{element.pm_id }} </td>
+              </ng-container>
 
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="created_date">
-                  <th mat-header-cell *matHeaderCellDef> Request date </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('created_date',i)"
-                    [style.display]="getRowSpan('created_date', i) ? '' : 'none'"> {{element.created_date }} </td>
-                </ng-container>
-                <!-- Symbol Column -->
-                <ng-container matColumnDef="created_by">
-                  <th mat-header-cell *matHeaderCellDef> Request By </th>
-                  <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('created_by',i)"
-                    [style.display]="getRowSpan('created_by', i) ? '' : 'none'"> {{element.created_by }} </td>
-                </ng-container>
-                <ng-container matColumnDef="action">
-                  <th mat-header-cell *matHeaderCellDef> Request By </th>
-                  <td mat-cell *matCellDef="let element;let i = index ">
-                    <i class="fas fa-check" (click)="approvedList(element.pm_id,element.item_code,'approved')"
-                      style="cursor:pointer" title="Approved"></i>&nbsp;
-                    <i class="fas fa-times" (click)="approvedList(element.pm_id,element.item_code,'reject')"
-                      style="cursor:pointer" title="Decline"></i>&nbsp;
-                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                      (click)="approvedList(element.pm_id,element.item_code,'hold')" style="cursor:pointer"
-                      title="Hold"></i>
-                    <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                      (click)="approvedList(element.pm_id,element.item_code,'esclate')" style="cursor:pointer"
-                      title="Esclate"></i>
-                  </td>
-                </ng-container>
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-              </table>
-              <mat-paginator #paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-                showFirstLastButtons (page)="changePage($event)"></mat-paginator>
-            </div>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="created_date">
+                <th mat-header-cell *matHeaderCellDef> Request date </th>
+                <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('created_date',i)"
+                  [style.display]="getRowSpan('created_date', i) ? '' : 'none'"> {{element.created_date }} </td>
+              </ng-container>
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="created_by">
+                <th mat-header-cell *matHeaderCellDef> Request By </th>
+                <td mat-cell *matCellDef="let element;let i = index " [attr.rowspan]="getRowSpan('created_by',i)"
+                  [style.display]="getRowSpan('created_by', i) ? '' : 'none'"> {{element.created_by }} </td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Request By </th>
+                <td mat-cell *matCellDef="let element;let i = index ">
+                  <i class="fas fa-check" (click)="approvedList(element.pm_id,element.item_code,'approved')"
+                    style="cursor:pointer" title="Approved"></i>&nbsp;
+                  <i class="fas fa-times" (click)="approvedList(element.pm_id,element.item_code,'reject')"
+                    style="cursor:pointer" title="Decline"></i>&nbsp;
+                  <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                    (click)="approvedList(element.pm_id,element.item_code,'hold')" style="cursor:pointer"
+                    title="Hold"></i>
+                  <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
+                    (click)="approvedList(element.pm_id,element.item_code,'esclate')" style="cursor:pointer"
+                    title="Esclate"></i>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+            <mat-paginator #paginator [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+              showFirstLastButtons (page)="changePage($event)"></mat-paginator>
           </div>
         </div>
       </div>
-    </mat-card>
+    </div>
   </div>
 </div>
-<!-- <div class="row">
-  <div class="col-12">
-    <mat-card class="card-height-850-lp card-height-960">
-      <div class="row">
-        <div class="col-12">
-          <div class="row">
-            <div class="col-12 remove-col-padding">
-              <table class="table table-borderd table-stripped custom-table">
-                <thead class="table-skill__head text-center">
-                  <tr class="custom-tr">
-                    <th class="custom-th" rowspan="2">Item Code</th>
-                    <th class="custom-th" rowspan="2">Item Name</th>
-                    <th class="custom-th" rowspan="2">Quantity</th>
-                    <th class="custom-th" rowspan="2">Intended Use</th>
-                    <th class="custom-th" rowspan="2">Request ID</th>
-                    <th class="custom-th" rowspan="2">Request Date</th>
-                    <th class="custom-th" rowspan="2">Request By</th>
-                    <th class="custom-th" rowspan="2">Action</th>
-                  </tr>
-                </thead>
-                <tbody class="text-center" *ngIf="this.requistionArray.length > 0">
-                  <ng-container *ngFor="let item of requistionArray;let i=index">
-                    <tr class="custom-tr" *ngFor="let dety of item.pm_item_details;let j = index">
-                      <td class="custom-td">
-                        {{dety.item_code}}
-                      </td>
-                      <td class="custom-td">
-                        {{dety.item_name}}
-                      </td>
-                      <td class="custom-td">
-                        {{dety.item_quantity}}
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
-                        {{item.pm_intended_use}}
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
-                        {{item.pm_id}}
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
-                        {{item.pm_created.created_date | date:'d-MMM-y'}}
-                      </td>
-                      <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.pm_item_details.length">
-                        {{item.pm_created.created_by}}
-                      </td>
-                      <td *ngIf="!viewOnly" class="custom-td">
-                        <i class="fas fa-check" (click)="approvedList(item.pm_id,dety.item_code,'approved')"
-                          style="cursor:pointer" title="Approved"></i>&nbsp;
-                        <i class="fas fa-times" (click)="approvedList(item.pm_id,dety.item_code,'reject')"
-                          style="cursor:pointer" title="Decline"></i>&nbsp;
-                        <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                          (click)="approvedList(item.pm_id,dety.item_code,'hold')" style="cursor:pointer"
-                          title="Hold"></i>
-                        <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-                          (click)="approvedList(item.pm_id,dety.item_code,'esclate')" style="cursor:pointer"
-                          title="Esclate"></i>
-                      </td>
-                    </tr>
-                  </ng-container>
-                </tbody>
-                <tbody *ngIf="this.requistionArray.length === 0" class="no-border">
-                  <tr class="text-center">
-                    <td colspan="9">
-                      <img
-                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                      <br><br><br>
-                      <br><span class="font-size-20 font-light font-color-brown">
-                        No Data Available
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
-</div> -->

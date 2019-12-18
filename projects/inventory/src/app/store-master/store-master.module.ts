@@ -17,6 +17,7 @@ import { CreatePurchaseOrderComponent } from './create-purchase-order/create-pur
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
 import { GenerateReceiptComponent } from './generate-receipt/generate-receipt.component';
 import { GoodsReceiptComponent } from './goods-receipt/goods-receipt.component';
+import { ProcurementCommonComponent } from './procurement-common/procurement-common.component';
 
 
 const moment = _moment;
@@ -48,7 +49,8 @@ export const MY_FORMATS = {
 		CreatePurchaseOrderComponent,
 		PurchaseOrderComponent,
 		GenerateReceiptComponent,
-		GoodsReceiptComponent
+		GoodsReceiptComponent,
+		ProcurementCommonComponent
 	],
 	entryComponents: [AddVendorDialog,MessageModalComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
