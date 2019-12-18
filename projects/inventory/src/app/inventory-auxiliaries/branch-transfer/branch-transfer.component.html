@@ -1,0 +1,241 @@
+<div class="assession-master-container" *ngIf="!createNewFlag">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Branch Transfer</span>
+          </div>
+          <div class="col-5">
+          </div>
+          <div class="col-1">
+            <button class="btn-success-blue mat-raised-button" (click)="createNewBranchTransfer()">
+              Create New
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div class="assession-master-container" *ngIf="createNewFlag">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">
+              {{editBranchtransfer ? 'Edit' : 'Create New'}}
+            </span>
+          </div>
+          <div class="col-5">
+          </div>
+          <div class="col-1">
+            <button class="btn-danger mat-raised-button" (click)="goBack()">
+              Go Back
+            </button>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!createNewFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <div [hidden]="BRANCH_TRANSFER_DATA.length == 0">
+            <mat-form-field>
+              <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+              <mat-icon matPrefix>filter_list</mat-icon>
+            </mat-form-field>
+            <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                <td mat-cell *matCellDef="let item">{{item.srno}}</td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date. </th>
+                <td mat-cell *matCellDef="let item">{{item.date | date: 'd-MMM-y'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="created_by">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By. </th>
+                <td mat-cell *matCellDef="let item">{{item.created_by}}</td>
+              </ng-container>
+              <ng-container matColumnDef="branch_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Branch Name. </th>
+                <td mat-cell *matCellDef="let item">{{item.branch_name}}</td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let item">
+                  <ul class="inline-flex margin-top-10" style="list-style-type: none;">
+                    <li><i class="material-icons icon-edit" (click)="editItem(item.action)">create</i>
+                    </li>
+                    <li><i class="material-icons icon-danger" (click)="openDeleteDialog(item.action)">delete</i>
+                    </li>
+                  </ul>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+            </table>
+            <mat-paginator [hidden]="BRANCH_TRANSFER_DATA.length < 1" #paginator [pageSize]="itempagesize"
+              [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+            </mat-paginator>
+          </div>
+          <div *ngIf="BRANCH_TRANSFER_DATA.length == 0" class="no-records">
+            <div class="text-center">
+              <app-no-data
+                [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/item_search.png'"
+                [noDataText]="'No Items Selected'"></app-no-data>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="createNewFlag">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <div class="row">
+        <div class="col-2 col-ver-line-divider">
+          <form [formGroup]="createRequistionForm" novalidate>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Item Code</mat-label>
+                  <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
+                    [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                    (keyup)="filterItem($event)">
+                  <mat-autocomplete #autoGroup="matAutocomplete">
+                    <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
+                      (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
+                      {{item.item_code}} -
+                      {{item.item_name}}</mat-option>
+                  </mat-autocomplete>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Item Name</mat-label>
+                  <input matInput placeholder="Item Name" type="text" formControlName="item_name" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12 ">
+                <textarea rows="5" class="form-control" formControlName="item_desc" readonly></textarea>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-6 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Quantity</mat-label>
+                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity" required>
+                </mat-form-field>
+              </div>
+              <div class="col-6 ">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Units</mat-label>
+                  <input matInput placeholder="Units" type="text" formControlName="item_units" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12  text-center">
+                <button *ngIf="!UpdateFlag" mat-raised-button class="btn-neutral" (click)="addList()">Add
+                  to list</button>
+                <button *ngIf="UpdateFlag" mat-raised-button class="btn-neutral" (click)="updateList()">Update</button>
+                <button mat-raised-button class="btn-reset margin-left-10"
+                  *ngIf="this.finalRequistionArray.length === 0" (click)="resetForm()">Reset</button>
+                <button mat-raised-button class="btn-reset margin-left-10" *ngIf="this.finalRequistionArray.length > 0"
+                  (click)="finalCancel()">Cancel</button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-10">
+          <div class="row">
+            <div class="col-12 remove-col-padding">
+              <table class="table table-borderd table-stripped custom-table">
+                <thead class="table-skill__head text-center">
+                  <tr class="custom-tr">
+                    <th class="custom-th" rowspan="2">Item Code</th>
+                    <th class="custom-th" rowspan="2">Item Name</th>
+                    <th class="custom-th" rowspan="2">Description</th>
+                    <th class="custom-th" rowspan="2">Quantity</th>
+                    <th class="custom-th" rowspan="2">Action</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center" *ngIf="this.finalRequistionArray.length > 0">
+                  <tr class="custom-tr" *ngFor="let item of this.finalRequistionArray;let i = index">
+                    <td class="custom-td">
+                      {{item.item_code}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_name}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_desc}}
+                    </td>
+                    <td class="custom-td">
+                      {{item.item_quantity}}
+                    </td>
+                    <td *ngIf="!viewOnly" class="custom-td">
+                      <i class="far fa-edit modify-icon" (click)="editList(i)" style="cursor:pointer"
+                        title="Edit"></i>&nbsp;
+                      <i class="far fa-trash-alt delete-icon inline-form-radio-spacing" (click)="deleteList(i)"
+                        style="cursor:pointer" title="Delete"></i>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="this.finalRequistionArray.length === 0" class="no-border">
+                  <tr class="text-center">
+                    <td colspan="9">
+                      <img
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/no_item_issued.png">
+                      <br><br><br>
+                      <br><span class="font-size-20 font-light font-color-brown">
+                        Please Update Item list on Click of Add Button
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <form [formGroup]="finalRequistionForm" novalidate>
+            <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Branch Name</mat-label>
+                <mat-select placeholder="Branch Name" formControlName="intended_use" [disabled]="editBranchtransfer">
+                  <mat-option *ngFor="let item of branchArray" [value]="item.br_id">{{item.br_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+          <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+            <div class="col-12 text-center">
+              <button *ngIf="!editBranchtransfer" mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+              <button *ngIf="editBranchtransfer" mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Update</button>
+              <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)" (deleteCanel)="cancelDel($event)"></app-delete-modal>
+<app-message-modal #messageModal></app-message-modal>

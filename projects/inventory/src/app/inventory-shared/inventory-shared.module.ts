@@ -41,6 +41,7 @@ import { InvItemDetailsComponent } from './inv-item-details/inv-item-details.com
 import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
 import { AddLocationDialog } from './location-search-and-add/add-location-dialog/add-location-dialog.component';
 import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
+import { MessageModalComponent } from '../store-master/message-modal/message-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -117,7 +118,8 @@ export const MY_FORMATS = {
 		HighlightPipe,
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
-		InventoryDetailsComponent
+		InventoryDetailsComponent,
+		MessageModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -130,7 +132,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		InvItemDetailsComponent,
 		LocationSearchAndAddComponent,
-		AddLocationDialog
+		AddLocationDialog,
+		MessageModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -177,7 +180,8 @@ export const MY_FORMATS = {
 		HighlightPipe,
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
-		InventoryDetailsComponent
+		InventoryDetailsComponent,
+		MessageModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
