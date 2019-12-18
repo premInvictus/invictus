@@ -80,4 +80,8 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/itemChangeStatus', value);
   }
+  generatePdfOfBarcode(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/change-status/generatePdfOfBarcode', value);
+  }
 }

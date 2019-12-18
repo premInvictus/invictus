@@ -42,7 +42,8 @@
             <ng-container matColumnDef="verification_date">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Date</th>
               <td mat-cell *matCellDef="let element">
-                {{element?.item_verification_date | date: 'd-MMM-y'}}
+                <span *ngIf="element?.item_verification_date"> {{element?.item_verification_date | date: 'd-MMM-y'}} </span>
+                <span *ngIf="!(element?.item_verification_date)"> - </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="item_code">

@@ -114,7 +114,7 @@
               <td colspan="9">No Record Found</td>
             </tr>
           </table>
-          <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
+          <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" (page)="pageEvent = fetchData($event)" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

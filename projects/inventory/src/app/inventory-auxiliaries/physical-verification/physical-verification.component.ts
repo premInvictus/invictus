@@ -24,6 +24,9 @@ export class PhysicalVerificationComponent implements OnInit {
   vendorListData: any = [];
   currentItemCode = 0;
   currentLocationId = 0;
+  pageIndex = 0;
+  pageEvent: PageEvent;
+  pageSize = 100;
   PHYSICAL_VERIFICATION_LIST_ELEMENT: PhysicalVerificationListElement[] = [];
   physicalVerificationdataSource = new MatTableDataSource<PhysicalVerificationListElement>(this.PHYSICAL_VERIFICATION_LIST_ELEMENT);
   displayedListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_desc', 'item_nature', 'item_category', 'item_location','item_current_stock', 'last_verification_date','action'];
@@ -54,7 +57,7 @@ export class PhysicalVerificationComponent implements OnInit {
   getPhysicalVerification(locationData) {
     console.log('locationData--', locationData);
     this.currentLocationId = locationData.location_id;
-    var inputJson = { location_id: locationData.location_id };
+    var inputJson = { location_id: locationData.location_id,  page_index: this.pageIndex, page_size: this.pageSize };
     let element: any = {};
     let recordArray = [];
     this.PHYSICAL_VERIFICATION_LIST_ELEMENT = [];
@@ -74,7 +77,7 @@ export class PhysicalVerificationComponent implements OnInit {
           item_location_id : item.location_id ? item.location_id : '-',
           item_current_stock: item.item_current_stock ? item.item_current_stock : '',
           item_units: item.item_units ? item.item_units : '-',
-          last_verification_date: item.pv_item_data && item.pv_item_data.length>0 ? item.pv_item_data[0]['pv_created_date'] : '-',
+          last_verification_date: item.pv_item_data && item.pv_item_data.length>0 ? item.pv_item_data[0]['pv_created_date'] : '',
           action:item
         };
         this.PHYSICAL_VERIFICATION_LIST_ELEMENT.push(element);
@@ -152,6 +155,13 @@ export class PhysicalVerificationComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
     });
+  }
+
+  fetchData(event?: PageEvent) {
+    this.pageIndex = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.getPhysicalVerification({location_id: Number(this.currentLocationId) });
+    return event;
   }
 
 

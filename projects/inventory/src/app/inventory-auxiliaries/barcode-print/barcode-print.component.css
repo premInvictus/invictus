@@ -1,0 +1,76 @@
+.bar-tiltle-span {
+    position: relative;
+    left: 10px !important;
+}
+.bar-tiltle-span2 {
+    position: relative;
+    top: -2px;
+    font-size: 10px;
+    left: 14px;
+}
+.bar-isbn-span {
+    position: relative;
+    left: 10px;
+    top: -20px;
+}
+.bar-isbn-span2 {
+    position: relative;
+    left: 14px;
+    top: -17px;
+    font-size: 11px;
+}
+.bar-location-span {
+    position: relative;
+    left: -26px;
+    top: -20px;
+}
+.bar-location-span2 {
+    position: relative;
+    left: -17px;
+    top: -13px;
+    font-size: 11px;
+}
+.align-btn-bar {
+    position: relative;
+    top: -5px;
+}
+.bar-acc-div {
+    width: 184px !important
+}
+.barcode-div-print.margin-barcode-print {
+    margin-top: 80.64px;
+}
+.barcode-div-print{
+    border: 1px solid;
+    width: 129.54px !important;
+    height: 59.81px !important;
+    border-radius: 6px;
+}
+.barcode-div-print-2{
+    border: 1px solid;
+    width: 130.54px !important;
+    height: 31.81px !important;
+    border-radius: 6px;
+}
+.accumulate-div-bar-code {
+    padding-top: 60.48px;
+    padding-bottom: 59.9px;
+    background: white;
+    padding-left: 27.35px;
+    padding-right: 27.35px;
+}
+.accumulate-div-bar-code-2 {
+    padding-top: 44.94px;
+    padding-bottom: 44.13px;
+    background: white;
+    padding-left: 14.09px;
+    padding-right: 14.09px;
+}
+@media print {
+    .visible-print-row {
+      display: block !important;
+    }
+}
+.visible-print-row {
+    display: none !important;
+  }
