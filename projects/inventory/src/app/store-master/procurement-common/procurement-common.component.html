@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Procurement Master</span>
+          </div>
+        </div>
+        <div class="col-6 ">
+          <div class="top-card-title float-right">
+            <button *ngIf="tabSelectedIndex === 1" mat-raised-button class="btn-neutral" (click)="redirectToPage('PO')">Create
+              PO</button>
+            <button *ngIf="tabSelectedIndex === 2" mat-raised-button class="btn-neutral" (click)="redirectToPage('GR')">Create Good
+              Receipt </button>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card class="card-height-850-lp card-height-960">
+      <div class="col-12 ">
+        <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+          <mat-tab label="Purchase Requisition">
+            <app-purchase-requisition></app-purchase-requisition>
+          </mat-tab>
+          <mat-tab label="Purchase Order">
+            <app-purchase-order></app-purchase-order>
+          </mat-tab>
+          <mat-tab label="Goods Receipt">
+            <app-goods-receipt></app-goods-receipt>
+          </mat-tab>
+          <mat-tab label="Branch Transfer">
+            <!-- <app-purchase-requisition></app-purchase-requisition> -->
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </mat-card>
+  </div>
+</div>

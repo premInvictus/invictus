@@ -33,6 +33,7 @@ export class PurchaseOrderComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
   allselectedP = false;
+  tabSelectedIndex: any;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
@@ -47,7 +48,7 @@ export class PurchaseOrderComponent implements OnInit {
     this.session = JSON.parse(localStorage.getItem('session'));
   }
 
-  ngOnInit() {
+  ngOnInit() {  
     this.getAllOrderMaster();
   }
   getAllOrderMaster() {
