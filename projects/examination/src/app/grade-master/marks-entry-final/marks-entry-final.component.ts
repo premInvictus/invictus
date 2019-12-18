@@ -192,22 +192,60 @@ export class MarksEntryFinalComponent implements OnInit {
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subSubjectArray = result.data;
+        // const temp = result.data;
+        // if (temp.length > 0) {
+        //   temp.forEach(element => {
+        //     if (element.sub_parent_id && element.sub_parent_id === '0') {
+        //       const childSub: any[] = [];
+        //       for (const item of temp) {
+        //         if (element.sub_id === item.sub_parent_id) {
+        //           childSub.push(item);
+        //         }
+        //       }
+        //       element.childSub = childSub;
+        //       this.subjectArray.push(element);
+        //     }
+        //   });
+        // }
+        // console.log(this.subjectArray);
         const temp = result.data;
-        if (temp.length > 0) {
-          temp.forEach(element => {
-            if (element.sub_parent_id && element.sub_parent_id === '0') {
-              const childSub: any[] = [];
-              for (const item of temp) {
-                if (element.sub_id === item.sub_parent_id) {
-                  childSub.push(item);
-                }
-              }
-              element.childSub = childSub;
-              this.subjectArray.push(element);
-            }
-          });
-        }
-        console.log(this.subjectArray);
+				let scholastic_subject: any[] = [];
+				let coscholastic_subject: any[] = [];
+				if (temp.length > 0) {
+
+				temp.forEach(element => {
+					if (element.sub_type === '1') {
+					if (element.sub_parent_id && element.sub_parent_id === '0') {
+						var childSub: any[] = [];
+						for (const item of temp) {
+						if (element.sub_id === item.sub_parent_id) {
+							childSub.push(item);
+						}
+						}
+						element.childSub = childSub;
+						scholastic_subject.push(element);
+					}                           
+					} else if (element.sub_type === '2') {
+					if (element.sub_parent_id && element.sub_parent_id === '0') {
+						var childSub: any[] = [];
+						for (const item of temp) {
+						if (element.sub_id === item.sub_parent_id) {
+							childSub.push(item);
+						}
+						}
+						element.childSub = childSub;
+						coscholastic_subject.push(element);
+					}              
+					}
+				});
+				}
+
+				for(var i=0; i<scholastic_subject.length;i++) {
+				this.subjectArray.push(scholastic_subject[i]);
+				}
+				for(var i=0; i<coscholastic_subject.length;i++) {
+				this.subjectArray.push(coscholastic_subject[i]);
+				}
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }

@@ -2,3 +2,14 @@
     width: 70% ;
     margin:auto ;
 }
+.option-group-parent-type {
+    display: block; margin-left:20px; margin-top: -10px;
+}
+
+.option-group-parent {
+    display: block; margin-left:10px;     margin-top: -10px;
+}
+
+.option-group-child {
+    display: block; margin-left:5px;    margin-top: -10px;
+}
