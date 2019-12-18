@@ -27,7 +27,7 @@ export class PurchaseRequisitionComponent implements OnInit {
   pageLength: number;
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
-  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'pm_intended_use', 'pm_id', 'created_date', 'created_by', 'action'];
+  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'pm_intended_use', 'pm_id', 'created_date', 'created_by', 'item_status', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -89,20 +89,24 @@ export class PurchaseRequisitionComponent implements OnInit {
 
           next.item_details.forEach(element => {
             let item_quantity = 0;
+            let item_status = 'pending';
             next.pm_item_details.forEach(dety => {
               if (dety.item_code === element.item_code) {
-                item_quantity = dety.item_quantity
+                item_quantity = dety.item_quantity;
+                item_status = dety.item_status;
               }
             });
             current.push({
               position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code },
               item_code: element.item_code,
               item_name: element.item_name,
+              item_status: item_status,
               item_quantity: item_quantity,
               pm_intended_use: next.pm_intended_use,
               pm_id: next.pm_id,
               created_date: next.pm_created.created_date,
-              created_by: next.pm_created.created_by,
+              created_by: next.pm_created.created_by_name,
+
               action: { 'pm_id': next.pm_id, 'item_code': element.item_code }
 
             });
@@ -218,5 +222,7 @@ export class PurchaseRequisitionComponent implements OnInit {
     }
     //console.log(this.requistionArray);
   }
-
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }
