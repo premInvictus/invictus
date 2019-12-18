@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-
 import { InventorySharedModule } from '../inventory-shared/inventory-shared.module';
 import * as _moment from 'moment';
 import { AuxiliariesRoutingModule } from './auxiliaries-routing.module';
@@ -13,6 +11,7 @@ import { BulkUploadComponent } from './bulk-upload/bulk-upload.component';
 import { ChangeStatusComponent } from './change-status/change-status.component';
 import { BarcodePrintComponent } from './barcode-print/barcode-print.component';
 import { StockReconciliationComponent } from './stock-reconciliation/stock-reconciliation.component';
+import { BranchTransferComponent } from './branch-transfer/branch-transfer.component';
 
 const moment = _moment;
 
@@ -37,6 +36,7 @@ export const MY_FORMATS = {
 		ItemSearchComponent,
 		PhysicalVerificationComponent,
 		BulkUploadComponent,
+		BranchTransferComponent,
 		ChangeStatusComponent,
 		BarcodePrintComponent,
 		StockReconciliationComponent

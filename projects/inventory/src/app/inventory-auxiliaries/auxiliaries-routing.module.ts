@@ -7,8 +7,10 @@ import { ChangeStatusComponent } from './change-status/change-status.component';
 import { BarcodePrintComponent } from './barcode-print/barcode-print.component';
 import { StockReconciliationComponent } from './stock-reconciliation/stock-reconciliation.component';
 import { InventoryDetailsComponent } from '../inventory-shared/inventory-details/inventory-details.component';
+import { BranchTransferComponent } from './branch-transfer/branch-transfer.component';
 const routes: Routes = [
 	{ path: 'item-search', component: ItemSearchComponent },
+	{ path: 'branch-transfer', component: BranchTransferComponent },
 	{ path: 'physical-verification', component: PhysicalVerificationComponent },
 	{ path: 'bulk-upload', component: BulkUploadComponent },
 	{ path: 'change-status', component: ChangeStatusComponent },

@@ -11,7 +11,6 @@ import { RecordMasterComponent } from './record-master/record-master.component';
 import { VendorMasterComponent } from './vendor-master/vendor-master.component';
 import { ProcurementMasterComponent } from './procurement-master/procurement-master.component';
 import { AddVendorDialog } from './vendor-master/add-vendor-dialog/add-vendor-dialog.component';
-import { MessageModalComponent } from './message-modal/message-modal.component';
 import { PurchaseRequisitionComponent } from './purchase-requisition/purchase-requisition.component';
 import { CreatePurchaseOrderComponent } from './create-purchase-order/create-purchase-order.component';
 import { PurchaseOrderComponent } from './purchase-order/purchase-order.component';
@@ -34,7 +33,7 @@ export const MY_FORMATS = {
 };
 @NgModule({
 	imports: [
-		CommonModule,		
+		CommonModule,
 		StoreMasterRoutingModule,
 		InventorySharedModule
 	],
@@ -43,14 +42,13 @@ export const MY_FORMATS = {
 		VendorMasterComponent,
 		ProcurementMasterComponent,
 		AddVendorDialog,
-		MessageModalComponent,
 		PurchaseRequisitionComponent,
 		CreatePurchaseOrderComponent,
 		PurchaseOrderComponent,
 		GenerateReceiptComponent,
 		GoodsReceiptComponent
 	],
-	entryComponents: [AddVendorDialog,MessageModalComponent],
+	entryComponents: [AddVendorDialog],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 	{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]

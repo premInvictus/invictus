@@ -45,6 +45,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/insert', value);
   }
+  getBranch(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiSisUrl + '/setup/getBranch', value);
+  }
   getItemLogs(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/getItemLogs', value);
@@ -76,9 +80,21 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMaster', value);
   }
+  getBranchTransfer(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/findAll', value);
+  }
   itemChangeStatus(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/itemChangeStatus', value);
+  }
+  updateBranchTransfer(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/update', value);
+  }
+  createBranchTransfer(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/insert', value);
   }
   generatePdfOfBarcode(value) {
     this.service.stopLoading();
