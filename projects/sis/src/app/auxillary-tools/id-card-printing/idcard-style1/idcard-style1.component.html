@@ -1,15 +1,13 @@
 <div class="container-printid-landscape" *ngIf="showLandscape" style="float:left">
-  <img
-    src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573824937.png"
-    class="watermark-image">
+  <img [src]="idCardConfig.ps_watermark_image ? 
+  idCardConfig.ps_watermark_image: ''" class="watermark-image">
   <div>
     <div id="id_card_header"
       [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-11px'}">
       <div class="row remove-margin">
         <div class="col-3 my-col remove-col-padding text-center">
-          <img *ngIf="showSchoolLogo" class="id-card-school-logo"
-            src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png"
-            alt="school-logo">
+          <img *ngIf="showSchoolLogo" class="id-card-school-logo" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+          : 'https://via.placeholder.com/50'" alt="school-logo">
         </div>
         <div class="col-9 text-center remove-col-padding">
           <p [ngStyle]="{'font-weight':allContentBold}"

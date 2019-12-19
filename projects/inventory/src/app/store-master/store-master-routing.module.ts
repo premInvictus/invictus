@@ -10,6 +10,7 @@ import { PurchaseOrderComponent } from './purchase-order/purchase-order.componen
 import { GenerateReceiptComponent } from './generate-receipt/generate-receipt.component';
 import { GoodsReceiptComponent } from './goods-receipt/goods-receipt.component';
 import { ProcurementCommonComponent } from './procurement-common/procurement-common.component';
+import { AddItemsBranchTransferComponent } from './add-items-branch-transfer/add-items-branch-transfer.component';
 const routes: Routes = [
 	{ path: 'record-master', component: RecordMasterComponent },
 	{ path: 'create-procurement-master', component: ProcurementMasterComponent },
@@ -20,6 +21,7 @@ const routes: Routes = [
 	{ path: 'generate-receipt', component: GenerateReceiptComponent },
 	{ path: 'goods-receipt', component: GoodsReceiptComponent },
 	{ path: 'procurement-master', component: ProcurementCommonComponent },
+	{ path: 'add-items-branch-transfer', component: AddItemsBranchTransferComponent }
 ];
 
 @NgModule({
