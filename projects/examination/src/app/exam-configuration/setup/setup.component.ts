@@ -160,7 +160,12 @@ export class SetupComponent implements OnInit {
 					ect_co_gradeset_id: '',
 					ect_exam_type: '',
 					ect_status: '',
-					ect_created_by: ''
+					ect_created_by: '',
+					ect_grade_avg_highest: this.fbuild.group({
+						grade: '',
+						avg: '',
+						highest:''
+					})
 				})
 			},
 			{ // for Class Term Grade setup

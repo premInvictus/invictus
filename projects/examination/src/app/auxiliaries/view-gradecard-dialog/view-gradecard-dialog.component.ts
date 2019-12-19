@@ -50,7 +50,12 @@ export class ViewGradecardDialogComponent implements OnInit {
   totalworkingdays = 0;
   totalpresentday = 0;
   attendenceInPercent = 0;
-
+  obtainedGradeAvgHighest = {
+    obtained: true,
+    grade: true,
+    avg: true,
+    highest: true
+  };
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -63,6 +68,22 @@ export class ViewGradecardDialogComponent implements OnInit {
 
   ngOnInit() {
     console.log(this.data);
+    if(this.data.param.eme_exam_id || this.data.param.eme_subexam_id) {
+      this.obtainedGradeAvgHighest.obtained = false;
+    }
+    if(this.data.ect_grade_avg_highest && this.data.ect_grade_avg_highest != '') {
+      let obj = JSON.parse(this.data.ect_grade_avg_highest);
+      console.log('obj.avg', obj.avg);
+      if(obj.grade == '0') {
+        this.obtainedGradeAvgHighest.grade = false;
+      }
+      if(obj.avg == '0') {
+        this.obtainedGradeAvgHighest.avg = false;
+      }
+      if(obj.highest == '0') {
+        this.obtainedGradeAvgHighest.highest = false;
+      }
+    }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
     for (let i = 1; i <= this.data.param.eme_term_id; i++) {
       this.termArray.push(i);
@@ -112,6 +133,8 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.class_id = this.data.class_id;
     param.sec_id = this.data.sec_id;
     param.term_id = this.data.param.eme_term_id;
+    param.exam_id = this.data.param.eme_exam_id;
+    param.se_id = this.data.param.eme_subexam_id;
     this.examService.getClassHighestAndAverage(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         this.classHighestArr = result.data;
@@ -372,7 +395,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     //console.log('total',total);
     //console.log('totalmainsubject',totalmainsubject);
     //console.log('total percentage',total / totalmainsubject);
-    return this.getTwoDecimalValue(total / totalmainsubject) > 32 ? 'Pass' : 'Fail';
+    if(this.GradeSet.length > 0) {
+      let min = Number(this.GradeSet[0]['egs_range_end']);
+      for (let index = 0; index < this.GradeSet.length; index++) {
+        const element = this.GradeSet[index];
+        if (Number(element.egs_range_end) < min) {
+          min = Number(element.egs_range_end);
+        }
+      }
+      return this.getTwoDecimalValue(total / totalmainsubject) > min ? 'Pass' : 'Fail';
+    }
+    return '';
 
   }
   getPassTotalPercentage(term) {
@@ -438,12 +471,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     });
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
     const grade = this.getTwoDecimalValue(gradeMarks);
+    const gradePercentage = this.getTwoDecimalValue((gradeMarks / this.acedemicmarks)*100);
     if (Number(term) <= Number(this.data.param.eme_term_id)) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
         sub_id: sub_id,
         term: term,
-        grade: grade
+        grade: grade,
+        gradePercentage: gradePercentage
       });
       if (this.totalexecutedSolasticSubject === this.totalSolasticSubject) {
         this.resultdivflag = true;
@@ -452,12 +487,44 @@ export class ViewGradecardDialogComponent implements OnInit {
     let gradeValue = '';
     for (let index = 0; index < this.GradeSet.length; index++) {
       const element = this.GradeSet[index];
-      if (grade >= Number(element.egs_range_start) && grade <= Number(element.egs_range_end)) {
+      if (gradePercentage >= Number(element.egs_range_start) && grade <= Number(element.egs_range_end)) {
         gradeValue = element.egs_grade_name;
         break;
       }
     }
     return gradeValue;
+  }
+  getSubjectPassResult(sub_id, term) {
+    let gradeMarks = 0;
+    this.sexamArray.forEach(element => {
+      gradeMarks = gradeMarks + this.getCalculatedMarksSub(sub_id, element.exam_id, term);
+    });
+    //const grade = Math.round(gradeMarks / this.sexamArray.length);
+    const grade = this.getTwoDecimalValue(gradeMarks);
+    const gradePercentage = this.getTwoDecimalValue((gradeMarks / this.acedemicmarks)*100);
+    if (Number(term) <= Number(this.data.param.eme_term_id)) {
+      this.totalexecutedSolasticSubject++;
+      this.gradePerTermOnScholastic.push({
+        sub_id: sub_id,
+        term: term,
+        grade: grade,
+        gradePercentage: gradePercentage
+      });
+      if (this.totalexecutedSolasticSubject === this.totalSolasticSubject) {
+        this.resultdivflag = true;
+      }
+    }
+    if(this.GradeSet.length > 0) {
+      let min = Number(this.GradeSet[0]['egs_range_end']);
+      for (let index = 0; index < this.GradeSet.length; index++) {
+        const element = this.GradeSet[index];
+        if (Number(element.egs_range_end) < min) {
+          min = Number(element.egs_range_end);
+        }
+      }
+      return gradePercentage > min ? '' : 'F';
+    }
+    return '';
   }
   calculateGradeCcePoint(sub_id, term) {
     let gradeMarks = 0;
@@ -529,7 +596,14 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getExamDetails() {
     this.sexamArray = [];
-    this.examService.getExamDetails({ exam_class: this.data.class_id }).subscribe((result: any) => {
+    const param: any = {};
+    if(this.data.param.eme_exam_id) {
+      param.exam_id = this.data.param.eme_exam_id;
+    }
+    if(this.data.param.eme_class_id) {
+      param.exam_class = this.data.param.eme_class_id;
+    }
+    this.examService.getExamDetails(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
         this.examArray.forEach(element => {
@@ -553,7 +627,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getStudentSubjects() {
     this.subjectArray = [];
-    this.examService.getStudentSubjects({ au_login_id: this.data.au_login_id }).subscribe((result: any) => {
+    this.examService.getStudentSubjects({ au_login_id: this.data.au_login_id, sub_isexam:'1'}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const temp: any[] = result.data;
         if (this.data.ect_exam_type === '2') {
