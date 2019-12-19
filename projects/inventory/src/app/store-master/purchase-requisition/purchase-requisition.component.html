@@ -1,4 +1,4 @@
-<div [hidden]="!tableDivFlag">
+<div [hidden]="!tableDivFlag" *ngIf="ELEMENT_DATA.length > 0" >
   <div class="row">
     <div class="col-6 pad-left-0">
       <mat-form-field appearance="legacy">
@@ -115,7 +115,7 @@
   </div>
 </div>
 <div *ngIf="ELEMENT_DATA.length === 0" class="no-records">
-  <div class="text-center">
+  <div class="text-center"> 
     <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_requisitions.png'"
       [noDataText]="'No Record Found'"></app-no-data>

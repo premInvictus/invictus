@@ -67,7 +67,7 @@ export class PurchaseOrderComponent implements OnInit {
             "vendor_id": item.pm_vendor ? item.pm_vendor.ven_id : '-',
             "vendor_name": item.pm_vendor ? item.pm_vendor.ven_name : '-',
             "vendor_category": item.pm_vendor ? item.pm_vendor.ven_category : '-',
-            "action": item.pm_id
+            "action": { 'pm_id': item.pm_id, 'pm_status': item.pm_status }
           });
           ind++;
         }
