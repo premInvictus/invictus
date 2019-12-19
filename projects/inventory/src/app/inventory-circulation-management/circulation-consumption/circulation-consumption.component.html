@@ -329,7 +329,7 @@
       </div>
       <div class="text-center" *ngIf="issueItemData?.length == 0">
         <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_books_issued.png'"
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/no_item_issued.png'"
           [noDataText]="" [subText]="'No Items Issued'"></app-no-data>
       </div>
     </mat-card>
@@ -338,12 +338,12 @@
 <div class="row" *ngIf="userData!=''">
 
   <div class="col-12 ">
-    <mat-card [hidden]="!(ITEM_LOG_LIST_ELEMENT.length > 0)">
+    <mat-card>
       <span class="font-size-20 font-bold">Items Logs</span>
 
       <div class="row">
 
-        <div class="col-12">
+        <div class="col-12" [hidden]="!(ITEM_LOG_LIST_ELEMENT.length > 0)">
           <div class="row ">
             <div class="col-9 remove-col-padding-left">
               <mat-form-field appearance="legacy lib-form">

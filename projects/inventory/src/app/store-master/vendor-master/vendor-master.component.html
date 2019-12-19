@@ -267,7 +267,7 @@
                 <td colspan="9">No Record Found</td>
               </tr>
             </table>
-            <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
+            <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
             </mat-paginator>
           </div>
         </div>
@@ -280,7 +280,7 @@
       <mat-card>
         <div class="text-center">
           <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/no_vendor_list.png'"
             [noDataText]="" [subText]="'No Vendor Found'"></app-no-data>
         </div>
       </mat-card>
@@ -328,7 +328,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Receipt Date</th>
                 <td mat-cell *matCellDef="let element;let i = index" [attr.rowspan]="getRowSpan('receipt_date',i)"
                 [style.display]="getRowSpan('receipt_date', i) ? '' : 'none'">
-                  {{element?.receipt_date}}
+                  {{element?.receipt_date | date:'d-MMM-y'}}
                 </td>
               </ng-container>
               <ng-container matColumnDef="generated_by">
@@ -375,7 +375,7 @@
                 <td colspan="9">No Record Found</td>
               </tr>
             </table>
-            <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
+            <mat-paginator #paginatorone [pageSize]="100" [pageSizeOptions]="[100,300,500,1000]" showFirstLastButtons>
             </mat-paginator>
           </div>
         </div>
@@ -387,7 +387,7 @@
       <mat-card>
         <div class="text-center">
           <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/no_vendor_list.png'"
             [noDataText]="" [subText]="'No Vendor Log Found'"></app-no-data>
         </div>
       </mat-card>
