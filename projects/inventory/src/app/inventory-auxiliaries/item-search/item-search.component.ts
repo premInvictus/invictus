@@ -25,7 +25,7 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   pageEvent: PageEvent;
   pageSize = 100;
   @ViewChild('searchModal') searchModal;
-  displayedColumns = ['sno', 'code', 'name', 'nature', 'category', 'location', 'qty', 'reorder', 'desc'];
+  displayedColumns = ['sno', 'nature', 'category', 'code', 'name', 'location', 'qty', 'reorder'];
   val: any;
   itempagesizeoptions = [100, 300, 500, 1000];
   itemArray: any[] = [];

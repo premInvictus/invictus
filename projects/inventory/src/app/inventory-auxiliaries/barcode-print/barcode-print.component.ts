@@ -41,10 +41,10 @@ export class BarcodePrintComponent implements OnInit {
   }
   getBarCode() {
     if (this.barCodePrintForm.value.item_code) {
+      this.barCodeArray = [];
       let inputJson = { 'filters': [{ 'filter_type': 'item_code', 'filter_value': this.barCodePrintForm.value.item_code, 'type': 'text' }]};
       this.inventoryService.filterItemsFromMaster(inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
-          this.barCodeArray = [];
           this.barCodeArray = res.data;
           this.barCodeArray.reverse();
         }
@@ -66,15 +66,17 @@ export class BarcodePrintComponent implements OnInit {
   searchOk($event) {
     localStorage.removeItem('invoiceBulkRecords');
     if ($event) {
-      this.common.getReservoirDataBasedOnFilter({
+      this.barCodeArray = [];
+      let inputJson = {
         filters: $event.filters,
         generalFilters: $event.generalFilters,
-        search_from: 'master'
-      }).subscribe((res: any) => {
+        //page_index: this.pageIndex,
+        //page_size: this.pageSize,
+      };
+      this.inventoryService.filterItemsFromMaster(inputJson).subscribe((res: any) => {
         if (res && res.status === 'ok') {
-          this.barCodeArray = [];
-          this.barCodeArray = res.data.resultData;
-          this.barCodePrintForm.reset();
+          this.barCodeArray = res.data;
+          this.barCodeArray.reverse();
         }
       });
     }
