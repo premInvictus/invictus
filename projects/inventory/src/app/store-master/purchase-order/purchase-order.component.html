@@ -1,4 +1,4 @@
-<div [hidden]="!tableDivFlag">
+<div [hidden]="!tableDivFlag" *ngIf="ELEMENT_DATA.length > 0">
   <div class="row">
     <div class="col-6 pad-left-0">
       <mat-form-field appearance="legacy">
@@ -52,12 +52,13 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
           <td mat-cell class="cell-left" *matCellDef="let element;">
-            <i class="far fa-edit modify-icon" (click)="actionList(element.action,'receipt')" style="cursor:pointer"
-              title="Edit"></i>&nbsp;
-            <i class="far fa-edit modify-icon" (click)="actionList(element.action,'edit')" style="cursor:pointer"
-              title="Edit"></i>&nbsp;
+            <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status !=='approved'"
+              (click)="actionList(element.action.pm_id ,'receipt')" style="cursor:pointer" title="Edit"></i>&nbsp;
+            <i class="far fa-edit modify-icon" *ngIf="element.action.pm_status !=='approved'"
+              (click)="actionList(element.action.pm_id ,'edit')" style="cursor:pointer" title="Edit"></i>&nbsp;
             <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
-              (click)="actionList(element.action,'delete')" style="cursor:pointer" title="Delete"></i>
+              *ngIf="element.action.pm_status !=='approved'" (click)="actionList(element.action.pm_id ,'delete')"
+              style="cursor:pointer" title="Delete"></i>
           </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

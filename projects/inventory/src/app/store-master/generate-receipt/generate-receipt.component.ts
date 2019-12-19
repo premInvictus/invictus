@@ -362,10 +362,15 @@ export class GenerateReceiptComponent implements OnInit {
       } else {
         this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-            this.finalSubmitArray = [];
-            this.finalRequistionArray = [];
-            this.itemCodeArray = [];
+            this.requistionArray[0].pm_status = 'approved';
+            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+              if (result) {
+                this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                this.finalSubmitArray = [];
+                this.finalRequistionArray = [];
+                this.itemCodeArray = [];
+              }
+            });
             if (this.requistionArray.length > 0) {
               this.requistionArray = [];
               this.router.navigate(['../procurement-master'], { relativeTo: this.route });

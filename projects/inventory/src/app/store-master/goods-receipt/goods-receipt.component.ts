@@ -29,7 +29,7 @@ export class GoodsReceiptComponent implements OnInit {
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
   displayedColumns: string[] = ['position', 'po_number', 'po_date', 'created_by', 'vendor_id', 'vendor_name',
-    'vendor_category', 'vendor_contact', 'vendor_email'];
+    'vendor_category', 'vendor_contact', 'vendor_email', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -69,7 +69,7 @@ export class GoodsReceiptComponent implements OnInit {
             "vendor_category": item.pm_vendor ? item.pm_vendor.ven_category : '-',
             "vendor_contact": item.pm_vendor ? item.pm_vendor.ven_contact : '-',
             "vendor_email": item.pm_vendor ? item.pm_vendor.ven_email : '-',
-            // "action": item.pm_id
+            "action": { 'pm_id': item.pm_id, 'pm_status': item.pm_status }
           });
           ind++;
         }
@@ -84,12 +84,21 @@ export class GoodsReceiptComponent implements OnInit {
   actionList(pm_id, action) {
     const sindex = this.orderArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
     if (sindex !== -1) {
-      if (action === 'delete') {
-        this.orderArray.splice(sindex, 1);
-      } else if (action === 'edit') {
-        this.setArray.push(this.orderArray[sindex]);
-        this.inventory.setrequisitionArray(this.setArray);
-        this.router.navigate(['../generate-receipt'], { relativeTo: this.route });
+      if (action === 'approved') {
+        this.inventory.updateItemQuantity(this.orderArray[sindex]).subscribe((result: any) => {
+          if (result) {
+            let finalArray: any = [];
+            this.orderArray[sindex].pm_status = 'approved';
+            finalArray.push(this.orderArray[sindex]);
+            this.inventory.updateRequistionMaster(finalArray).subscribe((result: any) => {
+              if (result) {
+                this.commonService.showSuccessErrorMessage('Item Quantity Updated Successfully', 'success');
+                this.getAllOrderMaster();
+              }
+            });
+
+          }
+        });
       }
     }
   }
