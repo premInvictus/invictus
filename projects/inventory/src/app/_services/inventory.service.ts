@@ -58,6 +58,10 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/configuration/update', value);
   }
+  updateMultiple(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/updateMultiple', value);
+  }
   getAllRequistionMaster() {
     return this.http.get(environment.apiInvUrl + '/requistion-master/getAllRequistionMaster');
   }
@@ -96,6 +100,10 @@ export class InventoryService {
   createBranchTransfer(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/branch-transfer/insert', value);
+  }
+  branchInsert(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/branchInsert', value);
   }
   generatePdfOfBarcode(value) {
     this.service.stopLoading();

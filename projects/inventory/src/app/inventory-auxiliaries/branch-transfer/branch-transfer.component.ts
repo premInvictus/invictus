@@ -3,6 +3,7 @@ import { InventoryService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { ErpCommonService } from 'src/app/_services';
 @Component({
   selector: 'app-branch-transfer',
   templateUrl: './branch-transfer.component.html',
@@ -11,9 +12,14 @@ import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 export class BranchTransferComponent implements OnInit {
   createNewFlag = false;
   bt_id: any;
+  item_det: any = {};
+  qty: any;
+  itemArray2: any[];
+  qty2: any;
   constructor(private service: InventoryService,
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,
+    private erp: ErpCommonService,
     public axiomService: AxiomService,
     public sisService: SisService, ) { }
   branchArray: any[] = [];
@@ -41,13 +47,25 @@ export class BranchTransferComponent implements OnInit {
   currentUser: any = {};
   session: any;
   editBranchtransfer = false;
+  genFlag = false;
   BRANCH_TRANSFER_DATA: any[] = [];
+  schoolInfo: any = {};
+  locations: any[] = [];
   datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getBranch();
     this.getBranchTransferData();
+    this.getSchool();
     this.buildForm();
+  }
+  getSchool() {
+    this.erp.getSchool().subscribe((res: any) => {
+      if (res && res.status === 'ok') {
+        this.schoolInfo = res.data[0];
+        console.log(this.schoolInfo);
+      }
+    });
   }
   buildForm() {
     this.createRequistionForm = this.fbuild.group({
@@ -57,7 +75,10 @@ export class BranchTransferComponent implements OnInit {
       item_quantity: '',
       item_units: '',
       item_price: '',
-      item_status: ''
+      item_status: '',
+      item_type_details: '',
+      location: '',
+      location_name: ''
 
     });
     this.finalRequistionForm = this.fbuild.group({
@@ -66,6 +87,7 @@ export class BranchTransferComponent implements OnInit {
 
   }
   createNewBranchTransfer() {
+    this.locations = [];
     this.createNewFlag = true;
     this.finalRequistionArray = [];
     this.itemArray = [];
@@ -119,13 +141,103 @@ export class BranchTransferComponent implements OnInit {
       }
     }
   }
+  getItems2(val) {
+    this.itemArray2 = [];
+    this.qty2 = '';
+    this.service.filterItemsFromMaster(
+      {
+        "filters": [
+          {
+            "filter_type": "item_code",
+            "filter_value": val.item_code,
+            "type": "text"
+          }
+        ],
+        page_index: 0,
+        page_size: ''
+      }
+    ).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.itemArray2 = result.data;
+        this.getQuantityBasedOnLocation2(val, this.itemArray2);
+        this.createRequistionForm.patchValue({
+          'item_code': val.item_code,
+          'item_name': val.item_name,
+          'item_desc': val.item_desc,
+          'item_quantity': val.item_quantity,
+          'item_units': val.item_units,
+          'location': val.location,
+          'location_name': this.getLocationName(Number(val.location)),
+          item_type_details: {
+            item_category: val.item_category,
+            item_nature: val.item_nature
+          }
+        });
+      }
+    });
+  }
   getItemPerId(item: any) {
+    this.locations = [];
+    this.service.filterItemsFromMaster(
+      {
+        "filters": [
+          {
+            "filter_type": "item_code",
+            "filter_value": Number(item.item_code),
+            "type": "text"
+          }
+        ],
+        page_index: 0,
+        page_size: ''
+      }
+    ).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.locations = result.data[0].locs
+      }
+    });
     this.itemCode = item.item_code;
     this.createRequistionForm.patchValue({
       item_name: item.item_name,
       item_desc: item.item_desc,
-      item_units: item.item_units.name
+      item_units: item.item_units.name,
+      item_type_details: {
+        item_category: item.item_category,
+        item_nature: item.item_nature
+      }
     });
+  }
+  getQuantityBasedOnLocation($event) {
+    if (!this.editBranchtransfer) {
+      const sindex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
+      if (sindex !== -1) {
+        const lindex = this.itemArray[sindex].item_location.findIndex(f => Number(f.location_id) === Number($event.value));
+        if (lindex !== -1) {
+          this.qty = Number(this.itemArray[sindex].item_location[lindex].item_qty);
+          this.createRequistionForm.patchValue({
+            item_quantity: this.qty,
+            location: Number($event.value),
+            location_name: this.getLocationName(Number($event.value))
+          });
+        }
+      }
+    }
+  }
+  getLocationName(location_id) {
+    const findex = this.locations.findIndex(f => Number(f.location_id) === Number(location_id));
+    if (findex !== -1) {
+      return this.locations[findex].location_hierarchy;
+    }
+  }
+  getQuantityBasedOnLocation2(val, array: any[]) {
+    if (this.editBranchtransfer) {
+      const sindex = array.findIndex(f => Number(f.item_code) === Number(val.item_code));
+      if (sindex !== -1) {
+        const lindex = array[sindex].item_location.findIndex(f => Number(f.location_id) === Number(val.location));
+        if (lindex !== -1) {
+          this.qty2 = Number(array[sindex].item_location[lindex].item_qty);
+        }
+      }
+    }
   }
   additemss() {
     if (this.createRequistionForm.valid) {
@@ -138,6 +250,23 @@ export class BranchTransferComponent implements OnInit {
   editItem(val) {
     this.createNewFlag = true;
     this.deleteFlag = false;
+    this.service.filterItemsFromMaster(
+      {
+        "filters": [
+          {
+            "filter_type": "item_code",
+            "filter_value": Number(val.inv_item_details[0].item_code),
+            "type": "text"
+          }
+        ],
+        page_index: 0,
+        page_size: ''
+      }
+    ).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.locations = result.data[0].locs
+      }
+    });
     this.finalRequistionArray = val.inv_item_details;
     this.editBranchtransfer = true;
     this.finalRequistionForm.patchValue({
@@ -146,46 +275,43 @@ export class BranchTransferComponent implements OnInit {
     this.bt_id = val.inv_bt_id;
   }
   addList() {
-    if (this.createRequistionForm.valid) {
-      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code));
+    if (this.createRequistionForm.valid && this.locations.length > 0 && (Number(this.createRequistionForm.value.item_quantity) <= Number(this.qty))) {
+      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code)
+        && Number(f.location) === Number(this.createRequistionForm.value.location));
       if (sindex !== -1) {
         this.openMessageModal();
       } else {
         this.itemCodeArray.push({
           item_code: this.createRequistionForm.value.item_code,
+          location: this.createRequistionForm.value.location
         });
-        this.createRequistionForm.value.item_status = 'pending';
         this.finalRequistionArray.push(this.createRequistionForm.value);
       }
       this.resetForm();
     } else {
-      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed', 'error');
     }
   }
 
   // Edit item list function
 
   editList(value) {
+    this.createRequistionForm.reset();
     this.UpdateFlag = true;
     this.update_id = value;
-    this.createRequistionForm.patchValue({
-      'item_code': this.finalRequistionArray[value].item_code,
-      'item_name': this.finalRequistionArray[value].item_name,
-      'item_desc': this.finalRequistionArray[value].item_desc,
-      'item_quantity': this.finalRequistionArray[value].item_quantity,
-      'item_units': this.finalRequistionArray[value].item_units
-    });
+    this.getItems2(this.finalRequistionArray[value])
   }
 
   // update item list function
 
   updateList() {
-    if (this.createRequistionForm.valid) {
+    if ((Number(this.createRequistionForm.value.item_quantity) <= Number(this.qty2))
+      && this.createRequistionForm.valid) {
       this.UpdateFlag = false;
       this.finalRequistionArray[this.update_id] = this.createRequistionForm.value;
-      this.resetForm();
+      this.createRequistionForm.reset();
     } else {
-      this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed', 'error');
     }
   }
 
@@ -236,7 +362,7 @@ export class BranchTransferComponent implements OnInit {
   }
   finalSubmit($event) {
     if ($event) {
-      if (!this.editBranchtransfer && !this.deleteFlag) {
+      if (!this.editBranchtransfer && !this.deleteFlag && !this.genFlag) {
         const JSON = {
           inv_bt_id: '',
           created_by: {
@@ -252,9 +378,13 @@ export class BranchTransferComponent implements OnInit {
           inv_item_details: this.finalRequistionArray,
           branch_details: {
             branch_id: this.finalRequistionForm.value.intended_use,
-            branch_name: this.getBranchName(this.finalRequistionForm.value.intended_use)
+            branch_name: this.getBranchName(this.finalRequistionForm.value.intended_use),
+            branch_prefix: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
           },
           status: 'active',
+          type: 'branch-transfer',
+          branch_to: this.getBranchPrefix(this.finalRequistionForm.value.intended_use),
+          branch_from: '',
         };
         this.service.createBranchTransfer(JSON).subscribe((res: any) => {
           if (res) {
@@ -267,7 +397,7 @@ export class BranchTransferComponent implements OnInit {
             this.commonService.showSuccessErrorMessage('Request Not Created Successfully', 'error');
           }
         });
-      } else if (this.editBranchtransfer && !this.deleteFlag) {
+      } else if (this.editBranchtransfer && !this.deleteFlag && !this.genFlag) {
         const JSON = {
           inv_bt_id: this.bt_id,
           inv_item_details: this.finalRequistionArray,
@@ -289,7 +419,7 @@ export class BranchTransferComponent implements OnInit {
             this.commonService.showSuccessErrorMessage('Request not Updated Successfully', 'error');
           }
         });
-      } else if (this.deleteFlag && !this.editBranchtransfer) {
+      } else if (this.deleteFlag && !this.editBranchtransfer && !this.genFlag) {
         const JSON = {
           inv_bt_id: this.bt_id,
           updated_date: '',
@@ -311,6 +441,61 @@ export class BranchTransferComponent implements OnInit {
             this.commonService.showSuccessErrorMessage('Request not Deleted Successfully', 'error');
           }
         });
+      } else if (this.genFlag && !this.editBranchtransfer) {
+        const JSON = {
+          inv_bt_id: this.bt_id,
+          updated_date: '',
+          updated_by: {
+            id: this.currentUser.login_id,
+            name: this.currentUser.full_name
+          },
+          status: 'gatepass-created'
+        };
+        this.service.updateBranchTransfer(JSON).subscribe((res: any) => {
+          if (res) {
+            this.finalRequistionArray = [];
+            this.createRequistionForm.reset();
+            this.finalRequistionForm.reset();
+            this.editBranchtransfer = false;
+            this.commonService.showSuccessErrorMessage('Gate Pass Created Successfully', 'success');
+            const JSON = {
+              inv_bt_id: '',
+              created_by: {
+                id: this.currentUser.login_id,
+                name: this.currentUser.full_name
+              },
+              updated_by: {
+                id: this.currentUser.login_id,
+                name: this.currentUser.full_name
+              },
+              created_date: '',
+              updated_date: '',
+              inv_item_details: this.item_det.inv_item_details,
+              branch_details: {
+                branch_id: '',
+                branch_name: this.schoolInfo.school_name,
+                branch_prefix: this.schoolInfo.school_prefix,
+              },
+              status: 'active',
+              type: 'procurement-master',
+              branch_from: this.item_det.branch_to,
+              branch_to: '',
+            };
+            this.service.branchInsert(JSON).subscribe((res: any) => {
+              if (res) {
+                this.service.updateMultiple({
+                  inv_item_details: this.item_det.inv_item_details
+                }).subscribe((res: any) => {
+                  if (res) {
+                  }
+                });
+              }
+            });
+            this.goBack();
+          } else {
+            this.commonService.showSuccessErrorMessage('Error to create gate pass Successfully', 'error');
+          }
+        });
       }
 
     }
@@ -320,6 +505,19 @@ export class BranchTransferComponent implements OnInit {
     if (findex !== -1) {
       return this.branchArray[findex].br_name;
     }
+  }
+  getBranchPrefix(id) {
+    const findex = this.branchArray.findIndex(f => Number(f.br_id) === Number(id));
+    if (findex !== -1) {
+      return this.branchArray[findex].br_prefix;
+    }
+  }
+  generatePass(val) {
+    this.genFlag = true;
+    this.item_det = val;
+    this.bt_id = val.inv_bt_id;
+    this.submitParam.text = 'to create gate pass ';
+    this.deleteModal.openModal(this.submitParam);
   }
   getBranchTransferData() {
     this.service.getBranchTransfer({
