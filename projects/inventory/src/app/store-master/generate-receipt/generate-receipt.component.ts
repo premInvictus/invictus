@@ -3,8 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ErpCommonService } from 'src/app/_services';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-generate-receipt',
@@ -14,11 +13,18 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class GenerateReceiptComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('messageModal') messageModal;
+  multipleFileArray: any[] = [];
+  imageArray: any[] = [];
+  finalDocumentArray: any[] = [];
+  counter: any = 0;
+  currentFileChangeEvent: any;
+  currentImage: any;
   UpdateFlag = false;
   submitParam: any = {};
   createOrderForm: FormGroup;
   finalReceiptForm: FormGroup;
   requistionArray: any[] = [];
+  locationDataArray: any[] = [];
   finalSubmitArray: any = {};
   finalReceiptArray: any[] = [];
   setBlankArray: any[] = [];
@@ -175,7 +181,7 @@ export class GenerateReceiptComponent implements OnInit {
       'item_quantity': this.finalRequistionArray[value].item_quantity,
       'item_units': this.finalRequistionArray[value].item_units,
       'item_price': this.finalRequistionArray[value].item_price,
-      'item_location': this.finalRequistionArray[value].item_location
+      'item_location': this.getLocationName(this.finalRequistionArray[value].item_location)
     });
   }
 
@@ -338,8 +344,8 @@ export class GenerateReceiptComponent implements OnInit {
       this.finalSubmitArray['pm_details'] = {
         purchase_order_id: this.finalReceiptForm.value.po_no,
         invoice_no: this.finalReceiptForm.value.invoice_no,
+        invoice_pdf: this.imageArray
       }
-      console.log(this.finalSubmitArray);
       if (this.pm_type === 'GR') {
         this.finalSubmitArray['pm_id'] = this.pm_id;
         this.finalReceiptArray.push(this.finalSubmitArray);
@@ -388,6 +394,7 @@ export class GenerateReceiptComponent implements OnInit {
           this.isLoading = false;
           for (var i = 0; i < result.length; i++) {
             this.allLocationData.push(result[i]);
+            this.locationDataArray.push(result[i]);
           }
         }
       });
@@ -401,11 +408,58 @@ export class GenerateReceiptComponent implements OnInit {
     });
   }
   getLocationName(location_id) {
-    const sindex = this.allLocationData.findIndex(f => Number(f.location_id) === Number(location_id));
+    const sindex = this.locationDataArray.findIndex(f => Number(f.location_id) === Number(location_id));
     if (sindex !== -1) {
-      return this.allLocationData[sindex].location_hierarchy;
+      return this.locationDataArray[sindex].location_hierarchy;
     } else {
       return '-';
     }
+  }
+  fileChangeEvent(fileInput) {
+    this.multipleFileArray = [];
+    this.currentFileChangeEvent = fileInput;
+    const files = fileInput.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.IterateFileLoop(files[i]);
+    }
+  }
+
+  IterateFileLoop(files) {
+    const reader = new FileReader();
+    reader.onloadend = (e) => {
+      this.currentImage = reader.result;
+      const fileJson = {
+        fileName: files.name,
+        imagebase64: this.currentImage,
+        module: 'Inventory Procurement'
+      };
+      this.multipleFileArray.push(fileJson);
+      if (this.multipleFileArray.length === this.currentFileChangeEvent.target.files.length) {
+        this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+          if (result && result.status === 'ok') {
+            for (const item of result.data) {
+              this.imageArray.push({
+                file_name: item.file_name,
+                file_url: item.file_url
+              });
+            }
+          }
+        });
+      }
+    };
+    reader.readAsDataURL(files);
+  }
+  getuploadurl(fileurl: string) {
+    const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+    if (filetype === 'pdf') {
+      return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+    } else if (filetype === 'doc' || filetype === 'docx') {
+      return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+    } else {
+      return fileurl;
+    }
+  }
+  deleteFile(index) {
+    this.imageArray.splice(index, 1);
   }
 }

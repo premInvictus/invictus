@@ -24,7 +24,7 @@ export class ProcurementMasterComponent implements OnInit {
   currentUser: any;
   session: any;
   constructor(
-    private fbuild: FormBuilder,
+    private fbuild: FormBuilder, 
     public commonService: CommonAPIService,
     public inventory: InventoryService,
     private router: Router,
@@ -115,6 +115,7 @@ export class ProcurementMasterComponent implements OnInit {
     if (this.createRequistionForm.valid) {
       this.UpdateFlag = false;
       this.finalRequistionArray[this.update_id] = this.createRequistionForm.value;
+      this.finalRequistionArray[this.update_id].item_status = 'pending';
       this.resetForm();
     } else {
       this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');

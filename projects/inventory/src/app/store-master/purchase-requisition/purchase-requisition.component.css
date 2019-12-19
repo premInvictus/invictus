@@ -21,3 +21,7 @@
 .mat-column-pm_intended_use{
     width: 25% !important;
 }
+.mat-checkbox-disabled {
+    cursor: default;
+    opacity: 0.5;
+}
