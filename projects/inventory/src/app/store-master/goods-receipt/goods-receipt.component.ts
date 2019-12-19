@@ -29,7 +29,7 @@ export class GoodsReceiptComponent implements OnInit {
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
   displayedColumns: string[] = ['position', 'po_number', 'po_date', 'created_by', 'vendor_id', 'vendor_name',
-    'vendor_category', 'vendor_contact', 'vendor_email', 'action'];
+    'vendor_category', 'vendor_contact', 'vendor_email'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -69,7 +69,7 @@ export class GoodsReceiptComponent implements OnInit {
             "vendor_category": item.pm_vendor ? item.pm_vendor.ven_category : '-',
             "vendor_contact": item.pm_vendor ? item.pm_vendor.ven_contact : '-',
             "vendor_email": item.pm_vendor ? item.pm_vendor.ven_email : '-',
-            "action": item.pm_id
+            // "action": item.pm_id
           });
           ind++;
         }
@@ -98,6 +98,9 @@ export class GoodsReceiptComponent implements OnInit {
     if (sindex !== -1) {
       this.orderArray.splice(sindex, 1);
     }
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
 

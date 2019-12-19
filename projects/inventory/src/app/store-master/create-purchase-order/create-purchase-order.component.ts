@@ -56,13 +56,15 @@ export class CreatePurchaseOrderComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
+
       for (let item of this.requistionArray) {
+        console.log('item', item);
         this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
         this.pm_type = item.pm_type;
         this.pm_id = item.pm_id;
         for (let dety of item.pm_item_details) {
           if (dety.item_status === 'approved') {
-            dety.item_status = 'pending';
+            dety.item_status = 'approved';
             const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
             if (sindex !== -1) {
               this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
@@ -75,12 +77,16 @@ export class CreatePurchaseOrderComponent implements OnInit {
           }
         }
       }
+      console.log('aasasas', this.finalRequistionArray);
+      this.finalOrderForm.patchValue({
+        ven_id: this.ven_id,
+      });
+      this.vendor(this.ven_id);
+    } else {
+      this.resetVendor();
     }
 
-    this.finalOrderForm.patchValue({
-      ven_id: this.ven_id,
-    });
-    this.vendor(this.ven_id);
+
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -90,7 +96,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
       item_quantity: '',
       item_units: '',
       item_price: '',
-      item_status: ''
+      item_status: 'approved'
     });
     this.finalOrderForm = this.fbuild.group({
       ven_id: '',
@@ -209,10 +215,9 @@ export class CreatePurchaseOrderComponent implements OnInit {
       this.router.navigate(['../procurement-master'], { relativeTo: this.route });
     } else {
       this.inventory.setrequisitionArray(this.setBlankArray);
-      this.commonService.tabChange.next({ 'currrentTab': 1 });
       this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+      this.inventory.setTabIndex({ 'currentTab': 1 });
     }
-
   }
   //  Open Final Submit Modal function
   openMessageModal() {
@@ -255,9 +260,8 @@ export class CreatePurchaseOrderComponent implements OnInit {
   }
 
   vendor(ven_id) {
-    // keyCode
     this.resetVendor();
-    if (ven_id !== '') {
+    if (ven_id) {
       this.vendorArray = [];
       this.erpCommonService.getVendor({ ven_id: Number(ven_id) }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
@@ -276,7 +280,6 @@ export class CreatePurchaseOrderComponent implements OnInit {
         }
       });
     }
-
   }
 
   finalSubmit($event) {
@@ -293,7 +296,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
       this.finalSubmitArray['pm_intended_use'] = '';
       this.finalSubmitArray['pm_source'] = 'PO';
       this.finalSubmitArray['pm_type'] = 'PO';
-      if (this.pm_type === 'PR') {
+      if (this.pm_type !== 'PO') {
         this.finalSubmitArray['pm_created'] = {
           created_by: Number(this.currentUser.login_id),
           created_by_name: this.currentUser.full_name,
@@ -321,26 +324,40 @@ export class CreatePurchaseOrderComponent implements OnInit {
         this.finalPoArray.push(this.finalSubmitArray);
         this.inventory.updateRequistionMaster(this.finalPoArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Purchase Order Updated Successfylly', 'success');
+            this.commonService.showSuccessErrorMessage('Purchase Order Updated Successfully', 'success');
             this.finalSubmitArray = [];
             this.finalRequistionArray = [];
             this.itemCodeArray = [];
             this.requistionArray = [];
             this.finalPoArray = [];
+            this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+            this.inventory.setTabIndex({ 'currentTab': 1 });
           }
         });
       } else {
         this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
           if (result) {
-            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-              if (result) {
-                this.commonService.showSuccessErrorMessage('Purchase Order Generated Successfylly', 'success');
-                this.finalSubmitArray = [];
-                this.finalRequistionArray = [];
-                this.itemCodeArray = [];
-                this.requistionArray = [];
-              }
-            });
+            if (this.requistionArray.length > 0) {
+              this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+                if (result) {
+                  this.commonService.showSuccessErrorMessage('Purchase Order Generated Successfully', 'success');
+                  this.finalSubmitArray = [];
+                  this.finalRequistionArray = [];
+                  this.itemCodeArray = [];
+                  this.requistionArray = [];
+                  this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+                  this.inventory.setTabIndex({ 'currentTab': 0 });
+                }
+              });
+            } else {
+              this.commonService.showSuccessErrorMessage('Purchase Order Generated Successfully', 'success');
+              this.finalSubmitArray = [];
+              this.finalRequistionArray = [];
+              this.itemCodeArray = [];
+              this.requistionArray = [];
+              this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+              this.inventory.setTabIndex({ 'currentTab': 1 });
+            }
           } else {
             this.commonService.showSuccessErrorMessage('Error While Generating Order', 'error');
           }

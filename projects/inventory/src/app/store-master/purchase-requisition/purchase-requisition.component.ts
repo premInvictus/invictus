@@ -5,6 +5,7 @@ import { Element } from './purchase-requisition.model';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CapitalizePipe } from '../../_pipes';
 
 @Component({
   selector: 'app-purchase-requisition',
@@ -12,7 +13,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
   styleUrls: ['./purchase-requisition.component.css']
 })
 export class PurchaseRequisitionComponent implements OnInit {
-
+  @ViewChild('deleteModal') deleteModal;
+  submitParam: any = {};
   requistionArray: any[] = [];
   itemCode: any;
   itemCodeArray: any[] = [];
@@ -97,7 +99,7 @@ export class PurchaseRequisitionComponent implements OnInit {
               }
             });
             current.push({
-              position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code },
+              position: { 'count': i, 'pm_id': next.pm_id, 'item_code': element.item_code, 'item_status': item_status },
               item_code: element.item_code,
               item_name: element.item_name,
               item_status: item_status,
@@ -106,8 +108,7 @@ export class PurchaseRequisitionComponent implements OnInit {
               pm_id: next.pm_id,
               created_date: next.pm_created.created_date,
               created_by: next.pm_created.created_by_name,
-
-              action: { 'pm_id': next.pm_id, 'item_code': element.item_code }
+              action: { 'pm_id': next.pm_id, 'item_code': element.item_code, 'item_status': item_status }
 
             });
             i++;
@@ -115,7 +116,6 @@ export class PurchaseRequisitionComponent implements OnInit {
           return current;
         }, []);
         this.ELEMENT_DATA = DATA;
-        console.log(this.ELEMENT_DATA);
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         this.pageLength = this.ELEMENT_DATA.length;
         this.dataSource.paginator = this.paginator;
@@ -129,22 +129,67 @@ export class PurchaseRequisitionComponent implements OnInit {
     });
   }
   approvedList(pm_id, item_code, text) {
-    const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
-    if (tindex !== -1) {
-      const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item_code));
-      if (text === 'approved') {
-        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
-      } else if (text === 'reject') {
-        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'reject';
-      } else if (text === 'hold') {
-        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
-      } else if (text === 'esclate') {
-        this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+    this.submitParam.text = new CapitalizePipe().transform(text + ' Request');
+    this.submitParam.pm_id = pm_id;
+    this.submitParam.item_code = item_code;
+    this.submitParam.action = text;
+    this.submitParam.action_performed = 'single'
+    this.deleteModal.openModal(this.submitParam);
+
+  }
+  finalSubmit($event) {
+    if ($event.action_performed === 'single') {
+      const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number($event.pm_id));
+      if (tindex !== -1) {
+        const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number($event.item_code));
+        if ($event.action === 'approved') {
+          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
+        } else if ($event.action === 'reject') {
+          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
+        } else if ($event.action === 'hold') {
+          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
+        } else if ($event.action === 'esclate') {
+          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+        }
+        if ($event.action !== 'approved') {
+          this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+            if (result) {
+              this.commonService.showSuccessErrorMessage('Successfully', 'success');
+              this.toBePromotedList = [];
+              this.getAllRequistionMaster();
+            } else {
+              this.commonService.showSuccessErrorMessage('Error ', 'error');
+            }
+          });
+        } else {
+          this.inventory.setrequisitionArray(this.requistionArray);
+          this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
+        }
       }
-      if (text !== 'approved') {
+    } else if ($event.action_performed === 'overall') {
+      if (this.toBePromotedList.length > 0) {
+        for (let item of this.toBePromotedList) {
+          const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(item.pm_id));
+          if (tindex !== -1) {
+            const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item.item_code));
+            if ($event.action === 'approved') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
+            } else if ($event.action === 'reject') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
+            } else if ($event.action === 'hold') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
+            } else if ($event.action === 'esclate') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+            }
+          }
+        }
+      }
+      if ($event.action !== 'approved') {
         this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
           if (result) {
-            this.commonService.showSuccessErrorMessage('Successfylly', 'success');
+            this.commonService.showSuccessErrorMessage('Successfully', 'success');
+            this.getAllRequistionMaster();
+            this.toBePromotedList = [];
           } else {
             this.commonService.showSuccessErrorMessage('Error ', 'error');
           }
@@ -170,8 +215,8 @@ export class PurchaseRequisitionComponent implements OnInit {
   isSelectedP(count) {
     return this.toBePromotedList.findIndex(f => f.count === count) !== -1 ? true : false;
   }
-  isDisabledP(item_code) {
-    //return this.promoteStudentListArray.findIndex(f => f.au_login_id === login_id && f.pmap_status === '0') !== -1 ? true : false;
+  isDisabledP(count) {
+    //return this.toBePromotedList.findIndex(f => f.count === count) && f.pmap_status === '0') !== -1 ? true : false;
   }
   checkAllPromotionList() {
     this.toBePromotedList = [];
@@ -190,37 +235,12 @@ export class PurchaseRequisitionComponent implements OnInit {
       this.toBePromotedList = [];
     }
   }
+
   overallSubmit(text) {
-    if (this.toBePromotedList.length > 0) {
-      for (let item of this.toBePromotedList) {
-        const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(item.pm_id));
-        if (tindex !== -1) {
-          const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item.item_code));
-          if (text === 'approved') {
-            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
-          } else if (text === 'reject') {
-            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'reject';
-          } else if (text === 'hold') {
-            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
-          } else if (text === 'esclate') {
-            this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
-          }
-        }
-      }
-    }
-    if (text !== 'approved') {
-      this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-        if (result) {
-          this.commonService.showSuccessErrorMessage('Successfylly', 'success');
-        } else {
-          this.commonService.showSuccessErrorMessage('Error ', 'error');
-        }
-      });
-    } else {
-      this.inventory.setrequisitionArray(this.requistionArray);
-      this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
-    }
-    //console.log(this.requistionArray);
+    this.submitParam.text = new CapitalizePipe().transform(text + ' Request');
+    this.submitParam.action = text;
+    this.submitParam.action_performed = 'overall';
+    this.deleteModal.openModal(this.submitParam);
   }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();

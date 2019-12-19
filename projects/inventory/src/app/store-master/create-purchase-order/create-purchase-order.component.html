@@ -1,9 +1,16 @@
 <div class="row">
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
-      <div class="col-6 ">
-        <div class="top-card-title">
-          <span class="font-size-24 font-medium">Create Purchase Order</span>
+      <div class="row">
+        <div class="col-6 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Create Purchase Order</span>
+          </div>
+        </div>
+        <div class="col-6 ">
+          <div class="top-card-title float-right">
+            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">Back</button>
+          </div>
         </div>
       </div>
     </mat-card>
@@ -26,7 +33,7 @@
                     <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
                       (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
                       {{item.item_code}} -
-                      {{item.item_name}}</mat-option>
+                      {{item.item_name | capitalize}}</mat-option>
                   </mat-autocomplete>
                   <mat-error>
                     This field is required
@@ -53,7 +60,8 @@
               <div class="col-6 ">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Quantity</mat-label>
-                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity" required>
+                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity" autocomplete="off"
+                    required>
                 </mat-form-field>
               </div>
               <div class="col-6 ">
@@ -67,7 +75,8 @@
               <div class="col-12 ">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Price</mat-label>
-                  <input matInput placeholder="Price" type="text" formControlName="item_price" required>
+                  <input matInput placeholder="Price" type="text" formControlName="item_price" autocomplete="off"
+                    required>
                 </mat-form-field>
               </div>
             </div>
@@ -102,10 +111,10 @@
                       {{item.item_code}}
                     </td>
                     <td class="custom-td">
-                      {{item.item_name}}
+                      {{item.item_name | capitalize}}
                     </td>
                     <td class="custom-td">
-                      {{item.item_desc}}
+                      {{item.item_desc | capitalize}}
                     </td>
                     <td class="custom-td">
                       {{item.item_quantity}}
@@ -125,7 +134,7 @@
                   <tr class="text-center">
                     <td colspan="9">
                       <img
-                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                      src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_order.png">
                       <br><br><br>
                       <br><span class="font-size-20 font-light font-color-brown">
                         Please Update Item list on Click of Add Button
@@ -148,8 +157,8 @@
               <div class="col-4 ">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Vendor ID</mat-label>
-                  <input type="text" matInput placeholder="Vendor ID" formControlName="ven_id" required
-                    (keyup)="filterVendor($event)">
+                  <input type="text" matInput placeholder="Vendor ID" formControlName="ven_id" autocomplete="off"
+                    required (keyup)="filterVendor($event)">
                   <mat-error>
                     This field is required
                   </mat-error>

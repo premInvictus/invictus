@@ -48,7 +48,7 @@ export class PurchaseOrderComponent implements OnInit {
     this.session = JSON.parse(localStorage.getItem('session'));
   }
 
-  ngOnInit() {  
+  ngOnInit() {
     this.getAllOrderMaster();
   }
   getAllOrderMaster() {
@@ -100,5 +100,8 @@ export class PurchaseOrderComponent implements OnInit {
     if (sindex !== -1) {
       this.orderArray.splice(sindex, 1);
     }
+  }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
