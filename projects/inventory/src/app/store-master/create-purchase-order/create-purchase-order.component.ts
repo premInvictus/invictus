@@ -14,6 +14,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 export class CreatePurchaseOrderComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('messageModal') messageModal;
+  messageText = 'Create';
   UpdateFlag = false;
   submitParam: any = {};
   createOrderForm: FormGroup;
@@ -56,15 +57,15 @@ export class CreatePurchaseOrderComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
-
       for (let item of this.requistionArray) {
-        console.log('item', item);
+
         this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
         this.pm_type = item.pm_type;
         this.pm_id = item.pm_id;
         for (let dety of item.pm_item_details) {
-          if (dety.item_status === 'approved') {
-            dety.item_status = 'approved';
+          if (item.pm_type === 'PO') {
+            this.messageText = 'Update';
+            console.log('item', item);
             const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
             if (sindex !== -1) {
               this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
@@ -74,10 +75,23 @@ export class CreatePurchaseOrderComponent implements OnInit {
               });
               this.finalRequistionArray.push(dety);
             }
+          } else {
+            this.messageText = 'Create';
+            if (dety.item_status === 'approveds') {
+              dety.item_status = 'approved';
+              const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
+              if (sindex !== -1) {
+                this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
+              } else {
+                this.itemCodeArray.push({
+                  item_code: dety.item_code,
+                });
+                this.finalRequistionArray.push(dety);
+              }
+            }
           }
         }
       }
-      console.log('aasasas', this.finalRequistionArray);
       this.finalOrderForm.patchValue({
         ven_id: this.ven_id,
       });
@@ -85,8 +99,6 @@ export class CreatePurchaseOrderComponent implements OnInit {
     } else {
       this.resetVendor();
     }
-
-
   }
   buildForm() {
     this.createOrderForm = this.fbuild.group({
@@ -227,7 +239,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
   //  Open Final Submit Modal function
   openSubmitModal() {
     if (this.finalOrderForm.valid) {
-      this.submitParam.text = 'Create Purchase Order';
+      this.submitParam.text = this.messageText + ' Purchase Order';
       this.deleteModal.openModal(this.submitParam);
     } else {
       this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');

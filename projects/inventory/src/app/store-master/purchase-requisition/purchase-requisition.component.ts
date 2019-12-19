@@ -136,20 +136,24 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.submitParam.action_performed = 'single'
     this.deleteModal.openModal(this.submitParam);
 
-  }
+  } 
   finalSubmit($event) {
     if ($event.action_performed === 'single') {
       const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number($event.pm_id));
       if (tindex !== -1) {
         const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number($event.item_code));
-        if ($event.action === 'approved') {
-          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
-        } else if ($event.action === 'reject') {
-          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
-        } else if ($event.action === 'hold') {
-          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
-        } else if ($event.action === 'esclate') {
-          this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+        if (rindex !== -1) {
+          if (this.requistionArray[tindex].pm_item_details[rindex].item_status !== 'approved') {
+            if ($event.action === 'approved') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approveds';
+            } else if ($event.action === 'reject') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
+            } else if ($event.action === 'hold') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
+            } else if ($event.action === 'esclate') {
+              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+            }
+          }
         }
         if ($event.action !== 'approved') {
           this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
@@ -172,14 +176,18 @@ export class PurchaseRequisitionComponent implements OnInit {
           const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(item.pm_id));
           if (tindex !== -1) {
             const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item.item_code));
-            if ($event.action === 'approved') {
-              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approved';
-            } else if ($event.action === 'reject') {
-              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
-            } else if ($event.action === 'hold') {
-              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
-            } else if ($event.action === 'esclate') {
-              this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+            if (rindex !== -1) {
+              if (this.requistionArray[tindex].pm_item_details[rindex].item_status !== 'approved') {
+                if ($event.action === 'approved') {
+                  this.requistionArray[tindex].pm_item_details[rindex].item_status = 'approveds';
+                } else if ($event.action === 'reject') {
+                  this.requistionArray[tindex].pm_item_details[rindex].item_status = 'rejected';
+                } else if ($event.action === 'hold') {
+                  this.requistionArray[tindex].pm_item_details[rindex].item_status = 'hold';
+                } else if ($event.action === 'esclate') {
+                  this.requistionArray[tindex].pm_item_details[rindex].item_status = 'esclate';
+                }
+              }
             }
           }
         }
@@ -215,7 +223,18 @@ export class PurchaseRequisitionComponent implements OnInit {
   isSelectedP(count) {
     return this.toBePromotedList.findIndex(f => f.count === count) !== -1 ? true : false;
   }
-  isDisabledP(count) {
+  isDisabledP(pm_id, item_code) {
+    const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
+    if (tindex !== -1) {
+      const rindex = this.requistionArray[tindex].pm_item_details.findIndex(r => Number(r.item_code) === Number(item_code));
+      if (rindex !== -1) {
+        if (this.requistionArray[tindex].pm_item_details[rindex].item_status === 'approved') {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
     //return this.toBePromotedList.findIndex(f => f.count === count) && f.pmap_status === '0') !== -1 ? true : false;
   }
   checkAllPromotionList() {
@@ -224,11 +243,13 @@ export class PurchaseRequisitionComponent implements OnInit {
     if (this.allselectedP) {
       let i = 0;
       for (const item of this.ELEMENT_DATA) {
-        this.toBePromotedList.push({
-          count: i,
-          item_code: item.item_code,
-          pm_id: item.pm_id
-        });
+        if (item.item_status !== 'approved') {
+          this.toBePromotedList.push({
+            count: i,
+            item_code: item.item_code,
+            pm_id: item.pm_id
+          });
+        }
         i++;
       }
     } else {

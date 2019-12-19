@@ -253,7 +253,7 @@
               </div>
             </div>
             <div class="row">
-              <div class="col-4 ">
+              <div class="col-4 " *ngIf="pm_id">
                 <mat-form-field class="form-field opacity-class" appearance="outline">
                   <mat-label>PO No.</mat-label>
                   <input type="text" matInput placeholder="PO No." formControlName="po_no" readonly>
@@ -265,6 +265,34 @@
                   <input type="text" matInput placeholder="Invoice No." formControlName="invoice_no">
                 </mat-form-field>
               </div>
+            </div>
+            <div class="row">
+              <div class="col-1 col-doc-img-3">
+                <div class="remove-col-padding set-width-height">
+                  <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment"
+                    style="display: none"><a class=" text-center cursor-pointer">
+                    <mat-icon class="mar-left-28 cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
+                    &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" for="addattachment">Choose
+                      File</label>
+                  </a>
+                </div>
+              </div>
+              <ng-container *ngFor="let img of this.imageArray;let i = index">
+                <div class="col-1 col-doc-img-3">
+                  <div class="remove-col-padding  ">
+                    <div style="float:right;">
+                      <button mat-button class="upload-document-delete-btn" (click)="deleteFile(i)">
+                        <mat-icon class="btn-upload-icon">delete</mat-icon>
+                      </button>
+                    </div>
+                    <div class="inline-flex ">
+                      <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
+                      <img class="btn-doc-upload-preview margin-left-10" [src]="getuploadurl(img.file_url)"><br>
+                    </div>
+                    <br>
+                  </div>
+                </div>
+              </ng-container>
             </div>
           </form>
           <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">

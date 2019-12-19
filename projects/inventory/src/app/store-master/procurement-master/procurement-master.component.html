@@ -84,11 +84,11 @@
               <table class="table table-borderd table-stripped custom-table">
                 <thead class="table-skill__head text-center">
                   <tr class="custom-tr">
-                    <th class="custom-th" rowspan="2">Item Code</th>
+                    <th class="custom-th" style="width: 10%;" rowspan="2">Item Code</th>
                     <th class="custom-th" rowspan="2">Item Name</th>
                     <th class="custom-th" rowspan="2">Description</th>
-                    <th class="custom-th" rowspan="2">Quantity</th>
-                    <th class="custom-th" rowspan="2">Action</th>
+                    <th class="custom-th" style="width: 10%;" rowspan="2">Quantity</th>
+                    <th class="custom-th" style="width: 10%;" rowspan="2">Action</th>
                   </tr>
                 </thead>
                 <tbody class="text-center" *ngIf="this.finalRequistionArray.length > 0">
@@ -96,10 +96,10 @@
                     <td class="custom-td">
                       {{item.item_code}}
                     </td>
-                    <td class="custom-td">
+                    <td class="custom-td text-left">
                       {{item.item_name | capitalize}}
                     </td>
-                    <td class="custom-td">
+                    <td class="custom-td text-left">
                       {{item.item_desc | capitalize}}
                     </td>
                     <td class="custom-td">
