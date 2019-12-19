@@ -522,6 +522,7 @@ export class CirculationConsumptionComponent implements OnInit {
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		for (let i = 0; i < itemData.length; i++) {
 			var inputJson = {};
+			console.log('itemData[i]--', itemData[i]);
 			if (itemData[i]['item_status'] === 'issued') {
 				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd')) {
 					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
@@ -529,9 +530,9 @@ export class CirculationConsumptionComponent implements OnInit {
 					inputJson['fdue_date'] = itemData[i]['due_date'];
 					inputJson['reissue_status'] = 1;
 					inputJson['item_code'] = itemData[i]['item_code'];
-					inputJson['issued_quantity'] = itemData[i]['item_location']['item_qty'];
+					inputJson['issued_quantity'] = itemData[i]['issued_quantity'];
 					inputJson['item_units'] =  itemData[i]['item_units'];
-					inputJson['item_location'] = { location_id: itemData[i]['item_location']['location_id'], item_qty: itemData[i]['item_location']['item_qty'] };
+					inputJson['item_location'] = { location_id: itemData[i]['item_location'], item_qty: itemData[i]['issued_quantity'] };
 				} else {
 					if (itemData[i]['item_nature']['id'] === 41) {
 						inputJson['item_status'] = 'active';
@@ -547,6 +548,8 @@ export class CirculationConsumptionComponent implements OnInit {
 								this.finIssueItem.splice(j, 1);
 							}
 						}
+					} else {
+						this.common.showSuccessErrorMessage('Consumeable Items cant Return', 'info');
 					}
 				}
 				updateditemData.push(inputJson);
@@ -554,8 +557,8 @@ export class CirculationConsumptionComponent implements OnInit {
 				if (itemData[i]['due_date']) {
 					inputJson['item_code'] = itemData[i]['item_code'];
 					inputJson['item_status'] = 'issued';
-					inputJson['issued_quantity'] = itemData[i]['item_location']['item_qty'];
-					inputJson['item_location'] = { location_id: itemData[i]['item_location'], item_qty: itemData[i]['item_location']['item_qty'] };
+					inputJson['issued_quantity'] = itemData[i]['issued_quantity'];
+					inputJson['item_location'] = { location_id: itemData[i]['item_location'], item_qty: itemData[i]['issued_quantity'] };
 					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
 					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					inputJson['item_units'] =  itemData[i]['item_units'];
@@ -564,6 +567,8 @@ export class CirculationConsumptionComponent implements OnInit {
 				}
 			}
 		}
+
+		
 
 		var limitFlag = this.checkForIssueItemLimit();
 
@@ -580,6 +585,8 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
+
+			console.log('inputJson--', inputJson);
 			if (!this.userHaveItemsData) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
 					if (result) {
