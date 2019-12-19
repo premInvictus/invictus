@@ -24,6 +24,16 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	icarddetforecolor: any;
 	footerforecolor: any;
 	footerbackcolor: any;
+	showImage = false;
+	hideIfBlankFlag = false;
+	templateImage: any;
+	showTempImage = false;
+	authSignFlag = false;
+	schoolLogo: any = '';
+	school_logo_image: any;
+	showSchoolImage = false;
+	showWaterImage = false;
+	waterMarkImage: any = '';
 	currentImage: any;
 	logoPosition: any[] = [{ id: '1', pos: 'Top' },
 	{ id: '2', pos: 'Bottom' },
@@ -38,9 +48,6 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	idCardSettings: any;
 	multipleFileArray: any[] = [];
 	authImage: any;
-	showImage = false;
-	hideIfBlankFlag = false;
-	authSignFlag = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -239,6 +246,81 @@ export class IdcardPrintingSetupComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.authImage = result.data[0].file_url;
 					this.showImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadLogo($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop2(files[i]);
+		}
+	}
+	IterateFileLoop2(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.schoolLogo = result.data[0].file_url;
+					this.showSchoolImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadTempImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop3(files[i]);
+		}
+	}
+	IterateFileLoop3(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.templateImage = result.data[0].file_url;
+					this.showTempImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadWaterImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop4(files[i]);
+		}
+	}
+	IterateFileLoop4(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.waterMarkImage = result.data[0].file_url;
+					this.showWaterImage = true;
 				}
 			});
 		};

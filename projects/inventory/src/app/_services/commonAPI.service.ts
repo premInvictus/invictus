@@ -25,6 +25,7 @@ export class CommonAPIService {
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();
+	branchItems: any = {};
 	data: any = {};
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
@@ -208,7 +209,7 @@ export class CommonAPIService {
 
 	getMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
+		return this.http.post(environment.apiInvUrl + '/common/findAll', value);
 	}
 
 	getLocation(value) {
@@ -237,11 +238,11 @@ export class CommonAPIService {
 
 	insertMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/common/insert', value);
+		return this.http.post(environment.apiInvUrl + '/common/insert', value);
 	}
 	updateMaster(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/common/update', value);
+		return this.http.post(environment.apiInvUrl + '/common/update', value);
 	}
 	setItemData(data) {
 		this.itemData = data;
@@ -257,6 +258,12 @@ export class CommonAPIService {
 	}
 	getData() {
 		return this.data;
+	}
+	setBranchItems(data) {
+		this.branchItems = data;
+	}
+	getBranchItems() {
+		return this.branchItems;
 	}
 
 }

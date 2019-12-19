@@ -96,6 +96,7 @@ export class BranchTransferComponent implements OnInit {
     this.finalRequistionForm.reset();
     this.createRequistionForm.reset();
     this.editBranchtransfer = false;
+    this.itemArray2 = [];
   }
 
   goBack() {
@@ -275,7 +276,8 @@ export class BranchTransferComponent implements OnInit {
     this.bt_id = val.inv_bt_id;
   }
   addList() {
-    if (this.createRequistionForm.valid && this.locations.length > 0 && (Number(this.createRequistionForm.value.item_quantity) <= Number(this.qty))) {
+    if (this.createRequistionForm.valid && this.locations.length > 0 && (Number(this.createRequistionForm.value.item_quantity) <= Number(this.qty))
+      && (Number(this.createRequistionForm.value.item_quantity) !== 0)) {
       const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createRequistionForm.value.item_code)
         && Number(f.location) === Number(this.createRequistionForm.value.location));
       if (sindex !== -1) {
@@ -289,7 +291,7 @@ export class BranchTransferComponent implements OnInit {
       }
       this.resetForm();
     } else {
-      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed', 'error');
+      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed or is not zero', 'error');
     }
   }
 
@@ -306,12 +308,13 @@ export class BranchTransferComponent implements OnInit {
 
   updateList() {
     if ((Number(this.createRequistionForm.value.item_quantity) <= Number(this.qty2))
+      && ((Number(this.createRequistionForm.value.item_quantity) !== 0))
       && this.createRequistionForm.valid) {
       this.UpdateFlag = false;
       this.finalRequistionArray[this.update_id] = this.createRequistionForm.value;
       this.createRequistionForm.reset();
     } else {
-      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed', 'error');
+      this.commonService.showSuccessErrorMessage('Please fill all required fields or make sure item has a location or quantity do not exceed or is not zero', 'error');
     }
   }
 
@@ -522,7 +525,8 @@ export class BranchTransferComponent implements OnInit {
   getBranchTransferData() {
     this.service.getBranchTransfer({
       "pageIndex": this.pageIndex,
-      "pageSize": this.pageSize
+      "pageSize": this.pageSize,
+      "type": 'branch-transfer'
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         let ind = 0;
