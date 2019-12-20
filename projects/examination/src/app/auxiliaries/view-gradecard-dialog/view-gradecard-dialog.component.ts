@@ -52,9 +52,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   attendenceInPercent = 0;
   obtainedGradeAvgHighest = {
     obtained: true,
-    grade: true,
-    avg: true,
-    highest: true
+    grade: false,
+    avg: false,
+    highest: false
   };
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -74,14 +74,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     if(this.data.ect_grade_avg_highest && this.data.ect_grade_avg_highest != '') {
       let obj = JSON.parse(this.data.ect_grade_avg_highest);
       console.log('obj.avg', obj.avg);
-      if(obj.grade == '0') {
-        this.obtainedGradeAvgHighest.grade = false;
+      if(obj.grade && obj.grade == true) {
+        this.obtainedGradeAvgHighest.grade = true;
       }
-      if(obj.avg == '0') {
-        this.obtainedGradeAvgHighest.avg = false;
+      if(obj.avg && obj.avg == true) {
+        this.obtainedGradeAvgHighest.avg = true;
       }
-      if(obj.highest == '0') {
-        this.obtainedGradeAvgHighest.highest = false;
+      if(obj.highest && obj.highest == true) {
+        this.obtainedGradeAvgHighest.highest = true;
       }
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
