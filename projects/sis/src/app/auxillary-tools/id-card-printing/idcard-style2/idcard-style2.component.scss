@@ -1,11 +1,26 @@
 .student-portrait-photo--size__style2 {
     margin-top: 0px !important;
 }
+// img.watermark-image {
+//     position: absolute;
+//     top: 100px;
+//     left: 131px;
+//     width: 8%;
+//     z-index: 0;
+//     opacity: 0.3;
+// }
+// img.watermark-image {
+//     position: absolute;
+//     left: 102px;
+//     width: 100px;
+//     z-index: 0;
+//     opacity: 0.3;
+// }
 img.watermark-image {
-    position: absolute;
-    top: 100px;
-    left: 131px;
-    width: 8%;
+    width: 108px;
+    position: relative;
+    top: -172px;
+    left: 94px;
     z-index: 0;
     opacity: 0.3;
 }
@@ -169,7 +184,7 @@ ngx-barcode {
     float: none !important;
 }
 .styl-1 {
-    float: none !important;
+    float: none ;
     position: relative;
     left: 30%;
 }

@@ -13,7 +13,7 @@ import { PrintIdCardComponent } from './print-id-card/print-id-card.component';
 	styleUrls: ['./id-card-printing.component.scss']
 })
 export class IdCardPrintingComponent implements OnInit, AfterViewInit {
-	displayedColumns: string[] = ['select', 'no', 'name', 'class', 'section', 'contact', 'print', 'action'];
+	displayedColumns: string[] = ['select', 'no', 'name', 'class', 'section', 'contact', 'action'];
 	BULK_ELEMENT_DATA: BulkElement[] = [];
 	dataSource = new MatTableDataSource<BulkElement>(this.BULK_ELEMENT_DATA);
 	checkFlag = true;
@@ -48,6 +48,9 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		au_process_type: '4', au_process_name: 'Admission'
 	}];
 	showViewProfile = false;
+	classArray: any;
+	sectionArray: any;
+	studentdetailsform: FormGroup;
 	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -58,6 +61,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getSchool();
+		this.getClass();
 		this.getIdCardSettings();
 		localStorage.removeItem('id_card_view_last_state');
 	}
@@ -66,6 +70,10 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	}
 
 	buildForm() {
+		this.studentdetailsform = this.fbuild.group({
+			'au_class_id': '',
+			'au_sec_id': ''
+		});
 		this.individualPrintForm = this.fbuild.group({
 			enrollment_type: '',
 			print_option: '',
@@ -151,7 +159,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 							au_admission_no: this.studentDetails.au_admission_no,
 							au_login_id: this.studentDetails.au_login_id,
 							au_full_name: this.studentDetails.au_full_name,
-							au_mobile: this.studentDetails.au_mobile,
+							au_mobile: this.studentDetails.active_contact,
 							au_profileimage: this.studentDetails.au_profileimage,
 							class_name: this.studentDetails.class_name,
 							sec_name: this.studentDetails.sec_name,
@@ -261,7 +269,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	}
 	checkEventChange(event) {
 		if (event.value === '2') {
-			this.getBulkStudents();
+			// this.getBulkStudents();
 		}
 	}
 	radioEnableEvent() {
@@ -275,32 +283,56 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 			this.disabled = false;
 		}
 	}
-	getBulkStudents() {
-		this.BULK_ELEMENT_DATA = [];
-		this.dataSource = new MatTableDataSource<BulkElement>(this.BULK_ELEMENT_DATA);
-		this.sisService.printApplication({
-			enrollment_type: this.individualPrintForm.value.enrollment_type,
-			pmap_status: '1'
-		}).subscribe((result: any) => {
+	getClass() {
+		this.classArray = [];
+		this.sisService.getClass({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				let pos = 1;
-				for (const item of result.data) {
-					this.BULK_ELEMENT_DATA.push({
-						select: pos,
-						no: item.au_admission_no,
-						name: item.au_full_name,
-						class: item.class_name,
-						section: item.sec_name,
-						contact: item.au_mobile,
-						print: '0',
-						action: item
-					});
-					pos++;
-				}
-				this.dataSource = new MatTableDataSource<BulkElement>(this.BULK_ELEMENT_DATA);
-				this.dataSource.sort = this.sort;
+				this.classArray = result.data;
 			}
 		});
+	}
+	getSectionsByClass() {
+		this.sectionArray = [];
+		this.sisService.getSectionsByClass({ class_id: this.studentdetailsform.value.au_class_id }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.sectionArray = result.data;
+			}
+		});
+	}
+	getBulkStudents() {
+		this.checkStudents = [];
+		this.checkAllFlag = false;
+		this.BULK_ELEMENT_DATA = [];
+		if (!this.studentdetailsform.value.au_class_id && !this.studentdetailsform.value.au_sec_id) {
+			this.commonApiService.showSuccessErrorMessage('Please Select Class', 'error');
+		} else {
+			this.BULK_ELEMENT_DATA = [];
+			this.dataSource = new MatTableDataSource<BulkElement>(this.BULK_ELEMENT_DATA);
+			this.sisService.printApplication({
+				enrollment_type: this.individualPrintForm.value.enrollment_type,
+				pmap_status: '1',
+				class_id: this.studentdetailsform.value.au_class_id,
+				sec_id: this.studentdetailsform.value.au_sec_id,
+			}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					let pos = 1;
+					for (const item of result.data) {
+						this.BULK_ELEMENT_DATA.push({
+							select: pos,
+							no: item.au_admission_no,
+							name: item.au_full_name,
+							class: item.class_name,
+							section: item.sec_name,
+							contact: item.active_contact ? item.active_contact : '-',
+							action: item
+						});
+						pos++;
+					}
+					this.dataSource = new MatTableDataSource<BulkElement>(this.BULK_ELEMENT_DATA);
+					this.dataSource.sort = this.sort;
+				}
+			});
+		}
 	}
 	checkAllStudents($event) {
 		this.checkStudents = [];
@@ -340,8 +372,8 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 				adm_no: adm_id,
 				enrollment_type: this.individualPrintForm.value.enrollment_type
 			},
-			'height': '80vh',
-			'width': '65vh'
+			'height': '50vh',
+			'width': '50vh'
 		});
 	}
 	printIdCard(adm_id) {
@@ -350,7 +382,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 				adm_no: adm_id,
 				enrollment_type: this.individualPrintForm.value.enrollment_type
 			},
-			'height': '80vh',
+			'height': '60vh',
 			'width': '65vh'
 		});
 	}
@@ -360,7 +392,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 				no: this.checkStudents,
 				enrollment_type: this.individualPrintForm.value.enrollment_type
 			},
-			'height': '100vh',
+			'height': '80vh',
 			'width': '100vh'
 		});
 	}

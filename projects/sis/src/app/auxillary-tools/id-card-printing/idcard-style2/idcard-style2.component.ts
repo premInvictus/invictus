@@ -46,11 +46,11 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 		private commonApiService: CommonAPIService) { }
 
 	ngOnInit() {
+		this.getSchool();
 	}
 	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
 			+ ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
-		this.getSchool();
 		this.getBloodGroup();
 		if (this.studentDetails.au_profileimage) {
 			this.studentProfileImage = this.studentDetails.au_profileimage;

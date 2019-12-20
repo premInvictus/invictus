@@ -347,7 +347,7 @@
    </div>
 </div> -->
 <div style=" font-size:11px;height:207px;width:325px;margin-left:15px;margin-top:15px;"
-   [ngStyle]="{'background-image': 'url(' + photo + ')'}" class="styl-1">
+   [ngStyle]="{'background-image': 'url(' + photo + ')'}" class="styl-1 styl-2">
    <table cellpadding="0" cellspacing="0" style="width:100%;/* margin-top: 4px; */">
       <tbody>
          <tr [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor}">
@@ -386,8 +386,7 @@
                      <tr>
                         <td [ngStyle]="{'font-weight':allContentBold}" align="right" valign="top"> <b> Parent :</b></td>
                         <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top"
-                           align="left">&nbsp;Barun
-                           Kumar</td>
+                           align="left">&nbsp;{{studentDetails?.active_parent}}</td>
                      </tr>
                      <tr>
                         <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right"><b> Class :</b></td>
@@ -404,8 +403,9 @@
                               cellpadding="0">
                               <tbody>
                                  <tr>
-                                    <td style="width: 160px;"> Behind Tractor Showroom, Karnibag, Deoghar Karnibag
-                                       814112 Deoghar</td>
+                                    <td style="width: 160px;">
+                                       {{studentDetails?.address1 ? (studentDetails.address1 | capitalize) : '-'}} ,
+                                       {{studentDetails?.city ? (studentDetails.city | capitalize) : '-'}}</td>
                                  </tr>
                               </tbody>
                            </table>
@@ -415,19 +415,23 @@
                         <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right"><b> Phone :</b></td>
                         <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top"
                            align="left">
-                           &nbsp;9663244491</td>
+                           &nbsp;{{studentDetails?.active_contact ? studentDetails.active_contact : '-'}}</td>
                      </tr>
                      <tr>
-                        <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right" style="white-space:nowrap;"><b> Transport
+                        <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right"
+                           style="white-space:nowrap;"><b> Transport
                               :</b></td>
-                        <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top" align="left">&nbsp;
+                        <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top"
+                           align="left">&nbsp;
                            {{studentDetails.route_name}}- {{studentDetails.stoppages_name}}
                         </td>
                      </tr>
                      <tr>
-                        <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right" style="white-space:nowrap;"><b> Blood Group
+                        <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right"
+                           style="white-space:nowrap;"><b> Blood Group
                               :</b></td>
-                        <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top" align="left">&nbsp;
+                        <td [ngStyle]="{'font-weight':allContentBold}" style="font-weight: bold;" valign="top"
+                           align="left">&nbsp;
                            {{getBloodGroupName(studentDetails.mi_blood_group) ? getBloodGroupName(studentDetails.mi_blood_group) : '-'}}
                         </td>
                      </tr>
@@ -448,4 +452,6 @@
       <ngx-barcode bc-element-type="img" [bc-value]="studentDetails.au_admission_no" bc-format="CODE128"
          bc-background="transparent"></ngx-barcode>
    </div>
+   <img [src]="idCardConfig.ps_watermark_image ? 
+   idCardConfig.ps_watermark_image: ''" class="watermark-image">
 </div>

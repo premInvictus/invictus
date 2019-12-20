@@ -3,14 +3,22 @@
 .remove-col-padding{padding-left: 0 !important;padding-right: 0 !important;}
 .container-printid-landscape {width: 344px !important;height: 207px !important;margin-left: -8px; margin-top: -8px; float: left}
         #id_card_header {padding-bottom: 2px !important;margin-top: 0px !important;padding-top: 10px;}
-        img.watermark-image {
+        /* img.watermark-image {
             position: absolute;
             top: 53px;
             left: 75px;
             width: 140px;
             z-index: 0;
             opacity: 0.5;
-        }  
+        }   */
+        img.watermark-image {
+            width: 130px;
+            position: relative;
+            top: -167px;
+            left: 85px;
+            z-index: 0;
+            opacity: 0.3;
+        }
         .container-printid-landscape2 {
             width: 325px !important;
             height: 207px !important;

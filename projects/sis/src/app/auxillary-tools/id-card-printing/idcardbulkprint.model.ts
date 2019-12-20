@@ -5,6 +5,5 @@ name: any;
 class: any;
 section: any;
 contact: any;
-print: any;
 action: any ;
 }

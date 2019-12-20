@@ -5,21 +5,21 @@
 </div>
 <ng-container *ngIf="data.adm_no">
   <h4 class="text-center text-uppercase">{{studentDetails.au_full_name}}</h4>
-  <div *ngIf="idCardConfig.ps_card_style == '1'" id="printCard" style="margin-left: -80px">
+  <div *ngIf="idCardConfig.ps_card_style == '1'">
     <app-idcard-style1 [studentDetails]="studentDetails" [idCardConfig]="idCardConfig"></app-idcard-style1>
     <br>
     <div class="text-center">
       <button mat-button class="btn-green" (click)="print()">Print</button>
     </div>
   </div>
-  <div *ngIf="idCardConfig.ps_card_style == '2'" id="printCard" style="margin-left: -80px">
+  <div *ngIf="idCardConfig.ps_card_style == '2'">
     <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardConfig"></app-idcard-style2>
     <br>
     <div class="text-center">
       <button mat-button class="btn-green" (click)="print()">Print</button>
     </div>
   </div>
-  <div *ngIf="idCardConfig.ps_card_style == '3'" id="printCard" style="margin-left: -80px">
+  <div *ngIf="idCardConfig.ps_card_style == '3'">
     <app-idcard-style3 [studentDetails]="studentDetails" [idCardConfig]="idCardConfig"></app-idcard-style3>
     <br>
     <div class="text-center">
@@ -29,22 +29,22 @@
 </ng-container>
 <!--Bulk-->
 <div id="printCard" *ngIf="!data.adm_no">
+  <div class="text-center" *ngIf="studentDetailsArray.length > 0">
+    <button mat-button class="btn-green" (click)="print()">Print</button>
+  </div>
   <div style="display:block;">
     <div style="page-break-before:always">
       <ng-container *ngFor="let item of studentDetailsArray">
-        <div *ngIf="idCardConfig.ps_card_style == '1'">
+        <div *ngIf="idCardConfig.ps_card_style == '1'" style="float:left">
           <app-idcard-style1 [studentDetails]="item" [idCardConfig]="idCardConfig"></app-idcard-style1>
         </div>
-        <div *ngIf="idCardConfig.ps_card_style == '2'">
+        <div *ngIf="idCardConfig.ps_card_style == '2'" style="float:left">
           <app-idcard-style2 [studentDetails]="item" [idCardConfig]="idCardConfig"></app-idcard-style2>
         </div>
         <div *ngIf="idCardConfig.ps_card_style == '3'">
           <app-idcard-style3 [studentDetails]="item" [idCardConfig]="idCardConfig"></app-idcard-style3>
         </div>
       </ng-container>
-      <div class="text-center">
-        <button mat-button class="btn-green" (click)="print()">Print</button>
-      </div>
     </div>
   </div>
 </div>
