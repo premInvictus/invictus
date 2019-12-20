@@ -24,23 +24,34 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	icarddetforecolor: any;
 	footerforecolor: any;
 	footerbackcolor: any;
+	showImage = false;
+	hideIfBlankFlag = false;
+	templateImage: any;
+	showTempImage = false;
+	authSignFlag = false;
+	schoolLogo: any = '';
+	school_logo_image: any;
+	showSchoolImage = false;
+	showWaterImage = false;
+	waterMarkImage: any = '';
 	currentImage: any;
 	logoPosition: any[] = [{ id: '1', pos: 'Top' },
 	{ id: '2', pos: 'Bottom' },
 	{ id: '3', pos: 'Left' },
 	{ id: '4', pos: 'Right' }];
-	styleArray: any[] = [{ ps_card_style: '1', ps_card_style_name: 'Style 1' },
-	{ ps_card_style: '2', ps_card_style_name: 'Style 2' },
-	{ ps_card_style: '3', ps_card_style_name: 'Style 3' }];
-	layoutArray: any[] = [{ ps_card_layout: '1', ps_card_layout_name: 'Landscape' },
-	{ ps_card_layout: '2', ps_card_layout_name: 'Potrait' }];
+	styleArray: any[] = [
+		// { ps_card_style: '1', ps_card_style_name: 'Style 1' },
+		{ ps_card_style: '2', ps_card_style_name: 'Style 1' },
+		// { ps_card_style: '3', ps_card_style_name: 'Style 3' }
+	];
+	layoutArray: any[] = [
+		{ ps_card_layout: '1', ps_card_layout_name: 'Landscape' },
+		// { ps_card_layout: '2', ps_card_layout_name: 'Potrait' }
+	];
 	addressFontSize: any[] = [];
 	idCardSettings: any;
 	multipleFileArray: any[] = [];
 	authImage: any;
-	showImage = false;
-	hideIfBlankFlag = false;
-	authSignFlag = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -101,6 +112,9 @@ export class IdcardPrintingSetupComponent implements OnInit {
 			ps_hide_photo: '',
 			ps_show_stu_addr: '',
 			ps_hide_stu_bg: '',
+			ps_school_logo: '',
+			ps_template_image: '',
+			ps_watermark_image: ''
 		});
 	}
 	getHeaderForeColorChange($event) {
@@ -147,6 +161,9 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	}
 	saveIdCardSettings() {
 		this.idcardForm.value.ps_auth_sign = this.authImage;
+		this.idcardForm.value.ps_school_logo = this.schoolLogo;
+		this.idcardForm.value.ps_template_image = this.templateImage;
+		this.idcardForm.value.ps_watermark_image = this.waterMarkImage;
 		this.idcardForm.value.ps_user_type = 'student';
 		this.sisService.addIdCardPrintSettings(this.idcardForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -172,6 +189,15 @@ export class IdcardPrintingSetupComponent implements OnInit {
 				this.footerforecolor = this.idCardSettings.ps_footer_fore_color;
 				this.footerbackcolor = this.idCardSettings.ps_footer_back_color;
 				this.authImage = this.idCardSettings.ps_auth_sign;
+				this.schoolLogo = this.idCardSettings.ps_school_logo;
+				this.templateImage = this.idCardSettings.ps_template_image;
+				this.waterMarkImage = this.idCardSettings.ps_watermark_image;
+				if (this.templateImage) {
+					this.showTempImage = true;
+				}
+				if (this.waterMarkImage) {
+					this.showWaterImage = true;
+				}
 				this.showImage = true;
 				if (this.idCardSettings.ps_missing_student === '1') {
 					this.hideIfBlankFlag = false;
@@ -239,6 +265,81 @@ export class IdcardPrintingSetupComponent implements OnInit {
 				if (result.status === 'ok') {
 					this.authImage = result.data[0].file_url;
 					this.showImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadLogo($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop2(files[i]);
+		}
+	}
+	IterateFileLoop2(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.schoolLogo = result.data[0].file_url;
+					this.showSchoolImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadTempImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop3(files[i]);
+		}
+	}
+	IterateFileLoop3(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.templateImage = result.data[0].file_url;
+					this.showTempImage = true;
+				}
+			});
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadWaterImage($event) {
+		this.multipleFileArray = [];
+		const files: FileList = $event.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop4(files[i]);
+		}
+	}
+	IterateFileLoop4(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage
+			};
+			this.multipleFileArray.push(fileJson);
+			this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.waterMarkImage = result.data[0].file_url;
+					this.showWaterImage = true;
 				}
 			});
 		};

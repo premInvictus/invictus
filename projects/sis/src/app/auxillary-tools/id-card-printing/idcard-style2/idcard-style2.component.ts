@@ -41,6 +41,7 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 	showGuardianPhoto = false;
 	showParentMobile = false;
 	showParentName = false;
+	photo: any;
 	constructor(private sisService: SisService,
 		private commonApiService: CommonAPIService) { }
 
@@ -139,6 +140,8 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 		} else {
 			this.showParentName = false;
 		}
+		this.photo = this.idCardConfig.ps_template_image ?
+			this.idCardConfig.ps_template_image : '/assets/images/landscape-id-card_bg_three_3.jpg'
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {

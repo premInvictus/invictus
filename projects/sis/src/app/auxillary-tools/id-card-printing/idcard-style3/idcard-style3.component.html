@@ -1,9 +1,11 @@
-<div *ngIf="showLandscape" class="container-printid-landscape35" style="float: left;">
-   <img src="/assets/images/landscape-id-card_bg_three.jpg" style="width: 100%;height:100%;">
+<div *ngIf="showLandscape" class="container-printid-landscape35">
+   <img [src]="idCardConfig.ps_template_image ? 
+   idCardConfig.ps_template_image: '/assets/images/landscape-id-card_bg_three_3.jpg'" style="width: 100%;height:100%;">
    <div id="id_card_landscape_body">
       <div class="row remove-margin">
          <div class="col-3 my-col remove-col-padding text-left">
-            <img *ngIf="showSchoolLogo" class="id-card-school-logo-style-3" [src]="schoolLogo" alt="school-logo">
+            <img *ngIf="showSchoolLogo" class="id-card-school-logo-style-3" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+            : 'https://via.placeholder.com/50'" alt="school-logo">
          </div>
          <div class="col-6 custom-margin-school-name remove-col-padding set-school-head-land">
             <p [ngStyle]="{'font-weight':allContentBold}"
@@ -56,7 +58,7 @@
                   </p>
                </div>
                <div class="col-4remove-col-padding">
-                  <div class="text-left"><img *ngIf="showAuthority" [src]="authSign" class="principal-sign--size"
+                  <div class="text-left"><img *ngIf="showAuthority" [src]="authSign" class="principal-sign--size psign"
                         alt="principal signature"></div>
                   <div class="text-left text-sign-lan3">
                      <p [ngStyle]="{'font-weight':allContentBold}"
@@ -74,8 +76,7 @@
       </div>
    </div>
 </div>
-<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide"
-   style="float:left;object-fit: fill !important;">
+<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide" style="object-fit: fill !important;">
    <div class="container-landscape-box__white">
       <div [ngStyle]="{'background': idcardBodyColor}">
          <div class="row remove-margin">
@@ -84,7 +85,7 @@
                </span>
                <div style="width: 65px;
                        height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size"
-                     [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+                     [src]="studentDetails?.father_image ? studentDetails?.father_image : 'https://via.placeholder.com/50'"
                      alt="student photo"></div>
                <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
                      {{  studentDetails && studentDetails.father_honorific === '1' ? 'Mr.' :
@@ -106,7 +107,7 @@
                <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Mother</b>
                </span>
                <div style="width: 65px;
-                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
+                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : 'https://via.placeholder.com/50
                   '" alt="student photo"></div>
                <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
                      {{studentDetails && studentDetails.mother_honorific === '1' ? 'Mr.' :
@@ -130,7 +131,7 @@
                </span>
                <div style="width: 65px;
                     height: 65px;margin:auto"><img *ngIf="showGuardianPhoto" class="parent-photo--size"
-                     src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
+                     src="'https://via.placeholder.com/50'" alt="student photo"></div>
                <p class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
                      {{studentDetails && studentDetails.guardian_honorific === '1' ? 'Mr.' :
                     studentDetails && studentDetails.guardian_honorific === '2' ? 'Mrs.' :
@@ -170,18 +171,18 @@
       </div>
    </div>
 </div>
-<div class="container-printid-portrait" *ngIf="showPotrait" style="float:left">
+<div class="container-printid-portrait" *ngIf="showPotrait">
    <div class="container-portrait-box__white">
-      <img
-         src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573824937.png"
-         class="watermark-image2">
-      <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_three.jpg">
+      <img [src]="idCardConfig.ps_watermark_image ? 
+      idCardConfig.ps_watermark_image: ''" class="watermark-image2" class="watermark-image2">
+      <img class="background-portrait-one" [src]="idCardConfig.ps_template_image ? 
+      idCardConfig.ps_template_image: '/assets/images/id-card-portait-bg_background_three.jpg'">
       <div id="id_card_portrait_body">
          <div>
             <div class="row remove-margin  school-logo-pt">
                <div class="col-3 remove-col-padding text-center">
-                  <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo2"
-                     src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573824937.png">
+                  <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo2" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+                  : 'https://via.placeholder.com/50'">
                </div>
                <div class="col-9 col-padding-school-addr">
                   <p [ngStyle]="{'font-weight':allContentBold}" style="color: black;
@@ -261,16 +262,17 @@
    text-sign-lan2">
       Auth. Sign</p>
 </div>
-<div class="container-printid-portrait" *ngIf="showPotrait && showBackSide" style="float:left">
+<div class="container-printid-portrait" *ngIf="showPotrait && showBackSide">
    <div class="container-portrait-box__white">
-      <img class="background-portrait-one" src="/assets/images/id-card-portait-bg_background_three.jpg">
+      <img class="background-portrait-one" [src]="idCardConfig.ps_template_image ? 
+      idCardConfig.ps_template_image: '/assets/images/id-card-portait-bg_background_three.jpg'">
       <div id="id_card_portrait_body">
          <div>
             <div class="row remove-margin">
                <div style="width: 55px;
                               height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
                   <img *ngIf="showParentPhoto" class="parent-portrait-photo--size"
-                     [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+                     [src]="studentDetails?.father_image ? studentDetails?.father_image : 'https://via.placeholder.com/50'"
                      alt="student photo">
                </div>
                <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
@@ -289,7 +291,7 @@
             <div class="row remove-margin">
                <div style="width: 55px;
                               height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
-                  <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
+                  <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : 'https://via.placeholder.com/50
                 '" alt="student photo">
                </div>
                <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
@@ -309,7 +311,7 @@
                <div style="width: 55px;
                               height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
                   <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size"
-                     src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo">
+                     src="'https://via.placeholder.com/50'" alt="student photo">
                </div>
                <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
                   <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name
