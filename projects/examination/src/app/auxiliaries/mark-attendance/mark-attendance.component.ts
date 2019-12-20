@@ -179,6 +179,7 @@ export class MarkAttendanceComponent implements OnInit {
 								au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
 								au_full_name: new CapitalizePipe().transform(item.au_full_name),
 								au_roll_no: item.r_rollno,
+								au_admission_no: item.au_admission_no
 							});
 							this.finalArray.push({
 								class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',

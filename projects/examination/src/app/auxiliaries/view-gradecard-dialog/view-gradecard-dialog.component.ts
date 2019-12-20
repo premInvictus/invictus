@@ -96,14 +96,31 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.getSession();
     this.getAllStudents();
     this.getStudentSubjects();
-    this.getTermWorkingAndHoliday();
+    //this.getTermWorkingAndHoliday();
     this.getClassGradeset();
     //this.getExamDetails();
     //this.getGradeCardMark(); 
 
   }
-  getTermStudentAttendence() {
-
+  getTermStudentAttendence2() {
+    const param: any = {};
+    param.au_login_id = this.data.au_login_id;
+    param.term_id = this.data.param.eme_term_id;
+    param.class_id = this.data.param.eme_class_id;
+    param.sec_id = this.data.param.eme_sec_id;
+    this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
+      console.log(result1);
+      if(result1 && result1.status === 'ok') {
+        const termAttendence = result1.data[0];
+        this.totalpresentday = Number(termAttendence['mta_present_days']);
+        this.totalworkingdays = Number(termAttendence['mta_overall_attendance']);
+        this.attendenceInPercent = this.getTwoDecimalValue(this.totalpresentday /this.totalworkingdays * 100);
+      } else {
+        this.totalpresentday = 0;
+        this.totalworkingdays = 0;
+        this.attendenceInPercent = 0;
+      }
+    })
   }
   getTermWorkingAndHoliday() {
     const param: any = {};
@@ -121,7 +138,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           if(result1 && result1.status === 'ok') {
             const termAttendence = result1.data;
             this.totalpresentday = termAttendence.length;
-            this.attendenceInPercent = this.getTwoDecimalValue(this.totalworkingdays / this.totalpresentday * 100);
+            this.attendenceInPercent = this.getTwoDecimalValue(this.totalpresentday /this.totalworkingdays * 100);
           }
         })
       }
@@ -226,7 +243,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature'];
+    param.gs_name = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = result.data;
@@ -241,6 +258,12 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.useTeacherSignature = element.gs_value;
           } else if (element.gs_alias === 'gradecard_footer') {
             this.footer = element.gs_value;
+          } else if (element.gs_alias === 'school_attendance_theme') {
+            if(element.gs_value == '1') {
+              this.getTermWorkingAndHoliday();
+            } else {
+              this.getTermStudentAttendence2();
+            }
           }
         });
       }
