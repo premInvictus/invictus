@@ -51,3 +51,8 @@
 .mat-raised-button {
     min-width:48px !important;
 }
+.custom-class-plus{
+    color: #3691ea;
+    font-size: 24px;
+    cursor: pointer;
+}

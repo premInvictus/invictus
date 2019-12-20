@@ -29,7 +29,8 @@ export class PurchaseRequisitionComponent implements OnInit {
   pageLength: number;
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
-  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'pm_intended_use', 'pm_id', 'created_date', 'created_by', 'item_status', 'action'];
+  displayedColumns: string[] = ['pm_id', 'created_date', 'created_by', 'item_code', 'item_name', 'item_quantity',
+    'pm_intended_use', 'item_status', 'position', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
@@ -136,7 +137,7 @@ export class PurchaseRequisitionComponent implements OnInit {
     this.submitParam.action_performed = 'single'
     this.deleteModal.openModal(this.submitParam);
 
-  } 
+  }
   finalSubmit($event) {
     if ($event.action_performed === 'single') {
       const tindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number($event.pm_id));

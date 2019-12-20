@@ -8,9 +8,9 @@
           </div>
         </div>
         <div class="col-6 ">
-          <div class="top-card-title float-right">
+          <!-- <div class="top-card-title float-right">
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">Back</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </mat-card>
@@ -80,9 +80,11 @@
                 </mat-form-field>
               </div>
             </div>
-            <div class="row">
+            <div class="row" style="margin-top: 0px;">
               <div class="col-12 ">
-                <mat-form-field class="form-field" appearance="outline">
+                <app-location-search-and-add [showAdd]="true" (renderData)="getFilterLocation($event)">
+                </app-location-search-and-add>
+                <!-- <mat-form-field class="form-field" appearance="outline">
                   <input matInput placeholder="Enter Location" formControlName="item_location" required
                     [matAutocomplete]="auto" (keyup)="getFilterLocation($event)" />
                   <mat-autocomplete flex #auto="matAutocomplete">
@@ -91,7 +93,7 @@
                       <span [innerHTML]="item.location_hierarchy | capitalize "></span>
                     </mat-option>
                   </mat-autocomplete>
-                </mat-form-field>
+                </mat-form-field> -->
               </div>
             </div>
             <div class="row">
@@ -151,7 +153,8 @@
                   <tr class="text-center">
                     <td colspan="9">
                       <img
-                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/good_receipts.png" width="350">
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/good_receipts.png"
+                        width="350">
                       <br><br><br>
                       <br><span class="font-size-20 font-light font-color-brown">
                         Please Update Item list on Click of Add Button
@@ -164,17 +167,16 @@
           </div>
           <form [formGroup]="finalReceiptForm" novalidate *ngIf="this.finalRequistionArray.length > 0">
             <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
-              <div class="col-6">
+              <!-- <div class="col-6">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Source</mat-label>
                   <input matInput placeholder="Source" type="text" autocomplete="off" formControlName="source">
                 </mat-form-field>
-              </div>
-              <div class="col-6">
+              </div> -->
+              <div class="col-12">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Intended Use</mat-label>
-                  <input matInput placeholder="Intended Use" type="text" autocomplete="off"
-                    formControlName="intended_use">
+                  <mat-label>Remarks</mat-label>
+                  <input matInput placeholder="Remarks" type="text" autocomplete="off" formControlName="intended_use">
                 </mat-form-field>
               </div>
             </div>
@@ -295,9 +297,10 @@
               </ng-container>
             </div>
           </form>
-          <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+          <div class="row margin-top-20">
             <div class="col-12 text-center">
-              <button mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+              <button mat-raised-button class="btn-success-green" *ngIf="this.finalRequistionArray.length > 0"
+                (click)="openSubmitModal()">Submit</button>
               <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
           </div>
@@ -307,4 +310,4 @@
   </div>
 </div>
 <app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
-<app-message-modal #messageModal></app-message-modal>
+<app-message-modal #messageModal></app-message-modal> 

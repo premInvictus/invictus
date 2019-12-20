@@ -36,13 +36,14 @@ import { UnpublishModalComponent } from './unpublish-modal/unpublish-modal.compo
 import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 const moment = _moment;
-import {PopoverModule} from 'ngx-bootstrap/popover';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { InvItemDetailsComponent } from './inv-item-details/inv-item-details.component';
 import { LocationSearchAndAddComponent } from './location-search-and-add/location-search-and-add.component';
 import { AddLocationDialog } from './location-search-and-add/add-location-dialog/add-location-dialog.component';
 import { NgxBarcodeModule } from 'ngx-barcode';
 import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
 import { MessageModalComponent } from '../store-master/message-modal/message-modal.component';
+import { ReceiptModalComponent } from './receipt-modal/receipt-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -121,7 +122,8 @@ export const MY_FORMATS = {
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
 		InventoryDetailsComponent,
-		MessageModalComponent
+		MessageModalComponent,
+		ReceiptModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -135,7 +137,8 @@ export const MY_FORMATS = {
 		InvItemDetailsComponent,
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
-		MessageModalComponent
+		MessageModalComponent,
+		ReceiptModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -175,7 +178,7 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
-		NoDataComponent, 
+		NoDataComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		InvItemDetailsComponent,
@@ -184,7 +187,8 @@ export const MY_FORMATS = {
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
 		InventoryDetailsComponent,
-		MessageModalComponent
+		MessageModalComponent,
+		ReceiptModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
@@ -193,7 +197,7 @@ export const MY_FORMATS = {
 	]
 })
 export class InventorySharedModule {
-  constructor() {
+	constructor() {
 		const script: any = document.createElement('script');
 		if (!(CKEDITOR.type === '10')) {
 			CKEDITOR.type = '10';
@@ -215,7 +219,7 @@ export class InventorySharedModule {
 				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
-				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	}
