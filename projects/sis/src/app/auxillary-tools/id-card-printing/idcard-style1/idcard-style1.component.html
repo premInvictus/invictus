@@ -1,15 +1,13 @@
-<div class="container-printid-landscape" *ngIf="showLandscape" style="float:left">
-  <img
-    src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573824937.png"
-    class="watermark-image">
+<div class="container-printid-landscape" *ngIf="showLandscape">
+  <img [src]="idCardConfig.ps_watermark_image ? 
+    idCardConfig.ps_watermark_image: ''" class="watermark-image">
   <div>
     <div id="id_card_header"
       [ngStyle]="{'color':container_box_idheader, 'background':container_box_idheader_bgColor, 'margin-top': '-11px'}">
       <div class="row remove-margin">
         <div class="col-3 my-col remove-col-padding text-center">
-          <img *ngIf="showSchoolLogo" class="id-card-school-logo"
-            src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png"
-            alt="school-logo">
+          <img *ngIf="showSchoolLogo" class="id-card-school-logo" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+            : 'https://via.placeholder.com/50'" alt="school-logo">
         </div>
         <div class="col-9 text-center remove-col-padding">
           <p [ngStyle]="{'font-weight':allContentBold}"
@@ -28,9 +26,13 @@
       </div>
     </div>
     <div id="id_card_body" [ngStyle]="{'background': idcardBodyColor,'border-bottom-left-radius':'15px',
-              'border-bottom-right-radius':'15px'}">
+                'border-bottom-right-radius':'15px'}">
       <div class="row remove-margin">
         <div class="col-8 id-card-col-60 remove-col-padding">
+          <p [ngStyle]="{'font-weight':allContentBold}" class="id_card_student_info remove-paragraph-bottom-padding">
+            <b>Admission No :</b>
+            {{studentDetails.au_admission_no ? studentDetails.au_admission_no : '-'}}
+          </p>
           <p [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
             class="id_card_student_info remove-paragraph-bottom-padding"><b>Name
               :</b>{{studentDetails.au_full_name}}
@@ -50,10 +52,6 @@
           <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}"
             class="id_card_student_info remove-paragraph-bottom-padding"><b>Date of Birth
               :</b>{{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
-          <p [ngStyle]="{'font-weight':allContentBold}" class="id_card_student_info remove-paragraph-bottom-padding">
-            <b>House :</b>
-            {{studentDetails.hou_house_name ? studentDetails.hou_house_name : '-'}}
-          </p>
           <p [ngStyle]="{'font-weight':allContentBold}" class="id_card_student_info remove-paragraph-bottom-padding">
             <b>Blood Group :</b>
             {{getBloodGroupName(studentDetails.mi_blood_group) ? getBloodGroupName(studentDetails.mi_blood_group) : '-'}}
@@ -92,8 +90,7 @@
   <div>
   </div>
 </div>
-<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide"
-  style="float:left;object-fit: fill !important;">
+<div class="container-printid-landscape2" *ngIf="showLandscape && showBackSide" style="object-fit: fill !important;">
   <div class="container-landscape-box__white">
     <div [ngStyle]="{'background': idcardBodyColor}">
       <div class="row remove-margin">
@@ -101,19 +98,19 @@
           <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Father</b>
           </span>
           <div style="width: 65px;
-                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size"
-              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+                         height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size"
+              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'https://via.placeholder.com/50'"
               alt="student photo"></div>
           <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
               {{  studentDetails && studentDetails.father_honorific === '1' ? 'Mr.' :
-                       studentDetails && studentDetails.father_honorific === '2' ? 'Mrs.' :
-                       studentDetails && studentDetails.father_honorific === '3' ? 'Miss.' :
-                       studentDetails && studentDetails.father_honorific === '4' ? 'Ms.' :
-                       studentDetails && studentDetails.father_honorific === '5' ? 'Mx.' :
-                       studentDetails && studentDetails.father_honorific === '6' ? 'Sir.' :
-                       studentDetails && studentDetails.father_honorific === '7' ? 'Dr.' :
-                       studentDetails && studentDetails.father_honorific === '8' ? 'Lady' : ''
-                       }}
+                         studentDetails && studentDetails.father_honorific === '2' ? 'Mrs.' :
+                         studentDetails && studentDetails.father_honorific === '3' ? 'Miss.' :
+                         studentDetails && studentDetails.father_honorific === '4' ? 'Ms.' :
+                         studentDetails && studentDetails.father_honorific === '5' ? 'Mx.' :
+                         studentDetails && studentDetails.father_honorific === '6' ? 'Sir.' :
+                         studentDetails && studentDetails.father_honorific === '7' ? 'Dr.' :
+                         studentDetails && studentDetails.father_honorific === '8' ? 'Lady' : ''
+                         }}
               {{studentDetails.father_name}}</b>
           </p>
           <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
@@ -124,18 +121,18 @@
           <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Mother</b>
           </span>
           <div style="width: 65px;
-                       height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
-                  '" alt="student photo"></div>
+                         height: 65px;margin:auto"><img *ngIf="showParentPhoto" class="parent-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : 'https://via.placeholder.com/50
+                    '" alt="student photo"></div>
           <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
               {{studentDetails && studentDetails.mother_honorific === '1' ? 'Mr.' :
-                       studentDetails && studentDetails.mother_honorific === '2' ? 'Mrs.' :
-                       studentDetails && studentDetails.mother_honorific === '3' ? 'Miss.' :
-                       studentDetails && studentDetails.mother_honorific === '4' ? 'Ms.' :
-                       studentDetails && studentDetails.mother_honorific === '5' ? 'Mx.' :
-                       studentDetails && studentDetails.mother_honorific === '6' ? 'Sir.' :
-                       studentDetails && studentDetails.mother_honorific === '7' ? 'Dr.' :
-                       studentDetails && studentDetails.mother_honorific === '8' ? 'Lady' : ''
-                       }}
+                         studentDetails && studentDetails.mother_honorific === '2' ? 'Mrs.' :
+                         studentDetails && studentDetails.mother_honorific === '3' ? 'Miss.' :
+                         studentDetails && studentDetails.mother_honorific === '4' ? 'Ms.' :
+                         studentDetails && studentDetails.mother_honorific === '5' ? 'Mx.' :
+                         studentDetails && studentDetails.mother_honorific === '6' ? 'Sir.' :
+                         studentDetails && studentDetails.mother_honorific === '7' ? 'Dr.' :
+                         studentDetails && studentDetails.mother_honorific === '8' ? 'Lady' : ''
+                         }}
               {{studentDetails.mother_name}}</b>
           </p>
           <p *ngIf="showParentMobile" class="id_card_student_contact_info remove-paragraph-bottom-padding">
@@ -147,18 +144,18 @@
           <span class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>Guardian Info</b>
           </span>
           <div style="width: 65px;
-                    height: 65px;margin:auto"><img *ngIf="showGuardianPhoto" class="parent-photo--size"
-              src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo"></div>
+                      height: 65px;margin:auto"><img *ngIf="showGuardianPhoto" class="parent-photo--size"
+              src="'https://via.placeholder.com/50'" alt="student photo"></div>
           <p class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
               {{studentDetails && studentDetails.guardian_honorific === '1' ? 'Mr.' :
-                    studentDetails && studentDetails.guardian_honorific === '2' ? 'Mrs.' :
-                    studentDetails && studentDetails.guardian_honorific === '3' ? 'Miss.' :
-                    studentDetails && studentDetails.guardian_honorific === '4' ? 'Ms.' :
-                    studentDetails && studentDetails.guardian_honorific === '5' ? 'Mx.' :
-                    studentDetails && studentDetails.guardian_honorific === '6' ? 'Sir.' :
-                    studentDetails && studentDetails.guardian_honorific === '7' ? 'Dr.' :
-                    studentDetails && studentDetails.guardian_honorific === '8' ? 'Lady' : ''
-                    }}
+                      studentDetails && studentDetails.guardian_honorific === '2' ? 'Mrs.' :
+                      studentDetails && studentDetails.guardian_honorific === '3' ? 'Miss.' :
+                      studentDetails && studentDetails.guardian_honorific === '4' ? 'Ms.' :
+                      studentDetails && studentDetails.guardian_honorific === '5' ? 'Mx.' :
+                      studentDetails && studentDetails.guardian_honorific === '6' ? 'Sir.' :
+                      studentDetails && studentDetails.guardian_honorific === '7' ? 'Dr.' :
+                      studentDetails && studentDetails.guardian_honorific === '8' ? 'Lady' : ''
+                      }}
               {{studentDetails.guardian_name}}</b>
           </p>
           <p class="id_card_student_contact_info remove-paragraph-bottom-padding">9999955555</p>
@@ -187,21 +184,22 @@
     </div>
   </div>
 </div>
-<div class="container-printid-portrait" *ngIf="showPotrait" style="float:left">
+<div class="container-printid-portrait" *ngIf="showPotrait">
   <div class="container-portrait-box__white">
-    <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
+    <img class="background-portrait-one" [src]="idCardConfig.ps_template_image ? 
+      idCardConfig.ps_template_image: '/assets/images/id-card-portait-1_bg.png'">
     <div id="id_card_portrait_body">
       <div>
         <div class="row remove-margin  school-logo-pt">
           <div class="col-3 remove-col-padding text-center">
-            <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo"
-              src="https://invictus-data.s3.ap-south-1.amazonaws.com/xavier/sis/documents/attachment/document_xavier_logo_1573821403.png">
+            <img *ngIf="showSchoolLogo" class="id-card-portriat-school-logo" [src]="idCardConfig.ps_school_logo ? idCardConfig.ps_school_logo
+              : 'https://via.placeholder.com/50'">
           </div>
           <div class="col-9 col-padding-school-addr">
             <p [ngStyle]="{'font-weight':allContentBold}" style="color: #fff;
-                background: transparent;
-                text-align: center;text-align: end;
-    font-weight: bold;" class="id-card-school-name text-uppercase remove-paragraph-bottom-padding">
+                  background: transparent;
+                  text-align: center;text-align: end;
+      font-weight: bold;" class="id-card-school-name text-uppercase remove-paragraph-bottom-padding">
               {{schoolInfo.school_name}}
             </p>
           </div>
@@ -216,7 +214,7 @@
             <div class="text-center">
               <p [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
                 class="id_card_portrait_student_name text-uppercase remove-paragraph-bottom-padding" style="position: relative;
-                        top: -50px;"><b>
+                          top: -50px;"><b>
                   {{studentDetails.au_full_name}}
                 </b>
               </p>
@@ -227,6 +225,10 @@
       <div>
         <div class="row remove-margin id-card-div-move-pot">
           <div class="col-12 remove-col-padding text-uppercase">
+            <p [ngStyle]="{'font-weight':allContentBold}"
+              class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Admission No :</b>
+              {{studentDetails.au_admission_no}}
+            </p>
             <p [ngStyle]="{'font-weight':allContentBold}"
               class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Session :</b>
               {{sessionPromote}}
@@ -246,10 +248,6 @@
             <p *ngIf="dobFlag" [ngStyle]="{'font-weight':allContentBold}"
               class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Date of Birth :</b>
               {{studentDetails.upd_dob | date: 'd-MMM-y'}}</p>
-            <p [ngStyle]="{'font-weight':allContentBold}"
-              class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>House :</b>
-              {{studentDetails.hou_house_name}}
-            </p>
             <p [ngStyle]="{'font-weight':allContentBold}"
               class="id_card_portrait_student_info remove-paragraph-bottom-padding"><b>Blood Group :</b>
               {{getBloodGroupName(studentDetails.mi_blood_group)}}
@@ -272,14 +270,15 @@
 </div>
 <div class="container-printid-portrait" *ngIf="showPotrait && showBackSide" style="float:left">
   <div class="container-portrait-box__white">
-    <img class="background-portrait-one" src="/assets/images/id-card-portait-1_bg.png">
+    <img class="background-portrait-one" [src]="idCardConfig.ps_template_image ? 
+     idCardConfig.ps_template_image: '/assets/images/id-card-portait-1_bg.png'">
     <div id="id_card_portrait_body">
       <div>
         <div class="row remove-margin">
           <div style="width: 55px;
-                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+                                height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
             <img *ngIf="showParentPhoto" class="parent-portrait-photo--size"
-              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'assets/images/id-father_sample_pic.jpg'"
+              [src]="studentDetails?.father_image ? studentDetails?.father_image : 'https://via.placeholder.com/50'"
               alt="student photo">
           </div>
           <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
@@ -297,9 +296,9 @@
       <div>
         <div class="row remove-margin">
           <div style="width: 55px;
-                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
-            <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : '../../../../assets/images/id-mother_sample_pic.jpg
-                '" alt="student photo">
+                                height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+            <img *ngIf="showParentPhoto" class="parent-portrait-photo--size" [src]="studentDetails?.mother_image ? studentDetails.mother_image : 'https://via.placeholder.com/50
+                  '" alt="student photo">
           </div>
           <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
             <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name :</b>
@@ -316,9 +315,9 @@
       <div *ngIf="showGuardianPhoto">
         <div class="row remove-margin">
           <div style="width: 55px;
-                              height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
-            <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size"
-              src="/assets/images/id-guardian_sample_pic.jpg" alt="student photo">
+                                height: 55px;margin-bottom: 10px;" class="col-4 remove-col-padding text-center">
+            <img *ngIf="showGuardianPhoto" class="parent-portrait-photo--size" src="'https://via.placeholder.com/50'"
+              alt="student photo">
           </div>
           <div [ngStyle]="{'font-weight':allContentBold}" class="col-8 col-padding-school-addr-portrait">
             <p class="id-card-school-contactno remove-paragraph-bottom-padding"><b>Name

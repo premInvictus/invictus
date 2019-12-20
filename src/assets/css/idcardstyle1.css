@@ -1,7 +1,7 @@
 .row {display: flex;}
 .margin-top-20 {margin-top: 20px !important}
 .remove-col-padding{padding-left: 0 !important;padding-right: 0 !important;}
-.container-printid-landscape {width: 344px !important;height: 207px !important;margin-left: -8px; margin-top: -8px;}
+.container-printid-landscape {width: 344px !important;height: 207px !important;margin-left: -8px; margin-top: -8px; float: left}
         #id_card_header {padding-bottom: 2px !important;margin-top: 0px !important;padding-top: 10px;}
         img.watermark-image {
             position: absolute;
@@ -15,6 +15,7 @@
             width: 325px !important;
             height: 207px !important;
             margin-top: 38px;
+            float: left !important;
         }
         .set-school-head-land {
             position: relative;
@@ -46,18 +47,34 @@
             width: 55px;
             height: 24px;
             position: relative;
-            left: 105px;
-            top: 36px;
         }      
-        .landscape-style3 .barcode img {
-            -webkit-transform: rotate(90deg) !important;
-            transform: rotate(90deg) !important;
+        .landscape-style5 .barcode img {
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
             width: 118px !important;
             height: 24px !important;
-            position: relative;
-            top: 54px;
-            left: 87px;
+            position: relative !important;
+            left: 183px !important;
+            top: -70px !important;
         }
+        .styl-1 {
+            float: left !important;
+        }
+                .landscape-style3 .barcode img {
+                    -webkit-transform: rotate(90deg) !important;
+                    transform: rotate(90deg) !important;
+                    width: 118px !important;
+                    height: 24px !important;
+                    position: absolute;
+                    top: 102px;
+                    left: -28px;
+                }
+            
+            img.psign {
+                position: relative;
+                left: 100px;
+                top: 32px;
+            }
         .id-card-school-logo {width: 40px;height: 40px;position: relative;
             top: -6px;}
         img {vertical-align: middle;border-style: none;}
@@ -131,6 +148,7 @@
             height: 215px !important;
             margin-left: -8px;
             margin-top: -8px;
+            float: left !important;
         }
         #id_card_landscape_body {
             position: absolute;
@@ -157,6 +175,7 @@
             margin-left: -8px;
             margin-top: -8px;
             margin-right: 15px;
+            float:left !important;
         }
         img.watermark-image2 {
             position: absolute;
