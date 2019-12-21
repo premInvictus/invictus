@@ -22,10 +22,11 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   ELEMENT_DATA: any[] = [];
   pageLength: number;
   pageIndex = 0;
-	pageSize = 100;
-  pageSizeOptions=[100, 300, 500, 1000];
+  pageSize = 100;
+  pageSizeOptions = [100, 300, 500, 1000];
   val: any;
-  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_desc', 'item_location', 'item_current_stock'];
+  displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_category', 'item_nature', 'item_reorder_level',
+    'item_location', 'item_current_stock'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   filterData: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -45,18 +46,18 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     //this.getItemRecordMaster({pageSize: this.pageSize, pageIndex : 0});
     this.getAllItemsFromMaster()
   }
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     localStorage.removeItem('invoiceBulkRecords');
   }
-  buildForm(){
+  buildForm() {
     this.searchForm = this.fbuild.group({
-      search:''
+      search: ''
     });
   }
-  openSearchDialog = (data) => { this.searchForm.patchValue({ search: '' });this.searchModal.openModal(data); };
+  openSearchDialog = (data) => { this.searchForm.patchValue({ search: '' }); this.searchModal.openModal(data); };
   openItemDetailsModal(item_code) {
     const item: any = {};
     item.item_code = item_code;
@@ -69,7 +70,7 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
       console.log('The dialog was closed');
     });
   }
-  getRowSpan(col, index) {    
+  getRowSpan(col, index) {
     //console.log('col '+col, 'index'+index);
     return this.spans[index] && this.spans[index][col];
   }
@@ -100,89 +101,70 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     //console.log('spans', this.spans);
   }
-  getItemRecordMaster(value){
+  getItemRecordMaster(value) {
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.inventoryService.getItemRecordMaster(value).subscribe((result: any) => {
-      if(result && result.status === 'ok'){
+      if (result && result.status === 'ok') {
         this.displayList(result.data.records);
       }
     })
   }
-  displayList(value){
+  displayList(value) {
     this.itemArray = value;
-    // this.itemArray.forEach((element, index) => {
-    //   const total_qty = element.item_location.reduce((total:number, val) => {
-    //     return total += Number(val.item_qty);
-    //   },0);
-    //   const location = element.item_location_details.reduce((current, next, index) => {
-    //     next.item_qty = element.item_location[index].item_qty;
-    //     current.push(next);
-    //     return current;
+    // const DATA = this.itemArray.reduce((current, next, index) => {
+    //   const location = next.item_location.reduce((current1, next1, index1) => {
+    //     next1.location_name = next.locs[index1] ? next.locs[index1].location_name : '';
+    //     next1.location_hierarchy = next.locs[index1] ? next.locs[index1].location_hierarchy : '';
+    //     next1.location_status = next.locs[index1] ? next.locs[index1].location_status : '';
+    //     next1.location_type_id = next.locs[index1] ? next.locs[index1].location_type_id: '';
+    //     current1.push(next1);
+    //     return current1;
     //   },[]);
-    //   this.ELEMENT_DATA.push({
-    //     position: index + 1,
-    //     item_code: element.item_code,
-    //     item_name: element.item_name,
-    //     item_desc: element.item_desc,
-    //     item_location: location,
-    //     item_current_stock: total_qty,
-    //     item_units_name: element.item_units_name
-    //   });
-    // });
-    /*const DATA = this.itemArray.reduce((current, next, index) => {
-      const location = next.locs.reduce((current, next, index) => {
-            next.item_qty = element.item_location[index].item_qty;
-            current.push(next);
-            return current;
-          },[]);
-      next.item_location.forEach(element => {
-        current.push({
-          position: index + 1,
-          item_code: next.item_code,
-          item_name: next.item_name,
-          item_desc: next.item_desc,
-          item_location: element.location_name,
-          item_current_stock: element.item_qty,
-          item_units_name: next.item_units_name
-        });
-      });
-      return current;
-    },[]); */
-    console.log('this.itemArray', this.itemArray);
-    const DATA = this.itemArray.reduce((current, next, index) => {
-      const location = next.item_location.reduce((current1, next1, index1) => {
-        next1.location_name = next.locs[index1] ? next.locs[index1].location_name : '';
-        next1.location_hierarchy = next.locs[index1] ? next.locs[index1].location_hierarchy : '';
-        next1.location_status = next.locs[index1] ? next.locs[index1].location_status : '';
-        next1.location_type_id = next.locs[index1] ? next.locs[index1].location_type_id: '';
-        current1.push(next1);
-        return current1;
-      },[]);
-      location.forEach(element => {
-        current.push({
-          position: index + 1,
-          item_code: next.item_code,
-          item_name: next.item_name,
-          item_desc: next.item_desc,
-          item_location: element.location_hierarchy,
-          item_current_stock: element.item_qty,
-          item_units_name: next.item_units.name
-        })
+    //   location.forEach(element => {
+    //     current.push({
+    //       position: index + 1,
+    //       item_code: next.item_code,
+    //       item_name: next.item_name,
+    //       item_desc: next.item_desc,
+    //       item_location: element.location_hierarchy,
+    //       item_current_stock: element.item_qty,
+    //       item_units_name: next.item_units.name
+    //     })
+    //   })
+    //   return current;
+    // },[]);
+    // console.log(DATA);
+    let location = '';
+    let quantity = 0;
+    let index = 1;
+    for (let item of this.itemArray) {
+      for (let dety of item.item_location) {
+        quantity = Number(quantity) + Number(dety.item_qty);
+      }
+      let i = 0;
+      for (let detz of item.locs) {
+        if (i === 0) {
+          location = detz.location_hierarchy;
+        } else {
+          location = location + "," + detz.location_hierarchy;
+        }
+        i++;
+      }
+      this.ELEMENT_DATA.push({
+        position: index,
+        item_code: item.item_code,
+        item_name: item.item_name,
+        item_category: item.item_category.name,
+        item_nature: item.item_nature.name,
+        item_reorder_level: item.item_reorder_level,
+        item_location: location,
+        item_current_stock: quantity,
       })
-      return current;
-    },[]);
-    console.log(DATA);
-    this.ELEMENT_DATA = DATA;
-
-    this.cacheSpan('position', d => d.position);
-    this.cacheSpan('item_code', d => d.item_code);
-    this.cacheSpan('item_name', d => d.item_name);
-    this.cacheSpan('item_desc', d => d.item_desc);
-
+      index++;
+    }
     this.tableDivFlag = true;
     this.tabledataFlag = true;
-    console.log(this.ELEMENT_DATA);
     localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: parseInt(value.totalRecords) }));
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.paginator.length = parseInt(value.totalRecords);
@@ -190,14 +172,13 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
   changePage(pageEvent: PageEvent) {
-		console.log(pageEvent);
     // this.paginator.length = 100;
-    this.getItemRecordMaster({pageSize: pageEvent.pageSize, pageIndex : pageEvent.pageIndex});
+    this.getItemRecordMaster({ pageSize: pageEvent.pageSize, pageIndex: pageEvent.pageIndex });
   }
   fetchData(event?: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    if(this.filterData.searchData) {
+    if (this.filterData.searchData) {
       this.getAllItemsFromMaster();
     } else {
       this.filterItemsFromMaster();
@@ -210,8 +191,8 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.filterData = {}
     this.filterData.page_index = this.pageIndex;
-    this.filterData.page_size= this.pageSize;
-    if(this.val){
+    this.filterData.page_size = this.pageSize;
+    if (this.val) {
       this.filterData.searchData = this.val
     }
     this.inventoryService.searchItemsFromMaster(this.filterData).subscribe((res: any) => {
@@ -235,7 +216,7 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     this.filterItemsFromMaster();
   }
-  filterItemsFromMaster(){
+  filterItemsFromMaster() {
     this.filterData.page_index = this.pageIndex;
     this.filterData.page_size = this.pageSize;
     this.inventoryService.filterItemsFromMaster(this.filterData).subscribe((res: any) => {

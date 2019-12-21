@@ -14,7 +14,7 @@
                   <div class="col-8">
                     <mat-form-field class="lib-form form-field">
                       <input matInput placeholder="Search Any Book By Name or ID" formControlName="search"
-                        autocomplete="off"  (keydown.enter)="getItems($event)" />
+                        autocomplete="off" (keydown.enter)="getItems($event)" />
                     </mat-form-field>
                   </div>
 
@@ -47,7 +47,7 @@
     <div class="col-12">
       <mat-card *ngIf="ITEM_LOGS[0]?.code">
         <div class="row">
-          <div class="col-12 smart-col-88 remove-col-padding">
+          <div class="col-12  remove-col-padding">
             <div class="row remove-top-margin">
               <div class="col-8">
                 <span class="font-size-20 font-bold">{{ITEM_LOGS[0]?.name | titlecase}}</span><br>
@@ -60,8 +60,7 @@
                   <span class="font-bold font-size-14">Locations :
                   </span><span>
                     <ng-container *ngFor="let loc of ITEM_LOGS; let i=index">
-                      {{loc.location | titlecase}} - <b>{{loc.qty}}
-                        {{loc.units | capitalize}}</b>
+                      {{loc.location | titlecase}}
                       <ng-container *ngIf="(i+1) != loc.item_location.length"> |</ng-container>
                     </ng-container>
                   </span><br>
@@ -73,10 +72,17 @@
               <div class="col-4">
                 <div class="row">
                   <div class="col-12 text-right">
-                    <button mat-button class="btn-spacer btn-item-qty margin-left-10">
-                      {{ITEM_LOGS[0]?.total_qty}} {{ITEM_LOGS[0]?.units | titlecase}}
+                    <button mat-button class="btn-spacer btn-item-qty margin-left-10"
+                      (click)="showUserContextMenu =!showUserContextMenu ">
+                      {{ITEM_LOGS[0]?.total_qty}} {{ITEM_LOGS[0]?.units | titlecase}} 
+                      <i class="fas fa-angle-down"></i>
                     </button>
                   </div>
+                </div>
+                <div class="user-context-menu" *ngIf="showUserContextMenu">
+                  <ul class="user-type-menu" *ngFor="let loc of ITEM_LOGS; ">
+                    <li> {{loc.location | titlecase}} - <b>{{loc.qty}} {{loc.units | capitalize}}</b></li>
+                  </ul>
                 </div>
               </div>
             </div>

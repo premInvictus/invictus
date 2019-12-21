@@ -8,3 +8,6 @@
     font-weight: bold;
     text-decoration: underline;
 }
+.mat-column-position {
+    width: 4% !important
+}
