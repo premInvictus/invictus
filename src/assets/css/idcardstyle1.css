@@ -62,8 +62,8 @@
             width: 118px !important;
             height: 24px !important;
             position: relative !important;
-            left: 183px !important;
-            top: -70px !important;
+            left: 187px !important;
+            top: -99px !important;
         }
         .styl-1 {
             float: left !important;
@@ -377,4 +377,18 @@
 }
 .id-card-school-address {
     font-size: 10px;
+}
+
+.idcardStyle2:first-child
+{
+    font-size:11px;
+    height:207px;
+    width:325px;
+    margin-left:-8px;
+    
+}
+
+.id-margin-top:first-child
+{
+    margin-top:-8px;
 }
