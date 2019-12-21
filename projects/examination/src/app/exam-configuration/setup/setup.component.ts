@@ -160,7 +160,13 @@ export class SetupComponent implements OnInit {
 					ect_co_gradeset_id: '',
 					ect_exam_type: '',
 					ect_status: '',
-					ect_created_by: ''
+					ect_created_by: '',
+					ect_grade_avg_highest: this.fbuild.group({
+						grade: '',
+						avg: '',
+						highest:'',
+						remark:''
+					})
 				})
 			},
 			{ // for Class Term Grade setup
@@ -262,6 +268,30 @@ export class SetupComponent implements OnInit {
 			}
 		}
 	}
+	get_ect_grade_avg_highest(value) {
+		let ect_grade_avg_highest_str = '';
+		if(value.grade) {
+			ect_grade_avg_highest_str += 'Grade - Yes, '
+		} else {
+			ect_grade_avg_highest_str += 'Grade - No, '
+		}
+		if(value.avg) {
+			ect_grade_avg_highest_str += 'Average - Yes, '
+		} else {
+			ect_grade_avg_highest_str += 'Average - No, '
+		}
+		if(value.highest) {
+			ect_grade_avg_highest_str += 'Highest - Yes, '
+		} else {
+			ect_grade_avg_highest_str += 'Highest - No, '
+		}
+		if(value.remark) {
+			ect_grade_avg_highest_str += 'Remark - Yes'
+		} else {
+			ect_grade_avg_highest_str += 'Remark - No'
+		}
+		return ect_grade_avg_highest_str;
+	}
 	getExamTypeName(etId) {
 		for (const item of this.examTypeArray) {
 			if (Number(item.e_id) === Number(etId)) {
@@ -307,6 +337,7 @@ export class SetupComponent implements OnInit {
 							grade_name: that.getGradeName(item.ect_gradeset_id),
 							co_grade_name: that.getGradeName(item.ect_co_gradeset_id),
 							exam_type: that.getExamTypeName(item.ect_exam_type),
+							ect_grade_avg_highest: item.ect_grade_avg_highest ? that.get_ect_grade_avg_highest(JSON.parse(item.ect_grade_avg_highest)): '',
 							action: item
 						});
 						pos++;
@@ -683,7 +714,8 @@ export class SetupComponent implements OnInit {
 				ect_term_id: value.ect_term_id,
 				ect_gradeset_id: value.ect_gradeset_id,
 				ect_co_gradeset_id: value.ect_co_gradeset_id,
-				ect_exam_type: value.ect_exam_type
+				ect_exam_type: value.ect_exam_type,
+				ect_grade_avg_highest: value.ect_grade_avg_highest ? JSON.parse(value.ect_grade_avg_highest) : ''
 			});
 		} else if (Number(this.configValue) === 8) { // for report card setup
 			this.setupUpdateFlag = true;
@@ -737,7 +769,7 @@ export class SetupComponent implements OnInit {
 			this.getActiveClass(this);
 			this.getTermList(this);
 			this.getDropdownGradeSet(this);			
-			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'exam_type', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'ect_grade_avg_highest', 'exam_type', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 8) { // for exam class term garde	
 			this.getClassTermDate(this);	

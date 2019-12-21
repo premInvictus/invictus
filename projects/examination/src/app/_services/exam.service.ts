@@ -109,6 +109,11 @@ export class ExamService {
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/checkAdditionalSubjectForClass', value);
 	}
 
+	getTermStudentAttendence2(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermStudentAttendence2', value);
+	}
+
 	addMarksEntry(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/marksEntry/addMarksEntry', value);
