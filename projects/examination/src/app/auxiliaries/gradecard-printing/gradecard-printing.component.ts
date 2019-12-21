@@ -33,6 +33,7 @@ export class GradecardPrintingComponent implements OnInit {
   dataSource = new MatTableDataSource<Element>();
   selection = new SelectionModel<Element>(true, []);
   classterm: any;
+  subexamArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -49,6 +50,7 @@ export class GradecardPrintingComponent implements OnInit {
   openDialog(item): void {
     item.param = this.paramform.value;
     item.ect_exam_type = this.classterm.ect_exam_type;
+    item.ect_grade_avg_highest = this.classterm.ect_grade_avg_highest;
     const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
       width: '80%',
       height: '80%',
@@ -83,6 +85,8 @@ export class GradecardPrintingComponent implements OnInit {
     param.class_id = this.paramform.value.eme_class_id;
     param.sec_id = this.paramform.value.eme_sec_id;
     param.term_id = this.paramform.value.eme_term_id;
+    param.exam_id = this.paramform.value.eme_exam_id;
+    param.se_id = this.paramform.value.eme_subexam_id;
     this.examService.printGradecard(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         console.log(result.data);
@@ -190,7 +194,9 @@ export class GradecardPrintingComponent implements OnInit {
     this.paramform = this.fbuild.group({
       eme_class_id: '',
       eme_sec_id: '',
-      eme_term_id: ''
+      eme_term_id: '',
+      eme_exam_id:'',
+      eme_subexam_id:''
     })
   }
 
@@ -252,7 +258,7 @@ export class GradecardPrintingComponent implements OnInit {
           });
         }
         console.log(this.subjectArray);
-        //this.subjectArray = result.data;
+        //this.subjectArray = result.data; 
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
@@ -376,6 +382,45 @@ export class GradecardPrintingComponent implements OnInit {
   }
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+  resetTableDiv() {
+    this.tableDivFlag = false;
+    this.paramform.patchValue({
+      eme_subexam_id: ''
+    });
+  }
+  getSubExam() {
+    this.subexamArray = [];
+    if (this.paramform.value.eme_exam_id) {
+      this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
+            this.subexamArray = result.data[0].exam_sub_exam_max_marks;
+            console.log(this.subexamArray);
+            const subexam_id_arr: any[] = [];
+            for (let item of this.subexamArray) {
+              subexam_id_arr.push(item.se_id);
+            }
+            const param: any = {};
+            param.ssm_class_id = this.paramform.value.eme_class_id;
+            param.ssm_exam_id = this.paramform.value.eme_exam_id;
+            param.ssm_se_id = subexam_id_arr;
+            param.ssm_sub_id = this.paramform.value.eme_sub_id;
+            this.examService.getSubjectSubexamMapping(param).subscribe((result: any) => {
+              if (result && result.status === 'ok') {
+                for (let item of result.data) {
+                  for (let item1 of this.subexamArray) {
+                    if (item.ssm_se_id === item1.se_id) {
+                      item1.exam_max_marks = item.ssm_sub_mark;
+                    }
+                  }
+                }
+              }
+            })
+          }
+        }
+      });
+    }
   }
 
 }

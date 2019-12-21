@@ -81,7 +81,7 @@
             </div>
             <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepattern">
                 <div class="row" *ngFor="let term of termArray">
-                    <div class="col-12" *ngIf="sflag && eflag && gflag">
+                    <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
                         <table class="table-100 custom-table" style="margin-bottom: 15px">
                             <thead>
                                 <tr class="custom-tr">
@@ -102,11 +102,14 @@
                                     <th class="custom-th text-center" *ngFor="let item of sexamArray">
                                         {{item.exam_name | titlecase}}
                                         <br>({{item.exam_weightage}})</th>
-                                    <th class="custom-th text-center">Marks Obtained<br>({{acedemicmarks}})</th>
-                                    <th class="custom-th text-center">Grade</th>
+                                    <th *ngIf="obtainedGradeAvgHighest.obtained" class="custom-th text-center">Marks
+                                        Obtained<br>({{acedemicmarks}})</th>
+                                    <th *ngIf="obtainedGradeAvgHighest.grade" class="custom-th text-center">Grade</th>
                                     <ng-container *ngIf="term == data.param.eme_term_id">
-                                        <th class="custom-th text-center">Average</th>
-                                        <th class="custom-th text-center">Highest</th>
+                                        <th *ngIf="obtainedGradeAvgHighest.avg" class="custom-th text-center">Average
+                                        </th>
+                                        <th *ngIf="obtainedGradeAvgHighest.highest" class="custom-th text-center">
+                                            Highest</th>
                                     </ng-container>
                                 </tr>
                             </thead>
@@ -122,25 +125,31 @@
                                         </ng-container>
                                         <td class="custom-td" *ngFor="let item of sexamArray">
                                             {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
-                                        <td class="custom-td">{{calculateTotal(sub.sub_id,term)}}</td>
-                                        <td class="custom-td">{{calculateGrade(sub.sub_id,term)}}</td>
+                                        <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
+                                            {{calculateTotal(sub.sub_id,term)}}
+                                            ({{getSubjectPassResult(sub.sub_id,term)}})</td>
+                                        <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
+                                            {{calculateGrade(sub.sub_id,term)}}</td>
                                         <ng-container *ngIf="term == data.param.eme_term_id">
-                                            <td class="custom-td">{{getClassAverage(sub.sub_id)}}</td>
-                                            <td class="custom-td">{{getClassHighest(sub.sub_id)}}</td>
+                                            <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
+                                                {{getClassAverage(sub.sub_id)}}</td>
+                                            <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td">
+                                                {{getClassHighest(sub.sub_id)}}</td>
                                         </ng-container>
-                                        
+
                                     </tr>
                                 </ng-container>
                                 <tr class="custom-tr">
-                                    <td class="custom-td">Total({{getTotalMainSubject()}} main subject)</td>
+                                    <td class="custom-td text-left padding-left-8px">Total({{getTotalMainSubject()}}
+                                        main subject)</td>
                                     <td class="custom-td" [attr.colspan]="sexamArray.length"></td>
-                                    <td class="custom-td">{{getPassTotalPercentage(term)}}%</td>
-                                    <td class="custom-td"></td>
+                                    <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
+                                        {{getPassTotalPercentage(term)}}%</td>
+                                    <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
                                     <ng-container *ngIf="term == data.param.eme_term_id">
-                                        <td class="custom-td"></td>
-                                        <td class="custom-td"></td>
+                                        <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
+                                        <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
                                     </ng-container>
-                                    
                                 </tr>
                             </tbody>
 
@@ -195,26 +204,28 @@
                         <table class="table-100 custom-table" style="margin-bottom: 15px">
                             <thead>
                                 <tr class="custom-tr">
-                                    <th class="custom-th text-center" width="200px">Scholastic Areas</th>
-                                    <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}} </th>
+                                    <th [attr.colspan]="2" class="custom-th text-center" width="200px">Scholastic Areas</th>
+                                    <ng-container *ngIf="obtainedGradeAvgHighest.remark">
+                                        <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}} </th>
+                                    </ng-container>
+                                    <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
+                                        <th class="custom-th text-center">Term -{{term}} </th>
+                                    </ng-container>
                                 </tr>
                                 <tr class="custom-tr">
-                                    <th width="40%" class="custom-th text-center">Subject Name</th>
+                                    <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
                                     <!-- <th class="custom-th text-center" *ngFor="let item of sexamArray">
                                         {{item.exam_name | titlecase}}
                                         <br>({{item.exam_weightage}})</th> -->
                                     <th width="5%" class="custom-th text-center" width="60px">Grade</th>
-                                    <th width="55%" class="custom-th text-center">Remark</th>
+                                    <th *ngIf="obtainedGradeAvgHighest.remark" width="55%" class="custom-th text-center">Remark</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <ng-container *ngFor="let sub of subjectArray">
+                                <!-- <ng-container *ngFor="let sub of subjectArray">
                                     <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
                                         <tr class="custom-tr" *ngIf="sub.sub_type == 1">
                                             <td class="custom-td text-left padding-left-8px">{{sub.sub_name | titlecase}}</td>
-                                            <!-- <td class="custom-td" *ngFor="let item of sexamArray">
-                                                {{getGradePoint(getCalculatedMarks(sub.sub_id, item.exam_id,term))}}
-                                            </td> -->
                                             <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}</td>
                                             <td class="custom-td">{{remarkOfSub(sub.sub_id) | titlecase}}</td>
                                         </tr>
@@ -222,18 +233,39 @@
                                     <ng-template #childdiv>
                                         <tr class="custom-tr" *ngIf="sub.sub_type == 1">
                                             <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
-                                            <!-- <td class="custom-td" *ngFor="let item of sexamArray"></td> -->
                                             <td class="custom-td"></td>
                                             <td class="custom-td"></td>
                                         </tr>
                                         <ng-container *ngFor="let sub1 of sub.childSub">
                                             <tr class="custom-tr" *ngIf="sub1.sub_type == 1">
                                                 <td class="custom-td text-left padding-left-8px">{{sub1.sub_name}}</td>
-                                                <!-- <td class="custom-td" *ngFor="let item of sexamArray">
-                                                    {{getGradePoint(getCalculatedMarks(sub1.sub_id, item.exam_id,term))}}
-                                                </td> -->
                                                 <td class="custom-td">{{calculateGradeCcePoint(sub1.sub_id,term)}}</td>
                                                 <td class="custom-td">{{remarkOfSub(sub1.sub_id) | titlecase}}</td>
+                                            </tr>
+                                        </ng-container>
+                                    </ng-template>
+                                </ng-container> -->
+                                <ng-container *ngFor="let sub of subjectArray">
+                                    <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
+                                        <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                            <td class="custom-td text-left padding-left-8px" [attr.colspan]="2">
+                                                {{sub.sub_name | titlecase}}</td>
+                                            <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}</td>
+                                            <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">{{remarkOfSub(sub.sub_id) | titlecase}}</td>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template #childdiv>
+                                        <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                            <td class="custom-td text-left padding-left-8px" [attr.rowspan]="sub.childSub.length">{{sub.sub_name}}</td>
+                                            <td class="custom-td text-left padding-left-8px">{{sub.childSub[0].sub_name}}</td>
+                                            <td class="custom-td">{{calculateGradeCcePoint(sub.childSub[0].sub_id,term)}}</td>
+                                            <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td"></td>
+                                        </tr>
+                                        <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
+                                            <tr class="custom-tr" *ngIf="sub1.sub_type == 1 && i!=0">
+                                                <td class="custom-td text-left padding-left-8px">{{sub1.sub_name}}</td>
+                                                <td class="custom-td">{{calculateGradeCcePoint(sub1.sub_id,term)}}</td>
+                                                <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">{{remarkOfSub(sub1.sub_id) | titlecase}}</td>
                                             </tr>
                                         </ng-container>
                                     </ng-template>
@@ -280,7 +312,7 @@
                             <tr><br></tr>
                             <tr class="margin-top-10">
                                 <td style="text-align: left">Result</td>
-                                <td >:</td>
+                                <td>:</td>
                                 <td>{{getPassResult(data.param.eme_term_id)}}</td>
                             </tr>
                         </thead>

@@ -571,6 +571,10 @@ export class CollectionReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['additional_amt'] = Number(repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0) - Number(tot) - Number(repoArray[Number(keys)]['inv_opening_balance']
+													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0) - (repoArray[Number(keys)]['invoice_fine_amount']
+														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0);
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
@@ -589,6 +593,15 @@ export class CollectionReportComponent implements OnInit {
 						this.columnDefinitions.push(
 							{
 								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
+								id: 'additional_amt', name: 'Short / Access (₹)', field: 'additional_amt',
 								filterable: true,
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
@@ -668,6 +681,7 @@ export class CollectionReportComponent implements OnInit {
 								});
 							});
 						});
+						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
@@ -1737,10 +1751,10 @@ export class CollectionReportComponent implements OnInit {
 							if (repoArray[Number(keys)]['modes_arr'].length > 0) {
 								let k = 0;
 								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['modes_arr']) {									
+								for (const titem of repoArray[Number(keys)]['modes_arr']) {
 									if (titem && titem.pay_name !== "Other Payment" && titem.pay_name !== "Fine Payment") {
-										Object.keys(titem).forEach((key2: any) => {	
-											var total_row_amt = 0;									
+										Object.keys(titem).forEach((key2: any) => {
+											var total_row_amt = 0;
 											if (key2 === 'pay_name' && Number(keys) === 0) {
 												const feeObj: any = {};
 												this.columnDefinitions.push({
@@ -1762,7 +1776,7 @@ export class CollectionReportComponent implements OnInit {
 												j++;
 											}
 											if (key2 === 'pay_name') {
-												obj['id'] = repoArray[Number(keys)]['pay_name'] + keys ;
+												obj['id'] = repoArray[Number(keys)]['pay_name'] + keys;
 												obj['fh_name'] = repoArray[Number(keys)]['fh_name'] ?
 													repoArray[Number(keys)]['fh_name'] : '-';
 												obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
@@ -1771,11 +1785,11 @@ export class CollectionReportComponent implements OnInit {
 												total_row_amt = total_row_amt + titem['total_amount'] ? Number(titem['total_amount']) : 0;
 											}
 
-											
+
 										});
 									}
-									
-								}								
+
+								}
 							}
 							i++;
 							this.dataset.push(obj);
@@ -1795,7 +1809,7 @@ export class CollectionReportComponent implements OnInit {
 								});
 							});
 						});
-						
+
 						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
 							this.gridHeight = 350;
@@ -2208,7 +2222,12 @@ export class CollectionReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new IndianCurrency().transform(value);
+			if (value > 0) {
+				return new IndianCurrency().transform(value);
+			} else {
+				return '-' + new IndianCurrency().transform(-value);
+			}
+
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
@@ -2679,10 +2698,10 @@ export class CollectionReportComponent implements OnInit {
 								}
 							} else {
 								if (item2.id.toString().match(/Q/)) {
-										obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
-											: '-';
-									} else {
-										obj[item2.id] = groupItem.rows[key][item2.id];
+									obj[item2.id] = groupItem.rows[key][item2.id].status !== 'Not Generated' ? groupItem.rows[key][item2.id].status
+										: '-';
+								} else {
+									obj[item2.id] = groupItem.rows[key][item2.id];
 								}
 							}
 						}
