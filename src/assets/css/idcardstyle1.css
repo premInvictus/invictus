@@ -14,7 +14,7 @@
         img.watermark-image {
             width: 130px;
             position: relative;
-            top: -167px;
+            margin-top: -140px;
             left: 85px;
             z-index: 0;
             opacity: 0.3;
@@ -63,7 +63,8 @@
             height: 24px !important;
             position: relative !important;
             left: 187px !important;
-            top: -99px !important;
+            top: -80px !important;
+            margin-top: -18px;
         }
         .styl-1 {
             float: left !important;
