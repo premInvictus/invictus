@@ -54,7 +54,8 @@ export class ViewGradecardDialogComponent implements OnInit {
     obtained: true,
     grade: false,
     avg: false,
-    highest: false
+    highest: false,
+    remark:false,
   };
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -82,6 +83,9 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
       if(obj.highest && obj.highest == true) {
         this.obtainedGradeAvgHighest.highest = true;
+      }
+      if(obj.remark && obj.remark == true) {
+        this.obtainedGradeAvgHighest.remark = true;
       }
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
@@ -304,7 +308,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     })
   }
   getCalculatedMarksSub(sub_id, exam_id, term) {
-    console.log(this.subjectArray);
+    console.log('this.subjectArray',this.subjectArray);
     const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
     let totalscore = 0;
     if (currentSub.childSub.length > 0) {

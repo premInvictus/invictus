@@ -479,6 +479,14 @@
                               aria-hidden="true">
                             </mat-slide-toggle>
                           </div>
+                          <div class="col-6">
+                            <mat-label>Remark</mat-label>
+                          </div>
+                          <div class="col-6" formGroupName="ect_grade_avg_highest">
+                            <mat-slide-toggle class="inline-form-radio-spacing" formControlName="remark"
+                              aria-hidden="true">
+                            </mat-slide-toggle>
+                          </div>
                         </div>
 
                       </form>
@@ -655,7 +663,7 @@
                                       </ng-container>
                                       <ng-container *ngIf="configValue == '7'" matColumnDef="ect_grade_avg_highest">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                          Grade-Avg-Highest
+                                          Grade-Avg-Highest-Remark
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span *ngIf="item.ect_grade_avg_highest">{{ item.ect_grade_avg_highest }}</span>

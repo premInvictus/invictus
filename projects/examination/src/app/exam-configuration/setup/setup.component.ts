@@ -164,7 +164,8 @@ export class SetupComponent implements OnInit {
 					ect_grade_avg_highest: this.fbuild.group({
 						grade: '',
 						avg: '',
-						highest:''
+						highest:'',
+						remark:''
 					})
 				})
 			},
@@ -280,9 +281,14 @@ export class SetupComponent implements OnInit {
 			ect_grade_avg_highest_str += 'Average - No, '
 		}
 		if(value.highest) {
-			ect_grade_avg_highest_str += 'Highest - Yes'
+			ect_grade_avg_highest_str += 'Highest - Yes, '
 		} else {
-			ect_grade_avg_highest_str += 'Highest - No'
+			ect_grade_avg_highest_str += 'Highest - No, '
+		}
+		if(value.remark) {
+			ect_grade_avg_highest_str += 'Remark - Yes'
+		} else {
+			ect_grade_avg_highest_str += 'Remark - No'
 		}
 		return ect_grade_avg_highest_str;
 	}
