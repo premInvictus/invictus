@@ -43,6 +43,7 @@ export class GenerateReceiptComponent implements OnInit {
   ven_id: any;
   pm_type: any;
   pm_id: any;
+  currentLocationId: any;
   created_date: any;
   allLocationData: any[] = [];
   isLoading = false;
@@ -161,6 +162,7 @@ export class GenerateReceiptComponent implements OnInit {
           item_code: this.createOrderForm.value.item_code,
         });
         this.createOrderForm.value.item_status = 'pending';
+        this.createOrderForm.value.item_location = this.currentLocationId;
         this.finalRequistionArray.push(this.createOrderForm.value);
       }
       this.resetForm();
@@ -191,6 +193,7 @@ export class GenerateReceiptComponent implements OnInit {
     if (this.createOrderForm.valid) {
       this.UpdateFlag = false;
       this.finalRequistionArray[this.update_id] = this.createOrderForm.value;
+      this.finalRequistionArray[this.update_id].item_location = this.currentLocationId;
       this.resetForm();
     } else {
       this.commonService.showSuccessErrorMessage('Please fill all required fields', 'error');
@@ -316,7 +319,7 @@ export class GenerateReceiptComponent implements OnInit {
       };
       this.finalSubmitArray['pm_item_details'] = this.finalRequistionArray;
       this.finalSubmitArray['pm_intended_use'] = this.finalReceiptForm.value.intended_use;
-      this.finalSubmitArray['pm_source'] = this.finalReceiptForm.value.source;
+      this.finalSubmitArray['pm_source'] = 'GR';
       this.finalSubmitArray['pm_type'] = 'GR';
       if (this.pm_type !== 'GR') {
         this.finalSubmitArray['pm_created'] = {
@@ -346,71 +349,46 @@ export class GenerateReceiptComponent implements OnInit {
         invoice_no: this.finalReceiptForm.value.invoice_no,
         invoice_pdf: this.imageArray
       }
-      if (this.pm_type === 'GR') {
-        this.finalSubmitArray['pm_id'] = this.pm_id;
-        this.finalReceiptArray.push(this.finalSubmitArray);
-        this.inventory.updateRequistionMaster(this.finalReceiptArray).subscribe((result: any) => {
-          if (result) {
-            this.commonService.showSuccessErrorMessage('Receipt Updated Successfully', 'success');
-            this.finalSubmitArray = [];
-            this.finalRequistionArray = [];
-            this.itemCodeArray = [];
-            this.requistionArray = [];
-            this.finalReceiptArray = [];
-          }
-        });
-      } else {
-        this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result: any) => {
-          if (result) {
-            this.requistionArray[0].pm_status = 'approved';
-            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-              if (result) {
-                this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-                this.finalSubmitArray = [];
-                this.finalRequistionArray = [];
-                this.itemCodeArray = [];
+      this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
+        if (result_r) {
+          this.requistionArray[0].pm_status = 'approved';
+          this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+            if (result) {
+              this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+                if (result_p) {
+                  let finalArray: any = [];
+                  result_r.pm_status = 'approved';
+                  finalArray.push(result_r);
+                  this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
+                    if (result_q) {
+                      this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                      this.finalSubmitArray = [];
+                      this.finalRequistionArray = [];
+                      this.itemCodeArray = [];
+                    }
+                  });
+                }
+              });
+              if (this.requistionArray.length > 0) {
+                this.requistionArray = [];
+                this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+                this.inventory.setTabIndex({ 'currentTab': 1 });
+              } else {
+                this.requistionArray = [];
+                this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+                this.inventory.setTabIndex({ 'currentTab': 2 });
               }
-            });
-            if (this.requistionArray.length > 0) {
-              this.requistionArray = [];
-              this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-              this.inventory.setTabIndex({ 'currentTab': 1 });
-            } else {
-              this.requistionArray = [];
-              this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-              this.inventory.setTabIndex({ 'currentTab': 2 });
             }
-          } else {
-            this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
-          }
-        });
-      }
-
-    }
-  }
-  getFilterLocation(event) {
-    var inputJson = { 'filter': event.target.value };
-    if (event.target.value && event.target.value.length > 2) {
-      this.toHighlight = event.target.value
-      this.isLoading = true;
-      this.erpCommonService.getFilterLocation(inputJson).subscribe((result: any) => {
-        this.allLocationData = [];
-        if (result) {
-          this.isLoading = false;
-          for (var i = 0; i < result.length; i++) {
-            this.allLocationData.push(result[i]);
-            this.locationDataArray.push(result[i]);
-          }
+          });
+        } else {
+          this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
         }
       });
-    } else {
-      this.allLocationData = [];
     }
   }
-  setLocationId(locationDetails, i) {
-    this.createOrderForm.patchValue({
-      item_location: locationDetails.location_hierarchy,
-    });
+  getFilterLocation(locationData) {
+    this.currentLocationId = locationData.location_id;
+    this.locationDataArray.push(locationData);
   }
   getLocationName(location_id) {
     const sindex = this.locationDataArray.findIndex(f => Number(f.location_id) === Number(location_id));

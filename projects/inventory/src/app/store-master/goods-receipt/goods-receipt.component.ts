@@ -13,6 +13,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
   styleUrls: ['./goods-receipt.component.css']
 })
 export class GoodsReceiptComponent implements OnInit {
+  @ViewChild('receiptModal') receiptModal;
   orderArray: any[] = [];
   setArray: any[] = [];
   itemCode: any;
@@ -28,6 +29,7 @@ export class GoodsReceiptComponent implements OnInit {
   pageLength: number;
   pageSize = 300;
   pageSizeOptions = [100, 300, 1000];
+  submitParam: any = {};
   displayedColumns: string[] = ['position', 'po_number', 'po_date', 'created_by', 'vendor_id', 'vendor_name',
     'vendor_category', 'vendor_contact', 'vendor_email', 'action'];
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -82,24 +84,9 @@ export class GoodsReceiptComponent implements OnInit {
     });
   }
   actionList(pm_id, action) {
-    const sindex = this.orderArray.findIndex(f => Number(f.pm_id) === Number(pm_id));
-    if (sindex !== -1) {
-      if (action === 'approved') {
-        this.inventory.updateItemQuantity(this.orderArray[sindex]).subscribe((result: any) => {
-          if (result) {
-            let finalArray: any = [];
-            this.orderArray[sindex].pm_status = 'approved';
-            finalArray.push(this.orderArray[sindex]);
-            this.inventory.updateRequistionMaster(finalArray).subscribe((result: any) => {
-              if (result) {
-                this.commonService.showSuccessErrorMessage('Item Quantity Updated Successfully', 'success');
-                this.getAllOrderMaster();
-              }
-            });
-
-          }
-        });
-      }
+    if (action === 'approved') {
+      this.submitParam.pm_id = pm_id;
+      this.receiptModal.openModal(this.submitParam);
     }
   }
   editList(pm_id) {

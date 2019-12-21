@@ -8,9 +8,9 @@
           </div>
         </div>
         <div class="col-6 ">
-          <div class="top-card-title float-right">
+          <!-- <div class="top-card-title float-right">
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">Back</button>
-          </div>
+          </div> -->
         </div>
       </div>
     </mat-card>
@@ -134,7 +134,8 @@
                   <tr class="text-center">
                     <td colspan="9">
                       <img
-                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_order.png" width="350">
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_order.png"
+                        width="350">
                       <br><br><br>
                       <br><span class="font-size-20 font-light font-color-brown">
                         Please Update Item list on Click of Add Button
@@ -220,9 +221,10 @@
               </div>
             </div>
           </form>
-          <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
+          <div class="row margin-top-20">
             <div class="col-12 text-center">
-              <button mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+              <button mat-raised-button class="btn-success-green" *ngIf="this.finalRequistionArray.length > 0"
+                (click)="openSubmitModal()">Submit</button>
               <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
           </div>

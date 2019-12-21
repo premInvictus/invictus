@@ -20,12 +20,12 @@
           <span [innerHTML]="item.location_hierarchy | capitalize | highlight: toHighlight"></span>
         </mat-option>
       </mat-autocomplete>
-
     </form>
   </div>
   <div class="col-1 margin-top-no" *ngIf="showAdd">
-    <button class="btn-success-blue mat-raised-button" (click)="openAddLocationDialog()">
+    <i class="fas fa-plus custom-class-plus" (click)="openAddLocationDialog()" title="Add"> </i>
+    <!-- <button class="btn-success-blue mat-raised-button" (click)="openAddLocationDialog()">
       +
-    </button>
+    </button> -->
   </div>
 </div>

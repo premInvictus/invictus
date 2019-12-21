@@ -220,5 +220,8 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
     this.common.setItemData(item);
     this.router.navigate(['../inventory-details'], { relativeTo: this.route });
   }
+  createPo() {
+    this.router.navigate(['../../store-master/create-procurement-master'], { relativeTo: this.route });
+  }
 
 }
