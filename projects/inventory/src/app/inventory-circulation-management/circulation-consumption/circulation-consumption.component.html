@@ -56,7 +56,8 @@
             [src]="userData?.au_profileimage" height="90px" width="90px"
             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'" />
         </div>
-        <div class="col-3 remove-col-padding-left margin-top-15">
+       
+        <div class="col-2 remove-col-padding-left margin-top-15">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
           <span class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'"> S -
@@ -65,6 +66,7 @@
               -{{userData?.au_login_id}}</span> )
           </span>
         </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
         <div class="col-2 remove-col-padding margin-top-15">
           <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
             <div class="col-4 remove-col-padding">
@@ -94,39 +96,61 @@
             </div>
           </div>
         </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
         <div class="col-3 remove-col-padding margin-top-15">
           <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
-            <div class="col-4 remove-col-padding">
+            <div class="col-6 remove-col-padding">
               <span class="font-size-16 font-bold">Mobile No.</span>
               <span class="font-size-16 font-bold float-right">:</span>
             </div>
-            <div class="col-8 remove-col-padding-right">
+            <div class="col-6 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
                 <span *ngIf="userData?.au_mobile">{{userData?.au_mobile}}</span>
                 <span *ngIf="!(userData?.au_mobile)">-</span>
               </span>
             </div>
           </div>
-        </div>
-        <div class="col-3 remove-col-padding margin-top-15">
           <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
-            <div class="col-8 remove-col-padding">
+            <div class="col-6 remove-col-padding">
               <span class="font-size-16 font-bold">Items Returned Till Date.</span>
               <span class="font-size-16 font-bold float-right">:</span>
             </div>
-            <div class="col-4 remove-col-padding-right">
+            <div class="col-6 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
                 {{itemsReadTillDate}}
+
+                <!-- <a href="javascript:void(0)"
+                  (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
+                    class="fas fa-shopping-cart"></i></a> -->
               </span>
             </div>
           </div>
         </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
+        <div class="col-1 remove-col-padding margin-top-15">
+          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+            <div class="col-12 remove-col-padding-right">
+              <span class="font-size-16 font-bold">
+                <!-- <a href="javascript:void(0)"
+                  (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
+                    class="fas fa-shopping-cart"></i></a> -->
+
+                <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button style="width:200px !important;"
+                  (click)="showReturnIssueSection=!showReturnIssueSection">
+                  Issue / Return Item
+                </button>
+
+              </span>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </mat-card>
   </div>
 </div>
 
-<div class="row" *ngIf="userData!=''">
+<div class="row" *ngIf="(userData!='' && showReturnIssueSection)">
   <div class="col-12 remove-col-padding-left">
     <form [formGroup]="returnIssueItemsForm">
       <mat-card class="mat-card-108">
@@ -164,7 +188,7 @@
                   <th class="custom-th">Current Stock</th>
                   <th class="custom-th">Location</th>
                   <th class="custom-th">Stock</th>
-                  <th class="custom-th">Issued Quantity</th>
+                  <th class="custom-th">Issued/ Return Quantity</th>
                   <th class="custom-th">Due Date</th>
                   <th class="custom-th">Action</th>
                 </tr>
@@ -207,36 +231,50 @@
                           </mat-form-field>
                         </form>
                       </span>
+
                       <span
                         *ngIf="(item?.item_status === 'issued')">{{getLocationName(item?.item_location?.location_id) | titlecase}}</span>
 
                     </td>
                     <td width="5%" class="custom-td text-center"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span *ngIf="!(item?.item_status === 'issued')">{{item?.current_location_stock}} {{item?.item_units?.name}}</span>
+                      <span *ngIf="!(item?.item_status === 'issued')">{{item?.current_location_stock}}
+                        {{item?.item_units?.name}}</span>
                       <span
-                        *ngIf="item?.item_status === 'issued'">{{item?.item_location?.current_stock[item?.matchIndex]?.item_qty}}</span>
+                        *ngIf="item?.item_status === 'issued'">{{getItemLocationStock(item, item?.item_location?.location_id)}}
+                        {{item?.item_units?.name}}</span>
                     </td>
                     <td width="8%" class="custom-td text-center"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <div>
+                        <span *ngIf="formGroupArray?.length > 0 && (item?.item_status === 'issued')">
+                          <form [formGroup]="formGroupArray[i]">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Return Quantity</mat-label>
+                              <input matInput type="number" placeholder="Issued Quantity"
+                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)"
+                                value="{{item?.issued_quantity}}" />
+                            </mat-form-field>
+                          </form>
+                        </span>
+                        <span *ngIf="formGroupArray?.length > 0 && !(item?.item_status === 'issued')">
+                          <form [formGroup]="formGroupArray[i]">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Issued Quantity</mat-label>
+                              <input matInput type="number" placeholder="Issued Quantity"
+                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)" />
+                            </mat-form-field>
+                          </form>
 
-                      <span *ngIf="!(item?.item_status === 'issued') && formGroupArray?.length > 0">
-                        <form [formGroup]="formGroupArray[i]">
-                          <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Issued Quantity</mat-label>
-                            <input matInput type="number" placeholder="Issued Quantity"
-                              formControlName="issued_quantity" required (blur)="setIssuedQuantity(item, i)" />
-                          </mat-form-field>
-                        </form>
-                      </span>
-
-                      <span *ngIf="(item?.item_status === 'issued')">{{item?.item_location?.item_qty}} {{item?.item_units?.name}}</span>
+                        </span>
+                        <!-- <span *ngIf="(item?.item_status === 'issued')"> {{item?.item_units?.name}}</span> -->
+                      </div>
                     </td>
                     <td width="10%" class="custom-td text-nowrap"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <div class="inline-flex date-width-100">
                         <div class="inline-flex" *ngIf="(item?.item_status == 'issued')">
-                          {{item?.due_date | date : 'd-MMM-y'}} 
+                          {{item?.due_date | date : 'd-MMM-y'}}
                         </div> &nbsp;
                         <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
                           (dateChange)="setDueDate(i, returnIssueItemsForm.value.due_date)" [value]="item?.fdue_date">
@@ -250,8 +288,12 @@
                       </div>
                     </td>
                     <td width="5%" class="custom-td"
-                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'"><i
-                        class="fas fa-trash font-color-red" (click)="removeItem(i)"></i></td>
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+
+                      <span *ngIf="item?.item_status === 'issued'"><i class="fas fa-plus font-color-blue"
+                          (click)="addItem(item,i)"></i> | </span>
+                      <i class="fas fa-trash font-color-red" (click)="removeItem(i)"></i>
+                    </td>
                   </tr>
                 </ng-container>
               </tbody>
@@ -279,7 +321,7 @@
 
   </div>
 </div>
-<div class="row" *ngIf="userData!=''">
+<div class="row" *ngIf="userData!='' && issueItemData?.length > 0">
   <div class="col-12">
     <mat-card class="margin-top-10 card-height-325">
       <div class="row">
@@ -314,9 +356,10 @@
                     <span>{{item?.item_name | titlecase | truncatetext: 55}}</span></td>
                   <td class="custom-td text-left" width="10%">{{item?.item_nature?.name | titlecase | truncatetext: 20}}
                   </td>
-                  <td class="custom-td text-left" width="25%">{{getLocationName(item?.item_location?.location_id) | titlecase }}
+                  <td class="custom-td text-left" width="25%">
+                    {{getLocationName(item?.item_location?.location_id) | titlecase }}
                   </td>
-                  <td class="custom-td" width="12%">{{item?.item_location?.item_qty}} {{item?.item_units?.name}}
+                  <td class="custom-td" width="12%">{{item?.issued_quantity}} {{item?.item_units?.name}}
                   </td>
                   <td class="custom-td" width="8%">{{item?.issued_on | date: 'd-MMM-y' }}</td>
                   <td class="custom-td" width="8%">{{item?.due_date | date: 'd-MMM-y' }}</td>
@@ -335,7 +378,7 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="userData!=''">
+<div class="row" *ngIf="userData!='' && ITEM_LOG_LIST_ELEMENT.length > 0">
 
   <div class="col-12 ">
     <mat-card>
@@ -412,7 +455,13 @@
             <ng-container matColumnDef="issued_quantity">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Issued Quantity</th>
               <td mat-cell *matCellDef="let element">
-                <span class="text-capitalize">{{element?.item_location?.item_qty}} {{element?.item_units?.name}} </span>
+                <span class="text-capitalize">{{element?.issued_quantity}} {{element?.item_units?.name}} </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="returned_quantity">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Returned Quantity</th>
+              <td mat-cell *matCellDef="let element">
+                <span class="text-capitalize">{{element?.returned_quantity}} {{element?.item_units?.name}} </span>
               </td>
             </ng-container>
             <ng-container matColumnDef="due_date">
