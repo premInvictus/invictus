@@ -141,7 +141,7 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 			this.showParentName = false;
 		}
 		this.photo = this.idCardConfig.ps_template_image ?
-			this.idCardConfig.ps_template_image : '/assets/images/landscape-id-card_bg_three_3.jpg'
+			this.idCardConfig.ps_template_image : ''
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
