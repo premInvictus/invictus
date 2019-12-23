@@ -89,9 +89,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
-    for (let i = 1; i <= this.data.param.eme_term_id; i++) {
-      this.termArray.push(i);
-    }
+    this.termArray.push(this.data.param.eme_term_id);
     this.getClassHighestAndAverage();
     this.getSubjectSubexamMapping();
     this.ctForClass();
@@ -323,6 +321,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getCalculatedMarks(sub_id, exam_id, term) {
     const curExam = this.examArray.find(e => e.exam_id === exam_id);
+    console.log('curExam----------------', curExam);
     const percentageArray: any[] = [];
     curExam.exam_sub_exam_max_marks.forEach(element => {
       if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0) {
@@ -633,6 +632,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.examService.getExamDetails(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+        if(this.data.param.eme_subexam_id && this.data.param.eme_subexam_id.length > 0) {
+          const curExam = this.examArray.find(e => e.exam_id === this.data.param.eme_exam_id);
+          const curExamSubExam: any[] = [];
+          curExam.exam_sub_exam_max_marks.forEach(element => {
+            const subindex = this.data.param.eme_subexam_id.findIndex(e => e === element.se_id);
+            if(subindex !== -1) {
+              curExamSubExam.push(element)
+            }
+          });
+          curExam.exam_sub_exam_max_marks = curExamSubExam;
+        }
         this.examArray.forEach(element => {
           if (element.exam_category === '1') {
             this.sexamArray.push(element);
@@ -646,6 +656,7 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.acedemicmarks += Number(element.exam_weightage);
           });
         }
+        console.log('examArray-------', this.examArray);
         this.getGradeCardMark();
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
