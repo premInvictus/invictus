@@ -30,10 +30,10 @@
                 <th mat-header-cell *matHeaderCellDef> Action </th>
                 <td mat-cell *matCellDef="let item">
                   <div class="inline-flex margin-top-10" *ngIf="item.action.status !== 'gatepass-created'">
-                    <i class="fas fa-cart-plus" style="color: #3388e5" (click)="addItems(item.action)"></i>
+                    <i class="fas fa-cart-plus" style="color: #3388e5; cursor: pointer;" (click)="addItems(item.action)"></i>
                   </div>
                   <b><span *ngIf="item.action.status === 'gatepass-created'">
-                      <i class="fas fa-clipboard-check" style="color: green" matTooltip="Gate Pass Generated"></i>
+                      <i class="fas fa-clipboard-check" style="color: green;cursor: pointer;" matTooltip="Gate Pass Generated"></i>
                     </span></b>
                 </td>
               </ng-container>

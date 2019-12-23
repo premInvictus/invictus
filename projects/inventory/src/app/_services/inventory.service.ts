@@ -95,7 +95,7 @@ export class InventoryService {
   }
   updateBranchTransfer(value) {
     this.service.stopLoading();
-    return this.http.post(environment.apiInvUrl + '/branch-transfer/update', value);
+    return this.http.post(environment.apiInvUrl + '/branch-transfer/updateBranchTransfer', value);
   }
   createBranchTransfer(value) {
     this.service.stopLoading();
