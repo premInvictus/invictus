@@ -78,6 +78,10 @@ export class IdcardPrintingSetupComponent implements OnInit {
 			this.addressFontSize.push(i + 1);
 		}
 	}
+	deleteTemp() {
+		this.templateImage = '';
+		this.showTempImage = false;
+	}
 	buildForm() {
 		this.idcardForm = this.fbuild.group({
 			ps_card_style: '',
