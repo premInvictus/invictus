@@ -52,7 +52,7 @@
             </div>
           </div>
         </div>
-        <div class="col-1">
+        <div class="col-1 div-border-color">
           <div class="divider-div"></div>
         </div>
         <div class="col-8">
@@ -70,11 +70,11 @@
                     <div class="col-4">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Item Quantity</mat-label>
-                        <input matInput type="text" formControlName="branch_qty" placeholder="Item Name" readonly>
+                        <input matInput type="text" formControlName="item_quantity" placeholder="Item Name" readonly>
                       </mat-form-field>
                     </div>
                     <div class="col-4">
-                      <app-location-search-and-add [showAdd]="true" (renderData)="getFilterLocation($event,i)">
+                      <app-location-search-and-add [showAdd]="true" (renderData)="getFilterLocation($event,i)" required>
                       </app-location-search-and-add>
                     </div>
                   </div>
@@ -84,12 +84,22 @@
           </div>
         </div>
       </div>
+      <div *ngIf="formGroupArray.length === 0" class="no-records">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/item_search.png'"
+            [noDataText]="'No Items Selected'"></app-no-data>
+        </div>
+      </div>
       <div class="row margin-top-20">
         <div class="col-12 text-center">
-          <button mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+          <button mat-raised-button class="btn-success-green" *ngIf="formGroupArray.length > 0"
+            (click)="openSubmitModal()">Submit</button>
           <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
         </div>
       </div>
     </mat-card>
   </div>
 </div>
+
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
