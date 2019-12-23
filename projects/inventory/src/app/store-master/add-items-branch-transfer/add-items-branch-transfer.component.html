@@ -20,13 +20,24 @@
         <div class="col-3">
           <div class="row">
             <div class="col-12">
-              <ng-container *ngFor="let item of formGroupArray">
+              <ng-container *ngFor="let item of formGroupArray; let i = index;">
                 <form [formGroup]="item.formGroup">
                   <div class="row">
                     <div class="col-6">
                       <mat-form-field class="form-field" appearance="outline">
                         <mat-label>Item Code</mat-label>
-                        <input matInput type="text" formControlName="item_code" placeholder="Item Code">
+                        <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
+                          [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                          (keyup)="filterItem($event)" [readonly]="viewOnly">
+                        <mat-autocomplete #autoGroup="matAutocomplete">
+                          <mat-option (onSelectionChange)="getItemPerId(item,i)" (keyup.enter)="getItemPerId(item,i)"
+                            (click)="getItemPerId(item,i)" *ngFor="let item of itemArray" [value]="item.item_code">
+                            {{item.item_code}} -
+                            {{item.item_name | capitalize}}</mat-option>
+                        </mat-autocomplete>
+                        <mat-error>
+                          This field is required
+                        </mat-error>
                       </mat-form-field>
                     </div>
                     <div class="col-6">
@@ -47,7 +58,7 @@
         <div class="col-8">
           <div class="row">
             <div class="col-12">
-              <ng-container *ngFor="let item of formGroupArray">
+              <ng-container *ngFor="let item of formGroupArray; let i = index;">
                 <form [formGroup]="item.formGroup">
                   <div class="row">
                     <div class="col-4">
@@ -62,11 +73,21 @@
                         <input matInput type="text" formControlName="branch_qty" placeholder="Item Name" readonly>
                       </mat-form-field>
                     </div>
+                    <div class="col-4">
+                      <app-location-search-and-add [showAdd]="true" (renderData)="getFilterLocation($event,i)">
+                      </app-location-search-and-add>
+                    </div>
                   </div>
                 </form>
               </ng-container>
             </div>
           </div>
+        </div>
+      </div>
+      <div class="row margin-top-20">
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success-green" (click)="openSubmitModal()">Submit</button>
+          <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
         </div>
       </div>
     </mat-card>

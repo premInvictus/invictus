@@ -64,8 +64,8 @@
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
           <td mat-cell class="cell-left" *matCellDef="let element;">
-            <i class="far fa-edit modify-icon" 
-              (click)="actionList(element.action.pm_id,'approved')" style="cursor:pointer" title="Edit"></i>&nbsp;
+            <i class="far fa-edit modify-icon" (click)="actionList(element.action.pm_id,'approved')"
+              style="cursor:pointer" title="Edit"></i>&nbsp;
             <!-- <i class="far fa-trash-alt delete-icon inline-form-radio-spacing"
               (click)="actionList(element.action,'delete')" style="cursor:pointer" title="Delete"></i> -->
           </td>
@@ -81,9 +81,9 @@
 </div>
 <div *ngIf="ELEMENT_DATA.length === 0" class="no-records">
   <div class="text-center">
-    <!-- <app-no-data
+    <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/good_receipts.png'"
-      [noDataText]="'No Record Found'"></app-no-data> -->
+      [noDataText]="'No Record Found'"></app-no-data>
   </div>
 </div>
 <app-receipt-modal #receiptModal></app-receipt-modal>

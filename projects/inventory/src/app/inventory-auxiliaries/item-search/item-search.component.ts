@@ -25,7 +25,7 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   pageEvent: PageEvent;
   pageSize = 100;
   @ViewChild('searchModal') searchModal;
-  displayedColumns = ['sno', 'nature', 'category', 'code', 'name', 'location', 'qty', 'reorder'];
+  displayedColumns = ['sno', 'code', 'name', 'category', 'nature', 'reorder', 'location', 'qty'];
   val: any;
   itempagesizeoptions = [100, 300, 500, 1000];
   itemArray: any[] = [];
@@ -139,34 +139,45 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
       if (res && res.status === 'ok') {
         this.itemArray = [];
         this.itemArray = res.data;
+        let location = '';
+        let quantity = 0;
         const DATA = this.itemArray.reduce((current, next, index) => {
+          let i = 0;
           next.item_location.forEach(element => {
-            current.push({
-              "sno": index + 1,
-              "code": next.item_code,
-              "name": next.item_name,
-              "session": next.item_session,
-              "nature": next.item_nature.name,
-              "category": next.item_category.name,
-              "location": this.getLocation(element.location_id, next.locs),
-              "qty": this.getQuantity(element.location_id, next.item_location),
-              "reorder": next.item_reorder_level,
-              "units": next.item_units.name,
-              "desc": next.item_desc,
-              "status": next.item_status,
-              "action": next
-            });
+            if (i == 0) {
+              location = this.getLocation(element.location_id, next.locs);
+            } else {
+              location = location + "," + this.getLocation(element.location_id, next.locs);
+            }
+            quantity = Number(quantity) + Number(element.item_qty);
+            i++;
           });
+          current.push({
+            "sno": index + 1,
+            "code": next.item_code,
+            "name": next.item_name,
+            "session": next.item_session,
+            "nature": next.item_nature.name,
+            "category": next.item_category.name,
+            "location": location,
+            "qty": quantity,
+            "reorder": next.item_reorder_level,
+            "units": next.item_units.name,
+            "desc": next.item_desc,
+            "status": next.item_status,
+            "action": next
+          });
+
           return current;
         }, []);
         this.ITEM_MASTER_DATA = DATA;
-        this.cacheSpan('sno', d => d.sno);
-        this.cacheSpan('code', d => d.code);
-        this.cacheSpan('name', d => d.name);
-        this.cacheSpan('nature', d => d.nature);
-        this.cacheSpan('category', d => d.category);
-        this.cacheSpan('reorder', d => d.reorder);
-        this.cacheSpan('desc', d => d.desc);
+        // this.cacheSpan('sno', d => d.sno);
+        // this.cacheSpan('code', d => d.code);
+        // this.cacheSpan('name', d => d.name);
+        // this.cacheSpan('nature', d => d.nature);
+        // this.cacheSpan('category', d => d.category);
+        // this.cacheSpan('reorder', d => d.reorder);
+        // this.cacheSpan('desc', d => d.desc);
         this.totalRecords = Number(res.totalRecords);
         localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
         this.datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);

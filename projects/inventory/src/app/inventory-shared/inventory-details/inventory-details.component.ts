@@ -16,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./inventory-details.component.css']
 })
 export class InventoryDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+  showUserContextMenu = false;
   itemData: any[] = [];
   itemData2: any[] = [];
   currentUser: any;

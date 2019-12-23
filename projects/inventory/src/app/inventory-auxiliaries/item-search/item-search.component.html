@@ -43,54 +43,56 @@
     <div class="col-12">
       <mat-card>
         <div class="row">
-          <div class="col-2"></div>
-          <div class="col-8">
+          <div class="col-12">
             <div [hidden]="ITEM_MASTER_DATA.length == 0">
               <mat-form-field>
                 <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
               <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+
                 <ng-container matColumnDef="sno">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
-                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('sno',i)"
-                    [style.display]="getRowSpan('sno', i) ? '' : 'none'"> {{item.sno}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Sr No.</th>
+                  <td mat-cell *matCellDef="let item"> {{item.sno}} </td>
                 </ng-container>
-                <ng-container matColumnDef="nature">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Nature </th>
-                  <td mat-cell *matCellDef="let item; let i = index;" [attr.rowspan]="getRowSpan('nature',i)"
-                    [style.display]="getRowSpan('nature', i) ? '' : 'none'"> {{item.nature}} </td>
-                </ng-container>
-                <ng-container matColumnDef="category">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
-                  <td mat-cell *matCellDef="let item; let i = index" [attr.rowspan]="getRowSpan('category',i)"
-                    [style.display]="getRowSpan('category', i) ? '' : 'none'"> {{item.category}} </td>
-                </ng-container>
+
                 <ng-container matColumnDef="code">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Code </th>
-                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('code',i)"
-                    [style.display]="getRowSpan('code', i) ? '' : 'none'">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Code</th>
+                  <td mat-cell *matCellDef="let item">
                     <a style="color: #277d9e; text-decoration: underline !important;
-                        cursor: pointer;" (click)="goToDetails(item.action)">{{item.code}} </a></td>
+                      cursor: pointer;" (click)="goToDetails(item.action)">{{item.code}} </a> </td>
                 </ng-container>
+
                 <ng-container matColumnDef="name">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Item Name </th>
-                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('name',i)"
-                    [style.display]="getRowSpan('name', i) ? '' : 'none'"> {{item.name | titlecase}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
+                  <td mat-cell *matCellDef="let item"> {{item.name}} </td>
                 </ng-container>
+
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Category</th>
+                  <td mat-cell *matCellDef="let item"> {{item.category}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nature">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Nature</th>
+                  <td mat-cell *matCellDef="let item"> {{item.nature}} </td>
+                </ng-container>
+
                 <ng-container matColumnDef="reorder">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Reorder Level </th>
-                  <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('reorder',i)"
-                    [style.display]="getRowSpan('reorder', i) ? '' : 'none'"> {{item.reorder + ' ' + item.units}} </td>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Reorder Level </th>
+                  <td mat-cell *matCellDef="let item"> {{item.reorder}} </td>
                 </ng-container>
+
                 <ng-container matColumnDef="location">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Location </th>
                   <td mat-cell *matCellDef="let item"> {{item.location}} </td>
                 </ng-container>
+
                 <ng-container matColumnDef="qty">
                   <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
                   <td mat-cell *matCellDef="let item"> {{item.qty}} </td>
                 </ng-container>
+
                 <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
               </table>
