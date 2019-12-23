@@ -155,7 +155,7 @@
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
-                                                {{item.emp_name}} 
+                                                {{item.emp_name}}
                                             </mat-option>
                                         </mat-select>
                                         <mat-error>
@@ -182,38 +182,55 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="row salary-card">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Bank Name</mat-label>
-                                        <mat-select formControlName="bank_name" required placeholder="Bank Name"
-                                            [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-                                            <mat-option value="">Please select</mat-option>
-                                            <mat-option *ngFor="let item of bankArray" [value]="item.tb_id">
-                                                {{item.tb_name}}
-                                            </mat-option>
-                                        </mat-select>
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Bank A/c No.</mat-label>
-                                        <input type="text" formControlName="bank_ac" matInput placeholder="Bank A/c No."
-                                            required [readonly]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher">
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>IFSC Code</mat-label>
-                                        <input type="text" formControlName="ifsc_code" matInput placeholder="IFSC Code"
-                                            required [readonly]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher">
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field>
+
+                                    <ng-container *ngFor="let item of empBankDetail; let i=index;">
+                                        <form [formGroup]="empBankDetail[i]">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Bank Name</mat-label>
+                                                <mat-select formControlName="bank_name" required placeholder="Bank Name"
+                                                    [disabled]="viewOnly"
+                                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of bankArray" [value]="item.tb_id">
+                                                        {{item.tb_name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error>
+                                                    This field is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Bank A/c No.</mat-label>
+                                                <input type="text" formControlName="bank_ac" matInput
+                                                    placeholder="Bank A/c No." required [readonly]="viewOnly"
+                                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                                <mat-error>
+                                                    This field is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>IFSC Code</mat-label>
+                                                <input type="text" formControlName="ifsc_code" matInput
+                                                    placeholder="IFSC Code" required [readonly]="viewOnly"
+                                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                                <mat-error>
+                                                    This field is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </form>
+                                        <div style="float:right; margin-left:88% !important;">
+                                            <a *ngIf="empBankDetail.length > 1 && !viewOnly" style="float:right"
+                                                href="javascript:void(0)" (click)="removeEmpBank(i)"><i
+                                                    class="fas fa-minus-circle" style="color:#e11022"></i></a>&nbsp;
+                                        </div>
+                                    </ng-container>
+                                    <div style="float:right; margin-left:82%;margin-top:-21px">
+                                        <a *ngIf="!viewOnly" href="javascript:void(0)" style="float:right"
+                                            (click)="addEmpBank()"><i class="fas fa-plus-circle"
+                                                style="color:#0078c2"></i></a>
+                                    </div>
                                 </div>
+
                             </div>
                             <div class="col-4 col-pad-5">
                                 <div class="row salary-card">

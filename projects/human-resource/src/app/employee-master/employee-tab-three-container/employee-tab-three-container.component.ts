@@ -66,6 +66,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	departmentArray;
 	designationArray;
 	wingArray;
+	empBankDetail:any [] = [];
 	constructor(
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -156,9 +157,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			supervisor: '',
 			increment_month: '',
 			contract_period: '',
-			bank_name: '',
-			bank_ac: '',
-			ifsc_code: '',
+			// bank_name: '',
+			// bank_ac: '',
+			// ifsc_code: '',
 			sal_str: '',
 			pay_mode: '',
 			basic_pay: '',
@@ -171,8 +172,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			net_salary: '',
 			total_earning: ''
 		});
+
+		
 	}
 	ngOnChanges() {
+		this.empBankDetail = [];
 		this.buildForm();
 		this.getDepartment();
 		this.getDesignation();
@@ -187,8 +191,27 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.getSalartDetails();
 			this.onChangeData();
+			
+
+			console.log(this.empBankDetail);
 		}
 	}
+
+	addEmpBank() {
+		this.empBankDetail.push(this.fbuild.group({
+			bank_name: '',
+			bank_ac: '',
+			ifsc_code: ''
+		}));
+	}
+
+	removeEmpBank(index) {
+		if (this.empBankDetail.length > 1) {
+			this.empBankDetail.splice(index, 1);
+		}
+		
+	}
+
 	getDepartment() {
 		this.sisService.getDepartment({}).subscribe((result: any) => {
 			if (result && result.status == 'ok') {
@@ -357,6 +380,26 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	getSalartDetails() {
 		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : '';
+		console.log(this.employeedetails.emp_salary_detail);
+		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail && this.employeedetails.emp_salary_detail.emp_bank_detail.length > 0) {
+			this.empBankDetail = [];
+			for (var i=0; i < this.employeedetails.emp_salary_detail.emp_bank_detail.length; i++) {
+				this.empBankDetail.push(this.fbuild.group({
+					bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString(),
+					//bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_name'],
+					bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'],
+					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc']
+				}));
+			}			
+		} else {
+			this.empBankDetail.push(this.fbuild.group({
+				bank_name: '',
+				bank_ac: '',
+				ifsc_code: ''
+			}));
+		}
+
+		console.log(this.empBankDetail);
 
 		this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
@@ -377,10 +420,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			increment_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_incremental_month_detail ? this.employeedetails.emp_salary_detail.emp_incremental_month_detail.month_data : '',
 			supervisor: this.employeedetails.emp_supervisor ? this.employeedetails.emp_supervisor.id : '',
 			contract_period: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_job_detail ? this.employeedetails.emp_salary_detail.emp_job_detail.contact_period : '',
-			bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? 
-			this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id.toString() : '',
-			bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
-			ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
+			// bank_name: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? 
+			// this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_id.toString() : '',
+			// bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
+			// ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
 			sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id, 10) : '',
 			pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.config_id, 10) : '',
 			basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
@@ -402,6 +445,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	}
 	saveForm() {
+		console.log(this.empBankDetail);
+		var bankDetail = [];
+		for(var i=0; i< this.empBankDetail.length;i++) {
+			var inputJson = {bnk_detail: {
+									bnk_id: this.empBankDetail[i].value.bank_name,
+									bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
+									bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
+									bnk_acc_no: this.empBankDetail[i].value.bank_ac
+								}};
+			bankDetail.push(inputJson);
+		}
+		console.log('bankDetail--', bankDetail);
 		if (this.salaryDetails.valid) {
 			this.employeedetails['emp_salary_detail'] = {
 				account_docment_detail: {
@@ -438,16 +493,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				emp_incremental_month_detail: {
 					month_data: this.salaryDetails.value.increment_month
 				},
-				emp_bank_detail: [
-					{
-						bnk_detail: {
-							bnk_id: this.salaryDetails.value.bank_name,
-							bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
-							bnk_ifsc: this.salaryDetails.value.ifsc_code,
-							bnk_acc_no: this.salaryDetails.value.bank_ac
-						}
-					}
-				],
+				emp_bank_detail: bankDetail,
 				emp_salary_structure: {
 					emp_pay_scale: {
 						pc_id: this.salaryDetails.value.sal_str,
@@ -514,6 +560,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 
 	updateForm(moveNext) {
+		var bankDetail = [];
+		for(var i=0; i< this.empBankDetail.length;i++) {
+			var inputJson = {bnk_detail: {
+									bnk_id: this.empBankDetail[i].value.bank_name,
+									bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
+									bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
+									bnk_acc_no: this.empBankDetail[i].value.bank_ac
+								}};
+			bankDetail.push(inputJson);
+		}
 		if (this.salaryDetails.valid) {
 			this.employeedetails['emp_salary_detail'] = {
 				account_docment_detail: {
@@ -546,16 +602,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				emp_incremental_month_detail: {
 					month_data: this.salaryDetails.value.increment_month
 				},
-				emp_bank_detail: [
-					{
-						bnk_detail: {
-							bnk_id: this.salaryDetails.value.bank_name,
-							bnk_name: this.getBankName(this.salaryDetails.value.bank_name),
-							bnk_ifsc: this.salaryDetails.value.ifsc_code,
-							bnk_acc_no: this.salaryDetails.value.bank_ac
-						}
-					}
-				],
+				emp_bank_detail: bankDetail,
 				emp_salary_structure: {
 					emp_pay_scale: {
 						pc_id: this.salaryDetails.value.sal_str,
