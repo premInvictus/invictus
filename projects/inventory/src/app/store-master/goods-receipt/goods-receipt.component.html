@@ -61,6 +61,18 @@
             {{element.vendor_email}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="print">
+          <th mat-header-cell *matHeaderCellDef class="cell-left"> Gate Pass</th>
+          <td mat-cell class="cell-left" *matCellDef="let element;">
+              <i class="fas fa-ticket-alt" style="color: #2e9ca4;cursor: pointer;" matTooltip="Gate Pass Generated"  
+              (click)="printReceipt(element.action.pm_id)"></i>
+            <!-- <i class="far fa-edit modify-icon" (click)="printReceipt(element.action.pm_id)" style="cursor:pointer"
+              title="print"></i>&nbsp; -->
+           
+          </td>
+        </ng-container>
+
+
         <ng-container matColumnDef="action">
           <th mat-header-cell *matHeaderCellDef class="cell-left"> Action </th>
           <td mat-cell class="cell-left" *matCellDef="let element;">
