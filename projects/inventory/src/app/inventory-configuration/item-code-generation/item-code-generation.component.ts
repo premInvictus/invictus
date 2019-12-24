@@ -285,4 +285,8 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
     }
   }
 
+  applyFilter(filterValue: string) {
+    this.datasource.filter = filterValue.trim().toLowerCase();
+  }
+
 }

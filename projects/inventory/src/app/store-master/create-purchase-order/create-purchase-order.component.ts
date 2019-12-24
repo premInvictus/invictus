@@ -16,6 +16,7 @@ export class CreatePurchaseOrderComponent implements OnInit {
   @ViewChild('messageModal') messageModal;
   messageText = 'Create';
   UpdateFlag = false;
+  viewOnly = false;
   submitParam: any = {};
   createOrderForm: FormGroup;
   finalOrderForm: FormGroup;

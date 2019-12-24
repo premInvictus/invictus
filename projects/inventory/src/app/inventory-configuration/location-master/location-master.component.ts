@@ -25,7 +25,7 @@ export class LocationMasterComponent implements OnInit {
 	locationTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource: any = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
-	displayedColumns: any[] = ['location_id','location_name','location_hierarchy', 'location_type_name', 'location_status', 'action'];
+	displayedColumns: any[] = ['location_id', 'location_name', 'location_hierarchy', 'location_type_name', 'location_status', 'action'];
 	configFlag = false;
 	editFlag = false;
 	currentLocationId: any;
@@ -122,9 +122,9 @@ export class LocationMasterComponent implements OnInit {
 				location_type_id: this.locationForm.value.location_type_id ? this.locationForm.value.location_type_id : 0,
 				location_name: this.locationForm.value.location_name ? this.locationForm.value.location_name : '',
 				location_status: this.locationForm.value.location_status ? this.locationForm.value.location_status : 1,
-				location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id)+this.locationForm.value.location_name  : this.locationForm.value.location_name,
+				location_hierarchy: this.getLocationHierarchy(this.locationForm.value.location_parent_id) ? this.getLocationHierarchy(this.locationForm.value.location_parent_id) + this.locationForm.value.location_name : this.locationForm.value.location_name,
 			}
-	
+
 			if (this.locationForm.value.location_id) {
 				this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
 					if (result) {
@@ -149,7 +149,7 @@ export class LocationMasterComponent implements OnInit {
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
 		}
-		
+
 	}
 
 	edit(element) {
@@ -189,7 +189,7 @@ export class LocationMasterComponent implements OnInit {
 					if (item.location_parent_id > 0) {
 						this.getLocationHierarchy(item.location_parent_id);
 					}
-					 
+
 				}
 			}
 		}
@@ -234,7 +234,9 @@ export class LocationMasterComponent implements OnInit {
 		this.locationForm.reset();
 		this.editFlag = false;
 	}
+	deleteComCancel() {
 
+	}
 
 }
 

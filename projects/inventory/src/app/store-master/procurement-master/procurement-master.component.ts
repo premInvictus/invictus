@@ -20,6 +20,7 @@ export class ProcurementMasterComponent implements OnInit {
   finalRequistionArray: any[] = [];
   finalSubmitArray: any = {};
   UpdateFlag = false;
+  viewOnly = false;
   update_id: any;
   currentUser: any;
   session: any;

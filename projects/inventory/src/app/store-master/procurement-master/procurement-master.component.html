@@ -20,8 +20,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Item Code</mat-label>
                   <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
-                    [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
-                    (keyup)="filterItem($event)">
+                    [matAutocomplete]="autoGroup" (keyup)="filterItem($event)">
                   <mat-autocomplete #autoGroup="matAutocomplete">
                     <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
                       (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
@@ -117,7 +116,8 @@
                   <tr class="text-center">
                     <td colspan="9">
                       <img
-                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_requisitions.png" width="350">
+                        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/purchase_requisitions.png"
+                        width="350">
                       <br><br><br>
                       <br><span class="font-size-20 font-light font-color-brown">
                         Please Update Item list on Click of Add Button

@@ -65,5 +65,7 @@ export class BranchTranferTwoComponent implements OnInit, AfterViewInit {
     this.common.setBranchItems(val);
     this.router.navigate(['../add-items-branch-transfer'], { relativeTo: this.route })
   }
-
+  applyFilter(filterValue: string) {
+    this.datasource.filter = filterValue.trim().toLowerCase();
+  }
 }
