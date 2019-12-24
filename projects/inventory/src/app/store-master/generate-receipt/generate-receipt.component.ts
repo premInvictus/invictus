@@ -22,6 +22,7 @@ export class GenerateReceiptComponent implements OnInit {
   UpdateFlag = false;
   submitParam: any = {};
   createOrderForm: FormGroup;
+  searchPoForm: FormGroup;
   finalReceiptForm: FormGroup;
   requistionArray: any[] = [];
   locationDataArray: any[] = [];
@@ -29,6 +30,7 @@ export class GenerateReceiptComponent implements OnInit {
   finalReceiptArray: any[] = [];
   setBlankArray: any[] = [];
   itemArray: any[] = [];
+  poArray: any[] = [];
   vendorArray: any[] = [];
   itemCode: any;
   vendorCode: any;
@@ -68,37 +70,7 @@ export class GenerateReceiptComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
-      for (let item of this.requistionArray) {
-        this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
-        this.pm_type = item.pm_type;
-        this.pm_id = item.pm_id;
-        if (this.pm_id) {
-          this.opacityClass = 'opacity-class';
-          this.viewOnly = true;
-        } else {
-          this.opacityClass = '';
-          this.viewOnly = false;
-        }
-        for (let dety of item.pm_item_details) {
-          // if (dety.item_status === 'approved') {
-          dety.item_status = 'pending';
-          const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
-          if (sindex !== -1) {
-            this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
-          } else {
-            this.itemCodeArray.push({
-              item_code: dety.item_code,
-            });
-            this.finalRequistionArray.push(dety);
-          }
-          // }
-        }
-      }
-      this.finalReceiptForm.patchValue({
-        ven_id: this.ven_id,
-        po_no: this.pm_id
-      });
-      this.vendor(this.ven_id);
+      this.getTablevalue();
     }
   }
   buildForm() {
@@ -111,6 +83,9 @@ export class GenerateReceiptComponent implements OnInit {
       item_price: '',
       item_location: '',
       item_status: ''
+    });
+    this.searchPoForm = this.fbuild.group({
+      po_id: ''
     });
     this.finalReceiptForm = this.fbuild.group({
       ven_id: '',
@@ -129,6 +104,41 @@ export class GenerateReceiptComponent implements OnInit {
     });
 
   }
+
+  getTablevalue() {
+    for (let item of this.requistionArray) {
+      this.ven_id = item.pm_vendor ? item.pm_vendor.ven_id : '';
+      this.pm_type = item.pm_type;
+      this.pm_id = item.pm_id;
+      if (this.pm_id) {
+        this.opacityClass = 'opacity-class';
+        this.viewOnly = true;
+      } else {
+        this.opacityClass = '';
+        this.viewOnly = false;
+      }
+      for (let dety of item.pm_item_details) {
+        // if (dety.item_status === 'approved') {
+        dety.item_status = 'pending';
+        const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
+        if (sindex !== -1) {
+          this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
+        } else {
+          this.itemCodeArray.push({
+            item_code: dety.item_code,
+          });
+          this.finalRequistionArray.push(dety);
+        }
+        // }
+      }
+    }
+    this.finalReceiptForm.patchValue({
+      ven_id: this.ven_id,
+      po_no: this.pm_id
+    });
+    this.vendor(this.ven_id);
+  }
+
   filterItem($event) {
     // keyCode
     if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
@@ -444,5 +454,34 @@ export class GenerateReceiptComponent implements OnInit {
   }
   deleteFile(index) {
     this.imageArray.splice(index, 1);
+  }
+
+  searchPo($event) {
+    // keyCode
+    if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+      if ($event.target.value !== '' && $event.target.value.length >= 0) {
+        this.poArray = [];
+        this.inventory.getRequistionMaster({ filter: $event.target.value }).subscribe((result: any) => {
+          if (result) {
+            this.poArray = result;
+
+          }
+        });
+      }
+    }
+  }
+
+  getPOPerId(item: any) {
+    this.finalRequistionArray = [];
+    this.requistionArray = [];
+    if (item) {
+      const sindex = this.requistionArray.findIndex(f => Number(f.pm_id) === Number(item.pm_id));
+      if (sindex === -1) {
+        this.requistionArray.push(item);
+        this.getTablevalue();
+      } else {
+        this.getTablevalue();
+      }
+    }
   }
 }
