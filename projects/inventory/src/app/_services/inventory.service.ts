@@ -121,4 +121,9 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/updateItemQuantity', value);
   }
+  generatePdfOfReceipt(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/change-status/generatePdfOfReceipt', value);
+  }
+
 }

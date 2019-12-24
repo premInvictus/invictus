@@ -8,5 +8,6 @@ export interface Element {
   vendor_category: any,
   vendor_contact: any;
   vendor_email: any;
+  print: any;
   action: any,
 }
