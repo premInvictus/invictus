@@ -80,7 +80,74 @@
                 </div>
             </div>
             <ng-container *ngIf="data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0">
-                a sdfsfsfdasfdasdfasfsfad asdfsadf a
+                <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepattern">
+                    <div class="row" *ngFor="let term of termArray">
+                        <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
+                            <table class="table-100 custom-table" style="margin-bottom: 15px">
+                                <thead>
+                                    <tr class="custom-tr">
+                                        <th class="custom-th text-center" width="200px">Scholastic Areas</th>
+                                        <ng-container *ngIf="term == data.param.eme_term_id">
+                                            <th [attr.colspan]="sexamArray[0].exam_sub_exam_max_marks.length" class="custom-th text-center">
+                                                Term-{{term}}</th>
+                                        </ng-container>
+                                    </tr>
+                                    <tr class="custom-tr">
+                                        <th class="custom-th text-center">Subject Name</th>
+                                        <th class="custom-th text-center" *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
+                                            {{item.sexam_name | titlecase}}
+                                            <br>({{item.exam_max_marks}})</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let sub of subjectArray">
+                                        <tr class="custom-tr" *ngIf="sub.sub_type == 1">
+                                            <ng-container *ngIf="sub.ess_additional == 0">
+                                                <td class="custom-td text-left padding-left-8px">{{sub.sub_name}}</td>
+                                            </ng-container>
+                                            <ng-container *ngIf="sub.ess_additional == 1">
+                                                <td class="custom-td text-left padding-left-8px">{{sub.sub_name}} (Add.)
+                                                </td>
+                                            </ng-container>
+                                            <td class="custom-td" *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
+                                                {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}</td>
+
+                                        </tr>
+                                    </ng-container>
+                                    <!-- <tr class="custom-tr">
+                                        <td class="custom-td text-left padding-left-8px">Total({{getTotalMainSubject()}}
+                                            main subject)</td>
+                                        <td class="custom-td" [attr.colspan]="sexamArray.length"></td>
+                                    </tr> -->
+                                </tbody>
+
+                            </table>
+                        </div>
+                        <!-- <div class="col-6" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
+                            <table class="custom-table table-100">
+                                <thead>
+                                    <tr class="custom-tr">
+                                        <th class="custom-th padding-left-8px">Co-Scholastic Areas [on a 3-point A-C
+                                            grading
+                                            scale ]
+                                        </th>
+                                        <th class="custom-th text-center">Grade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-container *ngFor="let sub of subjectArray">
+                                        <tr *ngIf="sub.sub_type == 2">
+                                            <td class="custom-td padding-left-8px text-left">{{sub.sub_name}} </td>
+                                            <td class="custom-td text-center">
+                                                {{calculateGradePoint(sub.sub_id, term)}}
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </tbody>
+                            </table>
+                        </div> -->
+                    </div>
+                </ng-template>
             </ng-container>
             <ng-container *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
                 <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepattern">
@@ -187,25 +254,6 @@
                             </table>
                         </div>
                     </div>
-                    <!-- <div class="row">
-                        <div class="col-6">
-                            <table class="custom-table table-100">
-                                <thead>
-                                    <tr class="custom-tr">
-                                        <th class="custom-th padding-left-8px"> </th>
-                                        <th class="custom-th text-center">Grade</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="custom-td padding-left-8px text-left">Discpline [on a 5-point AE grading
-                                            scale ]</td>
-                                        <td class="custom-td text-center"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> -->
                 </ng-template>
                 <ng-template #ccepattern>
                     <div class="row" *ngFor="let term of termArray">
@@ -224,18 +272,20 @@
                                     </tr>
                                     <tr class="custom-tr">
                                         <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                            <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject Name
+                                            <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject
+                                                Name
                                             </th>
                                             <th width="5%" class="custom-th text-center">Grade</th>
                                             <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
                                                 class="custom-th text-center">Remark</th>
                                         </ng-container>
                                         <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                            <th width="80%" [attr.colspan]="2" class="custom-th text-center">Subject Name
+                                            <th width="80%" [attr.colspan]="2" class="custom-th text-center">Subject
+                                                Name
                                             </th>
                                             <th width="20%" class="custom-th text-center">Grade</th>
                                         </ng-container>
-                                        
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -315,14 +365,16 @@
                                             {{item.exam_name | titlecase}}
                                             <br>({{item.exam_weightage}})</th> -->
                                         <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                            <th width="40%" [attr.colspan]="2" class="custom-th text-center">Co-Scholastic Areas
+                                            <th width="40%" [attr.colspan]="2" class="custom-th text-center">
+                                                Co-Scholastic Areas
                                             </th>
                                             <th width="5%" class="custom-th text-center">Grade</th>
                                             <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
                                                 class="custom-th text-center">Remark</th>
                                         </ng-container>
                                         <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                            <th width="80%" [attr.colspan]="2" class="custom-th text-center">Co-Scholastic Areas
+                                            <th width="80%" [attr.colspan]="2" class="custom-th text-center">
+                                                Co-Scholastic Areas
                                             </th>
                                             <th width="20%" class="custom-th text-center">Grade</th>
                                         </ng-container>
@@ -442,14 +494,14 @@
                 </div>
             </div>
             <hr>
-            <div class="row" *ngIf="data.ect_exam_type == 2">
+            <div class="row" *ngIf="data.ect_exam_type == 2 && (data.param.eme_subexam_id && data.param.eme_subexam_id.length == 0)">
                 <div class="col-12">
                     <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a 8-pont grading
                         scale as
                         follows</span>
                 </div>
             </div>
-            <div class="row" *ngIf="data.ect_exam_type == 2">
+            <div class="row" *ngIf="data.ect_exam_type == 2 && (data.param.eme_subexam_id && data.param.eme_subexam_id.length == 0)">
                 <div class="col-12">
 
                     <div style="margin-top: 15px; text-align: center; width: 100%;">
