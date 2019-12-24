@@ -56,7 +56,8 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_footer: '',
       gradecard_principal_signature: '',
       gradecard_use_principal_signature: '',
-      gradecard_use_teacher_signature: ''
+      gradecard_use_teacher_signature: '',
+      school_attendance_theme: ''
     })
   }
   uploadPricipalSign($event) {
@@ -79,7 +80,7 @@ export class GradecardSettingComponent implements OnInit {
 	}
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature'];
+    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const settings = result.data;
@@ -92,6 +93,8 @@ export class GradecardSettingComponent implements OnInit {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false); 
               } else if(key === 'gradecard_use_teacher_signature') {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
+              } else if(key === 'school_attendance_theme') {
+                control.setValue(element.gs_value && element.gs_value === '2' ? true : false);
               } else {
                 control.setValue(element.gs_value); 
               }              
@@ -104,9 +107,15 @@ export class GradecardSettingComponent implements OnInit {
   }
 
   saveSetting() {
+    if (this.gradecaredform.value && !(this.gradecaredform.value.school_attendance_theme)) {
+      this.gradecaredform.value.school_attendance_theme = '1';
+    } else if (this.gradecaredform.value && (this.gradecaredform.value.school_attendance_theme)) { 
+      this.gradecaredform.value.school_attendance_theme = '2';
+    }
+    // console.log('this.gradecaredform.value---', this.gradecaredform.value);
     this.examService.updateGlobalSetting(this.gradecaredform.value).subscribe((result: any) => {
       if(result && result.status === 'ok') {
-        console.log(result.data);
+        // console.log(result.data);
         this.commonService.showSuccessErrorMessage(result.message, 'success');
       } else {
         this.commonService.showSuccessErrorMessage(result.message, 'error');
