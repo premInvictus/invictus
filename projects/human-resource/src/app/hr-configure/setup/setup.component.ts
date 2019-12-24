@@ -46,7 +46,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	multipleDropdownName: any;
 	congigArray = [
 		{ id: "1", name: 'Master' },
-		{ id: "2", name: 'Salary Compopnent' },
+		{ id: "2", name: 'Salary Component' },
 		{ id: "3", name: 'Salary Structure' },
 		{ id: "4", name: 'Leave Management' },
 		{ id: "5", name: 'Department Wise Leave' },

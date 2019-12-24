@@ -44,7 +44,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	viewMode = false;
 	formData = {};
 	currentUser: any;
-	msgMultipleCount = 0;
+	msgMultipleCount = 1;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private fbuild: FormBuilder,
@@ -793,7 +793,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	onBodyChange(event) {
 		this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-		this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 1 : 0));
+		this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 2 : 1));
 	}
 
 	sendSMS(inputJson) {
@@ -809,7 +809,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	checkValidation() {
-		this.msgMultipleCount = 0;
+		this.msgMultipleCount = 1;
 		var validationStatus = false;
 		if (this.messageForm.value.messageSubject === '') {
 			validationStatus = false;
@@ -823,7 +823,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					//validationStatus = false;
 					validationStatus = true;
 					this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-					this.msgMultipleCount = this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 1 : 0);
+					this.msgMultipleCount = this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 2 : 1);
 					//this.commonAPIService.showSuccessErrorMessage('You can use only 160 character for message', 'error');
 				} else {
 					validationStatus = true;
