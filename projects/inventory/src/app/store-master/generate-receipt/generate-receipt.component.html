@@ -8,9 +8,25 @@
           </div>
         </div>
         <div class="col-6 ">
-          <!-- <div class="top-card-title float-right">
-            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">Back</button>
-          </div> -->
+          <form [formGroup]="searchPoForm" novalidate>
+            <div class="top-card-title float-right">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Search Po</mat-label>
+                <input type="text" matInput placeholder="Search Po" formControlName="po_id"
+                  [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup2"
+                  (keyup)="searchPo($event)">
+                <mat-autocomplete #autoGroup2="matAutocomplete">
+                  <mat-option (onSelectionChange)="getPOPerId(item)" *ngFor="let item of poArray" [value]="item.pm_id">
+                    {{item.pm_id}}
+                  </mat-option>
+                </mat-autocomplete>
+                <mat-error>
+                  This field is required
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </form>
+
         </div>
       </div>
     </mat-card>
@@ -310,4 +326,4 @@
   </div>
 </div>
 <app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
-<app-message-modal #messageModal></app-message-modal> 
+<app-message-modal #messageModal></app-message-modal>
