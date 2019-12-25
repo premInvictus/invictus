@@ -53,7 +53,8 @@
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
                                 padding: 10px;" />
-                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'E'">
+                                <div class="user-chips"
+                                    *ngIf="messageForm.value.messageType === 'E' && selectedUserArr.length > 0">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
                                         <span class="custom-btn-text">{{item?.au_full_name}}</span>
@@ -61,7 +62,8 @@
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
                                 </div>
-                                <div class="user-chips" *ngIf="messageForm.value.messageType === 'S'">
+                                <div class="user-chips"
+                                    *ngIf="messageForm.value.messageType === 'S'  && selectedUserArr.length > 0">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
                                         <span class="custom-btn-text">{{item?.au_full_name}}</span>
@@ -69,10 +71,14 @@
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
                                 </div>
-                                <span class="three-dot">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"
-                                        style="cursor: pointer; z-index: 99999;"
-                                        (click)="showUserContextMenu =!showUserContextMenu "></i>
+                                <span>
+                                    <span class="three-dot">
+                                        <i class="fa fa-ellipsis-v" aria-hidden="true"
+                                            style="cursor: pointer; z-index: 99999;"
+                                            (click)="showUserContextMenu =!showUserContextMenu "></i>
+                                    </span>
+                                    <!-- <span class="remove-all"><i class="fas fa-trash-alt" style="color:#ff0000"
+                                            (click)="removeAll()"></i></span> -->
                                 </span>
                                 <div *ngIf="showUserContextMenu" class="user-context-menu">
                                     <ul class="user-type-menu" *ngIf="!showClass && !showUser">
@@ -85,16 +91,25 @@
                                             <li>
                                                 <div style="width:100%; float:left;">
                                                     <div style="width: 50%; float:left">
-                                                        <section class="example-section">
+                                                        <section class="example-section" *ngIf="!showSearchFlag">
                                                             <mat-checkbox (change)="selectAllClass($event)"
                                                                 class="example-margin">
                                                                 Select All
                                                             </mat-checkbox>
                                                         </section>
+                                                        <!-- <section class="example-search" *ngIf="showSearchFlag">
+                                                            <input matInput placeholder="Search" type="input"
+                                                                autocomplete="false" (input)="searchByClass($event)"/>
+                                                                <i class="fa fa-times" aria-hidden="true" style="float:right;margin-right:5px;" (click)="cancelSearchByClass()"></i>
+                                                        </section> -->
                                                     </div>
                                                     <div style="width: 50%; float:right">
                                                         <a href="javascript:void(0)" style="float:right"
                                                             (click)="generateUserList()">Next</a>
+                                                        <a href="javascript:void(0)"
+                                                            style="float:right; color:#ff0000; margin-right:5px;"
+                                                            (click)="backToMain()">Back</a>&nbsp;&nbsp;
+                                                        <!-- <i class="fa fa-search" aria-hidden="true" style="float:right;margin-right:5px;" (click)="showSearch()"></i> -->
                                                     </div>
                                                 </div>
                                             </li>
@@ -120,9 +135,14 @@
                                                             </mat-checkbox>
                                                         </section>
                                                     </div>
+
                                                     <div style="width: 50%; float:right">
+
                                                         <a href="javascript:void(0)" style="float:right"
-                                                            (click)="done()">Done</a>
+                                                            (click)="done()">Done</a> &nbsp;&nbsp;
+                                                        <a href="javascript:void(0)"
+                                                            style="float:right; color:#ff0000; margin-right:5px;"
+                                                            (click)="backToUserList()">Back</a>&nbsp;&nbsp;
                                                     </div>
                                                 </div>
                                             </li>
@@ -131,6 +151,8 @@
                                                     <mat-checkbox [checked]="ing.checked"
                                                         (change)="updateUserCheck(i, $event)">
                                                         {{ing.au_full_name | titlecase}}
+                                                        <span
+                                                            *ngIf="ing?.au_admission_no">({{ing?.au_admission_no}})</span>
                                                     </mat-checkbox>
                                                 </section>
                                             </li>
@@ -153,12 +175,14 @@
 
                         <div class="row">
                             <div class="col-12" style="min-height: 400px;">
-                                <ckeditor [config]="ckeConfig" formControlName="messageBody" (change)="onBodyChange($event)" ></ckeditor>
+                                <ckeditor [config]="ckeConfig" formControlName="messageBody"
+                                    (change)="onBodyChange($event)"></ckeditor>
                             </div>
                         </div>
 
                         <div class="row character-count-section" *ngIf="messageForm.value.messageType==='S'">
-                            1 SMS has maximum 160 character <span class="round-orange-button"> {{ msgMultipleCount | number}} SMS </span>
+                            1 SMS has maximum 160 character <span class="round-orange-button">
+                                {{ msgMultipleCount | number}} SMS </span>
                         </div>
 
                         <div class="row" *ngIf="messageForm.value.messageType === 'E'">

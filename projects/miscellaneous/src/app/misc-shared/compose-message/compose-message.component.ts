@@ -46,6 +46,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	currentUser: any;
 	msgMultipleCount = 1;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
+	showSearchFlag = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -205,7 +206,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					if (result) {
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
-						this.reset();
+						//this.reset();
 						this.getTemplate();
 					}
 				});
@@ -214,7 +215,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					if (result) {
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
-						this.reset();
+						//this.reset();
 						this.getTemplate();
 					}
 				});
@@ -262,6 +263,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	getClass() {
+		this.classDataArr = [];
 		this.sisService.getClass({}).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				var result = result.data;
@@ -288,6 +290,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		const inputJson = {};
 		if (this.currentReceivers === 'Teacher') {
 			inputJson['role_id'] = '3';
+			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
@@ -304,6 +307,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -315,8 +319,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
 			});
-		} if (this.currentReceivers === 'Staff') {
+		} else if (this.currentReceivers === 'Staff') {
 			inputJson['role_id'] = '2';
+			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
@@ -333,6 +338,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							sec_name: result.data[i]['sec_name'],
 							class_id: result.data[i]['class_id'],
 							sec_id: result.data[i]['sec_id'],
+							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
 					}
@@ -344,7 +350,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.showClass = true;
 				}
 			});
-		} else {
+		} else if (this.currentReceivers === 'Student') {
 			inputJson['class_ids'] = checkedClassIds[0];
 			inputJson['pmap_status'] = '1';
 			this.userDataArr = [];
@@ -362,6 +368,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							em_admission_no: result.data[i]['em_admission_no'],
 							au_role_id: '4',
 							checked: false,
+							au_admission_no: result.data[i]['em_admission_no'],
 						}
 						if (result.data[i]['active_parent'] === 'F') {
 							inputJson['au_email'] = result.data[i]['father_email'] ? result.data[i]['father_email'] : '';
@@ -515,6 +522,24 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 			}
 		}
+	}
+
+	backToUserList() {
+		if (this.currentReceivers === 'Staff') {
+			this.showClass = false;
+			this.showUser = false;
+		} else if (this.currentReceivers === 'Teacher') {
+			this.showClass = false;
+			this.showUser = false;
+		} else if (this.currentReceivers === 'Student') {
+			this.showClass = true;
+			this.showUser = false;
+		}
+	}
+
+	backToMain() {
+		this.showClass = false;
+		this.showUser = false;
 	}
 
 	deleteUser(i) {
@@ -792,8 +817,17 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	onBodyChange(event) {
-		this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-		this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 2 : 1));
+		//console.log(this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length);
+		var tempmsgMultipleCount = Math.round((this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length / 160)) ;
+		if (tempmsgMultipleCount <= 0 )  {
+			this.msgMultipleCount = 1;
+		} else {
+			this.msgMultipleCount = tempmsgMultipleCount;
+		}
+		if (this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length > 160) {
+			this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length % 160) > 0 ? 1 : 1));
+		}
+		
 	}
 
 	sendSMS(inputJson) {
@@ -823,7 +857,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					//validationStatus = false;
 					validationStatus = true;
 					this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-					this.msgMultipleCount = this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 2 : 1);
+					this.msgMultipleCount = this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 1 : 1);
 					//this.commonAPIService.showSuccessErrorMessage('You can use only 160 character for message', 'error');
 				} else {
 					validationStatus = true;
@@ -865,5 +899,36 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	cancelSendSMS() {
 
+	}
+
+	removeAll() {
+		this.selectedUserArr = [];
+	}
+
+	showSearch() {
+		this.showSearchFlag = !this.showSearchFlag;
+	}
+
+	searchByClass(event) {
+		console.log(event.target.value);
+		if (event.target.value) {
+			var tempArr = [];
+			for (var i = 0; i < this.classDataArr.length; i++) {
+				if (this.classDataArr[i]['class_name'].toLowerCase().includes(event.target.value)) {
+					tempArr.push(this.classDataArr[i]);
+				}
+			}
+			if (tempArr.length > 0) {
+				this.classDataArr = tempArr;
+			}
+		} else {
+			this.getClass();
+		}
+		
+		
+	}
+
+	cancelSearchByClass() {
+		this.getClass();
 	}
 }
