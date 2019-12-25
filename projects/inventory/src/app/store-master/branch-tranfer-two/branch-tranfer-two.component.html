@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <div [hidden]="BRANCH_TRANSFER_DATA.length == 0">
+            <mat-form-field>
+              <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+              <mat-icon matPrefix>filter_list</mat-icon>
+            </mat-form-field>
+            <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+              <ng-container matColumnDef="srno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No </th>
+                <td mat-cell *matCellDef="let item">{{item.srno}}</td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let item">{{item.date | date: 'd-MMM-y'}}</td>
+              </ng-container>
+              <ng-container matColumnDef="created_by">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Created By </th>
+                <td mat-cell *matCellDef="let item">{{item.created_by}}</td>
+              </ng-container>
+              <ng-container matColumnDef="branch_name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Branch Name </th>
+                <td mat-cell *matCellDef="let item">{{item.branch_name}}</td>
+              </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let item">
+                  <div class="inline-flex margin-top-10" *ngIf="item.action.status !== 'gatepass-created'">
+                    <i class="fas fa-cart-plus" style="color: #3388e5; cursor: pointer;" (click)="addItems(item.action)"></i>
+                  </div>
+                  <b><span *ngIf="item.action.status === 'gatepass-created'">
+                      <i class="fas fa-clipboard-check" style="color: green;cursor: pointer;" matTooltip="Gate Pass Generated"></i>
+                    </span></b>
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+            </table>
+            <mat-paginator [hidden]="BRANCH_TRANSFER_DATA.length < 1" #paginator [pageSize]="itempagesize"
+              [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+            </mat-paginator>
+          </div>
+          <div *ngIf="BRANCH_TRANSFER_DATA.length == 0" class="no-records">
+            <div class="text-center">
+              <app-no-data
+                [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/item_search.png'"
+                [noDataText]="'No Items Selected'"></app-no-data>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

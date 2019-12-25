@@ -1,0 +1,121 @@
+<div class="search-book">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-5 margin-top-15">
+            <span class="font-size-24">Item Search</span>
+          </div>
+          <div class="col-6">
+            <div class="search-container">
+              <form [formGroup]="searchForm">
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field class="form-field lib-form">
+                      <input matInput [placeholder]="!searchForm.value.search ? 'Search Any Item ..' : ''" type="text"
+                        formControlName="search" id="search_item" autocomplete="off"
+                        (keydown.enter)="getItems($event)" />
+                    </mat-form-field>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right">
+                    <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                        class="font-size-12 m    argin-top-15 font-skyblue">Advanced Search <i
+                          class="fas fa-chevron-down"></i></span></a>
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                      (keyup.enter)="search()">
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="col-1">
+            <div class="top-card-title-new float-right">
+              <button mat-raised-button class="btn-success-blue margin-left-10" (click)="createPo()">Create PR</button>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-12">
+            <div [hidden]="ITEM_MASTER_DATA.length == 0">
+              <mat-form-field>
+                <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+              <table class="table-100 text-center " mat-table [dataSource]="datasource" matSort>
+
+                <ng-container matColumnDef="sno">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Sr No.</th>
+                  <td mat-cell *matCellDef="let item"> {{item.sno}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="code">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Code</th>
+                  <td mat-cell *matCellDef="let item">
+                    <a style="color: #277d9e; text-decoration: underline !important;
+                      cursor: pointer;" (click)="goToDetails(item.action)">{{item.code}} </a> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Name</th>
+                  <td mat-cell *matCellDef="let item"> {{item.name}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Category</th>
+                  <td mat-cell *matCellDef="let item"> {{item.category}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="nature">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Item Nature</th>
+                  <td mat-cell *matCellDef="let item"> {{item.nature}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="reorder">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Reorder Level </th>
+                  <td mat-cell *matCellDef="let item"> {{item.reorder}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="location">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Location </th>
+                  <td mat-cell *matCellDef="let item"> {{item.location}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="qty">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+                  <td mat-cell *matCellDef="let item"> {{item.qty}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+              </table>
+              <mat-paginator [hidden]="ITEM_MASTER_DATA.length < 1" #paginator [pageSize]="itempagesize"
+                [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+              </mat-paginator>
+            </div>
+            <div *ngIf="ITEM_MASTER_DATA.length == 0" class="no-records">
+              <div class="text-center">
+                <app-no-data
+                  [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/item_search.png'"
+                  [noDataText]="'No Items Selected'" [subText]="'It seems there is no items searched yet. Scan Item or Enter Item
+                  ID to view availaiable Items in inventory.'"></app-no-data> <br>
+                <button mat-button class="btn-success-blue margin-top-10" (click)="intitiateSearch()"
+                  style="width: 140px;height:40px">
+                  Search Item
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

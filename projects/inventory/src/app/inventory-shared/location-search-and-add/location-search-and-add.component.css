@@ -1,0 +1,58 @@
+::ng-deep .mat-form-field-underline {
+    display: none;
+}
+
+.highlight {
+    font-weight: bold;
+}
+
+.example-full-width {
+    width: 100%;
+}
+
+.example-full-width input {
+      width: 100%;
+}
+
+.mat-progress-bar {
+    height:2px;
+}
+
+.green-progress ::ng-deep .mat-progress-bar .mat-progress-bar-fill::before {
+    background-color: #26a69a !important; 
+}
+
+.green-progress ::ng-deep .mat-progress-bar .mat-progress-bar-fill::after {
+    background-color: #26a69a !important; 
+}
+
+::ng-deep .mat-autocomplete-panel {
+   margin-top:3px;
+}
+
+.margin-top--5 {
+    margin-top: -5px;
+}
+
+.mat-option {
+    height: 42px !important;
+    line-height: 42px !important;
+}
+
+.margin-top-no {
+    margin-top: 10px !important;
+    margin-left: -7px;
+}
+
+::ng-deep .mat-form-field-appearance-legacy .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+}
+
+.mat-raised-button {
+    min-width:48px !important;
+}
+.custom-class-plus{
+    color: #3691ea;
+    font-size: 24px;
+    cursor: pointer;
+}

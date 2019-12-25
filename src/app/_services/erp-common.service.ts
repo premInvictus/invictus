@@ -514,6 +514,56 @@ export class ErpCommonService {
 		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
 	}
 
+	getUserItemsData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/getAll', value);
+	}
+
+	searchItemByStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/configuration/filterItemsFromMaster', value);
+	}
+
+	insertUserItemData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/insert', value);
+	}
+
+	updateUserItemData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/inventory-user/update', value);
+	}
+
+	getFilterLocation(value) {
+		//this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/location/getAll', value);
+	}
+
+	getInventoryPhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/physical-verification/getAll', value);
+	}
+
+	insertInventoryPhysicalVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/physical-verification/insert', value);
+	}
+
+	getInventoryStockReconciliation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/stock-reconciliation/getAll', value);
+	}
+
+	updateInventoryStockReconciliation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/stock-reconciliation/update', value);
+	}
+
+	getVendorLogDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/vendor/getAll', value);
+	}
+
 }
 
 

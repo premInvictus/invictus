@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Procurement Master</span>
+          </div>
+        </div>
+        <div class="col-6 ">
+          <mat-tab-group [selectedIndex]="tabSelectedIndex" class="mat-tab-customize-class"
+            (selectedIndexChange)="setTabValue($event)">
+            <mat-tab label="Purchase Requisition">
+            </mat-tab>
+            <mat-tab label="Purchase Order">
+            </mat-tab>
+            <mat-tab label="Goods Receipt">
+            </mat-tab>
+            <mat-tab label="Branch Transfer">
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card style="padding-top: 1px;">
+      <div class="col-12 ">
+        <div class="top-card-title-new float-right">
+          <button *ngIf="tabSelectedIndex === 1" mat-raised-button class="btn-neutral"
+            (click)="redirectToPage('PO')">Create
+            PO</button>
+          <button *ngIf="tabSelectedIndex === 2" mat-raised-button class="btn-neutral"
+            (click)="redirectToPage('GR')">Create Good
+            Receipt </button>
+        </div>
+        <ng-container *ngIf="tabSelectedIndex === 0">
+          <app-purchase-requisition></app-purchase-requisition>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 1">
+          <app-purchase-order></app-purchase-order>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 2">
+          <app-goods-receipt></app-goods-receipt>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 3">
+          <app-branch-tranfer-two></app-branch-tranfer-two>
+        </ng-container>
+
+      </div>
+    </mat-card>
+  </div>
+</div>

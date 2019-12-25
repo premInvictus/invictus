@@ -1,0 +1,141 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-9 margin-top-15">
+          <span class="font-size-24">Stock Reconciliation</span>
+        </div>
+       
+          <div class="col-3">
+            <div>
+              <app-location-search-and-add [showAdd]="false" (renderData)="getStockReconciliation($event)"></app-location-search-and-add>
+            </div>
+          </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" [hidden]="!(STOCK_RECONCILIATION_LIST_ELEMENT.length > 0)">
+  <div class="col-12">
+    <mat-card class="card-height-730">
+      <div class="row">
+        <div class="col-6">
+          <span class="font-bold font-size-20">Items List</span>
+        </div> 
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="row ">
+            <div class="col-10 remove-col-padding">
+              <mat-form-field appearance="legacy lib-form">
+                <input matInput placeholder="Search" (keyup)="applyFilterVendor($event.target.value)" />
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <table mat-table [dataSource]="stockReconciliationDataSource" matSort class="table-100 text-center" id="report_table">
+            <ng-container matColumnDef="srno">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="2%"> Sr. No. </th>
+              <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+            </ng-container>
+            <ng-container matColumnDef="verification_date">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Date</th>
+              <td mat-cell *matCellDef="let element">
+                <span *ngIf="element?.item_verification_date"> {{element?.item_verification_date | date: 'd-MMM-y'}} </span>
+                <span *ngIf="!(element?.item_verification_date)"> - </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="item_code">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Item Code</th>
+              <td mat-cell *matCellDef="let element">
+                <a class="font-skyblue cursor-pointer" (click)="openItemDetailsModal(element?.item_code)">{{element?.item_code}} </a>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="item_name">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Item Name</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                {{element?.item_name | titlecase  }}
+              </td>
+            </ng-container>
+           
+            <ng-container matColumnDef="item_nature">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Nature</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.item_nature | titlecase}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="item_category">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Category</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.item_category | titlecase}}
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="item_location">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">Location</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                {{element?.item_location | titlecase }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="item_current_stock">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">Current Stock</th>
+              <td mat-cell *matCellDef="let element">
+
+                {{element?.item_current_stock}}  {{element?.item_units?.name | titlecase}}
+                
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="item_available_stock">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Available Quantity</th>
+              <td mat-cell *matCellDef="let element">
+                {{element?.item_available_stock }} {{element?.item_units?.name}}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Action</th>
+              <td mat-cell *matCellDef="let element">
+                <span><i class="fa fa-check-circle font-color-green margin-right-15"
+                    (click)="openApproveModal(element);approveVerificationModel(element, true)"></i></span>
+                <span class="ver-line-divider"><i class="fas fa-times-circle font-color-red margin-left-15"
+                    (click)="openModal(element);deleteVerificationModel(element)"></i></span>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedListColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedListColumns;">
+            </tr>
+          </table>
+
+          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+            <tr *ngIf="STOCK_RECONCILIATION_LIST_ELEMENT.length == 0">
+              <td colspan="9">No Record Found</td>
+            </tr>
+          </table>
+          <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
+          </mat-paginator>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="STOCK_RECONCILIATION_LIST_ELEMENT.length == 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/physical_verifications.png'"
+          [noDataText]="" [subText]="'No Stock Reconciliation Found'"></app-no-data>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #approveModalRef [deleteMessage]="'Action'" [inputText]="'Action'"
+  (deleteOk)="approveVerification($event)" (deleteCancel)="approveComCancel()">
+</app-delete-modal>
+<app-delete-modal #deleteModalRef [deleteMessage]="'Action'" [inputText]="'Action'"
+  (deleteOk)="deleteVerification($event)" (deleteCancel)="deleteComCancel()">
+</app-delete-modal>

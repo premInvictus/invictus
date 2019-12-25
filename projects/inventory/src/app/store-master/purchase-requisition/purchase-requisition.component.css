@@ -1,0 +1,37 @@
+.check {
+    background-color: #28a745;
+    width: 20px;
+    height: 20px;
+    border-radius: 30px;
+    color: white;
+    font-size: 15px;
+    top: 19px;
+    cursor: pointer;
+    line-height: 1.5;
+}
+.pad-left-0{
+    padding-left:0px !important;
+}
+.mat-column-position {
+    width: 3% !important;
+}
+.mat-column-item_name{
+    width: 25% !important;
+}
+.mat-column-pm_intended_use{
+    width: 25% !important;
+}
+.mat-checkbox-disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
+
+
+
+
+
+
+
+
+
