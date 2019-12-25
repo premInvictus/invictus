@@ -29,13 +29,13 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Qualification', 'Occupation',
 		'Income Range', 'Vaccination',
 		'Age', 'Activity', 'Level of Intrest', 'Event Level',
-		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality'];
+		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality','Tag'];
 	secondHeaderArray: any[] = ['Alias', 'Required',
 		'Alias', 'Type',
 		'Alias', 'Alias',
 		'Alias', 'Alias',
 		'', 'Alias', 'Vaccinations', 'Alias', 'Alias', 'Alias', 'Alias',
-		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias'];
+		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias'];
 	configFlag = false;
 	updateFlag = false;
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
@@ -243,7 +243,15 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				nat_alias: '',
 				nat_status: ''
 			})
-		}];
+		},
+		{
+			formGroup: this.fbuild.group({
+				tag_id: '',
+				tag_name: '',
+				tag_alias: '',
+				tag_status: ''
+			})
+		},];
 	}
 	loadConfiguration($event) {
 		this.configFlag = false;
@@ -311,6 +319,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 21) {
 			this.getNationalityAll(this);
+			this.configFlag = true;
+		} else if (Number(this.configValue) === 22) {
+			this.getStudentTagAll(this);
 			this.configFlag = true;
 		}
 	}
@@ -397,6 +408,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 21) {
 			if (value.nat_status === '1') {
+				return true;
+			}
+		} else if (Number(this.configValue) === 22) {
+			if (value.tag_status === '1') {
 				return true;
 			}
 		}
@@ -667,6 +682,18 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.getNationalityAll(this);
 				}
 			});
+		} else if (Number(this.configValue) === 22) {
+			if (value.tag_status === '1') {
+				value.tag_status = '0';
+			} else {
+				value.tag_status = '1';
+			}
+			this.sisService.updatestudenttags(value).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getStudentTagAll(this);
+				}
+			});
 		}
 	}
 	deleteConfirm({ data, type }) {
@@ -733,6 +760,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				break;
 			case '21':
 				this.deleteEntry(data, 'deletenationality', this.getNationalityAll);
+				break;
+			case '22':
+				this.deleteEntry(data, 'deletestudenttags', this.getStudentTagAll);
 				break;
 		}
 	}
@@ -1270,6 +1300,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.formGroupArray[value - 1].formGroup.value.nat_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertnationality', this.getNationalityAll);
 					break;
+				case '22':
+					this.formGroupArray[value - 1].formGroup.value.tag_status = '1';
+					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertstudenttags', this.getStudentTagAll);
+					break;
 			}
 		}
 	}
@@ -1449,6 +1483,14 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				nat_alias: value.nat_alias,
 				nat_status: value.nat_status
 			});
+		} else if (Number(this.configValue) === 22) {
+			this.updateFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				tag_id: value.tag_id,
+				tag_name: value.tag_name,
+				tag_alias: value.tag_alias,
+				tag_status: value.tag_status
+			});
 		}
 	}
 	updateConfiguration(value) {
@@ -1534,6 +1576,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				case '21':
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updatenationality', this.getNationalityAll);
 					break;
+				case '22':
+					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updatestudenttags', this.getStudentTagAll);
+					break;
 			}
 		}
 	}
@@ -1582,6 +1627,28 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						position: pos,
 						name: item.cat_name,
 						alias: item.cat_alias,
+						action: item
+					});
+					pos++;
+				}
+				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+				that.configDataSource.paginator = that.paginator;
+				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+				that.configDataSource.sort = that.sort;
+			}
+		});
+	}
+	getStudentTagAll(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.sisService.getstudenttags().subscribe((result: any) => {
+			if (result.status === 'ok') {
+				let pos = 1;
+				for (const item of result.data) {
+					that.CONFIG_ELEMENT_DATA.push({
+						position: pos,
+						name: item.tag_name,
+						alias: item.tag_alias,
 						action: item
 					});
 					pos++;
