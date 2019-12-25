@@ -488,4 +488,9 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDropoutReport', value);
 	}
+
+	getAdditionFeeHeadComponent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getAdditionFeeHeadComponent', value);
+	}
 }

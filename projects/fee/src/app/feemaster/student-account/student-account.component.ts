@@ -39,6 +39,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
 	@Input() feeLoginId: any;
+	@Input() studentDetails:any;
 	@Output() editChange = new EventEmitter();
 	finalSibReqArray: any[] = [];
 	finalArray: any[] = [];
@@ -53,6 +54,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	multipleFileArray: any[] = [];
 	counter: any = 0;
 	documentPath: any;
+	additionalFeeComponentArray: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -76,12 +78,17 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
+		
 
 	}
 	ngOnChanges() {
 		console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
-			this.getFeeAccount(this.feeLoginId);
+			console.log('studentDetails--', this.studentDetails);
+			if ( this.studentDetails.studentdetails) {
+				this.getFeeAccount(this.feeLoginId);
+			}
+			
 		}
 	}
 	buildForm() {
@@ -90,6 +97,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_login_id: '',
 			accd_fo_id: '',
 			accd_fs_id: '',
+			accd_afc_id:'',
 			accd_fcg_id: '',
 			accd_fcg_document: '',
 			accd_reason_id: '',
@@ -115,6 +123,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_status: 1
 		});
 	}
+
+	additionalFeeComponent() {
+		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: this.studentDetails && this.studentDetails.studentdetails && this.studentDetails.studentdetails.au_class_id ? this.studentDetails.studentdetails.au_class_id : ''  }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('additionalFeeComponentArray--', result.data);
+				this.additionalFeeComponentArray = result.data;
+			}
+		});
+	}
+
 	getFeeAccount(au_login_id) {
 		this.showTransport = false;
 		this.accountDetails = {};
@@ -200,10 +218,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_hostel_from: this.accountDetails.accd_hostel_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_hostel_from,
 					accd_hostel_to: this.accountDetails.accd_hostel_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_hostel_to,
 					accd_ses_id: this.accountDetails.ses_id,
-					accd_status: this.accountDetails.accd_status
+					accd_status: this.accountDetails.accd_status,
+					accd_afc_id: this.accountDetails.accd_additional_fee_head ? JSON.parse(this.accountDetails.accd_additional_fee_head) : []
 				});
+				console.log('this.accountsForm', this.accountsForm);
 				this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 				this.slabModel = this.accountDetails.accd_ts_id;
+				this.additionalFeeComponent();
 			} else {
 				this.accountsForm.reset();
 				this.transportFlag = false;
@@ -428,6 +449,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
+				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 				accd_status: '1'
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
@@ -526,8 +548,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
-				accd_status: this.accountsForm.value.accd_status
+				accd_status: this.accountsForm.value.accd_status,
+				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 			};
+			console.log('accountJSON--', accountJSON)
 			if (this.isExist('350')) {
 				this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -617,7 +641,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
-				accd_status: this.accountsForm.value.accd_status
+				accd_status: this.accountsForm.value.accd_status,
+				accd_afc_id: this.accountsForm.value.accd_afc_id,
 			};
 			this.checkFormChangedValue();
 		} else {

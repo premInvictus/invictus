@@ -202,7 +202,7 @@
                                                 {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
                                             <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
                                                 {{calculateTotal(sub.sub_id,term)}}
-                                                ({{getSubjectPassResult(sub.sub_id,term)}})</td>
+                                                {{getSubjectPassResult(sub.sub_id,term)}}</td>
                                             <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
                                                 {{calculateGrade(sub.sub_id,term)}}</td>
                                             <ng-container *ngIf="term == data.param.eme_term_id">
