@@ -22,15 +22,15 @@ export class SchoolDashboardComponent implements OnInit {
   reissued = 0;
   currentDate = new Date();
   result: any = {};
-  dashboardDueInventoryData: any = {};
-  dashboardReservoirData: any = {};
+  dashboardDueInventoryData: any[] = [];
+  dashboardReservoirData: any[] = [];
   prevIndex = 0;
   searchForm: FormGroup;
   @ViewChild('searchModal') searchModal;
-  @ViewChild('itemDet')itemDet;
+  @ViewChild('itemDet') itemDet;
   constructor(private fbuild: FormBuilder, private common: CommonAPIService,
     private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
-		private router: Router,) { }
+    private router: Router, ) { }
 
   ngOnInit() {
     this.buildForm();
@@ -54,8 +54,8 @@ export class SchoolDashboardComponent implements OnInit {
 
   buildForm() {
     this.searchForm = this.fbuild.group({
-      searchId : ''
-		});
+      searchId: ''
+    });
   }
   getReservoirData() {
     // this.erpCommonService.getDashboardInventoryData({}).subscribe((res: any) => {
@@ -132,14 +132,14 @@ export class SchoolDashboardComponent implements OnInit {
             enabled: false
           },
           colors: [
-           
+
             {
               radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
               stops: [
                 [0, '#A2A5F9'],
                 [1, '#8774F3']
               ]
-            },            
+            },
             {
               radialGradient: { cx: 0.5, cy: 0.3, r: 0.87 },
               stops: [
@@ -166,8 +166,8 @@ export class SchoolDashboardComponent implements OnInit {
       },
       series: [{
         name: 'Item Issued',
-        data: [          
-          ['Students', issuedToStudent],         
+        data: [
+          ['Students', issuedToStudent],
           ['Reissued', reissued],
           ['Staff', issuedToStaff],
           ['Teachers', issuedToTeacher],
@@ -198,32 +198,37 @@ export class SchoolDashboardComponent implements OnInit {
   //   for (var l=0; l<=i-1;l++) {
   //     if (this.dashboardDueItemData['all'] && this.dashboardDueItemData['all'][l]) {
   //       tot_length = tot_length +this.dashboardDueItemData['all'][l].reserv_user_logs.length;
-               
-        
+
+
   //     }
   //   }
   //   return tot_length;
-    
-    
+
+
   // }
 
   searchOk($event) {
-    this.common.setDashboardSearchData({	filters: $event.filters,
-      generalFilters: $event.generalFilters});
-      this.router.navigate(['../auxillary/item-search'], {relativeTo: this.route });	
+    this.common.setDashboardSearchData({
+      filters: $event.filters,
+      generalFilters: $event.generalFilters
+    });
+    this.router.navigate(['../auxillary/item-search'], { relativeTo: this.route });
   }
-  
+
   search() {
     console.log(this.searchForm.value.searchId);
-    this.common.setDashboardSearchData({search:this.searchForm.value.searchId});
-      this.router.navigate(['../auxillary/item-search'], {relativeTo: this.route });	
+    this.common.setDashboardSearchData({ search: this.searchForm.value.searchId });
+    this.router.navigate(['../auxillary/item-search'], { relativeTo: this.route });
   }
-  
+
   openItemModal(item_no) {
-		this.itemDet.openModal(item_no);
+    this.itemDet.openModal(item_no);
   }
 
   viewAllDue() {
-    this.router.navigate(['../item-issued'], {relativeTo: this.route });	
+    this.router.navigate(['../item-issued'], { relativeTo: this.route });
+  }
+  viewSyllabus() {
+    this.router.navigate(['inventory/school/store-master/procurement-master']);
   }
 }
