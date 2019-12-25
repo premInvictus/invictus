@@ -1,0 +1,178 @@
+<div class="add-question-content">
+  <div class="row">
+    <div class="col-lg-12 col-mobile-view-add-ques">
+      <div class="white-box">
+        <div class="container-box__white">
+          <div class="row">
+            <div class="col-lg-12 col-mobile-view-add-ques">
+              <div class="white-box-content-title">
+                <h4 class="text-uppercase text-center"><b>Location Master</b></h4>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-3 col-mobile-view-add-ques">
+              <div class="left-side-box">
+                <div class="left-side-box-content">
+                  <div>
+
+                    <div>
+                      <form [formGroup]="locationForm">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Enter Location Name</mat-label>
+                              <input matInput placeholder="Enter Location Name" type="text" class="text-capitalize"
+                                formControlName="location_name" value="" required>
+                              <mat-error>Please Enter Location Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Location Type</mat-label>
+                              <mat-select formControlName="location_type_id" placeholder="Select Type">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of locationTypeArray" value="{{item.config_id}}">
+                                  {{item.name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Location Type</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Parent Location</mat-label>
+                              <mat-select formControlName="location_parent_id" placeholder="Select Parent Location">
+                                <mat-option value="">Please Select Parent Location
+                                </mat-option>
+                                <mat-option *ngFor="let item of locationArray" [value]="item.location_id">
+                                  {{item.location_hierarchy}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Parent Location</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="text-center margin-top-15">
+                      <button *ngIf="!editFlag" mat-raised-button class="btn-success" (click)="save()">Add</button>
+                      <button *ngIf="editFlag" mat-raised-button class="btn-success" (click)="save()">Update</button>
+                      <button mat-raised-button class="btn-danger btn-spacer" (click)="resetForm()">Reset</button>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-9">
+              <div class="row" [hidden]="!(CONFIG_ELEMENT_DATA.length > 0)">
+                <div class="col-12">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="row ">
+                        <div class="col-10 remove-col-padding">
+                          <mat-form-field appearance="legacy lib-form">
+                            <input matInput placeholder="Search" (keyup)="applyFilterLocation($event.target.value)" />
+                            <mat-icon matPrefix>filter_list</mat-icon>
+                          </mat-form-field>
+                        </div>
+                      </div>
+                      <table mat-table [dataSource]="configDataSource" matSort class="table-100 text-center"
+                        id="report_table">
+                        <ng-container matColumnDef="location_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                            Location Name</th>
+                          <td mat-cell *matCellDef="let element" class="text-left">
+                            {{element?.location_name}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="location_id">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                            Location ID</th>
+                          <td mat-cell *matCellDef="let element">
+                            {{element?.location_id}}
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="location_hierarchy">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="27%">
+                            Location Hierarchy</th>
+                          <td mat-cell *matCellDef="let element" class="text-left">
+                            <span *ngIf="element?.location_hierarchy">{{element?.location_hierarchy}}</span>
+                            <span *ngIf="!(element?.location_hierarchy)">-</span>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="location_type_name">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%">
+                            Location Type</th>
+                          <td mat-cell *matCellDef="let element">
+                            <span *ngIf="element?.location_type_name">{{element?.location_type_name}}</span>
+                            <span *ngIf="!(element?.location_type_name)">-</span>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="location_status">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">
+                            Status</th>
+                          <td mat-cell *matCellDef="let element">
+                            <mat-slide-toggle class="inline-form-radio-spacing"
+                              [checked]="element?.location_status === '1' ? true : false" aria-hidden="true"
+                              (click)="toggleStatus(element.action)">
+                            </mat-slide-toggle>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="action">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
+                            Action</th>
+                          <td mat-cell *matCellDef="let element">
+                            <span><i class="fas fa-edit font-color-grey margin-right-15"
+                                (click)="edit(element, true)"></i></span>
+                            <span class="ver-line-divider"><i class="fas fa-trash font-color-red margin-left-15"
+                                (click)="openDeleteDialog({});deleteLocationModel(element)"></i></span>
+                          </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                      </table>
+
+                      <table class="table table-borderd table-stripped custom-table text-center"
+                        style="margin-top:5px;">
+                        <tr *ngIf="CONFIG_ELEMENT_DATA.length == 0">
+                          <td colspan="9">No Record Found</td>
+                        </tr>
+                      </table>
+                      <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
+                      </mat-paginator>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row" *ngIf="CONFIG_ELEMENT_DATA.length == 0">
+                <div class="col-12">
+                  <mat-card>
+                    <div class="text-center">
+                      <app-no-data
+                        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/location_master.png'"
+                        [noDataText]="" [subText]="'No Location Found'"></app-no-data>
+                    </div>
+                  </mat-card>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete Vendor'"
+    [inputText]="'Are you Sure? You want to Delete Vendor'" (deleteOk)="deleteLocation(currentLocationId)"
+    (deleteCancel)="deleteComCancel()">
+  </app-delete-modal>

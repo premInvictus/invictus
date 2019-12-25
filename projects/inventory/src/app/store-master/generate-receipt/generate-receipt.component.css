@@ -1,0 +1,29 @@
+
+.top-card-title-new {
+    padding-top:5px !important;
+}
+.opacity-class {
+    opacity: 0.7;
+}
+.sis-btn-document-label {
+    margin-left: -62px;
+    font-size: 11px;
+}
+.set-width-height{
+    width: 80px;
+    border: 1px solid #1e88e5a1;
+    height: 81px;
+    border-radius: 4px;
+}
+.mar-left-28{
+    margin-left: 17px;
+    margin-top: 8px;
+}
+.cloud-icon {
+    font-size: 38px !important;
+    color: #1e88e5;
+}
+.col-doc-img-3 {
+    max-width: 6%;
+    flex: 0 0 10%;
+}

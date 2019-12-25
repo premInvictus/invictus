@@ -1,0 +1,182 @@
+<div class="book-detial-container">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-6 margin-top-15">
+            <span class="font-size-24">Inventory Details</span>
+          </div>
+          <div class="col-6">
+            <div class="search-container">
+              <form [formGroup]="searchForm">
+                <div class="row remove-top-margin">
+
+                  <div class="col-8">
+                    <mat-form-field class="lib-form form-field">
+                      <input matInput placeholder="Search Any Book By Name or ID" formControlName="search"
+                        autocomplete="off" (keydown.enter)="getItems($event)" />
+                    </mat-form-field>
+                  </div>
+
+                  <div class="col-4 margin-top-10  text-right">
+                    <a class="cursor-pointer" (click)="openSearchDialog({})"><span
+                        class="font-size-12 margin-top-15 font-skyblue">Advanced Search <i
+                          class="fas fa-chevron-down"></i></span></a>
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="search()"
+                      (keyup.enter)="search()">
+                      Search
+                    </button>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <span class="font-size-16 opacity-7"> <a href="javascript:void(0)" (click)="goToBookSearch()">Inventory Search</a>
+        -
+      </span><span class="font-bold">Search Result</span>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card *ngIf="ITEM_LOGS[0]?.code">
+        <div class="row">
+          <div class="col-12  remove-col-padding">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <span class="font-size-20 font-bold">{{ITEM_LOGS[0]?.name | titlecase}}</span><br>
+                <span class="font-size-20 font-bold">{{ITEM_LOGS[0]?.code}}</span><br>
+                <div class="margin-top-35">
+                  <span class="font-bold font-size-14">Category :
+                  </span><span>{{ITEM_LOGS[0]?.category ? ITEM_LOGS[0]?.category:"-"}}</span><br>
+                  <span class="font-bold font-size-14">Nature :
+                  </span><span>{{ITEM_LOGS[0]?.nature ? ITEM_LOGS[0]?.nature:"-"}}</span><br>
+                  <span class="font-bold font-size-14">Locations :
+                  </span><span>
+                    <ng-container *ngFor="let loc of ITEM_LOGS; let i=index">
+                      {{loc.location | titlecase}}
+                      <ng-container *ngIf="(i+1) != loc.item_location.length"> |</ng-container>
+                    </ng-container>
+                  </span><br>
+                  <span class="font-bold font-size-14">Description :
+                  </span><span>{{ITEM_LOGS[0]?.desc ? (ITEM_LOGS[0]?.desc | capitalize) : "-"}}</span><br>
+                </div>
+                <hr>
+              </div>
+              <div class="col-4">
+                <div class="row">
+                  <div class="col-12 text-right">
+                    <button mat-button class="btn-spacer btn-item-qty margin-left-10"
+                      (click)="showUserContextMenu =!showUserContextMenu ">
+                      {{ITEM_LOGS[0]?.total_qty}} {{ITEM_LOGS[0]?.units | titlecase}} 
+                      <i class="fas fa-angle-down"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="user-context-menu" *ngIf="showUserContextMenu">
+                  <ul class="user-type-menu" *ngFor="let loc of ITEM_LOGS; ">
+                    <li> {{loc.location | titlecase}} - <b>{{loc.qty}} {{loc.units | capitalize}}</b></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+      <mat-card *ngIf="!ITEM_LOGS[0]?.code">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="'Loading....'" [subText]="''"></app-no-data>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card [hidden]="!(LOGS_DATA.length > 0)">
+        <div class="row">
+          <div class="col-12">
+            <span class="font-size-20">Item Log</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-2">
+          </div>
+          <div class="col-8">
+            <div class="row ">
+              <div class="col-10 remove-col-padding">
+                <mat-form-field appearance="legacy lib-form">
+                  <input matInput placeholder="Search">
+                  <mat-icon matPrefix>filter_list</mat-icon>
+                </mat-form-field>
+              </div>
+              <div class="col-2 remove-col-padding text-right" (click)="downloadExcel()">
+                <span class="font-size-14 font-skyblue">Export Table</span>
+              </div>
+            </div>
+            <table mat-table [dataSource]="datasource" matSort class="table-100 text-center" id="report_table">
+              <ng-container matColumnDef="sno">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+                <td mat-cell *matCellDef="let item"> {{item.sno}} </td>
+              </ng-container>
+              <ng-container matColumnDef="date">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                <td mat-cell *matCellDef="let item">
+                  {{item.date}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="code">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> No .</th>
+                <td mat-cell *matCellDef="let item" class="text-left mar-left-5"> {{item.code}}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                <td mat-cell *matCellDef="let item"> {{item.user_name}} </td>
+              </ng-container>
+              <ng-container matColumnDef="category">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Category </th>
+                <td mat-cell *matCellDef="let item"> {{getRole(item.role_id)}} </td>
+              </ng-container>
+              <ng-container matColumnDef="location">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Location </th>
+                <td mat-cell *matCellDef="let item"> {{item.location }} </td>
+              </ng-container>
+              <ng-container matColumnDef="issued_qty">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Issued Qty </th>
+                <td mat-cell *matCellDef="let item"> {{item.issued_qty }} </td>
+              </ng-container>
+              <ng-container matColumnDef="returned_qty">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Returned Qty </th>
+                <td mat-cell *matCellDef="let item"> {{item.returned_qty }} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="logdisplayedcolumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: logdisplayedcolumns;">
+              </tr>
+            </table>
+            <mat-paginator [hidden]="LOGS_DATA.length < 1" #paginator [pageSize]="itempagesize"
+              [pageSizeOptions]="itempagesizeoptions" showFirstLastButtons (page)="pageEvent = fetchData($event)">
+            </mat-paginator>
+          </div>
+          <div class="col-2">
+          </div>
+        </div>
+      </mat-card>
+      <mat-card *ngIf="LOGS_DATA.length === 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/isometric/no_item_issued.png'"
+            [noDataText]="'No Item Logs Found'" [subText]="''"></app-no-data>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>

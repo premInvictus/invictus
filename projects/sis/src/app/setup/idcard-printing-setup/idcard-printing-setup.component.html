@@ -2,14 +2,14 @@
    <div class="container-box__white card-height-840-lp">
       <div class="row">
          <!-- <div class="col-4 text-center">
-                <div class="line-divider"></div>
-             </div> -->
+             <div class="line-divider"></div>
+          </div> -->
          <div class="col-12 text-center">
             <h4 class="text-uppercase text-center"><b>ID Card Printing</b></h4>
          </div>
          <!-- <div class="col-4 text-center">
-                <div class="line-divider"></div>
-             </div> -->
+             <div class="line-divider"></div>
+          </div> -->
       </div>
       <form [formGroup]="idcardForm">
          <div class="row">
@@ -217,15 +217,15 @@
                         <label for="file4">Choose File
                            &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
                      <input style="display:none" type="file" accept="image/*" (change)="uploadWaterImage($event)"
-                        id="file4" formControlName="ps_watermark_image"><br><br>
+                        id="file4" formControlName="ps_auth_sign"><br><br>
                      <div [ngStyle]="{'background' : idcardForm.value.ps_id_color}"
                         style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
                         <img *ngIf="showWaterImage" style="height: 100%;
-                                          width: 100%;
-                                          border: 1px solid #646471;
-                                          border-radius: 4%;
-                                          opacity: 0.35;
-                                          z-index: -1;" [src]="waterMarkImage" (click)="previewImage(waterMarkImage)">
+                                       width: 100%;
+                                       border: 1px solid #646471;
+                                       border-radius: 4%;
+                                       opacity: 0.35;
+                                       z-index: -1;" [src]="waterMarkImage" (click)="previewImage(waterMarkImage)">
                      </div>
                   </div>
                </div>
@@ -238,16 +238,14 @@
                         <label for="file3">Choose File
                            &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
                      <input style="display:none" type="file" accept="image/*" (change)="uploadTempImage($event)"
-                        id="file3" formControlName="ps_template_image"><br><br>
+                        id="file3" formControlName="ps_auth_sign"><br><br>
                      <div style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
-                        <i *ngIf="showTempImage" class="fas fa-times delete-temp-btn" (click)="deleteTemp()"></i>
                         <img *ngIf="showTempImage"
                            style="height:100%;width:100%;border:1px solid #646471;border-radius: 4%"
                            [src]="templateImage" (click)="previewImage(templateImage)">
                      </div>
                   </div>
                </div>
-               <br>
                <div class="row">
                   <div class="col-8">
                      <label class="btn-document-label"><span><b>Upload School Logo.</b></span></label>
@@ -257,7 +255,7 @@
                         <label for="file2">Choose File
                            &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
                      <input style="display:none" type="file" accept="image/*" (change)="uploadLogo($event)" id="file2"
-                        formControlName="ps_school_logo"><br><br>
+                        formControlName="ps_auth_sign"><br><br>
                      <div [ngStyle]="{'background' : idcardForm.value.ps_header_back_color}"
                         style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
                         <img *ngIf="showSchoolImage"

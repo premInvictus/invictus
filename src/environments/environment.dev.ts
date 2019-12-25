@@ -6,6 +6,8 @@ export const environment = {
 	apiSmartUrl: 'http://dev-api-smart.invictusprojects.in',
 	apiExamUrl: 'http://dev-api-exam.invictusprojects.in',
 	apiReservUrl: 'http://dev-api-reservoir.invictusprojects.in',
+	apiHRUrl: 'http://dev-api-hrms.invictusprojects.in',
+	apiInvUrl: 'http://dev-api-inventory.invictusprojects.in',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
 	testInitiateCode : 'T100',

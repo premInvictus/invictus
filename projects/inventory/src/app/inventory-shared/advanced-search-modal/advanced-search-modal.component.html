@@ -1,0 +1,142 @@
+<ng-template #searchModal>
+  <div class="row remove-modal-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="dialog-title-container ">
+        <span class="font-size-24 font-white">Advanced Search</span>
+        <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+          cancel
+        </i>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 remove-col-padding">
+      <ng-container *ngFor="let form of formGroupArray;let i = index;">
+        <form [formGroup]="formGroupArray[i].formGroup">
+          <div [class]="i == 0 ? 'row margin-top-30' : 'row'">
+            <div class="col-4">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Choose your filter..</mat-label>
+                <mat-select formControlName="filter_type" (selectionChange)="setPlaceHolder($event.value, i)">
+                  <mat-option *ngFor="let item of filterArray" [value]="item.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div> 
+            <div class="col-7">
+              <div>
+                <div class="row remove-top-margin">
+                  <div class="col-8">
+                    <mat-form-field *ngIf="!checkLocationArray[i]" class="form-field" appearance="outline">
+                      <mat-label>
+                        {{placeholder[i] ? placeholder[i] : 'Select a filter type'}}</mat-label>
+                      <input matInput [placeholder]="placeholder[i] ? placeholder[i] : 'Select a filter type'"
+                        [type]="fieldType[i]" formControlName="filter_value"
+                        [readonly]="!(formGroupArray[i].formGroup.value.filter_type)" />
+                    </mat-form-field>
+                    <ng-container *ngIf="checkLocationArray[i]">
+                      <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Enter Location" formControlName="filter_value" required
+                          [matAutocomplete]="auto" (keyup)="getFilterLocation($event)" />
+                      </mat-form-field>
+                      <mat-progress-bar mode="determinate" value="100" *ngIf="!isLoading">
+                      </mat-progress-bar>
+                      <div class="green-progress">
+                        <mat-progress-bar mode="indeterminate" *ngIf="isLoading" color="#ff0000"></mat-progress-bar>
+                      </div>
+                      <mat-autocomplete flex #auto="matAutocomplete">
+                        <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
+                          (onSelectionChange)="setLocationId(item, i)">
+                          <!-- <small>{{item.location_hierarchy | capitalize}}</small> -->
+                          <span [innerHTML]="item.location_hierarchy | capitalize | highlight: toHighlight"></span>
+                        </mat-option>
+                      </mat-autocomplete>
+                    </ng-container>
+                  </div>
+                  <div class="col-4 margin-top-10  text-right" *ngIf="(formGroupArray.length - 1) === i">
+                    <button mat-button class="btn-spacer btn-lib-search margin-left-10"
+                      (click)="addNewFilter(i);$event.stopPropagation()"
+                      [disabled]="!formGroupArray[i].formGroup.value.filter_type && !formGroupArray[i].formGroup.value.filter_value">
+                      <span style="color:#fff !important">Add</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-1 text-center" *ngIf="i !== 0">
+              <div class="margin-top-15" (click)="deleteForm(i)">
+                <i class="fas fa-trash font-size-20 font-color-red"></i>
+              </div>
+            </div>
+          </div>
+        </form>
+      </ng-container>
+      <hr>
+      <div class="row">
+        <div class="col-12">
+          <div class="float-left">
+            <span class="font-size-16"><b>General Filters</b></span>
+          </div>
+        </div>
+      </div>
+      <form [formGroup]="generalFilterForm">
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Nature</mat-label>
+              <mat-select formControlName="item_nature.id" multiple>
+                <mat-option *ngFor="let item of natureArray" placeholder="Nature" [value]="item.config_id">
+                  {{item.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Category </mat-label>
+              <mat-select formControlName="item_category.id" multiple>
+                <mat-option *ngFor="let item of categoryArray" placeholder="Category" [value]="item.config_id">
+                  {{item.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row" *ngIf="currentUser.role_id === '2'">
+          <div class="col-12">
+            <div class="float-left">
+              <span class="font-size-16"><b>Additional Filters</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>From Date</mat-label>
+              <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from"
+                (blur)="getFromDate($event.target.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>To Date</mat-label>
+              <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to"
+                (blur)="getToDate($event.target.value)" />
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <br />
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <br>
+    </div>
+  </div>
+</ng-template>

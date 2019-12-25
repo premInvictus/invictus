@@ -1,0 +1,18 @@
+.card-top-title__container {
+    padding: 20px !important;
+}
+.card-height-650 {
+    min-height: 650px !important ;
+}
+.vertical-line-divider2 {
+    border-left: 2px solid #dee2e6;
+    height: 95%;
+}
+ul {
+    list-style-type: none;
+}
+.divider-div {
+    border: 1px solid #d3d8dc;
+    margin-right: 5px;
+    margin-left: 5px;
+}

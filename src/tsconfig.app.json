@@ -108,7 +108,14 @@
     "../projects/miscellaneous/src/app/communication/communication.module.ts",
     "../projects/miscellaneous/src/app/miscusertype/miscusertype.module.ts",
     "../projects/teacherapp/src/app/teacher-messages/teacher-messages.module.ts",
+    "../projects/inventory/src/app/inventory-shared/inventory-shared.module.ts",
+    "../projects/inventory/src/app/inventoryusertype/inventoryusertype.module.ts",
     "../projects/student-app/src/app/student-messages/student-messages.module.ts",
-    "../projects/human-resource/src/app/employee-messages/employee-messages.module.ts"
+    "../projects/human-resource/src/app/employee-messages/employee-messages.module.ts",
+    "../projects/inventory/src/app/store-master/store-master.module.ts",
+    "../projects/inventory/src/app/inventory-auxiliaries/auxiliaries.module.ts",
+    "../projects/inventory/src/app/inventory-circulation-management/circulation-management.module.ts",
+    "../projects/inventory/src/app/inventory-reports/reports.module.ts",
+    "../projects/inventory/src/app/inventory-configuration/configuration.module.ts"
   ]
 }
