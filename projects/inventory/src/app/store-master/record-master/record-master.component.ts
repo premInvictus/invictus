@@ -228,5 +228,7 @@ export class RecordMasterComponent implements OnInit, OnDestroy, AfterViewInit {
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  getItems($event) {
 
+  }
 }

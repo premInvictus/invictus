@@ -29,7 +29,7 @@ export class PhysicalVerificationComponent implements OnInit {
   pageSize = 100;
   PHYSICAL_VERIFICATION_LIST_ELEMENT: PhysicalVerificationListElement[] = [];
   physicalVerificationdataSource = new MatTableDataSource<PhysicalVerificationListElement>(this.PHYSICAL_VERIFICATION_LIST_ELEMENT);
-  displayedListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_desc', 'item_nature', 'item_category', 'item_location','item_current_stock', 'last_verification_date','action'];
+  displayedListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_desc', 'item_nature', 'item_category', 'item_location', 'item_current_stock', 'last_verification_date', 'action'];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -57,12 +57,12 @@ export class PhysicalVerificationComponent implements OnInit {
   getPhysicalVerification(locationData) {
     console.log('locationData--', locationData);
     this.currentLocationId = locationData.location_id;
-    var inputJson = { location_id: locationData.location_id,  page_index: this.pageIndex, page_size: this.pageSize };
+    var inputJson = { location_id: locationData.location_id, page_index: this.pageIndex, page_size: this.pageSize };
     let element: any = {};
     let recordArray = [];
     this.PHYSICAL_VERIFICATION_LIST_ELEMENT = [];
     this.physicalVerificationdataSource = new MatTableDataSource<PhysicalVerificationListElement>(this.PHYSICAL_VERIFICATION_LIST_ELEMENT);
-    this.erpCommonService.getInventoryPhysicalVerification(inputJson).subscribe((result:any) => {
+    this.erpCommonService.getInventoryPhysicalVerification(inputJson).subscribe((result: any) => {
       let pos = 1;
       this.physicalVerificationdataSource = recordArray = result;
       for (const item of recordArray) {
@@ -74,11 +74,11 @@ export class PhysicalVerificationComponent implements OnInit {
           item_nature: item.item_nature && item.item_nature.name ? item.item_nature.name : '-',
           item_category: item.item_category && item.item_category.name ? item.item_category.name : '-',
           item_location: item.location_hierarchy ? item.location_hierarchy : '-',
-          item_location_id : item.location_id ? item.location_id : '-',
+          item_location_id: item.location_id ? item.location_id : '-',
           item_current_stock: item.item_current_stock ? item.item_current_stock : '',
           item_units: item.item_units ? item.item_units : '-',
-          last_verification_date: item.pv_item_data && item.pv_item_data.length>0 ? item.pv_item_data[0]['pv_created_date'] : '',
-          action:item
+          last_verification_date: item.pv_item_data && item.pv_item_data.length > 0 ? item.pv_item_data[0]['pv_created_date'] : '',
+          action: item
         };
         this.PHYSICAL_VERIFICATION_LIST_ELEMENT.push(element);
         pos++;
@@ -102,9 +102,9 @@ export class PhysicalVerificationComponent implements OnInit {
       pv_status: 'approved',
       pv_item_stock: item.item_current_stock
     };
-    this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result:any) => {
+    this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result: any) => {
       this.common.showSuccessErrorMessage('Physical Verification Approve Successfully', 'success');
-      this.getPhysicalVerification({location_id: Number(this.currentLocationId) })
+      this.getPhysicalVerification({ location_id: Number(this.currentLocationId) })
     });
   }
 
@@ -113,20 +113,20 @@ export class PhysicalVerificationComponent implements OnInit {
     this.approveModalRef.openModal(data);
   }
 
-  approveVerificationModel(element,flag) {
+  approveVerificationModel(element, flag) {
 
   }
 
   openModal(data) {
     data['from'] = 'inv-physical-verification';
     this.deleteModalRef.openModal(data);
-  } 
+  }
 
   deleteVerificationModel(item_code) {
     this.currentItemCode = item_code;
   }
 
-  deleteComCancel() { 
+  deleteComCancel() {
     this.deleteModalRef.close();
   }
 
@@ -138,9 +138,9 @@ export class PhysicalVerificationComponent implements OnInit {
       pv_status: 'not-matched',
       pv_item_stock: data.quantity
     };
-    this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result:any) => {
+    this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result: any) => {
       this.common.showSuccessErrorMessage('Physical Verification Updated Successfully', 'success');
-      this.getPhysicalVerification({location_id: Number(this.currentLocationId) })
+      this.getPhysicalVerification({ location_id: Number(this.currentLocationId) })
     });
   }
 
@@ -160,11 +160,15 @@ export class PhysicalVerificationComponent implements OnInit {
   fetchData(event?: PageEvent) {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
-    this.getPhysicalVerification({location_id: Number(this.currentLocationId) });
+    this.getPhysicalVerification({ location_id: Number(this.currentLocationId) });
     return event;
   }
+  applyFilterVendor(filterValue: string) {
+    this.physicalVerificationdataSource.filter = filterValue.trim().toLowerCase();
+  }
+  approveComCancel() {
 
-
+  }
 
 }
 
@@ -177,7 +181,7 @@ export interface PhysicalVerificationListElement {
   item_category: any;
   item_location: string;
   item_current_stock: string;
-  last_verification_date:string;
+  last_verification_date: string;
   action: any;
 }
 

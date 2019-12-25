@@ -708,4 +708,7 @@ export class InventoryDetailsComponent implements OnInit, AfterViewInit, OnDestr
     const max = Math.max.apply(null, res);
     return max2 > max ? max2 : max;
   }
+  goToBookSearch(){
+    
+  }
 }

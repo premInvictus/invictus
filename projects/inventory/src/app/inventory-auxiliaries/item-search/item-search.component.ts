@@ -234,5 +234,7 @@ export class ItemSearchComponent implements OnInit, AfterViewInit, OnDestroy {
   createPo() {
     this.router.navigate(['../../store-master/create-procurement-master'], { relativeTo: this.route });
   }
-
+  applyFilter(filterValue: string) {
+    this.datasource.filter = filterValue.trim().toLowerCase();
+  }
 }

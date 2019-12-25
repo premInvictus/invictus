@@ -27,7 +27,7 @@ export class StockReconciliationComponent implements OnInit {
   currentLocationId = 0;
   STOCK_RECONCILIATION_LIST_ELEMENT: stockReconciliationListElement[] = [];
   stockReconciliationDataSource = new MatTableDataSource<stockReconciliationListElement>(this.STOCK_RECONCILIATION_LIST_ELEMENT);
-  displayedListColumns: string[] = ['srno', 'verification_date', 'item_code', 'item_name',  'item_nature', 'item_category', 'item_location','item_current_stock', 'item_available_stock','action'];
+  displayedListColumns: string[] = ['srno', 'verification_date', 'item_code', 'item_name', 'item_nature', 'item_category', 'item_location', 'item_current_stock', 'item_available_stock', 'action'];
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -60,7 +60,7 @@ export class StockReconciliationComponent implements OnInit {
     let recordArray = [];
     this.STOCK_RECONCILIATION_LIST_ELEMENT = [];
     this.stockReconciliationDataSource = new MatTableDataSource<stockReconciliationListElement>(this.STOCK_RECONCILIATION_LIST_ELEMENT);
-    this.erpCommonService.getInventoryStockReconciliation(inputJson).subscribe((result:any) => {
+    this.erpCommonService.getInventoryStockReconciliation(inputJson).subscribe((result: any) => {
       let pos = 1;
       this.stockReconciliationDataSource = recordArray = result;
       for (const item of recordArray) {
@@ -72,12 +72,12 @@ export class StockReconciliationComponent implements OnInit {
           item_nature: item.item_nature && item.item_nature.name ? item.item_nature.name : '-',
           item_category: item.item_category && item.item_category.name ? item.item_category.name : '-',
           item_location: item.location_hierarchy ? item.location_hierarchy : '-',
-          item_location_id : item.location_id ? item.location_id : '-',
+          item_location_id: item.location_id ? item.location_id : '-',
           item_current_stock: item.pv_item_data ? this.getCurrentStock(item.pv_item_data) : '',
           item_verification_date: item.pv_created_date ? item.pv_created_date : '',
           item_available_stock: item.available_stock ? item.available_stock : '-',
           item_units: item.item_units ? item.item_units : '-',
-          action:item
+          action: item
         };
         this.STOCK_RECONCILIATION_LIST_ELEMENT.push(element);
         pos++;
@@ -96,8 +96,8 @@ export class StockReconciliationComponent implements OnInit {
 
 
   getCurrentStock(currentStockData) {
-    for(var i=0; i<currentStockData.length; i++) {
-      if(Number(currentStockData[i].location_id) === Number(this.currentLocationId)) {
+    for (var i = 0; i < currentStockData.length; i++) {
+      if (Number(currentStockData[i].location_id) === Number(this.currentLocationId)) {
         return currentStockData[i].item_qty
       }
     }
@@ -109,20 +109,20 @@ export class StockReconciliationComponent implements OnInit {
       pv_location_id: Number(item.item_location_id),
       pv_item_stock: item.item_available_stock
     };
-    this.erpCommonService.updateInventoryStockReconciliation(inputJson).subscribe((result:any) => {
+    this.erpCommonService.updateInventoryStockReconciliation(inputJson).subscribe((result: any) => {
       this.common.showSuccessErrorMessage('Stock Reconciliation Approve Successfully', 'success');
-      this.getStockReconciliation({location_id: Number(this.currentLocationId) })
+      this.getStockReconciliation({ location_id: Number(this.currentLocationId) })
     });
   }
 
-  approveVerificationModel(element,flag) {
+  approveVerificationModel(element, flag) {
 
   }
 
   openModal(data) {
     data['from'] = 'inv-physical';
     this.deleteModalRef.openModal(data);
-  } 
+  }
 
   openApproveModal(data) {
     data.text = 'Approve';
@@ -133,7 +133,7 @@ export class StockReconciliationComponent implements OnInit {
     this.currentItemCode = item_code;
   }
 
-  deleteComCancel() { 
+  deleteComCancel() {
     this.deleteModalRef.close();
   }
 
@@ -145,9 +145,9 @@ export class StockReconciliationComponent implements OnInit {
       pv_status: 'cancel',
       pv_item_stock: data.quantity
     };
-    this.erpCommonService.updateInventoryStockReconciliation(inputJson).subscribe((result:any) => {
+    this.erpCommonService.updateInventoryStockReconciliation(inputJson).subscribe((result: any) => {
       this.common.showSuccessErrorMessage('Stock Reconciliation Updated Successfully', 'success');
-      this.getStockReconciliation({location_id: Number(this.currentLocationId) })
+      this.getStockReconciliation({ location_id: Number(this.currentLocationId) })
     });
   }
 
@@ -163,8 +163,12 @@ export class StockReconciliationComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }
+  applyFilterVendor(filterValue: string) {
+    this.stockReconciliationDataSource.filter = filterValue.trim().toLowerCase();
+  }
+  approveComCancel() {
 
-
+  }
 
 }
 
@@ -178,6 +182,6 @@ export interface stockReconciliationListElement {
   item_category: any;
   item_location: string;
   item_current_stock: string;
-  item_available_stock:string;
+  item_available_stock: string;
   action: any;
 }

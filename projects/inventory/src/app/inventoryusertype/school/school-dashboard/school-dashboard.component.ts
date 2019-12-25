@@ -22,6 +22,8 @@ export class SchoolDashboardComponent implements OnInit {
   reissued = 0;
   currentDate = new Date();
   result: any = {};
+  dashboardDueInventoryData: any = {};
+  dashboardReservoirData: any = {};
   prevIndex = 0;
   searchForm: FormGroup;
   @ViewChild('searchModal') searchModal;

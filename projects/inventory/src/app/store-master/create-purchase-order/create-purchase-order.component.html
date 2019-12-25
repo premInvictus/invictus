@@ -27,8 +27,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Item Code</mat-label>
                   <input type="text" matInput placeholder="Item Code" formControlName="item_code" required
-                    [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
-                    (keyup)="filterItem($event)">
+                    [matAutocomplete]="autoGroup" (keyup)="filterItem($event)">
                   <mat-autocomplete #autoGroup="matAutocomplete">
                     <mat-option (onSelectionChange)="getItemPerId(item)" (keyup.enter)="getItemPerId(item)"
                       (click)="getItemPerId(item)" *ngFor="let item of itemArray" [value]="item.item_code">
