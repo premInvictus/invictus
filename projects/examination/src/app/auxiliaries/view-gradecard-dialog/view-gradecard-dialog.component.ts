@@ -74,7 +74,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     }
     if(this.data.ect_grade_avg_highest && this.data.ect_grade_avg_highest != '') {
       let obj = JSON.parse(this.data.ect_grade_avg_highest);
-      console.log('obj.avg', obj.avg);
+      //console.log('obj.avg', obj.avg);
       if(obj.grade && obj.grade == true) {
         this.obtainedGradeAvgHighest.grade = true;
       }
@@ -89,9 +89,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
-    for (let i = 1; i <= this.data.param.eme_term_id; i++) {
-      this.termArray.push(i);
-    }
+    this.termArray.push(this.data.param.eme_term_id);
     this.getClassHighestAndAverage();
     this.getSubjectSubexamMapping();
     this.ctForClass();
@@ -113,7 +111,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.class_id = this.data.param.eme_class_id;
     param.sec_id = this.data.param.eme_sec_id;
     this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
-      console.log(result1);
+      //console.log(result1);
       if(result1 && result1.status === 'ok') {
         const termAttendence = result1.data[0];
         this.totalpresentday = Number(termAttendence['mta_present_days']);
@@ -308,7 +306,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     })
   }
   getCalculatedMarksSub(sub_id, exam_id, term) {
-    console.log('this.subjectArray',this.subjectArray);
+    //console.log('this.subjectArray',this.subjectArray);
     const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
     let totalscore = 0;
     if (currentSub.childSub.length > 0) {
@@ -321,8 +319,38 @@ export class ViewGradecardDialogComponent implements OnInit {
     }
     return this.getTwoDecimalValue(totalscore);
   }
+  getCalculatedMarksSubSubexam(sub_id, exam_id, term, se_id) {
+    //console.log('this.subjectArray',this.subjectArray);
+    const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
+    let totalscore = 0;
+    if (currentSub.childSub.length > 0) {
+      currentSub.childSub.forEach(element => {
+        totalscore += this.getCalculatedMarksSubexam(element.sub_id, exam_id, term, se_id);
+      });
+      //totalscore = totalscore / currentSub.childSub.length;
+    } else {
+      totalscore = this.getCalculatedMarksSubexam(sub_id, exam_id, term, se_id);
+    }
+    console.log('totalscore  ----------',totalscore);
+    return this.getTwoDecimalValue(Number(totalscore));
+  }
+  getCalculatedMarksSubexam(sub_id, exam_id, term, se_id) {
+    console.log('gradeCardMarkArray----------------', this.gradeCardMarkArray);
+    let emem_marks = 0;
+    if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0) {
+      this.gradeCardMarkArray.forEach(element1 => {
+        if (element1.eme_sub_id === sub_id && element1.eme_exam_id === exam_id && element1.eme_subexam_id === se_id && Number(element1.eme_term_id) === Number(term)) {
+          if (!isNaN(element1.emem_marks)) {
+            emem_marks = Number(element1.emem_marks);
+          }
+        }
+      });
+    }
+    return emem_marks;
+  }
   getCalculatedMarks(sub_id, exam_id, term) {
     const curExam = this.examArray.find(e => e.exam_id === exam_id);
+    console.log('curExam----------------', curExam);
     const percentageArray: any[] = [];
     curExam.exam_sub_exam_max_marks.forEach(element => {
       if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0) {
@@ -347,9 +375,10 @@ export class ViewGradecardDialogComponent implements OnInit {
         });
       }
     });
+    console.log('percentageArray',percentageArray);
     let score = 0;
     if (this.gradeCardMarkArray && this.gradeCardMarkArray.length > 0 && percentageArray.length > 0) {
-      console.log(percentageArray);
+      //console.log(percentageArray);
       switch (Number(curExam.exam_calculation_rule)) {
         case 1:
           let max1 = percentageArray[0].obtained_percentage;
@@ -389,7 +418,12 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
 
   getTwoDecimalValue(value) {
-    return Number.parseFloat(value.toFixed(2));
+    if(value && value != 0) {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+    
   }
   getPassResult(term) {
     let temp: any[] = [];
@@ -549,7 +583,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           min = Number(element.egs_range_end);
         }
       }
-      return gradePercentage > min ? '' : 'F';
+      return gradePercentage > min ? '' : '(F)';
     }
     return '';
   }
@@ -633,6 +667,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.examService.getExamDetails(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
+        if(this.data.param.eme_subexam_id && this.data.param.eme_subexam_id.length > 0) {
+          const curExam = this.examArray.find(e => e.exam_id === this.data.param.eme_exam_id);
+          const curExamSubExam: any[] = [];
+          curExam.exam_sub_exam_max_marks.forEach(element => {
+            const subindex = this.data.param.eme_subexam_id.findIndex(e => e === element.se_id);
+            if(subindex !== -1) {
+              curExamSubExam.push(element)
+            }
+          });
+          curExam.exam_sub_exam_max_marks = curExamSubExam;
+        }
         this.examArray.forEach(element => {
           if (element.exam_category === '1') {
             this.sexamArray.push(element);
@@ -646,6 +691,8 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.acedemicmarks += Number(element.exam_weightage);
           });
         }
+        console.log('sexamArray-------', this.sexamArray);
+        console.log('examArray-------', this.examArray);
         this.getGradeCardMark();
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
@@ -660,8 +707,8 @@ export class ViewGradecardDialogComponent implements OnInit {
         if (this.data.ect_exam_type === '2') {
           this.getRemarksEntryStudent();
         } else {
-          console.log(temp);
-          console.log(temp.map(e => e.sub_id));
+          //console.log(temp);
+          //console.log(temp.map(e => e.sub_id));
           this.getRemarksEntryStudent(temp.map(e => e.sub_id));
         }
         if (temp.length > 0) {
@@ -675,7 +722,7 @@ export class ViewGradecardDialogComponent implements OnInit {
               }
               element.childSub = childSub;
               this.subjectArray.push(element);
-              console.log('this.subjectArray', this.subjectArray);
+              //console.log('this.subjectArray', this.subjectArray);
             }
           });
         }

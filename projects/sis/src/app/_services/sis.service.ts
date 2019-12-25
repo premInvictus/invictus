@@ -1039,4 +1039,24 @@ export class SisService {
 	reset_password(value) {
 		return this.http.post('/users/reset_password', value);
 	}
+
+	getstudenttags(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/studentTags');
+	}
+
+	insertstudenttags(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/siSetup/studentTags',value);
+	}
+
+	updatestudenttags(value) {
+		this.service.startLoading();
+		return this.http.put(environment.apiSisUrl + '/siSetup/studentTags/'+value.tag_id,value);
+	}
+
+	deletestudenttags(value) {
+		this.service.startLoading();
+		return this.http.delete(environment.apiSisUrl + '/siSetup/studentTags/'+value.tag_id,value);
+	}
 }

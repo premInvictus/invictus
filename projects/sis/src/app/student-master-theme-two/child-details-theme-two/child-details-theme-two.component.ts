@@ -64,6 +64,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	cityId: any;
 	cityId2: any;
 	opacityClass = '';
+	studentTags: any[] = [];
 	constructor(
 		private formEnabledTwoService: FormEnabledTwoService,
 		private fbuild: FormBuilder,
@@ -86,6 +87,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.getState();
 		this.getReligionDetails();
 		this.getMotherTongue();
+		this.getStudentTags();
 		this.settingsArray = this.configSetting;
 		// this.getConfigureSetting();
 		this.addressStatus = 'No';
@@ -113,6 +115,15 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.sisService.getNationality().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.nationality = result.data;
+			}
+		});
+	}
+
+	getStudentTags() {
+		this.studentTags = [];
+		this.sisService.getstudenttags({tag_status:'1'}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.studentTags = result.data;
 			}
 		});
 	}
@@ -214,7 +225,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			upd_nationality: '',
 			upd_gender: '',
 			upd_category: '',
-			upd_mt_id: ''
+			upd_mt_id: '',
+			upd_tag_id: ''
 		});
 		this.paddressform = this.fbuild.group({
 			ea_id: '',
@@ -528,7 +540,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 				upd_nationality: personalDetails[0].upd_nationality,
 				upd_gender: personalDetails[0].upd_gender,
 				upd_category: personalDetails[0].upd_category,
-				upd_mt_id: personalDetails[0].upd_mt_id
+				upd_mt_id: personalDetails[0].upd_mt_id,
+				upd_tag_id: personalDetails[0].upd_tag_id
 			});
 			if (personalDetails[0].addressDetails.length > 0) {
 				personalDetails[0].addressDetails.forEach(element => {
