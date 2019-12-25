@@ -341,7 +341,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       this.gradeCardMarkArray.forEach(element1 => {
         if (element1.eme_sub_id === sub_id && element1.eme_exam_id === exam_id && element1.eme_subexam_id === se_id && Number(element1.eme_term_id) === Number(term)) {
           if (!isNaN(element1.emem_marks)) {
-            emem_marks = element1.emem_marks;
+            emem_marks = Number(element1.emem_marks);
           }
         }
       });
@@ -583,7 +583,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           min = Number(element.egs_range_end);
         }
       }
-      return gradePercentage > min ? '' : 'F';
+      return gradePercentage > min ? '' : '(F)';
     }
     return '';
   }
