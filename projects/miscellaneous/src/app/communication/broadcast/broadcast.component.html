@@ -203,6 +203,6 @@
 </div>
 
 <app-compose-message *ngIf="showComposeMessage" [reRenderForm]="renderForm"
-    (backToBroadcast)="resetComposeMessage(messageType)"></app-compose-message>
+    (backToBroadcast)="resetComposeMessage($event)"></app-compose-message>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>

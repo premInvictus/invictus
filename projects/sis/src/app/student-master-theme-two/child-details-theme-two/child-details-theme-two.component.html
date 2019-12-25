@@ -28,19 +28,39 @@
                       </mat-form-field>
                     </div>
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_category')">
-                      <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Category</mat-label>
-                        <mat-select placeholder="Category" formControlName="upd_category" required [disabled]="viewOnly"
-                          [errorStateMatcher]="confirmValidParentMatcher">
-                          <mat-option>Please Select</mat-option>
-                          <mat-option *ngFor="let item of category" [value]="item.cat_id">
-                            {{item.cat_name}}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error>
-                          This field is required
-                        </mat-error>
-                      </mat-form-field>
+                      <div class="row">
+                        <div class="col-6" style="padding-left:0">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Category</mat-label>
+                            <mat-select placeholder="Category" formControlName="upd_category" required
+                              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                              <mat-option>Please Select</mat-option>
+                              <mat-option *ngFor="let item of category" [value]="item.cat_id">
+                                {{item.cat_name}}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error>
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6" style="padding-right:0">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Student Tags</mat-label>
+                            <mat-select placeholder="Tags" formControlName="upd_tag_id" 
+                              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                              <mat-option>Please Select</mat-option>
+                              <mat-option *ngFor="let item of studentTags" [value]="item.tag_id">
+                                {{item.tag_name | titlecase}}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error>
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
+
                     </div>
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_religion_id')">
                       <mat-form-field class="form-field" appearance="outline">
