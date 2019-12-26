@@ -387,7 +387,7 @@ export class InventoryDetailsComponent implements OnInit, AfterViewInit, OnDestr
   }
   search() {
     if (this.searchForm.value.search.length >= 3) {
-      this.common.setData('or',this.searchForm.value);
+      this.common.setData('or', this.searchForm.value);
       this.router.navigate(['../item-search'], { relativeTo: this.route });
     }
   }
@@ -708,7 +708,7 @@ export class InventoryDetailsComponent implements OnInit, AfterViewInit, OnDestr
     const max = Math.max.apply(null, res);
     return max2 > max ? max2 : max;
   }
-  goToBookSearch(){
-    
+  goToBookSearch() {
+
   }
 }
