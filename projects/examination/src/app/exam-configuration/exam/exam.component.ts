@@ -291,7 +291,7 @@ export class ExamComponent implements OnInit {
 
 	getExamDetails() {
 		this.examDetailsArray = [];
-		this.examService.getExamDetails({}).subscribe((result: any) => {
+		this.examService.getExamDetails({exam_status: ['0','1']}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examDetailsArray = result.data;
 				this.ELEMENT_DATA = [];
