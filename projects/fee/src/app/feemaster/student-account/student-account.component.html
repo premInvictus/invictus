@@ -32,6 +32,17 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
+                <div class="inline-flex margin-left-15">
+                    <mat-form-field appearance="outline" class="form-field">
+                        <mat-label>Additional Fee Component</mat-label>
+                        <mat-select placeholder="Additional Fee Component" [disabled]="viewOnly" multiple 
+                            formControlName="accd_afc_id" [errorStateMatcher]="confirmValidParentMatcher" required>
+                            <!-- <mat-option>Please Select</mat-option> -->
+                            <mat-option *ngFor="let item of additionalFeeComponentArray" [value]="item.fh_id">{{item.fh_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
             </div>
         </div>
         <div class="row remove-top-margin">

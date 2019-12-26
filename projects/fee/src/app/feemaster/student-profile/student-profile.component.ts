@@ -16,8 +16,9 @@ export class StudentProfileComponent implements OnInit {
 	checkFlag1 = true;
 	checkFlag2 = true;
 	viewOnly = true;
+	studentDetails: any;
 	@ViewChild(StudentAccountComponent) stuAcc: StudentAccountComponent;
-	@ViewChild (CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
+	@ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
 	feeRenderId: any;
 	constructor(
 		private sisService: SisService,
@@ -34,6 +35,7 @@ export class StudentProfileComponent implements OnInit {
 			} else {
 				this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 					if (result.status === 'ok') {
+						this.studentDetails = this.commonStu;
 						this.lastRecordId = result.data[0].last_record;
 						this.loginId = result.data[0].au_login_id;
 					}
@@ -47,8 +49,9 @@ export class StudentProfileComponent implements OnInit {
 			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
 				if (result.status === 'ok') {
 					if (result.data[0].last_record && result.data[0].au_login_id) {
-					this.lastRecordId = result.data[0].last_record;
-					this.loginId = result.data[0].au_login_id;
+						this.studentDetails = this.commonStu;
+						this.lastRecordId = result.data[0].last_record;
+						this.loginId = result.data[0].au_login_id;
 					}
 				}
 			});
@@ -84,10 +87,10 @@ export class StudentProfileComponent implements OnInit {
 	}
 	editChange(flag) {
 		if (flag) {
-		this.viewOnly = true;
-		this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+			this.viewOnly = true;
+			this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 		}
-		if (this.viewOnly && this.isExist('350') ) {
+		if (this.viewOnly && this.isExist('350')) {
 			this.checkFlag1 = true;
 		}
 		if (this.viewOnly && this.commmon.isExistUserAccessMenu('374')) {
@@ -106,7 +109,7 @@ export class StudentProfileComponent implements OnInit {
 			}
 		}
 	}
-	checkStatus () {
+	checkStatus() {
 		if (this.commonStu.studentdetails.editable_status === '1') {
 			return true;
 		} else {
