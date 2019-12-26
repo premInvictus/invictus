@@ -50,12 +50,14 @@ export class ViewGradecardDialogComponent implements OnInit {
   totalworkingdays = 0;
   totalpresentday = 0;
   attendenceInPercent = 0;
+  obtainedGradeAvgHighestCount = 0;
   obtainedGradeAvgHighest = {
     obtained: true,
     grade: false,
     avg: false,
     highest: false,
     remark:false,
+    subjectwise_bifurcation:false
   };
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
@@ -86,6 +88,22 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
       if(obj.remark && obj.remark == true) {
         this.obtainedGradeAvgHighest.remark = true;
+      }
+      if(obj.subjectwise_bifurcation && obj.subjectwise_bifurcation == true) {
+        this.obtainedGradeAvgHighest.subjectwise_bifurcation = true;
+      }
+      // manage colspan for term
+      if(this.obtainedGradeAvgHighest.obtained) {
+        this.obtainedGradeAvgHighestCount++;
+      }
+      if(this.obtainedGradeAvgHighest.grade) {
+        this.obtainedGradeAvgHighestCount++;
+      }
+      if(this.obtainedGradeAvgHighest.highest) {
+        this.obtainedGradeAvgHighestCount++;
+      }
+      if(this.obtainedGradeAvgHighest.avg) {
+        this.obtainedGradeAvgHighestCount++;
       }
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
@@ -304,6 +322,18 @@ export class ViewGradecardDialogComponent implements OnInit {
         });
       }
     })
+  }
+
+  getMaxMarksSub(sub_id, exam_id, term) {
+    
+  }
+
+  getCalculatedMarksSubsubject(sub_id, exam_id, term, subsubject_id) {
+    //console.log('this.subjectArray',this.subjectArray);
+    const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
+    let totalscore = 0;
+    totalscore = this.getCalculatedMarks(subsubject_id, exam_id, term);
+    return this.getTwoDecimalValue(totalscore/currentSub.childSub.length);
   }
   getCalculatedMarksSub(sub_id, exam_id, term) {
     //console.log('this.subjectArray',this.subjectArray);
@@ -722,7 +752,6 @@ export class ViewGradecardDialogComponent implements OnInit {
               }
               element.childSub = childSub;
               this.subjectArray.push(element);
-              //console.log('this.subjectArray', this.subjectArray);
             }
           });
         }
@@ -734,6 +763,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           }
         });
         this.sflag = true;
+        console.log('this.subjectArray', this.subjectArray);
         this.getExamDetails();
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');

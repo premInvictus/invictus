@@ -165,7 +165,8 @@ export class SetupComponent implements OnInit {
 						grade: '',
 						avg: '',
 						highest:'',
-						remark:''
+						remark:'',
+						subjectwise_bifurcation:''
 					})
 				})
 			},
@@ -286,9 +287,14 @@ export class SetupComponent implements OnInit {
 			ect_grade_avg_highest_str += 'Highest - No, '
 		}
 		if(value.remark) {
-			ect_grade_avg_highest_str += 'Remark - Yes'
+			ect_grade_avg_highest_str += 'Remark - Yes, '
 		} else {
-			ect_grade_avg_highest_str += 'Remark - No'
+			ect_grade_avg_highest_str += 'Remark - No, '
+		}
+		if(value.subjectwise_bifurcation) {
+			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes'
+		} else {
+			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - No'
 		}
 		return ect_grade_avg_highest_str;
 	}
