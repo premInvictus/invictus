@@ -31,6 +31,7 @@ export class ItemMasterReportsComponent implements OnInit {
   finalSet: any[] = [];
   reportType = '1';
   gridObj: any;
+  gridHeight: any;
   filterFlag = false;
   filterResult: any[] = [];
   sortResult: any[] = [];
@@ -233,20 +234,14 @@ export class ItemMasterReportsComponent implements OnInit {
             if (Number(i) === 1) {
               this.columnDefinitions = [
                 {
-                  id: 'srno',
-                  name: 'Sr.No.',
-                  field: 'srno',
-                  sortable: true,
-
-                },
-                {
                   id: 'item_code',
                   name: 'Item Code',
                   field: 'item_code',
                   sortable: true,
                   filterable: true,
                   filterSearchType: FieldType.string,
-                  filter: { model: Filters.compoundInput }
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
                 },
                 {
                   id: 'item_name',
@@ -296,6 +291,7 @@ export class ItemMasterReportsComponent implements OnInit {
                   filterable: true,
                   filterSearchType: FieldType.string,
                   filter: { model: Filters.compoundInput },
+                  width: 25,
                 }
               ];
             }
@@ -322,6 +318,15 @@ export class ItemMasterReportsComponent implements OnInit {
               this.dataset.push(obj);
             }
           }
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 300;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 400;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
           this.tableFlag = true;
           setTimeout(() => this.groupByDepartment(), 2);
         } else {
@@ -330,7 +335,6 @@ export class ItemMasterReportsComponent implements OnInit {
       });
 
     } else if (this.reportType === 'location') {
-      console.log('fffff');
       const collectionJSON: any = {
         "filters": [
           {
@@ -344,125 +348,120 @@ export class ItemMasterReportsComponent implements OnInit {
       this.inventory.filterItemsFromMaster(collectionJSON).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           repoArray = result.data;
-          let ind = 0;
-
+          let finalSet = [];
           for (let item of repoArray) {
-            let object: any = {};
             for (let titem of item.item_location) {
-              console.log(titem);
+              let object: any = {};
               object['item_code'] = item.item_code;
-              object['item_name'] = item.item_name;
+              object['item_name'] = new CapitalizePipe().transform(item.item_name);
               object['item_category'] = item.item_category.name;
               object['item_nature'] = item.item_nature.name;
               object['item_location'] = titem.location_id;
               object['item_reorder_level'] = item.item_reorder_level;
+              object['locs'] = item.locs;
               object['item_qty'] = titem.item_qty;
-              this.finalSet.push(object);
-              console.log('dddd', this.finalSet);
+              finalSet.push(object);
             }
           }
+          let ind = 0;
+          for (let item of finalSet) {
+            const obj = {};
+            if (Number(ind) === 0) {
+              this.columnDefinitions = [               
+                {
+                  id: 'item_code',
+                  name: 'Item Code',
+                  field: 'item_code',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
+                },
+                {
+                  id: 'item_name',
+                  name: 'Item name',
+                  field: 'item_name',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
+                },
+                {
+                  id: 'item_category',
+                  name: ' Department',
+                  field: 'item_category',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          // for (let item of repoArray) {
-          //   if (Number(ind) === 1) {
-          //     this.columnDefinitions = [
-          //       {
-          //         id: 'srno',
-          //         name: 'Sr.No.',
-          //         field: 'srno',
-          //         sortable: true,
+                },
+                {
+                  id: 'item_nature',
+                  name: ' Item Nautre',
+                  field: 'item_nature',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_code',
-          //         name: 'Item Code',
-          //         field: 'item_code',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput }
-          //       },
-          //       {
-          //         id: 'item_name',
-          //         name: 'Item name',
-          //         field: 'item_name',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
+                },
+                {
+                  id: 'item_location',
+                  name: ' Location',
+                  field: 'item_location',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_category',
-          //         name: ' Department',
-          //         field: 'item_category',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
+                },
+                {
+                  id: 'item_reorder_level',
+                  name: 'Reorder Level',
+                  field: 'item_reorder_level',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_nature',
-          //         name: ' Item Nautre',
-          //         field: 'item_nature',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_location',
-          //         name: ' Location',
-          //         field: 'item_location',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_reorder_level',
-          //         name: 'Reorder Level',
-          //         field: 'item_reorder_level',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_qty',
-          //         name: 'Quantity',
-          //         field: 'item_qty',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-          //       }
-          //     ];
-          //   }
-
-          //   const obj = {};
-          //   for (let titem of item.item_location) {
-
-          //     obj['id'] = titem.location_id.toString() + item.item_code;
-          //     obj['srno'] = ind;
-          //     obj['item_code'] = item.item_code;
-          //     obj['item_name'] = item.item_name;
-          //     obj['item_category'] = item.item_category.name;
-          //     obj['item_nature'] = item.item_nature.name;
-          //     obj['item_location'] = this.getLocation(titem.location_id, item.locs);
-          //     obj['item_reorder_level'] = item.item_reorder_level;
-          //     obj['item_qty'] = titem.item_qty;
-          //     this.dataset.push(obj);
-          //     console.log(this.dataset);
-          //   }
-          //   ind++;
-          // }
-          // this.tableFlag = true;
-          //setTimeout(() => this.groupByDepartment(), 2);
+                },
+                {
+                  id: 'item_qty',
+                  name: 'Quantity',
+                  field: 'item_qty',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
+                }
+              ];
+            }
+            obj['id'] = item.item_code + ind;
+            obj['item_code'] = item.item_code;
+            obj['item_name'] = new CapitalizePipe().transform(item.item_name);
+            obj['item_category'] = item.item_category;
+            obj['item_nature'] = item.item_nature;
+            obj['item_location'] = this.getLocation(item.item_location, item.locs);
+            obj['item_reorder_level'] = item.item_reorder_level;
+            obj['item_qty'] = item.item_qty;
+            this.dataset.push(obj);
+            ind++;
+          }
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 300;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 400;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
+          this.tableFlag = true;
+          setTimeout(() => this.groupByLocation(), 2);
         } else {
           this.tableFlag = true;
         }
@@ -494,6 +493,23 @@ export class ItemMasterReportsComponent implements OnInit {
       collapsed: false,
     });
     this.draggableGroupingPlugin.setDroppedGroups('item_category');
+  }
+  groupByLocation() {
+    this.dataviewObj.setGrouping({
+      getter: 'item_location',
+      formatter: (g) => {
+        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+      },
+      comparer: (a, b) => {
+        // (optional) comparer is helpful to sort the grouped data
+        // code below will sort the grouped value in ascending order
+        return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+      },
+      aggregators: this.aggregatearray,
+      aggregateCollapsed: true,
+      collapsed: false,
+    });
+    this.draggableGroupingPlugin.setDroppedGroups('item_location');
   }
   getLocation(id, array: any[]) {
     const findex = array.findIndex(f => Number(f.location_id) === Number(id));

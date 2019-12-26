@@ -125,5 +125,8 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/change-status/generatePdfOfReceipt', value);
   }
-
+  repairAndDamageItem(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/repairAndDamageItem', value);
+  }
 }
