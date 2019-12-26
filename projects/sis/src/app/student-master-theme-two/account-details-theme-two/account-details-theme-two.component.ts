@@ -56,6 +56,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	multipleFileArray: any[] = [];
 	counter: any = 0;
 	documentPath: any;
+	additionalFeeComponentArray: any[] = [];
+	userClassId:'';
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -80,6 +82,11 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getRoutes();
 	}
 	ngOnChanges() {
+		console.log('this.feeDet', this.feeDet);
+		if (this.feeDet && this.feeDet.class_id) {
+			this.userClassId = this.feeDet.class_id;
+		}
+		this.additionalFeeComponent();
 		this.renderData();
 	}
 	buildForm() {
@@ -88,6 +95,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			accd_login_id: '',
 			accd_fo_id: '',
 			accd_fs_id: '',
+			accd_afc_id: '',
 			accd_fcg_id: '',
 			accd_fcg_document: '',
 			accd_reason_id: '',
@@ -113,6 +121,17 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			accd_status: 1
 		});
 	}
+
+	additionalFeeComponent() {
+		this.feeService.getAdditionFeeHeadComponent({ fh_class_id:  this.userClassId  }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('additionalFeeComponentArray--', result.data);
+				this.additionalFeeComponentArray = result.data;
+			}
+		});
+	}
+
+
 	renderData() {
 		this.conStatus = '';
 		this.concessionArray = [];
@@ -194,7 +213,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_hostel_from: this.feeDet.accd_hostel_from.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_from,
 				accd_hostel_to: this.feeDet.accd_hostel_to.split('-')[0] === '1970' ? '' : this.feeDet.accd_hostel_to,
 				accd_ses_id: this.feeDet.ses_id,
-				accd_status: this.feeDet.accd_status
+				accd_status: this.feeDet.accd_status,
+				accd_afc_id: this.feeDet.accd_additional_fee_head ? JSON.parse(this.feeDet.accd_additional_fee_head) : []
 			});
 			this.setDesc({ value: this.feeDet.accd_fcg_id });
 			this.slabModel = this.feeDet.accd_ts_id;
@@ -455,10 +475,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
-				accd_status: '1'
+				accd_status: '1',
+				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.additionalFeeComponent();
 					 this.renderData();
 				}
 			});
@@ -492,10 +514,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_hostel_fcc_id: this.accountsForm.value.accd_hostel_fcc_id,
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
-				accd_status: this.accountsForm.value.accd_status
+				accd_status: this.accountsForm.value.accd_status,
+				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 			};
 			this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.additionalFeeComponent();
 					this.renderData();
 				}
 			});
