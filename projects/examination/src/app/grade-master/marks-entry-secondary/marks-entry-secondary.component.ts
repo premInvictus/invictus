@@ -406,16 +406,20 @@ export class MarksEntrySecondaryComponent implements OnInit {
       });
     } else */
     if (status !== '2') {
-      if (this.marksInputArray.length === this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
+      if (true) {
         if (this.paramform.valid && this.marksInputArray.length > 0) {
           const param: any = {};
           param.examEntry = this.paramform.value;
           param.examEntryMapping = this.marksInputArray;
           param.examEntryStatus = status;
+          param.marksInputArrayLength = this.marksInputArray.length;
+          param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
           param.savelog = savelog;
           this.examService.addMarksEntry(param).subscribe((result: any) => {
             if (result && result.status === 'ok') {
               this.displayData();
+            } else {
+              this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
           })
         }
@@ -428,9 +432,13 @@ export class MarksEntrySecondaryComponent implements OnInit {
         param.examEntry = this.paramform.value;
         param.examEntryMapping = this.marksInputArray;
         param.examEntryStatus = status;
+        param.marksInputArrayLength = this.marksInputArray.length;
+        param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
             this.displayData();
+          } else {
+            this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
           }
         })
       }
