@@ -256,10 +256,10 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	}
 
 	orderPayment(element) {
-		this.outStandingAmt = element.feedue;
-		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
-		// this.paymentOrderModel.openModal(this.outStandingAmt);
-		this.makePayment(element);
+		this.commonAPIService.showSuccessErrorMessage('Sorry ! This service is not Available', 'error');
+		// this.outStandingAmt = element.feedue;
+		// this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';		
+		// this.makePayment(element);
 	}
 
 	makePayment(element) {

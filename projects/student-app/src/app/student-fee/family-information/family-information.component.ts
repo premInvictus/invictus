@@ -63,10 +63,10 @@ export class FamilyInformationComponent implements OnInit {
 	
 
 	orderPayment(element) {
-		this.outStandingAmt = this.familyOutstandingArr['family_total_outstanding_amt'];
-		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
-		// this.paymentOrderModel.openModal(this.outStandingAmt);
-		this.makePayment(element);
+		this.common.showSuccessErrorMessage('Sorry ! This service is not Available', 'error');
+		// this.outStandingAmt = this.familyOutstandingArr['family_total_outstanding_amt'];
+		// this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
+		// this.makePayment(element);
 	}
 
 	makePayment(element) {
