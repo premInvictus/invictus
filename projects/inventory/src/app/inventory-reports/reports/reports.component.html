@@ -61,11 +61,10 @@
                 </app-outstanding-report> -->
                 <app-procurement-report (displyRep)="displyRep($event)" *ngIf="reportType === '3'">
                 </app-procurement-report>
+                <app-store-ledger (displyRep)="displyRep($event)" *ngIf="reportType === '4'">
+                </app-store-ledger>
                 <app-repair-damaged-report (displyRep)="displyRep($event)" *ngIf="reportType === '5'">
                 </app-repair-damaged-report>
-
-
-
               </div>
             </div>
           </mat-expansion-panel>
