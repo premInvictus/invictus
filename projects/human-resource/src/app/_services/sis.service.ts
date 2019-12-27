@@ -138,4 +138,22 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
 	}
+	getTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
+	}
+
+	saveTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/insertNotificationTemplate', value);
+	}
+
+	updateTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/notificationTemplate/updateNotificationTemplate', value);
+	}
+	getAllStudentsByClassSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
+	}
 }
