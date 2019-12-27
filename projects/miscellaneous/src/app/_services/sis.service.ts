@@ -176,4 +176,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/notificationSMS/deleteSMSScheduler', value);
 	}
+	getAllStudentsByClassSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
+	}
 }

@@ -84,10 +84,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 		console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
-			console.log('studentDetails--', this.studentDetails);
-			if ( this.studentDetails.studentdetails) {
-				this.getFeeAccount(this.feeLoginId);
-			}
+			
+			this.getFeeAccount(this.feeLoginId);
+			
 			
 		}
 	}
@@ -124,8 +123,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		});
 	}
 
-	additionalFeeComponent() {
-		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: this.studentDetails && this.studentDetails.studentdetails && this.studentDetails.studentdetails.au_class_id ? this.studentDetails.studentdetails.au_class_id : ''  }).subscribe((result: any) => {
+	additionalFeeComponent(class_id) {
+		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : ''  }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('additionalFeeComponentArray--', result.data);
 				this.additionalFeeComponentArray = result.data;
@@ -224,7 +223,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				console.log('this.accountsForm', this.accountsForm);
 				this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 				this.slabModel = this.accountDetails.accd_ts_id;
-				this.additionalFeeComponent();
+				this.additionalFeeComponent(this.accountDetails.class_id);
 			} else {
 				this.accountsForm.reset();
 				this.transportFlag = false;

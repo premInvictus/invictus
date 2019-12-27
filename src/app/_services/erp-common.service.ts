@@ -564,6 +564,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiInvUrl + '/vendor/getAll', value);
 	}
 
+	getSectionsByClassMultiple(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionsByClassMultiple', value);
+	}
+
 }
 
 
