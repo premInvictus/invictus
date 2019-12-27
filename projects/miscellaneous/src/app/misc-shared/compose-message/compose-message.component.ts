@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
+import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
@@ -37,6 +38,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	showUser = false;
 	showClass = false;
 	selectedUserArr: any[] = [];
+	tempSelectedUserArr: any[] = [];
 	currentScheduleId;
 	not_id = 0;
 	addMode = true;
@@ -44,18 +46,24 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	viewMode = false;
 	formData = {};
 	currentUser: any;
-	msgMultipleCount = 1;
+	msgMultipleCount = 0;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	showSearchFlag = false;
+	finClassDataArr: any[] = [];
+	finUserDataArr: any[] = [];
+	selectedUserCount = 0;
+	showSearchByUserFlag = false;
+
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService,
+		private erpCommonService: ErpCommonService,
 		private dialog: MatDialog
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		
+
 	}
 
 	ngOnInit() {
@@ -63,13 +71,21 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	ngOnChanges() {
-		console.log('this.reRenderForm', this.reRenderForm);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		console.log(this.reRenderForm);
 		if (this.reRenderForm.editMode) {
+			this.messageForm = this.fbuild.group({
+				messageType: this.reRenderForm && this.reRenderForm.messageType ? this.reRenderForm.messageType : '',
+			});
 			this.setFormData(this.reRenderForm.formData);
 		} else if (this.reRenderForm.addMode) {
 			//this.buildForm();
+			this.messageForm = this.fbuild.group({
+				messageType: this.reRenderForm && this.reRenderForm.messageType ? this.reRenderForm.messageType : '',
+			});
 		}
+
+		console.log(this.messageForm);
 
 	}
 
@@ -77,23 +93,25 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.ckeConfig = ckconfig;
 		this.selectedUserArr = [];
 		this.messageForm = this.fbuild.group({
-			tpl_id: '',
-			messageType: '',
+			tpl_id: '0',
+			messageType: this.reRenderForm && this.reRenderForm.messageType ? this.reRenderForm.messageType : '',
 			messageTemplate: '',
 			messageTitle: '',
 			messageTo: '',
 			messageSubject: '',
 			messageBody: ''
 		});
+		console.log('in');
+		this.getTemplate();
 	}
 
 	setFormData(formData) {
+		console.log('formData--',formData);
 		this.editMode = true;
 		this.formData = formData;
-		console.log('this.formData--', this.formData);
-		this.messageForm = this.fbuild.group({
-			messageType: formData && formData.messageType ? formData.messageType : '',
-		});
+		// this.messageForm = this.fbuild.group({
+		// 	messageType: formData && formData.messageType ? formData.messageType : '',
+		// });
 		this.currentReceivers = formData && formData.user_type ? formData.user_type : '';
 		this.currentScheduleId = formData && formData.msg_id ? formData.msg_id : '';
 		this.attachmentArray = formData.attachment == '' ? [] : formData.attachment;
@@ -104,14 +122,13 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			if (result && result.data && result.data[0]) {
 				this.templateDataArr = result.data;
 				if (this.editMode) {
-					this.editTemplate({ value: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '' });
+					this.editTemplate({ value: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '0' });
 				}
 			}
 		});
 	}
 
 	getTemplate() {
-		this.resetFormValues();
 		this.templateDataArr = [];
 		const inputJson = {
 			tpl_type: this.messageForm.value.messageType
@@ -124,16 +141,18 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	editTemplate(event) {
-		this.editTemplateFlag = true;
+		
+		(event && event.value != '0') ? this.editTemplateFlag = true : this.editTemplateFlag = false;
 		const templateData = this.templateDataArr.filter((tplObj) => {
 			return tplObj.tpl_id.toString() === event.value.toString();
 		});
+
 		this.selectedUserArr = [];
-		console.log('templateData--', templateData);
+		this.messageForm.patchValue({tpl_id: (event && event.value != '0') ? event.value : ''});
 		if (templateData && templateData.length > 0) {
 			if (this.editMode) {
 				this.messageForm.patchValue({
-					tpl_id: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '',
+					//tpl_id: event && event.value ? event.value : '',
 					messageTemplate: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'].toString() : '',
 					messageType: this.formData && this.formData['messageType'] ? this.formData['messageType'] : '',
 					messageTitle: templateData[0]['tpl_title'],
@@ -157,7 +176,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 			} else {
 				this.messageForm.patchValue({
-					tpl_id: templateData ? templateData[0]['tpl_id'] : '',
+					//tpl_id: event && event.value ? event.value : '',
 					messageTitle: templateData ? templateData[0]['tpl_title'] : '',
 					messageSubject: templateData ? templateData[0]['tpl_subject'] : '',
 					messageBody: templateData ? templateData[0]['tpl_body'] : '',
@@ -166,7 +185,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 		} else if (this.editMode) {
 			this.messageForm.patchValue({
-				tpl_id: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '',
+				//tpl_id: event && event.value ? event.value : '',
 				messageTemplate: this.formData && this.formData['tpl_id'] ? this.formData['tpl_id'] : '',
 				messageType: this.formData && this.formData['messageType'] ? this.formData['messageType'] : '',
 				messageTitle: this.formData && this.formData['tpl_title'] ? this.formData['tpl_title'] : '',
@@ -192,6 +211,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	saveTemplate() {
+		console.log('this.messageForm.value--', this.messageForm.value);
 		if (this.messageForm.valid) {
 			const inputJson = {
 				'tpl_title': this.messageForm.value.messageTitle,
@@ -206,8 +226,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					if (result) {
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
-						//this.reset();
 						this.getTemplate();
+						this.editTemplateFlag = true;
 					}
 				});
 			} else {
@@ -215,8 +235,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					if (result) {
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
-						//this.reset();
 						this.getTemplate();
+						this.editTemplateFlag = true;
+						this.messageForm.patchValue({
+							tpl_id : this.templateDataArr && this.templateDataArr.length > 0 ? Number(this.templateDataArr.length)  : 1
+						});
 					}
 				});
 			}
@@ -248,6 +271,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	getUser(role_id) {
+		this.showSearchFlag = false;
+		this.showSearchByUserFlag = false;
 		this.classDataArr = [];
 		if (role_id === '2') {
 			this.currentReceivers = 'Staff';
@@ -274,6 +299,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						checked: false,
 					}
 					this.classDataArr.push(inputJson);
+					this.finClassDataArr.push(inputJson);
 				}
 				this.showClass = true;
 			}
@@ -282,9 +308,24 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	generateUserList() {
 		var checkedClassIds = [];
+		var classSectionJson = {};
 		for (var i = 0; i < this.classDataArr.length; i++) {
+			var classJson = {};
+			var secCheckFlag = false;
 			if (this.classDataArr[i]['checked']) {
-				checkedClassIds.push(this.classDataArr[i]['class_id']);
+				classJson['class_id'] = this.classDataArr[i]['class_id'];
+				for (var j = 0; j < this.classDataArr[i]['sec_arr'].length; j++) {
+					if (this.classDataArr[i]['sec_arr'][j]['checked']) {
+						var classJson = {};
+						secCheckFlag = true;
+						classJson['class_id'] = this.classDataArr[i]['class_id'];
+						classJson['sec_id'] = this.classDataArr[i]['sec_arr'][j]['sec_id'];
+						checkedClassIds.push(classJson);
+					}
+				}
+				if (!secCheckFlag) {
+					checkedClassIds.push(classJson);
+				}
 			}
 		}
 		const inputJson = {};
@@ -310,6 +351,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
+
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -341,6 +384,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -351,10 +395,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 			});
 		} else if (this.currentReceivers === 'Student') {
-			inputJson['class_ids'] = checkedClassIds[0];
-			inputJson['pmap_status'] = '1';
+			inputJson['class_ids'] = checkedClassIds;
 			this.userDataArr = [];
-			this.sisService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
+			this.sisService.getAllStudentsByClassSection(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -384,6 +427,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						}
 
 						this.userDataArr.push(inputJson);
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -462,42 +506,101 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	selectAllClass(event) {
 		if (event.checked === true) {
-			this.classDataArr.map((item) => {
+			this.classDataArr.map((item, index) => {
 				item.checked = true;
+				this.getSectionsByClass({ class_id: this.classDataArr[index]['class_id'] }, index, true);
 			});
+
 		} else {
-			this.classDataArr.map((item) => {
+			this.classDataArr.map((item, index) => {
 				item.checked = false;
+				this.classDataArr[index]['sec_arr'] = [];
 			});
 		}
+		this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
 	}
 
 	selectAllUser(event) {
 		if (event.checked === true) {
-			this.userDataArr.map((item) => {
+			this.userDataArr.map((item, index) => {
 				item.checked = true;
+				this.setSelectedUserData(this.userDataArr[index]);
 			});
-
+			this.selectedUserCount = this.userDataArr.length;
 		} else {
 			this.userDataArr.map((item) => {
 				item.checked = false;
+
 			});
+			this.selectedUserCount = 0;
 		}
+		this.finUserDataArr = JSON.parse(JSON.stringify(this.userDataArr));
 	}
 
 	updateClassCheck(i, event) {
 		if (event.checked) {
 			this.classDataArr[i]['checked'] = true;
+			this.finClassDataArr[i]['checked'] = true;
+			this.getSectionsByClass({ class_id: this.classDataArr[i]['class_id'] }, i, '');
 		} else {
 			this.classDataArr[i]['checked'] = false;
+			this.finClassDataArr[i]['checked'] = false;
+			this.classDataArr[i]['sec_arr'] = [];
 		}
+		//this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
+	}
+
+	updateClassSectionCheck(i, j, event) {
+		if (event.checked) {
+			this.classDataArr[i]['checked'] = true;
+			this.classDataArr[i]['sec_arr'][j]['checked'] = true;
+			this.finClassDataArr[i]['checked'] = true;
+			this.finClassDataArr[i]['sec_arr'][j]['checked'] = true;
+		} else {
+			this.classDataArr[i]['checked'] = false;
+			this.classDataArr[i]['sec_arr'][j]['checked'] = false;
+			this.finClassDataArr[i]['checked'] = false;
+			this.finClassDataArr[i]['sec_arr'][j]['checked'] = false;
+		}
+		//this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
 	}
 
 	updateUserCheck(i, event) {
 		if (event.checked) {
 			this.userDataArr[i]['checked'] = true;
+			this.finUserDataArr[i]['checked'] = true;
+			this.selectedUserCount++;
+			this.setSelectedUserData(this.userDataArr[i]);
 		} else {
 			this.userDataArr[i]['checked'] = false;
+			this.finUserDataArr[i]['checked'] = false;
+			this.selectedUserCount--;
+		}
+	}
+
+	setSelectedUserData(userDataArr) {		
+		if (userDataArr) {
+			var flag = false;
+			for (var i=0; i<this.selectedUserArr.length;i++) {
+				if (Number(this.selectedUserArr[i]['login_id']) === Number(userDataArr['au_login_id'])) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				var inputJson = {
+					login_id: userDataArr['au_login_id'],
+					class_id: userDataArr['class_id'],
+					sec_id: userDataArr['sec_id'],
+					class_name: userDataArr['class_name'],
+					sec_name: userDataArr['sec_name'],
+					email: userDataArr['au_email'],
+					au_full_name: userDataArr['au_full_name'],
+					mobile: userDataArr['au_mobile'],
+					role_id: userDataArr['au_role_id'],
+				};
+				this.tempSelectedUserArr.push(inputJson);
+			}
 		}
 	}
 
@@ -505,23 +608,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.showUser = false;
 		this.showClass = false;
 		this.showUserContextMenu = false;
-		for (let i = 0; i < this.userDataArr.length; i++) {
-			if (this.userDataArr[i]['checked']) {
-				var inputJson = {
-					login_id: this.userDataArr[i]['au_login_id'],
-					class_id: this.userDataArr[i]['class_id'],
-					sec_id: this.userDataArr[i]['sec_id'],
-					class_name: this.userDataArr[i]['class_name'],
-					sec_name: this.userDataArr[i]['sec_name'],
-					email: this.userDataArr[i]['au_email'],
-					au_full_name: this.userDataArr[i]['au_full_name'],
-					mobile: this.userDataArr[i]['au_mobile'],
-					role_id: this.userDataArr[i]['au_role_id'],
-				};
-				this.selectedUserArr.push(inputJson);
-
-			}
-		}
+		this.selectedUserCount = 0;
+		this.selectedUserArr = JSON.parse(JSON.stringify(this.tempSelectedUserArr));
 	}
 
 	backToUserList() {
@@ -545,205 +633,6 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	deleteUser(i) {
 		this.selectedUserArr.splice(i, 1);
 	}
-
-	// sendEmailSchedule() {
-	// 	if (this.messageForm.value.messageSubject === '') {
-	// 		this.commonAPIService.showSuccessErrorMessage('Please Fill Email Subject to send Email', 'error');
-	// 	} else {
-	// 		if (this.selectedUserArr.length <= 0) {
-	// 			this.commonAPIService.showSuccessErrorMessage('Please Choose Atleast one ' + this.currentReceivers + ' to whom you want to send Email', 'error');
-	// 		} else {
-	// 			let inputJsonForSchedule = {};
-	// 			inputJsonForSchedule = {
-	// 				ns_schedule_date: this.sendForm.value.schedule_date,
-	// 				ns_schedule_time: this.sendForm.value.schedule_time,
-	// 				ns_title: this.messageForm.value.messageSubject,
-	// 				ns_schedule_status: this.showScheduleBox ? 'S' : 'I',
-	// 				ns_template_id: this.messageForm.value.tpl_id,
-	// 				ns_desc: this.messageForm.value.messageBody,
-	// 				ns_attachments: JSON.stringify(this.attachmentArray),
-	// 				ns_type: this.messageForm.value.messageType
-	// 			};
-	// 			if (this.editMode && this.currentScheduleId > 0) {
-	// 				inputJsonForSchedule['scheduleId'] = this.currentScheduleId;
-	// 			}
-
-	// 			if (this.editMode && this.currentScheduleId > 0) {
-	// 				inputJsonForSchedule['scheduleId'] = this.currentScheduleId;
-	// 			}
-
-	// 			this.sisService.insertEmailScheduler(inputJsonForSchedule).subscribe((result: any) => {
-	// 				if (result && result.data && result.data) {
-	// 					if (result.data['schedule_id'] !== '0') {
-	// 						this.currentScheduleId = result.data['schedule_id'];
-	// 					}
-	// 					this.commonAPIService.showSuccessErrorMessage('Email Data Scheduled Successfully', 'success');
-	// 					this.generateEmailData();
-	// 				}
-	// 			});
-
-
-	// 		}
-	// 	}
-
-	// }
-
-	// generateEmailData() {
-	// 	const generateEmailDataArr = [];
-	// 	if (this.messageForm.value.tpl_subject !== '') {
-	// 		if (this.selectedUserArr.length > 0) {
-	// 			if (this.messageForm.value.messageType === 'S') {
-	// 				this.sendSMSSchedule();
-	// 			} else {
-	// 				let inputJsonForEmail = {};
-	// 				const finalJsonForEmail = {};
-	// 				let currentReceiver = '';
-	// 				if (this.currentReceivers === 'Student') {
-	// 					currentReceiver = 'S';
-	// 				} else if (this.currentReceivers === 'Parent') {
-	// 					currentReceiver = 'P';
-	// 				} else if (this.currentReceivers === 'Teacher') {
-	// 					currentReceiver = 'T';
-	// 				}
-
-	// 				for (let i = 0; i < this.selectedUserArr.length; i++) {
-	// 					inputJsonForEmail = {
-	// 						'not_ns_id': this.currentScheduleId,
-	// 						'not_receivers': currentReceiver,
-	// 						'not_receiver_class_id': this.selectedUserArr[i]['class_id'] ? this.selectedUserArr[i]['class_id'] : 0,
-	// 						'not_receiver_sec_id': this.selectedUserArr[i]['sec_id'] ? this.selectedUserArr[i]['sec_id'] : 0,
-	// 						'not_sent_status': 'P',
-	// 						'not_receiver_email': this.selectedUserArr[i]['email'],
-	// 						'not_receiver_login_id': this.selectedUserArr[i]['login_id'],
-	// 					};
-
-	// 					generateEmailDataArr.push(inputJsonForEmail);
-	// 				}
-
-	// 				if (this.editMode && this.not_id) {
-	// 					finalJsonForEmail['not_id'] = this.not_id;
-	// 				}
-	// 				finalJsonForEmail['email_data'] = generateEmailDataArr;
-	// 				this.sisService.insertEmailData(finalJsonForEmail).subscribe((result: any) => {
-	// 					if (result) {
-	// 						if (!this.showScheduleBox) {
-	// 							this.sendEmail(this.currentScheduleId);
-	// 						} else {
-	// 							this.resetForm();
-	// 						}
-	// 					}
-	// 				});
-
-	// 			}
-
-	// 		} else {
-	// 			this.commonAPIService.showSuccessErrorMessage('Please Choose Atleast one ' + this.currentReceivers + ' to whom you want to send Email', 'error');
-	// 		}
-	// 	} else {
-	// 		this.commonAPIService.showSuccessErrorMessage('Please Fill Subject to send Email', 'error');
-	// 	}
-	// }
-
-	// sendEmail(schedule_id) {
-	// 	this.sisService.sendEmail({ schedule_id }).subscribe((result: any) => {
-	// 		this.commonAPIService.showSuccessErrorMessage('Email has been Sent Successfully', 'success');
-	// 		this.resetForm();
-	// 		this.back();
-	// 	});
-	// }
-
-	// sendSMSSchedule() {
-	// 	const inputJsonForSchedule = {
-	// 		ns_schedule_date: this.messageForm.value.schedule_date,
-	// 		ns_schedule_time: this.messageForm.value.schedule_time,
-	// 		ns_title: this.messageForm.value.messageSubject,
-	// 		ns_schedule_status: this.showScheduleBox ? 'S' : 'I',
-	// 		ns_template_id: this.messageForm.value.tpl_id,
-	// 		ns_desc: this.messageForm.value.messageBody,
-	// 		ns_attachments: JSON.stringify([]),
-	// 		ns_type: 'S'
-	// 	};
-
-	// 	if (this.editMode && this.currentScheduleId > 0) {
-	// 		inputJsonForSchedule['scheduleId'] = this.currentScheduleId;
-	// 	}
-
-	// 	this.sisService.insertSMSScheduler(inputJsonForSchedule).subscribe((result: any) => {
-	// 		if (result && result.data && result.data) {
-	// 			if (result.data['schedule_id'] !== '0') {
-	// 				this.currentScheduleId = result.data['schedule_id'];
-	// 			}
-	// 			this.generateSMSData();
-	// 		}
-	// 	});
-
-
-	// }
-
-	// generateSMSData() {
-	// 	const generateSMSDataArr = [];
-	// 	if (this.selectedUserArr.length > 0) {
-
-	// 		let inputJsonForSMS = {};
-	// 		const finalJsonForSMS = {};
-	// 		let currentReceiver = '';
-	// 		if (this.currentReceivers === 'Student') {
-	// 			currentReceiver = 'S';
-	// 		} else if (this.currentReceivers === 'Parent') {
-	// 			currentReceiver = 'P';
-	// 		} else if (this.currentReceivers === 'Teacher') {
-	// 			currentReceiver = 'T';
-	// 		}
-
-	// 		for (let i = 0; i < this.selectedUserArr.length; i++) {
-	// 			inputJsonForSMS = {
-	// 				'not_ns_id': this.currentScheduleId,
-	// 				'not_receivers': currentReceiver,
-	// 				'not_receiver_class_id': this.selectedUserArr[i]['class_id'] ? this.selectedUserArr[i]['class_id'] : 0,
-	// 				'not_receiver_sec_id': this.selectedUserArr[i]['sec_id'] ? this.selectedUserArr[i]['sec_id'] : 0,
-	// 				'not_sent_status': 'P',
-	// 				'not_receiver_contact': this.selectedUserArr[i]['mobile'],
-	// 				'not_receiver_login_id': this.selectedUserArr[i]['login_id'],
-	// 			};
-	// 			generateSMSDataArr.push(inputJsonForSMS);
-	// 		}
-
-	// 		if (this.editMode && this.not_id) {
-	// 			finalJsonForSMS['not_id'] = this.not_id;
-	// 		}
-	// 		finalJsonForSMS['sms_data'] = generateSMSDataArr;
-	// 		this.sisService.insertSMSData(finalJsonForSMS).subscribe((result: any) => {
-	// 			if (result) {
-	// 				this.commonAPIService.showSuccessErrorMessage('SMS has been sent Successfully', 'success');
-	// 				if (!this.showScheduleBox) {
-	// 					this.sendSMS(this.currentScheduleId);
-	// 				} else {
-	// 					this.back();
-	// 					this.resetForm();
-	// 				}
-
-	// 			}
-	// 		});
-
-	// 	} else {
-	// 		this.commonAPIService.showSuccessErrorMessage('Please Choose Atleast one ' + this.currentReceivers + ' to whom you want to send SMS', 'error');
-	// 	}
-	// }
-
-	// sendSMS(schedule_id) {
-	// 	this.sisService.sendSMS({ schedule_id }).subscribe((result: any) => {
-	// 		if (result && result.status === 'ok') {
-	// 			const xhr = new XMLHttpRequest();
-	// 			xhr.open('GET', result.sms_send_result, true);
-	// 			xhr.send();
-	// 			this.resetForm();
-	// 			this.back();
-
-	// 		}
-	// 	});
-
-
-	// }
 
 	sendMessage() {
 		var validationFlag = this.checkValidation();
@@ -775,8 +664,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
-				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name,  "login_id" : this.currentUser.login_id}],
-				"msg_created_by" : {"login_id" : this.currentUser.login_id , "login_name" : this.currentUser.full_name},
+				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
 			}
 
@@ -791,13 +680,13 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						this.commonAPIService.showSuccessErrorMessage('Error While Updating Message', 'error');
 					}
 				});
-			} else {			
-				
+			} else {
+
 				if (this.messageForm.value.messageType === 'S') {
-					var consumeMessage = Math.round(this.msgMultipleCount * (this.selectedUserArr.length));
-					
+					var consumeMessage = this.msgMultipleCount * (this.selectedUserArr.length);
+
 					inputJson['delTitle'] = "Information";
-					inputJson['delMessage'] = "This will consume "+consumeMessage+" SMS"+"<br/> Would you like to broadcast this message as shown";
+					inputJson['delMessage'] = "This will consume " + consumeMessage + " SMS" + "<br/> Would you like to broadcast this message as shown";
 					this.deleteModal.openModal(inputJson);
 				} else {
 					this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
@@ -810,24 +699,14 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						}
 					});
 				}
-				
-				
 			}
-		}		
+		}
 	}
 
 	onBodyChange(event) {
-		//console.log(this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length);
-		var tempmsgMultipleCount = Math.round((this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length / 160)) ;
-		if (tempmsgMultipleCount <= 0 )  {
-			this.msgMultipleCount = 1;
-		} else {
-			this.msgMultipleCount = tempmsgMultipleCount;
-		}
-		if (this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length > 160) {
-			this.msgMultipleCount = Math.round(this.msgMultipleCount + ((this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim().length % 160) > 0 ? 1 : 1));
-		}
-		
+		this.messageForm.value.messageBody = this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim();
+		this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
+		this.msgMultipleCount = Math.ceil(this.msgMultipleCount);
 	}
 
 	sendSMS(inputJson) {
@@ -843,7 +722,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	checkValidation() {
-		this.msgMultipleCount = 1;
+		// this.msgMultipleCount = 0;
 		var validationStatus = false;
 		if (this.messageForm.value.messageSubject === '') {
 			validationStatus = false;
@@ -854,11 +733,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				this.commonAPIService.showSuccessErrorMessage('Please Choose Atleast one ' + this.currentReceivers + ' to whom you want to send Message', 'error');
 			} else if (this.messageForm.value.messageType === 'S') {
 				if (this.messageForm.value.messageBody.length > 160) {
-					//validationStatus = false;
 					validationStatus = true;
-					this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-					this.msgMultipleCount = this.msgMultipleCount + ((this.messageForm.value.messageBody.length % 160) > 0 ? 1 : 1);
-					//this.commonAPIService.showSuccessErrorMessage('You can use only 160 character for message', 'error');
+					this.msgMultipleCount = Math.ceil(this.msgMultipleCount);
 				} else {
 					validationStatus = true;
 				}
@@ -872,10 +748,13 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 
 	resetForm() {
+		this.msgMultipleCount = 0;
 		this.messageForm.reset();
 		this.selectedUserArr = [];
 		this.attachmentArray = [];
 		this.editTemplateFlag = false;
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
 	}
 
 	resetFormValues() {
@@ -883,6 +762,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.attachmentArray = [];
 		this.selectedUserArr = [];
 		this.editTemplateFlag = false;
+		this.tempSelectedUserArr = [];
 		this.messageForm.patchValue({
 			tpl_id: '',
 			messageTemplate: '',
@@ -890,7 +770,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			messageTo: '',
 			messageSubject: '',
 			messageBody: ''
-		})
+		});
+		this.msgMultipleCount = 0;
+		this.selectedUserCount = 0;
 	}
 
 	back() {
@@ -903,14 +785,19 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	removeAll() {
 		this.selectedUserArr = [];
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
 	}
 
 	showSearch() {
 		this.showSearchFlag = !this.showSearchFlag;
 	}
 
+	showSearchByUser() {
+		this.showSearchByUserFlag = !this.showSearchByUserFlag;
+	}
+
 	searchByClass(event) {
-		console.log(event.target.value);
 		if (event.target.value) {
 			var tempArr = [];
 			for (var i = 0; i < this.classDataArr.length; i++) {
@@ -922,13 +809,56 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				this.classDataArr = tempArr;
 			}
 		} else {
-			this.getClass();
+			this.classDataArr = this.finClassDataArr;
 		}
-		
-		
 	}
 
 	cancelSearchByClass() {
-		this.getClass();
+		this.showSearchFlag = false;
+		this.classDataArr = this.finClassDataArr;
+	}
+
+	cancelSearchByUser() {
+		this.showSearchByUserFlag = false;
+		this.userDataArr = this.finUserDataArr;
+	}
+
+	getSectionsByClass(inputJson, i, selectAllflag) {
+		this.erpCommonService.getSectionsByClass(inputJson).subscribe((result: any) => {
+			if (this.classDataArr && this.classDataArr[i]) {
+				this.classDataArr[i]['sec_arr'] = [];
+				this.finClassDataArr[i]['sec_arr'] = [];
+			}
+
+			let secDataArr = [];
+			if (result && result.data) {
+				for (var j = 0; j < result.data.length; j++) {
+					var inputJson = {
+						sec_id: result.data[j]['sec_id'],
+						sec_name: result.data[j]['sec_name'],
+						checked: selectAllflag ? selectAllflag : false,
+					}
+					secDataArr.push(inputJson);
+				}
+				this.classDataArr[i]['sec_arr'] = secDataArr;
+				this.finClassDataArr[i]['sec_arr'] = secDataArr;
+			}
+		});
+	}
+
+	searchByUser(event) {
+		if (event.target.value) {
+			var tempArr = [];
+			for (var i = 0; i < this.userDataArr.length; i++) {
+				if (this.userDataArr[i]['au_full_name'].toLowerCase().includes(event.target.value)) {
+					tempArr.push(this.userDataArr[i]);
+				}
+			}
+			if (tempArr.length > 0) {
+				this.userDataArr = tempArr;
+			}
+		} else {
+			this.userDataArr = this.finUserDataArr;
+		}
 	}
 }
