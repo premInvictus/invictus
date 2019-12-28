@@ -131,5 +131,12 @@ export class InventoryService {
   }
   getStockLedger() {
     return this.http.get(environment.apiInvUrl + '/requistion-master/getStockLedger');
+  } 
+  getConsumption() {
+    return this.http.get(environment.apiInvUrl + '/requistion-master/getConsumption');
+  }
+  getItemsFromMaster(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/configuration/getAllItemsFromMaster',value);
   }
 }

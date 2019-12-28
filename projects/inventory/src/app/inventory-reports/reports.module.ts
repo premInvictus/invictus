@@ -11,6 +11,7 @@ import { ItemMasterReportsComponent } from './item-master-reports/item-master-re
 import { ProcurementReportComponent } from './procurement-report/procurement-report.component';
 import { RepairDamagedReportComponent } from './repair-damaged-report/repair-damaged-report.component';
 import { StoreLedgerComponent } from './store-ledger/store-ledger.component';
+import { ConsumptionReportsComponent } from './consumption-reports/consumption-reports.component';
 
 
 const moment = _moment;
@@ -38,7 +39,8 @@ export const MY_FORMATS = {
 		ItemMasterReportsComponent,
 		ProcurementReportComponent,
 		RepairDamagedReportComponent,
-		StoreLedgerComponent
+		StoreLedgerComponent,
+		ConsumptionReportsComponent
 	],
 	entryComponents: [],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

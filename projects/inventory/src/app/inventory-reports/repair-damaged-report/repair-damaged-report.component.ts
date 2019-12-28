@@ -268,12 +268,30 @@ export class RepairDamagedReportComponent implements OnInit {
         filterSearchType: FieldType.string,
         filter: { model: Filters.compoundInput },
         width: 25,
+        grouping: {
+          getter: 'item_code',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       },
       {
         id: 'item_name', name: 'Item name', field: 'item_name',
         filterable: true,
         filterSearchType: FieldType.string,
         filter: { model: Filters.compoundInput },
+        grouping: {
+          getter: 'item_name',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
 
       },
       {
@@ -294,13 +312,31 @@ export class RepairDamagedReportComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 40,
+        grouping: {
+          getter: 'created_date',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
 
       },
       {
         id: 'created_by', name: 'Created By', field: 'created_by', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 80
+        width: 80,
+        grouping: {
+          getter: 'created_by',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
     ];
     this.inventory.repairAndDamageItem({ 'change_to': $event.value }).subscribe((result: any) => {
