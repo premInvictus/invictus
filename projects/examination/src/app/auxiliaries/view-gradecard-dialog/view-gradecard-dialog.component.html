@@ -251,7 +251,7 @@
                                                 Scholastic
                                                 Areas</th>
                                             <ng-container *ngIf="term == data.param.eme_term_id">
-                                                <th [attr.colspan]="sexamArray.length*2 + obtainedGradeAvgHighestCount"
+                                                <th [attr.colspan]="sexamArray.length + exambifurcateCount + obtainedGradeAvgHighestCount"
                                                     class="custom-th text-center">
                                                     Term
                                                     -{{term}}
@@ -267,7 +267,7 @@
                                         <tr class="custom-tr">
                                             <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
                                             <ng-container *ngFor="let item of sexamArray">
-                                                <th [attr.colspan]="2" class="custom-th text-center">
+                                                <th [attr.colspan]="getExambirfurcateColspan(item)" class="custom-th text-center">
                                                     {{item.exam_name | titlecase}}
                                                     <br>({{item.exam_weightage}})</th>
                                             </ng-container>
@@ -329,7 +329,7 @@
                                                         </td>
                                                     </ng-container>
                                                     <ng-container *ngFor="let item of sexamArray">
-                                                        <td class="custom-td"></td>
+                                                        <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks"></td>
                                                         <td class="custom-td">
                                                             {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
                                                         </td>
@@ -365,7 +365,7 @@
                                                     <td class="custom-td text-left padding-left-8px">
                                                         {{sub.childSub[0].sub_name}}</td>
                                                     <ng-container *ngFor="let item of sexamArray">
-                                                        <td class="custom-td">
+                                                        <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks">
                                                             {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub.childSub[0].sub_id)}}
                                                         </td>
                                                         <td [attr.rowspan]="sub.childSub.length" class="custom-td">
@@ -395,7 +395,7 @@
                                                             {{sub1.sub_name}}
                                                         </td>
                                                         <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td">
+                                                            <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks">
                                                                 {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub1.sub_id)}}
                                                             </td>
                                                         </ng-container>
@@ -407,7 +407,7 @@
                                             <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
                                                 Total({{getTotalMainSubject()}}
                                                 main subject)</td>
-                                            <td class="custom-td" [attr.colspan]="sexamArray.length*2"></td>
+                                            <td class="custom-td" [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
                                             <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
                                                 {{getPassTotalPercentage(term)}}%</td>
                                             <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>

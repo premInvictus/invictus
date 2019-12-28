@@ -14,7 +14,7 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 })
 export class ExamComponent implements OnInit {
 	displayedColumns: string[] = ['exam_name', 'exam_category', 'exam_class',
-		'exam_sub_exam', 'exam_sub_exam_max_marks', 'exam_calculation_rule', 'exam_weightage', 'status', 'action'];
+		'exam_sub_exam', 'exam_sub_exam_max_marks', 'exam_calculation_rule', 'exam_weightage', 'exam_bifurcate', 'status', 'action'];
 	@ViewChild('deleteModal') deleteModal;
 	examForm: FormGroup;
 	currentUser: any; 
@@ -68,7 +68,10 @@ export class ExamComponent implements OnInit {
 			exam_max_marks: '',
 			exam_sub_exam_max_marks: '',
 			exam_calculation_rule: '',
-			exam_weightage: ''
+			exam_weightage: '' ,
+			exam_bifurcate: this.fbuild.group({
+				bifurcated_marks: false
+			})
 
 		});
 	}
@@ -83,7 +86,10 @@ export class ExamComponent implements OnInit {
 			'exam_max_marks': '',
 			'exam_sub_exam_max_marks': '',
 			'exam_calculation_rule': '',
-			'exam_weightage': ''
+			'exam_weightage': '',
+		});
+		this.examForm.controls.exam_bifurcate.patchValue({
+			bifurcated_marks: false
 		});
 		this.updateFlag = false;
 		this.viewOnly = true;
@@ -247,6 +253,7 @@ export class ExamComponent implements OnInit {
 				exam_sub_exam_max_marks: this.amountDetailArray,
 				exam_calculation_rule: this.examForm.value.exam_calculation_rule,
 				exam_weightage: this.examForm.value.exam_weightage,
+				exam_bifurcate: this.examForm.value.exam_bifurcate
 			};
 			const updateJson = {
 				exam_id: this.examForm.value.exam_id,
@@ -258,6 +265,7 @@ export class ExamComponent implements OnInit {
 				exam_sub_exam_max_marks: this.amountDetailArray,
 				exam_calculation_rule: this.examForm.value.exam_calculation_rule,
 				exam_weightage: this.examForm.value.exam_weightage,
+				exam_bifurcate: this.examForm.value.exam_bifurcate
 			};
 			if (this.examForm.value.exam_id === '') {
 				this.examService.insertExam(insertJson).subscribe((result: any) => {
@@ -321,6 +329,7 @@ export class ExamComponent implements OnInit {
 						pushitem.exam_calculation_rule = item.ecr_name;
 						pushitem.exam_weightage = item.exam_weightage;
 						// pushitem.status = item.fh_status === '1' ? true : false;
+						pushitem.exam_bifurcate = item.exam_bifurcate.bifurcated_marks ? 'Yes' : 'No';
 						pushitem.action = item;
 						pushitem.status = item;
 						pushitem.modify = item.exam_id;
@@ -364,6 +373,7 @@ export class ExamComponent implements OnInit {
 			exam_sub_exam: subExamArray,
 			exam_calculation_rule: value.exam_calculation_rule,
 			exam_weightage: value.exam_weightage,
+			exam_bifurcate: value.exam_bifurcate
 		});
 	}
 	deleteExam($event) {
