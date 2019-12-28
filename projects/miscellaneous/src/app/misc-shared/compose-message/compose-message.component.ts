@@ -333,6 +333,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['role_id'] = '3';
 			inputJson['status'] = '1';
 			this.userDataArr = [];
+			this.finUserDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
@@ -366,6 +367,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['role_id'] = '2';
 			inputJson['status'] = '1';
 			this.userDataArr = [];
+			this.finUserDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
@@ -397,6 +399,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		} else if (this.currentReceivers === 'Student') {
 			inputJson['class_ids'] = checkedClassIds;
 			this.userDataArr = [];
+			this.finUserDataArr = [];
 			this.sisService.getAllStudentsByClassSection(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
@@ -704,9 +707,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	onBodyChange(event) {
-		this.messageForm.value.messageBody = this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim();
-		this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
-		this.msgMultipleCount = Math.ceil(this.msgMultipleCount);
+		if (this.messageForm.value.messageType === 'S') {
+			this.messageForm.value.messageBody = this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim();
+			this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
+			this.msgMultipleCount = Math.ceil(this.msgMultipleCount);
+		}		
 	}
 
 	sendSMS(inputJson) {

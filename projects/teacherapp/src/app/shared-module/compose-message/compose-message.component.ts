@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ErpCommonService } from 'src/app/_services';
 import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
@@ -34,6 +35,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	showUser = false;
 	showClass = false;
 	selectedUserArr: any[] = [];
+	tempSelectedUserArr: any[] = [];
 	currentScheduleId;
 	addMode = true;
 	editMode = false;
@@ -41,6 +43,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	formData = {};
 	showUserContextMenu = false;
 	currentUser: any;
+	showSearchFlag = false;
+	finClassDataArr:any[] = [];
+	finUserDataArr: any[] = [];
+	selectedUserCount = 0;
+	showSearchByUserFlag = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private fbuild: FormBuilder,
@@ -48,7 +55,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService,
 		private smartService: SmartService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private erpCommonService: ErpCommonService
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -143,23 +151,49 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						checked: false,
 					}
 					this.classDataArr.push(inputJson);
+					this.finClassDataArr.push(inputJson);
 				}
 				this.showClass = true;
 			}
 		});
 	}
 
+	
+
 	generateUserList() {
+		// var checkedClassIds = [];
+		// for (var i = 0; i < this.classDataArr.length; i++) {
+		// 	if (this.classDataArr[i]['checked']) {
+		// 		checkedClassIds.push(this.classDataArr[i]['class_id']);
+		// 	}
+		// }
 		var checkedClassIds = [];
+		var classSectionJson = {};
+		console.log('this.classDataArr--', this.classDataArr);
 		for (var i = 0; i < this.classDataArr.length; i++) {
+			var classJson = {};
+			var secCheckFlag = false;
 			if (this.classDataArr[i]['checked']) {
-				checkedClassIds.push(this.classDataArr[i]['class_id']);
+				classJson['class_id'] = this.classDataArr[i]['class_id'];
+				for (var j = 0; j < this.classDataArr[i]['sec_arr'].length; j++) {
+					if (this.classDataArr[i]['sec_arr'][j]['checked']) {
+						var classJson = {};
+						secCheckFlag = true;
+						classJson['class_id'] = this.classDataArr[i]['class_id'];
+						classJson['sec_id'] = this.classDataArr[i]['sec_arr'][j]['sec_id'];
+						checkedClassIds.push(classJson);
+					}
+				}
+				if (!secCheckFlag) {
+					checkedClassIds.push(classJson);
+				}
 			}
 		}
 		const inputJson = {};
 		if (this.currentReceivers === 'Teacher') {
 			inputJson['role_id'] = '3';
 			this.userDataArr = [];
+			this.finUserDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
@@ -178,6 +212,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							au_admission_no : result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -187,9 +222,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
 			});
-		} if (this.currentReceivers === 'Staff') {
+		}else if (this.currentReceivers === 'Staff') {
 			inputJson['role_id'] = '2';
 			this.userDataArr = [];
+			this.finUserDataArr = [];
 			this.sisService.getUser(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
@@ -208,6 +244,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 							au_admission_no : result.data[i]['au_admission_no']
 						}
 						this.userDataArr.push(inputJson);
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -218,10 +255,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				}
 			});
 		} else {
-			inputJson['class_ids'] = checkedClassIds[0];
-			inputJson['pmap_status'] = '1';
+			inputJson['class_ids'] = checkedClassIds;
+			//inputJson['pmap_status'] = '1';
 			this.userDataArr = [];
-			this.sisService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
+			this.finUserDataArr = [];
+			this.sisService.getAllStudentsByClassSection(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
 						var inputJson = {
@@ -250,6 +288,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						}
 
 						this.userDataArr.push(inputJson);
+						this.finUserDataArr.push(inputJson);
 					}
 					this.showUser = true;
 					this.showClass = false;
@@ -326,73 +365,211 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		}
 	}
 
+	// selectAllClass(event) {
+	// 	if (event.checked === true) {
+	// 		this.classDataArr.map((item, index) => {
+	// 			item.checked = true;
+				
+	// 		});
+			
+	// 	} else {
+	// 		this.classDataArr.map((item) => {
+	// 			item.checked = false;
+	// 		});
+	// 	}
+	// }
 	selectAllClass(event) {
 		if (event.checked === true) {
-			this.classDataArr.map((item) => {
+			this.classDataArr.map((item, index) => {
 				item.checked = true;
+				this.getSectionsByClass({ class_id: this.classDataArr[index]['class_id'], teacher_id: this.currentUser.login_id }, index, true);
 			});
+
 		} else {
-			this.classDataArr.map((item) => {
+			this.classDataArr.map((item, index) => {
 				item.checked = false;
+				this.classDataArr[index]['sec_arr'] = [];
 			});
 		}
+		this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
 	}
 
 	selectAllUser(event) {
 		if (event.checked === true) {
-			this.userDataArr.map((item) => {
+			this.userDataArr.map((item, index) => {
 				item.checked = true;
+				this.setSelectedUserData(this.userDataArr[index]);
 			});
+			this.selectedUserCount = this.userDataArr.length;
 
 		} else {
 			this.userDataArr.map((item) => {
 				item.checked = false;
 			});
+			this.selectedUserCount = 0;
 		}
+		this.finUserDataArr = JSON.parse(JSON.stringify(this.userDataArr));
 	}
 
+	// updateClassCheck(i, event) {
+	// 	if (event.checked) {
+	// 		this.classDataArr[i]['checked'] = true;
+	// 	} else {
+	// 		this.classDataArr[i]['checked'] = false;
+	// 	}
+	// }
+
+	
 	updateClassCheck(i, event) {
 		if (event.checked) {
 			this.classDataArr[i]['checked'] = true;
+			this.finClassDataArr[i]['checked'] = true;
+			this.getSectionsByClass({ class_id: this.classDataArr[i]['class_id'], teacher_id: this.currentUser.login_id }, i, '');
 		} else {
 			this.classDataArr[i]['checked'] = false;
+			this.finClassDataArr[i]['checked'] = false;
+			this.classDataArr[i]['sec_arr'] = [];
 		}
+		//this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
+	}
+
+	updateClassSectionCheck(i, j, event) {
+		if (event.checked) {
+			this.classDataArr[i]['checked'] = true;
+			this.classDataArr[i]['sec_arr'][j]['checked'] = true;
+			this.finClassDataArr[i]['checked'] = true;
+			this.finClassDataArr[i]['sec_arr'][j]['checked'] = true;
+		} else {
+			this.classDataArr[i]['checked'] = false;
+			this.classDataArr[i]['sec_arr'][j]['checked'] = false;
+			this.finClassDataArr[i]['checked'] = false;
+			this.finClassDataArr[i]['sec_arr'][j]['checked'] = false;
+		}
+		//this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
 	}
 
 	updateUserCheck(i, event) {
 		if (event.checked) {
 			this.userDataArr[i]['checked'] = true;
+			this.finUserDataArr[i]['checked'] = true;
+			this.selectedUserCount++;
+			this.setSelectedUserData(this.userDataArr[i]);
 		} else {
 			this.userDataArr[i]['checked'] = false;
+			this.finUserDataArr[i]['checked'] = false;
+			this.selectedUserCount--;
+		}
+	}
+
+	getSectionsByClass(inputJson, i, selectAllflag) {
+		this.erpCommonService.getSectionByTeacherIdClassId(inputJson).subscribe((result: any) => {
+			if (this.classDataArr && this.classDataArr[i]) {
+				this.classDataArr[i]['sec_arr'] = [];
+				this.finClassDataArr[i]['sec_arr'] = [];
+			}
+
+			let secDataArr = [];
+			if (result && result.data) {
+				for (var j = 0; j < result.data.length; j++) {
+					var inputJson = {
+						sec_id: result.data[j]['sec_id'],
+						sec_name: result.data[j]['sec_name'],
+						checked: selectAllflag ? selectAllflag : false,
+					}
+					secDataArr.push(inputJson);
+				}
+				this.classDataArr[i]['sec_arr'] = secDataArr;
+				this.finClassDataArr[i]['sec_arr'] = secDataArr;
+			}
+		});
+	}
+
+	setSelectedUserData(userDataArr) {		
+		if (userDataArr) {
+			var flag = false;
+			for (var i=0; i<this.selectedUserArr.length;i++) {
+				if (Number(this.selectedUserArr[i]['login_id']) === Number(userDataArr['au_login_id'])) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				var inputJson = {
+					login_id: userDataArr['au_login_id'],
+					class_id: userDataArr['class_id'],
+					sec_id: userDataArr['sec_id'],
+					class_name: userDataArr['class_name'],
+					sec_name: userDataArr['sec_name'],
+					email: userDataArr['au_email'],
+					au_full_name: userDataArr['au_full_name'],
+					mobile: userDataArr['au_mobile'],
+					role_id: userDataArr['au_role_id'],
+				};
+				this.tempSelectedUserArr.push(inputJson);
+			}
 		}
 	}
 
 	done() {
 		this.showUser = false;
 		this.showClass = false;
-		for (let i = 0; i < this.userDataArr.length; i++) {
-			if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
-				if (this.userDataArr[i]['checked']) {
-					var inputJson = {
-						login_id: this.userDataArr[i]['au_login_id'],
-						class_id: this.userDataArr[i]['class_id'],
-						sec_id: this.userDataArr[i]['sec_id'],
-						class_name: this.userDataArr[i]['class_name'],
-						sec_name: this.userDataArr[i]['sec_name'],
-						email: this.userDataArr[i]['au_email'],
-						au_full_name: this.userDataArr[i]['au_full_name'],
-						mobile: this.userDataArr[i]['au_mobile'],
-						role_id: this.userDataArr[i]['au_role_id'],
-						au_admission_no : this.userDataArr[i]['au_admission_no']
-					};
-					this.selectedUserArr.push(inputJson);
-				}
-			}
-			
-		}
-
 		this.showUserContextMenu = false;
+		this.selectedUserCount = 0;
+		
+		this.selectedUserArr = JSON.parse(JSON.stringify(this.tempSelectedUserArr));
 	}
+
+	removeAll() {
+		this.selectedUserArr = [];
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
+	}
+
+	showSearch() {
+		this.showSearchFlag = !this.showSearchFlag;
+	}
+
+	showSearchByUser() {
+		this.showSearchByUserFlag = !this.showSearchByUserFlag;
+	}
+
+	cancelSearchByClass() {
+		this.showSearchFlag = false;
+		this.classDataArr = this.finClassDataArr;
+	}
+
+	cancelSearchByUser() {
+		this.showSearchByUserFlag = false;
+		this.userDataArr = this.finUserDataArr;
+	}
+
+
+	// done() {
+	// 	this.showUser = false;
+	// 	this.showClass = false;
+	// 	for (let i = 0; i < this.userDataArr.length; i++) {
+	// 		if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
+	// 			if (this.userDataArr[i]['checked']) {
+	// 				var inputJson = {
+	// 					login_id: this.userDataArr[i]['au_login_id'],
+	// 					class_id: this.userDataArr[i]['class_id'],
+	// 					sec_id: this.userDataArr[i]['sec_id'],
+	// 					class_name: this.userDataArr[i]['class_name'],
+	// 					sec_name: this.userDataArr[i]['sec_name'],
+	// 					email: this.userDataArr[i]['au_email'],
+	// 					au_full_name: this.userDataArr[i]['au_full_name'],
+	// 					mobile: this.userDataArr[i]['au_mobile'],
+	// 					role_id: this.userDataArr[i]['au_role_id'],
+	// 					au_admission_no : this.userDataArr[i]['au_admission_no']
+	// 				};
+	// 				this.selectedUserArr.push(inputJson);
+	// 			}
+	// 		}
+			
+	// 	}
+
+	// 	this.showUserContextMenu = false;
+	// }
 
 	checkAlreadyExists(item) {
 		var flag = false;
@@ -493,6 +670,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.selectedUserArr = [];
 		this.attachmentArray = [];
 		this.editTemplateFlag = false;
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
 	}
 
 	resetFormValues() {
@@ -508,6 +687,37 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			messageSubject: '',
 			messageBody: ''
 		})
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
+	}
+
+	searchByUser(event) {
+		if (event.target.value) {
+			var tempArr = [];
+			for (var i = 0; i < this.userDataArr.length; i++) {
+				if (this.userDataArr[i]['au_full_name'].toLowerCase().includes(event.target.value)) {
+					tempArr.push(this.userDataArr[i]);
+				}
+			}
+			if (tempArr.length > 0) {
+				this.userDataArr = tempArr;
+			}
+		} else {
+			this.userDataArr = this.finUserDataArr;
+		}
+	}
+
+	backToUserList() {
+		if (this.currentReceivers === 'Staff') {
+			this.showClass = false;
+			this.showUser = false;
+		} else if (this.currentReceivers === 'Teacher') {
+			this.showClass = false;
+			this.showUser = false;
+		} else if (this.currentReceivers === 'Student') {
+			this.showClass = true;
+			this.showUser = false;
+		}
 	}
 
 	viewMessage(element) {
