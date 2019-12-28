@@ -34,13 +34,17 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	showUser = false;
 	showClass = false;
 	selectedUserArr: any[] = [];
+	tempSelectedUserArr: any[] = [];
 	currentScheduleId;
 	addMode = true;
 	editMode = false;
 	viewMode = false;
 	formData = {};
 	showUserContextMenu = false;
+	finUserDataArr: any[] = [];
 	currentUser: any;
+	selectedUserCount = 0;
+	showSearchByUserFlag = false;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private fbuild: FormBuilder,
@@ -55,7 +59,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
-		this.getUser();
+		//this.getUser();
 	}
 
 	ngOnChanges() {
@@ -139,38 +143,44 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		inputJson['role_id'] = '3';
 		inputJson['class_id'] = this.currentUser.class_id ? this.currentUser.class_id : '';
 		this.userDataArr = [];
-		
-		this.erpCommonService.getTeacher(inputJson).subscribe((result: any) => {
-			var userData = [];
-			if (result && result.data && result.data[0]['au_login_id']) {
-				for (var i = 0; i < result.data.length; i++) {
-					var inputJson = {
-						au_login_id: result.data[i]['au_login_id'],
-						au_full_name: result.data[i]['au_full_name'],
-						au_email: result.data[i]['au_email'],
-						au_mobile: result.data[i]['au_mobile'],
-						au_profileimage: result.data[i]['au_profileimage'],
-						au_role_id: '3',
-						checked: false,
-						class_name: result.data[i]['class_name'],
-						sec_name: result.data[i]['sec_name'],
-						class_id: result.data[i]['class_id'],
-						sec_id: result.data[i]['sec_id'],
-						au_admission_no : result.data[i]['au_admission_no'],
+		this.finUserDataArr = [];
+		console.log('this.showUserContextMenu--',this.showUserContextMenu);
+		this.showUserContextMenu =!this.showUserContextMenu; 
+		if (this.showUserContextMenu) {
+			this.erpCommonService.getTeacher(inputJson).subscribe((result: any) => {
+				var userData = [];
+				if (result && result.data && result.data[0]['au_login_id']) {				
+					for (var i = 0; i < result.data.length; i++) {
+						var inputJson = {
+							au_login_id: result.data[i]['au_login_id'],
+							au_full_name: result.data[i]['au_full_name'],
+							au_email: result.data[i]['au_email'],
+							au_mobile: result.data[i]['au_mobile'],
+							au_profileimage: result.data[i]['au_profileimage'],
+							au_role_id: '3',
+							checked: false,
+							class_name: result.data[i]['class_name'],
+							sec_name: result.data[i]['sec_name'],
+							class_id: result.data[i]['class_id'],
+							sec_id: result.data[i]['sec_id'],
+							au_admission_no : result.data[i]['au_admission_no'],
+						}
+						userData.push(inputJson);
+						
 					}
-					userData.push(inputJson);
+	
+					this.userDataArr = this.uniqueUserArray(userData);
+					this.finUserDataArr = this.uniqueUserArray(userData);
+					this.showUser = true;
+					this.showClass = false;
+				} else {
+					this.showUser = false;
+					this.showClass = true;
+					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
-
-				this.userDataArr = this.uniqueUserArray(userData);
-
-				this.showUser = true;
-				this.showClass = false;
-			} else {
-				this.showUser = false;
-				this.showClass = true;
-				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-			}
-		});
+			});
+		}
+		
 
 	}
 
@@ -239,8 +249,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	selectAllClass(event) {
 		if (event.checked === true) {
-			this.classDataArr.map((item) => {
+			this.classDataArr.map((item, index) => {
 				item.checked = true;
+				this.setSelectedUserData(this.userDataArr[index]);
 			});
 		} else {
 			this.classDataArr.map((item) => {
@@ -254,13 +265,16 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.userDataArr.map((item) => {
 				item.checked = true;
 			});
+			this.selectedUserCount = this.userDataArr.length;
 
 		} else {
 			this.userDataArr.map((item) => {
 				item.checked = false;
 			});
+			this.selectedUserCount = 0;
 			
 		}
+		this.finUserDataArr = JSON.parse(JSON.stringify(this.userDataArr));
 	}
 
 	updateClassCheck(i, event) {
@@ -274,36 +288,76 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	updateUserCheck(i, event) {
 		if (event.checked) {
 			this.userDataArr[i]['checked'] = true;
+			this.finUserDataArr[i]['checked'] = true;
+			this.selectedUserCount++;
+			this.setSelectedUserData(this.userDataArr[i]);
 		} else {
 			this.userDataArr[i]['checked'] = false;
+			this.finUserDataArr[i]['checked'] = false;
+			this.selectedUserCount--;
+		}
+	}
+
+	setSelectedUserData(userDataArr) {		
+		if (userDataArr) {
+			var flag = false;
+			for (var i=0; i<this.selectedUserArr.length;i++) {
+				if (Number(this.selectedUserArr[i]['login_id']) === Number(userDataArr['au_login_id'])) {
+					flag = true;
+					break;
+				}
+			}
+			if (!flag) {
+				var inputJson = {
+					login_id: userDataArr['au_login_id'],
+					class_id: userDataArr['class_id'],
+					sec_id: userDataArr['sec_id'],
+					class_name: userDataArr['class_name'],
+					sec_name: userDataArr['sec_name'],
+					email: userDataArr['au_email'],
+					au_full_name: userDataArr['au_full_name'],
+					mobile: userDataArr['au_mobile'],
+					role_id: userDataArr['au_role_id'],
+				};
+				this.tempSelectedUserArr.push(inputJson);
+			}
 		}
 	}
 
 	done() {
 		this.showUser = false;
 		this.showClass = false;
-		for (let i = 0; i < this.userDataArr.length; i++) {
-			if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
-				if (this.userDataArr[i]['checked']) {
-					var inputJson = {
-						login_id: this.userDataArr[i]['au_login_id'],
-						class_id: this.userDataArr[i]['class_id'],
-						sec_id: this.userDataArr[i]['sec_id'],
-						class_name: this.userDataArr[i]['class_name'],
-						sec_name: this.userDataArr[i]['sec_name'],
-						email: this.userDataArr[i]['au_email'],
-						au_full_name: this.userDataArr[i]['au_full_name'],
-						mobile: this.userDataArr[i]['au_mobile'],
-						role_id: this.userDataArr[i]['au_role_id'],
-						au_admission_no : this.userDataArr[i]['au_admission_no']
-					};
-					this.selectedUserArr.push(inputJson);
-				}
-			}
-			
-		}
 		this.showUserContextMenu = false;
+		this.selectedUserCount = 0;
+		this.finUserDataArr = JSON.parse(JSON.stringify(this.tempSelectedUserArr));
+		this.selectedUserArr = JSON.parse(JSON.stringify(this.tempSelectedUserArr));
 	}
+
+	// done() {
+	// 	this.showUser = false;
+	// 	this.showClass = false;
+	// 	for (let i = 0; i < this.userDataArr.length; i++) {
+	// 		if (!(this.checkAlreadyExists(this.userDataArr[i]))) {
+	// 			if (this.userDataArr[i]['checked']) {
+	// 				var inputJson = {
+	// 					login_id: this.userDataArr[i]['au_login_id'],
+	// 					class_id: this.userDataArr[i]['class_id'],
+	// 					sec_id: this.userDataArr[i]['sec_id'],
+	// 					class_name: this.userDataArr[i]['class_name'],
+	// 					sec_name: this.userDataArr[i]['sec_name'],
+	// 					email: this.userDataArr[i]['au_email'],
+	// 					au_full_name: this.userDataArr[i]['au_full_name'],
+	// 					mobile: this.userDataArr[i]['au_mobile'],
+	// 					role_id: this.userDataArr[i]['au_role_id'],
+	// 					au_admission_no : this.userDataArr[i]['au_admission_no']
+	// 				};
+	// 				this.selectedUserArr.push(inputJson);
+	// 			}
+	// 		}
+			
+	// 	}
+	// 	this.showUserContextMenu = false;
+	// }
 
 	checkAlreadyExists(item) {
 		var flag = false;
@@ -426,6 +480,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		this.selectedUserArr = [];
 		this.attachmentArray = [];
 		this.editTemplateFlag = false;
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
 	}
 
 	resetFormValues() {
@@ -440,7 +496,13 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			messageTo: '',
 			messageSubject: '',
 			messageBody: ''
-		})
+		});
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
+	}
+
+	backToUserList() {
+		this.showUserContextMenu = !this.showUserContextMenu;
 	}
 
 	viewMessage(element) {
@@ -454,6 +516,25 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	searchOk(event) {
 
 	}
+
+	removeAll() {
+		this.selectedUserArr = [];
+		this.tempSelectedUserArr = [];
+		this.selectedUserCount = 0;
+	}
+
+	
+	showSearchByUser() {
+		this.showSearchByUserFlag = !this.showSearchByUserFlag;
+	}
+
+	
+
+	cancelSearchByUser() {
+		this.showSearchByUserFlag = false;
+		this.userDataArr = this.finUserDataArr;
+	}
+
 
 	back() {
 		this.backToBroadcast.emit(this.messageForm.value.messageType);

@@ -119,4 +119,9 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setupdetail/getClassData', param);
 	}
+
+	getAllStudentsByClassSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
+	}
 }

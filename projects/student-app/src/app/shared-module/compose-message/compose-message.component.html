@@ -22,86 +22,87 @@
                     <div class="message-container">
                         <div class="row">
                             <div class="col-12 border-bottom">
-                                <!-- <mat-form-field class="form-field" appearance="outline"> -->
-                                
                                 <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
-                                padding: 10px;     min-height: 40px;
-    overflow-y: auto;" />
-                                <div class="user-chips">
+                                padding: 10px;" readonly/>
+                                <div class="user-chips"
+                                    *ngIf="selectedUserArr.length > 0">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
                                         class="custom-entry-button margin-left-10">
                                         <span class="custom-btn-text">{{item?.au_full_name}}</span>
                                         <i class="fas fa-times-circle custom-entry-btn-icon"
                                             (click)="deleteUser(i, item)"></i>
                                     </button>
-                                </div>
-                                <span class="three-dot">
-                                    <i class="fa fa-ellipsis-v" aria-hidden="true"
-                                        style="cursor: pointer; z-index: 99999;"
-                                        (click)="showUserContextMenu =!showUserContextMenu "></i>
+                                </div>                                
+                                <span>
+                                    <span class="three-dot" *ngIf="this.messageForm.value.messageType != ''">
+                                        <i class="fa fa-ellipsis-v" aria-hidden="true"
+                                            style="cursor: pointer; z-index: 99999;"
+                                            (click)="getUser();"></i>
+                                    </span>
+                                    <span class="remove-all" *ngIf="this.messageForm.value.messageType != '' && selectedUserArr.length > 0"><i
+                                            class="fas fa-trash-alt" style="color:#ff0000"
+                                            (click)="removeAll()"></i></span>
                                 </span>
-                                <div *ngIf="showUserContextMenu" class="user-context-menu">
-                                    <!-- <ul class="user-type-menu" *ngIf="!showClass && !showUser">
-                                        <li (click)="getUser('4')">Student/Parent</li>
-                                        <li (click)="getUser('3')">Teacher</li>
-                                        <li (click)="getUser('2')">Staff</li>
-                                    </ul> -->
-                                    <!-- <div *ngIf="showClass">
-                                        <ul class="class-menu">
-                                            <li>
-                                                <div style="width:100%; float:left;">
-                                                    <div style="width: 50%; float:left">
-                                                        <section class="example-section">
-                                                            <mat-checkbox (change)="selectAllClass($event)"
-                                                                class="example-margin">
-                                                                Select All
-                                                            </mat-checkbox>
-                                                        </section>
-                                                    </div>
-                                                    <div style="width: 50%; float:right">
-                                                        <a href="javascript:void(0)" style="float:right"
-                                                            (click)="generateUserList()">Next</a>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li *ngFor="let ing of classDataArr; let i = index">
-                                                <section class="example-section">
-                                                    <mat-checkbox [checked]="ing.checked"
-                                                        (change)="updateClassCheck(i, $event)">
-                                                        {{ing.class_name}}
-                                                    </mat-checkbox>
-                                                </section>
-                                            </li>
-                                        </ul>
-                                    </div> -->
-                                    <div>
+                                <div *ngIf="finUserDataArr?.length > 0 && showUserContextMenu" class="user-context-menu">
+                                    <div style="width: 100%;
+                                    float: left;
+                                    padding: 10px;
+                                    border-bottom: 1px solid #ccc;" *ngIf="showUser">
+                                        <div style="width: 75%; float:left">
+                                            <section class="example-section" *ngIf="!showSearchByUserFlag">
+                                                <mat-checkbox (change)="selectAllUser($event)" class="example-margin">
+                                                    Select All
+                                                </mat-checkbox>
+                                            </section>
+                                            <section class="example-search" *ngIf="showSearchByUserFlag">
+                                                <input matInput placeholder="Search" type="input" autocomplete="false"
+                                                    (input)="searchByUser($event)" style="width: 90%" />
+                                                <i class="fa fa-times cross-icon" aria-hidden="true"
+                                                    (click)="cancelSearchByUser()"></i>
+                                            </section>
+                                        </div>
+
+                                        <div style="width: 25%; float:right">
+
+                                            <a href="javascript:void(0)" style="float:right;font-size:16px;margin-top: -2px;" (click)="done()" title="Done"><i class="fas fa-check-circle" style="color:#82C91E"></i></a>
+                                            &nbsp;&nbsp;
+                                            <!-- <a href="javascript:void(0)"
+                                                style="float:right; color:#ff0000; margin-right:5px;"
+                                                (click)="backToUserList()" title="Back"><i class="fas fa-arrow-circle-left" style=" color:#ff0000; margin-right:5px;font-size:16px"></i></a>&nbsp;&nbsp; -->
+                                            <i *ngIf="!showSearchByUserFlag" class="fa fa-search search-icon"
+                                                aria-hidden="true" (click)="showSearchByUser()"></i>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="showUser" style="height: 350px; overflow-y:auto; float:left;width:100%">
                                         <ul class="user-menu">
-                                            <li>
-                                                <div style="width:100%; float:left;">
-                                                    <div style="width: 50%; float:left">
-                                                        <section class="example-section">
-                                                            <mat-checkbox (change)="selectAllUser($event)"
-                                                                class="example-margin">
-                                                                Select All
-                                                            </mat-checkbox>
-                                                        </section>
-                                                    </div>
-                                                    <div style="width: 50%; float:right">
-                                                        <a href="javascript:void(0)" style="float:right"
-                                                            (click)="done()">Done</a>
-                                                    </div>
-                                                </div>
-                                            </li>
+
                                             <li *ngFor="let ing of userDataArr; let i = index">
                                                 <section class="example-section">
                                                     <mat-checkbox [checked]="ing.checked"
                                                         (change)="updateUserCheck(i, $event)">
                                                         {{ing.au_full_name | titlecase}}
+                                                        <span *ngIf="ing?.au_admission_no">, {{ing?.au_admission_no}},
+                                                        </span>
+                                                        <span *ngIf="ing?.class_name && ing?.sec_name">
+                                                            {{ing?.class_name}} - {{ing?.sec_name}} </span>
+                                                        <span *ngIf="ing?.class_name && !(ing?.sec_name)">
+                                                            {{ing?.class_name}} </span>
+
                                                     </mat-checkbox>
                                                 </section>
                                             </li>
+
                                         </ul>
+
                                     </div>
+                                    <section class="data-footer" *ngIf="showUser">
+                                        <div>
+                                            <div class="total-user" style="float:left"><b>Total User :
+                                                    {{finUserDataArr?.length}}</b></div>
+                                            <div class="selected-user" style="float:right"><b>Selected User :
+                                                    {{selectedUserCount}}</b></div>
+                                        </div>
+                                    </section>
                                 </div>
 
                                 <!-- </mat-form-field> -->
@@ -109,11 +110,9 @@
                         </div>
                         <div class="row">
                             <div class="col-12 border-bottom">
-                                <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="Subject" type="input" formControlName="messageSubject"
                                     style="width: 90%;
                                 padding: 10px;" />
-                                <!-- </mat-form-field> -->
                             </div>
                         </div>
 
@@ -121,7 +120,7 @@
                             <div class="col-12" style="min-height: 400px;">
                                 <ckeditor [config]="ckeConfig" formControlName="messageBody"></ckeditor>
                             </div>
-                        </div>
+                        </div>                      
 
                         <div class="row">
                             <div class="col-12">
@@ -144,7 +143,6 @@
                                 </ul>
 
                             </div>
-                            
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
@@ -162,7 +160,5 @@
     </div>
 </div>
 
-<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendMessage($event)"
-    (deleteCancel)="cancelSendMessage()"></app-delete-modal>
-
-    <app-messages-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-messages-advanced-search-modal>
+<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="sendSMS($event)"
+    (deleteCancel)="cancelSendSMS()"></app-delete-modal>
