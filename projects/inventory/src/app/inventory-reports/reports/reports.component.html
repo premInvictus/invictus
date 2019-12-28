@@ -11,7 +11,7 @@
           <div class="report-card__container">
             <div class="row margin-top-20">
               <div *ngFor="let item of feeReportArray;let i = index" [class]="getClassPerIndex(i)">
-                <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
+                <mat-card class="report-card mat-card" (click)="executeReport(item.report_id)">
                   <div class="report-card-container2">
                     <div [class]="item.main_text_class">
                       <img style="width:57px !important; height: 50px !important" [class]="item.report_main_image_class"
@@ -56,13 +56,14 @@
               <div class="col-12">
                 <app-item-master-reports (displyRep)="displyRep($event)" *ngIf="reportType === '1'">
                 </app-item-master-reports>
-
-                <!-- <app-outstanding-report (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
-                </app-outstanding-report> -->
-
-
-
-
+                <app-consumption-reports (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
+                </app-consumption-reports>
+                <app-procurement-report (displyRep)="displyRep($event)" *ngIf="reportType === '3'">
+                </app-procurement-report>
+                <app-store-ledger (displyRep)="displyRep($event)" *ngIf="reportType === '4'">
+                </app-store-ledger>
+                <app-repair-damaged-report (displyRep)="displyRep($event)" *ngIf="reportType === '5'">
+                </app-repair-damaged-report>
               </div>
             </div>
           </mat-expansion-panel>

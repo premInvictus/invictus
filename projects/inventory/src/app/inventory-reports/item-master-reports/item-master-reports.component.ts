@@ -11,7 +11,7 @@ import * as ExcelProper from 'exceljs';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
-import {
+import { 
   GridOption, Column, AngularGridInstance, Grouping, Aggregators,
   FieldType,
   Filters,
@@ -31,6 +31,7 @@ export class ItemMasterReportsComponent implements OnInit {
   finalSet: any[] = [];
   reportType = '1';
   gridObj: any;
+  gridHeight: any;
   filterFlag = false;
   filterResult: any[] = [];
   sortResult: any[] = [];
@@ -196,7 +197,7 @@ export class ItemMasterReportsComponent implements OnInit {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
-    // this.updateTotalRow(angularGrid.slickGrid);
+    this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
     let columnIdx = grid.getColumns().length;
@@ -233,20 +234,14 @@ export class ItemMasterReportsComponent implements OnInit {
             if (Number(i) === 1) {
               this.columnDefinitions = [
                 {
-                  id: 'srno',
-                  name: 'Sr.No.',
-                  field: 'srno',
-                  sortable: true,
-
-                },
-                {
                   id: 'item_code',
                   name: 'Item Code',
                   field: 'item_code',
                   sortable: true,
                   filterable: true,
                   filterSearchType: FieldType.string,
-                  filter: { model: Filters.compoundInput }
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
                 },
                 {
                   id: 'item_name',
@@ -296,6 +291,8 @@ export class ItemMasterReportsComponent implements OnInit {
                   filterable: true,
                   filterSearchType: FieldType.string,
                   filter: { model: Filters.compoundInput },
+                  width: 25,
+                  groupTotalsFormatter: this.sumTotalsFormatter,
                 }
               ];
             }
@@ -322,6 +319,26 @@ export class ItemMasterReportsComponent implements OnInit {
               this.dataset.push(obj);
             }
           }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = 'Grand Total';
+          obj3['item_name'] ='';
+          obj3['item_category'] ='';
+          obj3['item_nature'] = '';
+          obj3['item_reorder_level'] ='';
+          obj3['item_qty'] =  this.dataset.map(t => t['item_qty']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('item_qty'));
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 300;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 400;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
           this.tableFlag = true;
           setTimeout(() => this.groupByDepartment(), 2);
         } else {
@@ -330,7 +347,6 @@ export class ItemMasterReportsComponent implements OnInit {
       });
 
     } else if (this.reportType === 'location') {
-      console.log('fffff');
       const collectionJSON: any = {
         "filters": [
           {
@@ -344,132 +360,146 @@ export class ItemMasterReportsComponent implements OnInit {
       this.inventory.filterItemsFromMaster(collectionJSON).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           repoArray = result.data;
-          let ind = 0;
-
+          let finalSet = [];
           for (let item of repoArray) {
-            let object: any = {};
             for (let titem of item.item_location) {
-              console.log(titem);
+              let object: any = {};
               object['item_code'] = item.item_code;
-              object['item_name'] = item.item_name;
+              object['item_name'] = new CapitalizePipe().transform(item.item_name);
               object['item_category'] = item.item_category.name;
               object['item_nature'] = item.item_nature.name;
               object['item_location'] = titem.location_id;
               object['item_reorder_level'] = item.item_reorder_level;
+              object['locs'] = item.locs;
               object['item_qty'] = titem.item_qty;
-              this.finalSet.push(object);
-              console.log('dddd', this.finalSet);
+              finalSet.push(object);
             }
           }
+          let ind = 0;
+          for (let item of finalSet) {
+            const obj = {};
+            if (Number(ind) === 0) {
+              this.columnDefinitions = [               
+                {
+                  id: 'item_code',
+                  name: 'Item Code',
+                  field: 'item_code',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
+                },
+                {
+                  id: 'item_name',
+                  name: 'Item name',
+                  field: 'item_name',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
+                },
+                {
+                  id: 'item_category',
+                  name: ' Department',
+                  field: 'item_category',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          // for (let item of repoArray) {
-          //   if (Number(ind) === 1) {
-          //     this.columnDefinitions = [
-          //       {
-          //         id: 'srno',
-          //         name: 'Sr.No.',
-          //         field: 'srno',
-          //         sortable: true,
+                },
+                {
+                  id: 'item_nature',
+                  name: ' Item Nautre',
+                  field: 'item_nature',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_code',
-          //         name: 'Item Code',
-          //         field: 'item_code',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput }
-          //       },
-          //       {
-          //         id: 'item_name',
-          //         name: 'Item name',
-          //         field: 'item_name',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
+                },
+                {
+                  id: 'item_location',
+                  name: ' Location',
+                  field: 'item_location',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_category',
-          //         name: ' Department',
-          //         field: 'item_category',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
+                },
+                {
+                  id: 'item_reorder_level',
+                  name: 'Reorder Level',
+                  field: 'item_reorder_level',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
 
-          //       },
-          //       {
-          //         id: 'item_nature',
-          //         name: ' Item Nautre',
-          //         field: 'item_nature',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_location',
-          //         name: ' Location',
-          //         field: 'item_location',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_reorder_level',
-          //         name: 'Reorder Level',
-          //         field: 'item_reorder_level',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-
-          //       },
-          //       {
-          //         id: 'item_qty',
-          //         name: 'Quantity',
-          //         field: 'item_qty',
-          //         sortable: true,
-          //         filterable: true,
-          //         filterSearchType: FieldType.string,
-          //         filter: { model: Filters.compoundInput },
-          //       }
-          //     ];
-          //   }
-
-          //   const obj = {};
-          //   for (let titem of item.item_location) {
-
-          //     obj['id'] = titem.location_id.toString() + item.item_code;
-          //     obj['srno'] = ind;
-          //     obj['item_code'] = item.item_code;
-          //     obj['item_name'] = item.item_name;
-          //     obj['item_category'] = item.item_category.name;
-          //     obj['item_nature'] = item.item_nature.name;
-          //     obj['item_location'] = this.getLocation(titem.location_id, item.locs);
-          //     obj['item_reorder_level'] = item.item_reorder_level;
-          //     obj['item_qty'] = titem.item_qty;
-          //     this.dataset.push(obj);
-          //     console.log(this.dataset);
-          //   }
-          //   ind++;
-          // }
-          // this.tableFlag = true;
-          //setTimeout(() => this.groupByDepartment(), 2);
+                },
+                {
+                  id: 'item_qty',
+                  name: 'Quantity',
+                  field: 'item_qty',
+                  sortable: true,
+                  filterable: true,
+                  filterSearchType: FieldType.string,
+                  filter: { model: Filters.compoundInput },
+                  width: 25,
+                  groupTotalsFormatter: this.sumTotalsFormatter,
+                }
+              ];
+            }
+            obj['id'] = item.item_code + ind;
+            obj['item_code'] = item.item_code;
+            obj['item_name'] = new CapitalizePipe().transform(item.item_name);
+            obj['item_category'] = item.item_category;
+            obj['item_nature'] = item.item_nature;
+            obj['item_location'] = this.getLocation(item.item_location, item.locs);
+            obj['item_reorder_level'] = item.item_reorder_level;
+            obj['item_qty'] = item.item_qty;
+            this.dataset.push(obj);
+            ind++;
+          }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = 'Grand Total';
+          obj3['item_name'] ='';
+          obj3['item_category'] ='';
+          obj3['item_nature'] = '';
+          obj3['item_location'] = '';
+          obj3['item_reorder_level'] ='';
+          obj3['item_qty'] =  this.dataset.map(t => t['item_qty']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('item_qty'));
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 300;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 400;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
+          this.tableFlag = true;
+          setTimeout(() => this.groupByLocation(), 2);
         } else {
           this.tableFlag = true;
         }
       });
     }
   }
-
+  sumTotalsFormatter(totals, columnDef) {
+    const val = totals.sum && totals.sum[columnDef.field];
+    if (val != null) {
+      return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+    }
+    return '';
+  }
   srnTotalsFormatter(totals, columnDef) {
     if (totals.group.level === 0) {
       return '<b class="total-footer-report">Total</b>';
@@ -494,6 +524,23 @@ export class ItemMasterReportsComponent implements OnInit {
       collapsed: false,
     });
     this.draggableGroupingPlugin.setDroppedGroups('item_category');
+  }
+  groupByLocation() {
+    this.dataviewObj.setGrouping({
+      getter: 'item_location',
+      formatter: (g) => {
+        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+      },
+      comparer: (a, b) => {
+        // (optional) comparer is helpful to sort the grouped data
+        // code below will sort the grouped value in ascending order
+        return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+      },
+      aggregators: this.aggregatearray,
+      aggregateCollapsed: true,
+      collapsed: false,
+    });
+    this.draggableGroupingPlugin.setDroppedGroups('item_location');
   }
   getLocation(id, array: any[]) {
     const findex = array.findIndex(f => Number(f.location_id) === Number(id));

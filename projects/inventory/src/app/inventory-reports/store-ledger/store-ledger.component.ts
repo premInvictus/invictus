@@ -1,79 +1,75 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { CommonAPIService, SisService, InventoryService } from '../../_services';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { CapitalizePipe } from '../../_pipes';
+import { ErpCommonService } from 'src/app/_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AxiomService, SmartService, SisService, CommonAPIService,FeeService } from '../../_services';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material';
-import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
-import { DatePipe, TitleCasePipe, DecimalPipe } from '@angular/common';
-import {
-  GridOption, Column, AngularGridInstance, Grouping, Aggregators,
-  FieldType,
-  Filters,
-  Formatters,
-  DelimiterType,
-  FileType
-} from 'angular-slickgrid';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as ExcelProper from 'exceljs';
-import { TranslateService } from '@ngx-translate/core';
-import { ErpCommonService } from 'src/app/_services';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import {
+  GridOption, Column, AngularGridInstance, Grouping, Aggregators,
+  FieldType,
+  Filters,
+  Sorters,
+  SortDirectionNumber,
+  Formatters
+} from 'angular-slickgrid';
+
 @Component({
-  selector: 'app-attendance-reports',
-  templateUrl: './attendance-reports.component.html',
-  styleUrls: ['./attendance-reports.component.scss']
+  selector: 'app-store-ledger',
+  templateUrl: './store-ledger.component.html',
+  styleUrls: ['./store-ledger.component.css']
 })
-export class AttendanceReportsComponent implements OnInit {
-  @ViewChild('searchModal') searchModal;
+export class StoreLedgerComponent implements OnInit {
+  @Input() userName: any = '';
+  notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
   levelHeading: any[] = [];
   levelTotalFooter: any[] = [];
   levelSubtotalFooter: any[] = [];
-  submitFlag = false;
-  defaultFlag = false;
-  finalDivFlag = true;
-  entry_date = new Date();
-  firstForm: FormGroup;
-  attendanceReport: FormGroup;
-  employeeArray: any[] = [];
-  employeeAttendanceArray: any[] = [];
-  attendanceArray: any[] = [];
-  studentArray: any[] = [];
-  departmentArray: any[] = [];
-  currentUser: any;
+  reportTypeArray: any[] = [];
   gridHeight: any;
-  session: any;
-  monthEntryAvailable = false;
-  att_id: any;
-  defaultsrc: any;
-  columnDefinitions1: Column[] = [];
-  exportColumnDefinitions: any[] = [];
-  tableFlag = false;
-  columnDefinitions: Column[] = [];
-  gridOptions: GridOption = {};
-  dataset: any[] = [];
-  angularGrid: AngularGridInstance;
-  dataviewObj: any;
-  draggableGroupingPlugin: any;
+  finalSet: any[] = [];
+  reportType = '1';
   gridObj: any;
+  filterFlag = false;
+  filterResult: any[] = [];
+  sortResult: any[] = [];
   totalRow: any;
-  requiredAll = true;
-  employeeCatDeptAvail = false;
-  nodataFlag = true;
-  dataArr: any[] = [];
+  aggregatearray: any[] = [];
+  feeHeadJson: any[] = [];
   groupColumns: any[] = [];
   groupLength: any;
+  exportColumnDefinitions: any[] = [];
+  reportFilterForm: FormGroup;
+  // @Output() displyRep = new EventEmitter();
+  columnDefinitions1: Column[] = [];
+  columnDefinitions2: Column[] = [];
+  gridOptions: GridOption = {};
+  gridOptions1: GridOption;
+  gridOptions2: GridOption;
+  tableFlag = false;
+  dataset: any[] = [];
+  dataset1: any[];
+  dataset2: any[];
   selectedGroupingFields: string[] = ['', '', ''];
+  draggableGroupingPlugin: any;
+  dataviewObj: any;
+  angularGrid: AngularGridInstance;
+  dataArr: any[] = [];
+  columnDefinitions: Column[] = [];
+  nodataFlag = true;
   sessionArray: any[] = [];
-  holidayArray: any[] = [];
   sessionName: any;
+  currentUser: any;
+  session: any;
   schoolInfo: any;
-  monthArray: any[] = [];
-  notFormatedCellArray: any[] = [];
+  itemDetailsArray: any[] = [];
   alphabetJSON = {
     1: 'A',
     2: 'B',
@@ -120,77 +116,17 @@ export class AttendanceReportsComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
-  constructor(
-    public dialog: MatDialog,
-    private fbuild: FormBuilder,
-    private smartService: SmartService,
-    public commonAPIService: CommonAPIService,
-    public axiomService: AxiomService,
-    public sisService: SisService,
-    private erpCommonService: ErpCommonService,
-    public feeService: FeeService
-  ) {
+  constructor(private fbuild: FormBuilder, private inventory: InventoryService, private CommonService: CommonAPIService,
+    private erpCommonService: ErpCommonService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
-    this.buildForm();
+    this.getItemDetails();
+    this.getReport();
     this.getSchool();
     this.getSession();
-    this.getFeeMonths();
-    this.getAllEmployee('');
-  }
-
-  buildForm() {
-    this.attendanceReport = this.fbuild.group({
-      month_id: ''
-    });
-
-  }
-  getFeeMonths() {
-    this.monthArray = [];
-    this.feeService.getFeeMonths({}).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.monthArray = result.data;
-      } else {
-      }
-    });
-  }
-  angularGridReady(angularGrid: AngularGridInstance) {
-    this.angularGrid = angularGrid;
-    this.gridObj = angularGrid.slickGrid; // grid object
-    this.dataviewObj = angularGrid.dataView;
-    this.updateTotalRow(angularGrid.slickGrid);
-  }
-  updateTotalRow(grid: any) {
-    if (this.totalRow) {
-      let columnIdx = grid.getColumns().length;
-      while (columnIdx--) {
-        const columnId = grid.getColumns()[columnIdx].id;
-        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
-      }
-    }
-
-  }
-  getAllEmployee(value) {
-    this.employeeArray = [];
-    if (value) {
-      this.commonAPIService.getFilterData(value).subscribe((result: any) => {
-        if (result && result.data.length > 0) {
-          this.employeeArray = result.data;
-          this.getEmployeeAttendance();
-        }
-      });
-    } else {
-      this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-        if (result && result.length > 0) {
-          this.employeeArray = result;
-          this.getEmployeeAttendance();
-        }
-      });
-    }
   }
   getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -200,12 +136,7 @@ export class AttendanceReportsComponent implements OnInit {
       }
     });
   }
-  getSessionName(id) {
-    const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
-    if (findex !== -1) {
-      return this.sessionArray[findex].ses_name;
-    }
-  }
+
   getSchool() {
     this.erpCommonService.getSchool()
       .subscribe(
@@ -215,91 +146,20 @@ export class AttendanceReportsComponent implements OnInit {
           }
         });
   }
-  getEmployeeAttendance() {
-    this.attendanceArray = [];
-    this.employeeAttendanceArray = [];
-    this.dataset = [];
-    this.columnDefinitions = [];
-    this.holidayArray = [];
-    var no_of_days = this.getDaysInMonth(this.attendanceReport.value.month_id, new Date().getFullYear());
-    const inputJson: any = {};
-    inputJson.datefrom = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-1';
-    inputJson.dateto = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + no_of_days;
-    this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
-        this.holidayArray = res.data;
-        const dateArray: any[] = [];
-        var date;
-        var dateFormate;
-        for (let i = 0; i <= no_of_days; i++) {
-          date = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + i;
-          dateFormate = this.commonAPIService.dateConvertion(date, 'y-MM-dd');
-          if (i !== 0) {
-            const findex = this.holidayArray.indexOf(dateFormate);
-            if (findex !== -1) {
-              dateArray.push({
-                date: date,
-                attendance: 'h'
-              });
-            } else {
-              dateArray.push({
-                date: date,
-                attendance: ''
-              });
-            }
-
-          }
-        }
-        for (let item of this.employeeArray) {
-          this.employeeAttendanceArray.push({
-            emp_id: item.emp_id,
-            emp_name: item.emp_name,
-            attendance_array: dateArray
-          });
-        }
-        const checkifMonthEntry: any = {
-          "$and": [
-            { "ses_id": this.session.ses_id },
-            { "month_id": new Date(this.attendanceReport.value.month_id).getMonth() + 1 }
-          ]
-        };
-        this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
-          if (res && res.status === 'ok') {
-            this.attendanceArray = res.data;
-            this.getAttendanceReport('');
-          } else {
-            this.attendanceArray = [];
-            this.getAttendanceReport('');
-          }
-        });
-      } else {
-        this.nodataFlag = true;
+  getItemDetails() {
+    this.inventory.getItemsFromMaster({}).subscribe((result: any) => {
+      if (result) {
+        this.itemDetailsArray = result;
       }
-
     });
   }
-  getDaysInMonth(month, year) {
-    return new Date(year, month, 0).getDate();
-  };
-
-  getAttendance(emp_id, date) {
-    let findex: any = '';
-    findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
+  getItemName(item_code) {
+    const findex = this.itemDetailsArray.findIndex(f => Number(f.item_code) === Number(item_code));
     if (findex !== -1) {
-      let findex2: any = '';
-      findex2 = this.attendanceArray[findex].employeeList.findIndex(f => Number(f.emp_id) === Number(emp_id));
-      if (findex2 !== -1) {
-        return this.attendanceArray[findex].employeeList[findex2].attendance;
-      } else {
-        return '-';
-      }
-    }
-    else {
-      return '-';
+      return this.itemDetailsArray[findex].item_name;
     }
   }
-
-  getAttendanceReport(value: any) {
+  getReport() {
     this.dataArr = [];
     this.totalRow = {};
     this.columnDefinitions = [];
@@ -392,7 +252,7 @@ export class AttendanceReportsComponent implements OnInit {
             this.exportToExcel(this.dataset);
           }
           if (args.command === 'export-csv') {
-            this.exportToFile('csv');
+            // this.exportToFile('csv');
           }
         },
         onColumnsChanged: (e, args) => {
@@ -419,101 +279,110 @@ export class AttendanceReportsComponent implements OnInit {
     this.dataset = [];
     this.columnDefinitions = [
       {
-        id: 'srno',
-        name: 'SNo.',
-        field: 'srno',
-        sortable: true,
-        maxWidth: 40,
-
-      },
-      {
-        id: 'full_name', name: 'Full Name', field: 'full_name', sortable: true,
+        id: 'date', name: 'Date', field: 'date', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 80
+        width: 20,
+      },
+      {
+        id: 'item_code', name: 'Item Code', field: 'item_code', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 15
+      }
+      ,
+      {
+        id: 'item_name', name: 'Item Name', field: 'item_name', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 40,
+      },
+      {
+        id: 'particulars', name: 'Particulars', field: 'particulars', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 35
+      }
+      ,
+      {
+        id: 'stu_name', name: 'Name', field: 'stu_name', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 50,
+      },
+      {
+        id: 'quantity_in', name: 'Quantity In', field: 'quantity_in', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 30,
+        groupTotalsFormatter: this.sumTotalsFormatter,
+      }
+      ,
+      {
+        id: 'quantity_out', name: 'Quantity Out', field: 'quantity_out', sortable: true,
+        filterable: true,
+        filterSearchType: FieldType.string,
+        width: 30,
+        groupTotalsFormatter: this.sumTotalsFormatter,
       }
     ];
+    this.inventory.getStockLedger().subscribe((result: any) => {
+      if (result) {
+        repoArray = result;
+        let ind = 0;
+        for (let item of repoArray) {
+          let obj: any = {};
+          obj['id'] = item.item_name + ind;
+          obj['item_code'] = item.item_code;
+          obj['item_name'] = new CapitalizePipe().transform(this.getItemName(item.item_code));
+          obj['item_code_name'] = item.item_code + '-' + new CapitalizePipe().transform(this.getItemName(item.item_code));
+          obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
+          obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
+          obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+          obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
+          obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
+          this.dataset.push(obj);
+          ind++;
+        }
+        const sortedArr: any[] = this.dataset.sort((a, b) => {
+          const isAsc = false;
+          return compare(new Date(a.date).getTime(), new Date(b.date).getTime(), isAsc);
+        });
+        this.dataset = sortedArr;
 
-    if (this.employeeAttendanceArray.length > 0) {
-      repoArray = this.employeeAttendanceArray;
-      let index = 0;
-      for (const item of repoArray) {
-        if (index === 0) {
-          for (const dety of item.attendance_array) {
-            let date = this.commonAPIService.dateConvertion(dety.date, 'dd-MMM-y')
-            let date_name = this.commonAPIService.dateConvertion(dety.date, 'dd');
-            this.columnDefinitions.push({
-              id: date, name: date_name, field: date, sortable: true,
-              filterable: true,
-              filterSearchType: FieldType.string,
-              formatter: this.iconFormatter
-            });
-          }
-          this.columnDefinitions.push({
-            id: 'total', name: 'Total Present', field: 'total', sortable: true,
-            filterable: true,
-            filterSearchType: FieldType.string
-          });
-          this.columnDefinitions.push({
-            id: 'total_absent', name: 'Total Absent', field: 'total_absent', sortable: true,
-            filterable: true,
-            filterSearchType: FieldType.string
-          });
+        this.totalRow = {};
+        const obj3: any = {};
+        obj3['id'] = 'footer';
+        obj3['date'] = 'Grand Total';
+        obj3['item_code'] = '';
+        obj3['item_name'] = '';
+        obj3['particulars'] = '';
+        obj3['stu_name'] = '';
+        obj3['quantity_in'] = this.dataset.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        obj3['quantity_out'] = this.dataset.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0)
+        this.totalRow = obj3;
+        this.aggregatearray.push(new Aggregators.Sum('quantity_in'));
+        this.aggregatearray.push(new Aggregators.Sum('quantity_out'));
+        if (this.dataset.length <= 5) {
+          this.gridHeight = 300;
+        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+          this.gridHeight = 400;
+        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+          this.gridHeight = 550;
+        } else if (this.dataset.length > 20) {
+          this.gridHeight = 750;
         }
-        const obj: any = {};
-        obj['id'] = (index + 1);
-        obj['srno'] = (index + 1);
-        obj['full_name'] = item.emp_name ? new CapitalizePipe().transform(item.emp_name) : '-';
-        var dateFormate;
-        for (const dety of item.attendance_array) {
-          let date = this.commonAPIService.dateConvertion(dety.date, 'dd-MMM-y')
-          if (dety.attendance === 'h') {
-            obj[date] = 'h';
-          } else {
-            dateFormate = this.commonAPIService.dateConvertion(dety.date, 'y-MM-dd');
-            obj[date] = this.getAttendance(item.emp_id, dateFormate);
-          }
-          obj['total'] = this.getSumByEmplyoeewise(item.emp_id);
-          obj['total_absent'] = this.getAbsentSum(item.emp_id);
-        }
-        this.dataset.push(obj);
-        index++;
+        this.tableFlag = true;
+        this.nodataFlag = false;
+        setTimeout(() => this.groupByItemName(), 2);
+      } else {
+        this.nodataFlag = true;
+        this.tableFlag = true;
       }
-      this.totalRow = {};
-      const obj3: any = {};
-      obj3['id'] = 'footer';
-      obj3['srno'] = '';
-      obj3['full_name'] = 'Total Present';
-      for (const item of repoArray) {
-        for (const dety of item.attendance_array) {
-          let date = this.commonAPIService.dateConvertion(dety.date, 'dd-MMM-y')
-          if (dety.attendance === 'h') {
-            obj3[date] = 0;
-          } else {
-            dateFormate = this.commonAPIService.dateConvertion(dety.date, 'y-MM-dd');
-            obj3[date] = this.getSumByDatewise(dateFormate);
-          }
-        }
-      }
-      obj3['total'] = this.dataset.map(t => t['total']).reduce((acc, val) => Number(acc) + Number(val), 0);
-      obj3['total_absent'] = this.dataset.map(t => t['total_absent']).reduce((acc, val) => Number(acc) + Number(val), 0);
-      this.totalRow = obj3;
-      if (this.dataset.length <= 5) {
-        this.gridHeight = 300;
-      } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-        this.gridHeight = 400;
-      } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-        this.gridHeight = 550;
-      } else if (this.dataset.length > 20) {
-        this.gridHeight = 750;
-      }
-      this.tableFlag = true;
-      this.nodataFlag = false;
-    } else {
-      this.nodataFlag = true;
-      this.tableFlag = true;
+    });
+    function compare(a, b, isAsc) {
+      return (a > b ? -1 : 1) * (isAsc ? 1 : -1);
     }
-
 
   }
   clearGroupsAndSelects() {
@@ -542,107 +411,31 @@ export class AttendanceReportsComponent implements OnInit {
       this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = groups[i] && groups[i].getter || '');
     }
   }
-
+  sumTotalsFormatter(totals, columnDef) {
+    const val = totals.sum && totals.sum[columnDef.field];
+    if (val != null) {
+      return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+    }
+    return '';
+  }
   showPreHeader() {
     this.gridObj.setPreHeaderPanelVisibility(true);
   }
-  iconFormatter(row, cell, value, columnDef, dataContext) {
-    if (value !== '-') {
-      if (value === 1) {
-        return "<i class='fas fa-check' style='color:green'></i>";
-      } else if (value === 'h') {
-        return '<i class="fas fa-hospital-symbol" style="color:orange"></i>';
-      } else {
-        return "<i class='fas fa-times' style='color:red'></i>";
-      }
-    } else {
-      return "-";
-    }
+  angularGridReady(angularGrid: AngularGridInstance) {
+    this.angularGrid = angularGrid;
+    this.gridObj = angularGrid.slickGrid; // grid object
+    this.dataviewObj = angularGrid.dataView;
+    this.updateTotalRow(angularGrid.slickGrid);
   }
-  selectTrackByFn(index, item) {
-    return index;
-  }
-  exportToFile(type = 'csv') {
-    let reportType: any = '';
-    this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Accession Master:') + this.sessionName;
-    this.angularGrid.exportService.exportToFile({
-      delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
-      filename: reportType + '_' + new Date(),
-      format: (type === 'csv') ? FileType.csv : FileType.txt
-    });
-  }
-  getSumByDatewise(date) {
-    let findex: any = '';
-    let totalArray = [];
-    var present = 0;
-    var absent = 0;
-    var total = 0;
-    findex = this.attendanceArray.findIndex(e => (e.entrydate) === (date));
-    if (findex !== -1) {
-      for (let item of this.attendanceArray[findex].employeeList) {
-        if (item.attendance === 1) {
-          present++;
-        } else if (item.attendance === 0) {
-          absent++;
-        }
-        total++;
-      }
-      totalArray.push({
-        'present': present,
-        'absent': absent,
-        'total': total,
-      });
-    }
-    return present;
-  }
-  getSumByEmplyoeewise(emp_id) {
-    let totalArray = [];
-    var present = 0;
-    var absent = 0;
-    var total = 0;
-    for (let item of this.attendanceArray) {
-      for (let dety of item.employeeList) {
-        if (dety.emp_id === emp_id) {
-          if (dety.attendance === 1) {
-            present++;
-          } else if (dety.attendance === 0) {
-            absent++;
-          }
-          total++;
-        }
+  updateTotalRow(grid: any) {
+    if (this.totalRow) {
+      let columnIdx = grid.getColumns().length;
+      while (columnIdx--) {
+        const columnId = grid.getColumns()[columnIdx].id;
+        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
       }
     }
-    totalArray.push({
-      'present': present,
-      'absent': absent,
-      'total': total,
-    });
-    return present;
-  }
-  getAbsentSum(emp_id) {
-    let totalArray = [];
-    var present = 0;
-    var absent = 0;
-    var total = 0;
-    for (let item of this.attendanceArray) {
-      for (let dety of item.employeeList) {
-        if (dety.emp_id === emp_id) {
-          if (dety.attendance === 1) {
-            present++;
-          } else if (dety.attendance === 0) {
-            absent++;
-          }
-          total++;
-        }
-      }
-    }
-    totalArray.push({
-      'present': present,
-      'absent': absent,
-      'total': total,
-    });
-    return absent;
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];
@@ -654,7 +447,7 @@ export class AttendanceReportsComponent implements OnInit {
     this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Employee Attendance Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Procurement Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -696,7 +489,7 @@ export class AttendanceReportsComponent implements OnInit {
       Object.keys(this.dataset).forEach((key: any) => {
         const arr: any[] = [];
         for (const item2 of this.exportColumnDefinitions) {
-          arr.push(this.commonAPIService.htmlToText(this.dataset[key][item2.id]));
+          arr.push(this.CommonService.htmlToText(this.dataset[key][item2.id]));
         }
         rowData.push(arr);
         this.pdfrowdata.push(arr);
@@ -753,12 +546,12 @@ export class AttendanceReportsComponent implements OnInit {
           doc.setFillColor('#c8d6e5');
         }
         // grand total
-        if (data.row.index === rows.length - 1) {
-          doc.setFontStyle('bold');
-          doc.setFontSize('18');
-          doc.setTextColor('#ffffff');
-          doc.setFillColor(67, 160, 71);
-        }
+        // if (data.row.index === rows.length - 1) {
+        //   doc.setFontStyle('bold');
+        //   doc.setFontSize('18');
+        //   doc.setTextColor('#ffffff');
+        //   doc.setFillColor(67, 160, 71);
+        // }
       },
       headStyles: {
         fontStyle: 'bold',
@@ -800,7 +593,6 @@ export class AttendanceReportsComponent implements OnInit {
       // tslint:disable-next-line:max-line-length
       head: [['No of records: ' + json.length]],
       didDrawPage: function (data) {
-
       },
       headStyles: {
         fontStyle: 'bold',
@@ -847,10 +639,16 @@ export class AttendanceReportsComponent implements OnInit {
     });
     doc.save(reportType + '_' + new Date() + '.pdf');
   }
+  getSessionName(id) {
+    const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
+    if (findex !== -1) {
+      return this.sessionArray[findex].ses_name;
+    }
+  }
   getGroupColumns(columns) {
     let grName = '';
     for (const item of columns) {
-      for (const titem of this.columnDefinitions) { 
+      for (const titem of this.columnDefinitions) {
         if (item.getter === titem.id) {
           grName = grName + titem.name + ',';
           break;
@@ -874,9 +672,9 @@ export class AttendanceReportsComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('employee_attendance_') + this.sessionName;
+    reportType = new TitleCasePipe().transform('procurement_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('employee attendance report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('procurement report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -894,7 +692,7 @@ export class AttendanceReportsComponent implements OnInit {
       Object.keys(json).forEach(key => {
         const obj: any = {};
         for (const item2 of this.exportColumnDefinitions) {
-          obj[item2.id] = this.checkReturn(this.commonAPIService.htmlToText(json[key][item2.id]));
+          obj[item2.id] = this.checkReturn(this.CommonService.htmlToText(json[key][item2.id]));
 
         }
         worksheet.addRow(obj);
@@ -1074,8 +872,15 @@ export class AttendanceReportsComponent implements OnInit {
       return data;
     }
   }
-  openSearchDialog = (data) => { this.searchModal.openModal(data); }
-  searchOk($event) {
-    this.getAllEmployee($event);
+  groupByItemName() {
+    this.dataviewObj.setGrouping({
+      getter: 'item_code_name',
+      formatter: (g) => {
+        return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+      },
+      aggregators: this.aggregatearray,
+      aggregateCollapsed: true,
+      collapsed: false,
+    });
   }
 }

@@ -29,6 +29,33 @@ export class ReportsComponent implements OnInit {
       report_main_image_class: '',
       report_middle_class: 'inline-flex',
       report_check_icon_class: ''
+    },
+    {
+      report_id: '3',
+      report_name: 'Procurement Report',
+      report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+      report_main_image_class: '',
+      report_middle_class: 'inline-flex',
+      report_check_icon_class: ''
+    },
+    {
+      report_id: '4',
+      report_name: 'Store Ledger Report',
+      report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+      report_main_image_class: '',
+      report_middle_class: 'inline-flex',
+      report_check_icon_class: ''
+    },
+    {
+      report_id: '5',
+      report_name: 'Repair/Damaged Report',
+      report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+      report_main_image_class: '',
+      report_middle_class: 'inline-flex',
+      report_check_icon_class: ''
     }
   ];
   reportType: string;
@@ -42,15 +69,6 @@ export class ReportsComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.userName = this.currentUser.full_name;
   }
-  checkEnable(report_id) {
-    if (Number(report_id) === 3 || Number(report_id) === 4 || Number(report_id) === 13
-      || Number(report_id) === 14) {
-      return 'report-card1 mat-card';
-    } else {
-      return 'report-card mat-card';
-    }
-  }
-
   switchReport() {
     this.accountFlag = false;
     this.reportFlag = true;
@@ -102,7 +120,7 @@ export class ReportsComponent implements OnInit {
       if ($event.report_index === 2) {
         this.reportHeader = 'Outstanding Report - ' + $event.report_name;
       }
-      if ($event.report_index === 8) {
+      if ($event.report_index === 3) {
         this.reportHeader = 'Concession - ' + $event.report_name;
       }
       if ($event.report_index === 10) {
