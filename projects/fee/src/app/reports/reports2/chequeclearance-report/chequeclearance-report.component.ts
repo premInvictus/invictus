@@ -519,12 +519,16 @@ export class ChequeclearanceReportComponent implements OnInit {
 						: 0;
 					obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
 						repoArray[Number(index)]['bank_name'] : '-';
-					if (Number(repoArray[Number(index)]['status']) === 1) {
+					if (repoArray[Number(index)]['status'] === 'c' || Number(repoArray[Number(index)]['status']) === 1) {
 						obj['status'] = 'Cleared';
-					} else if (Number(repoArray[Number(index)]['status']) === 2) {
+					} else if (repoArray[Number(index)]['status'] === 'b') {
 						obj['status'] = 'Bounced';
-					} else if (Number(repoArray[Number(index)]['status']) === 0) {
+					} else if (Number(repoArray[Number(index)]['status']) === 2) {
+						obj['status'] = 'Dishonoured';
+					} else if (Number(repoArray[Number(index)]['status']) === 3) {
 						obj['status'] = 'Deposited';
+					} else if (Number(repoArray[Number(index)]['status']) === 4) {
+						obj['status'] = 'Approved';
 					} else {
 						obj['status'] = 'Pending';
 					}
