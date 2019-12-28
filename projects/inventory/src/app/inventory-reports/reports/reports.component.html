@@ -56,9 +56,8 @@
               <div class="col-12">
                 <app-item-master-reports (displyRep)="displyRep($event)" *ngIf="reportType === '1'">
                 </app-item-master-reports>
-
-                <!-- <app-outstanding-report (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
-                </app-outstanding-report> -->
+                <app-consumption-reports (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
+                </app-consumption-reports>
                 <app-procurement-report (displyRep)="displyRep($event)" *ngIf="reportType === '3'">
                 </app-procurement-report>
                 <app-store-ledger (displyRep)="displyRep($event)" *ngIf="reportType === '4'">

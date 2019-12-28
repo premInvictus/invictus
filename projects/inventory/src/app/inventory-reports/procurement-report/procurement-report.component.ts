@@ -15,7 +15,7 @@ import {
   GridOption, Column, AngularGridInstance, Grouping, Aggregators,
   FieldType,
   Filters,
-  Sorters,
+  Sorters, 
   SortDirectionNumber,
   Formatters
 } from 'angular-slickgrid';
@@ -282,7 +282,16 @@ export class ProcurementReportComponent implements OnInit {
         id: 'receipt_date', name: 'Receipt Date', field: 'receipt_date', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 40
+        width: 40,
+        grouping: {
+          getter: 'receipt_date',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
       ,
       {
@@ -296,13 +305,31 @@ export class ProcurementReportComponent implements OnInit {
         id: 'vendor_id', name: 'Vendo ID', field: 'vendor_id', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 25
+        width: 25,
+        grouping: {
+          getter: 'vendor_id',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
       ,
       {
         id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
         filterable: true,
-        filterSearchType: FieldType.string
+        filterSearchType: FieldType.string,
+        grouping: {
+          getter: 'vendor_name',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
       ,
       {
@@ -399,14 +426,14 @@ export class ProcurementReportComponent implements OnInit {
     //this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
-    if (this.totalRow) {
-      let columnIdx = grid.getColumns().length;
-      while (columnIdx--) {
-        const columnId = grid.getColumns()[columnIdx].id;
-        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
-      }
-    }
+    // if (this.totalRow) {
+    //   let columnIdx = grid.getColumns().length;
+    //   while (columnIdx--) {
+    //     const columnId = grid.getColumns()[columnIdx].id;
+    //     const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+    //     columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+    //   }
+    // }
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];

@@ -20,12 +20,13 @@ import {
   Formatters
 } from 'angular-slickgrid';
 
+
 @Component({
-  selector: 'app-store-ledger',
-  templateUrl: './store-ledger.component.html',
-  styleUrls: ['./store-ledger.component.css']
+  selector: 'app-consumption-reports',
+  templateUrl: './consumption-reports.component.html',
+  styleUrls: ['./consumption-reports.component.css']
 })
-export class StoreLedgerComponent implements OnInit {
+export class ConsumptionReportsComponent implements OnInit {
   @Input() userName: any = '';
   notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
@@ -283,12 +284,30 @@ export class StoreLedgerComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 20,
+        grouping: {
+          getter: 'date',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       },
       {
         id: 'item_code', name: 'Item Code', field: 'item_code', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 15
+        width: 15,
+        grouping: {
+          getter: 'item_code',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
       ,
       {
@@ -296,12 +315,30 @@ export class StoreLedgerComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 40,
+        grouping: {
+          getter: 'item_name',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       },
       {
         id: 'particulars', name: 'Particulars', field: 'particulars', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 35
+        width: 35,
+        grouping: {
+          getter: 'particulars',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false
+        },
       }
       ,
       {
@@ -309,24 +346,17 @@ export class StoreLedgerComponent implements OnInit {
         filterable: true,
         filterSearchType: FieldType.string,
         width: 50,
-      },
-      {
-        id: 'quantity_in', name: 'Quantity In', field: 'quantity_in', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 30,
-        groupTotalsFormatter: this.sumTotalsFormatter,
       }
       ,
       {
-        id: 'quantity_out', name: 'Quantity Out', field: 'quantity_out', sortable: true,
+        id: 'quantity_out', name: 'Quantity', field: 'quantity_out', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
         width: 30,
         groupTotalsFormatter: this.sumTotalsFormatter,
       }
     ];
-    this.inventory.getStockLedger().subscribe((result: any) => {
+    this.inventory.getConsumption().subscribe((result: any) => {
       if (result) {
         repoArray = result;
         let ind = 0;
@@ -339,7 +369,6 @@ export class StoreLedgerComponent implements OnInit {
           obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
           obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
           obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
-          obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
           obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
           this.dataset.push(obj);
           ind++;
@@ -358,10 +387,8 @@ export class StoreLedgerComponent implements OnInit {
         obj3['item_name'] = '';
         obj3['particulars'] = '';
         obj3['stu_name'] = '';
-        obj3['quantity_in'] = this.dataset.map(t => t['quantity_in']).reduce((acc, val) => Number(acc) + Number(val), 0);
         obj3['quantity_out'] = this.dataset.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0)
         this.totalRow = obj3;
-        this.aggregatearray.push(new Aggregators.Sum('quantity_in'));
         this.aggregatearray.push(new Aggregators.Sum('quantity_out'));
         if (this.dataset.length <= 5) {
           this.gridHeight = 300;
@@ -374,7 +401,7 @@ export class StoreLedgerComponent implements OnInit {
         }
         this.tableFlag = true;
         this.nodataFlag = false;
-        setTimeout(() => this.groupByItemName(), 2);
+        // setTimeout(() => this.groupByItemName(), 2);
       } else {
         this.nodataFlag = true;
         this.tableFlag = true;

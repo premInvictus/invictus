@@ -11,7 +11,7 @@ import * as ExcelProper from 'exceljs';
 declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
-import {
+import { 
   GridOption, Column, AngularGridInstance, Grouping, Aggregators,
   FieldType,
   Filters,
@@ -197,7 +197,7 @@ export class ItemMasterReportsComponent implements OnInit {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
-    // this.updateTotalRow(angularGrid.slickGrid);
+    this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
     let columnIdx = grid.getColumns().length;
@@ -292,6 +292,7 @@ export class ItemMasterReportsComponent implements OnInit {
                   filterSearchType: FieldType.string,
                   filter: { model: Filters.compoundInput },
                   width: 25,
+                  groupTotalsFormatter: this.sumTotalsFormatter,
                 }
               ];
             }
@@ -318,6 +319,17 @@ export class ItemMasterReportsComponent implements OnInit {
               this.dataset.push(obj);
             }
           }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = 'Grand Total';
+          obj3['item_name'] ='';
+          obj3['item_category'] ='';
+          obj3['item_nature'] = '';
+          obj3['item_reorder_level'] ='';
+          obj3['item_qty'] =  this.dataset.map(t => t['item_qty']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('item_qty'));
           if (this.dataset.length <= 5) {
             this.gridHeight = 300;
           } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -437,6 +449,7 @@ export class ItemMasterReportsComponent implements OnInit {
                   filterSearchType: FieldType.string,
                   filter: { model: Filters.compoundInput },
                   width: 25,
+                  groupTotalsFormatter: this.sumTotalsFormatter,
                 }
               ];
             }
@@ -451,6 +464,18 @@ export class ItemMasterReportsComponent implements OnInit {
             this.dataset.push(obj);
             ind++;
           }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = 'Grand Total';
+          obj3['item_name'] ='';
+          obj3['item_category'] ='';
+          obj3['item_nature'] = '';
+          obj3['item_location'] = '';
+          obj3['item_reorder_level'] ='';
+          obj3['item_qty'] =  this.dataset.map(t => t['item_qty']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('item_qty'));
           if (this.dataset.length <= 5) {
             this.gridHeight = 300;
           } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
@@ -468,7 +493,13 @@ export class ItemMasterReportsComponent implements OnInit {
       });
     }
   }
-
+  sumTotalsFormatter(totals, columnDef) {
+    const val = totals.sum && totals.sum[columnDef.field];
+    if (val != null) {
+      return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+    }
+    return '';
+  }
   srnTotalsFormatter(totals, columnDef) {
     if (totals.group.level === 0) {
       return '<b class="total-footer-report">Total</b>';
