@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CommonAPIService, SisService, InventoryService } from '../../_services';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { CommonAPIService, InventoryService } from '../../_services';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { CapitalizePipe } from '../../_pipes';
 import { ErpCommonService } from 'src/app/_services';
@@ -15,7 +15,7 @@ import {
   GridOption, Column, AngularGridInstance, Grouping, Aggregators,
   FieldType,
   Filters,
-  Sorters, 
+  Sorters,
   SortDirectionNumber,
   Formatters
 } from 'angular-slickgrid';
@@ -26,6 +26,7 @@ import {
   styleUrls: ['./procurement-report.component.css']
 })
 export class ProcurementReportComponent implements OnInit {
+  @ViewChild('receiptModal') receiptModal;
   @Input() userName: any = '';
   notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
@@ -45,6 +46,7 @@ export class ProcurementReportComponent implements OnInit {
   feeHeadJson: any[] = [];
   groupColumns: any[] = [];
   groupLength: any;
+  submitParam: any = {};
   exportColumnDefinitions: any[] = [];
   reportFilterForm: FormGroup;
   // @Output() displyRep = new EventEmitter();
@@ -275,7 +277,8 @@ export class ProcurementReportComponent implements OnInit {
         id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
         filterable: true,
         filterSearchType: FieldType.string,
-        width: 25
+        width: 25,
+        formatter: this.receiptFormatter
       }
       ,
       {
@@ -371,9 +374,9 @@ export class ProcurementReportComponent implements OnInit {
           ind++;
         }
         if (this.dataset.length <= 5) {
-          this.gridHeight = 300;
+          this.gridHeight = 350;
         } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-          this.gridHeight = 400;
+          this.gridHeight = 450;
         } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
           this.gridHeight = 550;
         } else if (this.dataset.length > 20) {
@@ -434,6 +437,21 @@ export class ProcurementReportComponent implements OnInit {
     //     columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
     //   }
     // }
+  }
+  receiptFormatter(row, cell, value, columnDef, dataContext) {
+    return '<a style="text-decoration:underline !important;cursor:pointer">' + value + '</a>';
+  }
+  onCellClicked(e, args) {
+    if (args.cell === args.grid.getColumnIndex('receipt_no')) {
+      const item: any = args.grid.getDataItem(args.row);
+      if (item['receipt_no']) {
+        this.actionList(Number(item['receipt_no']), false);
+      }
+    }
+  }
+  actionList(pm_id, action) {
+    this.submitParam.pm_id = pm_id;
+    this.receiptModal.openModal(this.submitParam);
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];
