@@ -59,6 +59,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     remark:false,
     subjectwise_bifurcation:false
   };
+  exambifurcateCount = 0;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -685,6 +686,13 @@ export class ViewGradecardDialogComponent implements OnInit {
       this.gflag = true;
     });
   }
+  getExambirfurcateColspan(element) {
+    if(element.exam_bifurcate.bifurcated_marks) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
   getExamDetails() {
     this.sexamArray = [];
     const param: any = {};
@@ -711,6 +719,9 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.examArray.forEach(element => {
           if (element.exam_category === '1') {
             this.sexamArray.push(element);
+            if(element.exam_bifurcate.bifurcated_marks) {
+              this.exambifurcateCount += 1;
+            }
           } else {
             this.cexamArray.push(element);
           }
