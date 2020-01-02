@@ -792,7 +792,7 @@
             </div>
             <hr>
             <div class="row"
-                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
                 <div class="col-12">
                     <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a 8-pont grading
                         scale as
@@ -800,7 +800,7 @@
                 </div>
             </div>
             <div class="row"
-                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
                 <div class="col-12">
 
                     <div style="margin-top: 15px; text-align: center; width: 100%;">
