@@ -55,9 +55,24 @@
                                                    </div>
                                                    <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
+                                                         <mat-label>Interface</mat-label>
+                                                         <mat-select placeholder="Interface"
+                                                         [value]="typeVal"
+                                                            (selectionChange)="changeIsWebApp($event)">
+                                                            <mat-option value="">Select Interface</mat-option>
+                                                            <mat-option *ngFor="let item of typeArray"
+                                                               [value]="item.id">
+                                                               {{item.name}}
+                                                            </mat-option>
+                                                         </mat-select>
+                                                      </mat-form-field>
+                                                   </div>
+                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                      <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Project</mat-label>
                                                          <mat-select formControlName="pro_id" placeholder="Project"
-                                                            (ngModelChange)="getModuleList($event)">
+                                                            [disabled]="isApp"
+                                                            (selectionChange)="getModuleList($event)">
                                                             <mat-option value="">Select Project</mat-option>
                                                             <mat-option *ngFor="let item of projectsArray"
                                                                [value]="item.pro_id">
@@ -67,7 +82,7 @@
                                                       </mat-form-field>
                                                    </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row" *ngIf="moduleArray.length > 0">
                                                    <div
                                                       class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
                                                       <div>
@@ -81,6 +96,11 @@
                                                             </div>
                                                          </div>
                                                       </div>
+                                                   </div>
+                                                </div>
+                                                <div class="row" *ngIf="moduleArray.length == 0">
+                                                   <div class="col-12">
+                                                      <span>No Records Found</span>
                                                    </div>
                                                 </div>
                                              </form>

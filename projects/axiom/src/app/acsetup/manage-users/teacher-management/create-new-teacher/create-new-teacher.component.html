@@ -100,21 +100,21 @@
                                     <div class="col-lg-5 fin-tab-col-50 col-mobile-view-add-ques" *ngIf="login_id">
                                        <div class="row">
                                           <div class="col-lg-4 fin-tab-col-50">
-                                                <mat-checkbox class="user-opt-select" name="read-only"
+                                             <mat-checkbox class="user-opt-select" name="read-only"
                                                 (change)="activePasswordInput($event)" formControlName="changepassword">
                                                 Change Password </mat-checkbox>
                                           </div>
-                                          <div class="col-lg-8 fin-tab-col-50" *ngIf="Teacher_Form.value.changepassword">
-                                                <mat-form-field class="form-field" appearance="outline"
-                                                >
+                                          <div class="col-lg-8 fin-tab-col-50"
+                                             *ngIf="Teacher_Form.value.changepassword">
+                                             <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Password</mat-label>
                                                 <input matInput formControlName="au_password" autocomplete="off"
                                                    placeholder="Password" type="password">
                                              </mat-form-field>
                                           </div>
                                        </div>
-                                       
-                                       
+
+
                                     </div>
                                     <div class="col-lg-7 fin-tab-col-50 col-mobile-view-add-ques">
                                        <div class="image-upload">
@@ -277,12 +277,25 @@
                         </div>
                         <div class="row">
                            <div class="col-sm-4 col-md-4 col-lg-4">
+                              <mat-form-field class="form-field" appearance="outline">
+                                 <mat-label>Interface</mat-label>
+                                 <mat-select placeholder="Interface" [value]="typeVal"
+                                    (selectionChange)="changeIsWebApp($event)">
+                                    <mat-option value="">Select Interface</mat-option>
+                                    <mat-option *ngFor="let item of typeArray" [value]="item.id">
+                                       {{item.name}}
+                                    </mat-option>
+                                 </mat-select>
+                              </mat-form-field>
+                           </div>
+                           <div class="col-sm-4 col-md-4 col-lg-4">
                               <div class="form-group ">
                                  <div class="col-lg-9">
                                     <mat-form-field class="form-field" appearance="outline">
                                        <mat-label>Select Project</mat-label>
                                        <mat-select placeholder="Project" formControlName="pro_id"
-                                          (ngModelChange)="getModuleList($event)">
+                                       [disabled]="isApp"
+                                          (selectionChange)="getModuleList($event.value)">
                                           <mat-option value="">
                                              Select Project
                                           </mat-option>
@@ -295,7 +308,7 @@
                               </div>
                            </div>
                         </div>
-                        <div class="row">
+                        <div class="row" *ngIf="moduleArray.length > 0">
                            <div class="col-lg-12">
                               <div>
                                  <div>
@@ -310,6 +323,11 @@
                               </div>
                            </div>
                         </div>
+                        <div class="row" *ngIf="moduleArray.length == 0">
+                              <div class="col-12">
+                                 <span>No Records Found</span>
+                              </div>
+                           </div>
                         <br>
                         <div class="row">
                            <div class="col-12 mt-3 ">

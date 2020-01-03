@@ -26,6 +26,9 @@ export class AdminService {
 		if (value.role_id) {
 			param.role_id = value.role_id;
 		}
+		if (value.mor_type) {
+			param.mor_type = value.mor_type;
+		}
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getModuleList', param);
 	}
 	getUserAccessSchool(value) {
