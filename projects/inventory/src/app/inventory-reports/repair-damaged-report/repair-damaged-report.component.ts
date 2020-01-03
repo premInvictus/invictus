@@ -490,6 +490,9 @@ export class RepairDamagedReportComponent implements OnInit {
         rowData.push(arr);
         this.pdfrowdata.push(arr);
       });
+    }{
+      // iterate all groups
+      this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
     }
     if (this.totalRow) {
       const arr: any[] = [];
@@ -636,6 +639,82 @@ export class RepairDamagedReportComponent implements OnInit {
     });
     doc.save(reportType + '_' + new Date() + '.pdf');
   }
+
+  checkGroupLevelPDF(item, doc, headerData) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        // add and style for groupeditem level heading
+        this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+        this.levelHeading.push(this.pdfrowdata.length - 1);
+        if (groupItem.groups) {
+          this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+          const levelArray: any[] = [];
+          const obj3: any = {};
+
+          obj3['id'] = 'footer';
+          obj3['item_code'] = '';
+          obj3['item_name'] = '';
+          obj3['item_qty'] = '';
+          obj3['reason_desc'] = '';
+          obj3['created_date'] = '';
+          obj3['created_by'] = '';
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+
+        } else {
+          const rowData: any[] = [];
+          Object.keys(groupItem.rows).forEach(key => {
+            const arr: any = [];
+            for (const item2 of this.columnDefinitions) {
+              if (item2.id === 'receipt_date') {
+                arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
+              } else {
+                arr.push(this.CommonService.htmlToText(groupItem.rows[key][item2.id]));
+              }
+            }
+            rowData.push(arr);
+            this.pdfrowdata.push(arr);
+          });
+          const levelArray: any[] = [];
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = '';
+          obj3['item_name'] = '';
+          obj3['item_qty'] = '';
+          obj3['reason_desc'] = '';
+          obj3['created_date'] = '';
+          obj3['created_by'] = '';
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+        }
+      }
+    }
+  }
+
   getSessionName(id) {
     const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
     if (findex !== -1) {
@@ -695,6 +774,9 @@ export class RepairDamagedReportComponent implements OnInit {
         }
         worksheet.addRow(obj);
       });
+    }else {
+      // iterate all groups
+      this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
     }
     if (this.totalRow) {
       worksheet.addRow(this.totalRow);
@@ -856,6 +938,154 @@ export class RepairDamagedReportComponent implements OnInit {
       const blob = new Blob([data], { type: 'application/octet-stream' });
       saveAs(blob, fileName);
     });
+  }
+  checkGroupLevel(item, worksheet) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        worksheet.addRow({});
+        this.notFormatedCellArray.push(worksheet._rows.length);
+        // style for groupeditem level heading
+        worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+          this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
+        worksheet.getCell('A' + worksheet._rows.length).value = this.CommonService.htmlToText(groupItem.title);
+        worksheet.getCell('A' + worksheet._rows.length).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'c8d6e5' },
+          bgColor: { argb: 'ffffff' },
+        };
+        worksheet.getCell('A' + worksheet._rows.length).border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        worksheet.getCell('A' + worksheet._rows.length).font = {
+          name: 'Arial',
+          size: 10,
+          bold: true
+        };
+
+        if (groupItem.groups) {
+          this.checkGroupLevel(groupItem.groups, worksheet);
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = '';
+          obj3['item_name'] = '';
+          obj3['item_qty'] = '';
+          obj3['reason_desc'] = '';
+          obj3['created_date'] = '';
+          obj3['created_by'] = '';
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          // style row having total
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        } else {
+          Object.keys(groupItem.rows).forEach(key => {
+            const obj = {};
+            for (const item2 of this.exportColumnDefinitions) {
+              if (item2.id === 'receipt_date') {
+                obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
+              } else {
+                obj[item2.id] = this.checkReturn(this.CommonService.htmlToText(groupItem.rows[key][item2.id]));
+              }
+            }
+            worksheet.addRow(obj);
+          });
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['item_code'] = '';
+          obj3['item_name'] = '';
+          obj3['item_qty'] = '';
+          obj3['reason_desc'] = '';
+          obj3['created_date'] = '';
+          obj3['created_by'] = '';
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        }
+      }
+    }
   }
   checkWidth(id, header) {
     const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
