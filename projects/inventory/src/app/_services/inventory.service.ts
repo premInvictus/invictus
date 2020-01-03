@@ -131,12 +131,21 @@ export class InventoryService {
   }
   getStockLedger() {
     return this.http.get(environment.apiInvUrl + '/requistion-master/getStockLedger');
-  } 
+  }
   getConsumption() {
     return this.http.get(environment.apiInvUrl + '/requistion-master/getConsumption');
   }
   getItemsFromMaster(value) {
     this.service.stopLoading();
-    return this.http.post(environment.apiInvUrl + '/configuration/getAllItemsFromMaster',value);
+    return this.http.post(environment.apiInvUrl + '/configuration/getAllItemsFromMaster', value);
   }
+  downloadEmployeeExcel(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/bulkUpdate/downloadEmployeeExcel', value);
+  }
+  uploadEmployeeExcel(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/bulkUpdate/uploadEmployeeExcel', value);
+  }
+
 }
