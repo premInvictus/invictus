@@ -333,8 +333,22 @@ export class ViewGradecardDialogComponent implements OnInit {
     //console.log('this.subjectArray',this.subjectArray);
     const currentSub = this.subjectArray.find(e => e.sub_id === sub_id);
     let totalscore = 0;
+    let child_count_except_0 = 0;
+      for (let index = 0; index < currentSub.childSub.length; index++) {
+        let isSelected = true;
+        const element = currentSub.childSub[index];
+        const curExam = this.examArray.find(e => e.exam_id === exam_id);
+        curExam.exam_sub_exam_max_marks.forEach(subexam => {
+          if(this.getOneSubjectSubexamMark(this.data.param.eme_class_id, exam_id, subexam.se_id, element.sub_id) <= 0) {
+            isSelected = false;
+          }
+        });
+        if(isSelected) {
+          child_count_except_0  = child_count_except_0 + 1;
+        }        
+      }
     totalscore = this.getCalculatedMarks(subsubject_id, exam_id, term);
-    return this.getTwoDecimalValue(totalscore/currentSub.childSub.length);
+    return this.getTwoDecimalValue(totalscore/child_count_except_0);
   }
   getCalculatedMarksSub(sub_id, exam_id, term) {
     //console.log('this.subjectArray',this.subjectArray);
@@ -344,7 +358,21 @@ export class ViewGradecardDialogComponent implements OnInit {
       currentSub.childSub.forEach(element => {
         totalscore += this.getCalculatedMarks(element.sub_id, exam_id, term);
       });
-      totalscore = totalscore / currentSub.childSub.length;
+      let child_count_except_0 = 0;
+      for (let index = 0; index < currentSub.childSub.length; index++) {
+        let isSelected = true;
+        const element = currentSub.childSub[index];
+        const curExam = this.examArray.find(e => e.exam_id === exam_id);
+        curExam.exam_sub_exam_max_marks.forEach(subexam => {
+          if(this.getOneSubjectSubexamMark(this.data.param.eme_class_id, exam_id, subexam.se_id, element.sub_id) <= 0) {
+            isSelected = false;
+          }
+        });
+        if(isSelected) {
+          child_count_except_0  = child_count_except_0 + 1;
+        }        
+      }
+      totalscore = totalscore / child_count_except_0;
     } else {
       totalscore = this.getCalculatedMarks(sub_id, exam_id, term);
     }
