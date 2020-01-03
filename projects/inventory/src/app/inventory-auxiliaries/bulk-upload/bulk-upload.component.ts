@@ -20,7 +20,6 @@ export class BulkUploadComponent implements OnInit {
   }
 
   bulkupdate(event) {
-    console.log('this.uploadModule', this.uploadComponent);
     if (this.uploadComponent === '') {
       this.commonAPIService.showSuccessErrorMessage('Please choose one component for which do you wish to upload data', 'error');
     } else {
@@ -44,36 +43,6 @@ export class BulkUploadComponent implements OnInit {
     }
   }
 
-  bulkDocumentUpdate(event) {
-    const files = event.target.files;
-    const formData = new FormData();
-    const component = this.uploadComponent;
-    console.log('file--', files);
-    if (files.length > 1) {
-      for (let i = 0; i < files.length; i++) {
-        if (files[i]['type'] === 'application/vnd.ms-excel' || files[i]['type'] === 'application/octet-stream' || (files[i]['type'] === '' && files[i]['size'] > 0)) {
-          formData.append('uploadFile', files[i], files[i].name);
-        } else if ((files[i]['type'] === 'application/zip' || files[i]['type'] === 'application/x-zip-compressed') && files[i]['size'] > 0) {
-          formData.append('zipFile', files[i], files[i].name);
-        }
-      }
-      formData.append('module', 'auxillary');
-      formData.append('component', component);
-      const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
-      this.inventory.uploadEmployeeExcel(formData).subscribe((result: any) => {
-        if (result.status === 'ok') {
-          this.commonAPIService.showSuccessErrorMessage('Uploaded Successfully', 'success');
-          this.myInputVariable.nativeElement.value = '';
-        } else {
-          this.commonAPIService.showSuccessErrorMessage('Error While Uploading File', 'error');
-          this.myInputVariable.nativeElement.value = '';
-        }
-      });
-    } else {
-      this.commonAPIService.showSuccessErrorMessage('Please Choose one zip file and one excel file', 'error');
-      this.myInputVariable.nativeElement.value = '';
-    }
-  }
 
   loadComponent(event) {
     this.uploadComponent = event.value;
