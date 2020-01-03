@@ -13,6 +13,7 @@ import { AddFamilyComponent } from './add-family/add-family.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
 import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
 import { SecurityDepositComponent } from './security-deposit/security-deposit.component';
+import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { DropoutComponent } from './dropout/dropout.component';
 @NgModule({
 	imports: [
@@ -34,7 +35,8 @@ import { DropoutComponent } from './dropout/dropout.component';
 		FamilyInformationComponent,
 		FamilyTransactionEntryComponent,
 		SecurityDepositComponent,
-		DropoutComponent
+		DropoutComponent,
+		BulkUpdatesComponent
 	]
 })
 export class AuxiliaryModule { }

@@ -9,7 +9,7 @@ import { FamilyInformationComponent } from './family-information/family-informat
 import { FamilyTransactionEntryComponent } from './family-transaction-entry/family-transaction-entry.component';
 import { SecurityDepositComponent } from './security-deposit/security-deposit.component';
 import { DropoutComponent } from './dropout/dropout.component';
-
+import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 
 const routes: Routes = [
 	{ path: 'cheque-control-tool', component: ChequeControlToolComponent },
@@ -22,6 +22,7 @@ const routes: Routes = [
 	{ path: 'family-transaction-entry', component: FamilyTransactionEntryComponent},
 	{ path: 'security-deposit', component: SecurityDepositComponent},
 	{ path: 'dropout', component: DropoutComponent},
+	{ path: 'bulk-transaction', component: BulkUpdatesComponent}
 ];
 
 @NgModule({
