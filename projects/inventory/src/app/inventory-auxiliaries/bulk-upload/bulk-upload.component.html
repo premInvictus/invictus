@@ -1,3 +1,66 @@
-<p>
-  bulk-upload works!
-</p>
+<div class="padding-8">
+  <div class="container-box__white">
+    <div class="row">
+
+      <div class="col-12 text-center">
+        <h4 class="text-center"><b>Bulk Uploads</b></h4>
+      </div>
+    </div>
+    <div class="row">
+
+      <!-- <div class="text-center">
+          <label for="bulkupdate">
+            <i class="fas fa-cloud-upload-alt fa-3x icon-green"></i><br> 
+            <span>Drag and Drop File</span>
+          </label>
+          <input style="display:none;" type="file" name="file" id="bulkupdate" (change)="bulkupdate($event)">
+        </div> -->
+
+      <div class="col-4">
+        <div class="row">
+          <div class="col-12">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Setup Component</mat-label>
+              <mat-select (selectionChange)="loadComponent($event)" placeholder="Setup Component">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="1">Item Master</mat-option>
+                <mat-option value="2">Location Update</mat-option>
+                <mat-option value="3">Item Location</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-8">
+        <div class="row">
+          <div class="col-12 remove-col-padding text-center">
+            <span style="float:left; cursor: pointer;padding-right: 10px; font-size:14px;" (click)="downloadTemplate()">
+              <img style="cursor: pointer" src="/assets/images/xml.svg" matTooltip="Click to Download">
+              &nbsp;&nbsp;Download Sample Excel Sheet
+            </span>
+          </div>
+        </div>
+        <br />
+        <div class="container-box__uploadbox">
+          <div class="bulk-upload-main-content">
+            <label class="upload-box" for="bulkupdate">
+              <div class="bulk-upload-content">
+                <div class="bulk-upload-sub-content" style="margin-top:20%">
+                  <i class="material-icons bulk-upload-icon">
+                    save_alt
+                  </i><br>
+                  <span><b>Choose a file</b> or drag it here !</span>
+                  <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
+                    (change)="bulkupdate($event)">
+                  <input style="display:none;" type="text" name="module" id="module" value="module">
+                  <input style="display:none;" type="text" name="component" id="component" value="{{uploadComponent}}">
+                </div>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
