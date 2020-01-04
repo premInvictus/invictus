@@ -152,7 +152,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 							au_enrollment_id: result.data.au_enrollment_id
 						});
 						this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
-							this.commonAPIService.renderTab.next({ tabMove: true });
+						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
@@ -233,12 +233,12 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			this.sisService.addStudent(this.taboneform).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Student Details Updated Successfully', 'success');
-						if (isview) {
-							this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-							this.getStudent(this.login_id);
-						} else {
-							this.commonAPIService.renderTab.next({ tabMove: true });
-						}
+					if (isview) {
+						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+						this.getStudent(this.login_id);
+					} else {
+						this.commonAPIService.renderTab.next({ tabMove: true });
+					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
@@ -263,10 +263,16 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		this.parentJson = [];
 		let ctr = 0;
 		for (const item of this.parentDetails.formGroupArray) {
-			if (item.formGroup.value.epd_status === '') {
-				ctr++;
-			} else {
+			console.log('active parent', item)
+			if (item.formGroup.value.epd_status) {
+				if (item.formGroup.value.epd_status === '' || item.formGroup.value.epd_status === '0') {
+					ctr++;
+				} else {
+					break;
+				}
 				break;
+			} else {
+				ctr++;
 			}
 		}
 		if (ctr === 3) {
@@ -756,8 +762,8 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		this.parentDetails.aluminiStatusArray = [false, false, false];
 		this.parentDetails.showHideGuardianField = false;
 		this.parentDetails.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
-		'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
-		'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
 	}
 
 	isExistUserAccessMenu(actionT) {
