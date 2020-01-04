@@ -11,27 +11,20 @@
    <div class="col-lg-12">
       <mat-card class="detail-question-box-blue">
          <mat-card-content>
-            <!-- <div class="row">
-               <div class="col-sm-4 col-md-4 col-lg-4">
-                  <div class="form-group col-apple-10">
-                     <div class="col-lg-9">
-                        <mat-form-field class="form-field" appearance="outline">
-                           <mat-label>Select Project</mat-label>
-                           <mat-select placeholder="Project" formControlName="pro_id" #input
-                              (selectionChange)="getModuleList(input.value)">
-                              <mat-option value="">
-                                 Select Project
-                              </mat-option>
-                              <mat-option *ngFor="let item of projectsArray" [value]="item.pro_id">
-                                 {{item.pro_name}}
-                              </mat-option>
-                           </mat-select>
-                        </mat-form-field>
-                     </div>
-                  </div>
-               </div>
-            </div> -->
             <div class="row">
+               <div class="col-lg-12">
+                  <mat-form-field class="form-field" appearance="outline">
+                     <mat-label>Interface</mat-label>
+                     <mat-select placeholder="Interface" [value]="typeVal" (selectionChange)="changeIsWebApp($event)">
+                        <mat-option value="">Select Interface</mat-option>
+                        <mat-option *ngFor="let item of typeArray" [value]="item.id">
+                           {{item.name}}
+                        </mat-option>
+                     </mat-select>
+                  </mat-form-field>
+               </div>
+            </div>
+            <div class="row" *ngIf="moduleArray.length > 0">
                <div class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
                   <div>
                      <div>
@@ -44,6 +37,11 @@
                         </div>
                      </div>
                   </div>
+               </div>
+            </div>
+            <div class="row" *ngIf="moduleArray.length == 0">
+               <div class="col-12">
+                  <span>No Records Found</span>
                </div>
             </div>
             <br>
