@@ -493,4 +493,14 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/feeAccount/getAdditionFeeHeadComponent', value);
 	}
+
+	uploadFeeTransactionExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/uploadFeeTransactionExcel', value);
+	}
+
+	downloadFeeTransactionExcel(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/downloadFeeTransactionExcel', value);
+	}
 }

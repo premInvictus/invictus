@@ -474,7 +474,7 @@ export class ConsumptionReportsComponent implements OnInit {
     this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Procurement Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Consumption Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -521,6 +521,9 @@ export class ConsumptionReportsComponent implements OnInit {
         rowData.push(arr);
         this.pdfrowdata.push(arr);
       });
+    } {
+      // iterate all groups
+      this.checkGroupLevelPDF(this.dataviewObj.getGroups(), doc, headerData);
     }
     if (this.totalRow) {
       const arr: any[] = [];
@@ -666,6 +669,90 @@ export class ConsumptionReportsComponent implements OnInit {
     });
     doc.save(reportType + '_' + new Date() + '.pdf');
   }
+  checkGroupLevelPDF(item, doc, headerData) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        // add and style for groupeditem level heading
+        this.pdfrowdata.push([groupItem.value + ' (' + groupItem.rows.length + ')']);
+        this.levelHeading.push(this.pdfrowdata.length - 1);
+        if (groupItem.groups) {
+          this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
+          const levelArray: any[] = [];
+          const obj3: any = {};
+
+          obj3['id'] = 'footer';
+          obj3['date'] = '';
+          obj3['item_code'] = '';
+          obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
+          obj3['particulars'] = '';
+          obj3['stu_name'] = '';
+          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+
+        } else {
+          const rowData: any[] = [];
+          Object.keys(groupItem.rows).forEach(key => {
+            const arr: any = [];
+            for (const item2 of this.columnDefinitions) {
+              if (item2.id === 'receipt_date') {
+                arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
+              } else {
+                arr.push(this.CommonService.htmlToText(groupItem.rows[key][item2.id]));
+              }
+            }
+            rowData.push(arr);
+            this.pdfrowdata.push(arr);
+          });
+          const levelArray: any[] = [];
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['date'] = '';
+          obj3['item_code'] = '';
+          obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
+          obj3['particulars'] = '';
+          obj3['stu_name'] = '';
+          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);         
+          for (const col of this.exportColumnDefinitions) {
+            Object.keys(obj3).forEach((key: any) => {
+              if (col.id === key) {
+                levelArray.push(obj3[key]);
+              }
+            });
+          }
+          if (groupItem.level === 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelTotalFooter.push(this.pdfrowdata.length - 1);
+          } else if (groupItem.level > 0) {
+            this.pdfrowdata.push(levelArray);
+            this.levelSubtotalFooter.push(this.pdfrowdata.length - 1);
+          }
+        }
+      }
+    }
+  }
+
+
+  getLevelFooter(level, groupItem) {
+    if (level === 0) {
+      return 'Total';
+    }
+    if (level > 0) {
+      return 'Sub Total (' + groupItem.value + ')';
+    }
+  }
   getSessionName(id) {
     const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
     if (findex !== -1) {
@@ -699,9 +786,9 @@ export class ConsumptionReportsComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('procurement_report') + this.sessionName;
+    reportType = new TitleCasePipe().transform('consumption_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('procurement report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('consumption report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -724,6 +811,9 @@ export class ConsumptionReportsComponent implements OnInit {
         }
         worksheet.addRow(obj);
       });
+    } else {
+      // iterate all groups
+      this.checkGroupLevel(this.dataviewObj.getGroups(), worksheet);
     }
     if (this.totalRow) {
       worksheet.addRow(this.totalRow);
@@ -885,6 +975,154 @@ export class ConsumptionReportsComponent implements OnInit {
       const blob = new Blob([data], { type: 'application/octet-stream' });
       saveAs(blob, fileName);
     });
+  }
+  checkGroupLevel(item, worksheet) {
+    if (item.length > 0) {
+      for (const groupItem of item) {
+        worksheet.addRow({});
+        this.notFormatedCellArray.push(worksheet._rows.length);
+        // style for groupeditem level heading
+        worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
+          this.alphabetJSON[this.exportColumnDefinitions.length] + (worksheet._rows.length));
+        worksheet.getCell('A' + worksheet._rows.length).value = this.CommonService.htmlToText(groupItem.title);
+        worksheet.getCell('A' + worksheet._rows.length).fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'c8d6e5' },
+          bgColor: { argb: 'ffffff' },
+        };
+        worksheet.getCell('A' + worksheet._rows.length).border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        worksheet.getCell('A' + worksheet._rows.length).font = {
+          name: 'Arial',
+          size: 10,
+          bold: true
+        };
+
+        if (groupItem.groups) {
+          this.checkGroupLevel(groupItem.groups, worksheet);
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['date'] = '';
+          obj3['item_code'] = '';
+          obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
+          obj3['particulars'] = '';
+          obj3['stu_name'] = '';
+          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          // style row having total
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        } else {
+          Object.keys(groupItem.rows).forEach(key => {
+            const obj = {};
+            for (const item2 of this.exportColumnDefinitions) {
+              if (item2.id === 'receipt_date') {
+                obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
+              } else {
+                obj[item2.id] = this.checkReturn(this.CommonService.htmlToText(groupItem.rows[key][item2.id]));
+              }
+            }
+            worksheet.addRow(obj);
+          });
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['date'] = '';
+          obj3['item_code'] = '';
+          obj3['item_name'] = this.getLevelFooter(groupItem.level, groupItem);
+          obj3['particulars'] = '';
+          obj3['stu_name'] = '';
+          obj3['quantity_out'] = groupItem.rows.map(t => t['quantity_out']).reduce((acc, val) => Number(acc) + Number(val), 0);
+          worksheet.addRow(obj3);
+          this.notFormatedCellArray.push(worksheet._rows.length);
+          if (groupItem.level === 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                  bold: true,
+                  color: { argb: 'ffffff' }
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.fill = {
+                  type: 'pattern',
+                  pattern: 'solid',
+                  fgColor: { argb: '004261' },
+                  bgColor: { argb: '004261' },
+                };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          } else if (groupItem.level > 0) {
+            worksheet.getRow(worksheet._rows.length).eachCell(cell => {
+              this.exportColumnDefinitions.forEach(element => {
+                cell.font = {
+                  name: 'Arial',
+                  size: 10,
+                };
+                cell.alignment = { wrapText: true, horizontal: 'center' };
+                cell.border = {
+                  top: { style: 'thin' },
+                  left: { style: 'thin' },
+                  bottom: { style: 'thin' },
+                  right: { style: 'thin' }
+                };
+              });
+            });
+          }
+        }
+      }
+    }
   }
   checkWidth(id, header) {
     const res = this.dataset.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
