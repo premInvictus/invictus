@@ -63,7 +63,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	}
 	ngAfterViewInit() {
 		this.studentdataSource.sort = this.sortP;
-		this.shuffledataSource.sort = this.sortD;
+		this.shuffledataSource.sort = this.sortD; 
 	}
 	buildForm() {
 		this.shufflesortform = this.fbuild.group({
@@ -91,6 +91,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	}
 	getSectionsByClass() {
 		this.resetTableAndSelection();
+		this.resetshuffletableflag();
 		this.sectionArray = [];
 		this.sisService.getSectionsByClass({ class_id: this.shufflesortform.value.class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {

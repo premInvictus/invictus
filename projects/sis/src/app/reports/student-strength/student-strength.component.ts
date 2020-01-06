@@ -1080,13 +1080,13 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
-			this.gridHeight = 750;
+			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
-			this.gridHeight = 550;
+			this.gridHeight = 650;
 		} else if (this.dataset.length > 5) {
-			this.gridHeight = 400;
+			this.gridHeight = 500;
 		} else {
-			this.gridHeight = 300;
+			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('student_strength'));
 	}
@@ -1163,13 +1163,13 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
-			this.gridHeight = 750;
+			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
-			this.gridHeight = 550;
+			this.gridHeight = 650;
 		} else if (this.dataset.length > 5) {
-			this.gridHeight = 400;
+			this.gridHeight = 500;
 		} else {
-			this.gridHeight = 300;
+			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
 

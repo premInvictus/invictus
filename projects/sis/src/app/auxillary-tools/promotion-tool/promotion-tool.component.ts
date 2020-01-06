@@ -12,16 +12,17 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 export class PromotionToolComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	displayedColumns: any[] = ['select', 'no', 'name', 'class', 'section', 'action'];
-	PROMOTE_ELEMENT_DATA: Element[] = []; 
+	PROMOTE_ELEMENT_DATA: Element[] = [];
 	DEMOTE_ELEMENT_DATA: Element[] = [];
 	promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 	demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
-	enrollMentTypeArray: any[] = [{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	}];
+	enrollMentTypeArray: any[] = [
+		// {
+		// 	au_process_type: '3', au_process_name: 'Provisional Admission'
+		// },
+		{
+			au_process_type: '4', au_process_name: 'Admission'
+		}];
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	promotionSectionArray: any[] = [];
@@ -233,7 +234,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 							class: item.class_name,
 							section: item.sec_id !== '0' ? item.sec_name : '-',
 							em_admission_no: this.promoteForm.value.enrollment_type === '4'
-							|| this.demoteForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
+								|| this.demoteForm.value.enrollment_type === '4' ? item.em_admission_no : item.em_provisional_admission_no,
 							action: item
 						});
 						counter++;

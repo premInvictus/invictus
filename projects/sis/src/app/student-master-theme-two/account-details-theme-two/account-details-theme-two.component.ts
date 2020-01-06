@@ -57,7 +57,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	counter: any = 0;
 	documentPath: any;
 	additionalFeeComponentArray: any[] = [];
-	userClassId:'';
+	userClassId: '';
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -123,7 +123,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	}
 
 	additionalFeeComponent() {
-		this.feeService.getAdditionFeeHeadComponent({ fh_class_id:  this.userClassId  }).subscribe((result: any) => {
+		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: this.userClassId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('additionalFeeComponentArray--', result.data);
 				this.additionalFeeComponentArray = result.data;
@@ -439,8 +439,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_reason_id ||
-				!this.accountsForm.value.accd_remark_id) {
+			if (!this.accountsForm.value.accd_remark_id) {
 				this.validateFlag = false;
 			}
 		}
@@ -481,7 +480,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.additionalFeeComponent();
-					 this.renderData();
+					this.renderData();
 				}
 			});
 		}

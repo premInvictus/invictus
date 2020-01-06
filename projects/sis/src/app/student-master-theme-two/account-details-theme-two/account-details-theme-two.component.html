@@ -187,7 +187,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-sm" *ngIf="conDescFlag">
+                                <!-- <div class="col-sm" *ngIf="conDescFlag">
                                     <mat-form-field appearance="outline" class="form-field">
                                         <mat-label>Reason For Approve Concession</mat-label>
                                         <mat-select placeholder="Reason For Approve Concession" [disabled]="viewOnly"
@@ -199,7 +199,7 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
+                                </div> -->
 
                             </div>
                             <div class="col-6" *ngIf="conDescFlag">
@@ -208,7 +208,7 @@
                                         <mat-label>Remarks</mat-label>
                                         <textarea formControlName="accd_remark_id"
                                             [errorStateMatcher]="confirmValidParentMatcher" matInput
-                                            placeholder="Remarks" [readonly]="viewOnly" rows="5"></textarea>
+                                            placeholder="Remarks" [readonly]="viewOnly" rows="1" required></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>

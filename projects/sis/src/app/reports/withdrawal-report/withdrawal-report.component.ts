@@ -579,15 +579,14 @@ export class WithdrawalReportComponent implements OnInit, AfterViewInit {
 		// this.dataset.push(blankTempObj);
 		this.totalRow = blankTempObj;
 
-		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
-			this.gridHeight = 750;
+			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
-			this.gridHeight = 550;
+			this.gridHeight = 650;
 		} else if (this.dataset.length > 5) {
-			this.gridHeight = 400;
+			this.gridHeight = 500;
 		} else {
-			this.gridHeight = 300;
+			this.gridHeight = 400;
 		}
 
 	}
@@ -608,7 +607,7 @@ export class WithdrawalReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href=".//assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Withdrawal Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
