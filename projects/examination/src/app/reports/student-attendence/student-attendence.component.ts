@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService, FeeService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
@@ -10,11 +10,18 @@ import {
   DelimiterType,
   FileType
 } from 'angular-slickgrid';
+declare var slickgroup:any;
+//const slickgroup =  require('slickgrid-colgroup-plugin');
+//declare const slickgroup: any;
+//import * as slickgroup from 'slickgrid-colgroup-plugin'
+
+//import * as slickgroup from './../../../../../../node_modules/slickgrid-colgroup-plugin/src/slick.colgroup.js';
 
 @Component({
   selector: 'app-student-attendence',
   templateUrl: './student-attendence.component.html',
-  styleUrls: ['./student-attendence.component.css']
+  styleUrls: ['./student-attendence.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class StudentAttendenceComponent implements OnInit {
 
@@ -26,7 +33,7 @@ export class StudentAttendenceComponent implements OnInit {
   studentArray: any[] = [];
   monthArray: any[] = [];
 
-  columnDefinitions: Column[] = [];
+  columnDefinitions: any[] = [];
   gridOptions: GridOption = {};
   dataset: any[] = [];
   angularGrid: AngularGridInstance;
@@ -39,11 +46,16 @@ export class StudentAttendenceComponent implements OnInit {
     this.buildForm();
     this.getClass();
     this.getFeeMonths();
+    
+    
+
+    
+
 
     this.gridOptions = {
       enableDraggableGrouping: false,
       createPreHeaderPanel: true,
-      showPreHeaderPanel: false,
+      showPreHeaderPanel: true,
       enableHeaderMenu: true,
       preHeaderPanelHeight: 40,
       enableFiltering: true,
@@ -56,8 +68,10 @@ export class StudentAttendenceComponent implements OnInit {
       fullWidthRows: true,
       enableAutoTooltip: true,
       enableCellNavigation: true,
+     
+      //colspanCallback: this.renderDifferentColspan,
       headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',
+        iconColumnHideCommand: 'fas fa-times',  
         iconSortAscCommand: 'fas fa-sort-up',
         iconSortDescCommand: 'fas fa-sort-down',
         title: 'Sort'
@@ -95,10 +109,15 @@ export class StudentAttendenceComponent implements OnInit {
         },
         onColumnsChanged: (e, args) => {
           console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
-          this.updateTotalRow(this.angularGrid.slickGrid);
+         // this.updateTotalRow(this.angularGrid.slickGrid);
         },
       }
     };
+    console.log(slickgroup);
+    if (new slickgroup.ColGroup()) {
+      console.log(new slickgroup.ColGroup());
+      this.gridOptions['registerPlugins'] = [new slickgroup.ColGroup()];
+    }
   }
   constructor(
     private fbuild: FormBuilder,
@@ -176,16 +195,22 @@ export class StudentAttendenceComponent implements OnInit {
   }
   angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
-		const grid = angularGrid.slickGrid; // grid object
-		this.updateTotalRow(angularGrid.slickGrid);
+    const grid = angularGrid.slickGrid; // grid object
+    
+
+
+		//this.updateTotalRow(angularGrid.slickGrid);
 	}
   updateTotalRow(grid: any) {
 		//console.log('this.groupColumns', this.groupColumns);
 		let columnIdx = grid.getColumns().length;
 		while (columnIdx--) {
-			const columnId = grid.getColumns()[columnIdx].id;
-			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+      const columnId = grid.getColumns()[columnIdx].id;
+      if (columnId) {
+        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+			  columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+      }
+			
 		}
 	}
   iconFormatter(row, cell, value, columnDef, dataContext) {
@@ -203,20 +228,26 @@ export class StudentAttendenceComponent implements OnInit {
   }
   prepareDataSource(value) {
     this.columnDefinitions = [
-      { id: 'au_admission_no', name: 'Admission no', field: 'au_admission_no', sortable: true, filterable: true, resizable: false },
-      { id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: false },
+      { id: 'au_admission_no', name: 'Admission no', field: 'au_admission_no', sortable: true, filterable: true, resizable: false, },
+      { id: 'au_full_name', name: 'Name', field: 'au_full_name', sortable: true, filterable: true, resizable: false, columnGroup: 'info' },
     ];
     for (let index = 1; index <= value.no_of_days_in_month; index++) {
       this.columnDefinitions.push({
-        id: index.toString(), name: index.toString(), field: index.toString(), sortable: true, filterable: true, resizable: false, formatter: this.iconFormatter
+        id: index.toString(), name: index.toString(), field: index.toString(), sortable: true, filterable: true, resizable: false, formatter: this.iconFormatter, columnGroup: 'days'
       });
     }
     this.columnDefinitions.push(
-      { id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: false }
+      { id: 'present', name: 'Present', field: 'present', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
     );
     this.columnDefinitions.push(
-      { id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: false }
+      { id: 'absent', name: 'Absent', field: 'absent', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance' }
     );
+
+    this.columnDefinitions.push(
+      { id: 'absent1', name: 'Absent1', field: 'attendance', sortable: true, filterable: true, resizable: false, columnGroup: 'attendance1' }
+    );
+
+   
 
     for (let i = 0; i < value.attendence.length; i++) {
       const tempObj = {};
@@ -257,6 +288,25 @@ export class StudentAttendenceComponent implements OnInit {
       this.gridHeight = 300;
     }
     this.tableFlag = true;
+  }
+  renderDifferentColspan(item: any) {
+    if (item.id % 2 === 1) {
+      return {
+        columns: {
+          duration: {
+            colspan: 3 // "duration" will span over 3 columns
+          }
+        }
+      };
+    } else {
+      return {
+        columns: {
+          0: {
+            colspan: '*' // starting at column index 0, we will span accross all column (*)
+          }
+        }
+      };
+    }
   }
 
 }
