@@ -35,7 +35,7 @@ export class MarksRegisterComponent implements OnInit {
   ect_grade_avg_highest: any = {grade: false}
   reportTypeArray: any[] = [
     {id: 'marksinput', name: 'Marks Input'},
-    {id: 'weightagescore', name: 'Weightage Score'},
+    {id: 'weightagescore', name: 'Weighted Score'},
     {id: 'consolidatedregister', name: 'Consolidated Register'}
   ];
   subTypeArray: any[] = [
@@ -334,7 +334,7 @@ export class MarksRegisterComponent implements OnInit {
     }
     return tempvalue;
   }
-  getInputMarksSubexam(login_id,sub_id,exam_id,se_id){
+  getInputMarksSubexam(login_id,sub_id,exam_id,se_id,key){
     let tempvalue = '-';
     for (let index = 0; index < this.responseMarksArray.length; index++) {
       const element = this.responseMarksArray[index];
@@ -348,9 +348,29 @@ export class MarksRegisterComponent implements OnInit {
                 for (let index3 = 0; index3 < element2.student_mark_subexam.length; index3++) {
                   const element3 = element2.student_mark_subexam[index3];
                   if(element3.se_id === se_id) {
-                    tempvalue = element3.student_mark;
+                    tempvalue = element3[key];
                   }                  
                 }
+              }              
+            }
+          }          
+        }
+      }      
+    }
+    return tempvalue;
+  }
+  getInputMarksExam(login_id,sub_id,exam_id,key){
+    let tempvalue = '-';
+    for (let index = 0; index < this.responseMarksArray.length; index++) {
+      const element = this.responseMarksArray[index];
+      if(element.au_login_id === login_id) {
+        for (let index1 = 0; index1 < element.so_printData.sub_mark.length; index1++) {
+          const element1 = element.so_printData.sub_mark[index1];
+          if(element1.sub_id === sub_id) {
+            for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
+              const element2 = element1.sub_exam_mark[index2];
+              if(element2.exam_id === exam_id) {
+                tempvalue = element2[key];
               }              
             }
           }          
