@@ -122,7 +122,7 @@
          <div class="container-box__white">
             <div class="row">
                <div class="col-12 text-center">
-                  <h4 class="text-uppercase text-center"><b>Request Details</b></h4> 
+                  <h4 class="text-uppercase text-center"><b>Request Details</b></h4>
                </div>
             </div>
             <div class="row">
@@ -214,9 +214,9 @@
             <br>
             <div class="text-center">
                <button *ngIf="isExistUserAccessMenu('270')" mat-raised-button class="btn-success"
-                  (click)="openDeleteDialog({data:requestFields})">Approve</button>
-               <button *ngIf="isExistUserAccessMenu('271')" mat-raised-button
-                  class="btn-delete btn-spacer">Decline</button>
+                  (click)="openDeclineDialog({data:requestFields},'approve')">Approve</button>
+               <button *ngIf="isExistUserAccessMenu('271')" mat-raised-button class="btn-delete btn-spacer"
+                  (click)="openDeclineDialog({data:requestFields},'decline')">Decline</button>
             </div>
             <br>
             <br>

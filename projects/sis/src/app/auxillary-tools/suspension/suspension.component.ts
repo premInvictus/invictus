@@ -204,7 +204,7 @@ export class SuspensionComponent implements OnInit {
 		if (this.suspensionForm.valid) {
 			const inputJson = {
 				'susp_login_id': this.suspensionForm.value.au_login_id,
-				'susp_docs': this.susp_docs.length > 0 ? this.susp_docs : '',
+				'susp_docs': this.susp_docs && this.susp_docs.length > 0 ? this.susp_docs : '',
 				'susp_from': this.suspensionForm.value.susp_from,
 				'susp_to': this.suspensionForm.value.susp_to,
 				'susp_reason': this.suspensionForm.value.susp_reason,

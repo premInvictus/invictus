@@ -58,9 +58,6 @@
     padding-left: 50px;
     padding-top: 15px;
 }
-textarea.mat-input-element {
-    padding: 0px 0px !important;
-}
 .pad-left-22 {
     padding-left: 22px;
 }
@@ -70,4 +67,7 @@ textarea.mat-input-element {
     border: 1px solid #646471;
     border-radius: 4%;
     position: relative;
+}
+textarea.mat-input-element {
+    padding: 2px 0px !important;
 }

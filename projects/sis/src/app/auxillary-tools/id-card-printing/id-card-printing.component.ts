@@ -38,6 +38,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	idColor: any;
 	disabled = true;
 	checkAllFlag = false;
+	chekboxDisable = false;
 	checkStudents: any[] = [];
 	dialogRef: MatDialogRef<ViewIdCardComponent>;
 	dialogRef2: MatDialogRef<PrintIdCardComponent>;
@@ -349,13 +350,26 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getSelectedStudents($event, item) {
-		const findex = this.checkStudents.findIndex(f => f.no === $event.source.value);
-		if (findex === -1) {
-			this.checkStudents.push({
-				no: $event.source.value
-			});
+		if (this.checkStudents.length > 20) {
+			this.commonApiService.showSuccessErrorMessage('Maximum 20 Id card print allowed', 'error');
+			//this.dataSource[$event.source.value].checked = false;
 		} else {
-			this.checkStudents.splice(findex, 1);
+			const findex = this.checkStudents.findIndex(f => f.no === $event.source.value);
+			if (findex === -1) {
+				this.checkStudents.push({
+					no: $event.source.value
+				});
+			} else {
+				this.checkStudents.splice(findex, 1);
+			}
+		}
+	}
+	checkedFlag(value) {
+		const findex = this.checkStudents.findIndex(f => f.no === value);
+		if (findex === -1) {
+			return false;
+		} else {
+			return true;
 		}
 	}
 	resetAllExceptEnrollMent() {

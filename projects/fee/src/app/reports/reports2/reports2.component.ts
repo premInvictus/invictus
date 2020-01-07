@@ -164,7 +164,7 @@ export class Reports2Component implements OnInit {
 	userArray: any[] = [];
 	userName: any = '';
 	currentUser: any = {};
-	constructor(private service: FeeService) { }
+	constructor(private service: FeeService, private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -223,7 +223,7 @@ export class Reports2Component implements OnInit {
 		if (index === 0 || index === 5 || index === 10) {
 			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		} else {
-			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		}
 	}
 	displyRep($event) {
@@ -252,6 +252,44 @@ export class Reports2Component implements OnInit {
 			}
 		} else {
 			this.reportHeader = $event.report_name;
+		}
+	}
+	isExistUserAccessMenu(actionT) {
+		if (actionT === '1') {
+			return this.CommonAPIService.isExistUserAccessMenu('576');
+		}
+		if (actionT === '2') {
+			return this.CommonAPIService.isExistUserAccessMenu('577');
+		}
+		if (actionT === '5') {
+			return this.CommonAPIService.isExistUserAccessMenu('578');
+		}
+		if (actionT === '6') {
+			return this.CommonAPIService.isExistUserAccessMenu('579');
+		}
+		if (actionT === '7') {
+			return this.CommonAPIService.isExistUserAccessMenu('580');
+		}
+		if (actionT === '8') {
+			return this.CommonAPIService.isExistUserAccessMenu('581');
+		}
+		if (actionT === '9') {
+			return this.CommonAPIService.isExistUserAccessMenu('582');
+		}
+		if (actionT === '10') {
+			return this.CommonAPIService.isExistUserAccessMenu('583');
+		}
+		if (actionT === '11') {
+			return this.CommonAPIService.isExistUserAccessMenu('584');
+		}
+		if (actionT === '12') {
+			return this.CommonAPIService.isExistUserAccessMenu('585');
+		}
+		if (actionT === '15') {
+			return this.CommonAPIService.isExistUserAccessMenu('586');
+		}
+		if (actionT === '16') {
+			return this.CommonAPIService.isExistUserAccessMenu('587');
 		}
 	}
 }

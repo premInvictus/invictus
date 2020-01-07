@@ -39,7 +39,7 @@ export class BarCodeReportComponent implements OnInit {
     });
   }
   getClassAll() {
-    this.erp.getClass({}).subscribe((res: any) => {
+    this.sisService.getClass({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.classArray = [];
         this.classArray = res.data;
@@ -47,7 +47,8 @@ export class BarCodeReportComponent implements OnInit {
     });
   }
   getSectionsByClass() {
-    this.erp.getSectionsByClass({
+    this.barcodeArray = [];
+    this.sisService.getSectionsByClass({
       class_id: this.classForm.value.class_id
     }).subscribe((res: any) => {
       if (res && res.status === 'ok') {

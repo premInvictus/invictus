@@ -4,7 +4,7 @@ import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
-import {  DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 
 import { saveAs } from 'file-saver';
@@ -191,32 +191,40 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
-			grouping: {
-				getter: 'admission_no',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			{
+				id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
+				grouping: {
+					getter: 'admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
+				groupTotalsFormatter: this.srnTotalsFormatter
 			},
-			groupTotalsFormatter: this.srnTotalsFormatter },
 			{ id: 'alumini_no', name: 'Alumini No.', field: 'alumini_no', sortable: true, filterable: true },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			}},
-			{ id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
-			 	formatter: this.checkDateFormatter },
+			{
+				id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+				groupTotalsFormatter: this.countTotalsFormatter
+			},
+			{
+				id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+				grouping: {
+					getter: 'class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				}
+			},
+			{
+				id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
+				formatter: this.checkDateFormatter
+			},
 			{ id: 'alumini_date', name: 'Left Date', field: 'alumini_date', sortable: true, filterable: true, formatter: this.checkDateFormatter },
 			{ id: 'mobile', name: 'Contact', field: 'mobile', sortable: true, filterable: true },
 			{ id: 'parent_name', name: 'Active Parent', field: 'parent_name', sortable: true, filterable: true },
@@ -528,7 +536,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -557,7 +565,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -583,7 +591,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -875,7 +883,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -952,7 +960,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -1091,8 +1099,8 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 			tempObj['id'] = this.reportProcessWiseData[i]['au_login_id'] + counter;
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportProcessWiseData[i]['sec_name'] ?
-			this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] : '-';
-			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['au_admission_no']);
+				this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] : '-';
+			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['em_admission_no']);
 			tempObj['alumini_no'] = this.valueAndDash(this.reportProcessWiseData[i]['em_alumini_no']);
 			tempObj['parent_name'] = this.valueAndDash(parentHonorific + this.reportProcessWiseData[i]['epd_parent_name']);
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['au_full_name']));
@@ -1115,13 +1123,13 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		this.totalRow = blankTempObj;
 		console.log('dataset  ', this.dataset);
 		if (this.dataset.length > 20) {
-			this.gridHeight = 750;
+			this.gridHeight = 800;
 		} else if (this.dataset.length > 10) {
-			this.gridHeight = 550;
+			this.gridHeight = 650;
 		} else if (this.dataset.length > 5) {
-			this.gridHeight = 400;
+			this.gridHeight = 500;
 		} else {
-			this.gridHeight = 300;
+			this.gridHeight = 400;
 		}
 		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
 	}
@@ -1141,7 +1149,7 @@ export class AluminiStudentListComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Alumini Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
