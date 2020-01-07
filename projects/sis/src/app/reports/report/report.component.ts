@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonAPIService, SisService } from '../../_services/index';
+
 
 @Component({
 	selector: 'app-report',
@@ -32,7 +34,7 @@ export class ReportComponent implements OnInit {
 		},
 		{
 			report_id: '3',
-			report_name: 'Student Streangth',
+			report_name: 'Student Strength',
 			report_image: '/assets/images/Fee Reports/fee_projection.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -41,7 +43,7 @@ export class ReportComponent implements OnInit {
 		},
 		{
 			report_id: '4',
-			report_name: 'List Of Sibling Sutudents',
+			report_name: 'List Of Sibling Students',
 			report_image: '/assets/images/Fee Reports/fee_transaction.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -111,7 +113,7 @@ export class ReportComponent implements OnInit {
 	userArray: any[] = [];
 	userName: any = '';
 	currentUser: any = {};
-	constructor() { }
+	constructor(private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -161,7 +163,7 @@ export class ReportComponent implements OnInit {
 		if (index === 0 || index === 5 || index === 10) {
 			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		} else {
-			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		}
 	}
 	displyRep($event) {
@@ -189,5 +191,36 @@ export class ReportComponent implements OnInit {
 			this.reportHeader = $event.report_name;
 		}
 	}
-
+	isExistUserAccessMenu(actionT) {
+		if (actionT === '1') {
+			return this.CommonAPIService.isExistUserAccessMenu('566');
+		}
+		if (actionT === '2') {
+			return this.CommonAPIService.isExistUserAccessMenu('567');
+		}
+		if (actionT === '3') {
+			return this.CommonAPIService.isExistUserAccessMenu('568');
+		}
+		if (actionT === '4') {
+			return this.CommonAPIService.isExistUserAccessMenu('569');
+		}
+		if (actionT === '5') {
+			return this.CommonAPIService.isExistUserAccessMenu('570');
+		}
+		if (actionT === '6') {
+			return this.CommonAPIService.isExistUserAccessMenu('571');
+		}
+		if (actionT === '7') {
+			return this.CommonAPIService.isExistUserAccessMenu('572');
+		}
+		if (actionT === '8') {
+			return this.CommonAPIService.isExistUserAccessMenu('573');
+		}
+		if (actionT === '9') {
+			return this.CommonAPIService.isExistUserAccessMenu('574');
+		}
+		if (actionT === '10') {
+			return this.CommonAPIService.isExistUserAccessMenu('575');
+		}
+	}
 }

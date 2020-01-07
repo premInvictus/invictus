@@ -1,41 +1,61 @@
-<form [formGroup]="aluminiReportForm" autocomplete="off">
-    <div class="row">
-        
-        <div class="col-2" *ngIf="showDate">
-            <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
-                <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
-                </mat-datepicker-toggle>
-                <mat-datepicker #cpicker></mat-datepicker>
+<div class="row">
+    <div class="col-2">
+        <form [formGroup]="reportFilterForm">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Report Type</mat-label>
+                <mat-select formControlName="report_type" (selectionChange)="changeReportType($event)">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of reportTypeArray" [value]="item.report_type">
+                        {{item.report_name}}</mat-option>
+                </mat-select>
             </mat-form-field>
-        </div>
-        <div class="col-2" *ngIf="showDateRange">
-            <mat-form-field class="form-field" appearance="outline">
-                <mat-label>From</mat-label>
-                <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
-                <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
-                </mat-datepicker-toggle>
-                <mat-datepicker #fpicker></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div class="col-2" *ngIf="showDateRange">
-            <mat-form-field class="form-field" appearance="outline">
-                <mat-label>To</mat-label>
-                <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
-                <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
-                </mat-datepicker-toggle>
-                <mat-datepicker #tpicker></mat-datepicker>
-            </mat-form-field>
-        </div>
-        <div class="col-2 margin-top-10">
-            <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
-        </div>
-        <div class="col-2">
-            <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
-        </div>
+        </form>
     </div>
-</form>
+    <div class="col-10">
+        <form [formGroup]="aluminiReportForm" autocomplete="off" *ngIf="showFlag">
+            <div class="row" style="margin-top: 0px;">
+                <div class="col-2" *ngIf="showDate">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Date</mat-label>
+                        <input matInput [matDatepicker]="cpicker" placeholder="Date" formControlName="cdate">
+                        <mat-datepicker-toggle matSuffix [for]="cpicker" (dateInput)="cpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #cpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-2" *ngIf="showDateRange">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>From</mat-label>
+                        <input matInput [matDatepicker]="fpicker" placeholder="From" formControlName="fdate">
+                        <mat-datepicker-toggle matSuffix [for]="fpicker" (dateInput)="fpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #fpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-2" *ngIf="showDateRange">
+                    <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>To</mat-label>
+                        <input matInput [matDatepicker]="tpicker" placeholder="To" formControlName="tdate">
+                        <mat-datepicker-toggle matSuffix [for]="tpicker" (dateInput)="tpicker('input', $event)">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #tpicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="col-2 margin-top-10">
+                    <mat-checkbox (change)="showDateToggle()">Date Range</mat-checkbox>
+                </div>
+                <div class="col-2">
+                    <button class="btn-success margin-top-12" mat-raised-button (click)="submit()">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
 
 <div *ngIf="tableFlag && dataset.length > 0">
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"

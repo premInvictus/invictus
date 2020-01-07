@@ -30,6 +30,7 @@ import {
 })
 export class DocumentReportComponent implements OnInit, AfterViewInit {
 	columnDefinitions: Column[] = [];
+	reportTypeArray: any[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
 	angularGrid: AngularGridInstance;
@@ -43,9 +44,11 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 	selectedGroupingFields: string[] = [];
 	draggableGroupingPlugin: any;
 	groupLength: any;
+	reportType: any;
 	schoolInfo;
 	currentSession;
 	currentUser;
+	showFlag = false;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -103,6 +106,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 
 
 	aluminiReportForm: FormGroup;
+	reportFilterForm: FormGroup;
 	requiredDocData: any[] = [];
 	reportProcessWiseData: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
@@ -201,6 +205,24 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 			cdate: new Date(),
 			tdate: new Date()
 		});
+		this.reportFilterForm = this.fbuild.group({
+			report_type: ''
+		});
+		this.reportTypeArray.push(
+			{
+				report_type: 'status', report_name: 'Status Report'
+			},
+			{
+				report_type: 'negative', report_name: 'Negative Report'
+			}
+		);
+	}
+	changeReportType($event) {
+		this.dataset = [];
+		this.reportType = $event.value;
+		if ($event.value) {
+			this.showFlag = true;
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -505,7 +527,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -534,7 +556,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 						if (item2.id === 'admission_no') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
 						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+							levelArray.push(groupItem.rows.length);
 						} else {
 							levelArray.push('');
 						}
@@ -560,7 +582,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 				this.notFormatedCellArray.push(worksheet._rows.length);
 				// style for groupeditem level heading
 				worksheet.mergeCells('A' + (worksheet._rows.length) + ':' +
-				this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
+					this.alphabetJSON[this.columnDefinitions.length] + (worksheet._rows.length));
 				worksheet.getCell('A' + worksheet._rows.length).value = groupItem.value + ' (' + groupItem.rows.length + ')';
 				worksheet.getCell('A' + worksheet._rows.length).fill = {
 					type: 'pattern',
@@ -852,7 +874,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 		worksheet.addRow({});
 		if (this.groupColumns.length > 0) {
 			worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
-			this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+				this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
 			worksheet.getCell('A' + worksheet._rows.length).value = 'Groupded As: ' + this.getGroupColumns(this.groupColumns);
 			worksheet.getCell('A' + worksheet._rows.length).font = {
 				name: 'Arial',
@@ -929,7 +951,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 		if (level === 0) {
 			return 'Total';
 		} else if (level > 0) {
-			return 'Sub Total (level ' + level + ')' ;
+			return 'Sub Total (level ' + level + ')';
 		}
 	}
 	srnTotalsFormatter(totals, columnDef) {
@@ -978,29 +1000,35 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 			if (result.status === 'ok') {
 				this.reportProcessWiseData = result.data;
 				this.columnDefinitions = [
-					{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
-					grouping: {
-						getter: 'admission_no',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					{
+						id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
+						grouping: {
+							getter: 'admission_no',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
 						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
+						groupTotalsFormatter: this.srnTotalsFormatter
 					},
-					groupTotalsFormatter: this.srnTotalsFormatter },
-					{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-					groupTotalsFormatter: this.countTotalsFormatter },
-					{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-					grouping: {
-						getter: 'class_name',
-						formatter: (g) => {
-							return `${g.value}  <span style="color:green">(${g.count})</span>`;
-						},
-						aggregators: this.aggregatearray,
-						aggregateCollapsed: true,
-						collapsed: false,
-					}},
+					{
+						id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
+						groupTotalsFormatter: this.countTotalsFormatter
+					},
+					{
+						id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
+						grouping: {
+							getter: 'class_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						}
+					},
 				];
 				for (let i = 0; i < result.data[1].length; i++) {
 					// this.displayedColumns.push(result.data[1][i]['docreq_name']);
@@ -1048,8 +1076,8 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 			tempObj['id'] = this.reportProcessWiseData[0][i]['ed_login_id'] + counter;
 			tempObj['counter'] = counter;
 			tempObj['class_name'] = this.reportProcessWiseData[0][i]['sec_name'] ?
-			this.reportProcessWiseData[0][i]['class_name'] + '-' + this.reportProcessWiseData[0][i]['sec_name'] :
-			this.reportProcessWiseData[0][i]['class_name'];
+				this.reportProcessWiseData[0][i]['class_name'] + '-' + this.reportProcessWiseData[0][i]['sec_name'] :
+				this.reportProcessWiseData[0][i]['class_name'];
 
 			tempObj['admission_no'] = this.reportProcessWiseData[0][i]['em_admission_no'];
 			tempObj['full_name'] = new TitleCasePipe().transform(this.reportProcessWiseData[0][i]['au_full_name']);
@@ -1057,7 +1085,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 
 			for (let k = 0; k < this.requiredDocData.length; k++) {
 				tempObj['doc' + this.requiredDocData[k].docreq_id] =
-				this.reportProcessWiseData[0][i]['req_doc'].indexOf(this.requiredDocData[k].docreq_id) !== -1 ? 'Yes' : 'No';
+					this.reportProcessWiseData[0][i]['req_doc'].indexOf(this.requiredDocData[k].docreq_id) !== -1 ? 'Yes' : 'No';
 			}
 			tempObj['total_document_required'] = this.reportProcessWiseData[1].length;
 			let total_uploaded_document = 0;
@@ -1067,7 +1095,13 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 				}
 			}
 			tempObj['total_uploaded_document'] = total_uploaded_document;
-			this.dataset.push(tempObj);
+			if (this.reportType === 'negative') {
+				if (Number(this.reportProcessWiseData[1].length) !== Number(total_uploaded_document)) {
+					this.dataset.push(tempObj);
+				}
+			} else {
+				this.dataset.push(tempObj);
+			}
 			counter++;
 		}
 		const blankTempObj = {};
@@ -1109,7 +1143,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
 		popupWin.document.write('<html> <link rel="stylesheet" href="/assets/css/print.css">' +
-		'<style>.tab-margin-button-bottom{display:none !important}</style>' +
+			'<style>.tab-margin-button-bottom{display:none !important}</style>' +
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Student Document Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
