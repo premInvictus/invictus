@@ -177,7 +177,7 @@
                                     </ng-container>
                                     <ng-template [ngIf]="exam.student_mark_subexam.length > 1">
                                         <th [attr.rowspan]="2" class="custom-th text-center" >
-                                            MO
+                                            MO<br>({{exam.exam_weightage}})
                                         </th>
                                     </ng-template>
                                 </ng-container>
@@ -374,7 +374,7 @@
                     </tbody>
                 </table>
             </ng-container>
-            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput'">
+            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && paramform.value.eme_sub_type == '1'">
                 <table class="custom-table" style="display: block !important; overflow-x: auto;">
                     <thead>
                         <tr class="custom-tr">
@@ -406,7 +406,7 @@
                                     </ng-container>
                                     <ng-template [ngIf]="exam.student_mark_subexam.length > 1">
                                         <th [attr.rowspan]="2" class="custom-th text-center" >
-                                            MO
+                                            MO<br>({{exam.exam_weightage}})
                                         </th>
                                     </ng-template>
                                 </ng-container>
@@ -461,6 +461,90 @@
                                             {{getInputMarksExam(stu.au_login_id,sub.sub_id,exam.exam_id,'student_mark')}}
                                         </td>
                                     </ng-template>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                </table>
+            </ng-container>
+            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && paramform.value.eme_sub_type == '2'">
+                <table class="custom-table" style="display: block !important; overflow-x: auto;">
+                    <thead>
+                        <tr class="custom-tr">
+                            <th rowspan="4" class="custom-th text-center" >Roll No.</th>
+                            <th rowspan="4" class="custom-th text-center" >Admission</th>
+                            <th rowspan="4" class="custom-th text-center" width="250px">Student name</th>
+                            <ng-container *ngFor="let sub of thead_data; let m = index">
+                                <th [attr.colspan]="sub.colspan" class="custom-th text-center" >
+                                    {{sub.sub_name}}
+                                </th>
+                            </ng-container>
+                        </tr>
+                        <tr class="custom-tr">
+                            <ng-container *ngFor="let sub of thead_data; let m = index">
+                                <ng-container *ngFor="let exam of sub.sub_exam_mark; let n = index">
+                                    <th class="custom-th text-center"  [attr.colspan]="exam.colspan">
+                                        {{exam.exam_name}}
+                                    </th>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                        <tr class="custom-tr">
+                            <ng-container *ngFor="let sub of thead_data; let m = index">
+                                <ng-container *ngFor="let exam of sub.sub_exam_mark; let n = index">
+                                    <ng-container *ngFor="let subexam of exam.student_mark_subexam; let o = index">
+                                        <th class="custom-th text-center"  [attr.colspan]="subexam.colspan">
+                                            {{subexam.sexam_name}}
+                                        </th>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                        <tr class="custom-tr">
+                            <ng-container *ngFor="let sub of thead_data; let m = index">
+                                <ng-container *ngFor="let exam of sub.sub_exam_mark; let n = index">
+                                    <ng-container *ngFor="let subexam of exam.student_mark_subexam; let o = index">
+                                        <ng-template [ngIf]="subexam.subsubject_marks.length > 0" [ngIfElse]="nosubsubject">
+                                            <ng-container
+                                                *ngFor="let subsubject of subexam.subsubject_marks; let p = index">
+                                                <th class="custom-th text-center" >
+                                                    {{subsubject.sub_name}}
+                                                </th>
+                                            </ng-container>
+                                        </ng-template>
+                                        <ng-template #nosubsubject>
+                                            <th class="custom-th text-center" >
+                                                MO
+                                            </th>
+                                        </ng-template>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let stu of responseMarksArray; let s = index">
+                            <td class="custom-td text-center font-size-14">{{stu.r_rollno}}</td>
+                            <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
+                            <td class="custom-td text-left font-size-14 text-nowrap"><span
+                                    class="margin-left-15">{{stu.au_full_name | titlecase}}</span> </td>
+                            <ng-container *ngFor="let sub of stu.co_printData.sub_mark; let m = index">
+                                <ng-container *ngFor="let exam of sub.sub_exam_mark; let n = index">
+                                    <ng-container *ngFor="let subexam of exam.student_mark_subexam; let o = index">
+                                        <ng-template [ngIf]="subexam.subsubject_marks.length > 0" [ngIfElse]="nosubsubjectmarks">
+                                            <ng-container
+                                                *ngFor="let subsubject of subexam.subsubject_marks; let p = index">
+                                                <td class="custom-td text-center text-nowrap" >
+                                                    {{getInputMarksSubsubject(stu.au_login_id,sub.sub_id,exam.exam_id,subexam.se_id,subsubject.sub_id,'co_printData')}}
+                                                </td>
+                                            </ng-container>
+                                        </ng-template>
+                                        <ng-template #nosubsubjectmarks>
+                                            <td class="custom-td text-center text-nowrap" >
+                                                {{getInputMarksSubexam(stu.au_login_id,sub.sub_id,exam.exam_id,subexam.se_id,'student_mark','co_printData')}}
+                                            </td>
+                                        </ng-template>
+                                    </ng-container>
                                 </ng-container>
                             </ng-container>
                         </tr>
