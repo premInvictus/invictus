@@ -195,35 +195,35 @@ export class StoreLedgerComponent implements OnInit {
       gridMenu: {
         customItems: [
           {
-          title: 'pdf',
-          titleKey: 'Export as PDF',
-          command: 'exportAsPDF',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'excel',
-          titleKey: 'Export Excel',
-          command: 'exportAsExcel',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'expand',
-          titleKey: 'Expand Groups',
-          command: 'expandGroup',
-          iconCssClass: 'fas fa-expand-arrows-alt'
-        },
-        {
-          title: 'collapse',
-          titleKey: 'Collapse Groups',
-          command: 'collapseGroup',
-          iconCssClass: 'fas fa-compress'
-        },
-        {
-          title: 'cleargroup',
-          titleKey: 'Clear Groups',
-          command: 'cleargroup',
-          iconCssClass: 'fas fa-eraser'
-        }
+            title: 'pdf',
+            titleKey: 'Export as PDF',
+            command: 'exportAsPDF',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'excel',
+            titleKey: 'Export Excel',
+            command: 'exportAsExcel',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'expand',
+            titleKey: 'Expand Groups',
+            command: 'expandGroup',
+            iconCssClass: 'fas fa-expand-arrows-alt'
+          },
+          {
+            title: 'collapse',
+            titleKey: 'Collapse Groups',
+            command: 'collapseGroup',
+            iconCssClass: 'fas fa-compress'
+          },
+          {
+            title: 'cleargroup',
+            titleKey: 'Clear Groups',
+            command: 'cleargroup',
+            iconCssClass: 'fas fa-eraser'
+          }
         ],
         onCommand: (e, args) => {
           if (args.command === 'toggle-preheader') {
@@ -333,15 +333,27 @@ export class StoreLedgerComponent implements OnInit {
         let ind = 0;
         for (let item of repoArray) {
           let obj: any = {};
-          obj['id'] = item.item_name + ind;
-          obj['item_code'] = item.item_code;
-          obj['item_name'] = new CapitalizePipe().transform(this.getItemName(item.item_code));
-          obj['item_code_name'] = item.item_code + '-' + new CapitalizePipe().transform(this.getItemName(item.item_code));
-          obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
-          obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
-          obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
-          obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
-          obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
+          if (item.particulars === 'Opening Balance') {
+            obj['id'] = item.item_name + ind;
+            obj['item_code'] = item.item_code;
+            obj['item_name'] = '-';
+            obj['item_code_name'] =  item.item_code + '-' + new CapitalizePipe().transform(this.getItemName(item.item_code));
+            obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
+            obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
+            obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+            obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
+            obj['quantity_out'] = item.quantity_out ? item.quantity_out : '-';
+          } else {
+            obj['id'] = item.item_name + ind;
+            obj['item_code'] = item.item_code;
+            obj['item_name'] = new CapitalizePipe().transform(this.getItemName(item.item_code));
+            obj['item_code_name'] = item.item_code + '-' + new CapitalizePipe().transform(this.getItemName(item.item_code));
+            obj['date'] = this.CommonService.dateConvertion(item.date, 'dd-MMM-y');
+            obj['particulars'] = item.particulars ? new CapitalizePipe().transform(item.particulars) : '-';
+            obj['stu_name'] = item.stu_name ? new CapitalizePipe().transform(item.stu_name) : '-';
+            obj['quantity_in'] = item.quantity_in ? item.quantity_in : 0;
+            obj['quantity_out'] = item.quantity_out ? item.quantity_out : 0;
+          }
           this.dataset.push(obj);
           ind++;
         }

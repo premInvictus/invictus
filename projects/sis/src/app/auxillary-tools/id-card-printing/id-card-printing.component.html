@@ -246,11 +246,11 @@
                       <!-- Checkbox Column -->
                       <ng-container matColumnDef="select">
                         <th mat-header-cell *matHeaderCellDef>
-                          <mat-checkbox (change)="checkAllStudents($event)"></mat-checkbox>
+                          <!-- <mat-checkbox (change)="checkAllStudents($event)"></mat-checkbox> -->
                         </th>
                         <td mat-cell *matCellDef="let item">
                           <mat-checkbox [value]="item.no" (change)="getSelectedStudents($event, item.action)"
-                            [checked]="checkAllFlag"></mat-checkbox>
+                            [checked]="checkedFlag(item.no)" [disabled]="chekboxDisable"></mat-checkbox >
                         </td>
                       </ng-container>
                       <!-- Admission Column -->

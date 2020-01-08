@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { EditRequestElement } from './edit-request.model';
-import { SisService, CommonAPIService} from '../../_services/index';
-import {StudentFormConfigService} from '../../sharedmodule/dynamic-content/student-form-config.service';
+import { SisService, CommonAPIService } from '../../_services/index';
+import { StudentFormConfigService } from '../../sharedmodule/dynamic-content/student-form-config.service';
 import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-edit-requests',
@@ -40,12 +40,12 @@ export class EditRequestsComponent implements OnInit {
 	reqPriority: any;
 	reqReason: any;
 	reqRemarks: any;
-	confirmMessage: any = 'Are you sure you want to approve?';
-	studentInfo:any;
+	confirmMessage: any;
+	studentInfo: any;
 	currentRequestid;
 	constructor(private commonService: CommonAPIService,
-							private sisService: SisService,
-							public configService: StudentFormConfigService) {}
+		private sisService: SisService,
+		public configService: StudentFormConfigService) { }
 
 	ngOnInit() {
 		this.editRequestDataSource.sort = this.sort;
@@ -53,6 +53,16 @@ export class EditRequestsComponent implements OnInit {
 	}
 
 	openDeleteDialog = (data) => {
+		this.deleteModal.openModal(data);
+	}
+	openDeclineDialog = (data, msg) => {
+		data.status = msg;
+		if (msg === 'decline') {
+			this.confirmMessage = 'Are you sure you want to decline?'
+		} else {
+			this.confirmMessage = 'Are you sure you want to approve?'
+		}
+
 		this.deleteModal.openModal(data);
 	}
 	applyFilter(filterValue: string) {
@@ -184,9 +194,9 @@ export class EditRequestsComponent implements OnInit {
 							});
 						}
 					}
-					if(value.req_login_id) {
-						this.sisService.getUser({login_id: value.req_login_id, role_id: '4'}).subscribe((result: any) => {
-							if(result && result.status === 'ok') {
+					if (value.req_login_id) {
+						this.sisService.getUser({ login_id: value.req_login_id, role_id: '4' }).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
 								this.studentInfo = result.data[0];
 							}
 						});
@@ -219,6 +229,7 @@ export class EditRequestsComponent implements OnInit {
 		}
 	}
 	approveRequest(event) {
+		console.log('event', event.status);
 		const rff_id: any[] = [];
 		for (const item of event.data) {
 			if (!item.rff_status) {
@@ -255,5 +266,5 @@ export class EditRequestsComponent implements OnInit {
 	isExistUserAccessMenu(mod_id) {
 		return this.commonService.isExistUserAccessMenu(mod_id);
 	}
-	deleteCancel() {}
+	deleteCancel() { }
 }

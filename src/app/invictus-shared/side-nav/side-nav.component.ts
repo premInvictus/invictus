@@ -92,11 +92,11 @@ export class SideNavComponent implements OnInit, OnChanges {
 						}
 						for (const level0 of morStatusEnabledArray) {
 							let menu: any = {};
-							if (level0.mod_level === '0') {
+							if (level0.mod_level === '0' && level0.menu_show === 'Y') {
 								menu = level0;
 								menu.submenu = [];
 								for (const level1 of morStatusEnabledArray) {
-									if (level1.mod_parent_id === level0.mod_id) {
+									if (level1.mod_parent_id === level0.mod_id && level1.menu_show === 'Y') {
 										menu.submenu.push(level1);
 									}
 								}
@@ -120,11 +120,11 @@ export class SideNavComponent implements OnInit, OnChanges {
 						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
 						for (const level0 of this.userAccessMenuArray) {
 							let menu: any = {};
-							if (level0.mod_level === '0') {
+							if (level0.mod_level === '0' && level0.menu_show === 'Y') {
 								menu = level0;
 								menu.submenu = [];
 								for (const level1 of this.userAccessMenuArray) {
-									if (level1.mod_parent_id === level0.mod_id) {
+									if (level1.mod_parent_id === level0.mod_id && level1.menu_show === 'Y') {
 										menu.submenu.push(level1);
 									}
 								}
@@ -148,11 +148,11 @@ export class SideNavComponent implements OnInit, OnChanges {
 						localStorage.setItem('userAccessMenu', JSON.stringify({ menus: this.userAccessMenuArray }));
 						for (const level0 of this.userAccessMenuArray) {
 							let menu: any = {};
-							if (level0.mod_level === '0') {
+							if (level0.mod_level === '0' && level0.menu_show === 'Y') {
 								menu = level0;
 								menu.submenu = [];
 								for (const level1 of this.userAccessMenuArray) {
-									if (level1.mod_parent_id === level0.mod_id) {
+									if (level1.mod_parent_id === level0.mod_id && level1.menu_show === 'Y') {
 										menu.submenu.push(level1);
 									}
 								}
@@ -182,11 +182,11 @@ export class SideNavComponent implements OnInit, OnChanges {
 						}
 						for (const level0 of studentMenuArray) {
 							let menu: any = {};
-							if (level0.mod_level === '0') {
+							if (level0.mod_level === '0' && level0.menu_show === 'Y') {
 								menu = level0;
 								menu.submenu = [];
 								for (const level1 of this.userAccessMenuArray) {
-									if (level1.mod_parent_id === level0.mod_id) {
+									if (level1.mod_parent_id === level0.mod_id && level1.menu_show === 'Y') {
 										menu.submenu.push(level1);
 									}
 								}
@@ -232,6 +232,6 @@ export class SideNavComponent implements OnInit, OnChanges {
 			localStorage.setItem('menuToggle', JSON.stringify(menuJSon));
 		}
 
-		
+
 	}
 }

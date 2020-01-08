@@ -10,7 +10,7 @@ import {
 	FileType
 } from 'angular-slickgrid';
 import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver'; 
 import * as Excel from 'exceljs/dist/exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
@@ -667,6 +667,7 @@ export class FeeLedgerReportComponent implements OnInit {
 					index++;
 					k++;
 				}
+				console.log('this.dataset',this.dataset)
 				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
