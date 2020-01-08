@@ -37,7 +37,7 @@ export class RepotContainerComponent implements OnInit {
   userArray: any[] = [];
   userName: any = '';
   currentUser: any = {};
-  constructor(private erpCommonService: ErpCommonService) { }
+  constructor(private erpCommonService: ErpCommonService, private CommonAPIService: CommonAPIService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -81,10 +81,18 @@ export class RepotContainerComponent implements OnInit {
     if (index === 0 || index === 5 || index === 10) {
       return 'col-12 col-lg-2  col-md-6 col-sm-6';
     } else {
-      return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+      return 'col-12 col-lg-2  col-md-6 col-sm-6';
     }
   }
   displyRep($event) {
     this.reportHeader = $event.report_name;
+  }
+  isExistUserAccessMenu(actionT) {
+    if (actionT === '1') {
+      return this.CommonAPIService.isExistUserAccessMenu('492');
+    }
+    if (actionT === '2') {
+      return this.CommonAPIService.isExistUserAccessMenu('592');
+    }
   }
 }

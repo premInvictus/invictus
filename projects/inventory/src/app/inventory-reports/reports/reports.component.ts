@@ -63,7 +63,7 @@ export class ReportsComponent implements OnInit {
   userArray: any[] = [];
   userName: any = '';
   currentUser: any = {};
-  constructor() { }
+  constructor(private CommonAPIService: CommonAPIService) { }
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -77,7 +77,7 @@ export class ReportsComponent implements OnInit {
     if (index === 0 || index === 5 || index === 10) {
       return 'col-12 col-lg-2  col-md-6 col-sm-6';
     } else {
-      return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+      return 'col-12 col-lg-2  col-md-6 col-sm-6';
     }
   }
   executeReport(report_id) {
@@ -134,6 +134,23 @@ export class ReportsComponent implements OnInit {
       }
     } else {
       this.reportHeader = $event.report_name;
+    }
+  }
+  isExistUserAccessMenu(actionT) {
+    if (actionT === '1') {
+      return this.CommonAPIService.isExistUserAccessMenu('593');
+    }
+    if (actionT === '2') {
+      return this.CommonAPIService.isExistUserAccessMenu('594');
+    }
+    if (actionT === '3') {
+      return this.CommonAPIService.isExistUserAccessMenu('595');
+    }
+    if (actionT === '4') {
+      return this.CommonAPIService.isExistUserAccessMenu('596');
+    }
+    if (actionT === '5') {
+      return this.CommonAPIService.isExistUserAccessMenu('597');
     }
   }
 }
