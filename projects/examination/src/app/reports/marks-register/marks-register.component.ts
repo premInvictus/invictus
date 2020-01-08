@@ -67,7 +67,14 @@ export class MarksRegisterComponent implements OnInit {
     })
   }
   changeReportType(){
-    
+    this.paramform.patchValue({
+      eme_sub_type: '',
+      eme_class_id: '',
+      eme_sec_id: '',
+      eme_sub_id: '',
+      eme_term_id: '',
+      eme_exam_id: ''
+    });
   }
   getClassTerm() {
     this.termsArray = [];
@@ -159,11 +166,11 @@ export class MarksRegisterComponent implements OnInit {
 
   getSectionsByClass() {
     this.paramform.patchValue({
+      eme_sub_type:'',
       eme_sec_id: '',
       eme_term_id: '',
       eme_sub_id: '',
-      eme_exam_id: '',
-      eme_subexam_id: ''
+      eme_exam_id: ''
     });
     this.tableDivFlag = false;
     this.sectionArray = [];
@@ -173,6 +180,12 @@ export class MarksRegisterComponent implements OnInit {
       } else {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
+    });
+  }
+  resetFormONSecitonChange() {
+    this.paramform.patchValue({
+      eme_sub_id: '',
+      eme_exam_id: ''
     });
   }
   getSubjectsByClass() {
