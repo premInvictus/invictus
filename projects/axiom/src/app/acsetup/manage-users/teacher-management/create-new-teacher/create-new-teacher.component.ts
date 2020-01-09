@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, FormGroupDirective, NgForm, FormControl, Valida
 import { QelementService } from '../../../../questionbank/service/qelement.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AcsetupService } from '../../../../acsetup/service/acsetup.service';
-import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService } from '../../../../_services/index';
+import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService, TreeviewService } from '../../../../_services/index';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { AdminService } from '../../../../user-type/admin/services/admin.service';
 import { appConfig } from '../../../../app.config';
@@ -27,6 +27,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		private route: ActivatedRoute,
 		private router: Router,
 		private notif: NotificationService,
+		private treeviewService: TreeviewService,
 		private breadCrumbService: BreadCrumbService
 	) {
 	}
@@ -125,29 +126,7 @@ export class CreateNewTeacherComponent implements OnInit {
 						(result: any) => {
 							if (result && result.status === 'ok') {
 								this.moduleArray = result.data;
-								for (const moditem of this.moduleArray) {
-									const mitem: any = {};
-									mitem.text = moditem.mod_name;
-									mitem.value = moditem.mod_id;
-									mitem.checked = this.isExistAssignedModuleList(moditem.mod_id);
-									mitem.children = [];
-									for (const submenu1 of moditem.submenu_level_1) {
-										const submenu1item: any = {};
-										submenu1item.text = submenu1.mod_name;
-										submenu1item.value = moditem.mod_id + '-' + submenu1.mod_id;
-										submenu1item.checked = this.isExistAssignedModuleList(submenu1.mod_id);
-										submenu1item.children = [];
-										for (const submenu2 of submenu1.submenu_level_2) {
-											const submenu2item: any = {};
-											submenu2item.text = submenu2.mod_name;
-											submenu2item.value = moditem.mod_id + '-' + submenu1.mod_id + '-' + submenu2.mod_id;
-											submenu2item.checked = this.isExistAssignedModuleList(submenu2.mod_id);
-											submenu1item.children.push(submenu2item);
-										}
-										mitem.children.push(submenu1item);
-									}
-									this.moduleItems.push(new TreeviewItem(mitem));
-								}
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
 							}
 						});
 				} else {
@@ -156,29 +135,7 @@ export class CreateNewTeacherComponent implements OnInit {
 						(result: any) => {
 							if (result && result.status === 'ok') {
 								this.moduleArray = result.data;
-								for (const moditem of this.moduleArray) {
-									const mitem: any = {};
-									mitem.text = moditem.mod_name;
-									mitem.value = moditem.mod_id;
-									mitem.checked = this.isExistAssignedModuleList(moditem.mod_id);
-									mitem.children = [];
-									for (const submenu1 of moditem.submenu_level_1) {
-										const submenu1item: any = {};
-										submenu1item.text = submenu1.mod_name;
-										submenu1item.value = moditem.mod_id + '-' + submenu1.mod_id;
-										submenu1item.checked = this.isExistAssignedModuleList(submenu1.mod_id);
-										submenu1item.children = [];
-										for (const submenu2 of submenu1.submenu_level_2) {
-											const submenu2item: any = {};
-											submenu2item.text = submenu2.mod_name;
-											submenu2item.value = moditem.mod_id + '-' + submenu1.mod_id + '-' + submenu2.mod_id;
-											submenu2item.checked = this.isExistAssignedModuleList(submenu2.mod_id);
-											submenu1item.children.push(submenu2item);
-										}
-										mitem.children.push(submenu1item);
-									}
-									this.moduleItems.push(new TreeviewItem(mitem));
-								}
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
 							}
 						});
 				}
@@ -446,29 +403,7 @@ export class CreateNewTeacherComponent implements OnInit {
 					this.moduleArray = [];
 					this.moduleItems = [];
 					this.moduleArray = result.data;
-					for (const moditem of this.moduleArray) {
-						const mitem: any = {};
-						mitem.text = moditem.mod_name;
-						mitem.value = moditem.mod_id;
-						mitem.checked = this.isExistAssignedModuleList(moditem.mod_id);
-						mitem.children = [];
-						for (const submenu1 of moditem.submenu_level_1) {
-							const submenu1item: any = {};
-							submenu1item.text = submenu1.mod_name;
-							submenu1item.value = moditem.mod_id + '-' + submenu1.mod_id;
-							submenu1item.checked = this.isExistAssignedModuleList(submenu1.mod_id);
-							submenu1item.children = [];
-							for (const submenu2 of submenu1.submenu_level_2) {
-								const submenu2item: any = {};
-								submenu2item.text = submenu2.mod_name;
-								submenu2item.value = moditem.mod_id + '-' + submenu1.mod_id + '-' + submenu2.mod_id;
-								submenu2item.checked = this.isExistAssignedModuleList(submenu2.mod_id);
-								submenu1item.children.push(submenu2item);
-							}
-							mitem.children.push(submenu1item);
-						}
-						this.moduleItems.push(new TreeviewItem(mitem));
-					}
+					this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
 				}
 			});
 	}

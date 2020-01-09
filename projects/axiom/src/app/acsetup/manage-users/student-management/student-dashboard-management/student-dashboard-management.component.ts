@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserAccessMenuService, NotificationService } from '../../../../_services/index';
+import { UserAccessMenuService, NotificationService, TreeviewService } from '../../../../_services/index';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AdminService } from '../../../../user-type/admin/services/admin.service';
@@ -23,6 +23,13 @@ export class StudentDashboardManagementComponent implements OnInit {
 		decoupleChildFromParent: false,
 		maxHeight: 400
 	});
+	typeArray = [
+		{ id: 'web', name: 'Desktop' },
+		{ id: 'app', name: 'Mobile' }
+	];
+	isApp = false;
+	submitButton = true;
+	typeVal = 'web';
 
 	constructor(
 		private router: Router,
@@ -30,12 +37,24 @@ export class StudentDashboardManagementComponent implements OnInit {
 		private adminService: AdminService,
 		private userAccessMenuService: UserAccessMenuService,
 		private notif: NotificationService,
+		private treeviewService: TreeviewService,
 	) { }
 
 	ngOnInit() {
 		//this.getProjectList();
-		this.getModuleList();
 		this.getAssignedModuleList();
+	}
+	changeIsWebApp($event) {
+		if ($event.value === 'app') {
+			this.isApp = true;
+			this.typeVal = 'app';
+			this.getAssignedModuleList2();
+		} else {
+			this.typeVal = 'web';
+			this.isApp = false;
+			this.moduleValues = [];
+			this.getAssignedModuleList();
+		}
 	}
 	isExistAssignedModuleList(mod_id) {
 		this.assignedModuleArray.filter(mitem => {
@@ -47,10 +66,42 @@ export class StudentDashboardManagementComponent implements OnInit {
 	}
 	getAssignedModuleList() {
 		this.assignedModuleArray = [];
-		this.userAccessMenuService.getUserAccessMenu({ role_id: '4' }).subscribe(
+		this.userAccessMenuService.getUserAccessMenu({ role_id: '4', mor_type: 'web' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.assignedModuleArray = result.data;
+					this.getModuleList();
+				} else {
+					this.getModuleList();
+				}
+			}
+		);
+	}
+	getAssignedModuleList2() {
+		this.assignedModuleArray = [];
+		this.moduleArray = [];
+		this.moduleItems = [];
+		this.userAccessMenuService.getUserAccessMenu({ role_id: '4', mor_type: 'app' }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.assignedModuleArray = result.data;
+					this.moduleItems = [];
+					this.adminService.getModuleList({ role_id: 4, mor_type: 'app' }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								this.moduleArray = result.data;
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+							}
+						});
+				} else {
+					this.moduleItems = [];
+					this.adminService.getModuleList({ role_id: '4', mor_type: 'app' }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								this.moduleArray = result.data;
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+							}
+						});
 				}
 			}
 		);
@@ -69,40 +120,18 @@ export class StudentDashboardManagementComponent implements OnInit {
 		//this.current_Pro_id = pro_id;
 		this.moduleItems = [];
 		//, pro_id: pro_id
-		this.adminService.getModuleList({ role_id: 4 }).subscribe(
+		this.adminService.getModuleList({ role_id: 4, mor_type: 'web' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.moduleArray = result.data;
-					for (const moditem of this.moduleArray) {
-						const mitem: any = {};
-						mitem.text = moditem.mod_name;
-						mitem.value = moditem.mod_id;
-						mitem.checked = this.isExistAssignedModuleList(moditem.mod_id);
-						mitem.children = [];
-						for (const submenu1 of moditem.submenu_level_1) {
-							const submenu1item: any = {};
-							submenu1item.text = submenu1.mod_name;
-							submenu1item.value = moditem.mod_id + '-' + submenu1.mod_id;
-							submenu1item.checked = this.isExistAssignedModuleList(submenu1.mod_id);
-							submenu1item.children = [];
-							for (const submenu2 of submenu1.submenu_level_2) {
-								const submenu2item: any = {};
-								submenu2item.text = submenu2.mod_name;
-								submenu2item.value = moditem.mod_id + '-' + submenu1.mod_id + '-' + submenu2.mod_id;
-								submenu2item.checked = this.isExistAssignedModuleList(submenu2.mod_id);
-								submenu1item.children.push(submenu2item);
-							}
-							mitem.children.push(submenu1item);
-						}
-						this.moduleItems.push(new TreeviewItem(mitem));
-					}
+					this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
 				}
 			});
 	}
 	submitModule() {
 		//this.current_Pro_id = 1;
 		// if (this.current_Pro_id) {
-		const menuRelation: any = { pro_id: 1, menuRelation: this.moduleValues };
+		const menuRelation: any = { pro_id: 1, menuRelation: this.moduleValues, type: this.isApp ? 'app' : 'web' };
 		this.adminService.addUserAccessMenu(menuRelation).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
