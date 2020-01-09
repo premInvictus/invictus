@@ -72,6 +72,14 @@
                                        </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
+                                       <mat-label>Select Class</mat-label>
+                                       <mat-select placeholder="Select Class" multiple formControlName="docreq_class"
+                                          required>
+                                          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                             {{item.class_name}}</mat-option>
+                                       </mat-select>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
                                        <mat-label>Is it Required ?</mat-label>
                                        <mat-select placeholder="Is it required?.." formControlName="docreq_is_required"
                                           [errorStateMatcher]="confirmValidParentMatcher" required>
@@ -547,6 +555,15 @@
                                                             </th>
                                                             <td mat-cell *matCellDef="let item">
                                                                {{ item.alias }}
+                                                            </td>
+                                                         </ng-container>
+                                                         <!-- Class Column -->
+                                                         <ng-container matColumnDef="class">
+                                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                                               Class
+                                                            </th>
+                                                            <td mat-cell *matCellDef="let item">
+                                                               {{ item.class }}
                                                             </td>
                                                          </ng-container>
                                                          <!-- Section Column -->

@@ -1087,7 +1087,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 				tempObj['doc' + this.requiredDocData[k].docreq_id] =
 					this.reportProcessWiseData[0][i]['req_doc'].indexOf(this.requiredDocData[k].docreq_id) !== -1 ? 'Yes' : 'No';
 			}
-			tempObj['total_document_required'] = this.reportProcessWiseData[1].length;
+			tempObj['total_document_required'] = this.reportProcessWiseData[0][i]['docreq_count'];
 			let total_uploaded_document = 0;
 			for (let k = 0; k < this.requiredDocData.length; k++) {
 				if (tempObj['req_doc'] && (tempObj['req_doc']).indexOf(this.requiredDocData[k].docreq_id) !== -1) {
@@ -1096,7 +1096,7 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 			}
 			tempObj['total_uploaded_document'] = total_uploaded_document;
 			if (this.reportType === 'negative') {
-				if (Number(this.reportProcessWiseData[1].length) !== Number(total_uploaded_document)) {
+				if (Number(this.reportProcessWiseData[0][i]['docreq_count']) > Number(total_uploaded_document)) {
 					this.dataset.push(tempObj);
 				}
 			} else {
