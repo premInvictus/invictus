@@ -13,8 +13,8 @@
               <mat-label>Choose User Type</mat-label>
               <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
                 <mat-option value="4">Student</mat-option>
-                <mat-option value="3">Teacher</mat-option>
-                <mat-option value="2">Staff</mat-option>
+                <mat-option value="3">Employee</mat-option>
+                <!-- <mat-option value="2">Staff</mat-option> -->
               </mat-select>
             </mat-form-field>
           </div>
@@ -68,7 +68,7 @@
         </div>
         <div class="col-1 smart-col-1 vertical-divide"></div>
         <div class="col-2 remove-col-padding margin-top-15">
-          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+          <div class="row remove-top-margin">
             <div class="col-4 remove-col-padding">
               <span class="font-size-16 font-bold">Class</span>
               <span class="font-size-16 font-bold float-right">:</span>
@@ -83,7 +83,7 @@
               </span>
             </div>
           </div>
-          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+          <div class="row remove-top-margin">
             <div class="col-4 remove-col-padding">
               <span class="font-size-16 font-bold">House</span>
               <span class="font-size-16 font-bold float-right">:</span>
@@ -98,7 +98,7 @@
         </div>
         <div class="col-1 smart-col-1 vertical-divide"></div>
         <div class="col-3 remove-col-padding margin-top-15">
-          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+          <div class="row remove-top-margin">
             <div class="col-6 remove-col-padding">
               <span class="font-size-16 font-bold">Mobile No.</span>
               <span class="font-size-16 font-bold float-right">:</span>
@@ -110,7 +110,7 @@
               </span>
             </div>
           </div>
-          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+          <div class="row remove-top-margin">
             <div class="col-6 remove-col-padding">
               <span class="font-size-16 font-bold">Items Returned Till Date.</span>
               <span class="font-size-16 font-bold float-right">:</span>
@@ -128,7 +128,7 @@
         </div>
         <div class="col-1 smart-col-1 vertical-divide"></div>
         <div class="col-1 remove-col-padding margin-top-15">
-          <div class="row remove-top-margin" *ngIf="userData?.au_role_id == '4'">
+          <div class="row remove-top-margin">
             <div class="col-12 remove-col-padding-right">
               <span class="font-size-16 font-bold">
                 <!-- <a href="javascript:void(0)"

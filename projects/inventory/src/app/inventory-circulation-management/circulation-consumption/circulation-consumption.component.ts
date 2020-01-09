@@ -194,9 +194,17 @@ export class CirculationConsumptionComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getTeacher({ 'login_id': this.searchForm.value.searchId, 'role_id': Number(au_role_id) }).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
+				this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId) }).subscribe((result: any) => {
+					if (result) {
+						//this.userData = result.data ? result.data[0] : '';
+						var resultJson = {
+							au_login_id: result.emp_login_id,							
+							au_role_id: 3,
+							au_full_name: result.emp_name,
+							au_mobile: result.emp_personal_detail && result.emp_personal_detail.contact_detail ? result.emp_personal_detail.contact_detail.primary_mobile_no : ''
+						}
+						console.log('resultJson--', resultJson);
+						this.userData = resultJson;
 						this.itemData = [];
 						this.itemLogData = [];
 						this.getUserIssueReturnLogData();
@@ -207,24 +215,26 @@ export class CirculationConsumptionComponent implements OnInit {
 						this.getUserIssueReturnLogData();
 					}
 				});
-			} else if (au_role_id === '2') {
-				this.erpCommonService.getUser({
-					'login_id': this.searchForm.value.searchId,
-					'role_id': Number(au_role_id)
-				}).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
-						this.itemData = [];
-						this.itemLogData = [];
-						this.getUserIssueReturnLogData();
-					} else {
-						this.userData = [];
-						this.itemData = [];
-						this.itemLogData = [];
-						this.getUserIssueReturnLogData();
-					}
-				});
-			}
+			} 
+			
+			// else if (au_role_id === '2') {
+			// 	this.erpCommonService.getUser({
+			// 		'login_id': this.searchForm.value.searchId,
+			// 		'role_id': Number(au_role_id)
+			// 	}).subscribe((result: any) => {
+			// 		if (result && result.status === 'ok') {
+			// 			this.userData = result.data ? result.data[0] : '';
+			// 			this.itemData = [];
+			// 			this.itemLogData = [];
+			// 			this.getUserIssueReturnLogData();
+			// 		} else {
+			// 			this.userData = [];
+			// 			this.itemData = [];
+			// 			this.itemLogData = [];
+			// 			this.getUserIssueReturnLogData();
+			// 		}
+			// 	});
+			// }
 
 		}
 	}
@@ -416,7 +426,7 @@ export class CirculationConsumptionComponent implements OnInit {
 
 		const inputJson = {
 			user_login_id: Number(this.userData.au_login_id),
-			user_role_id: Number(this.userData.au_role_id),
+			//user_role_id: Number(this.userData.au_role_id),
 		};
 		this.userHaveItemsData = false;
 		this.itemLogData = [];
@@ -551,7 +561,7 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_inv_logs: updateditemData,
 				user_login_id: this.userData.au_login_id,
 				user_admission_no: this.userData.em_admission_no,
-				user_role_id: this.userData.au_role_id,
+				user_role_id: (this.userData.au_role_id === '3' || this.userData.au_role_id === 3) ? 0 : this.userData.au_role_id,
 				user_full_name: this.userData.au_full_name,
 				user_class_name: this.userData.class_name ? this.userData.class_name : '',
 				user_sec_name: this.userData.sec_name ? this.userData.sec_name : '',
