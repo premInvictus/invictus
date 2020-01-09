@@ -42,6 +42,7 @@ export class MarksRegisterComponent implements OnInit {
     {id: '1', name: 'Scholastic'},
     {id: '2', name: 'Co-Scholastic'}
   ];
+  ect_exam_type = '0';
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -92,6 +93,8 @@ export class MarksRegisterComponent implements OnInit {
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classterm = result.data;
+        console.log(this.classterm);
+        this.ect_exam_type = this.classterm.ect_exam_type;
         if(this.classterm.ect_grade_avg_highest) {
           const temp_grade_config = JSON.parse(this.classterm.ect_grade_avg_highest);
           if(temp_grade_config.grade) {
