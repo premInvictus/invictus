@@ -203,9 +203,17 @@ export class IssueReturnComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getTeacher({ 'login_id': this.searchForm.value.searchId, 'role_id': Number(au_role_id) }).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
+				this.erpCommonService.getEmployeeDetail({ emp_id: Number(this.searchForm.value.searchId) }).subscribe((result: any) => {
+					if (result) {
+						console.log('result--', result);
+						var resultJson = {
+							au_login_id: result.emp_login_id,							
+							au_role_id: 3,
+							au_full_name: result.emp_name,
+							au_mobile: result.emp_personal_detail && result.emp_personal_detail.contact_detail ? result.emp_personal_detail.contact_detail.primary_mobile_no : ''
+						}
+						
+						this.userData = resultJson;
 						this.bookData = [];
 						this.bookLogData = [];
 						this.getUserIssueReturnLogData();
@@ -217,22 +225,22 @@ export class IssueReturnComponent implements OnInit {
 					}
 				});
 			} else if (au_role_id === '2') {
-				this.erpCommonService.getUser({
-					'login_id': this.searchForm.value.searchId,
-					'role_id': Number(au_role_id)
-				}).subscribe((result: any) => {
-					if (result && result.status === 'ok') {
-						this.userData = result.data ? result.data[0] : '';
-						this.bookData = [];
-						this.bookLogData = [];
-						this.getUserIssueReturnLogData();
-					} else {
-						this.userData = [];
-						this.bookData = [];
-						this.bookLogData = [];
-						this.getUserIssueReturnLogData();
-					}
-				});
+				// this.erpCommonService.getUser({
+				// 	'login_id': this.searchForm.value.searchId,
+				// 	'role_id': Number(au_role_id)
+				// }).subscribe((result: any) => {
+				// 	if (result && result.status === 'ok') {
+				// 		this.userData = result.data ? result.data[0] : '';
+				// 		this.bookData = [];
+				// 		this.bookLogData = [];
+				// 		this.getUserIssueReturnLogData();
+				// 	} else {
+				// 		this.userData = [];
+				// 		this.bookData = [];
+				// 		this.bookLogData = [];
+				// 		this.getUserIssueReturnLogData();
+				// 	}
+				// });
 			}
 
 		}
@@ -354,7 +362,7 @@ export class IssueReturnComponent implements OnInit {
 		
 		const inputJson = {
 			user_login_id: this.userData.au_login_id,
-			user_role_id: this.userData.au_role_id,
+			user_role_id: (this.userData.au_role_id === '3' || this.userData.au_role_id === 3) ? 0 : this.userData.au_role_id,
 			log: true
 		};
 		this.erpCommonService.getUserReservoirData(inputJson).subscribe((result: any) => {

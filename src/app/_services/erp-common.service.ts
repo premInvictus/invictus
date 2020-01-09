@@ -569,6 +569,16 @@ export class ErpCommonService {
 		return this.http.post(environment.apiSmartUrl + '/common/getSectionsByClassMultiple', value);
 	}
 
+	getEmployeeDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/get', value);
+	}
+
+	getGlobalTeacher(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getGlobalTeacher', value);
+	}
+
 }
 
 
