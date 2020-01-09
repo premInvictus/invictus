@@ -143,7 +143,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.modeFlag = false;
 		this.terminationFlag = false;
 		this.existFlag = false;
-		this.concession_document = this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
+		this.concession_document = this.feeDet.accd_fcg_id > 0 && this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
 		this.documentPath = this.feeDet.accd_fcg_document ? this.feeDet.accd_fcg_document : '';
 		this.concessionArray.push({
 			ed_docreq_id: 0,
@@ -196,7 +196,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_fs_id: this.feeDet.accd_fs_id,
 				accd_fcg_id: this.feeDet.accd_fcg_id,
 				accd_reason_id: this.feeDet.accd_reason_id,
-				accd_remark_id: this.feeDet.accd_remark_id,
+				accd_remark_id: this.feeDet.accd_fcg_id > 0 && this.feeDet.accd_remark_id ? this.feeDet.accd_remark_id : '',
 				accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
 				accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
 				accd_transport_mode: this.feeDet.accd_transport_mode,
