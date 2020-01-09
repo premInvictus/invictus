@@ -75,6 +75,17 @@ export class MarksRegisterComponent implements OnInit {
       eme_term_id: '',
       eme_exam_id: ''
     });
+    if(this.paramform.value.eme_report_type === 'marksinput') {
+      this.subTypeArray = [
+        {id: '1', name: 'Scholastic'},
+        {id: '2', name: 'Co-Scholastic'}
+      ];
+    } else {
+      this.subTypeArray = [
+        {id: '1', name: 'Scholastic'}
+      ];
+    }
+
   }
   getClassTerm() {
     this.termsArray = [];
@@ -260,7 +271,11 @@ export class MarksRegisterComponent implements OnInit {
           this.responseMarksArray = result.data;
           console.log(this.responseMarksArray);
           if(this.responseMarksArray.length > 0) {
-            this.thead_data = this.responseMarksArray[0]['so_printData']['sub_mark'];
+            if(this.paramform.value.eme_sub_type === '1') {
+              this.thead_data = this.responseMarksArray[0]['so_printData']['sub_mark'];
+            } else {
+              this.thead_data = this.responseMarksArray[0]['co_printData']['sub_mark'];
+            }
             console.log(this.thead_data);
           }
           
@@ -317,13 +332,13 @@ export class MarksRegisterComponent implements OnInit {
   //   }
 
   // }
-  getInputMarksSubsubject(login_id,sub_id,exam_id,se_id,ssub_id){
+  getInputMarksSubsubject(login_id,sub_id,exam_id,se_id,ssub_id,printDatakey='so_printData'){
     let tempvalue = '-';
     for (let index = 0; index < this.responseMarksArray.length; index++) {
       const element = this.responseMarksArray[index];
       if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element.so_printData.sub_mark.length; index1++) {
-          const element1 = element.so_printData.sub_mark[index1];
+        for (let index1 = 0; index1 < element[printDatakey].sub_mark.length; index1++) {
+          const element1 = element[printDatakey].sub_mark[index1];
           if(element1.sub_id === sub_id) {
             for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
               const element2 = element1.sub_exam_mark[index2];
@@ -347,13 +362,13 @@ export class MarksRegisterComponent implements OnInit {
     }
     return tempvalue;
   }
-  getInputMarksSubexam(login_id,sub_id,exam_id,se_id,key){
+  getInputMarksSubexam(login_id,sub_id,exam_id,se_id,key,printDatakey='so_printData'){
     let tempvalue = '-';
     for (let index = 0; index < this.responseMarksArray.length; index++) {
       const element = this.responseMarksArray[index];
       if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element.so_printData.sub_mark.length; index1++) {
-          const element1 = element.so_printData.sub_mark[index1];
+        for (let index1 = 0; index1 < element[printDatakey].sub_mark.length; index1++) {
+          const element1 = element[printDatakey].sub_mark[index1];
           if(element1.sub_id === sub_id) {
             for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
               const element2 = element1.sub_exam_mark[index2];
