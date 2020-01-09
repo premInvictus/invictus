@@ -39,7 +39,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
 	@Input() feeLoginId: any;
-	@Input() studentDetails:any;
+	@Input() studentDetails: any;
 	@Output() editChange = new EventEmitter();
 	finalSibReqArray: any[] = [];
 	finalArray: any[] = [];
@@ -78,16 +78,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.getHostelFeeStructures();
 		this.getTransportMode();
 		this.getRoutes();
-		
+
 
 	}
 	ngOnChanges() {
 		console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
-			
+
 			this.getFeeAccount(this.feeLoginId);
-			
-			
+
+
 		}
 	}
 	buildForm() {
@@ -96,7 +96,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_login_id: '',
 			accd_fo_id: '',
 			accd_fs_id: '',
-			accd_afc_id:'',
+			accd_afc_id: '',
 			accd_fcg_id: '',
 			accd_fcg_document: '',
 			accd_reason_id: '',
@@ -124,7 +124,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	}
 
 	additionalFeeComponent(class_id) {
-		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : ''  }).subscribe((result: any) => {
+		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : '' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log('additionalFeeComponentArray--', result.data);
 				this.additionalFeeComponentArray = result.data;
@@ -200,7 +200,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_fs_id: this.accountDetails.accd_fs_id,
 					accd_fcg_id: this.accountDetails.accd_fcg_id,
 					accd_reason_id: this.accountDetails.accd_reason_id,
-					accd_remark_id: this.accountDetails.accd_remark_id,
+					accd_remark_id: this.accountDetails.accd_fcg_id > 0 ? this.accountDetails.accd_remark_id : '',
 					accd_is_transport: this.accountDetails.accd_is_transport === 'N' ? false : true,
 					accd_is_hostel: this.accountDetails.accd_is_hostel === 'N' ? false : true,
 					accd_transport_mode: this.accountDetails.accd_transport_mode,
@@ -416,8 +416,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_reason_id ||
-				!this.accountsForm.value.accd_remark_id) {
+			if (!this.accountsForm.value.accd_remark_id) {
 				validateFlag = false;
 			}
 		}
