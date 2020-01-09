@@ -2,13 +2,23 @@
   <div class="col-12">
     <mat-card>
       <div class="row">
-        <div class="col-9 margin-top-15">
-          <span class="font-size-24">Id Card Printing</span>
+        <div class="col-6 margin-top-15">
+          <span class="font-size-24 font-bold">Id Card Printing</span>
         </div>
-        <div class="col-3">
-          <button mat-raised-button class="btn-success-blue" (click)="openFilter()">
-            Filter
-          </button>
+        <div class="col-6 text-right">
+          <form [formGroup]="barCodePrintForm">
+            <mat-form-field appearance="outline" class=" form-field-150">
+              <mat-label>Employee ID </mat-label>
+              <input matInput placeholder="Book ID " formControlName="emp_id" type="text"
+                (keydown.enter)="getCode();$event.preventDefault();" autocomplete="off" />
+            </mat-form-field>
+            <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openFilter({})">
+              Advanced Filter
+            </button>
+            <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getCode()">
+              Submit
+            </button>
+          </form>
         </div>
       </div>
     </mat-card>
@@ -36,6 +46,13 @@
               <button mat-button class="btn-green" (click)="print()">Print</button>
             </div>
           </div>
+        </div>
+      </div>
+      <div *ngIf="studentDetailsArray.length === 0">
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/bar_code_printing.png'"
+            [noDataText]="'No Employee for Print'" [subText]="'Please filter data to get employee code'"></app-no-data>
         </div>
       </div>
     </mat-card>
