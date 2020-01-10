@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { CommonAPIService, SisService } from '../../_services/index';
 import { ViewIdCardComponent } from './view-id-card/view-id-card.component';
 import { PrintIdCardComponent } from './print-id-card/print-id-card.component';
+import { FormGroup, FormBuilder } from '@angular/forms';
 @Component({
 	selector: 'app-id-card-printing',
 	templateUrl: './id-card-printing.component.html',
@@ -32,21 +33,28 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	idColor: any;
 	disabled = true;
 	checkAllFlag = false;
+	barCodePrintForm: FormGroup;
 	checkStudents: any[] = [];
 	dialogRef: MatDialogRef<ViewIdCardComponent>;
 	dialogRef2: MatDialogRef<PrintIdCardComponent>;
 	showViewProfile = false;
 	constructor(private sisService: SisService,
+		private fbuild: FormBuilder,
 		private commonApiService: CommonAPIService,
 		public dialog: MatDialog) { }
 
 	ngOnInit() {
 		this.getSchool();
 		this.getIdCardSettings();
+		this.buildForm();
 	}
 	ngAfterViewInit() {
 	}
-
+	buildForm() {
+		this.barCodePrintForm = this.fbuild.group({
+			'emp_id': ''
+		});
+	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -73,17 +81,8 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		this.searchModal.openModal();
 	}
 	searchOk(event) {
-		const filterJSON = {
-			"generalFilters": {
-				"emp_department_detail.dpt_id": [
-					"1"
-				],
-				"emp_category_detail.cat_id": [
-					"3"
-				]
-			}
-		};
-		this.commonApiService.getFilterData(filterJSON).subscribe((res: any) => {
+		this.studentDetailsArray = [];
+		this.commonApiService.getFilterData(event).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				for (const item of res.data) {
 					this.studentDetailsArray.push(item);
@@ -101,4 +100,17 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 			'<body onload="window.print()">' + printModal2.innerHTML + '</html>');
 		popupWin.document.close();
 	}
+	getCode() {
+		this.studentDetailsArray = [];
+		if (this.barCodePrintForm.value.emp_id) {
+		  let inputJson = { 'filters': [{ 'filter_type': 'emp_id', 'filter_value': this.barCodePrintForm.value.emp_id, 'type': 'text' }]};
+		  this.commonApiService.getFilterData(inputJson).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				for (const item of res.data) {
+					this.studentDetailsArray.push(item);
+				}
+			}
+		  });
+		}
+	  }
 }
