@@ -29,7 +29,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Qualification', 'Occupation',
 		'Income Range', 'Vaccination',
 		'Age', 'Activity', 'Level of Intrest', 'Event Level',
-		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality','Tag'];
+		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality', 'Tag'];
 	secondHeaderArray: any[] = ['Alias', 'Required',
 		'Alias', 'Type',
 		'Alias', 'Alias',
@@ -38,6 +38,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias'];
 	configFlag = false;
 	updateFlag = false;
+	classArray: any[] = [];
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
 	{ docreq_is_required: '0', docreq_is_required_name: 'No' }];
 	// reasonTypeArray: any[] = [
@@ -81,6 +82,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				docreq_name: '',
 				docreq_alias: '',
+				docreq_class: '',
 				docreq_status: '',
 				docreq_id: '',
 				docreq_is_required: ''
@@ -254,6 +256,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		},];
 	}
 	loadConfiguration($event) {
+		this.displayedColumns = ['position', 'name', 'alias', 'action', 'modify'];
 		this.configFlag = false;
 		this.updateFlag = false;
 		this.configValue = $event.value;
@@ -262,6 +265,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getDocumentsAll(this);
+			this.getClassAll();
+			this.displayedColumns = ['position', 'name', 'alias', 'class', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getHouses(this);
@@ -802,10 +807,16 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			let pos = 1;
 			if (result.status === 'ok') {
 				for (const item of result.data) {
+					const class_arr = [];
+					for (let ci = 0; ci < item.docreq_class.length; ci++) {
+						const class_name = that.getClassName(item.docreq_class[ci]);
+						class_arr.push(class_name);
+					}
 					that.CONFIG_ELEMENT_DATA.push({
 						position: pos,
 						name: item.docreq_name,
 						alias: item.docreq_is_required === '0' ? 'No' : 'Yes',
+						class: class_arr.toString(),
 						action: item
 					});
 					pos++;
@@ -1692,7 +1703,21 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					}
 				});
 	}
-
+	getClassAll() {
+		this.sisService.getClass({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.classArray = [];
+				this.classArray = res.data;
+			}
+		});
+	}
+	getClassName(classId) {
+		for (const item of this.classArray) {
+			if (Number(item.class_id) === Number(classId)) {
+				return item.class_name;
+			}
+		}
+	}
 }
 // export class ConfirmValidParentMatcher implements ErrorStateMatcher {
 // 	isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {

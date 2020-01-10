@@ -46,7 +46,7 @@ export class ReportsComponent implements OnInit {
 	userArray: any[] = [];
 	userName: any = '';
 	currentUser: any = {};
-	constructor(private erpCommonService: ErpCommonService) { }
+	constructor(private erpCommonService: ErpCommonService, private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
 		console.log('fdgn');
@@ -101,7 +101,7 @@ export class ReportsComponent implements OnInit {
 		if (index === 0 || index === 5 || index === 10) {
 			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		} else {
-			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		}
 	}
 	displyRep($event) {
@@ -126,7 +126,15 @@ export class ReportsComponent implements OnInit {
 		// 	// 	this.reportHeader = 'Transport - ' + $event.report_name;
 		// 	// }
 		// } else {
-			this.reportHeader = $event.report_name;
+		this.reportHeader = $event.report_name;
 		// }
+	}
+	isExistUserAccessMenu(actionT) {
+		if (actionT === '1') {
+			return this.CommonAPIService.isExistUserAccessMenu('590');
+		}
+		if (actionT === '2') {
+			return this.CommonAPIService.isExistUserAccessMenu('591');
+		}
 	}
 }

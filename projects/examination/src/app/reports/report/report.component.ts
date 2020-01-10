@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CommonAPIService } from '../../_services';
 
 @Component({
 	selector: 'app-report',
@@ -36,7 +37,7 @@ export class ReportComponent implements OnInit {
 	userArray: any[] = [];
 	userName: any = '';
 	currentUser: any = {};
-	constructor() { }
+	constructor(private CommonAPIService: CommonAPIService) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -86,7 +87,7 @@ export class ReportComponent implements OnInit {
 		if (index === 0 || index === 5 || index === 10) {
 			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		} else {
-			return 'col-12 col-lg-2 col-half-offset col-md-6 col-sm-6';
+			return 'col-12 col-lg-2  col-md-6 col-sm-6';
 		}
 	}
 	displyRep($event) {
@@ -101,5 +102,12 @@ export class ReportComponent implements OnInit {
 			this.reportHeader = $event.report_name;
 		}
 	}
-
+	isExistUserAccessMenu(actionT) {
+		if (actionT === '1') {
+			return this.CommonAPIService.isExistUserAccessMenu('588');
+		}
+		if (actionT === '2') {
+			return this.CommonAPIService.isExistUserAccessMenu('589');
+		}
+	}
 }

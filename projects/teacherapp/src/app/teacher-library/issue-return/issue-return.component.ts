@@ -175,7 +175,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	getTeacher() {
-		this.erpCommonService.getUser({ login_id: this.currentUser['login_id'], role_id: this.currentUser['role_id'] })
+		this.erpCommonService.getGlobalTeacher({ au_login_id: this.currentUser['login_id'], au_role_id: this.currentUser['role_id'] })
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
