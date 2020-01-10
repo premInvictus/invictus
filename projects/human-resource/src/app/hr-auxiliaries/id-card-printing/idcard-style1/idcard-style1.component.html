@@ -33,6 +33,13 @@
               <tr [ngStyle]="{'font-weight':allContentBold}"
                 class="id_card_portrait_student_info remove-paragraph-bottom-padding"
                 style="text-transform: capitalize !important;">
+                <td style="text-align:right"> Name</td>
+                <td>:</td>
+                <td>{{studentDetails.emp_name}}</td>
+              </tr>
+              <tr [ngStyle]="{'font-weight':allContentBold}"
+                class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                style="text-transform: capitalize !important;">
                 <td style="text-align:right">Mobile no</td>
                 <td>:</td>
                 <td>{{studentDetails.emp_personal_detail.contact_detail.primary_mobile_no}}</td>
