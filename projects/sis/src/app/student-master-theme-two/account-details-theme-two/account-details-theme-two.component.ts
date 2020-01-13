@@ -82,7 +82,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.getRoutes();
 	}
 	ngOnChanges() {
-		console.log('this.feeDet', this.feeDet);
 		if (this.feeDet && this.feeDet.class_id) {
 			this.userClassId = this.feeDet.class_id;
 		}
@@ -125,7 +124,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 	additionalFeeComponent() {
 		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: this.userClassId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log('additionalFeeComponentArray--', result.data);
 				this.additionalFeeComponentArray = result.data;
 			}
 		});
@@ -241,7 +239,6 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		}
 	}
 	setDesc(event) {
-		console.log('sss');
 		this.conDesc = '';
 		this.feeService.getConcessionGroup({ fcg_is_hostel_fee: 0 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

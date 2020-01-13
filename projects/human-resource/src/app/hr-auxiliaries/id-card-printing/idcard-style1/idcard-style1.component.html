@@ -13,7 +13,7 @@
             class="id-card-school-name text-uppercase remove-paragraph-bottom-padding">
             {{schoolInfo.school_name}}
           </p>
-          <p [ngStyle]="{'font-weight':allContentBold, 'font-size': addressFontSize}" *ngIf="stuAddressFlag"
+          <p [ngStyle]="{'font-weight':allContentBold}" *ngIf="stuAddressFlag"
             class="id-card-school-address remove-paragraph-bottom-padding">{{schoolInfo.school_address}},
             {{schoolInfo.school_city}},
             {{schoolInfo.school_state}} -
@@ -30,6 +30,13 @@
         <div class="col-8 id-card-col-60 remove-col-padding">
           <table style="width: 100%;">
             <tbody>
+              <tr [ngStyle]="{'font-weight':allContentBold}"
+                class="id_card_portrait_student_info remove-paragraph-bottom-padding"
+                style="text-transform: capitalize !important;">
+                <td style="text-align:right"> Name</td>
+                <td>:</td>
+                <td>{{studentDetails.emp_name}}</td>
+              </tr>
               <tr [ngStyle]="{'font-weight':allContentBold}"
                 class="id_card_portrait_student_info remove-paragraph-bottom-padding"
                 style="text-transform: capitalize !important;">
