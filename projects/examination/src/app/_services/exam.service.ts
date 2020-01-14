@@ -318,6 +318,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateTermAttendance', value);
 	}
+	insertBMI(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertBMI', value);
+	}
+	getBMI(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getBMI', value);
+	}
 }
 
 
