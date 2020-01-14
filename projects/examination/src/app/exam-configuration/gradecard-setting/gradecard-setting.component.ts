@@ -57,7 +57,8 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_principal_signature: '',
       gradecard_use_principal_signature: '',
       gradecard_use_teacher_signature: '',
-      school_attendance_theme: ''
+      school_attendance_theme: '',
+      gradecard_health_status: '',
     })
   }
   uploadPricipalSign($event) {
@@ -80,7 +81,7 @@ export class GradecardSettingComponent implements OnInit {
 	}
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header','gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme'];
+    param.gs_name = ['gradecard_header', 'gradecard_health_status', 'gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const settings = result.data;
@@ -95,6 +96,8 @@ export class GradecardSettingComponent implements OnInit {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else if(key === 'school_attendance_theme') {
                 control.setValue(element.gs_value && element.gs_value === '2' ? true : false);
+              } else if(key === 'gradecard_health_status') {
+                control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else {
                 control.setValue(element.gs_value); 
               }              

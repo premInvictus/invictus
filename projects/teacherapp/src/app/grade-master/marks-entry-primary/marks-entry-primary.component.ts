@@ -28,6 +28,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
   classterm: any;
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   currentUser: any;
+  subSubjectArray: any[] = [];
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildForm();
@@ -197,7 +198,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
   }
   
   getSubjectName() {
-    for (const item of this.subjectArray) {
+    for (const item of this.subSubjectArray) {
       if (item.sub_id === this.paramform.value.eme_sub_id) {
         return item.sub_name;
       }
@@ -381,17 +382,63 @@ export class MarksEntryPrimaryComponent implements OnInit {
     });
   }
   getSubjectsByClass() {
+    this.subjectArray = [];
     this.paramform.patchValue({
       eme_sub_id: ''
     });
-    this.subjectArray = [];
-    this.smartService.getSubjectByTeacherIdClassIdSectionId({
-      teacher_id: this.currentUser.login_id,
-      class_id: this.paramform.value.eme_class_id,
-      sec_id: this.paramform.value.eme_sec_id
-    }).subscribe((result: any) => {
+    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.subjectArray = result.data;
+        this.subSubjectArray = result.data;
+        const temp = result.data;
+        let scholastic_subject: any[] = [];
+        let coscholastic_subject: any[] = [];
+        if (temp.length > 0) {
+
+          temp.forEach(element => {
+            // if (element.sub_parent_id && element.sub_parent_id === '0') {
+            //   const childSub: any[] = [];
+            //   for (const item of temp) {
+            //     if (element.sub_id === item.sub_parent_id) {
+            //       childSub.push(item);
+            //     }
+            //   }
+            //   element.childSub = childSub;
+            //   this.subjectArray.push(element);
+            // }
+            if (element.sub_type === '1') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                scholastic_subject.push(element);
+              }                           
+            } else if (element.sub_type === '2') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                coscholastic_subject.push(element);
+              }              
+            }
+          });
+        }
+
+        for(var i=0; i<scholastic_subject.length;i++) {
+          this.subjectArray.push(scholastic_subject[i]);
+        }
+        for(var i=0; i<coscholastic_subject.length;i++) {
+          this.subjectArray.push(coscholastic_subject[i]);
+        }
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
   }

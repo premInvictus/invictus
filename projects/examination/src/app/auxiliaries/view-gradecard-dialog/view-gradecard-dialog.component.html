@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-5" *ngIf="studentDetails">
+                <div class="col-4" *ngIf="studentDetails">
                     <table>
                         <tr>
                             <td><span>Roll no.</span></td>
@@ -33,10 +33,19 @@
                             <td>{{studentDetails.r_rollno}}</td>
                         </tr>
                         <tr>
+                            <td><span>Admission No.</span></td>
+                            <td><span>:</span></td>
+                            <td>{{studentDetails.em_admission_no}}</td>
+                        </tr>
+                        <tr>
                             <td><span>Student's Name</span></td>
                             <td><span>:</span></td>
                             <td>{{studentDetails.au_full_name | titlecase}}</td>
                         </tr>
+                    </table>
+                </div>
+                <div class="col-4" *ngIf="studentDetails">
+                    <table>
                         <tr>
                             <td><span>Mother's/Father's/Guardian's Name</span></td>
                             <td><span>:</span></td>
@@ -52,30 +61,40 @@
                             <td><span>:</span></td>
                             <td>{{studentDetails.class_name}} - {{studentDetails.sec_name}}</td>
                         </tr>
-                    </table>
-                </div>
-                <div class="col-4" *ngIf="studentDetails">
-                    <table>
                         <tr>
                             <td><span>No. of Days Present</span></td>
                             <td><span>:</span></td>
                             <td>{{totalpresentday}}</td>
                         </tr>
+                    </table>
+                </div>
+                <div class="col-4">
+                    <table>
                         <tr>
                             <td><span>Total Working Days</span></td>
                             <td><span>:</span></td>
                             <td>{{totalworkingdays}}</td>
                         </tr>
                         <tr>
-                            <td><span>Attendance(%)</span></td>
+                            <td><span>Attendance (%)</span></td>
                             <td><span>:</span></td>
                             <td>{{attendenceInPercent}}%</td>
                         </tr>
+                        <tr *ngIf="showHealthStatus">
+                            <td><span>Height (cm )</span></td>
+                            <td><span>:</span></td>
+                            <td>{{studentDetails && studentDetails?.height ? studentDetails.height : '-'}}</td>
+                        </tr>
+                        <tr *ngIf="showHealthStatus">
+                            <td><span>Weight (kg )</span></td>
+                            <td><span>:</span></td>
+                            <td>{{studentDetails && studentDetails?.weight ? studentDetails.weight : '-'}}</td>
+                        </tr>
                     </table>
-                </div>
-                <div class="col-3 text-right">
-                    <img style="width: 80px; height: 100px" [src]="defaultsrc"
-                        onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+                    <div class="stu-image-div">
+                        <img style="width: 80px; height: 100px" [src]="defaultsrc"
+                            onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+                    </div>
                     <!-- <div [ngStyle]="{'background-image': 'url(' + defaultsrc + ')', 'height':'140px', 'width': '120px'}"></div> -->
                 </div>
             </div>
@@ -88,7 +107,8 @@
                                 <table class="table-100 custom-table" style="margin-bottom: 15px">
                                     <thead>
                                         <tr class="custom-tr">
-                                            <th [attr.colspan]="2" class="custom-th text-center" width="200px">Scholastic Areas</th>
+                                            <th [attr.colspan]="2" class="custom-th text-center" width="200px">
+                                                Scholastic Areas</th>
                                             <ng-container *ngIf="term == data.param.eme_term_id">
                                                 <th [attr.colspan]="(sexamArray[0].exam_sub_exam_max_marks.length) * 2"
                                                     class="custom-th text-center">
@@ -123,7 +143,8 @@
                                             </tr>
                                         </ng-container> -->
                                         <ng-container *ngFor="let sub of subjectArray">
-                                            <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv_subexam">
+                                            <ng-template [ngIf]="sub.childSub.length == 0"
+                                                [ngIfElse]="childdiv_subexam">
                                                 <tr class="custom-tr" *ngIf="sub.sub_type == 1">
                                                     <ng-container *ngIf="sub.ess_additional == 0">
                                                         <td [attr.colspan]="2"
@@ -136,7 +157,8 @@
                                                             {{sub.sub_name}} (Add.)
                                                         </td>
                                                     </ng-container>
-                                                    <ng-container *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
+                                                    <ng-container
+                                                        *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
                                                         <td class="custom-td"></td>
                                                         <td class="custom-td">
                                                             {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
@@ -161,7 +183,8 @@
                                                     </ng-container>
                                                     <td class="custom-td text-left padding-left-8px">
                                                         {{sub.childSub[0].sub_name}}</td>
-                                                    <ng-container *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
+                                                    <ng-container
+                                                        *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
                                                         <td class="custom-td">
                                                             {{getCalculatedMarksSubexam(sub.childSub[0].sub_id, data.param.eme_exam_id, term, item.se_id)}}
                                                         </td>
@@ -175,7 +198,8 @@
                                                         <td class="custom-td text-left padding-left-8px">
                                                             {{sub1.sub_name}}
                                                         </td>
-                                                        <ng-container *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
+                                                        <ng-container
+                                                            *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
                                                             <td class="custom-td">
                                                                 {{getCalculatedMarksSubexam(sub1.sub_id, data.param.eme_exam_id, term, item.se_id)}}
                                                             </td>
@@ -267,7 +291,8 @@
                                         <tr class="custom-tr">
                                             <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
                                             <ng-container *ngFor="let item of sexamArray">
-                                                <th [attr.colspan]="getExambirfurcateColspan(item)" class="custom-th text-center">
+                                                <th [attr.colspan]="getExambirfurcateColspan(item)"
+                                                    class="custom-th text-center">
                                                     {{item.exam_name | titlecase}}
                                                     <br>({{item.exam_weightage}})</th>
                                             </ng-container>
@@ -329,7 +354,8 @@
                                                         </td>
                                                     </ng-container>
                                                     <ng-container *ngFor="let item of sexamArray">
-                                                        <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks"></td>
+                                                        <td class="custom-td"
+                                                            *ngIf="item.exam_bifurcate.bifurcated_marks"></td>
                                                         <td class="custom-td">
                                                             {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
                                                         </td>
@@ -365,7 +391,8 @@
                                                     <td class="custom-td text-left padding-left-8px">
                                                         {{sub.childSub[0].sub_name}}</td>
                                                     <ng-container *ngFor="let item of sexamArray">
-                                                        <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks">
+                                                        <td class="custom-td"
+                                                            *ngIf="item.exam_bifurcate.bifurcated_marks">
                                                             {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub.childSub[0].sub_id)}}
                                                         </td>
                                                         <td [attr.rowspan]="sub.childSub.length" class="custom-td">
@@ -395,7 +422,8 @@
                                                             {{sub1.sub_name}}
                                                         </td>
                                                         <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td" *ngIf="item.exam_bifurcate.bifurcated_marks">
+                                                            <td class="custom-td"
+                                                                *ngIf="item.exam_bifurcate.bifurcated_marks">
                                                                 {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub1.sub_id)}}
                                                             </td>
                                                         </ng-container>
@@ -407,7 +435,8 @@
                                             <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
                                                 Total({{getTotalMainSubject()}}
                                                 main subject)</td>
-                                            <td class="custom-td" [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
+                                            <td class="custom-td"
+                                                [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
                                             <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
                                                 {{getPassTotalPercentage(term)}}%</td>
                                             <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
