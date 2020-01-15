@@ -11,6 +11,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 })
 export class RemarksEntryComponent implements OnInit {
 	paramform: FormGroup;
+	subjectWiseRemark = false;
 	classArray: any[] = [];
 	subjectArray: any[] = [];
 	sectionArray: any[] = [];
@@ -31,6 +32,7 @@ export class RemarksEntryComponent implements OnInit {
 	marksEditable = true;
 	editTable = false;
 	examType: any;
+	classGradeTerm: any[] = [];
 	responseMarksArray: any[] = [];
 	remarksTypeArray: any[] = [
 		{ rt_id: 1, rt_name: 'Internal Type' },
@@ -39,6 +41,7 @@ export class RemarksEntryComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
+		this.getClassTermGrade();
 	}
 
 	constructor(
@@ -74,10 +77,19 @@ export class RemarksEntryComponent implements OnInit {
 		});
 	}
 
+	getClassTermGrade() {
+		this.examService.getClassTermGrade({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.classGradeTerm = result.data;
+				console.log(this.classGradeTerm);
+			}
+		});
+	}
+
 	getSectionsByClass() {
 		this.dataReset();
 		this.paramform.patchValue({
-			ere_remarks_type:'',
+			ere_remarks_type: '',
 			ere_term_id: '',
 			ere_sub_id: '',
 			ere_exam_id: '',
@@ -91,6 +103,25 @@ export class RemarksEntryComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+		this.subjectWiseRemark = this.getRemarkActiveInactive();
+	}
+	getRemarkActiveInactive() {
+		let flag = false;
+		for (const item of this.classGradeTerm) {
+			for (const titem of item.ect_class_id) {
+				if (Number(titem) === Number(this.paramform.value.ere_class_id)) {
+					const evg_highest: any = JSON.parse(item.ect_grade_avg_highest);
+					if (Object.keys(evg_highest).length > 0 && evg_highest['remark']) {
+						flag = evg_highest['remark'];
+						break;
+					} else {
+						flag = false;
+						break;
+					}
+				}
+			}
+		}
+		return flag;
 	}
 
 	getRemarksType() {
@@ -106,6 +137,7 @@ export class RemarksEntryComponent implements OnInit {
 			this.tableDivFlag = false;
 			this.getRemarkSet();
 			this.getClassTerm();
+			this.getExamDetails();
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
@@ -134,9 +166,9 @@ export class RemarksEntryComponent implements OnInit {
 		});
 	}
 	showTableData() {
+		this.getSubjectsByClass();
 		if (Number(this.paramform.value.ere_remarks_type) === 2) {
 			if (Number(this.examType) === 1 && this.paramform.value.ere_sub_id === '') {
-				this.getSubjectsByClass();
 			} else if (Number(this.examType) === 1 && this.paramform.value.ere_sub_id !== '') {
 				this.displayExternalType();
 			} else {
@@ -146,9 +178,6 @@ export class RemarksEntryComponent implements OnInit {
 	}
 	getSubjectsByClass() {
 		this.subjectArray = [];
-		this.paramform.patchValue({
-			ere_sub_id: ''
-		});
 		this.smartService.getSubjectsByClass({ class_id: this.paramform.value.ere_class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				//this.subjectArray = result.data;
@@ -158,38 +187,38 @@ export class RemarksEntryComponent implements OnInit {
 				let coscholastic_subject: any[] = [];
 				if (temp.length > 0) {
 
-				temp.forEach(element => {
-					if (element.sub_type === '1') {
-					if (element.sub_parent_id && element.sub_parent_id === '0') {
-						var childSub: any[] = [];
-						for (const item of temp) {
-						if (element.sub_id === item.sub_parent_id) {
-							childSub.push(item);
+					temp.forEach(element => {
+						if (element.sub_type === '1') {
+							if (element.sub_parent_id && element.sub_parent_id === '0') {
+								var childSub: any[] = [];
+								for (const item of temp) {
+									if (element.sub_id === item.sub_parent_id) {
+										childSub.push(item);
+									}
+								}
+								element.childSub = childSub;
+								scholastic_subject.push(element);
+							}
+						} else if (element.sub_type === '2') {
+							if (element.sub_parent_id && element.sub_parent_id === '0') {
+								var childSub: any[] = [];
+								for (const item of temp) {
+									if (element.sub_id === item.sub_parent_id) {
+										childSub.push(item);
+									}
+								}
+								element.childSub = childSub;
+								coscholastic_subject.push(element);
+							}
 						}
-						}
-						element.childSub = childSub;
-						scholastic_subject.push(element);
-					}                           
-					} else if (element.sub_type === '2') {
-					if (element.sub_parent_id && element.sub_parent_id === '0') {
-						var childSub: any[] = [];
-						for (const item of temp) {
-						if (element.sub_id === item.sub_parent_id) {
-							childSub.push(item);
-						}
-						}
-						element.childSub = childSub;
-						coscholastic_subject.push(element);
-					}              
-					}
-				});
+					});
 				}
 
-				for(var i=0; i<scholastic_subject.length;i++) {
-				this.subjectArray.push(scholastic_subject[i]);
+				for (var i = 0; i < scholastic_subject.length; i++) {
+					this.subjectArray.push(scholastic_subject[i]);
 				}
-				for(var i=0; i<coscholastic_subject.length;i++) {
-				this.subjectArray.push(coscholastic_subject[i]);
+				for (var i = 0; i < coscholastic_subject.length; i++) {
+					this.subjectArray.push(coscholastic_subject[i]);
 				}
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
@@ -244,7 +273,7 @@ export class RemarksEntryComponent implements OnInit {
 	getRollNoUser() {
 		this.dataReset();
 		this.paramform.patchValue({
-			ere_remarks_type:'',
+			ere_remarks_type: '',
 			ere_term_id: '',
 			ere_sub_id: '',
 			ere_exam_id: '',
@@ -324,41 +353,81 @@ export class RemarksEntryComponent implements OnInit {
 	}
 
 	displayExternalType() {
-		this.responseMarksArray = [];
-		this.formGroupArray2 = [];
-		this.remarkInputArray = [];
-		const param: any = {};
-		param.examEntry = this.paramform.value;
-		this.examService.getRemarksEntry(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.responseMarksArray = result.data;
-				for (const item of this.responseMarksArray) {
-					for (const det of item.examEntryMapping) {
-						this.remarkInputArray.push({
-							login_id: det.erem_login_id,
-							remarks: det.erem_remark
+		if (Number(this.paramform.value.ere_remarks_type) === 2) {
+			this.responseMarksArray = [];
+			this.formGroupArray2 = [];
+			this.remarkInputArray = [];
+			const param: any = {};
+			param.examEntry = this.paramform.value;
+			this.examService.getRemarksEntry(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.responseMarksArray = result.data;
+					for (const item of this.responseMarksArray) {
+						for (const det of item.examEntryMapping) {
+							this.remarkInputArray.push({
+								login_id: det.erem_login_id,
+								remarks: det.erem_remark
+							});
+						}
+					}
+					for (const item of this.studentArray) {
+						const subjectDes: any[] = [];
+						const obj: any = {};
+						obj['login_id'] = item.au_login_id;
+						obj['remark'] = '';
+						obj['remark_id'] = '';
+						subjectDes.push(
+							this.fbuild.group(obj)
+						);
+
+						this.formGroupArray2.push({
+							formGroup: subjectDes
 						});
 					}
+					console.log(this.formGroupArray2);
+					this.tableDivFlag = true;
 				}
-				for (const item of this.studentArray) {
-					const subjectDes: any[] = [];
-					const obj: any = {};
-					obj['login_id'] = item.au_login_id;
-					obj['remark'] = '';
-					obj['remark_id'] = '';
-					subjectDes.push(
-						this.fbuild.group(obj)
-					);
+			});
+		}
 
-					this.formGroupArray2.push({
-						formGroup: subjectDes
-					});
+	}
+	displayExternalType2() {
+		if (Number(this.paramform.value.ere_remarks_type) === 2) {
+			this.responseMarksArray = [];
+			this.formGroupArray2 = [];
+			this.remarkInputArray = [];
+			const param: any = {};
+			param.examEntry = this.paramform.value;
+			this.examService.getRemarksEntry(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.responseMarksArray = result.data;
+					for (const item of this.responseMarksArray) {
+						for (const det of item.examEntryMapping) {
+							this.remarkInputArray.push({
+								login_id: det.erem_login_id,
+								remarks: det.erem_remark
+							});
+						}
+					}
+					for (const item of this.studentArray) {
+						const subjectDes: any[] = [];
+						const obj: any = {};
+						obj['login_id'] = item.au_login_id;
+						obj['remark'] = '';
+						obj['remark_id'] = '';
+						subjectDes.push(
+							this.fbuild.group(obj)
+						);
+
+						this.formGroupArray2.push({
+							formGroup: subjectDes
+						});
+					}
+					console.log(this.formGroupArray2);
+					this.tableDivFlag = true;
 				}
-				console.log(this.formGroupArray2);
-				this.tableDivFlag = true;
-			}
-		});
-
+			});
+		}
 	}
 	checkEditable(es_id, ere_review_status, editTable) {
 		if (this.responseMarksArray.length > 0) {
@@ -451,7 +520,6 @@ export class RemarksEntryComponent implements OnInit {
 	saveForm(status = '0') {
 		this.editTable = false;
 		this.remarkArray = [];
-		if (this.paramform.valid && this.marksInputArray.length > 0) {
 			let i = 0;
 			for (const item of this.formGroupArray) {
 				let j = 0;
@@ -490,11 +558,13 @@ export class RemarksEntryComponent implements OnInit {
 					this.displayData();
 				}
 			});
-		}
 	}
 	saveForm2(status = '0') {
 		this.editTable = false;
 		this.remarksEntry = [];
+		let check_valid = false;
+		check_valid = this.subjectWiseRemark ? (this.paramform.value.ere_exam_id && this.paramform.value.ere_sub_id) : (this.paramform.value.ere_exam_id ? true : false);
+		if (check_valid) {
 		for (const item of this.formGroupArray2) {
 			for (const det of item.formGroup) {
 				if (det.value.remark !== '') {
@@ -527,6 +597,9 @@ export class RemarksEntryComponent implements OnInit {
 				this.displayExternalType();
 			}
 		});
+	} else {
+		this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
+	}
 
 	}
 	changeFlagStatus() {
@@ -546,7 +619,7 @@ export class RemarksEntryComponent implements OnInit {
 	edit() {
 		this.editTable = true;
 	}
-	isExist(mod_id) {		
+	isExist(mod_id) {
 		if (mod_id === '471') {
 			if (this.commonAPIService.isExistUserAccessMenu(mod_id)) {
 				return true;
