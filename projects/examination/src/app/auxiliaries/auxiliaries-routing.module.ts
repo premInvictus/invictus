@@ -7,6 +7,7 @@ import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.co
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mark-attendance-theme-two.component';
+import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 
 const routes: Routes = [
 	{
@@ -29,6 +30,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'mark-attendances', component: MarkAttendanceThemeTwoComponent
+	},
+	{
+		path: 'common-attendance', component: CommonAttendanceComponent
 	}
 ];
 
