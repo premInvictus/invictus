@@ -287,9 +287,9 @@ export class SetupComponent implements OnInit {
 			ect_grade_avg_highest_str += 'Highest - No, '
 		}
 		if(value.remark) {
-			ect_grade_avg_highest_str += 'Remark - Yes, '
+			ect_grade_avg_highest_str += 'Subjectwise Remark - Yes, '
 		} else {
-			ect_grade_avg_highest_str += 'Remark - No, '
+			ect_grade_avg_highest_str += 'Subjectwise Remark - No, '
 		}
 		if(value.subjectwise_bifurcation) {
 			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes'
