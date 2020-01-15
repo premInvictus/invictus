@@ -42,7 +42,9 @@
                                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150" 
+                        *ngIf="(subjectArray.length > 0 && subjectWiseRemark) ||
+                        (subjectArray.length > 0 && paramform.value.ere_remarks_type === '1')">
                             <mat-label>Subject</mat-label>
                             <!-- <mat-select placeholder="Subject" formControlName="ere_sub_id"
                                 (selectionChange)="showTableData()" required>
@@ -79,9 +81,11 @@
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-                            *ngIf="paramform.value.ere_remarks_type === 1">
+                            *ngIf="paramform.value.ere_remarks_type !== ''">
                             <mat-label>Exam</mat-label>
-                            <mat-select placeholder="Exam" formControlName="ere_exam_id" required>
+                            <mat-select placeholder="Exam" formControlName="ere_exam_id" 
+                            (selectionChange)="displayExternalType2()"
+                            required>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
                                 </mat-option>
                             </mat-select>
@@ -205,14 +209,16 @@
                 <br>
                 <div class="row margin-top-25">
                     <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
-                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 "
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 || marksInputArray.length > 0 "
                             (click)="saveForm()">Save</button>
-                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 "
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 || marksInputArray.length > 0 "
                             (click)="saveForm2()">Save</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 "
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0
+                                || marksInputArray.length > 0 "
                             (click)="saveForm('1') ">Save &
                             Submit</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0 "
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0
+                            || marksInputArray.length > 0 "
                             (click)="saveForm2('1') ">Save &
                             Submit</button>
 
