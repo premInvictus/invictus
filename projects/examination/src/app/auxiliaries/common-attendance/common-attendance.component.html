@@ -2,55 +2,21 @@
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
       <div class="row">
-        <div class="col-2">
+        <div class="col-8">
           <div class="top-card-title">
             <span class="font-size-24 font-medium">Mark Attendance</span>
           </div>
         </div>
-        <div class="col-4">
+        <div class="col-4 text-right">
           <div class="top-card-title">
             <span>Daily</span>
-            <mat-slide-toggle class="inline-form-radio-spacing" checked aria-hidden="true" (click)="toggleStatus('2')">
-            </mat-slide-toggle><span> Cummulative</span>
+            <mat-slide-toggle class="inline-form-radio-spacing" [(ngModel)]="checked" (change)="toggleStatus()">
+            </mat-slide-toggle> <span> Cummulative</span>
           </div>
-        </div>
-        <div class="col-6 text-right">
-          <form [formGroup]="attendanceThemeTwoForm" novalidate>
-            <div class="top-card-title-form">
-              <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
-                appearance="outline">
-                <mat-label>Class</mat-label>
-                <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass();getClassTerm();"
-                  required placeholder="Select Class">
-                  <mat-option value="">Please select</mat-option>
-                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
-                    {{item.class_name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="form-field-150 margin-left-10" appearance="outline"
-                *ngIf="attendanceThemeTwoForm.value.syl_board_id === 1">
-                <mat-label>Section</mat-label>
-                <mat-select formControlName="syl_section_id" placeholder="Select Section"
-                  (selectionChange)="displayData();">
-                  <mat-option value="">Please select</mat-option>
-                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
-                    {{item.sec_name}}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
-                <mat-label>Term</mat-label>
-                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="displayData();"
-                  required>
-                  <mat-option value="">Please select</mat-option>
-                  <mat-option *ngFor="let item of termsArray" [value]="item?.id">{{item.name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-          </form>
         </div>
       </div>
     </mat-card>
   </div>
 </div>
+<app-mark-attendance *ngIf="!checked"></app-mark-attendance>
+<app-mark-attendance-theme-two *ngIf="checked"></app-mark-attendance-theme-two>

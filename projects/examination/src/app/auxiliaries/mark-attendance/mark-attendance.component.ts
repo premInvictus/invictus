@@ -4,7 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService, ExamService }
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
-import { Router, ActivatedRoute } from '@angular/router';
+
 
 @Component({
 	selector: 'app-mark-attendance',
@@ -47,15 +47,13 @@ export class MarkAttendanceComponent implements OnInit {
 		public axiomService: AxiomService,
 		public sisService: SisService,
 		public examService: ExamService,
-		private router: Router,
-		private route: ActivatedRoute
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 	}
 
 	ngOnInit() {
-		this.getGlobalSetting();
+		//this.getGlobalSetting();
 		this.buildForm();
 		this.getClass();
 	}
@@ -71,20 +69,20 @@ export class MarkAttendanceComponent implements OnInit {
 		});
 	}
 
-	getGlobalSetting() {
-		let param: any = {};
-		param.gs_name = ['school_attendance_theme'];
-		this.examService.getGlobalSetting(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.settings = result.data;
-				this.settings.forEach(element => {
-					if (element.gs_alias === 'school_attendance_theme') {
-						this.attendanceTheme = element.gs_value;
-					}
-				});
-			}
-		})
-	}
+	// getGlobalSetting() {
+	// 	let param: any = {};
+	// 	param.gs_name = ['school_attendance_theme'];
+	// 	this.examService.getGlobalSetting(param).subscribe((result: any) => {
+	// 		if (result && result.status === 'ok') {
+	// 			this.settings = result.data;
+	// 			this.settings.forEach(element => {
+	// 				if (element.gs_alias === 'school_attendance_theme') {
+	// 					this.attendanceTheme = element.gs_value;
+	// 				}
+	// 			});
+	// 		}
+	// 	})
+	// }
 
 	resetdata() {
 		this.formgroupArray = [];
@@ -275,10 +273,5 @@ export class MarkAttendanceComponent implements OnInit {
 			this.commonService.showSuccessErrorMessage('Mark all student attendance', 'error');
 		}
 
-	}
-	toggleStatus(value) {
-		if (value === '1') {
-			this.router.navigate(['../mark-attendances'], { relativeTo: this.route });
-		}
 	}
 }
