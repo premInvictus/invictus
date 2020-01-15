@@ -6,6 +6,7 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { DomSanitizer } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-view-gradecard-dialog',
@@ -52,6 +53,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   attendenceInPercent = 0;
   obtainedGradeAvgHighestCount = 0;
   showHealthStatus = false;
+  showdeclarationdate = false;
   obtainedGradeAvgHighest = {
     obtained: true,
     grade: false,
@@ -61,6 +63,8 @@ export class ViewGradecardDialogComponent implements OnInit {
     subjectwise_bifurcation: false
   };
   exambifurcateCount = 0;
+  classtermdate: any;
+  dateofdeclaration:any;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -72,6 +76,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.dateofdeclaration = new Date();
     console.log(this.data);
     if (this.data.param.eme_exam_id || this.data.param.eme_subexam_id) {
       this.obtainedGradeAvgHighest.obtained = false;
@@ -122,7 +127,23 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.getClassGradeset();
     //this.getExamDetails();
     //this.getGradeCardMark(); 
+    this.getClassTermDate();
 
+  }
+  getClassTermDate() {
+    this.classtermdate = {};
+    const param: any = {};
+    param.etd_term = this.data.param.eme_term_id;
+    param.etd_class_id = this.data.param.eme_class_id;
+    param.etd_status = '1';
+    this.examService.getClassTermDate(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.classtermdate = result.data[0];
+        if(this.classtermdate.etd_declaration_date) {
+          this.dateofdeclaration = new Date(this.classtermdate.etd_declaration_date);
+        }
+      }
+    })
   }
   getTermStudentAttendence2() {
     const param: any = {};
@@ -225,10 +246,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.ere_class_id = this.data.class_id;
     param.ere_sec_id = this.data.sec_id;
     param.ere_term_id = this.data.param.eme_term_id;
-    if (sub_id) {
-      param.ere_sub_id = sub_id;
-    }
     param.ere_remarks_type = this.data.ect_exam_type;
+    if (sub_id) {
+      if(!this.obtainedGradeAvgHighest.remark) {
+        param.ere_remarks_type = '2';
+      } else {
+        param.ere_sub_id = sub_id;
+      }      
+    }
     param.erem_login_id = this.data.au_login_id;
     this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -266,7 +291,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   getGlobalSetting() {
     let param: any = {};
     param.gs_name = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
-  'gradecard_health_status'];
+  'gradecard_health_status','gradecard_date'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = result.data;
@@ -280,6 +305,12 @@ export class ViewGradecardDialogComponent implements OnInit {
               this.showHealthStatus = true;
             } else {
               this.showHealthStatus = false;
+            }
+          } else if (element.gs_alias === 'gradecard_date') {
+            if (Number(element.gs_value) === 1) {
+              this.showdeclarationdate = true;
+            } else {
+              this.showdeclarationdate = false;
             }
           } else if (element.gs_alias === 'gradecard_use_principal_signature') {
             this.usePrincipalSignature = element.gs_value;
