@@ -4,6 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService, ExamService }
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-mark-attendance',
@@ -45,7 +46,9 @@ export class MarkAttendanceComponent implements OnInit {
 		public commonService: CommonAPIService,
 		public axiomService: AxiomService,
 		public sisService: SisService,
-		public examService: ExamService
+		public examService: ExamService,
+		private router: Router,
+		private route: ActivatedRoute
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -53,7 +56,7 @@ export class MarkAttendanceComponent implements OnInit {
 
 	ngOnInit() {
 		this.getGlobalSetting();
-		this.buildForm();		
+		this.buildForm();
 		this.getClass();
 	}
 
@@ -72,16 +75,16 @@ export class MarkAttendanceComponent implements OnInit {
 		let param: any = {};
 		param.gs_name = ['school_attendance_theme'];
 		this.examService.getGlobalSetting(param).subscribe((result: any) => {
-		  if (result && result.status === 'ok') {
-			this.settings = result.data;
-			this.settings.forEach(element => {
-			  if (element.gs_alias === 'school_attendance_theme') {
-				this.attendanceTheme = element.gs_value;
-			  }
-			});
-		  }
+			if (result && result.status === 'ok') {
+				this.settings = result.data;
+				this.settings.forEach(element => {
+					if (element.gs_alias === 'school_attendance_theme') {
+						this.attendanceTheme = element.gs_value;
+					}
+				});
+			}
 		})
-	  }
+	}
 
 	resetdata() {
 		this.formgroupArray = [];
@@ -169,11 +172,11 @@ export class MarkAttendanceComponent implements OnInit {
 						for (const item of this.studentArray) {
 							if (item.upd_gender === 'M') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
-							  } else if (item.upd_gender === 'F') {
+							} else if (item.upd_gender === 'F') {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
-							  } else {
+							} else {
 								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
-							  }
+							}
 							this.studentAttendanceArray.push({
 								sr_no: counter,
 								au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
@@ -228,7 +231,7 @@ export class MarkAttendanceComponent implements OnInit {
 			this.finalArray[i].attendance = 0;
 			this.presentStudent--;
 			this.absentStudent++;
-		} else {			
+		} else {
 			this.presentStudent++;
 			this.absentStudent--;
 			this.finalArray[i].attendance = 1;
@@ -273,5 +276,9 @@ export class MarkAttendanceComponent implements OnInit {
 		}
 
 	}
-
+	toggleStatus(value) {
+		if (value === '1') {
+			this.router.navigate(['../mark-attendances'], { relativeTo: this.route });
+		}
+	}
 }

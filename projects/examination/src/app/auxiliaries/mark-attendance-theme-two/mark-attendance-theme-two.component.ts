@@ -4,6 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService, ExamService }
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
+import { Router, ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -43,7 +44,9 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     public commonService: CommonAPIService,
     public axiomService: AxiomService,
     public sisService: SisService,
-    public examService: ExamService) {
+    public examService: ExamService,
+    private router: Router,
+		private route: ActivatedRoute) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
@@ -270,7 +273,12 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       'syl_board_id': 1
     });
   }
-
+  toggleStatus(value){
+    console.log(value)
+    if(value === '2'){
+      this.router.navigate(['../mark-attendance'], { relativeTo: this.route });
+    }    
+  }
 }
 
 export interface Element {
