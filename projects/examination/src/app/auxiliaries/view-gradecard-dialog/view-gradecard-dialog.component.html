@@ -755,18 +755,23 @@
             </ng-container>
 
 
-            <div class="row" *ngIf="resultdivflag && data.ect_exam_type == 2">
+            <div class="row" *ngIf="resultdivflag">
                 <div class="col-12">
                     <table>
                         <thead>
                             <tr><br></tr>
-                            <tr>
+                            <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1">
+                                <td width="20%" valign="top">Class Teacher's Remarks</td>
+                                <td width="1%" valign="top">:</td>
+                                <td>{{remarkOfSub() | titlecase}}</td>
+                            </tr>
+                            <tr *ngIf="data.ect_exam_type == 2">
                                 <td width="20%" valign="top">Class Teacher's Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td>{{remarkOfSub() | titlecase}}</td>
                             </tr>
                             <tr><br></tr>
-                            <tr class="margin-top-10">
+                            <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
                                 <td style="text-align: left">Result</td>
                                 <td>:</td>
                                 <td>{{getPassResult(data.param.eme_term_id)}}</td>
@@ -783,8 +788,8 @@
                                 <table>
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
-                                            <th>: {{today | date:'d-MMM-y'}}</th>
+                                            <th *ngIf="showdeclarationdate">Date</th>
+                                            <th *ngIf="showdeclarationdate">: {{dateofdeclaration | date:'d-MMM-y'}}</th>
                                         </tr>
                                     </thead>
                                 </table>
