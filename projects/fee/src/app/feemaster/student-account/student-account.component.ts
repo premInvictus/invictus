@@ -64,7 +64,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	) { }
 
 	ngOnInit() {
-		console.log('this.loginId', this.loginId);
+		//console.log('this.loginId', this.loginId);
 		this.stoppageArray = [];
 		this.slabArray = [];
 		this.terminateStatus = 'Terminate Transport Facility';
@@ -82,7 +82,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 	}
 	ngOnChanges() {
-		console.log('this.feeLoginId', this.feeLoginId);
+		//console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
 
 			this.getFeeAccount(this.feeLoginId);
@@ -126,7 +126,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	additionalFeeComponent(class_id) {
 		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : '' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log('additionalFeeComponentArray--', result.data);
+				//console.log('additionalFeeComponentArray--', result.data);
 				this.additionalFeeComponentArray = result.data;
 			}
 		});
@@ -220,7 +220,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_status: this.accountDetails.accd_status,
 					accd_afc_id: this.accountDetails.accd_additional_fee_head ? JSON.parse(this.accountDetails.accd_additional_fee_head) : []
 				});
-				console.log('this.accountsForm', this.accountsForm);
+				//console.log('this.accountsForm', this.accountsForm);
 				this.setDescription({ value: this.accountsForm.value.accd_fcg_id });
 				this.slabModel = this.accountDetails.accd_ts_id;
 				this.additionalFeeComponent(this.accountDetails.class_id);
@@ -549,7 +549,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_status: this.accountsForm.value.accd_status,
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
 			};
-			console.log('accountJSON--', accountJSON)
 			if (this.isExist('350')) {
 				this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -739,7 +738,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.finalArray.push(titem);
 			}
 		}
-		console.log(this.finalArray);
+		//console.log(this.finalArray);
 		this.reqObj = {
 			req_login_id: this.feeLoginId,
 			req_process_type: '4',
