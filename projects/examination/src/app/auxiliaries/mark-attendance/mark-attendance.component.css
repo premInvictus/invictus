@@ -7,3 +7,6 @@ table {
 .font-bold{
     font-weight: 700;
 }
+.inline-form-radio-spacing{
+    padding-left:10px !important;
+}

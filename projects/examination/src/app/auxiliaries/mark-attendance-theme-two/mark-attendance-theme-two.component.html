@@ -2,9 +2,16 @@
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
       <div class="row">
-        <div class="col-6">
+        <div class="col-2">
           <div class="top-card-title">
             <span class="font-size-24 font-medium">Mark Attendance</span>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="top-card-title">
+            <span>Daily</span>
+            <mat-slide-toggle class="inline-form-radio-spacing" checked aria-hidden="true" (click)="toggleStatus('2')">
+            </mat-slide-toggle><span>   Cummulative</span>
           </div>
         </div>
         <div class="col-6 text-right">
@@ -110,7 +117,7 @@
 <div class="row" *ngIf="ELEMENT_DATA.length === 0">
   <div class="col-12">
     <mat-card>
-      <table class="table-100" >
+      <table class="table-100">
         <tbody>
           <tr class="text-center">
             <td colspan="12">

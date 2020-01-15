@@ -6,6 +6,7 @@ import { CbseMarksAnalysisComponent } from './cbse-marks-analysis/cbse-marks-ana
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
+import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mark-attendance-theme-two.component';
 
 const routes: Routes = [
 	{
@@ -25,6 +26,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'health-status', component: BmiCalculatorComponent
+	},
+	{
+		path: 'mark-attendances', component: MarkAttendanceThemeTwoComponent
 	}
 ];
 
