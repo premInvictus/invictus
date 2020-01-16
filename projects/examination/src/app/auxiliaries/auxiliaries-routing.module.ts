@@ -4,9 +4,8 @@ import { GradecardPrintingComponent } from './gradecard-printing/gradecard-print
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { CbseMarksAnalysisComponent } from './cbse-marks-analysis/cbse-marks-analysis.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
-import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
-import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mark-attendance-theme-two.component';
+import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 
 const routes: Routes = [
 	{
@@ -22,13 +21,10 @@ const routes: Routes = [
 		path: 'rollno-allotment', component: RollnoAllotmentComponent
 	},
 	{
-		path: 'mark-attendance', component: MarkAttendanceComponent
-	},
-	{
 		path: 'health-status', component: BmiCalculatorComponent
 	},
 	{
-		path: 'mark-attendances', component: MarkAttendanceThemeTwoComponent
+		path: 'mark-attendance', component: CommonAttendanceComponent
 	}
 ];
 

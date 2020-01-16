@@ -12,7 +12,7 @@
               <input matInput placeholder="Book ID " formControlName="emp_id" type="text"
                 (keydown.enter)="getCode();$event.preventDefault();" autocomplete="off" />
             </mat-form-field>
-            <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openFilter({})">
+            <button mat-raised-button class="btn-success-blue btn-spacer align-btn-bar" (click)="openFilter()">
               Advanced Filter
             </button>
             <button mat-raised-button class="btn-success-green btn-spacer align-btn-bar" (click)="getCode()">
