@@ -6,6 +6,7 @@ import { CbseMarksAnalysisComponent } from './cbse-marks-analysis/cbse-marks-ana
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
+import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
 
 const routes: Routes = [
 	{
@@ -25,6 +26,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'mark-attendance', component: CommonAttendanceComponent
+	},
+	{
+		path: 'exam-achievement', component: ExamAchievementComponent
 	}
 ];
 
