@@ -12,6 +12,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AngularSlickgridModule } from 'angular-slickgrid';
 import { TranslateService } from '@ngx-translate/core';
 import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mark-attendance-theme-two.component';
+import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 
 @NgModule({
 	imports: [
@@ -21,7 +22,7 @@ import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mar
 		AngularSlickgridModule.forRoot()
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent, BmiCalculatorComponent],
 	entryComponents: [
 		CbseMarksUploadDialog, ViewGradecardDialogComponent
 	],

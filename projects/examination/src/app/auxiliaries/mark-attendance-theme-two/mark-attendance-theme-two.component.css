@@ -1,3 +1,6 @@
 ::ng-deep #mark_attendance_theme_two .mat-form-field-underline {
     display: none;
 }
+.inline-form-radio-spacing{
+    padding-left:10px !important;
+}

@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="paramform">
+        <div class="row ">
+          <div class="col-4 remove-col-padding-left margin-top-15">
+            <span class="font-size-24 ">Health Status</span>
+          </div>
+          <div class="col-8 remove-col-padding-right text-right">
+            <mat-form-field appearance="outline" class="form-field-150">
+              <mat-label>Class</mat-label>
+              <mat-select placeholder="Class" formControlName="bmi_class_id" (selectionChange)="getSectionsByClass();"
+                required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Section</mat-label>
+              <mat-select placeholder="Section" formControlName="bmi_sec_id" (selectionChange)="getRollNoUser()"
+                required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="studentArray.length > 0 && formGroupArray.length > 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <div class="text-center center-mr">
+            <table class="custom-table">
+              <thead>
+                <tr class="custom-tr">
+                  <th class="custom-th text-center">SNo.</th>
+                  <th class="custom-th text-center">Admission No.</th>
+                  <th class="custom-th text-center">Student Name.</th>
+                  <th class="custom-th text-center">Height</th>
+                  <th class="custom-th text-center">Weight</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="custom-tr" *ngFor="let item of studentArray;let i = index">
+                  <td class="custom-td text-center font-size-14">{{i + 1}}</td>
+                  <td class="custom-td text-center font-size-14">{{item.au_admission_no}}</td>
+                  <td class="custom-td text-left font-size-14">{{item.au_full_name | titlecase}}</td>
+                  <td class="custom-td text-center font-size-14">
+                    <form [formGroup]="formGroupArray[i].formGroup">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Height (in cm)</mat-label>
+                        <input matInput type="number" [formControlName]="'height' + i">
+                      </mat-form-field>
+                    </form>
+                  </td>
+                  <td class="custom-td text-center font-size-14">
+                    <form [formGroup]="formGroupArray[i].formGroup">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Weight (in kg)</mat-label>
+                        <input matInput type="number" [formControlName]="'weight' + i">
+                      </mat-form-field>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="col-2"></div>
+        <br>
+        <div class="col-12 text-center">
+          <br>
+          <button mat-button class="btn-success-green btn-spacer" (click)="saveBMI() ">Submit</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="studentArray.length === 0">
+  <div class="col-12 text-center">
+    <mat-card>
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'Please select all required field'"></app-no-data>
+    </mat-card>
+  </div>
+</div>

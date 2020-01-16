@@ -68,6 +68,8 @@
             </mat-form-field>
             <button class="btn-success margin-top-15" style="margin-left: 15px;" mat-raised-button
                 (click)="displayData()">Submit</button>
+            <span *ngIf="responseMarksArray.length > 0" style="float:right; padding-right: 10px;padding-top: 30px;"><img style="cursor: pointer"
+                src="/assets/images/xml.svg" (click)="generateExcel()" matTooltip="Export as excel"></span>
         </div>
     </div>
 </form>

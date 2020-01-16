@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-marks-register',
@@ -259,6 +260,20 @@ export class MarksRegisterComponent implements OnInit {
           return item.sub_name;
         }
       }
+    }
+  }
+  generateExcel() {
+    if (this.paramform.value.eme_exam_id.length > 0) {
+      let param: any = Object.assign({}, this.paramform.value) ;
+      param.downloadexcel = true;
+      this.examService.getMarksRegister(param).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log(result.data);
+          this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+        }
+      });
     }
   }
   displayData() {

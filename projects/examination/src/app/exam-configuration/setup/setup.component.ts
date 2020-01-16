@@ -177,6 +177,7 @@ export class SetupComponent implements OnInit {
 					etd_term: '',
 					etd_start: '',
 					etd_end: '',
+					etd_declaration_date:'',
 					etd_ses_id: '',
 					etd_status: ''
 				})
@@ -287,9 +288,9 @@ export class SetupComponent implements OnInit {
 			ect_grade_avg_highest_str += 'Highest - No, '
 		}
 		if(value.remark) {
-			ect_grade_avg_highest_str += 'Remark - Yes, '
+			ect_grade_avg_highest_str += 'Subjectwise Remark - Yes, '
 		} else {
-			ect_grade_avg_highest_str += 'Remark - No, '
+			ect_grade_avg_highest_str += 'Subjectwise Remark - No, '
 		}
 		if(value.subjectwise_bifurcation) {
 			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes'
@@ -375,6 +376,7 @@ export class SetupComponent implements OnInit {
 							term_name: item.etd_term,
 							term_start: item.etd_start,
 							term_end: item.etd_end,
+							etd_declaration_date: item.etd_declaration_date,
 							action: item
 						});
 						pos++;
@@ -731,6 +733,7 @@ export class SetupComponent implements OnInit {
 				etd_term: value.etd_term,
 				etd_start: value.etd_start,
 				etd_end: value.etd_end,
+				etd_declaration_date: value.etd_declaration_date,
 				etd_ses_id: value.etdetd_ses_id_id,
 				etd_status: value.etd_status
 			});
@@ -780,7 +783,7 @@ export class SetupComponent implements OnInit {
 		} else if (Number(this.configValue) === 8) { // for exam class term garde	
 			this.getClassTermDate(this);	
 			this.getActiveClass(this);	
-			this.displayedColumns = ['position', 'name', 'term_name', 'term_start', 'term_end', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'term_name', 'term_start', 'term_end', 'etd_declaration_date', 'action', 'modify'];
 			this.configFlag = true;
 		} 
 	}
