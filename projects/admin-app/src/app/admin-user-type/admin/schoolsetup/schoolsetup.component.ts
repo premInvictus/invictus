@@ -58,6 +58,13 @@ export class SchoolsetupComponent implements OnInit {
 	startMonthArray: any[] = [];
 	endMonthArray: any[] = [];
 	feePeriodArray: any[] = [];
+	currentImage: any;
+	documentsArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	currentFileChangeEvent: any;
+	multipleFileArray: any[] = [];
+	counter: any = 0;
+	documentPath: any;
 	displayedColumns = [
 		'position',
 		'logo',
@@ -207,15 +214,71 @@ export class SchoolsetupComponent implements OnInit {
 		this.createNewSchoolDiv = true;
 		this.schoolSetupDiv = false;
 	}
-	uploadSchoolLogo(event) {
-		if (event.target.files.length > 0) {
-			this.file1 = event.target.files[0];
+	uploadSchoolLogo(fileInput) {
+		if (fileInput.target.files.length > 0) {
+			this.multipleFileArray = [];
+			this.counter = 0;
+			this.currentFileChangeEvent = fileInput;
+			const files = fileInput.target.files;
+			for (let i = 0; i < files.length; i++) {
+				this.uploadLogo(files[i]);
+			}
 		}
 	}
-	uploadSchoolFavicon(event) {
-		if (event.target.files.length > 0) {
-			this.file2 = event.target.files[0];
+	uploadLogo(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'logo'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.adminService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.file1 = result.data[0].file_url;
+						//console.log(this.documentPath);
+
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadSchoolFavicon(fileInput) {
+		if (fileInput.target.files.length > 0) {
+			this.multipleFileArray = [];
+			this.counter = 0;
+			this.currentFileChangeEvent = fileInput;
+			const files = fileInput.target.files;
+			for (let i = 0; i < files.length; i++) {
+				this.uploadSchoolIcon(files[i]);
+			}
 		}
+	}
+	uploadSchoolIcon(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'favicon'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.adminService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.file2 = result.data[0].file_url;
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
 	}
 
 	checkPrefix() {
@@ -443,8 +506,8 @@ export class SchoolsetupComponent implements OnInit {
 		this.createNewSchoolDiv = true;
 		this.schoolSetupDiv = false;
 		this.editNewSchoolActive = true;
-		this.file1 = null;
-		this.file2 = null;
+		this.file1 = value.school_logo;
+		this.file2 = value.school_favicon;
 		this.newSchoolForm.controls.school_id.setValue(value.school_id);
 		this.newSchoolForm.controls.school_name.setValue(value.school_name);
 		this.newSchoolForm.controls.school_board.setValue(value.school_board_id);

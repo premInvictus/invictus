@@ -199,4 +199,8 @@ export class AdminService {
 		}
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getStudentRankInAllExams', param);
 	}
+	uploadDocuments(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
+	}
 }
