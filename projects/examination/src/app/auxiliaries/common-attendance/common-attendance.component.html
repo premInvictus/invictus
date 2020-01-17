@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-8">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Mark Attendance</span>
+          </div>
+        </div>
+        <div class="col-4 text-right">
+          <div class="top-card-title">
+            <span>Daily</span>
+            <mat-slide-toggle class="inline-form-radio-spacing" [(ngModel)]="checked" (change)="toggleStatus()">
+            </mat-slide-toggle> <span> Cummulative</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<app-mark-attendance *ngIf="!checked"></app-mark-attendance>
+<app-mark-attendance-theme-two *ngIf="checked"></app-mark-attendance-theme-two>
