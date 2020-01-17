@@ -1245,6 +1245,11 @@
                                 <td width="1%" valign="top">:</td>
                                 <td>{{remarkOfSub() | titlecase}}</td>
                             </tr>
+                            <tr *ngIf="isuserachivement == '1' && userachivement.a_achievement != ''">
+                                <td width="20%" valign="top">Achievement</td>
+                                <td width="1%" valign="top">:</td>
+                                <td>{{userachivement.a_achievement | titlecase}}</td>
+                            </tr>
                             <tr><br></tr>
                             <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
                                 <td style="text-align: left">Result</td>

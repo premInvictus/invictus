@@ -65,6 +65,8 @@ export class ViewGradecardDialogComponent implements OnInit {
   exambifurcateCount = 0;
   classtermdate: any;
   dateofdeclaration:any;
+  userachivement: any;
+  isuserachivement : string;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -291,7 +293,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   getGlobalSetting() {
     let param: any = {};
     param.gs_name = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
-  'gradecard_health_status','gradecard_date'];
+  'gradecard_health_status','gradecard_date','school_achievement'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = result.data;
@@ -324,8 +326,24 @@ export class ViewGradecardDialogComponent implements OnInit {
             } else {
               this.getTermStudentAttendence2();
             }
+          } else if(element.gs_alias === 'school_achievement') {
+            if (element.gs_value == '1') {
+              this.isuserachivement = element.gs_value;
+              this.getUserAchievement();
+            }
           }
         });
+      }
+    })
+  }
+  getUserAchievement() {
+    const param: any = {};
+    param.au_class_id = this.data.param.eme_class_id;
+    param.au_term_id = this.data.param.eme_term_id
+    param.au_login_id = this.data.au_login_id;
+    this.examService.getUserAchievement(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.userachivement = result.data[0];        
       }
     })
   }
