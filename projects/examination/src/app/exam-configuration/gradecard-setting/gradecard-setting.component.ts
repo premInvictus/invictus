@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
+import { environment } from '../../../../../../src/environments/environment';
 
 @Component({
   selector: 'app-gradecard-setting',
@@ -35,9 +36,9 @@ export class GradecardSettingComponent implements OnInit {
 			extraPlugins: 'uploadimage,uploadfile,simpleImageUpload',
       scayt_multiLanguageMod: true,
       filebrowserUploadMethod: 'form',
-      uploadUrl: 'http://localhost/axiom-backend/uploadS3.php',
-      imageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
-			filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
+      uploadUrl: environment.apiAxiomUrl+'/uploadS3.php',
+      imageUploadUrl:  environment.apiAxiomUrl+'/uploadS3.php',
+			filebrowserUploadUrl:  environment.apiAxiomUrl+'/uploadS3.php',
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
         ['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
@@ -61,6 +62,7 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_health_status: '',
       gradecard_date: '',
       gradecard_place: '',
+      school_achievement:''
     })
   }
   uploadPricipalSign($event) {
@@ -83,7 +85,7 @@ export class GradecardSettingComponent implements OnInit {
 	}
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header', 'gradecard_health_status', 'gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme','gradecard_date','gradecard_place'];
+    param.gs_name = ['gradecard_header', 'gradecard_health_status', 'gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme','gradecard_date','gradecard_place','school_achievement'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const settings = result.data;
@@ -103,6 +105,8 @@ export class GradecardSettingComponent implements OnInit {
               } else if(key === 'gradecard_date') {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else if(key === 'gradecard_place') {
+                control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
+              } else if(key === 'school_achievement') {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else {
                 control.setValue(element.gs_value); 

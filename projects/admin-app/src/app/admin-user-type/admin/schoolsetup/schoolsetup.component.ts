@@ -58,6 +58,13 @@ export class SchoolsetupComponent implements OnInit {
 	startMonthArray: any[] = [];
 	endMonthArray: any[] = [];
 	feePeriodArray: any[] = [];
+	currentImage: any;
+	documentsArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	currentFileChangeEvent: any;
+	multipleFileArray: any[] = [];
+	counter: any = 0;
+	documentPath: any;
 	displayedColumns = [
 		'position',
 		'logo',
@@ -206,16 +213,73 @@ export class SchoolsetupComponent implements OnInit {
 	openCreateNewSchoolDiv() {
 		this.createNewSchoolDiv = true;
 		this.schoolSetupDiv = false;
+		this.resetNewSchoolForm();
 	}
-	uploadSchoolLogo(event) {
-		if (event.target.files.length > 0) {
-			this.file1 = event.target.files[0];
+	uploadSchoolLogo(fileInput) {
+		if (fileInput.target.files.length > 0) {
+			this.multipleFileArray = [];
+			this.counter = 0;
+			this.currentFileChangeEvent = fileInput;
+			const files = fileInput.target.files;
+			for (let i = 0; i < files.length; i++) {
+				this.uploadLogo(files[i]);
+			}
 		}
 	}
-	uploadSchoolFavicon(event) {
-		if (event.target.files.length > 0) {
-			this.file2 = event.target.files[0];
+	uploadLogo(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'logo'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.adminService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.file1 = result.data[0].file_url;
+						//console.log(this.documentPath);
+
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
+	}
+	uploadSchoolFavicon(fileInput) {
+		if (fileInput.target.files.length > 0) {
+			this.multipleFileArray = [];
+			this.counter = 0;
+			this.currentFileChangeEvent = fileInput;
+			const files = fileInput.target.files;
+			for (let i = 0; i < files.length; i++) {
+				this.uploadSchoolIcon(files[i]);
+			}
 		}
+	}
+	uploadSchoolIcon(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'favicon'
+			};
+			this.multipleFileArray.push(fileJson);
+			this.counter++;
+			if (this.counter === this.currentFileChangeEvent.target.files.length) {
+				this.adminService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result) {
+						this.file2 = result.data[0].file_url;
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
 	}
 
 	checkPrefix() {
@@ -421,21 +485,31 @@ export class SchoolsetupComponent implements OnInit {
 		);
 	}
 	resetNewSchoolForm() {
-		this.newSchoolForm.controls.school_name.setValue('');
-		this.newSchoolForm.controls.school_board.setValue('');
-		this.newSchoolForm.controls.school_afflication_no.setValue('');
-		this.newSchoolForm.controls.school_branch.setValue('');
-		this.newSchoolForm.controls.school_address.setValue('');
-		this.newSchoolForm.controls.school_country.setValue('');
-		this.newSchoolForm.controls.school_state.setValue('');
-		this.newSchoolForm.controls.school_city.setValue('');
-		this.newSchoolForm.controls.school_website.setValue('');
-		this.newSchoolForm.controls.school_phone.setValue('');
-		this.newSchoolForm.controls.school_smsid.setValue('');
-		this.newSchoolForm.controls.school_email.setValue('');
-		this.newSchoolForm.controls.school_hindi_font.setValue('');
-		this.newSchoolForm.controls.school_prefix.setValue('');
-		this.newSchoolForm.controls.school_manager.setValue('');
+		this.newSchoolForm.patchValue({
+			school_id: '',
+			school_logo: '',
+			school_favicon: '',
+			school_name: '',
+			school_board: '',
+			school_afflication_no: '',
+			school_branch: '',
+			school_address: '',
+			school_country: '',
+			school_state: '',
+			school_city: '',
+			school_website: '',
+			school_phone: '',
+			school_smsid: '',
+			school_email: '',
+			school_hindi_font: '',
+			school_prefix: '',
+			school_total_students: '',
+			school_manager: '',
+			school_theme: '',
+			school_session_start_month: '',
+			school_session_end_month: '',
+			school_fee_period: ''
+		});
 		this.file1 = null;
 		this.file2 = null;
 	}
@@ -443,30 +517,33 @@ export class SchoolsetupComponent implements OnInit {
 		this.createNewSchoolDiv = true;
 		this.schoolSetupDiv = false;
 		this.editNewSchoolActive = true;
-		this.file1 = null;
-		this.file2 = null;
-		this.newSchoolForm.controls.school_id.setValue(value.school_id);
-		this.newSchoolForm.controls.school_name.setValue(value.school_name);
-		this.newSchoolForm.controls.school_board.setValue(value.school_board_id);
-		this.newSchoolForm.controls.school_afflication_no.setValue(
-			value.school_afflication_no
-		);
-		this.newSchoolForm.controls.school_branch.setValue(value.school_branch);
-		this.newSchoolForm.controls.school_address.setValue(value.school_address);
-		this.newSchoolForm.controls.school_country.setValue(
-			value.school_country_id
-		);
-		this.newSchoolForm.controls.school_state.setValue(value.school_state_id);
-		this.newSchoolForm.controls.school_city.setValue(value.school_city_id);
-		this.newSchoolForm.controls.school_website.setValue(value.school_website);
-		this.newSchoolForm.controls.school_phone.setValue(value.school_phone);
-		this.newSchoolForm.controls.school_smsid.setValue(value.school_smsid);
-		this.newSchoolForm.controls.school_email.setValue(value.school_email);
-		this.newSchoolForm.controls.school_hindi_font.setValue(
-			value.school_hindi_font
-		);
-		this.newSchoolForm.controls.school_prefix.setValue(value.school_prefix);
-		this.newSchoolForm.controls.school_manager.setValue(value.school_manager);
+		this.file1 = value.school_logo;
+		this.file2 = value.school_favicon;
+		this.newSchoolForm.patchValue({
+			school_id: value.school_id,
+			school_logo: '',
+			school_favicon: '',
+			school_name: value.school_name,
+			school_board: value.school_board_id,
+			school_afflication_no: value.school_afflication_no,
+			school_branch: value.school_branch,
+			school_address: value.school_address,
+			school_country: value.school_country_id,
+			school_state: value.school_state_id,
+			school_city: value.school_city_id,
+			school_website: value.school_website,
+			school_phone: value.school_phone,
+			school_smsid: value.school_smsid,
+			school_email: value.school_email,
+			school_hindi_font: value.school_hindi_fon,
+			school_prefix: value.school_prefix,
+			school_total_students: value.school_total_students,
+			school_manager: value.school_manager,
+			school_theme: value.school_theme,
+			school_session_start_month: Number(value.session_start_month),
+			school_session_end_month: Number(value.session_end_month),
+			school_fee_period: value.school_fee_period
+		});
 	}
 	editNewSchool() {
 		if (this.newSchoolForm.valid) {
@@ -474,6 +551,10 @@ export class SchoolsetupComponent implements OnInit {
 			newSchoolFormData.append('school_logo', this.file1);
 			newSchoolFormData.append('school_favicon', this.file2);
 			newSchoolFormData.append('school_id', this.newSchoolForm.value.school_id);
+			newSchoolFormData.append(
+				'school_prefix',
+				this.newSchoolForm.value.school_prefix
+			);
 			newSchoolFormData.append(
 				'school_name',
 				this.newSchoolForm.value.school_name
@@ -535,6 +616,22 @@ export class SchoolsetupComponent implements OnInit {
 				'school_manager',
 				this.newSchoolForm.value.school_manager
 			);
+			newSchoolFormData.append(
+				'school_theme',
+				this.newSchoolForm.value.school_theme
+			);
+			newSchoolFormData.append(
+				'school_fee_period',
+				this.newSchoolForm.value.school_fee_period
+			);
+			newSchoolFormData.append(
+				'school_session_start_month',
+				this.newSchoolForm.value.school_session_start_month
+			);
+			newSchoolFormData.append(
+				'school_session_end_month',
+				this.newSchoolForm.value.school_session_end_month
+			);
 			this.adminService.editSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -552,7 +649,6 @@ export class SchoolsetupComponent implements OnInit {
 		const param: any = {};
 		param.school_id = value;
 		param.si_status = '5';
-		console.log(param);
 		this.adminService.deleteSchool(param).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
