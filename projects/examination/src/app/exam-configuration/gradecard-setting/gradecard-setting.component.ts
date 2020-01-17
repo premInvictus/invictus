@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
+import { environment } from '../../../../../../src/environments/environment';
 
 @Component({
   selector: 'app-gradecard-setting',
@@ -35,9 +36,9 @@ export class GradecardSettingComponent implements OnInit {
 			extraPlugins: 'uploadimage,uploadfile,simpleImageUpload',
       scayt_multiLanguageMod: true,
       filebrowserUploadMethod: 'form',
-      uploadUrl: 'http://localhost/axiom-backend/uploadS3.php',
-      imageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
-			filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/uploadS3.php',
+      uploadUrl: environment.apiAxiomUrl+'/uploadS3.php',
+      imageUploadUrl:  environment.apiAxiomUrl+'/uploadS3.php',
+			filebrowserUploadUrl:  environment.apiAxiomUrl+'/uploadS3.php',
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
         ['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
