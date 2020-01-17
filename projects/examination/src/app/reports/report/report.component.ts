@@ -30,6 +30,15 @@ export class ReportComponent implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
+		},
+		{
+			report_id: '3',
+			report_name: 'Failure List',
+			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+			report_main_image_class: '',
+			report_middle_class: 'inline-flex',
+			report_check_icon_class: ''
 		}
 	];
 	reportType: string;
@@ -108,6 +117,9 @@ export class ReportComponent implements OnInit {
 		}
 		if (actionT === '2') {
 			return this.CommonAPIService.isExistUserAccessMenu('589');
+		}
+		if (actionT === '3') {
+			return true;
 		}
 	}
 }
