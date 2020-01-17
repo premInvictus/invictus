@@ -1,12 +1,9 @@
-<div *ngIf="attendanceTheme === '1'">
 <div class="row">
   <div class="col-12 ">
     <mat-card class="remove-card-padding">
       <div class="row">
         <div class="col-6">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Mark Attendance</span>
-          </div>
+
         </div>
         <div class="col-6 text-right">
           <form [formGroup]="firstForm">
@@ -14,7 +11,8 @@
               <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
                 appearance="outline">
                 <mat-label>Date</mat-label>
-                <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateChange)="resetForm()" formControlName="cw_entry_date">
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" (dateChange)="resetForm()"
+                  formControlName="cw_entry_date">
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -44,14 +42,9 @@
           </form>
         </div>
       </div>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card>
+
       <div class="row " *ngIf="defaultFlag">
-        <div class="col-6 remove-col-padding-left">
+        <div class="col-6 ">
           <form [formGroup]="attendanceForm">
             <mat-form-field appearance="outline" class="form-field-220">
               <mat-select formControlName="attendance" (selectionChange)="markStudentAttendance()" required
@@ -63,16 +56,19 @@
               </mat-select>
             </mat-form-field>
           </form>
-         
+
         </div>
         <div class="col-6 margin-top-25 remove-col-padding-right text-right" *ngIf="defaultFlag">
-            <!-- <span class="font-color-grey margin-bottom-5 margin-left-10 font-size-18 font-bold">On : {{firstForm.value.cw_entry_date | date : 'd-MMM-y'}}</span> -->
+          <!-- <span class="font-color-grey margin-bottom-5 margin-left-10 font-size-18 font-bold">On : {{firstForm.value.cw_entry_date | date : 'd-MMM-y'}}</span> -->
           <i class="fas fa-square font-size-20 font-color-grey margin-left-50"></i><span
-            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Total Student : {{totalStudent}}</span>
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Total Student :
+            {{totalStudent}}</span>
           <i class="fas fa-square font-size-20 font-color-green margin-left-50"></i><span
-            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Present : {{presentStudent}}</span>
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium">Present :
+            {{presentStudent}}</span>
           <i class="fas fa-square font-size-20 font-color-red margin-left-50"></i><span
-            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium margin-right-20">Absent : {{absentStudent}}</span>
+            class="font-color-grey margin-bottom-5 margin-left-10 font-size-15 font-medium margin-right-20">Absent :
+            {{absentStudent}}</span>
         </div>
       </div>
 
@@ -120,8 +116,9 @@
           <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>
         </div>
       </div>
+      <br>
     </mat-card>
   </div>
 </div>
-</div>
-<app-mark-attendance-theme-two *ngIf="attendanceTheme === '2'"></app-mark-attendance-theme-two>
+
+<!-- <app-mark-attendance-theme-two *ngIf="attendanceTheme === '2'"></app-mark-attendance-theme-two> -->

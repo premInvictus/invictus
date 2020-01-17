@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 
 
+
 @Component({
   selector: 'app-mark-attendance-theme-two',
   templateUrl: './mark-attendance-theme-two.component.html',
@@ -43,7 +44,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     public commonService: CommonAPIService,
     public axiomService: AxiomService,
     public sisService: SisService,
-    public examService: ExamService) {
+    public examService: ExamService, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
