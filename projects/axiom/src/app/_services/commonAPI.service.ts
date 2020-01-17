@@ -63,4 +63,9 @@ export class CommonAPIService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);
 	}
+	downloadTeacherExcel(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/bulkupload/downloadTeacherExcel', value);
+	}	
+
 }
