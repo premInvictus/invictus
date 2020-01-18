@@ -8,6 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MessageComponent } from './message/message.component';
 import { NotificationComponent } from './notification/notification.component';
 import { BroadcastComponent } from './broadcast/broadcast.component';
+import { SmsDeliverStatusComponent } from './broadcast/sms-deliver-status/sms-deliver-status.component';
 
 
 const moment = _moment;
@@ -32,8 +33,13 @@ export const MY_FORMATS = {
 	declarations: [
 		MessageComponent,
 		NotificationComponent,
-		BroadcastComponent
-		],
+		BroadcastComponent,
+		SmsDeliverStatusComponent
+	],
+	entryComponents: [
+		SmsDeliverStatusComponent
+	],
+	exports: [SmsDeliverStatusComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 	{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]

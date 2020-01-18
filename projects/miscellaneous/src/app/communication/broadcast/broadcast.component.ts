@@ -18,7 +18,7 @@ export class BroadcastComponent implements OnInit {
 	showComposeMessage = false;
 	broadcastForm: FormGroup;
 	displayedColumns: string[] = []
-	renderForm:any = {};
+	renderForm: any = {};
 	scheduleMessageData: any[] = [];
 	USER_ELEMENT_DATA: any[] = [];
 	selectedUserArr: any[] = [];
@@ -26,6 +26,7 @@ export class BroadcastComponent implements OnInit {
 	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 	currentTab = 1;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('smsModal') smsModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
 	constructor(
 		private fbuild: FormBuilder,
@@ -63,7 +64,7 @@ export class BroadcastComponent implements OnInit {
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
 			'no',
-			'user_type',		
+			'user_type',
 			'schedule_date',
 			'subject',
 			'attachment',
@@ -88,7 +89,7 @@ export class BroadcastComponent implements OnInit {
 		this.USER_ELEMENT_DATA = [];
 		this.displayedColumns = [
 			'no',
-			'user_type',		
+			'user_type',
 			'schedule_date',
 			'subject',
 			'send_by',
@@ -169,7 +170,7 @@ export class BroadcastComponent implements OnInit {
 		}
 	}
 
-	
+
 
 
 	applyFilterUser(filterValue: string) {
@@ -180,12 +181,18 @@ export class BroadcastComponent implements OnInit {
 	editMessage(element) {
 		var messageType = this.currentTab == 1 ? 'E' : 'S';
 		element.messageType = messageType;
-		this.renderForm = {addMode:false, editMode:true, formData: element, viewMode : false};
+		this.renderForm = { addMode: false, editMode: true, formData: element, viewMode: false };
 		this.showComposeMessage = true;
 	}
 
+	// messageStatus(element) {
+	// console.log(element);
+	// }
+	messageStatus = (data) => {
+		this.smsModal.openModal(data.user_data);
+	}
 	deleteMessageFunc(element) {
-		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status' : {status_id : '5' , status_name : 'delete' } }).subscribe((result: any) => {
+		this.commonAPIService.updateMessage({ 'msg_id': element.msg_id, 'msg_status': { status_id: '5', status_name: 'delete' } }).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Message has been deleted Successfully', 'success');
 				if (this.currentTab) {
@@ -198,7 +205,7 @@ export class BroadcastComponent implements OnInit {
 			}
 		});
 
-	} 
+	}
 
 	changeTab(event) {
 		this.currentTab = event.index;
@@ -221,8 +228,8 @@ export class BroadcastComponent implements OnInit {
 	composeMessage() {
 		this.showComposeMessage = true;
 		var messageType = this.currentTab == 1 ? 'E' : 'S';
-		this.renderForm = {addMode:true, editMode:false, messageType: messageType, formData:'', viewMode : false,};
-		
+		this.renderForm = { addMode: true, editMode: false, messageType: messageType, formData: '', viewMode: false, };
+
 	}
 
 	resetComposeMessage(messageType) {
@@ -230,12 +237,12 @@ export class BroadcastComponent implements OnInit {
 		this.showComposeMessage = false;
 		if (messageType === 'S') {
 			this.currentTab = 0;
-			this.getSMSScheduleData();			
+			this.getSMSScheduleData();
 		} else {
 			this.currentTab = 1;
 			this.getEmailScheduleData();
 		}
-		
+
 	}
 
 	previewImage(imgArray, index) {
@@ -250,6 +257,6 @@ export class BroadcastComponent implements OnInit {
 	}
 
 	deleteCancel() {
-		
+
 	}
 }

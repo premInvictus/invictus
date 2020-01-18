@@ -13,7 +13,7 @@ export class ReceiptModalComponent implements OnInit {
   vendor_name: any;
   vendor_contact: any;
   vendor_category: any;
-  vendor_email: any;
+  vendor_email: any; 
   receipt_no: any;
   recipt_date: any;
   created_by: any;
