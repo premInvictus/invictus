@@ -134,6 +134,24 @@ export class BouncedChequeModalComponent implements OnInit {
 			} else {
 				this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 			}
+		} else if (this.bouncedForm.value.fcc_status === 'cd') {
+			if (this.bouncedForm.value.fcc_process_date && this.bouncedForm.value.fcc_remarks
+				&& this.bouncedForm.value.ftr_deposit_bnk_id) {
+				this.bouncedForm.patchValue({
+					'fcc_deposite_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
+					'fcc_process_date': this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd'),
+					'fcc_inv_id': this.studentDetails.invoice_id,
+					'fcc_ftr_id': this.studentDetails.fee_transaction_id,
+				});
+				this.bouncedForm.value.fcc_status = 'c';
+				this.feeService.addCheckControlTool(this.bouncedForm.value).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.dialogRef.close({ status: '1' });
+					}
+				});
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
+			}
 		}
 	}
 	setBankcode(event) {
@@ -155,6 +173,9 @@ export class BouncedChequeModalComponent implements OnInit {
 				}
 			}
 		}
+	}
+	isExistUserAccessMenu(actionT) {
+		return this.commonAPIService.isExistUserAccessMenu(actionT);
 	}
 }
 
