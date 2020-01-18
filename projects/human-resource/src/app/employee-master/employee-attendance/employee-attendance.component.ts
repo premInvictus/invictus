@@ -109,23 +109,26 @@ export class EmployeeAttendanceComponent implements OnInit {
 							if (item.emp_month_attendance_data && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 								total_leave_closing_balance += (item.emp_month_attendance_data.leave_opening_balance ? item.emp_month_attendance_data.leave_opening_balance : 0);
 							}
-							for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
-								emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-								emp_attendance_detail = item.emp_month_attendance_data.month_data[i].attendance_detail;
-								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
-									if (parseInt(this.searchForm.value.month_id, 10) > parseInt(emp_month, 10)) {
-										total_leave_closing_balance = total_leave_closing_balance + (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
+							if (item.emp_month_attendance_data.month_data) {
+								for (var i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
+									emp_month = item.emp_month_attendance_data.month_data[i].month_id;
+									emp_attendance_detail = item.emp_month_attendance_data.month_data[i].attendance_detail;
+									if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
+										if (parseInt(this.searchForm.value.month_id, 10) > parseInt(emp_month, 10)) {
+											total_leave_closing_balance = total_leave_closing_balance + (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
+										}
+										if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+											curr_total_leave_closing_balance = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
+	
+											leave_credited_count = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
+	
+											total_leave_closing_balance = Number(total_leave_closing_balance) + Number(leave_credited_count);
+										}
 									}
-									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-										curr_total_leave_closing_balance = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
-
-										leave_credited_count = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
-
-										total_leave_closing_balance = Number(total_leave_closing_balance) + Number(leave_credited_count);
-									}
+									emp_leave_approved = item.emp_month_attendance_data.month_data[i].attendance_detail && item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved ? item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved : ''
 								}
-								emp_leave_approved = item.emp_month_attendance_data.month_data[i].attendance_detail && item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved ? item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved : ''
 							}
+							
 						}
 
 						// console.log('total_leave_closing_balance', total_leave_closing_balance);
@@ -135,7 +138,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 							srno: pos,
 							emp_id: item.emp_id,
 							emp_name: item.emp_name,
-							emp_designation: item.emp_designation_detail.name,
+							emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 							emp_bol: total_leave_closing_balance,
 							emp_present: no_of_days,
 							emp_balance_leaves: curr_total_leave_closing_balance,
