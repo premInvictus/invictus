@@ -37,10 +37,10 @@ export class GlobalFormFieldsComponent implements OnInit {
 		this.getFormFields();
 		this.getSlcTcTemplateSetting();
 	}
-	getSlcTcTemplateSetting(){
+	getSlcTcTemplateSetting() {
 		this.sisService.getSlcTcTemplateSetting({}).subscribe((result: any) => {
-			if(result && result.status === 'ok') {
-				if(result.data && result.data.length > 0) {
+			if (result && result.status === 'ok') {
+				if (result.data && result.data.length > 0) {
 					result.data.forEach(element => {
 						this.typeArray.push({
 							tmap_usts_id: element.usts_id,
@@ -129,6 +129,9 @@ export class GlobalFormFieldsComponent implements OnInit {
 			this.checkRequire = true;
 		} else {
 			this.prefetchFlag = false;
+			this.labelForm.patchValue({
+				sff_ff_id : '0'
+			});
 			this.checkRequire = false;
 		}
 	}
@@ -154,7 +157,9 @@ export class GlobalFormFieldsComponent implements OnInit {
 		this.labelForm.patchValue({
 			sff_label: item.sff_label,
 			sff_ff_id: this.configArray[index - 1].sff_ff_id,
-			sff_field_type: item.sff_field_type
+			sff_id: this.configArray[index - 1].sff_id ? this.configArray[index - 1].sff_id : '',
+			sff_field_type: item.sff_field_type,
+			sff_field_tag: this.configArray[index -1].sff_field_tag ? this.configArray[index -1].sff_field_tag : ''
 		});
 		this.currentIndex = index - 1;
 		this.updateFlag = true;
