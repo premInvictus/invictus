@@ -83,8 +83,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				email_id: '',
 				same_as_residential: false,
 				emp_status: 'live',
-				gender:'',
-				dob:''
+				gender: '',
+				dob: ''
 			});
 			this.addressFlag = false;
 			this.requiredOnly = false;
@@ -141,8 +141,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			sec_mobile: '',
 			whatsapp_no: '',
 			email_id: '',
-			gender:'',
-			dob:'',
+			gender: '',
+			dob: '',
 			emp_status: 'live'
 		});
 	}
@@ -181,19 +181,21 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.personalDetails.patchValue({
 				p_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.address : '',
 				p_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.city.cit_name : '',
-				p_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.state.sta_id : '',
+				p_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail && this.employeedetails.emp_personal_detail.address_detail.state.sta_id ?
+					this.employeedetails.emp_personal_detail.address_detail.state.sta_id.toString() : '',
 				p_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.pin : '',
 				r_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.address : '',
 				r_city: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.city.cit_name : '',
-				r_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id : '',
+				r_state: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail && this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id ?
+					this.employeedetails.emp_personal_detail.residential_address_detail.state.sta_id.toString() : '',
 				r_pincode: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.residential_address_detail ? this.employeedetails.emp_personal_detail.residential_address_detail.pin : '',
 				pri_mobile: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.primary_mobile_no : '',
 				sec_mobile: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.secondary_mobile_no : '',
 				whatsapp_no: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.whatsup_no : '',
 				email_id: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.contact_detail ? this.employeedetails.emp_personal_detail.contact_detail.email_id : '',
 				emp_status: this.employeedetails.emp_status ? this.employeedetails.emp_status : 'live',
-				gender:this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender : '',
-				dob:this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob : '',
+				gender: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.gender : '',
+				dob: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob ? this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.dob : '',
 			});
 			if (this.employeedetails.emp_personal_detail.same_as_residential) {
 				this.addressFlag = false;
@@ -207,8 +209,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		}
 
 	}
+
 	saveForm() {
-		if (this.personalDetails.valid) {			
+		if (this.personalDetails.valid) {
 			if (this.addressFlag) {
 				this.personaldetails['emp_personal_detail'] = {
 					same_as_residential: false,
@@ -250,8 +253,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						whatsup_no: this.personalDetails.value.whatsapp_no,
 						email_id: this.personalDetails.value.email_id
 					},
-					gender : this.personalDetails.value.gender,
-					dob : this.personalDetails.value.dob,
+					gender: this.personalDetails.value.gender,
+					dob: this.personalDetails.value.dob,
 				};
 			} else {
 				this.personaldetails['emp_personal_detail'] = {
@@ -294,8 +297,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						whatsup_no: this.personalDetails.value.whatsapp_no,
 						email_id: this.personalDetails.value.email_id
 					},
-					gender : this.personalDetails.value.gender,
-					dob : this.personalDetails.value.dob
+					gender: this.personalDetails.value.gender,
+					dob: this.personalDetails.value.dob
 				};
 			}
 			this.personaldetails['emp_personal_contact'] = {
@@ -530,8 +533,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						whatsup_no: this.personalDetails.value.whatsapp_no,
 						email_id: this.personalDetails.value.email_id
 					},
-					gender : this.personalDetails.value.gender,
-					dob : this.personalDetails.value.dob
+					gender: this.personalDetails.value.gender,
+					dob: this.personalDetails.value.dob
 				};
 			} else {
 				this.personaldetails['emp_personal_detail'] = {
@@ -574,8 +577,8 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 						whatsup_no: this.personalDetails.value.whatsapp_no,
 						email_id: this.personalDetails.value.email_id
 					},
-					gender : this.personalDetails.value.gender,
-					dob : this.personalDetails.value.dob
+					gender: this.personalDetails.value.gender,
+					dob: this.personalDetails.value.dob
 				};
 			}
 			this.employeedetails['emp_personal_detail'] = this.personaldetails['emp_personal_detail'];

@@ -58,7 +58,7 @@ export class EmployeeDetailComponent implements OnInit {
 			}
 		});
 
-		this.getEmployeeNavigationRecords();
+		this.getEmployeeNavigationRecords(); 
 
 	}
 
@@ -69,12 +69,14 @@ export class EmployeeDetailComponent implements OnInit {
 	}
 
 	getEmployeeDetail(emp_id) {
-		this.commonAPIService.getEmployeeDetail({ emp_id: emp_id }).subscribe((result: any) => {
-			var finResult = result ? result : {}
-			finResult['last_record'] = emp_id ? emp_id : 0;
-			this.employeeRecord = finResult;
-			this.rendorForm = true;
-		});
+		if (emp_id) {
+			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+				var finResult = result ? result : {}
+				finResult['last_record'] = emp_id ? emp_id : 0;
+				this.employeeRecord = finResult;
+				this.rendorForm = true;
+			});
+		}
 	}
 
 	setTabValue(value) {
