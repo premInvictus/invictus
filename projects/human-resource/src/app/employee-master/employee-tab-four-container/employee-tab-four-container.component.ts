@@ -158,7 +158,8 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 			this.experiencesArray = [];
 			this.educationsArray = [];
 		}
-		if (this.employeedetails && this.employeedetails.emp_remark_detail && this.employeedetails.emp_remark_detail.skills && this.employeedetails.emp_remark_detail.skills.length > 0) {
+		if (this.employeedetails && this.employeedetails.emp_remark_detail && this.employeedetails.emp_remark_detail.skills
+			&& this.employeedetails.emp_remark_detail.skills.length > 0) {
 			this.skillsArray = this.employeedetails.emp_remark_detail.skills;
 		} else {
 			this.skillsArray = [];

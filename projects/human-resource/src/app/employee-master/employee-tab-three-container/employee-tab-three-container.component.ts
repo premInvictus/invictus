@@ -66,7 +66,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	departmentArray;
 	designationArray;
 	wingArray;
-	empBankDetail:any [] = [];
+	empBankDetail: any[] = [];
 	constructor(
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -173,7 +173,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			total_earning: ''
 		});
 
-		
+
 	}
 	ngOnChanges() {
 		this.empBankDetail = [];
@@ -191,9 +191,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.employeedetails) {
 			this.getSalartDetails();
 			this.onChangeData();
-			
-
-			console.log(this.empBankDetail);
 		}
 	}
 
@@ -209,7 +206,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.empBankDetail.length > 1) {
 			this.empBankDetail.splice(index, 1);
 		}
-		
+
 	}
 
 	getDepartment() {
@@ -380,17 +377,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	getSalartDetails() {
 		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : '';
-		console.log(this.employeedetails.emp_salary_detail);
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail && this.employeedetails.emp_salary_detail.emp_bank_detail.length > 0) {
 			this.empBankDetail = [];
-			for (var i=0; i < this.employeedetails.emp_salary_detail.emp_bank_detail.length; i++) {
+			for (var i = 0; i < this.employeedetails.emp_salary_detail.emp_bank_detail.length; i++) {
 				this.empBankDetail.push(this.fbuild.group({
 					bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] && this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'] ? this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString() : '',
 					//bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_name'],
 					bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'],
 					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc']
 				}));
-			}			
+			}
 		} else {
 			this.empBankDetail.push(this.fbuild.group({
 				bank_name: '',
@@ -398,8 +394,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				ifsc_code: ''
 			}));
 		}
-
-		console.log(this.empBankDetail);
 
 		this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
@@ -445,18 +439,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	}
 	saveForm() {
-		console.log(this.empBankDetail);
 		var bankDetail = [];
-		for(var i=0; i< this.empBankDetail.length;i++) {
-			var inputJson = {bnk_detail: {
-									bnk_id: this.empBankDetail[i].value.bank_name,
-									bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
-									bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
-									bnk_acc_no: this.empBankDetail[i].value.bank_ac
-								}};
+		for (var i = 0; i < this.empBankDetail.length; i++) {
+			var inputJson = {
+				bnk_detail: {
+					bnk_id: this.empBankDetail[i].value.bank_name,
+					bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
+					bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
+					bnk_acc_no: this.empBankDetail[i].value.bank_ac
+				}
+			};
 			bankDetail.push(inputJson);
 		}
-		console.log('bankDetail--', bankDetail);
 		if (this.salaryDetails.valid) {
 			this.employeedetails['emp_salary_detail'] = {
 				account_docment_detail: {
@@ -561,13 +555,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	updateForm(moveNext) {
 		var bankDetail = [];
-		for(var i=0; i< this.empBankDetail.length;i++) {
-			var inputJson = {bnk_detail: {
-									bnk_id: this.empBankDetail[i].value.bank_name,
-									bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
-									bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
-									bnk_acc_no: this.empBankDetail[i].value.bank_ac
-								}};
+		for (var i = 0; i < this.empBankDetail.length; i++) {
+			var inputJson = {
+				bnk_detail: {
+					bnk_id: this.empBankDetail[i].value.bank_name,
+					bnk_name: this.getBankName(this.empBankDetail[i].value.bank_name),
+					bnk_ifsc: this.empBankDetail[i].value.ifsc_code,
+					bnk_acc_no: this.empBankDetail[i].value.bank_ac
+				}
+			};
 			bankDetail.push(inputJson);
 		}
 		if (this.salaryDetails.valid) {
@@ -767,11 +763,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getAllEpmployeeList() {
-		
+
 		this.commonAPIService.getAllEmployee({ 'emp_status': 'live' }).subscribe((result: any) => {
 			if (result && result.length > 0) {
 				this.employeeArray = result;
-				
+
 			}
 		});
 	}
