@@ -454,12 +454,14 @@ export class IssueReturnComponent implements OnInit {
 							bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 							bookData[i]['fdue_date'] = bookData[i]['fdue_date'];
 							bookData[i]['reissue_status'] = 1;
+							bookData[i]['issued_by'] = {'login_id':this.currentUser.login_id, "name" :this.currentUser.full_name };
 							console.log('in available jh');
 						} else {
 							console.log('in available');
 							bookData[i]['reserv_status'] = 'available';
 							bookData[i]['issued_on'] = this.common.dateConvertion(bookData[i]['issued_on'], 'yyyy-MM-dd');
 							bookData[i]['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
+							bookData[i]['returned_by'] = {'login_id':this.currentUser.login_id, "name" :this.currentUser.full_name };
 							for (let j=0; j< this.finIssueBook.length;j++) {
 								if (this.finIssueBook[j]['reserv_user_logs']['reserv_id'] === bookData[i]['reserv_id']) {
 									this.finIssueBook.splice(j,1);
@@ -472,6 +474,7 @@ export class IssueReturnComponent implements OnInit {
 				if (bookData[i]['fdue_date']) {
 					
 					bookData[i]['reserv_status'] = 'issued';
+					bookData[i]['issued_by'] = {'login_id':this.currentUser.login_id, "name" :this.currentUser.full_name };
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					this.finIssueBook.push(bookData[i]);
@@ -494,6 +497,8 @@ export class IssueReturnComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
+
+			console.log('inputJson--', inputJson);
 			
 			if (!this.userHaveBooksData) {
 				this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {

@@ -5,7 +5,7 @@ import { DatePipe } from '@angular/common';
 
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
+
 @Component({
   selector: 'app-view-all-due',
   templateUrl: './view-all-due.component.html',
@@ -42,22 +42,9 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
 		this.duelistdataSource.paginator = this.paginator;
   }
 
-  openSearchDialog = (data) => { this.searchModal.openModal(data); }
-  
-  openAdvanceSearchDialog(): void {
-    const dialogRef = this.dialog.open(AdvancedSearchModalComponent, {
-      width: '750px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
-
   getDueReservoir(bookArr) {
     const datePipe = new DatePipe('en-in');
-    let inputJson =  {'viewAll': true};
+    let inputJson =  {'viewAll': true, "issuedBy" : '5228'};
     if (bookArr && bookArr.length > 0) {
       inputJson['bookData'] = bookArr;
     }
