@@ -5,7 +5,7 @@ import { DatePipe } from '@angular/common';
 
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
+
 @Component({
   selector: 'app-view-all-due',
   templateUrl: './view-all-due.component.html',
@@ -20,7 +20,7 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
   currentSubscriptionId = '';
   DUE_LIST_ELEMENT: DueListElement[] = [];
   duelistdataSource = new MatTableDataSource<DueListElement>(this.DUE_LIST_ELEMENT);
-  displayedDueListColumns: string[] = ['srno', 'issued_to_admission_no','user_class_name','user_sec_name', 'reserv_id', 'title', 'issued_to','issued_on','issued_by', 'due_date', 'late_by'];
+  displayedDueListColumns: string[] = ['srno', 'issued_to_admission_no','user_class_name','user_sec_name', 'reserv_id', 'title', 'issued_to','issued_on', 'due_date','returned_on','returned_by' ,'late_by'];
   // subscriptionListPageIndex = 0;
   // subscriptionListPageSize = 10;
   // subscriptionListPageSizeOptions = [10, 25, 50, 100];
@@ -42,22 +42,9 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
 		this.duelistdataSource.paginator = this.paginator;
   }
 
-  openSearchDialog = (data) => { this.searchModal.openModal(data); }
-  
-  openAdvanceSearchDialog(): void {
-    const dialogRef = this.dialog.open(AdvancedSearchModalComponent, {
-      width: '750px',
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-    });
-  }
-
-
   getDueReservoir(bookArr) {
     const datePipe = new DatePipe('en-in');
-    let inputJson =  {'viewAll': true};
+    let inputJson =  {'viewAll': true, "issuedBy" : '5228'};
     if (bookArr && bookArr.length > 0) {
       inputJson['bookData'] = bookArr;
     }
@@ -165,8 +152,11 @@ export interface DueListElement {
   user_class_name:string;
   user_sec_name:string;
   issued_on: string;
-  issued_by:string;
-  // returned_by:string;
+  // issued_by:string;
+  
+  
   due_date: string;
+  returned_on:string;
+  returned_by:string;
   late_by: string;
 }

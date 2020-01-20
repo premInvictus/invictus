@@ -58,6 +58,8 @@
               <div class="col-12">
                 <app-marks-register *ngIf="reportType === '1'"></app-marks-register>
                 <app-student-attendence *ngIf="reportType === '2'"></app-student-attendence>
+                <app-failure-list *ngIf="reportType === '3'"></app-failure-list>
+                <app-negative-report *ngIf="reportType === '4'"></app-negative-report>
               </div>
             </div>
           </mat-expansion-panel>

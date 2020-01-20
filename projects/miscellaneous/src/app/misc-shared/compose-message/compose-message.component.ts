@@ -334,21 +334,22 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-					for (var i = 0; i < result.data.length; i++) {
+			this.commonAPIService.getAllEmployeeDetail({'emp_cat_id' : 1}).subscribe((result: any) => {
+				console.log('teacher data', result);
+				if (result) {
+					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_email: result.data[i]['au_email'],
-							au_mobile: result.data[i]['au_mobile'],
-							au_profileimage: result.data[i]['au_profileimage'],
+							au_login_id: result[i].emp_login_id,
+							au_full_name: result[i].emp_name,
+							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+							au_profileimage: result[i].emp_profile_pic,
 							au_role_id: '3',
 							checked: false,
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
+							class_name: '',
+							sec_name: '',
+							class_id: '',
+							sec_id: '',
 							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
@@ -360,7 +361,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				} else {
 					this.showUser = false;
 					this.showClass = true;
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
 				}
 			});
 		} else if (this.currentReceivers === 'Staff') {
@@ -368,21 +369,21 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.sisService.getUser(inputJson).subscribe((result: any) => {
-				if (result && result.data && result.data[0]['au_login_id']) {
-					for (var i = 0; i < result.data.length; i++) {
+			this.commonAPIService.getAllEmployeeDetail({'emp_cat_id' : 2}).subscribe((result: any) => {
+				if (result) {
+					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_email: result.data[i]['au_email'],
-							au_mobile: result.data[i]['au_mobile'],
-							au_profileimage: result.data[i]['au_profileimage'],
+							au_login_id: result[i].emp_login_id,
+							au_full_name: result[i].emp_name,
+							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+							au_profileimage: result[i].emp_profile_pic,
 							au_role_id: '2',
 							checked: false,
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
+							class_name: '',
+							sec_name: '',
+							class_id: '',
+							sec_id: '',
 							au_admission_no: '',
 						}
 						this.userDataArr.push(inputJson);
@@ -391,7 +392,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.showUser = true;
 					this.showClass = false;
 				} else {
-					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
 					this.showUser = false;
 					this.showClass = true;
 				}
@@ -560,9 +561,9 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.finClassDataArr[i]['checked'] = true;
 			this.finClassDataArr[i]['sec_arr'][j]['checked'] = true;
 		} else {
-			this.classDataArr[i]['checked'] = false;
+			this.classDataArr[i]['checked'] = this.classDataArr[i]['checked'] ? true : false;
 			this.classDataArr[i]['sec_arr'][j]['checked'] = false;
-			this.finClassDataArr[i]['checked'] = false;
+			this.finClassDataArr[i]['checked'] = this.classDataArr[i]['checked'] ? true : false;
 			this.finClassDataArr[i]['sec_arr'][j]['checked'] = false;
 		}
 		//this.finClassDataArr = JSON.parse(JSON.stringify(this.classDataArr));
@@ -841,7 +842,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					var inputJson = {
 						sec_id: result.data[j]['sec_id'],
 						sec_name: result.data[j]['sec_name'],
-						checked: selectAllflag ? selectAllflag : false,
+						checked: selectAllflag ? selectAllflag : true,
 					}
 					secDataArr.push(inputJson);
 				}

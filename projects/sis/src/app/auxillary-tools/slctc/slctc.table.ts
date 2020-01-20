@@ -11,7 +11,7 @@ export const slctable = {
 								actionpermission: ''
 						},
 						{
-								actionname: 'Cancel', actionclass: 'btn-danger btn-navspacer btn-promote', actionfunction: 'pendingdelete',
+								actionname: 'Cancel', actionclass: 'btn-danger btn-navspacer btn-promote canc-btn', actionfunction: 'pendingdelete',
 								actionpermission: ''
 						}
 				]
@@ -36,7 +36,7 @@ export const slctable = {
 								actionpermission: ''
 						},
 						{
-								actionname: 'Cancel', actionclass: 'btn-danger btn-navspacer btn-promote', actionfunction: 'issueddelete',
+								actionname: 'Cancel', actionclass: 'btn-danger btn-navspacer btn-promote canc-btn', actionfunction: 'issueddelete',
 								actionpermission: ''
 						}
 				]

@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-config-slctc',
 	templateUrl: './config-slctc.component.html',
-	styleUrls: ['./config-slctc.component.scss', ]
+	styleUrls: ['./config-slctc.component.scss',]
 })
 export class ConfigSlctcComponent implements OnInit {
 	printmechanism = true;
@@ -20,6 +20,7 @@ export class ConfigSlctcComponent implements OnInit {
 	customArray: any[] = [];
 	printSettings: any = {};
 	ffIdArray: any[] = [];
+	ackFlag: any = '0';
 	valueArray: any[] = [];
 	dialogRef: MatDialogRef<ViewSlctcPrintComponent>;
 	finalArray: any[] = [];
@@ -61,7 +62,8 @@ export class ConfigSlctcComponent implements OnInit {
 			usps_tc_id: this.tc_id,
 			usts_name: 'slctc',
 			usts_id: '1',
-			configRelation: this.finalArray
+			configRelation: this.finalArray,
+			ackFlag: this.ackFlag
 		};
 		this.sisService.insertSlcTcPrintSetting(customJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -72,6 +74,8 @@ export class ConfigSlctcComponent implements OnInit {
 				if (result.data) {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
+					this.router.navigate(['../../auxilliarytool/slc'],
+					{ queryParams: { issue_status: true}, relativeTo: this.route });
 				}
 
 			}
@@ -87,6 +91,9 @@ export class ConfigSlctcComponent implements OnInit {
 		this.sisService.getSlcTcPrintSetting({ tc_id: tc_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.printSettings = result.data[0];
+				const subjArr: any[] = result.data;
+				console.log(this.printSettings);
+				let subName = '';
 				this.sisService.getSlcTcFormConfig({ tmap_usts_id: '1' }).subscribe((result2: any) => {
 					if (result2.status === 'ok') {
 						Object.keys(this.printSettings).forEach(key => {
@@ -94,6 +101,13 @@ export class ConfigSlctcComponent implements OnInit {
 								if (item.sff_field_tag === key && item.sff_field_type === 'prefetch') {
 									if (key === 'upd_nationality') {
 										this.printSettings[key] = 'Indian';
+									}
+									if (key === 'ess_sub_id') {
+										for (const sub of subjArr) {
+											subName = subName + sub.subject_name + ', ';
+										}
+										subName = subName.substring(0, subName.length - 1);
+										this.printSettings[key] = subName;
 									}
 									this.prefetchArray.push({
 										label: item.sff_label,
@@ -150,5 +164,12 @@ export class ConfigSlctcComponent implements OnInit {
 			'height': '100vh',
 			'width': '100vh'
 		});
+	}
+	checkAck($event) {
+		if ($event.checked) {
+			this.ackFlag = '1';
+		} else {
+			this.ackFlag = '0';
+		}
 	}
 }
