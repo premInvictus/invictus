@@ -207,6 +207,7 @@ export class IssueReturnComponent implements OnInit {
 					if (result) {
 						console.log('result--', result);
 						var resultJson = {
+							emp_id : result.emp_id,							
 							au_login_id: result.emp_login_id,							
 							au_role_id: 3,
 							au_full_name: result.emp_name,
