@@ -203,7 +203,7 @@ export class IssueReturnComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getEmployeeDetail({ emp_id: Number(this.searchForm.value.searchId) }).subscribe((result: any) => {
+				this.erpCommonService.getEmployeeDetail({ emp_id: Number(this.searchForm.value.searchId),emp_login_id: { $ne: '' } }).subscribe((result: any) => {
 					if (result) {
 						console.log('result--', result);
 						var resultJson = {

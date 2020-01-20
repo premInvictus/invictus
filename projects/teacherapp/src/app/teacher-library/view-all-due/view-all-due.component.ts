@@ -20,7 +20,7 @@ export class ViewAllDueComponent implements OnInit, AfterViewInit {
   currentSubscriptionId = '';
   DUE_LIST_ELEMENT: DueListElement[] = [];
   duelistdataSource = new MatTableDataSource<DueListElement>(this.DUE_LIST_ELEMENT);
-  displayedDueListColumns: string[] = ['srno', 'issued_to_admission_no','user_class_name','user_sec_name', 'reserv_id', 'title', 'issued_to','issued_on','issued_by', 'due_date', 'late_by'];
+  displayedDueListColumns: string[] = ['srno', 'issued_to_admission_no','user_class_name','user_sec_name', 'reserv_id', 'title', 'issued_to','issued_on', 'due_date','returned_on','returned_by' ,'late_by'];
   // subscriptionListPageIndex = 0;
   // subscriptionListPageSize = 10;
   // subscriptionListPageSizeOptions = [10, 25, 50, 100];
@@ -152,8 +152,11 @@ export interface DueListElement {
   user_class_name:string;
   user_sec_name:string;
   issued_on: string;
-  issued_by:string;
-  // returned_by:string;
+  // issued_by:string;
+  
+  
   due_date: string;
+  returned_on:string;
+  returned_by:string;
   late_by: string;
 }
