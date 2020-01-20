@@ -24,6 +24,7 @@ export class FailureListComponent implements OnInit {
   subexamArray: any[] = [];
   tableDivFlag = false;
   responseMarksArray: any[] = [];
+  thead_data: any;
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -170,6 +171,8 @@ export class FailureListComponent implements OnInit {
         if (result && result.status === 'ok') {
           this.responseMarksArray = result.data;
           console.log(this.responseMarksArray);
+          this.thead_data = this.responseMarksArray['failureDetails']['se_id'][0]['subject'][0]['section'];
+          console.log(this.thead_data);
         }
       })
     } else {
