@@ -7,6 +7,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BookSearchComponent } from 'projects/teacherapp/src/app/teacher-library/book-search/book-search.component';
 import { BookLogsComponent } from 'projects/teacherapp/src/app/teacher-library/book-logs/book-logs.component';
 import { IssueReturnComponent } from 'projects/teacherapp/src/app/teacher-library/issue-return/issue-return.component';
+import { ViewAllDueComponent } from 'projects/teacherapp/src/app/teacher-library/view-all-due/view-all-due.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -15,6 +16,6 @@ import { IssueReturnComponent } from 'projects/teacherapp/src/app/teacher-librar
 		ReactiveFormsModule,
 		FormsModule,
   ],
-  declarations: [BookSearchComponent, BookLogsComponent, IssueReturnComponent]
+  declarations: [BookSearchComponent, BookLogsComponent, IssueReturnComponent,ViewAllDueComponent]
 })
 export class TeacherLibraryModule { }
