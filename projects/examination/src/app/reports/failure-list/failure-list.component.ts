@@ -23,7 +23,7 @@ export class FailureListComponent implements OnInit {
   classterm: any;
   subexamArray: any[] = [];
   tableDivFlag = false;
-  responseMarksArray: any[] = [];
+  responseMarksArray: any = {};
   thead_data: any;
   constructor(
     private fbuild: FormBuilder,
@@ -165,7 +165,7 @@ export class FailureListComponent implements OnInit {
   }
   displayData() {
     if (this.paramform.value.eme_exam_id.length > 0) {
-      this.responseMarksArray = [];
+      this.responseMarksArray = {};
       this.tableDivFlag = true;
       this.examService.getFailureList(this.paramform.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
@@ -192,6 +192,10 @@ export class FailureListComponent implements OnInit {
         }
       });
     }
+  }
+
+  isEmptyObject(object){
+    return Object.keys(object).length === 0
   }
 
 }

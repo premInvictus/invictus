@@ -46,7 +46,7 @@
   </div>
 </form>
 
-<div class="row" *ngIf="responseMarksArray.failureDetails" style="margin-bottom: 20px;">
+<div class="row" *ngIf="tableDivFlag && responseMarksArray.failureDetails" style="margin-bottom: 20px;">
   <div class="col-12">
     <div class="text-center center-mr" [style.width]="tableWidth">
       <table class="custom-table" style="display: block !important; overflow-x: auto;">
@@ -103,7 +103,7 @@
     </div>
   </div>
 </div>
-<div class="row" *ngIf="responseMarksArray.length === 0">
+<div class="row" *ngIf="!tableDivFlag">
   <div class="col-12 text-center">
     <app-no-data
       [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
