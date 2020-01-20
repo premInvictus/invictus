@@ -73,6 +73,31 @@
               <td width="75px" class="custom-td text-center font-size-14">{{sub.percentage}}%</td>
             </tr>
           </ng-container>
+          <br>
+          <ng-container
+            *ngFor="let sub of responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['subject']; let s = index">
+            <tr>
+              <td class="custom-td text-center font-size-14">{{sub.sub_name|uppercase}}</td>
+              <ng-container *ngFor="let section of sub.section; let m = index">
+                <td width="50px" class="custom-td text-center font-size-14">{{section.count}}</td>
+                <td width="50px" class="custom-td text-center font-size-14">{{section.percentage}}</td>
+              </ng-container>
+              <td width="75px" class="custom-td text-center font-size-14">{{sub.count}}/{{sub.total_count}}</td>
+              <td width="75px" class="custom-td text-center font-size-14">{{sub.percentage}}%</td>
+            </tr>
+          </ng-container>
+          <tr>
+            <td class="custom-td text-center font-size-14">TOTAL FAILURE</td>
+            <ng-container
+              *ngFor="let section of responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['total_failure']; let m = index">
+              <td width="50px" class="custom-td text-center font-size-14">{{section.count}}</td>
+              <td width="50px" class="custom-td text-center font-size-14">{{section.percentage}}</td>
+            </ng-container>
+            <td width="75px" class="custom-td text-center font-size-14">
+              {{responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['total_count']}}</td>
+            <td width="75px" class="custom-td text-center font-size-14">
+              {{responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['total_percentage']}}%</td>
+          </tr>
         </tbody>
       </table>
     </div>

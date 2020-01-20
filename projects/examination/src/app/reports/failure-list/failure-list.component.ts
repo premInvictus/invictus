@@ -179,5 +179,19 @@ export class FailureListComponent implements OnInit {
       this.tableDivFlag = false;
     }
   }
+  generateExcel() {
+    if (this.paramform.value.eme_exam_id.length > 0) {
+      let param: any = Object.assign({}, this.paramform.value) ;
+      param.downloadexcel = true;
+      this.examService.getFailureList(param).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          console.log(result.data);
+          this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
+        }
+      });
+    }
+  }
 
 }

@@ -415,7 +415,11 @@ export class MarksEntryComponent implements OnInit {
     this.paramform.patchValue({
       eme_sub_id: ''
     });
-    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.smartService.getSubjectByTeacherIdClassIdSectionId({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id,
+      sec_id: this.paramform.value.eme_sec_id
+       }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subSubjectArray = result.data;
         const temp = result.data;
