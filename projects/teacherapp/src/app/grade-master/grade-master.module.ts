@@ -11,6 +11,8 @@ import { MarkAttendanceComponent } from './mark-attendance/mark-attendance.compo
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.component';
 import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
+import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
+import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mark-attendance-theme-two.component';
 
 @NgModule({
   imports: [
@@ -18,7 +20,7 @@ import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
     GradeMasterRoutingModule,
     SharedModule
   ],
-  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent],
+  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent],
   entryComponents: [],
 })
 export class GradeMasterModule { }

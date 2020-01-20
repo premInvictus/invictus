@@ -161,7 +161,18 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getSubjectSubexamMapping', value);
 	}
-
+	getTermAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermAttendance', value);
+	}
+	insertTermAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertTermAttendance', value);
+	}
+	updateTermAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateTermAttendance', value);
+	}
 }
 
 
