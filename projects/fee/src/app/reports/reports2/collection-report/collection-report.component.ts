@@ -1764,9 +1764,9 @@ export class CollectionReportComponent implements OnInit {
 													cssClass: 'amount-report-fee',
 													sortable: true,
 													filterable: true,
+													formatter: this.checkFeeFormatter,
 													filterSearchType: FieldType.number,
 													filter: { model: Filters.compoundInput },
-													formatter: this.checkFeeFormatter,
 													groupTotalsFormatter: this.sumTotalsFormatter
 												});
 												feeObj['pay_name' + j] = '';
@@ -1781,7 +1781,6 @@ export class CollectionReportComponent implements OnInit {
 													repoArray[Number(keys)]['fh_name'] : '-';
 												obj[key2 + k] = titem['total_amount'] ? Number(titem['total_amount']) : 0;
 												k++;
-
 												total_row_amt = total_row_amt + titem['total_amount'] ? Number(titem['total_amount']) : 0;
 											}
 
@@ -2901,7 +2900,17 @@ export class CollectionReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
-					if (this.reportType !== 'mfr' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+					//console.log(item2, 'item2');
+					if (this.reportType === 'summary' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							obj[item2.id] = new IndianCurrency().transform(Number(json[key][item2.id]));
+						}
+						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
+							obj[item2.id] = this.common.htmlToText(json[key][item2.id]);
+						}
+
+					}
+					if (this.reportType !== 'mfr' && this.reportType !== 'summary' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 						}
@@ -3201,7 +3210,15 @@ export class CollectionReportComponent implements OnInit {
 			Object.keys(this.dataset).forEach((key: any) => {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
-					if (this.reportType !== 'mfr') {
+					if (this.reportType === 'summary') {
+						if (item2.id !== 'fh_name' && this.dataset[key][item2.id] !== '<b>Grand Total</b>') {
+							arr.push(new IndianCurrency().transform(Number(json[key][item2.id])));
+						}
+						if (item2.id !== 'invoice_created_date' && item2.id === 'fh_name') {
+							arr.push(this.common.htmlToText(json[key][item2.id]));
+						}
+					}
+					if (this.reportType !== 'mfr' && this.reportType !== 'summary') {
 						if (item2.id !== 'fp_name' && item2.id !== 'invoice_created_date') {
 							arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
 						}

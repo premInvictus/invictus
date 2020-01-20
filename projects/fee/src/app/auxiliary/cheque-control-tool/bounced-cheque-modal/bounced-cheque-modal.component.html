@@ -70,9 +70,19 @@
     <div class="row margin-top-25">
       <div class="col-12">
         <mat-radio-group aria-label="Select an option" formControlName="fcc_status">
-          <mat-radio-button value="d" [disabled]="bouncedForm.value.fcc_status !== 'd'">Deposited</mat-radio-button>
-          <mat-radio-button value="c" [disabled]="bouncedForm.value.fcc_status === 'd'">Cleared</mat-radio-button>
-          <mat-radio-button value="b" [disabled]="bouncedForm.value.fcc_status === 'd'">Dishonoured</mat-radio-button>
+          <mat-radio-button value="d"
+            [disabled]="bouncedForm.value.fcc_status !== 'd' && bouncedForm.value.fcc_status !== 'cd'">Deposited
+          </mat-radio-button>
+          <mat-radio-button value="c"
+            [disabled]="bouncedForm.value.fcc_status === 'd' || bouncedForm.value.fcc_status === 'cd'">Cleared
+          </mat-radio-button>
+          <mat-radio-button value="b"
+            [disabled]="bouncedForm.value.fcc_status === 'd' || bouncedForm.value.fcc_status === 'cd'">Dishonoured
+          </mat-radio-button>
+          <mat-radio-button value="cd"  *ngIf="isExistUserAccessMenu('604')"
+            [disabled]="bouncedForm.value.fcc_status !== 'cd'  && bouncedForm.value.fcc_status !== 'd'">Deposited &
+            Cleared
+          </mat-radio-button>
         </mat-radio-group>
       </div>
       <br>
@@ -91,10 +101,36 @@
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Deposite Date</mat-label>
             <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="fcc_deposite_date"
-            [min]="studentDetails?.transaction_date"
-              required>
+              [min]="studentDetails?.transaction_date" required>
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Remarks</mat-label>
+            <textarea matInput rows="4" placeholder="Remarks" formControlName="fcc_remarks" required></textarea>
+          </mat-form-field>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="bouncedForm.value.fcc_status === 'cd'">
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Deposited Bank</mat-label>
+            <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
+              <mat-option value="">Please Select</mat-option>
+              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">{{bank.bank_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Processing Date</mat-label>
+            <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date"
+              [min]="studentDetails?.fcc_deposite_date" required>
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="col-6">
@@ -109,8 +145,7 @@
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Processing Date</mat-label>
             <input matInput [matDatepicker]="picker2" placeholder="Choose a date" formControlName="fcc_process_date"
-            [min]="studentDetails?.fcc_deposite_date"
-              required>
+              [min]="studentDetails?.fcc_deposite_date" required>
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
           </mat-form-field>
