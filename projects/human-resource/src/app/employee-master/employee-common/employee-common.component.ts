@@ -77,26 +77,7 @@ export class EmployeeCommonComponent implements OnInit {
 	) {
 	}
 	ngOnInit() {
-		console.log('employeedetails', this.employeedetails)
-		// this.buildForm();
-		// this.getDepartment();
-		// this.getDesignation();
-		// this.getWing();
-		// this.getCategoryOne();
 		var result = this.employeedetails;
-		// if (result) {
-		// 	this.employeeDetailsForm.patchValue({
-		// 		emp_profile_pic: '',
-		// 		emp_id: result.emp_id,
-		// 		emp_name: result.emp_name,			
-		// 		emp_honorific_id: result.emp_honorific_detail && result.emp_honorific_detail.hon_id ? result.emp_honorific_detail.hon_id : '',
-		// 		emp_designation_id: result.emp_designation_detail && result.emp_designation_detail.des_id ? result.emp_designation_detail.des_id : '',
-		// 		emp_department_id:  result.emp_department_detail && result.emp_department_detail.dpt_id ? result.emp_department_detail.dpt_id : '',
-		// 		emp_wing_id: result.emp_wing_detail && result.emp_wing_detail.wing_id ? result.emp_wing_detail.wing_id : '',			
-		// 	});
-		// }
-
-		console.log(this.employeedetails);
 		this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
@@ -128,10 +109,8 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	ngOnChanges() {
-		console.log('oncha', this.employeedetails);
 		this.buildForm();
 		this.employeedetails.emp_status == 'live';
-		
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
@@ -140,17 +119,6 @@ export class EmployeeCommonComponent implements OnInit {
 			this.getEmployeeDetail(this.employeedetails.emp_id);
 		}
 	}
-
-	// getDepartment() {
-	// 	this.sisService.getDepartment({}).subscribe((result: any) => {
-	// 		if (result && result.status == 'ok') {
-	// 			this.departmentArray = result.data;
-	// 		} else {
-	// 			this.departmentArray = [];
-	// 		}
-
-	// 	});
-	// }
 	getDepartment() {
 		this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
 			if (result) {
@@ -183,16 +151,14 @@ export class EmployeeCommonComponent implements OnInit {
 		});
 	}
 	getEmployeeDetail(emp_id) {
-		console.log(emp_id, 'emp_id');
 		if (emp_id) {
 			this.previousB = true;
 			this.nextB = true;
 			this.firstB = true;
 			this.lastB = true;
-			this.setActionControls({viewOnly : true})
+			//this.setActionControls({viewMode : true})
 			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
 				if (result) {
-					console.log(result, 'result');
 					let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
 					let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
 					let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
@@ -216,7 +182,7 @@ export class EmployeeCommonComponent implements OnInit {
 						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 					}
 					this.navigation_record = result.navigation;
-					this.employeedetails['last_record'] = emp_id;
+					//this.employeedetails['last_record'] = emp_id;
 				}
 
 				if (this.navigation_record) {
@@ -237,6 +203,7 @@ export class EmployeeCommonComponent implements OnInit {
 						this.previousB = false;
 					}
 				}
+
 				const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 				inputElem.select();
 			});
@@ -379,11 +346,12 @@ export class EmployeeCommonComponent implements OnInit {
 
 	loadEmployee(event) {
 		this.viewOnly = true;
+		this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		this.lastRecordId = event.target.value;
 		this.commonAPIService.employeeData.next(
-			{
-				last_record: event.target.value
-			});
+		{
+			last_record: event.target.value
+		});
 
 	}
 
