@@ -38,9 +38,11 @@ export class ComparativeLongListComponent implements OnInit {
     {id: '1', name: 'Scholastic'}
   ];
   ect_exam_type = '0';
+  globalsettings: any[] = [];
   ngOnInit() {
     this.buildForm();
     this.getClass();
+    this.getGlobalSetting();
   }
 
   constructor(
@@ -248,7 +250,7 @@ export class ComparativeLongListComponent implements OnInit {
     if (this.paramform.value.eme_exam_id.length > 0) {
       let param: any = Object.assign({}, this.paramform.value) ;
       param.downloadexcel = true;
-      this.examService.getMarksRegister(param).subscribe((result: any) => {
+      this.examService.getComparativeList(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           console.log(result.data);
           this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
@@ -266,7 +268,7 @@ export class ComparativeLongListComponent implements OnInit {
       const param: any = {};
       param.examEntry = this.paramform.value;
       param.eme_review_status = ['0', '1', '2', '3', '4'];
-      this.examService.getMarksRegister(this.paramform.value).subscribe((result: any) => {
+      this.examService.getComparativeList(this.paramform.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.responseMarksArray = result.data;
           console.log(this.responseMarksArray);
@@ -300,7 +302,7 @@ export class ComparativeLongListComponent implements OnInit {
                     for (let index4 = 0; index4 < element3.subsubject_marks.length; index4++) {
                       const element4 = element3.subsubject_marks[index4];
                       if(element4.sub_id === ssub_id) {
-                        tempvalue = element4.student_mark;
+                        tempvalue = element4.student_mark_100_per;
                       }                      
                     }
                   }                  
@@ -379,6 +381,19 @@ export class ComparativeLongListComponent implements OnInit {
     this.paramform.patchValue({
       eme_exam_id: ''
     });
+  }
+  getGlobalSetting() {
+    let param: any = {};
+    param.gs_name = ['failure_percentage', 'failure_color'];
+    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const setting = result.data;
+        setting.forEach(element => {
+          this.globalsettings[element.gs_alias] = element.gs_value;
+        });
+        console.log(this.globalsettings);
+      }
+    })
   }
 
 }
