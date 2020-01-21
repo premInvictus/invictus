@@ -12,6 +12,7 @@ import { AngularSlickgridModule } from 'angular-slickgrid';
 import { TranslateService } from '@ngx-translate/core';
 import { FailureListComponent } from './failure-list/failure-list.component';
 import { NegativeReportComponent } from './negative-report/negative-report.component';
+import { ComparativeLongListComponent } from './comparative-long-list/comparative-long-list.component';
 
 @NgModule({
   imports: [
@@ -20,7 +21,7 @@ import { NegativeReportComponent } from './negative-report/negative-report.compo
     ExamSharedModule,
     AngularSlickgridModule.forRoot()
   ],
-  declarations: [MarksRegisterComponent, PerformanceReportsComponent, RecordAssessmentsComponent, ReportComponent, StudentAttendenceComponent, FailureListComponent, NegativeReportComponent],
+  declarations: [MarksRegisterComponent, PerformanceReportsComponent, RecordAssessmentsComponent, ReportComponent, StudentAttendenceComponent, FailureListComponent, NegativeReportComponent, ComparativeLongListComponent],
   providers: [TranslateService]
 })
 export class ReportsModule { }
