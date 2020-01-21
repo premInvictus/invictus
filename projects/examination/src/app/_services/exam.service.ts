@@ -342,6 +342,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getFailureList', value);
 	}
+	getComparativeList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getComparativeList', value);
+	}
 }
 
 

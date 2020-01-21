@@ -115,14 +115,32 @@
     </div>
   </div>
   <div class="row">
-      <div class="col-lg-4">
-        Achievements
-      </div>
-      <div class="col-lg-4">
-        <mat-slide-toggle class="inline-form-radio-spacing" formControlName="school_achievement">
-        </mat-slide-toggle>
-      </div>
+    <div class="col-lg-4">
+      Achievements
     </div>
+    <div class="col-lg-4">
+      <mat-slide-toggle class="inline-form-radio-spacing" formControlName="school_achievement">
+      </mat-slide-toggle>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-4">
+      Failure Percentage and Background Color
+    </div>
+    <div class="col-lg-2">
+      <mat-form-field class="form-field" appearance="outline">
+        <input matInput placeholder="Percentage" type="text" class="text-capitalize" formControlName="failure_percentage"
+          >
+      </mat-form-field>
+    </div>
+    <div class="col-lg-2">
+      <mat-form-field class="form-field" appearance="outline">
+        <input type="color" matInput placeholder="Color" class="text-capitalize"
+          formControlName="failure_color"
+          >
+      </mat-form-field>
+    </div>
+  </div>
   <div class="row">
     <div class="col-6">
       <div class="text-center margin-top-15">

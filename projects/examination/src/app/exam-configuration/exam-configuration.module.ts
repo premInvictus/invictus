@@ -10,6 +10,7 @@ import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting
 import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
 import { SubjectSubexamModalComponent } from './subject-subexam-mapping/subject-subexam-modal/subject-subexam-modal.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { SubjectSubexamModalComponent } from './subject-subexam-mapping/subject-
 		CommonModule,
 		LoadingModule,
 		ExaminationConfigurationRoutingModule,
-		ExamSharedModule
+		ExamSharedModule,
+		ColorPickerModule
 	],
 	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent],
 	entryComponents: [SubjectSubexamModalComponent]
