@@ -11,7 +11,7 @@
           <div class="report-card__container">
             <div class="row margin-top-20">
               <ng-container *ngFor="let item of feeReportArray;let i = index">
-                <div [class]="getClassPerIndex(i)" *ngIf="isExistUserAccessMenu(item.report_id)">
+                <div [class]="getClassPerIndex(i)">
                   <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
                     <div class="report-card-container2">
                       <div [class]="item.main_text_class">

@@ -77,6 +77,7 @@ export class EmployeeCommonComponent implements OnInit {
 	) {
 	}
 	ngOnInit() {
+		console.log('employeedetails', this.employeedetails)
 		// this.buildForm();
 		// this.getDepartment();
 		// this.getDesignation();
@@ -95,6 +96,7 @@ export class EmployeeCommonComponent implements OnInit {
 		// 	});
 		// }
 
+		console.log(this.employeedetails);
 		this.commonAPIService.employeeData.subscribe((data: any) => {
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
@@ -126,13 +128,17 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	ngOnChanges() {
+		console.log('oncha', this.employeedetails);
 		this.buildForm();
 		this.employeedetails.emp_status == 'live';
+		
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
 		this.getCategoryOne();
-		this.getEmployeeDetail(this.employeedetails.emp_id);
+		if (this.employeedetails) {
+			this.getEmployeeDetail(this.employeedetails.emp_id);
+		}
 	}
 
 	// getDepartment() {
@@ -177,13 +183,16 @@ export class EmployeeCommonComponent implements OnInit {
 		});
 	}
 	getEmployeeDetail(emp_id) {
+		console.log(emp_id, 'emp_id');
 		if (emp_id) {
 			this.previousB = true;
 			this.nextB = true;
 			this.firstB = true;
 			this.lastB = true;
+			this.setActionControls({viewOnly : true})
 			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
 				if (result) {
+					console.log(result, 'result');
 					let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
 					let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
 					let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
@@ -207,6 +216,7 @@ export class EmployeeCommonComponent implements OnInit {
 						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 					}
 					this.navigation_record = result.navigation;
+					this.employeedetails['last_record'] = emp_id;
 				}
 
 				if (this.navigation_record) {
@@ -368,7 +378,6 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 
 	loadEmployee(event) {
-		event.preventDefault();
 		this.viewOnly = true;
 		this.lastRecordId = event.target.value;
 		this.commonAPIService.employeeData.next(

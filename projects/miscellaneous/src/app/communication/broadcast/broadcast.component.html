@@ -163,10 +163,12 @@
                                 Action
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                <i class="far fa-edit table-edit-icon" style="cursor: pointer;color:#1E88E5; font-size: 24px;"
-                                    (click)="editMessage(element)"></i>
+                                <i class="fas fa-eye table-edit-icon" *ngIf="currentTab !== 1 "
+                                    style="cursor: pointer;color:#007d9e; font-size: 20px;"
+                                    (click)="messageStatus(element)"></i>
                                 <i class="material-icons delete-icon inline-form-table-icon-spacing"
-                                    style="cursor: pointer;" (click)="openDeleteDialog(element)">
+                                    style="cursor: pointer;font-size: 20px !important;"
+                                    (click)="openDeleteDialog(element)">
                                     delete
                                 </i>
                             </td>
@@ -206,3 +208,5 @@
     (backToBroadcast)="resetComposeMessage($event)"></app-compose-message>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteMessageFunc($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>
+
+<app-sms-deliver-status #smsModal></app-sms-deliver-status>

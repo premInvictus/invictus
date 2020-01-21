@@ -194,10 +194,11 @@ export class CirculationConsumptionComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId) }).subscribe((result: any) => {
+				this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId),emp_login_id: { $ne: '' } }).subscribe((result: any) => {
 					if (result) {
 						//this.userData = result.data ? result.data[0] : '';
 						var resultJson = {
+							emp_id : result.emp_id,	
 							au_login_id: result.emp_login_id,							
 							au_role_id: 3,
 							au_full_name: result.emp_name,

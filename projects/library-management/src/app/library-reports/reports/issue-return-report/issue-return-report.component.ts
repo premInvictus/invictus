@@ -401,7 +401,7 @@ export class IssueReturnReportComponent implements OnInit {
 					collapsed: false
 				},
 				groupTotalsFormatter: this.srnTotalsFormatter
-			},
+			},			
 			{
 				id: 'book_name', name: 'Book Name', field: 'book_name', sortable: true,
 				filterable: true,
@@ -485,6 +485,23 @@ export class IssueReturnReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'issued_by', name: 'Issued By', field: 'issued_by', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
+				grouping: {
+					getter: 'issued_by',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
 				id: 'issued_on', name: 'Issued Date', field: 'issued_on', sortable: true,
 				filterable: true,
 				width: 120,
@@ -534,6 +551,23 @@ export class IssueReturnReportComponent implements OnInit {
 					aggregateCollapsed: true,
 					collapsed: false
 				},
+			},
+			{
+				id: 'returned_by', name: 'Returned By', field: 'returned_by', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
+				grouping: {
+					getter: 'returned_by',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
 			},
 			{
 				id: 'due_by', name: 'Late By', field: 'due_by', sortable: true,
@@ -767,21 +801,22 @@ export class IssueReturnReportComponent implements OnInit {
 			// 		collapsed: false,
 			// 	},
 			// },
-			{
-				id: 'status', name: 'Status', field: 'status', sortable: true,
-				filterable: true,
-				width: 150,
-				filter: { model: Filters.compoundInput },
-				grouping: {
-					getter: 'status',
-					formatter: (g) => {
-						return `${g.value}  <span style="color:green">(${g.count})</span>`;
-					},
-					aggregators: this.aggregatearray,
-					aggregateCollapsed: true,
-					collapsed: false,
-				},
-			}];
+			// {
+			// 	id: 'status', name: 'Status', field: 'status', sortable: true,
+			// 	filterable: true,
+			// 	width: 150,
+			// 	filter: { model: Filters.compoundInput },
+			// 	grouping: {
+			// 		getter: 'status',
+			// 		formatter: (g) => {
+			// 			return `${g.value}  <span style="color:green">(${g.count})</span>`;
+			// 		},
+			// 		aggregators: this.aggregatearray,
+			// 		aggregateCollapsed: true,
+			// 		collapsed: false,
+			// 	},
+			// }
+		];
 		this.erpCommonService.getIssueReturnReport(accessionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -845,6 +880,8 @@ export class IssueReturnReportComponent implements OnInit {
 					obj['issued_to'] = new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['user_full_name']) : '-';
 					obj['issued_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_on']) : '-';
 					obj['due_date'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['due_date']) : '-';
+					obj['issued_by'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_by'] && repoArray[Number(index)]['reserv_user_logs']['issued_by']['name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['issued_by']['name']) : '-';
+					obj['returned_by'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_by'] && repoArray[Number(index)]['reserv_user_logs']['returned_by']['name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_by']['name']) : '-';
 					obj['due_by'] = this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date']) > 0 ? this.getDaysDiff(repoArray[Number(index)]['reserv_user_logs']['due_date'])+' Days' : '-';
 					obj['returned_on'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['returned_on']) : '-';
 					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['reserv_user_logs']['authors'][0]) : '-';
@@ -1211,6 +1248,7 @@ export class IssueReturnReportComponent implements OnInit {
 			'report_type': '',
 			'downloadAll': true,
 		});
+		this.getUserReservoirData('');
 	}
 	exportToFile(type = 'csv') {
 		let reportType: any = '';

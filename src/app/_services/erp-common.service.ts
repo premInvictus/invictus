@@ -579,6 +579,11 @@ export class ErpCommonService {
 		return this.http.post(environment.apiAxiomUrl + '/users/getGlobalTeacher', value);
 	}
 
+	getAllEmployeeDetail(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
+	}
+
 }
 
 

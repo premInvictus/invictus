@@ -1,3 +1,6 @@
 table {
     width: 100%;
 }
+.inline-form-radio-spacing{
+    padding-left:10px !important;
+}

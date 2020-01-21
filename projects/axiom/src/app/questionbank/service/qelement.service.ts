@@ -327,6 +327,16 @@ export class QelementService {
 		}
 
 	}
+	public teacherMappingUpload(uploadedFile, role_id) {
+		const fileList: FileList = uploadedFile;
+		if (fileList.length > 0) {
+			const file: File = fileList[0];
+			const formData: FormData = new FormData();
+			formData.append('uploadFile', file, file.name);
+			formData.append('role_id', role_id);
+			return this._http.post(environment.apiAxiomUrl + '/bulkupload/teacherMappingUpload', formData);
+		}
+	}
 	deleteQuestionPaper(value) {
 		return this._http.delete(environment.apiAxiomUrl + `/questionpaper/deleteQuestionPaper/${value.qp_id}`);
 	}

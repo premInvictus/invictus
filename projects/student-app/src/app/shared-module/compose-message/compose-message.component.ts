@@ -147,26 +147,25 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		console.log('this.showUserContextMenu--',this.showUserContextMenu);
 		this.showUserContextMenu =!this.showUserContextMenu; 
 		if (this.showUserContextMenu) {
-			this.erpCommonService.getTeacher(inputJson).subscribe((result: any) => {
+			this.erpCommonService.getAllEmployeeDetail({'emp_cat_id' : 1}).subscribe((result: any) => {
 				var userData = [];
-				if (result && result.data && result.data[0]['au_login_id']) {				
-					for (var i = 0; i < result.data.length; i++) {
+				if (result) {				
+					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
-							au_login_id: result.data[i]['au_login_id'],
-							au_full_name: result.data[i]['au_full_name'],
-							au_email: result.data[i]['au_email'],
-							au_mobile: result.data[i]['au_mobile'],
-							au_profileimage: result.data[i]['au_profileimage'],
+							au_login_id: result[i].emp_login_id,
+							au_full_name: result[i].emp_name,
+							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+							au_profileimage: result[i].emp_profile_pic,
 							au_role_id: '3',
 							checked: false,
-							class_name: result.data[i]['class_name'],
-							sec_name: result.data[i]['sec_name'],
-							class_id: result.data[i]['class_id'],
-							sec_id: result.data[i]['sec_id'],
-							au_admission_no : result.data[i]['au_admission_no'],
+							class_name: '',
+							sec_name: '',
+							class_id: '',
+							sec_id: '',
+							au_admission_no: '',
 						}
-						userData.push(inputJson);
-						
+						userData.push(inputJson);						
 					}
 	
 					this.userDataArr = this.uniqueUserArray(userData);
