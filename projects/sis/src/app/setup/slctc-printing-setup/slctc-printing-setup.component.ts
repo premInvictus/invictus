@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import {environment} from 'src/environments/environment';
 declare var CKEDITOR: any;
 @Component({
 	selector: 'app-slctc-printing-setup',
@@ -37,15 +38,15 @@ export class SlctcPrintingSetupComponent implements OnInit {
 	ngOnInit() {
 		this.buildForm();
 		this.getSlcTcTemplateSetting();
-		this.getSLCTCFormConfig({value: '1'});
+		this.getSLCTCFormConfig({ value: '1' });
 		this.getSLCTCFormConfig2();
 		this.getTemplate();
 
 	}
-	getSlcTcTemplateSetting(){
+	getSlcTcTemplateSetting() {
 		this.sisService.getSlcTcTemplateSetting({}).subscribe((result: any) => {
-			if(result && result.status === 'ok') {
-				if(result.data && result.data.length > 0) {
+			if (result && result.status === 'ok') {
+				if (result.data && result.data.length > 0) {
 					this.typeArray = result.data;
 					result.data.forEach(element => {
 						this.templateArray.push({
@@ -90,7 +91,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 				// console.log(result.data[0].usts_template); a
 				this.templateForm.patchValue({
 					'usts_template': result.data[0].usts_template,
-					'usts_id' : result.data[0].usts_id,
+					'usts_id': result.data[0].usts_id,
 				});
 			} else {
 				this.templateForm.patchValue({
@@ -151,7 +152,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 						}
 					});
 				}
-				
+
 			});
 
 			this.ckeConfig = {
@@ -166,11 +167,9 @@ export class SlctcPrintingSetupComponent implements OnInit {
 
 				scayt_multiLanguageMod: true,
 				filebrowserUploadMethod: 'form',
-				uploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-				filebrowserImageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-				filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-				filebrowserBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-				filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+				uploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+				imageUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
+				filebrowserUploadUrl: environment.apiAxiomUrl + '/uploadS3.php',
 				toolbar: [
 					// tslint:disable-next-line:max-line-length
 					['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates',
@@ -232,7 +231,7 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		this.ckeConfig.toolbar = toolbar;
 		console.log('test', this.ckeConfig);
 
-		
+
 		// this.ckeConfig = {
 		// 	allowedContent: true,
 		// 	pasteFromWordRemoveFontStyles: false,
