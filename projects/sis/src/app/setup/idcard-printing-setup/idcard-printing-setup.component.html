@@ -240,6 +240,7 @@
                      <input style="display:none" type="file" accept="image/*" (change)="uploadTempImage($event)"
                         id="file3" formControlName="ps_auth_sign"><br><br>
                      <div style="height:80px;width:80px;border-radius: 4%;margin: auto !important;">
+                        <i *ngIf="showTempImage" class="fas fa-times delete-temp-btn" (click)="deleteImageTemp()"></i>
                         <img *ngIf="showTempImage"
                            style="height:100%;width:100%;border:1px solid #646471;border-radius: 4%"
                            [src]="templateImage" (click)="previewImage(templateImage)">

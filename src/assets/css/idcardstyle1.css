@@ -393,3 +393,12 @@
 {
     margin-top:-8px;
 }
+span.empid-bar-code-span-ls {
+    position: absolute;
+    right: 54px;
+    transform: rotate(-90deg);
+    top: -91px;
+    font-size: 9px;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+}
