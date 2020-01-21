@@ -15,7 +15,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@Input() employeeCommonDetails;
 	@Input() employeedetails;
-
 	addOnly = false;
 	editOnly = false;
 	viewOnly = true;

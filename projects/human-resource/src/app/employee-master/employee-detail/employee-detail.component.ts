@@ -27,7 +27,6 @@ export class EmployeeDetailComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-
 		this.reRenderFormSubscription = this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data && data.reRenderForm) {
 				this.tabSelectedIndex = 0;
@@ -37,7 +36,6 @@ export class EmployeeDetailComponent implements OnInit {
 				this.tabSelectedIndex = 0;
 				this.employeeRecord = {};
 			}
-
 		});
 
 		this.reRenderTabSubscription = this.commonAPIService.renderTab.subscribe((data: any) => {
@@ -58,7 +56,7 @@ export class EmployeeDetailComponent implements OnInit {
 			}
 		});
 
-		this.getEmployeeNavigationRecords(); 
+		this.getEmployeeNavigationRecords();
 
 	}
 
