@@ -63,6 +63,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.buildForm();
 		this.getReasonType();
 		this.getVaccinations();
+		this.getClassAll();
 	}
 	ngAfterViewInit() {
 		this.configDataSource.sort = this.sort;
@@ -263,9 +264,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (Number(this.configValue) === 1) {
 			this.getBloodGroupAll(this);
 			this.configFlag = true;
-		} else if (Number(this.configValue) === 2) {
-			this.getDocumentsAll(this);
+		} else if (Number(this.configValue) === 2) {			
 			this.getClassAll();
+			this.getDocumentsAll(this);
 			this.displayedColumns = ['position', 'name', 'alias', 'class', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
@@ -1334,7 +1335,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				docreq_name: value.docreq_name,
 				docreq_alias: value.docreq_alias,
 				docreq_status: value.docreq_status,
-				docreq_is_required: value.docreq_is_required
+				docreq_is_required: value.docreq_is_required,
+				docreq_class:value.docreq_class
 			});
 		} else if (Number(this.configValue) === 3) {
 			this.updateFlag = true;

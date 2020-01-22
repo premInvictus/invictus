@@ -65,6 +65,7 @@ export class SchoolsetupComponent implements OnInit {
 	multipleFileArray: any[] = [];
 	counter: any = 0;
 	documentPath: any;
+	city_id: any;
 	displayedColumns = [
 		'position',
 		'logo',
@@ -241,8 +242,6 @@ export class SchoolsetupComponent implements OnInit {
 				this.adminService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
 						this.file1 = result.data[0].file_url;
-						//console.log(this.documentPath);
-
 					}
 				});
 			}
@@ -519,6 +518,7 @@ export class SchoolsetupComponent implements OnInit {
 		this.editNewSchoolActive = true;
 		this.file1 = value.school_logo;
 		this.file2 = value.school_favicon;
+		this.city_id = value.school_city_id;
 		this.newSchoolForm.patchValue({
 			school_id: value.school_id,
 			school_logo: '',
@@ -530,7 +530,7 @@ export class SchoolsetupComponent implements OnInit {
 			school_address: value.school_address,
 			school_country: value.school_country_id,
 			school_state: value.school_state_id,
-			school_city: value.school_city_id,
+			school_city: value.school_city,
 			school_website: value.school_website,
 			school_phone: value.school_phone,
 			school_smsid: value.school_smsid,
@@ -546,7 +546,7 @@ export class SchoolsetupComponent implements OnInit {
 		});
 	}
 	editNewSchool() {
-		if (this.newSchoolForm.valid) {
+		if (this.newSchoolForm.valid) {			
 			const newSchoolFormData = new FormData();
 			newSchoolFormData.append('school_logo', this.file1);
 			newSchoolFormData.append('school_favicon', this.file2);
@@ -585,7 +585,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_city',
-				this.newSchoolForm.value.school_city
+				this.city_id
 			);
 			newSchoolFormData.append(
 				'school_website',
@@ -677,6 +677,7 @@ export class SchoolsetupComponent implements OnInit {
 		}
 	}
 	getCityPerId(item: any) {
+		this.city_id = item.cit_id;
 		this.newSchoolForm.patchValue({
 			school_city: this.getCityName(item.cit_id),
 			school_state: item.sta_id,
