@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
 @NgModule({
 	imports: [
 		CommonModule,
@@ -33,7 +34,7 @@ import { MatIconModule } from '@angular/material/icon';
 		MatCardModule,
 		MatIconModule
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency, UserCredentialComponent],
+	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency, UserCredentialComponent,TruncatetextPipe],
 	exports: [
 		TopNavComponent,
 		SideNavComponent,
