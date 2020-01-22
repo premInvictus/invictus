@@ -161,7 +161,7 @@
                           <ng-container *ngIf="action.actionpermission == '' ">
                               <button  [hidden]="(element.status == 'Approved' && (action.actionname == 'Reissue' || action.actionname == 'Issue' )) 
                               || (element.status == 'Issued' && (action.actionname == 'Issue' || action.actionname == 'Print')) ||
-                              (element.status == 'Printed' && (action.actionname == 'Print' || action.actionname == 'Reissue' ||  action.actionname == 'Issue')) || 
+                              (element.status == 'Printed' && (action.actionname == 'Print' || action.actionname == 'Reissue')) || 
                               (element.status == 'Reissued' && (action.actionname == 'Print' || action.actionname == 'Issue'))"
                               mat-raised-button [ngClass]="action.actionclass" (click)="actionConfig(action.actionfunction,element[column])" >{{action.actionname}}</button>
                           </ng-container>                            
