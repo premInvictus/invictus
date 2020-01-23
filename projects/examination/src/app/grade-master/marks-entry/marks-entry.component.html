@@ -27,7 +27,7 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Subject</mat-label>
                             <mat-select placeholder="Subject" formControlName="eme_sub_id"
-                                (selectionChange)="getExamDetails();resetTableDiv();getRollNoUser()" required>
+                                (selectionChange)="resetTableDiv();getRollNoUser()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-optgroup label="Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
@@ -58,7 +58,7 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Term</mat-label>
                             <mat-select placeholder="Term" formControlName="eme_term_id"
-                                (selectionChange)="resetTableDiv()" required>
+                                (selectionChange)="getExamDetails();resetTableDiv()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
                             </mat-select>

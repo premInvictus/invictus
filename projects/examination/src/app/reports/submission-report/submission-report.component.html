@@ -1,0 +1,92 @@
+<div class="row">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-3">
+                <mat-tab-group (selectedIndexChange)="setIndex($event)">
+                    <mat-tab label="Teacherwise">
+                        <ng-template matTabContent>
+                            <app-teacherwise></app-teacherwise>
+                        </ng-template>
+                    </mat-tab>
+                    <mat-tab label="Classwise">
+                        <ng-template matTabContent>
+                            <app-classwise></app-classwise>
+                        </ng-template>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+            <div class="col-9 text-right">
+                <form [formGroup]="paramform">
+                    <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                        appearance="outline" *ngIf="currentTabIndex == 0">
+                        <mat-label>Teacher Name</mat-label>
+                        <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                            [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                                (onSelectionChange)="setTeacherId(item)">
+                                <small>{{item.au_full_name | titlecase}}</small>
+                                <small>( {{item.au_login_id}} )</small>
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Class</mat-label>
+                        <mat-select placeholder="Class" formControlName="eme_class_id"
+                            (selectionChange)="getSectionsByClass();getSubjectsByClass();getExamDetails();getClassTerm();resetTableDiv();"
+                            required>
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Section</mat-label>
+                        <mat-select placeholder="Section" formControlName="eme_sec_id"
+                            (selectionChange)="resetFormONSecitonChange();resetTableDiv();" required>
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Term</mat-label>
+                        <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="resetTableDiv()"
+                            required>
+                            <mat-option value="">Please select</mat-option>
+                            <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Subject</mat-label>
+                        <mat-select placeholder="Subject" multiple formControlName="eme_sub_id"
+                            (selectionChange)="resetTableDiv();">
+                            <ng-container *ngFor="let item of subjectArray">
+                                <mat-option *ngIf="item.childSub.length == 0" [value]="item.sub_id">
+                                    {{item.sub_name}}</mat-option>
+                                <mat-optgroup *ngIf="item.childSub.length != 0" [label]="item.sub_name">
+                                    <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id">
+                                        {{item1.sub_name}}</mat-option>
+                                </mat-optgroup>
+                            </ng-container>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Exam</mat-label>
+                        <mat-select placeholder="Exam" formControlName="eme_exam_id" multiple required>
+                            <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button class="btn-success margin-top-15" style="margin-left: 15px;" mat-raised-button
+                        (click)="displayData()">Submit</button>
+                    <span *ngIf="responseMarksArray.length > 0"
+                        style="float:right; padding-right: 10px;padding-top: 30px;"><img style="cursor: pointer"
+                            src="/assets/images/xml.svg" (click)="generateExcel()" matTooltip="Export as excel"></span>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
