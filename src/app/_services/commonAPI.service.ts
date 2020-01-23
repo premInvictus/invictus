@@ -32,7 +32,7 @@ export class CommonAPIService {
 	familyData: any;
 	familyNumber: any;
 	selectedChildData: any;
-	searchDashboardData:any;
+	searchDashboardData: any;
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
@@ -281,9 +281,16 @@ export class CommonAPIService {
 	}
 
 	getDashboardSearchData() {
-		return this.searchDashboardData ;
+		return this.searchDashboardData;
 	}
 
-	
-
+	getPushNotification(value) {
+		return this.http.post(environment.apiHRUrl + '/communication/getPushNotification', value);
+	}
+	getWebPushNotification(value) {
+		return this.http.post(environment.apiHRUrl + '/communication/getWebPushNotification', value);
+	}
+	updateMessage(value) {
+		return this.http.post(environment.apiHRUrl + '/communication/update', value);
+	}
 }

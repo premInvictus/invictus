@@ -13,6 +13,7 @@ import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/ad
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 
+
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -28,6 +29,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	currentUser: any = {};
 	userAccessMenuArray: any[] = [];
 	menuSubmenuArray: any[] = [];
+	notficationMsg: any[] = [];
 	clicked: any;
 	finalFont: any[] = [];
 	upperMenu: any;
@@ -35,6 +37,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	usernane: any = '';
 	schoolinfoArray: any;
 	image: any;
+	showNotification = false;
 	showImage = false;
 	showImageBlank = false;
 	schoolName: any;
@@ -105,6 +108,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		// 	this.innerHeight = (window.innerHeight) - 150;
 		// }
 		// console.log(this.mobileQuery);
+		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
@@ -370,7 +374,6 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 
 	logout() {
-
 		if (this._cookieService.get('userData')) {
 			this.userData = JSON.parse(this._cookieService.get('userData'));
 			if (this.userData) {
@@ -402,5 +405,20 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.router.navigate(['/login']);
 			}
 		}
+	}
+	getPushNotification() {
+		this.commonAPIService.getWebPushNotification({ 'msg_to': '3444' }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.notficationMsg = result.data;
+			}
+		});
+
+	}
+	markRead(item) {
+		console.log(item.msg_to);
+		item.msg_to[0].msg_status = {
+			'status_name': 'read'
+		};
+		console.log(item.msg_to[0].msg_status);
 	}
 }
