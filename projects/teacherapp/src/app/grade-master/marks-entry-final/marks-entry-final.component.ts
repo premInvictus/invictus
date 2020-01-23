@@ -73,7 +73,7 @@ export class MarksEntryFinalComponent implements OnInit {
     this.paramform.patchValue({
       eme_exam_id: ''
     });
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType() }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(),term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
@@ -96,7 +96,7 @@ export class MarksEntryFinalComponent implements OnInit {
       this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
     }
     this.subexamArray = [];
-    this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
           this.subexamArray = result.data[0].exam_sub_exam_max_marks;

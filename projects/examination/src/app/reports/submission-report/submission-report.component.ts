@@ -5,11 +5,11 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-comparative-long-list',
-  templateUrl: './comparative-long-list.component.html',
-  styleUrls: ['./comparative-long-list.component.css']
+  selector: 'app-submission-report',
+  templateUrl: './submission-report.component.html',
+  styleUrls: ['./submission-report.component.css']
 })
-export class ComparativeLongListComponent implements OnInit {
+export class SubmissionReportComponent implements OnInit {
 
   paramform: FormGroup
   classArray: any[] = [];
@@ -39,6 +39,9 @@ export class ComparativeLongListComponent implements OnInit {
   ];
   ect_exam_type = '0';
   globalsettings: any[] = [];
+  currentTabIndex = 0;
+  teacherArray: any[] = [];
+  teacherId = '';
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -51,10 +54,13 @@ export class ComparativeLongListComponent implements OnInit {
     private sisService: SisService,
     private smartService: SmartService,
     private commonAPIService: CommonAPIService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public axiomService: AxiomService
   ) { }
   buildForm() {
     this.paramform = this.fbuild.group({
+      teacher_name:'',
+      teacher_id: '',
       eme_sub_type: '',
       eme_class_id: '',
       eme_sec_id: '',
@@ -62,16 +68,6 @@ export class ComparativeLongListComponent implements OnInit {
       eme_term_id: '',
       eme_exam_id: ''
     })
-  }
-  changeReportType(){
-    this.paramform.patchValue({
-      eme_sub_type: '',
-      eme_class_id: '',
-      eme_sec_id: '',
-      eme_sub_id: '',
-      eme_term_id: '',
-      eme_exam_id: ''
-    });
   }
   getClassTerm() {
     this.termsArray = [];
@@ -105,7 +101,7 @@ export class ComparativeLongListComponent implements OnInit {
   getExamDetails() {
     this.examArray = [];
     this.subexamArray = [];
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_category: this.paramform.value.eme_sub_type }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
         this.subexamArray.push(result.data[0].exam_sub_exam_max_marks);
@@ -187,19 +183,12 @@ export class ComparativeLongListComponent implements OnInit {
       eme_exam_id: ''
     });
   }
-  changeTerm(){
-    this.paramform.patchValue({
-      eme_sub_type:'',
-      eme_sub_id: '',
-      eme_exam_id: ''
-    });
-  }
   getSubjectsByClass() {
     this.subjectArray = [];
     this.paramform.patchValue({
       eme_sub_id: ''
     });
-    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id, sub_isexam : '1', sub_type: this.paramform.value.eme_sub_type}).subscribe((result: any) => {
+    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id, sub_isexam : '1'}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subSubjectArray = result.data;
         const temp = result.data;
@@ -402,5 +391,38 @@ export class ComparativeLongListComponent implements OnInit {
       }
     })
   }
+  setIndex(event) {
+		console.log(event);
+		this.currentTabIndex = event;
+		this.paramform.patchValue({
+			teacher_name: '',
+			teacher_id: '',
+			class_id: '',
+			sec_id: '',
+			sub_id: '',
+		});
+  }
+  getTeacherInfo(event) {
+		console.log(event.target.value);
+		this.teacherArray = [];
+		if (event.target.value) {
+			this.axiomService.getAllTeacher({ full_name: event.target.value, role_id: '3', status: '1' }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.teacherArray = result.data;
+					console.log(result.data);
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+				}
+			});
+		}
+	}
+	setTeacherId(teacherDetails) {
+		this.paramform.patchValue({
+			teacher_name: teacherDetails.au_full_name,
+			teacher_id: teacherDetails.au_login_id
+		});
+		this.teacherId = teacherDetails.au_login_id;
+		// this.getClasswork();
+	}
 
 }
