@@ -123,11 +123,11 @@
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="schedule_date">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">
-                                Date
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">
+                                Date &amp; Time
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                {{element?.schedule_date | date : 'dd-MMM-y'}}
+                                {{element?.schedule_date | date : 'dd-MMM-y, hh:mm a'}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="subject">
