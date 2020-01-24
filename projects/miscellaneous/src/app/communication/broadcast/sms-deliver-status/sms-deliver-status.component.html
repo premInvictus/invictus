@@ -1,5 +1,6 @@
 <ng-template #smsModal>
   <div class="overflow-x-hidden">
+    
     <div class="row">
       <div class="col-12 text-right">
         <a class="close-btn" style="cursor:pointer" (click)="closeDialog()"><i class="material-icons">
@@ -9,6 +10,7 @@
     </div>
     <div class="row">
       <div class="col-12">
+        <span class="msg_heading"><b>Message Text : </b> <p [innerHtml]="inputData?.msg_description"></p> </span><br/>
         <table mat-table [dataSource]="dataSource" class="table-100 text-center">
           <ng-container matColumnDef="srno">
             <th mat-header-cell *matHeaderCellDef> Sr. No. </th>
@@ -17,7 +19,7 @@
 
           <ng-container matColumnDef="au_full_name">
             <th mat-header-cell *matHeaderCellDef> Name </th>
-            <td mat-cell *matCellDef="let element;"> {{element.au_full_name | capitalize}} </td>
+            <td mat-cell *matCellDef="let element;" class="text-left"> {{element.au_full_name | capitalize}} </td>
           </ng-container>
 
 

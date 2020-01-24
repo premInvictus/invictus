@@ -214,10 +214,23 @@
                             </div>
                         </div>
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-12" style="min-height: 400px;">
                                 <ckeditor [config]="ckeConfig" formControlName="messageBody"
                                     (change)="onBodyChange($event)"></ckeditor>
+                            </div>
+                        </div> -->
+
+                        <div class="row" *ngIf="messageForm.value.messageType==='E'">
+                            <div class="col-12" style="min-height: 400px;">
+                                <ckeditor [config]="ckeConfig" formControlName="messageBody"
+                                    (change)="onBodyChange($event)"></ckeditor>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="messageForm.value.messageType==='S'">
+                            <div class="col-12" style="min-height: 400px;">
+                                <textarea class="message-textarea" formControlName="messageBody" (change)="onBodyChange($event)"></textarea>
                             </div>
                         </div>
 
