@@ -28,7 +28,7 @@ const appRoutes: Routes = [
 		{path: 'hr', canActivate: [AuthGuard], loadChildren: 'projects/human-resource/src/app/app.module#HrSharedAppModule'},
 		{path: 'misc', canActivate: [AuthGuard], loadChildren: 'projects/miscellaneous/src/app/app.module#MiscellaneousSharedAppModule'},
 		{path: 'inventory', canActivate: [AuthGuard], loadChildren: 'projects/inventory/src/app/app.module#InventorySharedAppModule'},
-		{ path: '**', redirectTo: 'login'}
+		{ path: '**', redirectTo: 'login'},
 ];
 
 @NgModule({

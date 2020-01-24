@@ -12,8 +12,7 @@ import { QelementService } from 'projects/axiom/src/app/questionbank/service/qel
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
-
-
+import { TruncatetextPipe } from '../../_pipes/truncatetext.pipe'
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -72,7 +71,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private loader: LoaderService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
 		private route: ActivatedRoute) {
-
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
 		this.mobileQuery.addListener(this._mobileQueryListener);
@@ -407,18 +406,94 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 	getPushNotification() {
-		this.commonAPIService.getWebPushNotification({ 'msg_to': '3444' }).subscribe((result: any) => {
+		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.notficationMsg = result.data;
+				for (const item of this.notficationMsg) {
+					item.msg_description = new TruncatetextPipe().transform(item.msg_description, 80);
+				}
+			} else {
+				this.notficationMsg = [];
 			}
 		});
 
 	}
 	markRead(item) {
 		console.log(item.msg_to);
-		item.msg_to[0].msg_status = {
+		item.msg_to[0].msg_status = [{
+			'status_name': 'send'
+		}, {
 			'status_name': 'read'
-		};
+		}]
 		console.log(item.msg_to[0].msg_status);
+	}
+	redirectModule(event) {
+		event.msg_to[0].msg_status = [
+			{
+				'status_name': 'send'
+			}, {
+				'status_name': 'read'
+			}];
+		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
+			if (result) {
+				if (event.notification_type.module === 'syllabus') {
+					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'assignment') {
+					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'fees') {
+					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'classwork') {
+					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'leave') {
+					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'timetable') {
+					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+				}
+			} else {
+				if (event.notification_type.module === 'syllabus') {
+					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'assignment') {
+					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'fees') {
+					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'classwork') {
+					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'leave') {
+					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+				}
+				if (event.notification_type.module === 'timetable') {
+					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+				}
+			}
+		});
+	}
+	deleteNofiy(event) {
+		event.msg_to[0].msg_status = [
+			{
+				'status_name': 'send'
+			}, {
+				'status_name': 'delete'
+			}];
+		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
+			if (result) {
+				this.getPushNotification();
+				this.commonAPIService.showSuccessErrorMessage('Notification deleted Successfully', 'success');
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Some error Occur !!', 'error');
+			}
+		});
+	}
+	viewAll() {
+		this.showNotification = false;
+		this.router.navigate(['student/notification']);
 	}
 }
