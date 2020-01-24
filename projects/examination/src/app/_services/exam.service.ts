@@ -347,6 +347,10 @@ export class ExamService {
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAttendanceEvent', value);
 	}
 
+	getComparativeList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getComparativeList', value);
+	}
 }
 
 

@@ -10,7 +10,7 @@
             <mat-form-field appearance="outline" class="form-field-150">
               <mat-label>Class</mat-label>
               <mat-select placeholder="Class" formControlName="eme_class_id"
-                (selectionChange)="getSectionsByClass();getClassTerm();getExamDetails()" required>
+                (selectionChange)="getSectionsByClass();getClassTerm();" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
               </mat-select>
@@ -25,7 +25,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
               <mat-label>Term</mat-label>
-              <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="resetTableDiv();" required>
+              <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="getExamDetails();resetTableDiv();" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>

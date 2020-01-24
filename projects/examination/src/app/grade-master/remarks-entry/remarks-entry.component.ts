@@ -129,7 +129,6 @@ export class RemarksEntryComponent implements OnInit {
 			this.tableDivFlag = false;
 			this.getSubjectsByClass();
 			this.getClassTerm();
-			this.getExamDetails();
 			this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
@@ -137,7 +136,6 @@ export class RemarksEntryComponent implements OnInit {
 			this.tableDivFlag = false;
 			this.getRemarkSet();
 			this.getClassTerm();
-			this.getExamDetails();
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
@@ -227,7 +225,7 @@ export class RemarksEntryComponent implements OnInit {
 	}
 	getExamDetails() {
 		this.examArray = [];
-		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id }).subscribe((result: any) => {
+		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id:this.paramform.value.ere_term_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
 			} else {

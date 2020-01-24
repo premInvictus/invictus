@@ -24,7 +24,7 @@ export class BroadcastComponent implements OnInit {
 	selectedUserArr: any[] = [];
 	allUserSelectFlag = false;
 	scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
-	currentTab = 1;
+	currentTab = 0;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('smsModal') smsModal;
 	deleteMessage = 'Are you sure, you want to Delete Message ?';
@@ -40,7 +40,7 @@ export class BroadcastComponent implements OnInit {
 	ngOnInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
 		this.buildForm();
-		this.getEmailScheduleData();
+		this.getSMSScheduleData();
 	}
 
 	ngAfterViewInit() {
@@ -116,6 +116,7 @@ export class BroadcastComponent implements OnInit {
 			tempObj['msg_id'] = this.scheduleMessageData[i]['msg_id'];
 			tempObj['no'] = counter;
 			tempObj['subject'] = this.scheduleMessageData[i]['msg_subject'];
+			//tempObj['description'] = this.scheduleMessageData[i]['msg_description'];
 			//tempObj['class'] = this.scheduleMessageData[i]['class_name'] + ' - ' + this.scheduleMessageData[i]['sec_name'];
 			tempObj['schedule_date'] = this.scheduleMessageData[i]['msg_created_date'];
 			if (this.scheduleMessageData[i]['msg_receivers'] === 'Student') {
@@ -189,6 +190,7 @@ export class BroadcastComponent implements OnInit {
 	// console.log(element);
 	// }
 	messageStatus = (data) => {
+		data.user_data.msg_description = data.body;
 		this.smsModal.openModal(data.user_data);
 	}
 	deleteMessageFunc(element) {

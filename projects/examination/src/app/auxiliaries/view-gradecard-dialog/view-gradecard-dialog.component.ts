@@ -787,6 +787,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     if (this.data.param.eme_class_id) {
       param.exam_class = this.data.param.eme_class_id;
     }
+    if (this.data.param.eme_class_id) {
+      param.term_id = this.data.param.eme_term_id;
+    }
     this.examService.getExamDetails(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;

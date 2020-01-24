@@ -121,7 +121,7 @@ export class MarksRegisterComponent implements OnInit {
   getExamDetails() {
     this.examArray = [];
     this.subexamArray = [];
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.paramform.value.eme_sub_type }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_category: this.paramform.value.eme_sub_type }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
         this.subexamArray.push(result.data[0].exam_sub_exam_max_marks);
@@ -452,6 +452,13 @@ export class MarksRegisterComponent implements OnInit {
     this.responseMarksArray = [];
     this.tableDivFlag = false;
     this.paramform.patchValue({
+      eme_exam_id: ''
+    });
+  }
+  termChange(){
+    this.paramform.patchValue({
+      eme_sub_type:'',
+      eme_sub_id: '',
       eme_exam_id: ''
     });
   }

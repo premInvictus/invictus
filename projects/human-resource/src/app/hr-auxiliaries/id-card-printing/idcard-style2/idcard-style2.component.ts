@@ -39,6 +39,7 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 	showBackSide = false;
 	showParentPhoto = false;
 	showGuardianPhoto = false;
+	photo: any = '';
 	showParentMobile = false;
 	showParentName = false;
 	constructor(private sisService: SisService,
@@ -139,6 +140,8 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 		} else {
 			this.showParentName = false;
 		}
+		this.photo = this.idCardConfig.ps_template_image ?
+			this.idCardConfig.ps_template_image : ''
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {

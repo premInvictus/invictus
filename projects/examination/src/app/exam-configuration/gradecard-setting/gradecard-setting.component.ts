@@ -62,7 +62,9 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_health_status: '',
       gradecard_date: '',
       gradecard_place: '',
-      school_achievement:''
+      school_achievement:'',
+      failure_percentage:'',
+      failure_color:''
     })
   }
   uploadPricipalSign($event) {
@@ -85,7 +87,7 @@ export class GradecardSettingComponent implements OnInit {
 	}
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header', 'gradecard_health_status', 'gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme','gradecard_date','gradecard_place','school_achievement'];
+    param.gs_name = ['gradecard_header', 'gradecard_health_status', 'gradecard_footer','gradecard_principal_signature','gradecard_use_principal_signature', 'gradecard_use_teacher_signature','school_attendance_theme','gradecard_date','gradecard_place','school_achievement','failure_percentage','failure_color'];
     this.examService.getGlobalSetting(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const settings = result.data;

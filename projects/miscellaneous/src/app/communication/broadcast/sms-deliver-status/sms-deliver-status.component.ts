@@ -21,6 +21,7 @@ export class SmsDeliverStatusComponent implements OnInit {
   }
   openModal(data) {
     this.inputData = data;
+    console.log('inputData--', this.inputData);
     let ind = 0;
     this.ELEMENT_DATA = [];
     for (const item of this.inputData) {

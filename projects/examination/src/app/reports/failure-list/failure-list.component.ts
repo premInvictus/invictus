@@ -23,7 +23,7 @@ export class FailureListComponent implements OnInit {
   classterm: any;
   subexamArray: any[] = [];
   tableDivFlag = false;
-  responseMarksArray: any[] = [];
+  responseMarksArray: any = {};
   thead_data: any;
   constructor(
     private fbuild: FormBuilder,
@@ -57,8 +57,12 @@ export class FailureListComponent implements OnInit {
     });
   }
   getExamDetails() {
+    this.paramform.patchValue({
+      eme_exam_id: '',
+      eme_subexam_id: '',
+    });
     this.examArray = [];
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
@@ -127,7 +131,7 @@ export class FailureListComponent implements OnInit {
   getSubExam() {
     this.subexamArray = [];
     if (this.paramform.value.eme_exam_id) {
-      this.examService.getExamDetails({ exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+      this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
             this.subexamArray = result.data[0].exam_sub_exam_max_marks;
@@ -165,7 +169,7 @@ export class FailureListComponent implements OnInit {
   }
   displayData() {
     if (this.paramform.value.eme_exam_id.length > 0) {
-      this.responseMarksArray = [];
+      this.responseMarksArray = {};
       this.tableDivFlag = true;
       this.examService.getFailureList(this.paramform.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
@@ -192,6 +196,10 @@ export class FailureListComponent implements OnInit {
         }
       });
     }
+  }
+
+  isEmptyObject(object){
+    return Object.keys(object).length === 0
   }
 
 }

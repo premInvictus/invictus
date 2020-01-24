@@ -82,6 +82,10 @@ export class IdcardPrintingSetupComponent implements OnInit {
 		this.templateImage = '';
 		this.showTempImage = false;
 	}
+	deleteImageTemp() {
+		this.showTempImage = false;
+		this.templateImage = 'https://www.publicdomainpictures.net/pictures/200000/t2/plain-white-background-1480544970glP.jpg';
+	}
 	buildForm() {
 		this.idcardForm = this.fbuild.group({
 			ps_card_style: '',

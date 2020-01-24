@@ -228,7 +228,7 @@
     float: right;
     position: absolute;
     right: 50px;
-    bottom: 100px;
+    bottom: 70px;
 }
 
 .round-orange-button {
@@ -281,4 +281,10 @@
     float: left;
     padding: 17px;
     border-top: 1px solid #ccc;
+}
+
+.message-textarea {
+    min-height: 80%;
+    min-width: 100%;
+    resize: none; 
 }

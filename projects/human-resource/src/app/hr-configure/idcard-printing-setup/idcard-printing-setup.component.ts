@@ -30,11 +30,15 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	{ id: '2', pos: 'Bottom' },
 	{ id: '3', pos: 'Left' },
 	{ id: '4', pos: 'Right' }];
-	styleArray: any[] = [{ ps_card_style: '1', ps_card_style_name: 'Style 1' },
-	{ ps_card_style: '2', ps_card_style_name: 'Style 2' },
-	{ ps_card_style: '3', ps_card_style_name: 'Style 3' }];
-	layoutArray: any[] = [{ ps_card_layout: '1', ps_card_layout_name: 'Landscape' },
-	{ ps_card_layout: '2', ps_card_layout_name: 'Potrait' }];
+	styleArray: any[] = [
+		// { ps_card_style: '1', ps_card_style_name: 'Style 1' },
+		{ ps_card_style: '2', ps_card_style_name: 'Style 1' },
+		// { ps_card_style: '3', ps_card_style_name: 'Style 3' }
+	];
+	layoutArray: any[] = [
+		{ ps_card_layout: '1', ps_card_layout_name: 'Landscape' },
+		// { ps_card_layout: '2', ps_card_layout_name: 'Potrait' }
+	];
 	addressFontSize: any[] = [];
 	idCardSettings: any;
 	multipleFileArray: any[] = [];
@@ -168,6 +172,10 @@ export class IdcardPrintingSetupComponent implements OnInit {
 				this.commonService.showSuccessErrorMessage('Settings Not Saved', 'error');
 			}
 		});
+	}
+	deleteImageTemp() {
+		this.showTempImage = false;
+		this.templateImage = 'https://www.publicdomainpictures.net/pictures/200000/t2/plain-white-background-1480544970glP.jpg';
 	}
 	getIdCardSettings() {
 		this.idCardSettings = {};
