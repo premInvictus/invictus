@@ -263,10 +263,10 @@
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="sendMessage()" style="margin-left:0 !important">Send Message<i
+                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important">Send Message<i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button>
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="sendMessage()" style="margin-left:0 !important">Update Message <i
+                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important">Update Message <i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button>
                             &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
