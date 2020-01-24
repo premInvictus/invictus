@@ -7,7 +7,7 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { SideNavComponent } from './side-nav/side-nav.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProjectComponent } from './project/project.component';
-import { MatSidenavModule, MatTooltipModule, MatButtonModule } from '@angular/material';
+import { MatSidenavModule, MatTooltipModule, MatButtonModule, MatTableModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { AccordionModule } from 'ngx-bootstrap';
 import { IndianCurrency } from '../_pipes';
@@ -16,7 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
+//import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
+import { NotificationPageComponent } from '../login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -32,9 +33,11 @@ import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
 		MatInputModule,
 		MatTabsModule,
 		MatCardModule,
-		MatIconModule
+		MatIconModule,
+		MatTableModule
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent,IndianCurrency, UserCredentialComponent,TruncatetextPipe],
+	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent, IndianCurrency, UserCredentialComponent,
+		NotificationPageComponent],
 	exports: [
 		TopNavComponent,
 		SideNavComponent,
@@ -45,6 +48,7 @@ import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
 		MatExpansionModule,
 		MatSidenavModule,
 		RouterModule,
+
 	]
 })
 export class InvictusSharedModule { }

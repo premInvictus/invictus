@@ -29,11 +29,21 @@
               </mat-form-field>
               <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                 <mat-label>Section</mat-label>
-                <mat-select formControlName="syl_section_id" (selectionChange)="fetchDetails()" required
+                <mat-select formControlName="syl_section_id" (selectionChange)="getAttendanceEvent()" required
                   placeholder="Select Section">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                     {{item.sec_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                <mat-label>Event</mat-label>
+                <mat-select formControlName="syl_event" (selectionChange)="fetchDetails()" required
+                  placeholder="Select Section">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of eventArray" [value]="item.ae_id">
+                    {{item.ae_name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

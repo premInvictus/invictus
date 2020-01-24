@@ -235,6 +235,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
+            this.displayData();
             this.commonService.showSuccessErrorMessage('Term Attendance Submitted Successfully', 'success');
           } else {
             this.commonService.showSuccessErrorMessage('Error While Submitting Term Attendance', 'error');
@@ -254,6 +255,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
+            this.displayData();
             this.commonService.showSuccessErrorMessage('Term Attendance Updated Successfully', 'success');
           } else {
             this.commonService.showSuccessErrorMessage('Error While Updating Term Attendance', 'error');

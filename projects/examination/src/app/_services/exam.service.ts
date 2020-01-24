@@ -342,6 +342,11 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getFailureList', value);
 	}
+	getAttendanceEvent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAttendanceEvent', value);
+	}
+
 }
 
 

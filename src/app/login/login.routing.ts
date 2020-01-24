@@ -2,7 +2,7 @@
 import { LoginComponent } from '../login/login/login.component';
 
 const routes: Routes = [
-		{ path: '', component: LoginComponent }
+	{ path: '', component: LoginComponent },
 ];
 
 export const loginrouting = RouterModule.forChild(routes);
