@@ -19,7 +19,7 @@
     margin-top: 10px;
     position: absolute;
     background-color: #f9f9f9;
-    max-width: 380px;
+    width: 380px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     padding: 8px 0px;
     z-index: 1111;
@@ -82,5 +82,31 @@ span.invictus {
 }
 .msg_desc{
     font-weight: 600;
+    cursor: pointer;
+}
+.calender-class{
+    font-size: 14px;
+    line-height: 5;
+    padding: 0px !important;
+}
+.desc_class{
+    margin-top: 5px;
+    font-size: 12px;
+    color: #212529a3;
+    cursor: pointer;
+}
+.trash-class{
+    font-size: 12px;
+    text-align: right;
+    cursor: pointer;
+}
+.mat-card{
+    padding: 4px 12px ! important;
+}
+.view_all{
+    color: #267d9d;
+    text-align: center;
+    margin-top: 8px;
+    padding: 0px;
     cursor: pointer;
 }

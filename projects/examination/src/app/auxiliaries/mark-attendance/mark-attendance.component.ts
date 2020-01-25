@@ -21,6 +21,7 @@ export class MarkAttendanceComponent implements OnInit {
 	classArray: any[] = [];
 	sectionArray: any[] = [];
 	studentArray: any[] = [];
+	eventArray: any[] = [];
 	currentUser: any;
 	session: any;
 	formgroupArray: any[] = [];
@@ -62,6 +63,7 @@ export class MarkAttendanceComponent implements OnInit {
 		this.firstForm = this.fbuild.group({
 			syl_class_id: '',
 			syl_section_id: '',
+			syl_event: '',
 			cw_entry_date: this.entry_date
 		});
 		this.attendanceForm = this.fbuild.group({
@@ -106,7 +108,8 @@ export class MarkAttendanceComponent implements OnInit {
 		this.submitFlag = false;
 		this.firstForm.patchValue({
 			'syl_class_id': '',
-			'syl_section_id': ''
+			'syl_section_id': '',
+			'syl_event':''
 		});
 		this.attendanceForm.patchValue({
 			'attendance': ''
@@ -123,6 +126,21 @@ export class MarkAttendanceComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						this.classArray = result.data;
+					}
+				}
+			);
+	}
+	getAttendanceEvent() {
+		this.eventArray = [];
+		this.resetdata();
+		this.firstForm.patchValue({
+			'syl_event': ''
+		});
+		this.examService.getAttendanceEvent({})
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.eventArray = result.data;
 					}
 				}
 			);
@@ -156,6 +174,7 @@ export class MarkAttendanceComponent implements OnInit {
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;
 		studentParam.au_sec_id = this.firstForm.value.syl_section_id;
+		studentParam.au_event_id = this.firstForm.value.syl_event;
 		studentParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
 		studentParam.au_role_id = '4';
 		studentParam.au_status = '1';
@@ -185,6 +204,7 @@ export class MarkAttendanceComponent implements OnInit {
 							this.finalArray.push({
 								class_id: this.firstForm.value.syl_class_id ? this.firstForm.value.syl_class_id : '',
 								sec_id: this.firstForm.value.syl_section_id ? this.firstForm.value.syl_section_id : '',
+								ma_event: this.firstForm.value.syl_event ? this.firstForm.value.syl_event : '',
 								ma_created_date: this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) ? this.commonService.dateConvertion(this.firstForm.value.cw_entry_date) : '',
 								login_id: item.au_login_id ? item.au_login_id : '',
 								roll_no: item.r_rollno ? item.r_rollno : '',
@@ -246,6 +266,7 @@ export class MarkAttendanceComponent implements OnInit {
 			const checkParam: any = {};
 			checkParam.au_class_id = this.firstForm.value.syl_class_id;
 			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+			checkParam.au_event_id = this.firstForm.value.syl_event;
 			checkParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
 			checkParam.au_ses_id = this.session.ses_id;
 			this.examService.checkAttendanceForClass(checkParam).subscribe((result: any) => {

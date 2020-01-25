@@ -20,6 +20,7 @@ import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common
 import { AngularSlickgridModule, CollectionService } from 'angular-slickgrid';
 import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 @NgModule({
 	declarations: [
 		AppComponent,
