@@ -32,6 +32,7 @@ import { NoDataComponent } from './no-data/no-data.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 const moment = _moment;
 import { PopoverModule } from 'ngx-bootstrap/popover';
+import { SortDirective} from '../_directive/sort';
 
 export const MY_FORMATS = {
 	parse: {
@@ -96,7 +97,8 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		NoDataComponent,
 		PreviewDocumentComponent,
-		CommonDynamicChartComponent
+		CommonDynamicChartComponent,
+		SortDirective
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -140,6 +142,7 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ZerodashPipe,
 		NoDataComponent, PreviewDocumentComponent,
+		SortDirective
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

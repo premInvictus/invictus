@@ -53,25 +53,25 @@
   <div class="col-12">
     <mat-card>
       <div class ="table-center">
-      <table mat-table [dataSource]="rollNoDataSource" class="table-100 text-center" *ngIf="defaultFlag">
+      <table mat-table [dataSource]="rollNoDataSource" class="table-100 text-center" [hidden]="!defaultFlag" matSort>
 
         <ng-container matColumnDef="sr_no">
-          <th mat-header-cell *matHeaderCellDef> Sr No. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
           <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
         </ng-container>
 
         <ng-container matColumnDef="au_admission_no">
-          <th mat-header-cell *matHeaderCellDef> Admission No. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Admission No. </th>
           <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
         </ng-container>
 
         <ng-container matColumnDef="au_full_name">
-          <th mat-header-cell *matHeaderCellDef> Student Name </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Student Name </th>
           <td mat-cell *matCellDef="let element" class="text-left margin-left-10"> {{element.au_full_name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="au_roll_no">
-          <th mat-header-cell *matHeaderCellDef style="width:20%"> Roll No. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%"> Roll No. </th>
           <td mat-cell *matCellDef="let element">
             <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
               <input matInput placeholder="Enter Roll No." (change)="onTextChange($event)" type="text" value="{{element.au_roll_no}}" required
@@ -81,7 +81,7 @@
         </ng-container>
 
         <ng-container matColumnDef="au_board_roll_no" *ngIf="firstForm.value.syl_board_id === 0">
-          <th mat-header-cell *matHeaderCellDef style="width:20%"> Board Roll No. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:20%"> Board Roll No. </th>
           <td mat-cell *matCellDef="let element">
             <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
               <input matInput placeholder="Enter Board Roll No." (change)="onTextChange($event)" type="text" value="{{element.au_board_roll_no}}"

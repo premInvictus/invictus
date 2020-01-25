@@ -938,6 +938,12 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.studentDetails = result.data[0];
         this.defaultsrc = this.studentDetails.au_profileimage;
 
+        if(this.studentDetails.height && this.studentDetails.weight) {
+          var heightInMeter = (Number(this.studentDetails.height)/100);
+          var weightInKg = (Number(this.studentDetails.weight));
+          this.studentDetails['bmi'] = (weightInKg/(heightInMeter*heightInMeter)).toFixed(2);
+        }
+
         if (this.studentDetails.active_parent === 'M') {
           this.studentDetails.active_parent_name = this.studentDetails.mother_name;
         } else if (this.studentDetails.active_parent === 'F') {

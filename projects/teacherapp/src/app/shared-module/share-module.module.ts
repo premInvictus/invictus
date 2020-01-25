@@ -58,6 +58,7 @@ import * as _moment from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
+import { SortDirective} from '../_directive/sort';
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -135,7 +136,8 @@ export const MY_FORMATS = {
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
-		MessagesAdvancedSearchModalComponent
+		MessagesAdvancedSearchModalComponent,
+		SortDirective
 	],
 	exports: [
 		DeleteModalComponent,
@@ -191,7 +193,8 @@ export const MY_FORMATS = {
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
-		CKEditorModule
+		CKEditorModule,
+		SortDirective
 	],
 	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
 		ImageViewerComponent,

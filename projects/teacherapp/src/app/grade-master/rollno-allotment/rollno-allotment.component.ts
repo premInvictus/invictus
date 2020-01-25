@@ -4,7 +4,7 @@ import { CommonAPIService, SisService, AxiomService, SmartService } from '../../
 import { ExamService } from '../../_services/exam.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Element } from './rollno.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 
 @Component({
@@ -38,6 +38,7 @@ export class RollnoAllotmentComponent implements OnInit {
     { class_id: 18, class_name: 'X' },
     { class_id: 20, class_name: 'XII' },
   ];
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -55,6 +56,10 @@ export class RollnoAllotmentComponent implements OnInit {
     this.buildForm();
     this.getClass();
     this.ctForClass();
+  }
+
+  ngAfterViewInit() {
+    this.rollNoDataSource.sort = this.sort;
   }
 
   buildForm() {
@@ -180,6 +185,7 @@ export class RollnoAllotmentComponent implements OnInit {
               });
             }
             this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+            this.rollNoDataSource.sort = this.sort;
           } else {
             this.studentArray = [];
           }

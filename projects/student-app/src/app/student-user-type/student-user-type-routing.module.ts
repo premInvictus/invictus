@@ -5,7 +5,7 @@ import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential
 import { AuthGuard } from '../_guards/auth.guard';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 import { MakePaymentComponent } from './../student-fee/make-payment/make-payment.component';
-import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
+//import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -35,7 +35,7 @@ const routes: Routes = [
 			},
 			{ path: 'user-credential', component: UserCredentialComponent },
 			{ path: 'communication', loadChildren: '../student-messages/student-messages.module#StudentMessagesModule' },
-			{ path: 'notification', component: NotificationPageComponent },
+			//{ path: 'notification', component: NotificationPageComponent },
 		]
 	},
 	{
