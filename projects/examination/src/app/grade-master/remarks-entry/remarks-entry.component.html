@@ -91,7 +91,7 @@
                             </mat-select>
                         </mat-form-field>
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-                            *ngIf="paramform.value.ere_remarks_type === 1">
+                            *ngIf="paramform.value.ere_remarks_type === 1 || paramform.value.ere_remarks_type === 2">
                             <mat-label>Sub-Exam</mat-label>
                             <mat-select placeholder="Sub-Exam" formControlName="ere_sub_exam_id" multiple
                                 (selectionChange)="displayData()" required>

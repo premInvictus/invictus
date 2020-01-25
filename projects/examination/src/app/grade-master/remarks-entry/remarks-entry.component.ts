@@ -140,6 +140,8 @@ export class RemarksEntryComponent implements OnInit {
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
+			this.getSubExam();
+			this.getRemarkSet();
 			this.dataReset();
 			this.paramform.patchValue({
 				ere_term_id: '',
