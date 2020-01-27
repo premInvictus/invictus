@@ -67,6 +67,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   dateofdeclaration:any;
   userachivement: any;
   isuserachivement : string;
+  gradingSystem:string = '';
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -385,13 +386,20 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.examService.getClassGradeset({ class_id: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const tempGrade = result.data;
+        console.log('tempGrade--', tempGrade)
+        
         tempGrade.forEach(element => {
           if (element.egs_point_type === '2') {
-            this.GradeSet.push(element);
+            this.gradingSystem = element.egs_name;
+            this.GradeSet.push(element);            
           } else if (element.egs_point_type === '1') {
+            this.gradingSystem = element.egs_name;
             this.GradeSetPoint.push(element)
           }
         });
+
+        console.log('this.GradeSet 2--',this.GradeSet);
+        console.log('this.GradeSet 1--',this.GradeSetPoint);
       }
     })
   }
@@ -752,12 +760,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     }
   }
   calculateGradePoint(sub_id, term) {
+    
     let gradeMarks = 0;
     this.cexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
     const grade = Math.round(gradeMarks / this.cexamArray.length);
     const pointValue = this.GradeSetPoint.find(e => Number(e.egs_grade_value) === grade);
+    console.log('cexamArray--', this.cexamArray,sub_id, term);
+    console.log('gradeMarks--',gradeMarks);
+    console.log('this.GradeSetPoint-', this.GradeSetPoint);
+    console.log('gradeMarks,grade,pointValue',gradeMarks, grade+'-'+pointValue);
     if (pointValue) {
       return pointValue.egs_grade_name;
     }

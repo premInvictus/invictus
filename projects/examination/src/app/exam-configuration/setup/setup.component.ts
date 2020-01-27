@@ -417,15 +417,25 @@ export class SetupComponent implements OnInit {
 						eachElement.grade_value = '';
 						eachElement.range_start = '';
 						eachElement.range_end = '';
-						const tempgradevalue: any[] = [];
+						const tempgradevalue: any[] = [];						
 						for (const det of item.egs_grade_data) {
 							if(item.egs_point_type === '1') {
-								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +')');
+								if (det.egs_grade_text)  {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +') : '+det.egs_grade_text+' ');
+								} else {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +') ');
+								}
+								
 							} else if(item.egs_point_type === '2') {
-								tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +')');
-							}
+								if (det.egs_grade_text)  {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +') : '+det.egs_grade_text+' ');
+								} else {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +') ');
+								}
+							}							
 							
 						}
+
 						eachElement.grade_name = tempgradevalue;
 						that.CONFIG_ELEMENT_DATA.push(eachElement);
 					}
@@ -563,6 +573,7 @@ export class SetupComponent implements OnInit {
 			this.gradeDataFrmArr.push({
 				formGroup: this.fbuild.group({
 					egs_grade_name: '',
+					egs_grade_text:'',
 					egs_grade_value: '',
 					egs_range_start: '',
 					egs_range_end: ''
@@ -588,6 +599,7 @@ export class SetupComponent implements OnInit {
 				formGroup: this.fbuild.group({
 					egs_grade_name: gradeDataTier[i]['egs_grade_name'],
 					egs_grade_value: gradeDataTier[i]['egs_grade_value'],
+					egs_grade_text: gradeDataTier[i]['egs_grade_text'],
 					egs_range_start: gradeDataTier[i]['egs_range_start'],
 					egs_range_end: gradeDataTier[i]['egs_range_end']
 				})

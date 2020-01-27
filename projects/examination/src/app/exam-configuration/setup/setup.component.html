@@ -183,6 +183,21 @@
                                           </mat-select>
                                         </mat-form-field>
                                       </div>
+                                      <div [ngClass]="{
+                                        'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
+                                        'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
+                                      }" style="padding-right: 5px; padding-left: 2px;"
+                                        >
+                                        <mat-form-field class="form-field" appearance="outline">
+                                          <mat-label>Grade Text</mat-label>
+                                          <input matInput placeholder="Enter Grade Text" type="text"
+                                            class="text-capitalize" formControlName="egs_grade_text"
+                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_text').value | capitalize"
+                                            required>
+                                          <mat-error>Please Enter Grade Text</mat-error>
+                                        </mat-form-field>
+                                      </div>
                                     </div>
                                   </div>
                                   <div class="col-1" style="padding-right: 2px; padding-left: 0px;">
