@@ -62,8 +62,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       syl_class_id: '',
       syl_section_id: '',
       syl_term_id: '',
-      syl_exam_id: '',
-      syl_subexam_id: '',
+      syl_exam_id: '0',
+      syl_subexam_id: '0',
     });
   }
 
@@ -169,7 +169,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     this.examService.getExamDetails({
       exam_class: this.attendanceThemeTwoForm.value.syl_class_id,
       term_id: this.attendanceThemeTwoForm.value.syl_term_id,
-      exam_id:this.attendanceThemeTwoForm.value.syl_exam_id,
+      exam_id: this.attendanceThemeTwoForm.value.syl_exam_id,
     }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
@@ -206,44 +206,40 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   }
 
   displayData() {
-    if (!(this.attendanceThemeTwoForm.valid)) {
-      this.commonService.showSuccessErrorMessage('Please Choose Required Fields', 'error');
-    } else {
-      this.formgroupArray = [];
-      this.ELEMENT_DATA = [];
-      this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-      const studentParam: any = {};
-      studentParam.au_class_id = this.attendanceThemeTwoForm.value.syl_class_id;
-      if (Number(this.attendanceThemeTwoForm.value.syl_board_id) === 1) {
-        studentParam.au_sec_id = this.attendanceThemeTwoForm.value.syl_section_id;
-      }
-      studentParam.term_id = this.attendanceThemeTwoForm.value.syl_term_id;
-      studentParam.exam_id = this.attendanceThemeTwoForm.value.syl_exam_id;
-      studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id;
-      studentParam.au_role_id = '4';
-      studentParam.au_status = '1';
-
-      this.examService.getTermAttendance(studentParam)
-        .subscribe(
-          (result: any) => {
-            if (result && result.status === 'ok') {
-              console.log('result--', result);
-              this.studentArray = result.data;
-
-              for (var i = 0; i < result.data.length; i++) {
-                if (result.data[i]['overall_attendance'] || result.data[i]['present_days']) {
-                  this.termDataFlag = true;
-                  break;
-                }
-              }
-
-              this.setGridData();
-            } else {
-              this.termDataFlag = false;
-              this.fetchDetails();
-            }
-          });
+    this.formgroupArray = [];
+    this.ELEMENT_DATA = [];
+    this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    const studentParam: any = {};
+    studentParam.au_class_id = this.attendanceThemeTwoForm.value.syl_class_id;
+    if (Number(this.attendanceThemeTwoForm.value.syl_board_id) === 1) {
+      studentParam.au_sec_id = this.attendanceThemeTwoForm.value.syl_section_id;
     }
+    studentParam.term_id = this.attendanceThemeTwoForm.value.syl_term_id;
+    studentParam.exam_id = this.attendanceThemeTwoForm.value.syl_exam_id ? this.attendanceThemeTwoForm.value.syl_exam_id : '0';
+    studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id? this.attendanceThemeTwoForm.value.syl_subexam_id : '0';
+    studentParam.au_role_id = '4';
+    studentParam.au_status = '1';
+
+    this.examService.getTermAttendance(studentParam)
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
+            console.log('result--', result);
+            this.studentArray = result.data;
+
+            for (var i = 0; i < result.data.length; i++) {
+              if (result.data[i]['overall_attendance'] || result.data[i]['present_days']) {
+                this.termDataFlag = true;
+                break;
+              }
+            }
+            this.setGridData();
+          } else {
+            this.termDataFlag = false;
+            this.fetchDetails();
+          }
+        });
+
 
 
   }
@@ -272,8 +268,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
           session_id: this.session.ses_id,
           created_by: this.currentUser.login_id,
           term_id: this.attendanceThemeTwoForm.value.syl_term_id,
-          exam_id: this.attendanceThemeTwoForm.value.syl_exam_id,
-          subexam_id: this.attendanceThemeTwoForm.value.syl_subexam_id
+          exam_id: this.attendanceThemeTwoForm.value.syl_exam_id ? this.attendanceThemeTwoForm.value.syl_exam_id : '0',
+          subexam_id: this.attendanceThemeTwoForm.value.syl_subexam_id ? this.attendanceThemeTwoForm.value.syl_subexam_id : '0',
         })
       });
     }
