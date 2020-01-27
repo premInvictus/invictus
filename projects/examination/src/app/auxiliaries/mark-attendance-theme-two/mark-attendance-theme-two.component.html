@@ -30,23 +30,23 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                 <mat-label>Term</mat-label>
-                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="getExamDetails();"
-                  required>
+                <mat-select placeholder="Term" formControlName="syl_term_id"
+                  (selectionChange)="getExamDetails();displayData();" required>
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of termsArray" [value]="item?.id">{{item.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                 <mat-label>Exam</mat-label>
-                <mat-select placeholder="Exam" formControlName="syl_exam_id" (selectionChange)="getSubExam();" required>
+                <mat-select placeholder="Exam" formControlName="syl_exam_id"
+                  (selectionChange)="getSubExam();displayData();">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of examArray" [value]="item?.exam_id">{{item.exam_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
               <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                 <mat-label>SubExam</mat-label>
-                <mat-select placeholder="SubExam" formControlName="syl_subexam_id" (selectionChange)="displayData();"
-                  required>
+                <mat-select placeholder="SubExam" formControlName="syl_subexam_id" (selectionChange)="displayData();">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of subexamArray" [value]="item?.se_id">{{item.sexam_name}}</mat-option>
                 </mat-select>
