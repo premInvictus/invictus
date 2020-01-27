@@ -4,6 +4,7 @@ import { AuthGuard } from '../_guards/index';
 import { TeacherDashboardComponent } from './teacher/teacher-dashboard/teacher-dashboard.component';
 import { UserCredentialComponent } from 'src/app/invictus-shared/user-credential/user-credential.component';
 import { ProjectComponent } from '../../../../../src/app/invictus-shared/project/project.component';
+import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -60,7 +61,8 @@ const routes: Routes = [
 			{ path: 'auxillaries', loadChildren: 'projects/teacherapp/src/app/auxillaries/auxillaries.module#AuxillariesModule' },
 			{ path: 'user-credential', component: UserCredentialComponent },
 			{ path: 'grade-master', loadChildren: 'projects/teacherapp/src/app/grade-master/grade-master.module#GradeMasterModule' },
-			{ path: 'communication', loadChildren: 'projects/teacherapp/src/app/teacher-messages/teacher-messages.module#TeacherMessagesModule' }
+			{ path: 'communication', loadChildren: 'projects/teacherapp/src/app/teacher-messages/teacher-messages.module#TeacherMessagesModule' },
+			{ path: 'notification', component: NotificationPageComponent },
 		]
 	},
 ];

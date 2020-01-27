@@ -436,42 +436,45 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			}];
 		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
 			if (result) {
-				if (event.notification_type.module === 'syllabus') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				if (this.currentUser.role_id === '4') {
+					if (event.notification_type.module === 'syllabus') {
+						this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'assignment') {
+						this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'fees') {
+						this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'classwork') {
+						this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'leave') {
+						this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'timetable') {
+						this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+					}
 				}
-				if (event.notification_type.module === 'assignment') {
-					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'fees') {
-					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'classwork') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'leave') {
-					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'timetable') {
-					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
-				}
-			} else {
-				if (event.notification_type.module === 'syllabus') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'assignment') {
-					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'fees') {
-					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'classwork') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'leave') {
-					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'timetable') {
-					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+				if (this.currentUser.role_id === '3') {
+					if (event.notification_type.module === 'syllabus') {
+						this.router.navigate(['../syllabus/add'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'assignment') {
+						this.router.navigate(['../assignment/past-assignments'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'fees') {
+						this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'classwork') {
+						this.router.navigate(['../logentry/view-classwork'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'leave') {
+						this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+					}
+					if (event.notification_type.module === 'timetable') {
+						this.router.navigate(['../auxillaries/classwise-table'], { relativeTo: this.route });
+					}
 				}
 			}
 		});
@@ -494,6 +497,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	viewAll() {
 		this.showNotification = false;
-		this.router.navigate(['student/notification']);
+		if (this.currentUser.role_id === '3') {
+			this.router.navigate(['teacher/notification']);
+		}
+		if (this.currentUser.role_id === '4') {
+			this.router.navigate(['student/notification']);
+		}
+
 	}
 }
