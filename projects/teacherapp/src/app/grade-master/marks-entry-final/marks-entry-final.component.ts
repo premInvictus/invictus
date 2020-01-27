@@ -26,7 +26,12 @@ export class MarksEntryFinalComponent implements OnInit {
   exam_grade_type = '0';
   exam_grade_type_arr: any[] = [];
   classterm: any;
-  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
+  absentData = [
+    { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "AD", "egs_grade_value": "AD", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "NAD", "egs_grade_value": "NAD", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "ML", "egs_grade_value": "ML", "egs_range_start": "0", "egs_range_end": "0" }
+  ];
   currentUser: any;
   subSubjectArray: any[] =[];
   ngOnInit() {
@@ -49,7 +54,7 @@ export class MarksEntryFinalComponent implements OnInit {
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classterm = result.data;
-        this.getSubjectsByClass();
+        //this.getSubjectsByClass();
         console.log(result.data);
 
         result.data.ect_no_of_term.split(',').forEach(element => {
@@ -85,7 +90,9 @@ export class MarksEntryFinalComponent implements OnInit {
     this.examService.getGradeSet(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.exam_grade_type_arr = result.data[0].egs_grade_data;
-        this.exam_grade_type_arr.push(this.absentData);
+        this.absentData.forEach(element => {
+          this.exam_grade_type_arr.push(element);
+        });
       }
     })
   }
@@ -148,7 +155,11 @@ export class MarksEntryFinalComponent implements OnInit {
     this.tableDivFlag = false;
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
       this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
+      const param: any = {};
+      param.au_class_id = this.paramform.value.eme_class_id;
+      param.au_sec_id = this.paramform.value.eme_sec_id;
+      param.sub_id = this.paramform.value.eme_sub_id;
+      this.examService.getRollNoUser(param).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
         } else {
@@ -225,7 +236,7 @@ export class MarksEntryFinalComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage('Invalid input', 'error');
         marktarget.value = '';
       }
-    } else if (mark === 'AB') {
+    } else if (mark === 'AB' || mark === 'AD' || mark === 'NAD' || mark === 'ML') {
       const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
       if (ind !== -1) {
         this.marksInputArray[ind].mark = mark;

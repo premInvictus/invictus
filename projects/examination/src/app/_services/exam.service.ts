@@ -351,6 +351,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getComparativeList', value);
 	}
+	insertExamSexamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertExamSexamAlias', value);
+	}
+	getExamSexamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamSexamAlias', value);
+	}
 }
 
 

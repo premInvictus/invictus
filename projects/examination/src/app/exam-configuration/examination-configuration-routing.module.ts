@@ -6,6 +6,8 @@ import { SubExamComponent } from './sub-exam/sub-exam.component';
 import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting.component';
 import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
+import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-termwise.component';
+
 
 const routes: Routes = [
 	{
@@ -25,6 +27,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'subject-subexam-mapping', component: SubjectSubexamMappingComponent
+	},
+	{
+		path: 'exam-alias-termwise', component: ExamAliasTermwiseComponent
 	}
 ];
 

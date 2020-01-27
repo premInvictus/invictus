@@ -11,6 +11,7 @@ import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
 import { SubjectSubexamModalComponent } from './subject-subexam-mapping/subject-subexam-modal/subject-subexam-modal.component';
 import { ColorPickerModule } from 'ngx-color-picker';
+import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-termwise.component';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 		ExamSharedModule,
 		ColorPickerModule
 	],
-	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent],
+	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent, ExamAliasTermwiseComponent],
 	entryComponents: [SubjectSubexamModalComponent]
 })
 export class ExamConfigurationModule { }
