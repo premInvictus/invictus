@@ -90,6 +90,7 @@ export class RemarksEntryComponent implements OnInit {
 	getSectionsByClass() {
 		this.dataReset();
 		this.paramform.patchValue({
+			ere_sec_id: '',
 			ere_remarks_type: '',
 			ere_term_id: '',
 			ere_sub_id: '',
@@ -187,7 +188,6 @@ export class RemarksEntryComponent implements OnInit {
 				let scholastic_subject: any[] = [];
 				let coscholastic_subject: any[] = [];
 				if (temp.length > 0) {
-
 					temp.forEach(element => {
 						if (element.sub_type === '1') {
 							if (element.sub_parent_id && element.sub_parent_id === '0') {
@@ -214,13 +214,13 @@ export class RemarksEntryComponent implements OnInit {
 						}
 					});
 				}
-
 				for (var i = 0; i < scholastic_subject.length; i++) {
 					this.subjectArray.push(scholastic_subject[i]);
 				}
 				for (var i = 0; i < coscholastic_subject.length; i++) {
 					this.subjectArray.push(coscholastic_subject[i]);
 				}
+				console.log('subjectArray', this.subjectArray);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -228,7 +228,7 @@ export class RemarksEntryComponent implements OnInit {
 	}
 	getExamDetails() {
 		this.examArray = [];
-		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id:this.paramform.value.ere_term_id }).subscribe((result: any) => {
+		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
 			} else {
@@ -297,7 +297,7 @@ export class RemarksEntryComponent implements OnInit {
 		return this.subexamArray.find(e => e.se_id === se_id).sexam_name;
 	}
 	displayData() {
-		if (this.paramform.value.ere_sub_exam_id.length > 0) {
+		if (this.paramform.value.ere_sub_exam_id.length > 0 && Number(this.paramform.value.ere_remarks_type) === 1) {
 			this.tableDivFlag = true;
 			this.responseMarksArray = [];
 			this.formGroupArray = [];
@@ -489,6 +489,7 @@ export class RemarksEntryComponent implements OnInit {
 		}
 	}
 	enterInputMarks(es_id, login_id, mark) {
+		this.submitFlag = true;
 		const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
 		if (ind !== -1) {
 			this.marksInputArray[ind].mark = mark;
@@ -521,86 +522,86 @@ export class RemarksEntryComponent implements OnInit {
 	saveForm(status = '0') {
 		this.editTable = false;
 		this.remarkArray = [];
-			let i = 0;
-			for (const item of this.formGroupArray) {
-				let j = 0;
-				for (const det of item.formGroup) {
-					if (det.value['sdesc' + i + j] !== '') {
+		let i = 0;
+		for (const item of this.formGroupArray) {
+			let j = 0;
+			for (const det of item.formGroup) {
+				if (det.value['sdesc' + i + j] !== '') {
+					this.remarkArray.push(
+						{
+							es_id: det.value.s_id,
+							login_id: det.value.login_id,
+							mark: det.value['sdesc' + i + j]
+						}
+					);
+				} else {
+					const ind = this.marksInputArray.findIndex(e => e.login_id === det.value.login_id && e.es_id === det.value.s_id);
+					if (ind !== -1) {
 						this.remarkArray.push(
 							{
 								es_id: det.value.s_id,
 								login_id: det.value.login_id,
-								mark: det.value['sdesc' + i + j]
+								mark: this.marksInputArray[ind].remarks
 							}
 						);
-					} else {
-						const ind = this.marksInputArray.findIndex(e => e.login_id === det.value.login_id && e.es_id === det.value.s_id);
-						if (ind !== -1) {
-							this.remarkArray.push(
-								{
-									es_id: det.value.s_id,
-									login_id: det.value.login_id,
-									mark: this.marksInputArray[ind].remarks
-								}
-							);
-						}
 					}
-					j++;
 				}
-				i++;
+				j++;
 			}
-			const param: any = {};
-			param.examEntry = this.paramform.value;
-			param.examEntryMapping = this.remarkArray;
-			param.examEntryStatus = status;
-			param.externalFlag = '0';
-			this.examService.addReMarksEntry(param).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.displayData();
-				}
-			});
+			i++;
+		}
+		const param: any = {};
+		param.examEntry = this.paramform.value;
+		param.examEntryMapping = this.remarkArray;
+		param.examEntryStatus = status;
+		param.externalFlag = '0';
+		this.examService.addReMarksEntry(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.displayData();
+			}
+		});
 	}
 	saveForm2(status = '0') {
 		this.editTable = false;
 		this.remarksEntry = [];
 		let check_valid = false;
-		check_valid = this.subjectWiseRemark ? (this.paramform.value.ere_exam_id && this.paramform.value.ere_sub_id) : (this.paramform.value.ere_exam_id ? true : false);
+		check_valid = Number(this.examType) === 1 && this.subjectWiseRemark ? (this.paramform.value.ere_sub_id ? true: false) : (this.paramform.value.ere_term_id ? true : false);
 		if (check_valid) {
-		for (const item of this.formGroupArray2) {
-			for (const det of item.formGroup) {
-				if (det.value.remark !== '') {
-					this.remarksEntry.push(
-						{
-							erem_login_id: det.value.login_id,
-							erem_remark: det.value.remark
-						}
-					);
-				} else {
-					const ind = this.remarkInputArray.findIndex(e => e.login_id === det.value.login_id);
-					if (ind !== -1) {
+			for (const item of this.formGroupArray2) {
+				for (const det of item.formGroup) {
+					if (det.value.remark !== '') {
 						this.remarksEntry.push(
 							{
 								erem_login_id: det.value.login_id,
-								erem_remark: this.remarkInputArray[ind].remarks
+								erem_remark: det.value.remark
 							}
 						);
+					} else {
+						const ind = this.remarkInputArray.findIndex(e => e.login_id === det.value.login_id);
+						if (ind !== -1) {
+							this.remarksEntry.push(
+								{
+									erem_login_id: det.value.login_id,
+									erem_remark: this.remarkInputArray[ind].remarks
+								}
+							);
+						}
 					}
 				}
 			}
+			const param: any = {};
+			param.examEntry = this.paramform.value;
+			param.examEntryMapping = this.remarksEntry;
+			param.examEntryStatus = status;
+			param.externalFlag = '1';
+			this.examService.addReMarksEntry(param).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.displayExternalType();
+				}
+			});
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
 		}
-		const param: any = {};
-		param.examEntry = this.paramform.value;
-		param.examEntryMapping = this.remarksEntry;
-		param.examEntryStatus = status;
-		param.externalFlag = '1';
-		this.examService.addReMarksEntry(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.displayExternalType();
-			}
-		});
-	} else {
-		this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
-	}
 
 	}
 	changeFlagStatus() {
