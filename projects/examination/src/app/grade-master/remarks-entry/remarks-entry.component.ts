@@ -130,7 +130,7 @@ export class RemarksEntryComponent implements OnInit {
 			this.tableDivFlag = false;
 			this.getSubjectsByClass();
 			this.getClassTerm();
-			this.getSubExam();
+			// this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
 		} else {
@@ -140,7 +140,7 @@ export class RemarksEntryComponent implements OnInit {
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
-			this.getSubExam();
+			// this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
 			this.paramform.patchValue({
@@ -238,9 +238,9 @@ export class RemarksEntryComponent implements OnInit {
 	}
 	getSubExam() {
 		this.subexamArray = [];
-		this.examService.getSubExam({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.subexamArray = result.data;
+		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id:this.paramform.value.ere_term_id, exam_id : this.paramform.value.ere_exam_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok' && result.data && result.data[0]) {
+				this.subexamArray = result.data[0].exam_sub_exam_max_marks;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}

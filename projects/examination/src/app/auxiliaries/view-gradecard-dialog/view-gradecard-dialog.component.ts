@@ -153,6 +153,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.term_id = this.data.param.eme_term_id;
     param.class_id = this.data.param.eme_class_id;
     param.sec_id = this.data.param.eme_sec_id;
+
+    if (this.data.param.eme_exam_id) {
+      param.exam_id = this.data.param.eme_exam_id;
+    }
+    if (this.data.param.eme_subexam_id) {
+      param.subexam_id = this.data.param.eme_subexam_id;
+    }
+
     this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
       //console.log(result1);
       if (result1 && result1.status === 'ok') {
@@ -255,6 +263,12 @@ export class ViewGradecardDialogComponent implements OnInit {
       } else {
         param.ere_sub_id = sub_id;
       }      
+    }
+    if (this.data.param.eme_exam_id) {
+      param.ere_exam_id = this.data.param.eme_exam_id;
+    }
+    if (this.data.param.eme_subexam_id) {
+      param.ere_sub_exam_id = this.data.param.eme_subexam_id;
     }
     param.erem_login_id = this.data.au_login_id;
     this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {

@@ -84,7 +84,7 @@
                             *ngIf="paramform.value.ere_remarks_type !== ''">
                             <mat-label>Exam</mat-label>
                             <mat-select placeholder="Exam" formControlName="ere_exam_id" 
-                            (selectionChange)="displayExternalType2()"
+                            (selectionChange)="getSubExam();displayExternalType2()"
                             required>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
                                 </mat-option>
