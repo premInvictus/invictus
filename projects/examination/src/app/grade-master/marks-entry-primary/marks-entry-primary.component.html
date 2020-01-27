@@ -107,9 +107,9 @@
             <table class="custom-table">
                 <thead>
                     <tr class="custom-tr">
-                        <th rowspan="2" class="custom-th text-center" width="100">Roll No.</th>
-                        <th rowspan="2" class="custom-th text-center" width="250">Student name</th>
-                        <th rowspan="2" class="custom-th text-center" width="100">Admission</th>
+                        <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">Roll No.  <i class="fas fa-sort"></i></th>
+                        <th rowspan="2" class="custom-th text-center" width="250" sortColumn [sortKey]="'au_full_name'" [data]="studentArray">Student name  <i class="fas fa-sort"></i></th>
+                        <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'au_admission_no'" [data]="studentArray">Admission  <i class="fas fa-sort"></i></th>
                         <th [attr.colspan]="paramform.value.eme_subexam_id.length" class="custom-th text-center">
                             {{getSubjectName() | titlecase}}</th>
                     </tr>

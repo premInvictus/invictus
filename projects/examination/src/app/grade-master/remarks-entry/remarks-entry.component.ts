@@ -38,6 +38,7 @@ export class RemarksEntryComponent implements OnInit {
 		{ rt_id: 1, rt_name: 'Internal Type' },
 		{ rt_id: 2, rt_name: 'External Type' }
 	];
+	sortUp = false;
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
@@ -139,6 +140,8 @@ export class RemarksEntryComponent implements OnInit {
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
+			this.getSubExam();
+			this.getRemarkSet();
 			this.dataReset();
 			this.paramform.patchValue({
 				ere_term_id: '',
@@ -623,6 +626,10 @@ export class RemarksEntryComponent implements OnInit {
 				return true;
 			}
 		}
+	}
+
+	changeSortIcon() {
+		this.sortUp = !this.sortUp;
 	}
 }
 

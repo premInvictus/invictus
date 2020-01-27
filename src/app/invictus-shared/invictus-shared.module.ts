@@ -17,7 +17,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 //import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
-import { NotificationPageComponent } from '../login/notification-page/notification-page.component';
+//import { NotificationPageComponent } from '../login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -37,7 +37,7 @@ import { NotificationPageComponent } from '../login/notification-page/notificati
 		MatTableModule
 	],
 	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent, IndianCurrency, UserCredentialComponent,
-		NotificationPageComponent],
+		], //NotificationPageComponent
 	exports: [
 		TopNavComponent,
 		SideNavComponent,

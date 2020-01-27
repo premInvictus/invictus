@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Element } from './rollno.model';
-import { MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { CommonModule } from '@angular/common';
 
@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 	templateUrl: './rollno-allotment.component.html',
 	styleUrls: ['./rollno-allotment.component.css']
 })
-export class RollnoAllotmentComponent implements OnInit {
+export class RollnoAllotmentComponent implements OnInit,AfterViewInit {
 	defaultFlag = false;
 	finalDivFlag = true;
 	submitFlag = false;
@@ -36,6 +36,7 @@ export class RollnoAllotmentComponent implements OnInit {
 		{ class_id: 18, class_name: 'X' },
 		{ class_id: 20, class_name: 'XII' },
 	];
+	@ViewChild(MatSort) sort: MatSort;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -51,6 +52,10 @@ export class RollnoAllotmentComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
+	}
+
+	ngAfterViewInit() {
+		this.rollNoDataSource.sort = this.sort;
 	}
 
 	buildForm() {
@@ -170,6 +175,7 @@ export class RollnoAllotmentComponent implements OnInit {
 							});
 						}
 						this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+						this.rollNoDataSource.sort = this.sort;
 					} else {
 						this.commonService.showSuccessErrorMessage('No record found', 'error');
 						this.finalCancel();
