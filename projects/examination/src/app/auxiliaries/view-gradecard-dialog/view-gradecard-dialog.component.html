@@ -1335,12 +1335,12 @@
                     <table>
                         <thead>
                             <tr><br></tr>
-                            <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1">
+                            <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1 && remarkOfSub()">
                                 <td width="20%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
                             </tr>
-                            <tr *ngIf="data.ect_exam_type == 2">
+                            <tr *ngIf="data.ect_exam_type == 2 && remarkOfSub()">
                                 <td width="20%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
