@@ -53,6 +53,7 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -112,7 +113,8 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
-		DeleteModalComponent
+		DeleteModalComponent,
+		NotificationPageComponent
 	],
 	exports: [
 		MatProgressBarModule,
