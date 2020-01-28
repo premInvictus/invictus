@@ -17,7 +17,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 //import { TruncatetextPipe } from '../_pipes/truncatetext.pipe'
-//import { NotificationPageComponent } from '../login/notification-page/notification-page.component';
+import { NotificationPageComponent } from '../login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -36,8 +36,8 @@ import { MatIconModule } from '@angular/material/icon';
 		MatIconModule,
 		MatTableModule
 	],
-	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent, IndianCurrency, UserCredentialComponent,
-		], //NotificationPageComponent
+	declarations: [TopNavComponent, SideNavComponent, FooterComponent, ProjectComponent, IndianCurrency, UserCredentialComponent, NotificationPageComponent
+	], 
 	exports: [
 		TopNavComponent,
 		SideNavComponent,
@@ -47,8 +47,7 @@ import { MatIconModule } from '@angular/material/icon';
 		MatMenuModule,
 		MatExpansionModule,
 		MatSidenavModule,
-		RouterModule,
-
+		RouterModule
 	]
 })
 export class InvictusSharedModule { }

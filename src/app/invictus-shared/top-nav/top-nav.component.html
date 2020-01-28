@@ -69,7 +69,7 @@
                 <!-- </div>
             <div styple="position:relative"> -->
                 <div class="dropdown-content-2"
-                    *ngIf="showNotification && currentUser.role_id === '4' && notficationMsg.length > 0">
+                    *ngIf="showNotification && currentUser.role_id !=='2' && currentUser.role_id !=='1' && notficationMsg.length > 0">
                     <div class="row" style="margin-top: 0px;" *ngIf="notficationMsg.length > 0">
                         <div class="col-12">
                             <div class="notfication">
