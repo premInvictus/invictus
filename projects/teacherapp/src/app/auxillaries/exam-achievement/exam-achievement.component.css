@@ -1,0 +1,16 @@
+table {
+    width: 70%;
+}
+.table-center{
+    padding-left: 15%;
+    padding-right: 15%;
+}
+.mat-column-sr_no{
+    width: 3% !important;
+}
+.mat-column-au_admission_no{
+    width: 8% !important;
+}
+.mat-column-au_full_name{
+    width: 20% !important;
+}

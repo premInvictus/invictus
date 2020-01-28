@@ -5,7 +5,7 @@ import { GradeMasterRoutingModule } from './grade-master-routing.module';
 import { StudentAcademicProfileComponent } from './student-academic-profile/student-academic-profile.component';
 import { MarksEntryComponent } from './marks-entry/marks-entry.component';
 import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
-import { ReviewComponent, ReviewDialog } from './review/review.component';
+
 import { ExamSharedModule } from '../exam-shared/exam-shared.module';
 import { MarksEntryPrimaryComponent } from './marks-entry-primary/marks-entry-primary.component';
 import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entry-secondary.component';
@@ -20,9 +20,9 @@ import { ResultEntryComponent } from './result-entry/result-entry.component';
     GradeMasterRoutingModule,
     ExamSharedModule
   ],
-  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent, MarkEntrySubmitDialogComponent,ResultEntryComponent],
+  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent,  MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent, MarkEntrySubmitDialogComponent,ResultEntryComponent],
   entryComponents: [
-    ReviewDialog, MarkEntrySubmitDialogComponent
+     MarkEntrySubmitDialogComponent
   ],
 })
 export class GradeMasterModule { }

@@ -11,3 +11,4 @@ export * from './userAccessMenu.service';
 export * from './smart.service';
 export * from './sis.service';
 export * from './axiom.service';
+export * from './exam.service';
