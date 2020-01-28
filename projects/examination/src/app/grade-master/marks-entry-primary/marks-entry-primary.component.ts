@@ -28,7 +28,12 @@ export class MarksEntryPrimaryComponent implements OnInit {
   exam_grade_type_arr: any[] = [];
   subSubjectArray: any[] = [];
   classterm: any;
-  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
+  absentData = [
+    { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "AD", "egs_grade_value": "AD", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "NAD", "egs_grade_value": "NAD", "egs_range_start": "0", "egs_range_end": "0" },
+    { "egs_grade_name": "ML", "egs_grade_value": "ML", "egs_range_start": "0", "egs_range_end": "0" }
+  ];
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -84,7 +89,9 @@ export class MarksEntryPrimaryComponent implements OnInit {
     this.examService.getGradeSet(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.exam_grade_type_arr = result.data[0].egs_grade_data;
-        this.exam_grade_type_arr.push(this.absentData);
+        this.absentData.forEach(element => {
+          this.exam_grade_type_arr.push(element);
+        });
       }
     })
   }
@@ -342,7 +349,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage('Invalid input', 'error');
         marktarget.value = '';
       }
-    } else if (mark === 'AB') {
+    } else if (mark === 'AB'  || mark === 'AD' || mark === 'NAD' || mark === 'ML') {
       const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
       if (ind !== -1) {
         this.marksInputArray[ind].mark = mark;

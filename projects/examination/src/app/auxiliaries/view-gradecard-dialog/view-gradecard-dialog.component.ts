@@ -67,6 +67,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   dateofdeclaration:any;
   userachivement: any;
   isuserachivement : string;
+  gradingSystem:string = '';
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -153,6 +154,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.term_id = this.data.param.eme_term_id;
     param.class_id = this.data.param.eme_class_id;
     param.sec_id = this.data.param.eme_sec_id;
+
+    if (this.data.param.eme_exam_id) {
+      param.exam_id = this.data.param.eme_exam_id;
+    }
+    if (this.data.param.eme_subexam_id) {
+      param.subexam_id = this.data.param.eme_subexam_id;
+    }
+
     this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
       //console.log(result1);
       if (result1 && result1.status === 'ok') {
@@ -255,6 +264,12 @@ export class ViewGradecardDialogComponent implements OnInit {
       } else {
         param.ere_sub_id = sub_id;
       }      
+    }
+    if (this.data.param.eme_exam_id) {
+      param.ere_exam_id = this.data.param.eme_exam_id;
+    }
+    if (this.data.param.eme_subexam_id) {
+      param.ere_sub_exam_id = this.data.param.eme_subexam_id;
     }
     param.erem_login_id = this.data.au_login_id;
     this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
@@ -371,13 +386,20 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.examService.getClassGradeset({ class_id: this.data.class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const tempGrade = result.data;
+        console.log('tempGrade--', tempGrade)
+        
         tempGrade.forEach(element => {
           if (element.egs_point_type === '2') {
-            this.GradeSet.push(element);
+            this.gradingSystem = element.egs_name;
+            this.GradeSet.push(element);            
           } else if (element.egs_point_type === '1') {
+            this.gradingSystem = element.egs_name;
             this.GradeSetPoint.push(element)
           }
         });
+
+        console.log('this.GradeSet 2--',this.GradeSet);
+        console.log('this.GradeSet 1--',this.GradeSetPoint);
       }
     })
   }
@@ -738,12 +760,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     }
   }
   calculateGradePoint(sub_id, term) {
+    
     let gradeMarks = 0;
     this.cexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
     const grade = Math.round(gradeMarks / this.cexamArray.length);
     const pointValue = this.GradeSetPoint.find(e => Number(e.egs_grade_value) === grade);
+    console.log('cexamArray--', this.cexamArray,sub_id, term);
+    console.log('gradeMarks--',gradeMarks);
+    console.log('this.GradeSetPoint-', this.GradeSetPoint);
+    console.log('gradeMarks,grade,pointValue',gradeMarks, grade+'-'+pointValue);
     if (pointValue) {
       return pointValue.egs_grade_name;
     }

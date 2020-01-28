@@ -19,7 +19,7 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Section</mat-label>
                             <mat-select placeholder="Section" formControlName="eme_sec_id"
-                                (selectionChange)="getSubjectsByClass();getRollNoUser()" required>
+                                (selectionChange)="getSubjectsByClass();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                                 </mat-option>
@@ -91,7 +91,9 @@
 <div class="row" *ngIf="tableDivFlag">
     <div class="col-12 text-right">
         <mat-card>
-            AB-Absent
+            <div class="text-right center-mr">
+                AB-Absent, AD-Advantage, NAD-New Admission, ML-Medical Leave
+            </div>
         </mat-card>
     </div>
     <div class="col-12">

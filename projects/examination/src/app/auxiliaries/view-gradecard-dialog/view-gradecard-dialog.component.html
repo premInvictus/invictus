@@ -82,19 +82,19 @@
                 <div class="col-2">
                     <table>
                         <tr>
-                            <td><span>Total Working Meetings</span></td>
+                            <td><span>Total Meetings</span></td>
                             <td><span>:</span></td>
                             <td>{{totalworkingdays}}</td>
                         </tr>
                         <tr>
-                            <td><span>No. of Meetings Present</span></td>
+                            <td><span>Meetings Present</span></td>
                             <td><span>:</span></td>
                             <td>{{totalpresentday}}</td>
                         </tr>
                         <tr>
                             <td><span>Attendance (%)</span></td>
                             <td><span>:</span></td>
-                            <td>{{attendenceInPercent}}%</td>
+                            <td>{{attendenceInPercent}}</td>
                         </tr>
 
                     </table>
@@ -128,16 +128,17 @@
                         <tr>
                             <td class="text-center">
 
-                                <img style="width: 80px; height: 100px;margin-top:-48px;margin-left:28%" [src]="defaultsrc"
+                                <img style="width: 80px; height: 100px;margin-top:-48px;margin-left:28%"
+                                    [src]="defaultsrc"
                                     onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
 
                             </td>
                         </tr>
-                       
+
                         <tr>
                             <td><span>Admission No.</span></td>
                             <td><span>:</span></td>
-                            <td>{{studentDetails.em_admission_no}}</td>
+                            <td>{{studentDetails?.em_admission_no}}</td>
                         </tr>
                     </table>
                 </div>
@@ -155,7 +156,7 @@
                                         <thead>
                                             <tr class="custom-tr">
                                                 <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic Areas A</th>
+                                                    Scholastic Area A</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="(sexamArray[0].exam_sub_exam_max_marks.length) * 2"
                                                         class="custom-th text-center">
@@ -250,7 +251,7 @@
                                         <thead>
                                             <tr class="custom-tr">
                                                 <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic Areas B</th>
+                                                    Scholastic Area B</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="(sexamArray[0].exam_sub_exam_max_marks.length) * 2"
                                                         class="custom-th text-center">
@@ -349,7 +350,7 @@
                                     <table class="table-100 custom-table" style="margin-bottom: 15px">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Areas A</th>
+                                                <th class="custom-th text-center" width="200px">Scholastic Area A</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray[0].exam_sub_exam_max_marks.length"
                                                         class="custom-th text-center">
@@ -394,7 +395,7 @@
                                     <table class="table-100 custom-table" style="margin-bottom: 15px">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Areas B</th>
+                                                <th class="custom-th text-center" width="200px">Scholastic Area B</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray[0].exam_sub_exam_max_marks.length"
                                                         class="custom-th text-center">
@@ -455,7 +456,7 @@
                                             <tr class="custom-tr">
                                                 <th [attr.colspan]="2" class="custom-th text-center" width="200px">
                                                     Scholastic
-                                                    Areas A</th>
+                                                    Area A</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray.length + exambifurcateCount + obtainedGradeAvgHighestCount"
                                                         class="custom-th text-center">
@@ -614,7 +615,7 @@
                                             <tr class="custom-tr">
                                                 <th [attr.colspan]="2" class="custom-th text-center" width="200px">
                                                     Scholastic
-                                                    Areas B</th>
+                                                    Area B</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray.length + exambifurcateCount + obtainedGradeAvgHighestCount"
                                                         class="custom-th text-center">
@@ -768,12 +769,22 @@
 
                             </div>
                             <!-- co-scholstic exam Subjectwise bifurcation -->
-                            <div class="col-6" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
+                            <div class="col-12" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
                                 <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','A', subjectArray)">
                                     <table class="custom-table table-100">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px">Co-Scholastic Areas A
+                                                <th class="custom-th text-left padding-left-8px"> &nbsp;Co-Scholastic
+                                                    Area A &nbsp;
+                                                    <span *ngIf="GradeSetPoint.length>0" class="coscholastic-grade"> 
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}} </span> 
+                                                            
+                                                        </span>
+                                                        )
+                                                    </span>
+
                                                 </th>
                                                 <th class="custom-th text-center">Grade</th>
                                             </tr>
@@ -797,7 +808,18 @@
                                     <table class="custom-table table-100">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px">Co-Scholastic Areas B
+                                                <th class="custom-th padding-left-8px text-left"> &nbsp;Co-Scholastic
+                                                    Area B&nbsp;
+                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint"
+                                                            style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span
+                                                                *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}}                                                                 
+                                                            </span>
+                                                        </span>
+                                                        )
+                                                    </span>
                                                 </th>
                                                 <th class="custom-th text-center">Grade</th>
                                             </tr>
@@ -827,7 +849,7 @@
                                     <table class="table-100 custom-table" style="margin-bottom: 15px">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Areas A</th>
+                                                <th class="custom-th text-center" width="200px">Scholastic Area A</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray.length + obtainedGradeAvgHighestCount"
                                                         class="custom-th text-center">
@@ -913,7 +935,7 @@
                                     <table class="table-100 custom-table" style="margin-bottom: 15px">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Areas B</th>
+                                                <th class="custom-th text-center" width="200px">Scholastic Area B</th>
                                                 <ng-container *ngIf="term == data.param.eme_term_id">
                                                     <th [attr.colspan]="sexamArray.length + obtainedGradeAvgHighestCount"
                                                         class="custom-th text-center">
@@ -996,12 +1018,22 @@
 
                             </div>
                             <!-- co-scholstic exam not Subjectwise bifurcation -->
-                            <div class="col-6" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
+                            <div class="col-12" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
                                 <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','A', subjectArray)">
                                     <table class="custom-table table-100">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px">Co-Scholastic Areas A
+                                                <th class="custom-th text-left padding-left-8px"> &nbsp;Co-Scholastic
+                                                    Area A&nbsp;
+                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span
+                                                                *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}}
+                                                            </span>
+                                                        </span>
+                                                        )
+                                                    </span>
                                                 </th>
                                                 <th class="custom-th text-center">Grade</th>
                                             </tr>
@@ -1024,7 +1056,15 @@
                                     <table class="custom-table table-100">
                                         <thead>
                                             <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px">Co-Scholastic Areas B
+                                                <th class="custom-th padding-left-8px text-left"> &nbsp;Co-Scholastic
+                                                    Area B&nbsp;
+                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text"> - {{item?.egs_grade_text}}</span>
+                                                        </span>
+                                                        )
+                                                    </span>
                                                 </th>
                                                 <th class="custom-th text-center">Grade</th>
                                             </tr>
@@ -1056,7 +1096,7 @@
                                         <tr class="custom-tr">
                                             <th [attr.colspan]="2" class="custom-th text-center" width="200px">
                                                 Scholastic
-                                                Areas A</th>
+                                                Area A</th>
                                             <ng-container *ngIf="obtainedGradeAvgHighest.remark">
                                                 <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}}
                                                 </th>
@@ -1132,7 +1172,7 @@
                                         <tr class="custom-tr">
                                             <th [attr.colspan]="2" class="custom-th text-center" width="200px">
                                                 Scholastic
-                                                Areas B</th>
+                                                Area B</th>
                                             <ng-container *ngIf="obtainedGradeAvgHighest.remark">
                                                 <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}}
                                                 </th>
@@ -1209,16 +1249,16 @@
                                     <thead>
                                         <tr class="custom-tr">
                                             <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-center">
-                                                    Co-Scholastic Areas A
+                                                <th width="40%" [attr.colspan]="2" class="custom-th text-left">
+                                                    &nbsp;Co-Scholastic Area A
                                                 </th>
                                                 <th width="5%" class="custom-th text-center">Grade</th>
                                                 <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
                                                     class="custom-th text-center">Remark</th>
                                             </ng-container>
                                             <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-center">
-                                                    Co-Scholastic Areas A
+                                                <th width="80%" [attr.colspan]="2" class="custom-th text-left">
+                                                    &nbsp;Co-Scholastic Area A
                                                 </th>
                                                 <th width="20%" class="custom-th text-center">Grade</th>
                                             </ng-container>
@@ -1269,16 +1309,16 @@
                                     <thead>
                                         <tr class="custom-tr">
                                             <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-center">
-                                                    Co-Scholastic Areas B
+                                                <th width="40%" [attr.colspan]="2" class="custom-th text-left">
+                                                    &nbsp;Co-Scholastic Area B
                                                 </th>
                                                 <th width="5%" class="custom-th text-center">Grade</th>
                                                 <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
                                                     class="custom-th text-center">Remark</th>
                                             </ng-container>
                                             <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-center">
-                                                    Co-Scholastic Areas B
+                                                <th width="80%" [attr.colspan]="2" class="custom-th text-left">
+                                                    &nbsp;Co-Scholastic Area B
                                                 </th>
                                                 <th width="20%" class="custom-th text-center">Grade</th>
                                             </ng-container>
@@ -1335,26 +1375,26 @@
                     <table>
                         <thead>
                             <tr><br></tr>
-                            <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1">
+                            <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1 && remarkOfSub()">
                                 <td width="20%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
                             </tr>
-                            <tr *ngIf="data.ect_exam_type == 2">
+                            <tr *ngIf="data.ect_exam_type == 2 && remarkOfSub()">
                                 <td width="20%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
                             </tr>
-                            <tr *ngIf="isuserachivement == '1' && userachivement.a_achievement != ''">
+                            <tr *ngIf="isuserachivement == '1' && userachivement?.a_achievement != ''">
                                 <td width="20%" valign="top">Achievement</td>
                                 <td width="1%" valign="top">:</td>
-                                <td> {{userachivement.a_achievement | titlecase}}</td>
+                                <td> {{userachivement?.a_achievement | titlecase}}</td>
                             </tr>
                             <tr><br></tr>
                             <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
                                 <td style="text-align: left">Result</td>
                                 <td>:</td>
-                                <td> {{getPassResult(data.param.eme_term_id)}}</td>
+                                <td> {{getPassResult(data?.param?.eme_term_id)}}</td>
                             </tr>
                         </thead>
                     </table>
@@ -1407,9 +1447,10 @@
             </div>
             <hr>
             <div class="row"
-                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
+                *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
                 <div class="col-12">
-                    <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a 8-pont grading
+                    <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a
+                        {{gradingSystem}}
                         scale as
                         follows</span>
                 </div>
@@ -1434,8 +1475,39 @@
                                     </th>
                                     <td *ngFor="let item of GradeSet"
                                         style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item.egs_grade_name | titlecase}}</td>
+                                        {{item?.egs_grade_name | titlecase}}
+                                        <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
+                                    </td>
                                 </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row"
+                *ngIf="data.ect_exam_type == 1 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
+                <div class="col-12">
+
+                    <div style="margin-top: 15px; text-align: center; width: 100%;">
+                        <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
+                            <tbody>
+                                <tr>
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                        Name </th>
+                                    <td *ngFor="let item of GradeSetPoint"
+                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                        {{item?.egs_grade_name}} ( {{item?.egs_grade_text}} )
+                                    </td>
+                                </tr>
+                                <!-- <tr>
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade Text
+                                    </th>
+                                    <td *ngFor="let item of GradeSetPoint"
+                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                        <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
+                                    </td>
+                                </tr> -->
 
                             </tbody>
                         </table>

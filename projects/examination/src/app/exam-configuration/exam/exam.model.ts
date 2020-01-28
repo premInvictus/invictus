@@ -7,6 +7,7 @@ export interface Element {
 		exam_sub_exam_max_marks: any;
 		exam_calculation_rule: any;
 		exam_weightage: any;
+		is_noncore: any;
 		exam_bifurcate:any;
 		status: any;
 		action: any;
