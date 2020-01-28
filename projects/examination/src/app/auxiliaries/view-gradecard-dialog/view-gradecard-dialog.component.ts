@@ -686,11 +686,12 @@ export class ViewGradecardDialogComponent implements OnInit {
     let gradeValue = '';
     for (let index = 0; index < this.GradeSet.length; index++) {
       const element = this.GradeSet[index];
-      if (gradePercentage >= Number(element.egs_range_start) && grade <= Number(element.egs_range_end)) {
+      if (gradePercentage >= parseInt(element.egs_range_start,10) && parseInt(grade) <= parseInt(element.egs_range_end,10)) {
         gradeValue = element.egs_grade_name;
         break;
       }
     }
+    console.log(gradeValue);
     return gradeValue;
   }
   getSubjectPassResult(sub_id, term) {

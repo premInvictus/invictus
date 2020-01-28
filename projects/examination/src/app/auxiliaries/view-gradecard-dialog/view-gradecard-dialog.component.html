@@ -1471,7 +1471,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
+                                        Name
                                     </th>
                                     <td *ngFor="let item of GradeSet"
                                         style="border: 1px solid black;border-collapse: collapse;padding: 5px">
@@ -1493,11 +1494,11 @@
                         <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
                             <tbody>
                                 <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
                                         Name </th>
                                     <td *ngFor="let item of GradeSetPoint"
                                         style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item?.egs_grade_name}} ( {{item?.egs_grade_text}} )
+                                        {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
                                     </td>
                                 </tr>
                                 <!-- <tr>
