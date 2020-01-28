@@ -119,24 +119,26 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				this.totalRecords = Number(result.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of temparray) {
-					this.CHEQUE_ELEMENT_DATA.push({
-						srno: pos,
-						class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
-						chequeno: item.cheque_no,
-						admno: item.inv_process_usr_no,
-						studentname: item.au_full_name,
-						recieptno: item.receipt_no,
-						amount: item.receipt_amount,
-						bankname: item.bank_name,
-						entered_by: item.created_by,
-						approved_by: item.approved_by ? item.approved_by : '-',
-						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
-						bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
-						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
-						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
-						action: item,
-						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
-					});
+					if (item.fcc_status !== 'c' && item.fcc_status !== 'b') {
+						this.CHEQUE_ELEMENT_DATA.push({
+							srno: pos,
+							class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
+							chequeno: item.cheque_no,
+							admno: item.inv_process_usr_no,
+							studentname: item.au_full_name,
+							recieptno: item.receipt_no,
+							amount: item.receipt_amount,
+							bankname: item.bank_name,
+							entered_by: item.created_by,
+							approved_by: item.approved_by ? item.approved_by : '-',
+							recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
+							bankdeposite: item.fcc_deposite_date ? this.common.dateConvertion(item.fcc_deposite_date, 'd-MMM-y') : '-',
+							processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
+							remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
+							action: item,
+							ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
+						});
+					}
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
 							'fcc_ftr_id': '',
