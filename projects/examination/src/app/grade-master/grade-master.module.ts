@@ -12,6 +12,7 @@ import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entr
 import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.component';
 import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
 import { MarkEntrySubmitDialogComponent } from './mark-entry-submit-dialog/mark-entry-submit-dialog.component';
+import { ResultEntryComponent } from './result-entry/result-entry.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,7 @@ import { MarkEntrySubmitDialogComponent } from './mark-entry-submit-dialog/mark-
     GradeMasterRoutingModule,
     ExamSharedModule
   ],
-  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent, MarkEntrySubmitDialogComponent],
+  declarations: [StudentAcademicProfileComponent, MarksEntryComponent, RemarksEntryComponent, ReviewComponent, ReviewDialog, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, StudentAcademicProfileDetailsComponent, MarkEntrySubmitDialogComponent,ResultEntryComponent],
   entryComponents: [
     ReviewDialog, MarkEntrySubmitDialogComponent
   ],

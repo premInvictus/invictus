@@ -8,7 +8,7 @@ import { MarksEntryPrimaryComponent } from './marks-entry-primary/marks-entry-pr
 import { MarksEntrySecondaryComponent } from './marks-entry-secondary/marks-entry-secondary.component';
 import { MarksEntryFinalComponent } from './marks-entry-final/marks-entry-final.component';
 import { StudentAcademicProfileDetailsComponent } from './student-academic-profile-details/student-academic-profile-details.component';
-
+import { ResultEntryComponent } from './result-entry/result-entry.component';
 const routes: Routes = [
 	{
 		path: 'student-details', component: StudentAcademicProfileComponent,
@@ -27,6 +27,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'remarks-entry', component: RemarksEntryComponent
+	},
+	{
+		path: 'result-entry', component: ResultEntryComponent
 	},
 	{
 		path: 'review', component: ReviewComponent

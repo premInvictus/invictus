@@ -1,0 +1,138 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+        </div>
+        <div class="col-6 text-right">
+          <form [formGroup]="attendanceThemeTwoForm" novalidate>
+            <div class="top-card-title-form">
+              <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
+                appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select formControlName="syl_class_id" (selectionChange)="getSectionsByClass();getClassTerm();"
+                  required placeholder="Select Class">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                    {{item.class_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline"
+                *ngIf="attendanceThemeTwoForm.value.syl_board_id === 1">
+                <mat-label>Section</mat-label>
+                <mat-select formControlName="syl_section_id" placeholder="Select Section">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                    {{item.sec_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                <mat-label>Term</mat-label>
+                <mat-select placeholder="Term" formControlName="syl_term_id"
+                  (selectionChange)="getResultEntry();getExamDetails();displayData();" required>
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of termsArray" [value]="item?.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                <mat-label>Exam</mat-label>
+                <mat-select placeholder="Exam" formControlName="syl_exam_id"
+                  (selectionChange)="getResultEntry();getSubExam();displayData();">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of examArray" [value]="item?.exam_id">{{item.exam_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                <mat-label>SubExam</mat-label>
+                <mat-select placeholder="SubExam" formControlName="syl_subexam_id" (selectionChange)="getResultEntry();displayData();">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of subexamArray" [value]="item?.se_id">{{item.sexam_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-12 table-center" [hidden]="!(ELEMENT_DATA.length > 0)" style="padding:0% 15%">
+        <table mat-table matSort [dataSource]="termAttendanceDataSource" class="table-100 text-center"
+          id="mark_attendance_theme_two">
+          <ng-container matColumnDef="sr_no">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
+          </ng-container>
+
+          <ng-container matColumnDef="au_admission_no">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Admission No. </th>
+            <td mat-cell *matCellDef="let element">{{element.au_admission_no}}</td>
+          </ng-container>
+
+          <ng-container matColumnDef="roll_no">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%" class="text-center"> Roll No. </th>
+              <td mat-cell *matCellDef="let element">{{element.roll_no}}</td>
+            </ng-container>
+
+          <ng-container matColumnDef="au_full_name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header width="25%"> Student Name </th>
+            <td mat-cell *matCellDef="let element" class="text-left margin-left-10"> {{element.au_full_name}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="result_entry_option">
+            <th mat-header-cell *matHeaderCellDef style="width:20%" width="20%"> Result Entry Option</th>
+            <td mat-cell *matCellDef="let element">
+              <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+                <!-- <input matInput placeholder="Enter Result Entry" (change)="onTextChange($event)" type="text"
+                  value="{{element.result_entry}}" required formControlName="result_entry"> -->
+                  <mat-select placeholder="Please Select Result Entry" formControlName="result_entry_option" required (selectionChange)="setResultEntry(element)">
+                      <mat-option value="">Please select</mat-option>
+                      <mat-option *ngFor="let item of resultEntryOptionsArray" value="{{item?.value}}">{{item?.value}}
+                      </mat-option>
+                  </mat-select>                  
+              </form>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="result_entry">
+              <th mat-header-cell *matHeaderCellDef style="width:20%" width="20%"> Result Entry </th>
+              <td mat-cell *matCellDef="let element">
+                <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
+                  <input matInput placeholder="Enter Result Entry" (change)="onTextChange($event)" type="text"
+                    value="{{formgroupArray[element.sr_no - 1].formGroup.value?.result_entry}}" required formControlName="result_entry">             
+                </form>
+              </td>
+            </ng-container>
+
+         
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+        <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
+          <div class="col-12 text-center">
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()"
+              *ngIf="!termDataFlag">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="finalUpdate()"
+              *ngIf="termDataFlag">Update</button>
+            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+          </div>
+        </div>
+        <br>
+      </div>
+      <div class="table-center" *ngIf="ELEMENT_DATA.length === 0">
+        <table class="table-100">
+          <tbody>
+            <tr class="text-center">
+              <td colspan="12">
+                <img
+                  src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                <br><br><br>
+                <br><span class="font-size-20 font-light font-color-brown">
+                  Please Select Class , Section and Term
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </mat-card>
+  </div>
+</div>
