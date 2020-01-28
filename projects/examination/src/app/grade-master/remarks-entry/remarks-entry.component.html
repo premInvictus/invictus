@@ -175,7 +175,7 @@
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Remark</mat-label>
                                                             <mat-select
-                                                                (selectionChange)="$event.preventDefault();onSelectChange($event, s , i)"
+                                                                (selectionChange)="onSelectChange($event, s , i)"
                                                                 [formControlName]="'svalue' + s + i">
                                                                 <mat-option *ngFor="let item of remarkSet"
                                                                     [value]="item.ers_id">
@@ -187,7 +187,7 @@
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <input matInput type="text"
                                                                 [value]="getInputRemarks(item, stu.au_login_id)"
-                                                                (change)="$event.preventDefault();enterInputMarks(item, stu.au_login_id, $event.target.value)"
+                                                                (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)"
                                                                 [formControlName]="'sdesc' + s + i">
                                                         </mat-form-field>
                                                     </div>

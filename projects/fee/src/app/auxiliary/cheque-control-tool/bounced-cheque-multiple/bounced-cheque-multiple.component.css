@@ -1,0 +1,13 @@
+.modal-container {
+    overflow: hidden;
+}
+.btn-success {
+    background-color: #2b6c2d;
+  }
+  .btn-success:hover{
+    background-color: #ffffff;
+    color: #2b6c2d;
+  }
+  .mat-radio-button ~ .mat-radio-button {
+    margin-left: 16px;
+  }
