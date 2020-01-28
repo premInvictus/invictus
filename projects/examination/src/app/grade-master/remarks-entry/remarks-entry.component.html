@@ -86,7 +86,7 @@
                             *ngIf="paramform.value.ere_remarks_type === 1 ">
                             <mat-label>Exam</mat-label>
                             <mat-select placeholder="Exam" formControlName="ere_exam_id"
-                                (selectionChange)="dataReset();" required>
+                                (selectionChange)="dataReset();getSubExam();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
                                 </mat-option>
@@ -97,7 +97,7 @@
                             *ngIf="paramform.value.ere_remarks_type === 2 ">
                             <mat-label>Exam</mat-label>
                             <mat-select placeholder="Exam" formControlName="ere_exam_id"
-                                (selectionChange)="dataReset();displayExternalType2()">
+                                (selectionChange)="dataReset();getSubExam();displayExternalType2()">
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
                                 </mat-option>
@@ -108,7 +108,7 @@
                             <mat-label>Sub-Exam</mat-label>
                             <mat-select placeholder="Sub-Exam" formControlName="ere_sub_exam_id" multiple
                                 (selectionChange)="displayData();" required>
-                                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}}
+                                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}} 
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
