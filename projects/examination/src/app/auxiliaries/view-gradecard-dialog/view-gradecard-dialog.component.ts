@@ -69,6 +69,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   isuserachivement : string;
   gradingSystem:string = '';
   resultRemarksArr:any[] = [];
+  printData: any = {};
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -80,6 +81,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.printGradecard();
     this.dateofdeclaration = new Date();
     console.log(this.data);
     if (this.data.param.eme_exam_id || this.data.param.eme_subexam_id) {
@@ -133,6 +135,23 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getGradeCardMark(); 
     this.getClassTermDate();
     
+
+  }
+  printGradecard(item=null) {
+    const param: any = {};
+    param.login_id = [this.data.au_login_id];
+    param.class_id = this.data.param.eme_class_id;
+    param.sec_id = this.data.param.eme_sec_id;
+    param.term_id = this.data.param.eme_term_id;
+    param.exam_id = this.data.param.eme_exam_id;
+    param.se_id = this.data.param.eme_subexam_id;
+    param.view = '1';
+    this.examService.printGradecard(param).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        console.log(result.data);
+        this.printData = result.data;
+      }
+    })
 
   }
   getClassTermDate() {
@@ -902,7 +921,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     if(arr.length > 0) {
       for (let index = 0; index < arr.length; index++) {
         const element = arr[index];
-        if(element.sub_type == type && element.sub_category == category) {
+        if(element.sub_type == type && element.eac_category == category) {
           return true;
         }
         
@@ -924,7 +943,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
         if (temp.length > 0) {
           temp.forEach(element => {
-            if (element.sub_parent_id && element.sub_parent_id === '0' && element.sub_category) {
+            if (element.sub_parent_id && element.sub_parent_id === '0' && element.eac_category) {
               const childSub: any[] = [];
               for (const item of temp) {
                 if (element.sub_id === item.sub_parent_id) {
@@ -937,7 +956,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           });
         }
         this.subjectArray.forEach(element => {
-          if (element.sub_type === '1' && element.sub_category === 'A') {
+          if (element.sub_type === '1' && element.eac_category === 'A') {
             this.totalSolasticSubject++;
           } else if (element.sub_type === '2') {
             this.hasCoscholasticSub = true;
