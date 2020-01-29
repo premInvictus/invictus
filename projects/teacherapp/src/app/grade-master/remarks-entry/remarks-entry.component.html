@@ -37,67 +37,85 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Term</mat-label>
                             <mat-select placeholder="Term" formControlName="ere_term_id"
-                                (selectionChange)="showTableData()" required>
+                                (selectionChange)="dataReset();getExamDetails();showTableData();displayExternalType2();"
+                                required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150" 
-                        *ngIf="(subjectArray.length > 0 && subjectWiseRemark) ||
-                        (subjectArray.length > 0  && paramform.value.ere_remarks_type === '1')">
+                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="(subjectArray.length > 0 && subjectWiseRemark && examType === '1') ||
+                        (subjectArray.length > 0  && paramform.value.ere_remarks_type === 1)">
                             <mat-label>Subject</mat-label>
-                            <!-- <mat-select placeholder="Subject" formControlName="ere_sub_id"
-                                (selectionChange)="showTableData()" required>
-                                <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
-                                </mat-option>
-                            </mat-select> -->
                             <mat-select placeholder="Subject" formControlName="ere_sub_id"
-                                (selectionChange)="showTableData()" required>
+                                (selectionChange)="dataReset();showTableData();displayExternalType2()" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-optgroup label="Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="item.sub_type == '1' && item.childSub.length != 0"
-                                            [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                        <mat-optgroup [label]="item.sub_name" class="option-group-parent-type">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="item.sub_type == '1' && item.childSub.length == 0"
-                                            [value]="item.sub_id" class="option-group-child">
+                                        <mat-option [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>
                                 </mat-optgroup>
                                 <mat-optgroup label="Co-Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="item.sub_type == '2' && item.childSub.length != 0"
-                                            [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                        <mat-optgroup [label]="item.sub_name" class="option-group-parent-type">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="item.sub_type == '2' && item.childSub.length == 0"
-                                            [value]="item.sub_id" class="option-group-child">
+                                        <mat-option [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>
                                 </mat-optgroup>
                             </mat-select>
                         </mat-form-field>
+
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-                            *ngIf="paramform.value.ere_remarks_type !== ''">
+                            *ngIf="paramform.value.ere_remarks_type === 1 ">
                             <mat-label>Exam</mat-label>
                             <mat-select placeholder="Exam" formControlName="ere_exam_id"
-                                (selectionChange)="displayExternalType2()" required>
+                                (selectionChange)="dataReset();getSubExam();" required>
+                                <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
-                            *ngIf="paramform.value.ere_remarks_type === 1 || paramform.value.ere_remarks_type === 2">
+                            *ngIf="paramform.value.ere_remarks_type === 2 ">
+                            <mat-label>Exam</mat-label>
+                            <mat-select placeholder="Exam" formControlName="ere_exam_id"
+                                (selectionChange)="dataReset();getSubExam();displayExternalType2()">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
+                            *ngIf="paramform.value.ere_remarks_type === 1">
                             <mat-label>Sub-Exam</mat-label>
                             <mat-select placeholder="Sub-Exam" formControlName="ere_sub_exam_id" multiple
-                                (selectionChange)="displayData()" required>
+                                (selectionChange)="displayData();" required>
                                 <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <mat-form-field appearance="outline" class="margin-left-15 form-field-150"
+                            *ngIf="paramform.value.ere_remarks_type === 2">
+                            <mat-label>Sub-Exam</mat-label>
+                            <mat-select placeholder="Sub-Exam" formControlName="ere_sub_exam_id"
+                                (selectionChange)="displayExternalType2();">
+                                <mat-option value="">Please select</mat-option>
+                                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
                     </div>
                 </div>
             </form>
@@ -109,15 +127,17 @@
     <div class="col-12">
         <mat-card>
             <div class="text-center center-mr">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-8">
                 <table class="custom-table">
                     <thead>
                         <tr class="custom-tr">
-                            <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">Roll No. <i class="fas fa-sort"></i></th>
-                        <th rowspan="2" class="custom-th text-center" width="250" sortColumn [sortKey]="'au_full_name'" [data]="studentArray">Student name <i class="fas fa-sort"></i></th>
-                        <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'au_admission_no'" [data]="studentArray">Admission <i class="fas fa-sort"></i></th>
+                            <th rowspan="2" class="custom-th text-center" width="10%" sortColumn [sortKey]="'r_rollno'"
+                                [data]="studentArray">Roll No. <i class="fas fa-sort"></i></th>
+                            <th rowspan="2" class="custom-th text-center" width="25%" sortColumn
+                                [sortKey]="'au_full_name'" [data]="studentArray">Student name <i
+                                    class="fas fa-sort"></i></th>
+                            <th rowspan="2" class="custom-th text-center" width="10%" sortColumn
+                                [sortKey]="'au_admission_no'" [data]="studentArray">Admission <i
+                                    class="fas fa-sort"></i></th>
                             <th rowspan="2" class="custom-th text-center" *ngIf="formGroupArray2.length > 0"
                                 width="100">
                                 Remarks</th>
@@ -143,24 +163,25 @@
                                             <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Remark</mat-label>
-                                                            <mat-select
-                                                                (selectionChange)="onSelectChange($event, s , i)"
-                                                                [formControlName]="'svalue' + s + i">
-                                                                <mat-option *ngFor="let item of remarkSet"
-                                                                    [value]="item.ers_id">
-                                                                    {{item.ers_name}}</mat-option>
-                                                            </mat-select>
-                                                        </mat-form-field>
+                                                        <!-- <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Remark</mat-label> -->
+                                                        <mat-select (selectionChange)="onSelectChange($event, s , i)"
+                                                            [formControlName]="'svalue' + s + i">
+                                                            <mat-option value="">Please Select Remark</mat-option>
+                                                            <mat-option *ngFor="let item of remarkSet"
+                                                                [value]="item.ers_id">
+                                                                {{item.ers_name}}</mat-option>
+                                                        </mat-select>
+                                                        <!-- </mat-form-field> -->
                                                     </div>
                                                     <div class="col-8">
-                                                        <mat-form-field class="form-field" appearance="outline">
-                                                            <input matInput type="text"
-                                                                [value]="getInputRemarks(item, stu.au_login_id)"
-                                                                (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)"
-                                                                [formControlName]="'sdesc' + s + i">
-                                                        </mat-form-field>
+                                                        <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                                        <input matInput type="text" class="remark-text"
+                                                            placeholder="Enter Remarks"
+                                                            [value]="getInputRemarks(item, stu.au_login_id)"
+                                                            (change)="enterInputMarks(item, stu.au_login_id, $event.target.value)"
+                                                            [formControlName]="'sdesc' + s + i">
+                                                        <!-- </mat-form-field> -->
                                                     </div>
 
                                                 </div>
@@ -178,23 +199,24 @@
                                         <ng-template [ngIf]="checkExternalEdit('0')" [ngIfElse]="elseContaint">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>Remark</mat-label>
-                                                        <mat-select
-                                                            (selectionChange)="onSelectExternalChange($event, s)"
-                                                            formControlName="remark_id">
-                                                            <mat-option *ngFor="let item of remarkSet"
-                                                                [value]="item.ers_id">
-                                                                {{item.ers_name}}</mat-option>
-                                                        </mat-select>
-                                                    </mat-form-field>
+                                                    <!-- <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Remark</mat-label> -->
+                                                    <mat-select (selectionChange)="onSelectExternalChange($event, s)"
+                                                        formControlName="remark_id">
+                                                        <mat-option value="">Please Select Remark Option</mat-option>
+                                                        <mat-option *ngFor="let item of remarkSet"
+                                                            [value]="item.ers_id">
+                                                            {{item.ers_name}}</mat-option>
+                                                    </mat-select>
+                                                    <!-- </mat-form-field> -->
                                                 </div>
                                                 <div class="col-8">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <input matInput type="text" formControlName="remark"
-                                                            (change)="changeFlagStatus()"
-                                                            [value]="getInputRemarks2(stu.au_login_id)">
-                                                    </mat-form-field>
+                                                    <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                                    <input matInput type="text" formControlName="remark"
+                                                        class="remark-text" placeholder="Enter Remarks"
+                                                        (change)="changeFlagStatus()"
+                                                        [value]="getInputRemarks2(stu.au_login_id)">
+                                                    <!-- </mat-form-field> -->
                                                 </div>
                                             </div>
                                         </ng-template>
@@ -207,26 +229,20 @@
                         </tr>
                     </tbody>
                 </table>
-                </div>
-                <div class="col-2"></div>
-                </div>
                 <br>
                 <div class="row margin-top-25">
-                        <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
-                                <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 || marksInputArray.length > 0 "
-                                    (click)="saveForm()">Save</button>
-                                <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 || marksInputArray.length > 0 "
-                                    (click)="saveForm2()">Save</button>
-                                <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 
-                                        || marksInputArray.length > 0 "
-                                    (click)="saveForm('1') ">Save &
-                                    Submit</button>
-                                <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0
-                                    || marksInputArray.length > 0 "
-                                    (click)="saveForm2('1') ">Save &
-                                    Submit</button>
-        
-                            </div>
+                    <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0"
+                            (click)="saveForm()">Save</button>
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0"
+                            (click)="saveForm2()">Save</button>
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 
+                                     " (click)="saveForm('1') ">Save &
+                            Submit</button>
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0
+                                 " (click)="saveForm2('1') ">Save &
+                            Submit</button>
+                    </div>
                 </div>
             </div>
         </mat-card>

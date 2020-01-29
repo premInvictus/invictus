@@ -235,8 +235,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-				this.dataSource.paginator.length = this.paginator && this.paginator.length;
-				this.dataSource.paginator.length = this.totalRecords;
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
 			}
 		});

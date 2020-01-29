@@ -503,4 +503,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeTransaction/downloadFeeTransactionExcel', value);
 	}
+	addMultipleCheckControlTool(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addMultipleCheckControlTool', value);
+	}
 }

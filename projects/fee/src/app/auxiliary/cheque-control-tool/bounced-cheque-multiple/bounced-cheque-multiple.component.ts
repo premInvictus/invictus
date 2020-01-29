@@ -18,7 +18,6 @@ export class BouncedChequeMultipleComponent implements OnInit {
   gender: any;
   defaultsrc: any;
   banks: any[] = [];
-  resultFlag = false;
   constructor(
     public dialogRef: MatDialogRef<BouncedChequeMultipleComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -34,7 +33,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     this.getReason();
     this.getBanks();
     this.studentDetails = this.data;
-   // console.log('studentDetails', this.studentDetails);
+    // console.log('studentDetails', this.studentDetails);
   }
   buildForm() {
     this.bouncedForm = this.fbuild.group({
@@ -73,13 +72,12 @@ export class BouncedChequeMultipleComponent implements OnInit {
     return this.commonAPIService.isExistUserAccessMenu(actionT);
   }
   submit() {
-    this.resultFlag = true;
+    let finalArray: any[] = [];
     for (let item of this.studentDetails) {
-      let finalArray: any = {};
-      if(this.bouncedForm.value.fcc_status === 'cd'){
+      if (this.bouncedForm.value.fcc_status === 'cd') {
         this.bouncedForm.value.fcc_status = 'c';
       }
-      finalArray = {
+      finalArray.push({
         fcc_id: item.fcc_id,
         ftr_deposit_bnk_id: this.bouncedForm.value.ftr_deposit_bnk_id,
         fcc_deposite_date: this.bouncedForm.value.fcc_deposite_date ?
@@ -94,18 +92,15 @@ export class BouncedChequeMultipleComponent implements OnInit {
           this.commonAPIService.dateConvertion(this.bouncedForm.value.fcc_process_date, 'yyyy-MM-dd') : '',
         fcc_status: this.bouncedForm.value.fcc_status,
         fcc_inv_id: item.invoice_id
-      };
-      this.feeService.addCheckControlTool(finalArray).subscribe((result: any) => {
-        if (result && result.status === 'ok') {
-        } else {
-          this.resultFlag = false;
-        }
       });
     }
-    if (this.resultFlag) {
-      this.dialogRef.close({ status: '1' });
-    } else {
-      this.commonAPIService.showSuccessErrorMessage('Some error occured while insert', 'error');
-    }
+    this.feeService.addMultipleCheckControlTool(finalArray).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.dialogRef.close({ status: '1' });
+        this.studentDetails = [];
+      } else {
+        this.commonAPIService.showSuccessErrorMessage('Some error occured while insert', 'error');
+      }
+    });
   }
 }

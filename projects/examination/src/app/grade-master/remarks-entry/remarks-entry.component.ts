@@ -30,7 +30,7 @@ export class RemarksEntryComponent implements OnInit {
 	remarkArray: any[] = [];
 	remarkInputArray: any[] = [];
 	marksEditable = true;
-	editTable = false;
+	editTable = false;	
 	examType: any;
 	classGradeTerm: any[] = [];
 	responseMarksArray: any[] = [];
@@ -82,7 +82,6 @@ export class RemarksEntryComponent implements OnInit {
 		this.examService.getClassTermGrade({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classGradeTerm = result.data;
-				console.log(this.classGradeTerm);
 			}
 		});
 	}
@@ -134,6 +133,7 @@ export class RemarksEntryComponent implements OnInit {
 			// this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
+
 		} else {
 			this.tableDivFlag = false;
 			this.getRemarkSet();
@@ -220,13 +220,15 @@ export class RemarksEntryComponent implements OnInit {
 				for (var i = 0; i < coscholastic_subject.length; i++) {
 					this.subjectArray.push(coscholastic_subject[i]);
 				}
-				console.log('subjectArray', this.subjectArray);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
 	getExamDetails() {
+		this.paramform.patchValue({
+			ere_exam_id: '',
+		});
 		this.examArray = [];
 		this.subexamArray = [];
 		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id }).subscribe((result: any) => {
@@ -234,12 +236,15 @@ export class RemarksEntryComponent implements OnInit {
 				this.examArray = result.data;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			} 
+			}
 		});
 	}
 	getSubExam() {
+		this.paramform.patchValue({
+			ere_sub_exam_id: '',
+		});
 		this.subexamArray = [];
-		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id:this.paramform.value.ere_term_id, exam_id : this.paramform.value.ere_exam_id }).subscribe((result: any) => {
+		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id, exam_id: this.paramform.value.ere_exam_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok' && result.data && result.data[0]) {
 				this.subexamArray = result.data[0].exam_sub_exam_max_marks;
 			} else {
@@ -425,7 +430,6 @@ export class RemarksEntryComponent implements OnInit {
 							formGroup: subjectDes
 						});
 					}
-					console.log(this.formGroupArray2);
 					this.tableDivFlag = true;
 				}
 			});
@@ -566,7 +570,7 @@ export class RemarksEntryComponent implements OnInit {
 		this.editTable = false;
 		this.remarksEntry = [];
 		let check_valid = false;
-		check_valid = Number(this.examType) === 1 && this.subjectWiseRemark ? (this.paramform.value.ere_sub_id ? true: false) : (this.paramform.value.ere_term_id ? true : false);
+		check_valid = Number(this.examType) === 1 && this.subjectWiseRemark ? (this.paramform.value.ere_sub_id ? true : false) : (this.paramform.value.ere_term_id ? true : false);
 		if (check_valid) {
 			for (const item of this.formGroupArray2) {
 				for (const det of item.formGroup) {
