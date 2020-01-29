@@ -39,14 +39,13 @@ export class MarksRegisterComponent implements OnInit {
     {id: 'weightagescore', name: 'Weighted Score'},
     {id: 'consolidatedregister', name: 'Consolidated Register'}
   ];
-  subTypeArray: any[] = [
-    {id: '1', name: 'Scholastic'},
-    {id: '2', name: 'Co-Scholastic'}
-  ];
+  subTypeArray: any[] = [];
+  subTypeArray_temp: any[] = [];
   ect_exam_type = '0';
   ngOnInit() {
     this.buildForm();
     this.getClass();
+    this.getExamActivityCategory();
   }
 
   constructor(
@@ -68,6 +67,18 @@ export class MarksRegisterComponent implements OnInit {
       eme_exam_id: ''
     })
   }
+  getExamActivityCategory() {
+		const inputJson = {};
+		this.examService.getExamActivityCategory(inputJson)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+            this.subTypeArray = result.data;
+            this.subTypeArray_temp = result.data;
+					}
+				}
+			);
+	}
   changeReportType(){
     this.paramform.patchValue({
       eme_sub_type: '',
@@ -78,14 +89,17 @@ export class MarksRegisterComponent implements OnInit {
       eme_exam_id: ''
     });
     if(this.paramform.value.eme_report_type === 'marksinput') {
-      this.subTypeArray = [
-        {id: '1', name: 'Scholastic'},
-        {id: '2', name: 'Co-Scholastic'}
-      ];
+      this.subTypeArray = [];
+      this.subTypeArray_temp.forEach(element => {
+        this.subTypeArray.push(element);
+      });
     } else {
-      this.subTypeArray = [
-        {id: '1', name: 'Scholastic'}
-      ];
+      this.subTypeArray = [];
+      this.subTypeArray_temp.forEach(element => {
+        if(element.eac_type === '1') {
+          this.subTypeArray.push(element);
+        }
+      });
     }
 
   }
