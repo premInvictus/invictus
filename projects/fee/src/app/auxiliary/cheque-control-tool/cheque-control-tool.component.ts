@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl } from '@angular/material';
 import { ChequeToolElement } from './cheque-control-tool.model';
+import { SelectionModel } from '@angular/cdk/collections';
 import { FeeService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -10,6 +11,7 @@ import { BouncedChequeModalComponent } from './bounced-cheque-modal/bounced-cheq
 import { InvoiceDetailsModalComponent } from '../../feemaster/invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { CapitalizePipe } from '../../_pipes';
+import { BouncedChequeMultipleComponent } from './bounced-cheque-multiple/bounced-cheque-multiple.component';
 @Component({
 	selector: 'app-cheque-control-tool',
 	templateUrl: './cheque-control-tool.component.html',
@@ -29,11 +31,13 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+	selection = new SelectionModel<ChequeToolElement>(true, []);
 	formGroupArray: any[] = [];
 	filterForm: FormGroup;
 	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Dishonoured' }];
 	toggleSearch = false;
 	pageEvent: PageEvent;
+	checkboxLength = 0;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -77,7 +81,6 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 
 	openBounced(item): void {
-		console.log(item);
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
 			width: '800px',
@@ -91,6 +94,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		});
 	}
 
+
 	openCheckOperationModal(item): void {
 		const dialogRef = this.dialog.open(BouncedChequeModalComponent, {
 			data: item,
@@ -99,15 +103,27 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			hasBackdrop: true,
 			disableClose: true
 		});
-
 		dialogRef.afterClosed().subscribe(result => {
 			if (result.status === '1') {
 				this.getChequeControlListAll();
 			}
 		});
-
 	}
 
+
+	openMultipleBounced(item): void {
+		const dialogRef = this.dialog.open(BouncedChequeMultipleComponent, {
+			data: item,
+			width: '800px',
+			height: '30%',
+			hasBackdrop: true,
+			disableClose: true
+		});
+
+		dialogRef.afterClosed().subscribe(result => {
+			this.getChequeControlListAll();
+		});
+	}
 	getChequeControlListAll() {
 		this.formGroupArray = [];
 		this.CHEQUE_ELEMENT_DATA = [];
@@ -120,7 +136,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
-						srno: pos,
+						srno: item,
 						class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
@@ -135,7 +151,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
 						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
-						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : ''
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '',
+						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -188,7 +205,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
-						srno: pos,
+						srno: item,
 						class_name: item.class_name + ' ' + item.sec_name,
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
@@ -203,7 +220,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
 						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
 						action: item,
-						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-'
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
+						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -217,7 +235,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
-				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+				this.dataSource.paginator.length = this.paginator && this.paginator.length;
+				this.dataSource.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
 			}
 		});
@@ -277,13 +296,11 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		this.deleteModal.openModal(item);
 	}
 	approveFTR(item) {
-		console.log(item);
 		const param: any = {};
 		param.fcc_ftr_id = item.fee_transaction_id;
 		param.fcc_status = '';
 		param.ftr_status = '4';
 		param.ftr_approved_by = this.currentUser.login_id;
-		console.log(param);
 		this.feeService.approveFeeTransaction(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -292,5 +309,43 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				this.common.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+	}
+	isAllSelected() {
+		const numSelected = this.selection.selected.length;
+		const numRows = this.dataSource.data.length;
+		return numSelected === numRows;
+	}
+	masterToggle() {
+		this.isAllSelected() ?
+			this.selection.clear() :
+			this.dataSource.data.forEach(row => {
+				if (row.selectionDisable === false) {
+					this.selection.select(row);
+				}
+				//this.selection.select(row);
+				console.log(row);
+			});
+		this.checkboxLength = this.selection.selected.length;
+	}
+	fetchRecieptId() {
+		const rec_id_arr = [];
+		this.selection.selected.forEach(element => {
+			rec_id_arr.push(element.srno);
+		});
+		return rec_id_arr;
+	}
+	checkboxLabel(row?: ChequeToolElement): string {
+		if (!row) {
+			return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+		}
+		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.srno + 1}`;
+	}
+	manipulateAction(row) {
+		if (this.selection.selected.length > 0) {
+			this.selection.select(row);
+		} else {
+			this.selection.toggle(row);
+		}
+		this.checkboxLength = this.selection.selected.length;
 	}
 }

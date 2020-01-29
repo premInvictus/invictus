@@ -15,15 +15,14 @@ import { FamilyTransactionEntryComponent } from './family-transaction-entry/fami
 import { SecurityDepositComponent } from './security-deposit/security-deposit.component';
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { DropoutComponent } from './dropout/dropout.component';
+import { BouncedChequeMultipleComponent } from './cheque-control-tool/bounced-cheque-multiple/bounced-cheque-multiple.component';
 @NgModule({
 	imports: [
 		CommonModule,
 		AuxiliaryRoutingModule,
 		SharedmoduleModule
 	],
-	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent
-
-	],
+	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent,BouncedChequeMultipleComponent],
 	declarations: [
 		BouncedChequeModalComponent,
 		ChequeControlToolComponent,
@@ -36,7 +35,8 @@ import { DropoutComponent } from './dropout/dropout.component';
 		FamilyTransactionEntryComponent,
 		SecurityDepositComponent,
 		DropoutComponent,
-		BulkUpdatesComponent
+		BulkUpdatesComponent,
+		BouncedChequeMultipleComponent
 	]
 })
 export class AuxiliaryModule { }

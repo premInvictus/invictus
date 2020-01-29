@@ -228,12 +228,13 @@ export class RemarksEntryComponent implements OnInit {
 	}
 	getExamDetails() {
 		this.examArray = [];
+		this.subexamArray = [];
 		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-			}
+			} 
 		});
 	}
 	getSubExam() {
