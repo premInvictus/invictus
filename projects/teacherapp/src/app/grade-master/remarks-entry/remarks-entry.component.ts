@@ -132,6 +132,9 @@ export class RemarksEntryComponent implements OnInit {
 		});
 	}
 	getSubExam() {
+		this.paramform.patchValue({
+			ere_sub_exam_id: '',
+		});
 		this.subexamArray = [];
 		this.examService.getExamDetails({
 			exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id,
