@@ -58,9 +58,9 @@
       <div class="col-12 table-center" *ngIf="ELEMENT_DATA.length > 0" style="padding:0% 10%">
         <table mat-table [dataSource]="termAttendanceDataSource" class="table-100 text-center"
           id="mark_attendance_theme_two">
-          <ng-container matColumnDef="sr_no">
-            <th mat-header-cell *matHeaderCellDef> Sr No. </th>
-            <td mat-cell *matCellDef="let element"> {{element.sr_no}}.</td>
+          <ng-container matColumnDef="roll_no">
+            <th mat-header-cell *matHeaderCellDef> Roll No. </th>
+            <td mat-cell *matCellDef="let element"> {{element.roll_no}}.</td>
           </ng-container>
 
           <ng-container matColumnDef="au_admission_no">

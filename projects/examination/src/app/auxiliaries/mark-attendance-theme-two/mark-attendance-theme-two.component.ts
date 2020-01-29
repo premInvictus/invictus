@@ -39,7 +39,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   termDataFlag = false;
-  displayedColumns = ['sr_no', 'au_admission_no', 'au_full_name', 'overall_attendance', 'present_days'];
+  displayedColumns = ['roll_no', 'au_full_name','au_admission_no',  'overall_attendance', 'present_days'];
   constructor(
     private fbuild: FormBuilder,
     private smartService: SmartService,
@@ -252,6 +252,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     for (const item of this.studentArray) {
       this.ELEMENT_DATA.push({
         sr_no: counter,
+        roll_no:item.r_rollno,
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         present_days: item.present_days ? item.present_days : '',
@@ -331,7 +332,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
 
 export interface Element {
   sr_no: any;
-  au_admission_no: any;
+  roll_no:any;
+  au_admission_no:any;
   au_full_name: any;
   present_days: any;
   overall_attendance: any;

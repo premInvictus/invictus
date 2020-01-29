@@ -13,3 +13,15 @@
 .option-group-child {
     display: block; margin-left:5px;    margin-top: -10px;
 }
+
+.remark-text {
+    border-left: 1px solid #ccc;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+    margin-left: 26%;
+    text-align: left;
+}
+.row {
+    margin:0 !important
+}
