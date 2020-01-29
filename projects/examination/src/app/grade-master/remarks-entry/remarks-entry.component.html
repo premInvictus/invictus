@@ -108,7 +108,7 @@
                             <mat-label>Sub-Exam</mat-label>
                             <mat-select placeholder="Sub-Exam" formControlName="ere_sub_exam_id" multiple
                                 (selectionChange)="displayData();" required>
-                                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}} 
+                                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">{{item.sexam_name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -136,18 +136,18 @@
                 <table class="custom-table">
                     <thead>
                         <tr class="custom-tr">
-                            <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'r_rollno'"
+                            <th rowspan="2" class="custom-th text-center" width="10%" sortColumn [sortKey]="'r_rollno'"
                                 [data]="studentArray">Roll No.
                                 <i class="fas fa-sort"></i>
                             </th>
-                            <th rowspan="2" class="custom-th text-center" width="250" sortColumn
+                            <th rowspan="2" class="custom-th text-center" width="25%" sortColumn
                                 [sortKey]="'au_full_name'" [data]="studentArray">Student name <i
                                     class="fas fa-sort"></i></th>
-                            <th rowspan="2" class="custom-th text-center" width="100" sortColumn
+                            <th rowspan="2" class="custom-th text-center" width="10%" sortColumn
                                 [sortKey]="'au_admission_no'" [data]="studentArray">Admission <i
                                     class="fas fa-sort"></i></th>
                             <th rowspan="2" class="custom-th text-center" *ngIf="formGroupArray2.length > 0"
-                                width="100">
+                                width="50%">
                                 Remarks</th>
                             <th [attr.colspan]="paramform.value.ere_sub_exam_id.length"
                                 *ngIf="formGroupArray.length > 0" class="custom-th text-center">
@@ -191,7 +191,6 @@
                                                                 [formControlName]="'sdesc' + s + i">
                                                         </mat-form-field>
                                                     </div>
-
                                                 </div>
                                             </ng-template>
                                             <ng-template #elseContaint>
@@ -208,23 +207,25 @@
                                             [ngIfElse]="elseContaint">
                                             <div class="row">
                                                 <div class="col-4">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>Remark</mat-label>
+                                                    <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                                        <!-- <mat-label>Remark</mat-label> -->
                                                         <mat-select
                                                             (selectionChange)="onSelectExternalChange($event, s)"
-                                                            formControlName="remark_id">
+                                                            formControlName="remark_id" placeholder="Remark Option">
+                                                            <mat-option value="">Please Select Remark Option</mat-option>
                                                             <mat-option *ngFor="let item of remarkSet"
                                                                 [value]="item.ers_id">
                                                                 {{item.ers_name}}</mat-option>
                                                         </mat-select>
-                                                    </mat-form-field>
+                                                    <!-- </mat-form-field> -->
                                                 </div>
                                                 <div class="col-8">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <input matInput type="text" formControlName="remark"
+                                                    <!-- <mat-form-field class="form-field" appearance="outline"> -->
+                                                        <input matInput type="text" formControlName="remark" class="remark-text" 
+                                                            placeholder="Enter Remarks" 
                                                             (change)="changeFlagStatus()"
                                                             [value]="getInputRemarks2(stu.au_login_id)">
-                                                    </mat-form-field>
+                                                    <!-- </mat-form-field> -->
                                                 </div>
                                             </div>
                                         </ng-template>

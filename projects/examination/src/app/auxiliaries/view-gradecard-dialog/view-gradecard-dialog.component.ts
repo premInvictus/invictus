@@ -68,6 +68,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   userachivement: any;
   isuserachivement : string;
   gradingSystem:string = '';
+  resultRemarksArr:any[] = [];
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -131,6 +132,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark(); 
     this.getClassTermDate();
+    
 
   }
   getClassTermDate() {
@@ -279,11 +281,51 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     })
   }
+  getResultEntryStudent() {
+
+    const param: any = {};
+    param.ere_class_id = this.data.class_id;
+    param.ere_sec_id = this.data.sec_id;
+    param.ere_term_id = this.data.param.eme_term_id;    
+    param.ere_remarks_type = '3';        
+    if (this.studentDetails) {
+      param.erem_login_id = this.studentDetails.au_login_id;
+    }
+    
+    if (this.data.param.eme_exam_id) {
+      param.ere_exam_id = this.data.param.eme_exam_id;
+    }
+    if (this.data.param.eme_subexam_id) {
+      param.ere_sub_exam_id = this.data.param.eme_subexam_id;
+    }
+    
+    console.log('param--', param);
+    this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        console.log(result.data);
+        this.resultRemarksArr = result.data;
+      }
+    })
+  }
   remarkOfSub(sub_id = null) {
     let remarkstr = '';
     if (sub_id) {
       if (this.remarksArr.length > 0) {
         const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
+        remarkstr = temp.erem_remark;
+      }
+    } else {
+      if (this.remarksArr.length > 0) {
+        remarkstr = this.remarksArr[0].erem_remark;
+      }
+    }
+    return remarkstr;
+  }
+  remarkOfResult(au_login_id) {
+    let remarkstr = '';
+    if (au_login_id) {
+      if (this.resultRemarksArr.length > 0) {
+        const temp = this.resultRemarksArr.find(e => e.erem_login_id === au_login_id);
         remarkstr = temp.erem_remark;
       }
     } else {
@@ -686,11 +728,12 @@ export class ViewGradecardDialogComponent implements OnInit {
     let gradeValue = '';
     for (let index = 0; index < this.GradeSet.length; index++) {
       const element = this.GradeSet[index];
-      if (gradePercentage >= Number(element.egs_range_start) && grade <= Number(element.egs_range_end)) {
+      if (gradePercentage >= parseInt(element.egs_range_start,10) && parseInt(grade) <= parseInt(element.egs_range_end,10)) {
         gradeValue = element.egs_grade_name;
         break;
       }
     }
+    console.log(gradeValue);
     return gradeValue;
   }
   getSubjectPassResult(sub_id, term) {
@@ -978,6 +1021,7 @@ export class ViewGradecardDialogComponent implements OnInit {
         } else if (this.studentDetails.active_parent === 'G') {
           this.studentDetails.active_parent_name = this.studentDetails.guardian_name;
         }
+        this.getResultEntryStudent();
       }
     })
   }

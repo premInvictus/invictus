@@ -1,18 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 
 
 
 @Component({
-  selector: 'app-mark-attendance-theme-two',
-  templateUrl: './mark-attendance-theme-two.component.html',
-  styleUrls: ['./mark-attendance-theme-two.component.css']
+  selector: 'app-result-entry',
+  templateUrl: './result-entry.component.html',
+  styleUrls: ['./result-entry.component.css']
 })
-export class MarkAttendanceThemeTwoComponent implements OnInit {
+export class ResultEntryComponent implements OnInit {
   attendanceThemeTwoForm: FormGroup;
   classArray: any[] = [];
   sectionArray: any[] = [];
@@ -39,7 +39,10 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   termDataFlag = false;
-  displayedColumns = ['roll_no', 'au_full_name','au_admission_no',  'overall_attendance', 'present_days'];
+  resultEntryOptionsArray: any[] = [];
+  resultEntryData: any[] = [];
+  displayedColumns = ['roll_no', 'au_full_name', 'au_admission_no','result_entry_option', 'result_entry'];
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private fbuild: FormBuilder,
     private smartService: SmartService,
@@ -54,6 +57,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.getClass();
+    this.getResultEntryOptions();
   }
 
   buildForm() {
@@ -64,6 +68,20 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       syl_term_id: '',
       syl_exam_id: '0',
       syl_subexam_id: '0',
+    });
+  }
+
+  // Get Result Entry Options
+
+  getResultEntryOptions() {
+    let param: any = {};
+    param.gs_name = ['result_entry_options'];
+    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const settings = result.data;
+        this.resultEntryOptionsArray = JSON.parse(settings[0]['gs_value'])
+        console.log('settings=--', settings, this.resultEntryOptionsArray);
+      }
     });
   }
 
@@ -216,7 +234,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     }
     studentParam.term_id = this.attendanceThemeTwoForm.value.syl_term_id;
     studentParam.exam_id = this.attendanceThemeTwoForm.value.syl_exam_id ? this.attendanceThemeTwoForm.value.syl_exam_id : '0';
-    studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id? this.attendanceThemeTwoForm.value.syl_subexam_id : '0';
+    studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id ? this.attendanceThemeTwoForm.value.syl_subexam_id : '0';
     studentParam.au_role_id = '4';
     studentParam.au_status = '1';
 
@@ -227,15 +245,15 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
             console.log('result--', result);
             this.studentArray = result.data;
 
-            for (var i = 0; i < result.data.length; i++) {
-              if (result.data[i]['overall_attendance'] || result.data[i]['present_days']) {
-                this.termDataFlag = true;
-                break;
-              }
-            }
+            // for (var i = 0; i < result.data.length; i++) {
+            //   if (result.data[i]['result_entry']) {
+            //     this.termDataFlag = true;
+            //     break;
+            //   }
+            // }
             this.setGridData();
           } else {
-            this.termDataFlag = false;
+            //this.termDataFlag = false;
             this.fetchDetails();
           }
         });
@@ -244,19 +262,29 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
 
   }
 
+  setResultEntry(element) {
+    console.log('element', element);
+    this.formgroupArray[element.sr_no - 1].formGroup.patchValue({
+      'result_entry': this.formgroupArray[element.sr_no - 1].formGroup.value.result_entry_option
+    })
+    console.log(this.formgroupArray[element.sr_no - 1]);
+  }
+
   setGridData() {
     this.defaultFlag = true;
     this.finalDivFlag = false;
+    this.ELEMENT_DATA = [];
+    this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     // this.studentArray = result.data;
     let counter = 1;
     for (const item of this.studentArray) {
       this.ELEMENT_DATA.push({
         sr_no: counter,
-        roll_no:item.r_rollno,
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
-        present_days: item.present_days ? item.present_days : '',
-        overall_attendance: item.overall_attendance ? item.overall_attendance : ''
+        roll_no: item.r_rollno,
+        result_entry_option:'',
+        result_entry: this.getResultEntryRemark(item.au_login_id)
       });
       counter++;
       this.formgroupArray.push({
@@ -264,8 +292,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
           class_id: this.attendanceThemeTwoForm.value.syl_class_id,
           sec_id: this.attendanceThemeTwoForm.value.syl_section_id,
           login_id: item.au_login_id,
-          present_days: item.present_days,
-          overall_attendance: item.overall_attendance,
+          result_entry_option:  '',
+          result_entry: this.getResultEntryRemark(item.au_login_id),
           session_id: this.session.ses_id,
           created_by: this.currentUser.login_id,
           term_id: this.attendanceThemeTwoForm.value.syl_term_id,
@@ -274,47 +302,123 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
         })
       });
     }
+    console.log('this.ELEMENT_DATA--', this.ELEMENT_DATA);
     this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.termAttendanceDataSource.sort = this.sort;
+  }
+
+  getResultEntryRemark(login_id) {
+    var flag = false;
+    var remarkData = '';
+    for (let i = 0; i < this.resultEntryData.length; i++) {
+      // console.log(login_id, this.resultEntryData[i]['erem_login_id']);
+      if (this.resultEntryData[i]['erem_login_id'] === login_id) {
+        remarkData = this.resultEntryData[i]['erem_remark'];
+        // console.log('remarkData', remarkData);
+        flag = true;
+        break;
+      }
+    }
+    return remarkData;
+  }
+
+  getResultEntry() {
+    let inputJson = {};
+    this.resultEntryData = [];
+    this.termDataFlag = false;
+    if (this.attendanceThemeTwoForm.value.syl_class_id) {
+      inputJson['ere_class_id'] = this.attendanceThemeTwoForm.value.syl_class_id;
+    }
+    if (this.attendanceThemeTwoForm.value.syl_section_id) {
+      inputJson['ere_sec_id'] = this.attendanceThemeTwoForm.value.syl_section_id;
+    }
+    if (this.attendanceThemeTwoForm.value.syl_term_id) {
+      inputJson['ere_term_id'] = this.attendanceThemeTwoForm.value.syl_term_id;
+    }
+    if (this.attendanceThemeTwoForm.value.syl_exam_id) {
+      inputJson['ere_exam_id'] = this.attendanceThemeTwoForm.value.syl_exam_id;
+    }
+    if (this.attendanceThemeTwoForm.value.syl_subexam_id) {
+      inputJson['ere_sub_exam_id'] = this.attendanceThemeTwoForm.value.syl_subexam_id;
+    }
+    inputJson['ere_remarks_type'] = '3';
+    this.examService.getRemarksEntryStudent(inputJson).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        console.log('result--', result);
+        this.resultEntryData = result.data;
+        this.termDataFlag = true;
+      }
+    });
   }
 
   finalSubmit() {
     console.log(this.ELEMENT_DATA);
     console.log(this.formgroupArray);
-    let inputJson = [];
+    let inputJson = {};
+    let remarkArray = [];
     for (var i = 0; i < this.formgroupArray.length; i++) {
-      inputJson.push(this.formgroupArray[i]['formGroup']['value']);
+
+      remarkArray.push(
+        {
+          erem_login_id: this.formgroupArray[i]['formGroup']['value']['login_id'],
+          erem_remark: this.formgroupArray[i]['formGroup']['value']['result_entry']
+        }
+      );
+
     }
 
-    this.examService.insertTermAttendance(inputJson)
-      .subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            this.displayData();
-            this.commonService.showSuccessErrorMessage('Term Attendance Submitted Successfully', 'success');
-          } else {
-            this.commonService.showSuccessErrorMessage('Error While Submitting Term Attendance', 'error');
-          }
-        });
-
-    console.log('inputJson--', inputJson);
+    inputJson['examEntry'] = {
+      ere_class_id: this.attendanceThemeTwoForm.value.syl_class_id,
+      ere_sec_id: this.attendanceThemeTwoForm.value.syl_section_id,
+      ere_remarks_type: '3',
+      ere_term_id: this.attendanceThemeTwoForm.value.syl_term_id,
+      ere_exam_id: this.attendanceThemeTwoForm.value.syl_exam_id,
+      ere_sub_exam_id: this.attendanceThemeTwoForm.value.syl_subexam_id
+    }
+    inputJson['examEntryMapping'] = remarkArray;
+    inputJson['examEntryStatus'] = '1';
+    inputJson['externalFlag'] = 3;
+    inputJson['examEntryStatus'] = '1';
+    this.examService.addReMarksEntry(inputJson).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        //this.displayData();
+      }
+    });
   }
 
   finalUpdate() {
-    let inputJson = [];
+    console.log(this.ELEMENT_DATA);
+    console.log(this.formgroupArray);
+    let inputJson = {};
+    let remarkArray = [];
     for (var i = 0; i < this.formgroupArray.length; i++) {
-      inputJson.push(this.formgroupArray[i]['formGroup']['value']);
+
+      remarkArray.push(
+        {
+          erem_login_id: this.formgroupArray[i]['formGroup']['value']['login_id'],
+          erem_remark: this.formgroupArray[i]['formGroup']['value']['result_entry']
+        }
+      );
+
     }
 
-    this.examService.updateTermAttendance(inputJson)
-      .subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            this.displayData();
-            this.commonService.showSuccessErrorMessage('Term Attendance Updated Successfully', 'success');
-          } else {
-            this.commonService.showSuccessErrorMessage('Error While Updating Term Attendance', 'error');
-          }
-        });
+    inputJson['examEntry'] = {
+      ere_class_id: this.attendanceThemeTwoForm.value.syl_class_id,
+      ere_sec_id: this.attendanceThemeTwoForm.value.syl_section_id,
+      ere_remarks_type: '3',
+      ere_term_id: this.attendanceThemeTwoForm.value.syl_term_id,
+      ere_exam_id: this.attendanceThemeTwoForm.value.syl_exam_id,
+      ere_sub_exam_id: this.attendanceThemeTwoForm.value.syl_subexam_id
+    }
+    inputJson['examEntryMapping'] = remarkArray;
+    inputJson['examEntryStatus'] = '1';
+    inputJson['externalFlag'] = 3;
+    inputJson['examEntryStatus'] = '1';
+    this.examService.addReMarksEntry(inputJson).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        //this.displayData();
+      }
+    });
   }
 
   finalCancel() {
@@ -332,9 +436,9 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
 
 export interface Element {
   sr_no: any;
-  roll_no:any;
-  au_admission_no:any;
+  au_admission_no: any;
+  roll_no: any;
   au_full_name: any;
-  present_days: any;
-  overall_attendance: any;
+  result_entry_option:any;
+  result_entry: any;
 }

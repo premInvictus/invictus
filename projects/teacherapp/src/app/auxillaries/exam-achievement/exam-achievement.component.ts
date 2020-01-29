@@ -27,6 +27,8 @@ export class ExamAchievementComponent implements OnInit {
   formgroupArray: any[] = [];
   finalArray: any[] = [];
   submitFlag = false;
+  ctclass_id;
+  ctsection_id;
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private fbuild: FormBuilder,
@@ -42,7 +44,7 @@ export class ExamAchievementComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
-    this.getClass();
+    this.getClass();    
   }
   buildForm() {
     this.paramform = this.fbuild.group({
@@ -52,15 +54,67 @@ export class ExamAchievementComponent implements OnInit {
     });
     this.formgroupArray = [];
   }
+  // getClass() {
+  //   this.classArray = [];
+  //   this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+  //     if (result && result.status === 'ok') {
+  //       this.classArray = result.data;
+  //     } else {
+  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+  //     }
+  //   });
+  // }
+
   getClass() {
-    this.classArray = [];
-    this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.classArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-      }
-    });
+    this.sectionArray = [];
+    const classParam: any = {};
+    classParam.role_id = this.currentUser.role_id;
+    classParam.login_id = this.currentUser.login_id;
+    this.smartService.getClassData(classParam)
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
+            this.classArray = result.data;
+            this.ctForClass();
+          }
+        }
+      );
+  }
+  ctForClass() {
+    this.examService.ctForClass({ uc_login_id: this.currentUser.login_id })
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
+            this.ctclass_id = result.data[0].uc_class_id;
+            this.ctsection_id = result.data[0].uc_sec_id;
+            this.getSectionsByClass();
+          }
+        }
+      );
+  }
+  // get section list according to selected class
+  getSectionsByClass() {    
+    const sectionParam: any = {};
+    sectionParam.class_id = this.ctclass_id;
+    this.smartService.getSectionsByClass(sectionParam)
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
+            this.sectionArray = result.data;
+            this.paramform.patchValue({
+              'a_class_id' : this.ctclass_id,
+              'a_sec_id':this.ctsection_id
+            });
+            this.getClassTerm();
+          } else {
+            this.paramform.patchValue({
+              'a_class_id' : this.ctclass_id
+            });
+            this.getClassTerm();
+            this.sectionArray = [];
+          }
+        }
+      );
   }
 
   getClassTerm() {
@@ -80,19 +134,19 @@ export class ExamAchievementComponent implements OnInit {
   onTextChange($event) {
     this.submitFlag = true;
   }
-  getSectionsByClass() {
-    this.paramform.patchValue({
-      a_term_id: '',
-    });
-    this.sectionArray = [];
-    this.smartService.getSectionsByClass({ class_id: this.paramform.value.a_class_id }).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.sectionArray = result.data;
-      } else {
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-      }
-    });
-  }
+  // getSectionsByClass() {
+  //   this.paramform.patchValue({
+  //     a_term_id: '',
+  //   });
+  //   this.sectionArray = [];
+  //   this.smartService.getSectionsByClass({ class_id: this.paramform.value.a_class_id }).subscribe((result: any) => {
+  //     if (result && result.status === 'ok') {
+  //       this.sectionArray = result.data;
+  //     } else {
+  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+  //     }
+  //   });
+  // }
   fetchDetails() {
     this.formgroupArray = [];
     this.ELEMENT_DATA = [];

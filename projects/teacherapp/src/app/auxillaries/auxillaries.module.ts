@@ -9,6 +9,8 @@ import { AuxillariesRoutingModule } from './auxillaries-routing.module';
 import { LoadingModule } from 'ngx-loading';
 import { SharedModule } from '../shared-module/share-module.module';
 import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
+import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
+import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
 
 @NgModule({
 	imports: [
@@ -26,7 +28,9 @@ import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable
 		})
 	],
 	declarations: [
-		TeacherTimetableComponent
+		TeacherTimetableComponent,
+		BmiCalculatorComponent,
+		ExamAchievementComponent
 	],
 	entryComponents: [],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -1376,12 +1376,12 @@
                         <thead>
                             <tr><br></tr>
                             <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1 && remarkOfSub()">
-                                <td width="20%" valign="top">Remarks</td>
+                                <td width="10%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
                             </tr>
                             <tr *ngIf="data.ect_exam_type == 2 && remarkOfSub()">
-                                <td width="20%" valign="top">Remarks</td>
+                                <td width="10%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub() | titlecase}}</td>
                             </tr>
@@ -1391,10 +1391,22 @@
                                 <td> {{userachivement?.a_achievement | titlecase}}</td>
                             </tr>
                             <tr><br></tr>
-                            <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
+                            <!-- <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
                                 <td style="text-align: left">Result</td>
                                 <td>:</td>
                                 <td> {{getPassResult(data?.param?.eme_term_id)}}</td>
+                            </tr> -->
+                            <tr class="margin-top-10"
+                                *ngIf="data.ect_exam_type == 1 && remarkOfResult(studentDetails?.au_login_id)">
+                                <td style="text-align: left">Result</td>
+                                <td>:</td>
+                                <td> {{remarkOfResult(studentDetails?.au_login_id)}}</td>
+                            </tr>
+                            <tr class="margin-top-10"
+                                *ngIf="data.ect_exam_type == 2 && remarkOfResult(studentDetails?.au_login_id)">
+                                <td style="text-align: left">Result</td>
+                                <td>:</td>
+                                <td> {{remarkOfResult(studentDetails?.au_login_id)}}</td>
                             </tr>
                         </thead>
                     </table>
@@ -1415,7 +1427,7 @@
                                     </thead>
                                 </table>
                             </th>
-                            <th style="text-align: center; vertical-align: bottom;" height="80">
+                            <th style="text-align: left; vertical-align: bottom;" height="80">
                                 <table>
                                     <thead>
                                         <tr>
@@ -1471,7 +1483,8 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
+                                        Name
                                     </th>
                                     <td *ngFor="let item of GradeSet"
                                         style="border: 1px solid black;border-collapse: collapse;padding: 5px">
@@ -1493,11 +1506,11 @@
                         <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
                             <tbody>
                                 <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade
+                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
                                         Name </th>
                                     <td *ngFor="let item of GradeSetPoint"
                                         style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item?.egs_grade_name}} ( {{item?.egs_grade_text}} )
+                                        {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
                                     </td>
                                 </tr>
                                 <!-- <tr>
