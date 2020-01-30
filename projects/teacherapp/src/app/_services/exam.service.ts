@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoaderService } from '../_services';
+import { LoaderService } from '../_services/loader.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
