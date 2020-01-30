@@ -147,8 +147,8 @@
                 <ng-container *ngFor="let eachterm of printData.so_printData">
                     <ng-container *ngFor="let sub_category of eachterm.so_sub_category_arr">
                         <ng-container *ngIf="term == eachterm.term_id">
-                            <ng-template [ngIf]="data.ect_exam_type == 2">
-                                <ng-container *ngIf="eachterm.so_exam['sub_category'].length > 0">
+                            <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepatternso">
+                                <ng-container *ngIf="eachterm.so_exam[sub_category].length > 0">
                                     <ng-template [ngIf]="obtainedGradeAvgHighest.subjectwise_bifurcation"
                                         [ngIfElse]="not_subjectwise_bifurcation_subexam">
                                         <table class="table-100 custom-table" style="margin-bottom: 15px">
@@ -181,15 +181,21 @@
                                                         *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
                                                         <ng-container
                                                             *ngFor="let pexam of eachterm.so_exam[sub_category]">
-                                                            <ng-container
-                                                                *ngIf="pexam.is_noncore == 0; let tempColspan = 1;">
+                                                            <ng-container *ngIf="pexam.is_noncore == 0;">
                                                                 <ng-container
-                                                                    *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1; let tempColspan = 2;">
+                                                                    *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                    <th [attr.colspan]="2"
+                                                                        class="custom-th text-center">
+                                                                        {{pexam.exam_name | titlecase}}
+                                                                        <br>({{pexam.exam_weightage}})</th>
                                                                 </ng-container>
-                                                                <th [attr.colspan]="tempColspan"
-                                                                    class="custom-th text-center">
-                                                                    {{pexam.exam_name | titlecase}}
-                                                                    <br>({{pexam.exam_weightage}})</th>
+                                                                <ng-container
+                                                                    *ngIf="!pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                    <th [attr.colspan]="1"
+                                                                        class="custom-th text-center">
+                                                                        {{pexam.exam_name | titlecase}}
+                                                                        <br>({{pexam.exam_weightage}})</th>
+                                                                </ng-container>
                                                             </ng-container>
                                                         </ng-container>
                                                         <ng-container *ngIf="eachterm.is_noncore[sub_category]">
@@ -198,15 +204,21 @@
                                                             </th>
                                                             <ng-container
                                                                 *ngFor="let pexam of eachterm.so_exam[sub_category]">
-                                                                <ng-container
-                                                                    *ngIf="pexam.is_noncore == 1; let tempColspan = 1;">
+                                                                <ng-container *ngIf="pexam.is_noncore == 1;">
                                                                     <ng-container
-                                                                        *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1; let tempColspan = 2;">
+                                                                        *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                        <th [attr.colspan]="2"
+                                                                            class="custom-th text-center">
+                                                                            {{pexam.exam_name | titlecase}}
+                                                                            <br>({{pexam.exam_weightage}})</th>
                                                                     </ng-container>
-                                                                    <th [attr.colspan]="tempColspan"
-                                                                        class="custom-th text-center">
-                                                                        {{pexam.exam_name | titlecase}}
-                                                                        <br>({{pexam.exam_weightage}})</th>
+                                                                    <ng-container
+                                                                        *ngIf="!pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                        <th [attr.colspan]="1"
+                                                                            class="custom-th text-center">
+                                                                            {{pexam.exam_name | titlecase}}
+                                                                            <br>({{pexam.exam_weightage}})</th>
+                                                                    </ng-container>
                                                                 </ng-container>
                                                             </ng-container>
                                                         </ng-container>
@@ -232,7 +244,8 @@
                                             <tbody>
                                                 <ng-container *ngFor="let psubject of eachterm.sub_mark">
                                                     <ng-container *ngIf="psubject.sub_category == sub_category">
-                                                        <ng-template [ngIf]="psubject.childSub.length == 0" [ngIfElse]="childdiv">
+                                                        <ng-template [ngIf]="psubject.childSub.length == 0"
+                                                            [ngIfElse]="childdiv">
                                                             <tr class="custom-tr">
                                                                 <ng-container *ngIf="psubject.ess_additional == 0">
                                                                     <td [attr.colspan]="2"
@@ -245,41 +258,55 @@
                                                                         {{psubject.sub_name}} (Add.)
                                                                     </td>
                                                                 </ng-container>
-                                                                <ng-container *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
-                                                                    <ng-container *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
+                                                                <ng-container
+                                                                    *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
                                                                         <td class="custom-td"></td>
-                                                                        <td class="custom-td">{{psubexam.student_mark}}</td>
+                                                                        <td class="custom-td">{{psubexam.student_mark}}
+                                                                        </td>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <ng-container *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
-                                                                    <ng-container *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                <ng-container
+                                                                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let psubexam of psubject.sub_exam_mark">
                                                                         <ng-container *ngIf="psubexam.is_noncore == 0">
                                                                             <td class="custom-td"
-                                                                            *ngIf="psubexam.bifurcated_marks"></td>
+                                                                                *ngIf="psubexam.bifurcated_marks"></td>
                                                                             <td class="custom-td">
-                                                                                {{psubexam.student_mark)}}
+                                                                                {{psubexam.student_mark}}
                                                                             </td>
                                                                         </ng-container>
                                                                     </ng-container>
-                                                                    <ng-container *ngIf="eachterm.is_noncore[sub_category]">
-                                                                        <td class="custom-td">{{psubject.sub_grade_mark_core}} {{psubject.fail_status_core}}</td>
-                                                                        <ng-container *ngFor="let psubexam of psubject.sub_exam_mark">
-                                                                            <ng-container *ngIf="psubexam.is_noncore == 1">
+                                                                    <ng-container
+                                                                        *ngIf="eachterm.is_noncore[sub_category]">
+                                                                        <td class="custom-td">
+                                                                            {{psubject.sub_grade_mark_core}}
+                                                                            {{psubject.fail_status_core}}</td>
+                                                                        <ng-container
+                                                                            *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                            <ng-container
+                                                                                *ngIf="psubexam.is_noncore == 1">
                                                                                 <td class="custom-td"
-                                                                                *ngIf="psubexam.bifurcated_marks"></td>
+                                                                                    *ngIf="psubexam.bifurcated_marks">
+                                                                                </td>
                                                                                 <td class="custom-td">
-                                                                                    {{psubexam.student_mark)}}
+                                                                                    {{psubexam.student_mark}}
                                                                                 </td>
                                                                             </ng-container>
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </ng-container>
-                                                                <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                                    {{psubject.sub_grade_mark)}}
+                                                                <td *ngIf="obtainedGradeAvgHighest.obtained"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_grade_mark}}
                                                                     {{psubject.fail_status}}</td>
-                                                                <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
+                                                                <td *ngIf="obtainedGradeAvgHighest.grade"
+                                                                    class="custom-td">
                                                                     {{psubject.sub_grade_value}}</td>
-                                                                <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
+                                                                <td *ngIf="obtainedGradeAvgHighest.avg"
+                                                                    class="custom-td">
                                                                     {{psubject.sub_avg_mark}}</td>
                                                                 <td *ngIf="obtainedGradeAvgHighest.highest"
                                                                     class="custom-td">
@@ -304,12 +331,19 @@
                                                                 <td class="custom-td text-left padding-left-8px">
                                                                     {{psubject.childSub[0].sub_name}}</td>
 
-                                                                <ng-container *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
-                                                                    <ng-container *ngFor="let childsubexam of psubject.childSub[0].sub_exam_mark[0].student_mark_subexam">
-                                                                        <td class="custom-td">{{childsubexam.student_mark}}</td>
-                                                                        <ng-container *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
-                                                                            <ng-container *ngIf="psubexam.se_id == childsubexam.se_id">
-                                                                                <td [attr.rowspan]="psubject.childSub_count" class="custom-td">{{psubexam.student_mark}}</td>
+                                                                <ng-container
+                                                                    *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let childsubexam of psubject.childSub[0].sub_exam_mark[0].student_mark_subexam">
+                                                                        <td class="custom-td">
+                                                                            {{childsubexam.student_mark}}</td>
+                                                                        <ng-container
+                                                                            *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
+                                                                            <ng-container
+                                                                                *ngIf="psubexam.se_id == childsubexam.se_id">
+                                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                                    class="custom-td">
+                                                                                    {{psubexam.student_mark}}</td>
                                                                             </ng-container>
                                                                         </ng-container>
                                                                     </ng-container>
@@ -317,1302 +351,391 @@
 
 
                                                                 <!-- next day work -->
+                                                                <ng-container
+                                                                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                        <ng-container *ngIf="psubexam.is_noncore == 0">
+                                                                            <ng-container
+                                                                                *ngFor="let childsubexam of psubject.childSub[0].sub_exam_mark">
+                                                                                <ng-container
+                                                                                    *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
+                                                                                    <ng-container
+                                                                                        *ngIf="psubexam.exam_id == childsubexam.exam_id">
+                                                                                        <td class="custom-td"
+                                                                                            *ngIf="psubexam.bifurcated_marks">
+                                                                                            {{childsubexam.student_mark}}
+                                                                                        </td>
+                                                                                    </ng-container>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                            <td [attr.rowspan]="psubject.childSub_count"
+                                                                                class="custom-td">
+                                                                                {{psubexam.student_mark}}</td>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="eachterm.is_noncore[sub_category]">
+                                                                        <td [attr.rowspan]="psubject.childSub_count"
+                                                                            class="custom-td">
+                                                                            {{psubject.sub_grade_mark_core}}
+                                                                            {{psubject.fail_status_core}}</td>
+                                                                        <ng-container
+                                                                            *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                            <ng-container
+                                                                                *ngIf="psubexam.is_noncore == 0">
+                                                                                <ng-container
+                                                                                    *ngFor="let childsubexam of psubject.childSub[0].sub_exam_mark">
+                                                                                    <ng-container
+                                                                                        *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
+                                                                                        <ng-container
+                                                                                            *ngIf="psubexam.exam_id == childsubexam.exam_id">
+                                                                                            <td class="custom-td"
+                                                                                                *ngIf="psubexam.bifurcated_marks">
+                                                                                                {{childsubexam.student_mark}}
+                                                                                            </td>
+                                                                                        </ng-container>
+                                                                                    </ng-container>
+                                                                                </ng-container>
+                                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                                    class="custom-td">
+                                                                                    {{psubexam.student_mark}}</td>
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
 
-                                                                    
-                                                                <ng-container *ngFor="let item of sexamArray">
-                                                                    <td class="custom-td"
-                                                                        *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                        {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub.childSub[0].sub_id)}}
-                                                                    </td>
-                                                                    <td [attr.rowspan]="sub.childSub.length" class="custom-td">
-                                                                        {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
-                                                                    </td>
-                                                                </ng-container>
-        
-                                                                <td [attr.rowspan]="sub.childSub.length"
-                                                                    *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                                    {{calculateTotal(sub.sub_id,term)}}
-                                                                    {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                                <td [attr.rowspan]="sub.childSub.length"
-                                                                    *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                                    {{calculateGrade(sub.sub_id,term)}}</td>
-                                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                                    <td [attr.rowspan]="sub.childSub.length"
-                                                                        *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                                        {{getClassAverage(sub.sub_id)}}</td>
-                                                                    <td [attr.rowspan]="sub.childSub.length"
-                                                                        *ngIf="obtainedGradeAvgHighest.highest"
-                                                                        class="custom-td">
-                                                                        {{getClassHighest(sub.sub_id)}}</td>
-                                                                </ng-container>
+
+
+                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                    *ngIf="obtainedGradeAvgHighest.obtained"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_grade_mark}}
+                                                                    {{psubject.fail_status}}</td>
+                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                    *ngIf="obtainedGradeAvgHighest.grade"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_grade_value}}</td>
+                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                    *ngIf="obtainedGradeAvgHighest.avg"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_avg_mark}}</td>
+                                                                <td [attr.rowspan]="psubject.childSub_count"
+                                                                    *ngIf="obtainedGradeAvgHighest.highest"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_max_mark}}</td>
                                                             </tr>
-                                                            <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                                <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
+                                                            <ng-container
+                                                                *ngFor="let subsubject of psubject.childSub; let i=index">
+                                                                <tr *ngIf="i != 0">
                                                                     <td class="custom-td text-left padding-left-8px">
-                                                                        {{sub1.sub_name}}
+                                                                        {{subsubject.sub_name}}
                                                                     </td>
-                                                                    <ng-container *ngFor="let item of sexamArray">
-                                                                        <td class="custom-td"
-                                                                            *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                            {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub1.sub_id)}}
-                                                                        </td>
+                                                                    <ng-container
+                                                                        *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                        <ng-container
+                                                                            *ngFor="let eachsubexam of subsubject.sub_exam_mark[0].student_mark_subexa">
+                                                                            <ng-container
+                                                                                *ngFor="let psubexam of eachsubexam">
+                                                                                <td class="custom-td">
+                                                                                    {{psubexam.student_mark}}</td>
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                        <ng-container
+                                                                            *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                            <ng-container
+                                                                                *ngFor="let childsubexam of subsubject.sub_exam_mark">
+                                                                                <ng-container
+                                                                                    *ngIf="psubexam.exam_id == childsubexam.exam_id">
+                                                                                    <td class="custom-td"
+                                                                                        *ngIf="psubexam.bifurcated_marks">
+                                                                                        {{childsubexam.student_mark}}
+                                                                                    </td>
+                                                                                </ng-container>
+                                                                            </ng-container>
+                                                                        </ng-container>
                                                                     </ng-container>
                                                                 </tr>
                                                             </ng-container>
                                                         </ng-template>
                                                     </ng-container>
                                                 </ng-container>
-                                                <tr class="custom-tr">
-                                                    <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
-                                                        Total({{getTotalMainSubject('A')}}
-                                                        main subject)</td>
-                                                    <td class="custom-td"
-                                                        [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                        {{getPassTotalPercentage(term)}}%</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
-                                                    <ng-container *ngIf="term == data.param.eme_term_id">
-                                                        <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
+                                                <ng-container
+                                                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                    <ng-container *ngIf="sub_category == 'A'">
+                                                        <tr class="custom-tr">
+                                                            <td [attr.colspan]="2"
+                                                                class="custom-td text-left padding-left-8px">
+                                                                Total({{eachterm.term_total_so_subject[sub_category]}}
+                                                                main subject)</td>
+                                                            <td class="custom-td"
+                                                                [attr.colspan]="eachterm.examcolspan[sub_category]">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.obtained"
+                                                                class="custom-td">
+                                                                {{eachterm.term_student_total_percentage[sub_category]}}%
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.highest"
+                                                                class="custom-td"></td>
+                                                        </tr>
                                                     </ng-container>
+                                                </ng-container>
+                                            </tbody>
+                                        </table>
+                                    </ng-template>
+                                    <ng-template #not_subjectwise_bifurcation_subexam>
+                                        <table class="table-100 custom-table" style="margin-bottom: 15px">
+                                            <thead>
+                                                <tr class="custom-tr">
+                                                    <th class="custom-th text-center" width="200px">
+                                                        Scholastic Area {{sub_category}}</th>
+                                                    <th [attr.colspan]="eachterm.colspan[sub_category]"
+                                                        class="custom-th text-center">
+                                                        {{eachterm.term_name}}
+                                                        <ng-container
+                                                            *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                            ({{eachterm.term_total_mark[sub_category]}} Marks)
+                                                        </ng-container>
+                                                    </th>
                                                 </tr>
+                                                <tr class="custom-tr">
+                                                    <th class="custom-th text-center">Subject Name
+                                                    </th>
+                                                    <ng-container
+                                                        *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                        <ng-container
+                                                            *ngFor="let subexam of eachterm.so_exam[sub_category][0]['exam_sub_exam_max_marks']">
+                                                            <th class="custom-th text-center">
+                                                                {{subexam.sexam_name | titlecase}}
+                                                                <br>({{subexam.exam_max_marks}})</th>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <ng-container
+                                                        *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                        <ng-container
+                                                            *ngFor="let pexam of eachterm.so_exam[sub_category]">
+                                                            <ng-container *ngIf="pexam.is_noncore == 0;">
+                                                                <th class="custom-th text-center">
+                                                                    {{pexam.exam_name | titlecase}}
+                                                                    <br>({{pexam.exam_weightage}})
+                                                                </th>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="eachterm.is_noncore[sub_category]">
+                                                            <th class="custom-th text-center"> Marks
+                                                                Obtained<br>({{eachterm.term_total_mark_core[sub_category]}})
+                                                            </th>
+                                                            <ng-container
+                                                                *ngFor="let pexam of eachterm.so_exam[sub_category]">
+                                                                <ng-container *ngIf="pexam.is_noncore == 1;">
+                                                                    <th class="custom-th text-center">
+                                                                        {{pexam.exam_name | titlecase}}
+                                                                        <br>({{pexam.exam_weightage}})</th>
+
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </ng-container>
+                                                    <th *ngIf="obtainedGradeAvgHighest.obtained"
+                                                        class="custom-th text-center">
+                                                        Marks
+                                                        Obtained<br>({{eachterm.term_total_mark[sub_category]}})</th>
+                                                    <th *ngIf="obtainedGradeAvgHighest.grade"
+                                                        class="custom-th text-center">
+                                                        Grade
+                                                    </th>
+                                                    <th *ngIf="obtainedGradeAvgHighest.avg"
+                                                        class="custom-th text-center">
+                                                        Average
+                                                    </th>
+                                                    <th *ngIf="obtainedGradeAvgHighest.highest"
+                                                        class="custom-th text-center">
+                                                        Highest
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <ng-container *ngFor="let psubject of eachterm.sub_mark">
+                                                    <ng-container *ngIf="psubject.sub_category == sub_category">
+                                                        <ng-template [ngIf]="psubject.sub_parent_id == 0">
+                                                            <tr class="custom-tr">
+                                                                <ng-container *ngIf="psubject.ess_additional == 0">
+                                                                    <td class="custom-td text-left padding-left-8px">
+                                                                        {{psubject.sub_name}}</td>
+                                                                </ng-container>
+                                                                <ng-container *ngIf="psubject.ess_additional == 1">
+                                                                    <td class="custom-td text-left padding-left-8px">
+                                                                        {{psubject.sub_name}} (Add.)
+                                                                    </td>
+                                                                </ng-container>
+                                                                <ng-container
+                                                                    *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let psubexam of psubject.sub_exam_mark[0].student_mark_subexam">
+                                                                        <td class="custom-td">{{psubexam.student_mark}}
+                                                                        </td>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <ng-container
+                                                                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                                    <ng-container
+                                                                        *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                        <ng-container *ngIf="psubexam.is_noncore == 0">
+                                                                            <td class="custom-td">
+                                                                                {{psubexam.student_mark}}
+                                                                            </td>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                    <ng-container
+                                                                        *ngIf="eachterm.is_noncore[sub_category]">
+                                                                        <td class="custom-td">
+                                                                            {{psubject.sub_grade_mark_core}}
+                                                                            {{psubject.fail_status_core}}</td>
+                                                                        <ng-container
+                                                                            *ngFor="let psubexam of psubject.sub_exam_mark">
+                                                                            <ng-container
+                                                                                *ngIf="psubexam.is_noncore == 1">
+                                                                                <td class="custom-td">
+                                                                                    {{psubexam.student_mark}}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                                <td *ngIf="obtainedGradeAvgHighest.obtained"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_grade_mark}}
+                                                                    {{psubject.fail_status}}</td>
+                                                                <td *ngIf="obtainedGradeAvgHighest.grade"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_grade_value}}</td>
+                                                                <td *ngIf="obtainedGradeAvgHighest.avg"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_avg_mark}}</td>
+                                                                <td *ngIf="obtainedGradeAvgHighest.highest"
+                                                                    class="custom-td">
+                                                                    {{psubject.sub_max_mark}}</td>
+                                                            </tr>
+                                                        </ng-template>
+                                                    </ng-container>
+                                                </ng-container>
+                                                <ng-container
+                                                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                                                    <ng-container *ngIf="sub_category == 'A'">
+                                                        <tr class="custom-tr">
+                                                            <td class="custom-td text-left padding-left-8px">
+                                                                Total({{eachterm.term_total_so_subject[sub_category]}}
+                                                                main subject)</td>
+                                                            <td class="custom-td"
+                                                                [attr.colspan]="eachterm.examcolspan[sub_category]">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.obtained"
+                                                                class="custom-td">
+                                                                {{eachterm.term_student_total_percentage[sub_category]}}%
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.highest"
+                                                                class="custom-td"></td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </ng-container>
                                             </tbody>
                                         </table>
                                     </ng-template>
                                 </ng-container>
+                            </ng-template>
+                            <ng-template #ccepatternso>
+                                <table class="table-100 custom-table" style="margin-bottom: 15px">
+                                    <thead>
+                                        <tr class="custom-tr">
+                                            <th [attr.colspan]="2" class="custom-th text-center" width="200px">
+                                                Scholastic
+                                                Area {{sub_category}}</th>
+                                            <th [attr.colspan]="eachterm.colspan[sub_category]"
+                                                class="custom-th text-center">{{eachterm.term_name}}
+                                            </th>
+                                        </tr>
+                                        <tr class="custom-tr">
+                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
+                                                <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject
+                                                    Name
+                                                </th>
+                                                <th width="5%" class="custom-th text-center">Grade</th>
+                                                <th width="55%" class="custom-th text-center">Remark</th>
+                                            </ng-container>
+                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
+                                                <th width="80%" [attr.colspan]="2" class="custom-th text-center">Subject
+                                                    Name
+                                                </th>
+                                                <th width="20%" class="custom-th text-center">Grade</th>
+                                            </ng-container>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <ng-container *ngFor="let psubject of eachterm.sub_mark">
+                                            <ng-container *ngIf="psubject.sub_category == sub_category">
+                                                <ng-template [ngIf]="psubject.childSub.length == 0"
+                                                    [ngIfElse]="childdiv1">
+                                                    <tr class="custom-tr">
+                                                        <td class="custom-td text-left padding-left-8px"
+                                                            [attr.colspan]="2">
+                                                            {{psubject.sub_name | titlecase}}</td>
+                                                        <td class="custom-td">
+                                                            {{psubject.sub_grade_value}}
+                                                        </td>
+                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
+                                                            {{psubject.sub_remark | titlecase}}</td>
+                                                    </tr>
+                                                </ng-template>
+                                                <ng-template #childdiv1>
+                                                    <tr class="custom-tr">
+                                                        <td class="custom-td text-left padding-left-8px"
+                                                            [attr.rowspan]="psubject.childSub_count">
+                                                            {{psubject.sub_name}}</td>
+                                                        <td class="custom-td text-left padding-left-8px">
+                                                            {{psubject.childSub[0].sub_name}}</td>
+                                                        <td class="custom-td">
+                                                            {{psubject.childSub[0].sub_grade_value}}
+                                                        </td>
+                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
+                                                            {{psubject.sub_remark | titlecase}}
+                                                        </td>
+                                                    </tr>
+                                                    <ng-container *ngFor="let child of psubject.childSub; let i=index">
+                                                        <tr class="custom-tr" *ngIf="i != 0">
+                                                            <td class="custom-td text-left padding-left-8px">
+                                                                {{child.sub_name}}
+                                                            </td>
+                                                            <td class="custom-td">
+                                                                {{child.sub_grade_value}}
+                                                            </td>
+                                                            <td *ngIf="obtainedGradeAvgHighest.remark"
+                                                                class="custom-td">
+                                                                {{psubject.sub_remark | titlecase}}</td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </ng-template>
+                                            </ng-container>
+                                        </ng-container>
+                                    </tbody>
+                                </table>
                             </ng-template>
                         </ng-container>
                     </ng-container>
                 </ng-container>
             </ng-container>
 
-            <!-- user selected subexam or subexam exist -->
-            <ng-container *ngIf="data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0">
-                <ng-template [ngIf]="data.ect_exam_type == 2">
-                    <ng-template [ngIf]="obtainedGradeAvgHighest.subjectwise_bifurcation"
-                        [ngIfElse]="not_subjectwise_bifurcation_subexam">
-                        <div class="row" *ngFor="let term of termArray">
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
-                                <!-- scholastic subject A -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','A', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic Area A</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="(sexamArray[0].exam_sub_exam_max_marks.length) * 2"
-                                                        class="custom-th text-center">
-                                                        Term-{{term}}</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
-                                                <th [attr.colspan]="2" class="custom-th text-center"
-                                                    *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                    {{item.sexam_name | titlecase}}
-                                                    <br>({{item.exam_max_marks}})</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <ng-template [ngIf]="sub.childSub.length == 0"
-                                                    [ngIfElse]="childdiv_subexam">
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}</td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}} (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container
-                                                            *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                            <td class="custom-td"></td>
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                        </ng-container>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template #childdiv_subexam>
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                                (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.childSub[0].sub_name}}</td>
-                                                        <ng-container
-                                                            *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSubexam(sub.childSub[0].sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                            <td [attr.rowspan]="sub.childSub.length" class="custom-td">
-                                                                {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                        </ng-container>
-                                                    </tr>
-                                                    <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                        <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                            <td class="custom-td text-left padding-left-8px">
-                                                                {{sub1.sub_name}}
-                                                            </td>
-                                                            <ng-container
-                                                                *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                                <td class="custom-td">
-                                                                    {{getCalculatedMarksSubexam(sub1.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                                </td>
-                                                            </ng-container>
-                                                        </tr>
-                                                    </ng-container>
-                                                </ng-template>
-                                            </ng-container>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                                <!-- scholastic subject B -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','B', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic Area B</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="(sexamArray[0].exam_sub_exam_max_marks.length) * 2"
-                                                        class="custom-th text-center">
-                                                        Term-{{term}}</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
-                                                <th [attr.colspan]="2" class="custom-th text-center"
-                                                    *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                    {{item.sexam_name | titlecase}}
-                                                    <br>({{item.exam_max_marks}})</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <ng-template [ngIf]="sub.childSub.length == 0"
-                                                    [ngIfElse]="childdiv_subexam">
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}</td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}} (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container
-                                                            *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                            <td class="custom-td"></td>
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                        </ng-container>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template #childdiv_subexam>
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                                (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.childSub[0].sub_name}}</td>
-                                                        <ng-container
-                                                            *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSubexam(sub.childSub[0].sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                            <td [attr.rowspan]="sub.childSub.length" class="custom-td">
-                                                                {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                            </td>
-                                                        </ng-container>
-                                                    </tr>
-                                                    <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                        <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                            <td class="custom-td text-left padding-left-8px">
-                                                                {{sub1.sub_name}}
-                                                            </td>
-                                                            <ng-container
-                                                                *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                                <td class="custom-td">
-                                                                    {{getCalculatedMarksSubexam(sub1.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                                </td>
-                                                            </ng-container>
-                                                        </tr>
-                                                    </ng-container>
-                                                </ng-template>
-                                            </ng-container>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                            </div>
-                        </div>
-                    </ng-template>
-                    <ng-template #not_subjectwise_bifurcation_subexam>
-                        <div class="row" *ngFor="let term of termArray">
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','A', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Area A</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray[0].exam_sub_exam_max_marks.length"
-                                                        class="custom-th text-center">
-                                                        Term-{{term}}</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center">Subject Name</th>
-                                                <th class="custom-th text-center"
-                                                    *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                    {{item.sexam_name | titlecase}}
-                                                    <br>({{item.exam_max_marks}})</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                    <ng-container *ngIf="sub.ess_additional == 0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="sub.ess_additional == 1">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                            (Add.)
-                                                        </td>
-                                                    </ng-container>
-                                                    <td class="custom-td"
-                                                        *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                        {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                    </td>
-
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','B', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Area B</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray[0].exam_sub_exam_max_marks.length"
-                                                        class="custom-th text-center">
-                                                        Term-{{term}}</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center">Subject Name</th>
-                                                <th class="custom-th text-center"
-                                                    *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                    {{item.sexam_name | titlecase}}
-                                                    <br>({{item.exam_max_marks}})</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                    <ng-container *ngIf="sub.ess_additional == 0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="sub.ess_additional == 1">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                            (Add.)
-                                                        </td>
-                                                    </ng-container>
-                                                    <td class="custom-td"
-                                                        *ngFor="let item of sexamArray[0].exam_sub_exam_max_marks">
-                                                        {{getCalculatedMarksSubSubexam(sub.sub_id, data.param.eme_exam_id, term, item.se_id)}}
-                                                    </td>
-
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-
-                            </div>
-                        </div>
-                    </ng-template>
-                </ng-template>
-            </ng-container>
-            <!-- user not selected subexam or subexam does not exist -->
-            <ng-container *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
-                <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepattern">
-                    <ng-template [ngIf]="obtainedGradeAvgHighest.subjectwise_bifurcation"
-                        [ngIfElse]="not_subjectwise_bifurcation">
-                        <div class="row" *ngFor="let term of termArray">
-                            <!-- scholstic exam Subjectwise bifurcation-->
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
-                                <!-- scholastic subject A -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','A', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic
-                                                    Area A</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray['A'].length + exambifurcateCount + obtainedGradeAvgHighestCount"
-                                                        class="custom-th text-center">
-                                                        Term
-                                                        -{{term}}
-                                                        ({{acedemicmarks}} Marks)</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
-                                                <ng-container *ngFor="let item of sexamArray['A']">
-                                                    <th [attr.colspan]="getExambirfurcateColspan(item)"
-                                                        class="custom-th text-center">
-                                                        {{item.exam_name | titlecase}}
-                                                        <br>({{item.exam_weightage}})</th>
-                                                </ng-container>
-
-                                                <th *ngIf="obtainedGradeAvgHighest.obtained"
-                                                    class="custom-th text-center">
-                                                    Marks
-                                                    Obtained<br>({{acedemicmarks}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.grade" class="custom-th text-center">
-                                                    Grade
-                                                </th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th *ngIf="obtainedGradeAvgHighest.avg"
-                                                        class="custom-th text-center">
-                                                        Average
-                                                    </th>
-                                                    <th *ngIf="obtainedGradeAvgHighest.highest"
-                                                        class="custom-th text-center">
-                                                        Highest</th>
-                                                </ng-container>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}</td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}} (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td"
-                                                                *ngIf="item.exam_bifurcate.bifurcated_marks"></td>
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                            {{calculateTotal(sub.sub_id,term)}}
-                                                            {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                            {{calculateGrade(sub.sub_id,term)}}</td>
-                                                        <ng-container *ngIf="term == data.param.eme_term_id">
-                                                            <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                                {{getClassAverage(sub.sub_id)}}</td>
-                                                            <td *ngIf="obtainedGradeAvgHighest.highest"
-                                                                class="custom-td">
-                                                                {{getClassHighest(sub.sub_id)}}</td>
-                                                        </ng-container>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template #childdiv>
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                                (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.childSub[0].sub_name}}</td>
-                                                        <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td"
-                                                                *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub.childSub[0].sub_id)}}
-                                                            </td>
-                                                            <td [attr.rowspan]="sub.childSub.length" class="custom-td">
-                                                                {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <td [attr.rowspan]="sub.childSub.length"
-                                                            *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                            {{calculateTotal(sub.sub_id,term)}}
-                                                            {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                        <td [attr.rowspan]="sub.childSub.length"
-                                                            *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                            {{calculateGrade(sub.sub_id,term)}}</td>
-                                                        <ng-container *ngIf="term == data.param.eme_term_id">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                                {{getClassAverage(sub.sub_id)}}</td>
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                *ngIf="obtainedGradeAvgHighest.highest"
-                                                                class="custom-td">
-                                                                {{getClassHighest(sub.sub_id)}}</td>
-                                                        </ng-container>
-                                                    </tr>
-                                                    <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                        <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                            <td class="custom-td text-left padding-left-8px">
-                                                                {{sub1.sub_name}}
-                                                            </td>
-                                                            <ng-container *ngFor="let item of sexamArray">
-                                                                <td class="custom-td"
-                                                                    *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                    {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub1.sub_id)}}
-                                                                </td>
-                                                            </ng-container>
-                                                        </tr>
-                                                    </ng-container>
-                                                </ng-template>
-                                            </ng-container>
-                                            <tr class="custom-tr">
-                                                <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
-                                                    Total({{getTotalMainSubject('A')}}
-                                                    main subject)</td>
-                                                <td class="custom-td"
-                                                    [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
-                                                <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                    {{getPassTotalPercentage(term)}}%</td>
-                                                <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
-                                                </ng-container>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                                <!-- scholastic subject B -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','B', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                    Scholastic
-                                                    Area B</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray.length + exambifurcateCount + obtainedGradeAvgHighestCount"
-                                                        class="custom-th text-center">
-                                                        Term
-                                                        -{{term}}
-                                                        ({{acedemicmarks}} Marks)</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Subject Name</th>
-                                                <ng-container *ngFor="let item of sexamArray">
-                                                    <th [attr.colspan]="getExambirfurcateColspan(item)"
-                                                        class="custom-th text-center">
-                                                        {{item.exam_name | titlecase}}
-                                                        <br>({{item.exam_weightage}})</th>
-                                                </ng-container>
-
-                                                <th *ngIf="obtainedGradeAvgHighest.obtained"
-                                                    class="custom-th text-center">
-                                                    Marks
-                                                    Obtained<br>({{acedemicmarks}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.grade" class="custom-th text-center">
-                                                    Grade
-                                                </th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th *ngIf="obtainedGradeAvgHighest.avg"
-                                                        class="custom-th text-center">
-                                                        Average
-                                                    </th>
-                                                    <th *ngIf="obtainedGradeAvgHighest.highest"
-                                                        class="custom-th text-center">
-                                                        Highest</th>
-                                                </ng-container>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv">
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}</td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.colspan]="2"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}} (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td"
-                                                                *ngIf="item.exam_bifurcate.bifurcated_marks"></td>
-                                                            <td class="custom-td">
-                                                                {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                            {{calculateTotal(sub.sub_id,term)}}
-                                                            {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                            {{calculateGrade(sub.sub_id,term)}}</td>
-                                                        <ng-container *ngIf="term == data.param.eme_term_id">
-                                                            <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                                {{getClassAverage(sub.sub_id)}}</td>
-                                                            <td *ngIf="obtainedGradeAvgHighest.highest"
-                                                                class="custom-td">
-                                                                {{getClassHighest(sub.sub_id)}}</td>
-                                                        </ng-container>
-                                                    </tr>
-                                                </ng-template>
-                                                <ng-template #childdiv>
-                                                    <tr class="custom-tr"
-                                                        *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                        <ng-container *ngIf="sub.ess_additional == 0">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                            </td>
-                                                        </ng-container>
-                                                        <ng-container *ngIf="sub.ess_additional == 1">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                class="custom-td text-left padding-left-8px">
-                                                                {{sub.sub_name}}
-                                                                (Add.)
-                                                            </td>
-                                                        </ng-container>
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.childSub[0].sub_name}}</td>
-                                                        <ng-container *ngFor="let item of sexamArray">
-                                                            <td class="custom-td"
-                                                                *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub.childSub[0].sub_id)}}
-                                                            </td>
-                                                            <td [attr.rowspan]="sub.childSub.length" class="custom-td">
-                                                                {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}
-                                                            </td>
-                                                        </ng-container>
-
-                                                        <td [attr.rowspan]="sub.childSub.length"
-                                                            *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                            {{calculateTotal(sub.sub_id,term)}}
-                                                            {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                        <td [attr.rowspan]="sub.childSub.length"
-                                                            *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                            {{calculateGrade(sub.sub_id,term)}}</td>
-                                                        <ng-container *ngIf="term == data.param.eme_term_id">
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                                {{getClassAverage(sub.sub_id)}}</td>
-                                                            <td [attr.rowspan]="sub.childSub.length"
-                                                                *ngIf="obtainedGradeAvgHighest.highest"
-                                                                class="custom-td">
-                                                                {{getClassHighest(sub.sub_id)}}</td>
-                                                        </ng-container>
-                                                    </tr>
-                                                    <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                        <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                            <td class="custom-td text-left padding-left-8px">
-                                                                {{sub1.sub_name}}
-                                                            </td>
-                                                            <ng-container *ngFor="let item of sexamArray">
-                                                                <td class="custom-td"
-                                                                    *ngIf="item.exam_bifurcate.bifurcated_marks">
-                                                                    {{getCalculatedMarksSubsubject(sub.sub_id, item.exam_id,term,sub1.sub_id)}}
-                                                                </td>
-                                                            </ng-container>
-                                                        </tr>
-                                                    </ng-container>
-                                                </ng-template>
-                                            </ng-container>
-                                            <tr class="custom-tr">
-                                                <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
-                                                    Total({{getTotalMainSubject('B')}}
-                                                    main subject)</td>
-                                                <td class="custom-td"
-                                                    [attr.colspan]="sexamArray.length + exambifurcateCount"></td>
-                                                <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                    {{getPassTotalPercentage(term,'B')}}%</td>
-                                                <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
-                                                </ng-container>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                            </div>
-                            <!-- co-scholstic exam Subjectwise bifurcation -->
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','A', subjectArray)">
-                                    <table class="custom-table table-100">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-left padding-left-8px"> &nbsp;Co-Scholastic
-                                                    Area A &nbsp;
-                                                    <span *ngIf="GradeSetPoint.length>0" class="coscholastic-grade">
-                                                        (
-                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
-                                                            {{item?.egs_grade_name}} <span
-                                                                *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}}
-                                                            </span>
-
-                                                        </span>
-                                                        )
-                                                    </span>
-
-                                                </th>
-                                                <th class="custom-th text-center">Grade</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr *ngIf="sub.eac_type == 2 && sub.eac_category == 'A'">
-                                                    <td class="custom-td padding-left-8px text-left">{{sub.sub_name}}
-                                                    </td>
-                                                    <td class="custom-td text-center">
-                                                        {{calculateGradePoint(sub.sub_id, term)}}
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','B', subjectArray)">
-                                    <br>
-                                    <table class="custom-table table-100">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px text-left"> &nbsp;Co-Scholastic
-                                                    Area B&nbsp;
-                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
-                                                        (
-                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
-                                                            {{item?.egs_grade_name}} <span
-                                                                *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}}
-                                                            </span>
-                                                        </span>
-                                                        )
-                                                    </span>
-                                                </th>
-                                                <th class="custom-th text-center">Grade</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr *ngIf="sub.eac_type == 2 && sub.eac_category == 'B'">
-                                                    <td class="custom-td padding-left-8px text-left">{{sub.sub_name}}
-                                                    </td>
-                                                    <td class="custom-td text-center">
-                                                        {{calculateGradePoint(sub.sub_id, term)}}
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-
-                            </div>
-                        </div>
-                    </ng-template>
-                    <ng-template #not_subjectwise_bifurcation>
-                        <div class="row" *ngFor="let term of termArray">
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && sexamArray.length > 0">
-                                <!-- scholastic subject A -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','A', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Area A</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray.length + obtainedGradeAvgHighestCount"
-                                                        class="custom-th text-center">
-                                                        Term
-                                                        -{{term}}
-                                                        ({{acedemicmarks}} Marks)</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center">Subject Name</th>
-                                                <th class="custom-th text-center" *ngFor="let item of sexamArray">
-                                                    {{item.exam_name | titlecase}}
-                                                    <br>({{item.exam_weightage}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.obtained"
-                                                    class="custom-th text-center">
-                                                    Marks
-                                                    Obtained<br>({{acedemicmarks}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.grade" class="custom-th text-center">
-                                                    Grade
-                                                </th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th *ngIf="obtainedGradeAvgHighest.avg"
-                                                        class="custom-th text-center">
-                                                        Average
-                                                    </th>
-                                                    <th *ngIf="obtainedGradeAvgHighest.highest"
-                                                        class="custom-th text-center">
-                                                        Highest</th>
-                                                </ng-container>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                    <ng-container *ngIf="sub.ess_additional == 0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="sub.ess_additional == 1">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                            (Add.)
-                                                        </td>
-                                                    </ng-container>
-                                                    <td class="custom-td" *ngFor="let item of sexamArray">
-                                                        {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                        {{calculateTotal(sub.sub_id,term)}}
-                                                        {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                        {{calculateGrade(sub.sub_id,term)}}</td>
-                                                    <ng-container *ngIf="term == data.param.eme_term_id">
-                                                        <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                            {{getClassAverage(sub.sub_id)}}</td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td">
-                                                            {{getClassHighest(sub.sub_id)}}</td>
-                                                    </ng-container>
-
-                                                </tr>
-                                            </ng-container>
-                                            <tr class="custom-tr">
-                                                <td class="custom-td text-left padding-left-8px">
-                                                    Total({{getTotalMainSubject('A')}}
-                                                    main subject)</td>
-                                                <td class="custom-td" [attr.colspan]="sexamArray.length"></td>
-                                                <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                    {{getPassTotalPercentage(term)}}%</td>
-                                                <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
-                                                </ng-container>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                                <!-- scholastic subject B -->
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','B', subjectArray)">
-                                    <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center" width="200px">Scholastic Area B</th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th [attr.colspan]="sexamArray.length + obtainedGradeAvgHighestCount"
-                                                        class="custom-th text-center">
-                                                        Term
-                                                        -{{term}}
-                                                        ({{acedemicmarks}} Marks)</th>
-                                                </ng-container>
-                                            </tr>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-center">Subject Name</th>
-                                                <th class="custom-th text-center" *ngFor="let item of sexamArray">
-                                                    {{item.exam_name | titlecase}}
-                                                    <br>({{item.exam_weightage}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.obtained"
-                                                    class="custom-th text-center">
-                                                    Marks
-                                                    Obtained<br>({{acedemicmarks}})</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.grade" class="custom-th text-center">
-                                                    Grade
-                                                </th>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <th *ngIf="obtainedGradeAvgHighest.avg"
-                                                        class="custom-th text-center">
-                                                        Average
-                                                    </th>
-                                                    <th *ngIf="obtainedGradeAvgHighest.highest"
-                                                        class="custom-th text-center">
-                                                        Highest</th>
-                                                </ng-container>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                    <ng-container *ngIf="sub.ess_additional == 0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                        </td>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="sub.ess_additional == 1">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub.sub_name}}
-                                                            (Add.)
-                                                        </td>
-                                                    </ng-container>
-                                                    <td class="custom-td" *ngFor="let item of sexamArray">
-                                                        {{getCalculatedMarksSub(sub.sub_id, item.exam_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                        {{calculateTotal(sub.sub_id,term)}}
-                                                        {{getSubjectPassResult(sub.sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td">
-                                                        {{calculateGrade(sub.sub_id,term)}}</td>
-                                                    <ng-container *ngIf="term == data.param.eme_term_id">
-                                                        <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td">
-                                                            {{getClassAverage(sub.sub_id)}}</td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td">
-                                                            {{getClassHighest(sub.sub_id)}}</td>
-                                                    </ng-container>
-
-                                                </tr>
-                                            </ng-container>
-                                            <tr class="custom-tr">
-                                                <td class="custom-td text-left padding-left-8px">
-                                                    Total({{getTotalMainSubject('B')}}
-                                                    main subject)</td>
-                                                <td class="custom-td" [attr.colspan]="sexamArray.length"></td>
-                                                <td *ngIf="obtainedGradeAvgHighest.obtained" class="custom-td">
-                                                    {{getPassTotalPercentage(term,'B')}}%</td>
-                                                <td *ngIf="obtainedGradeAvgHighest.grade" class="custom-td"></td>
-                                                <ng-container *ngIf="term == data.param.eme_term_id">
-                                                    <td *ngIf="obtainedGradeAvgHighest.avg" class="custom-td"></td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.highest" class="custom-td"></td>
-                                                </ng-container>
-                                            </tr>
-                                        </tbody>
-
-                                    </table>
-                                </ng-container>
-
-                            </div>
-                            <!-- co-scholstic exam not Subjectwise bifurcation -->
-                            <div class="col-12" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','A', subjectArray)">
-                                    <table class="custom-table table-100">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th text-left padding-left-8px"> &nbsp;Co-Scholastic
-                                                    Area A&nbsp;
-                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
-                                                        (
-                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
-                                                            {{item?.egs_grade_name}} <span
-                                                                *ngIf="item?.egs_grade_text">- {{item?.egs_grade_text}}
-                                                            </span>
-                                                        </span>
-                                                        )
-                                                    </span>
-                                                </th>
-                                                <th class="custom-th text-center">Grade</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr *ngIf="sub.eac_type == 2 && sub.eac_category == 'A'">
-                                                    <td class="custom-td padding-left-8px text-left">{{sub.sub_name}}
-                                                    </td>
-                                                    <td class="custom-td text-center">
-                                                        {{calculateGradePoint(sub.sub_id, term)}}
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-                                <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','B', subjectArray)">
-                                    <br>
-                                    <table class="custom-table table-100">
-                                        <thead>
-                                            <tr class="custom-tr">
-                                                <th class="custom-th padding-left-8px text-left"> &nbsp;Co-Scholastic
-                                                    Area B&nbsp;
-                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
-                                                        (
-                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
-                                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
-                                                                - {{item?.egs_grade_text}}</span>
-                                                        </span>
-                                                        )
-                                                    </span>
-                                                </th>
-                                                <th class="custom-th text-center">Grade</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <ng-container *ngFor="let sub of subjectArray">
-                                                <tr *ngIf="sub.eac_type == 2 && sub.eac_category == 'B'">
-                                                    <td class="custom-td padding-left-8px text-left">{{sub.sub_name}}
-                                                    </td>
-                                                    <td class="custom-td text-center">
-                                                        {{calculateGradePoint(sub.sub_id, term)}}
-                                                    </td>
-                                                </tr>
-                                            </ng-container>
-                                        </tbody>
-                                    </table>
-                                </ng-container>
-                            </div>
-                        </div>
-                    </ng-template>
-                </ng-template>
-                <ng-template #ccepattern>
-                    <div class="row" *ngFor="let term of termArray">
-                        <div class="col-12" *ngIf="sflag && eflag && gflag">
-                            <!-- ccepattern scholastic subject A -->
-                            <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','A', subjectArray)">
-                                <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                    <thead>
-                                        <tr class="custom-tr">
-                                            <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                Scholastic
-                                                Area A</th>
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}}
-                                                </th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th class="custom-th text-center">Term -{{term}} </th>
-                                            </ng-container>
-                                        </tr>
-                                        <tr class="custom-tr">
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject
-                                                    Name
-                                                </th>
-                                                <th width="5%" class="custom-th text-center">Grade</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
-                                                    class="custom-th text-center">Remark</th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-center">Subject
-                                                    Name
-                                                </th>
-                                                <th width="20%" class="custom-th text-center">Grade</th>
-                                            </ng-container>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let sub of subjectArray">
-                                            <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv1">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                    <td class="custom-td text-left padding-left-8px" [attr.colspan]="2">
-                                                        {{sub.sub_name | titlecase}}</td>
-                                                    <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}
-                                                    </td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                        {{remarkOfSub(sub.sub_id) | titlecase}}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template #childdiv1>
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'A'">
-                                                    <td class="custom-td text-left padding-left-8px"
-                                                        [attr.rowspan]="sub.childSub.length">{{sub.sub_name}}</td>
-                                                    <td class="custom-td text-left padding-left-8px">
-                                                        {{sub.childSub[0].sub_name}}</td>
-                                                    <td class="custom-td">
-                                                        {{calculateGradeCcePoint(sub.childSub[0].sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td"></td>
-                                                </tr>
-                                                <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                    <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub1.sub_name}}
-                                                        </td>
-                                                        <td class="custom-td">
-                                                            {{calculateGradeCcePoint(sub1.sub_id,term)}}
-                                                        </td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                            {{remarkOfSub(sub1.sub_id) | titlecase}}</td>
-                                                    </tr>
-                                                </ng-container>
-                                            </ng-template>
-                                        </ng-container>
-                                    </tbody>
-
-                                </table>
-                            </ng-container>
-                            <!-- ccepattern scholastic subject B -->
-                            <ng-container *ngIf="getSubjectTypeAndCategoryStatus('1','B', subjectArray)">
-                                <table class="table-100 custom-table" style="margin-bottom: 15px">
-                                    <thead>
-                                        <tr class="custom-tr">
-                                            <th [attr.colspan]="2" class="custom-th text-center" width="200px">
-                                                Scholastic
-                                                Area B</th>
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th [attr.colspan]="2" class="custom-th text-center">Term -{{term}}
-                                                </th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th class="custom-th text-center">Term -{{term}} </th>
-                                            </ng-container>
-                                        </tr>
-                                        <tr class="custom-tr">
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-center">Subject
-                                                    Name
-                                                </th>
-                                                <th width="5%" class="custom-th text-center">Grade</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
-                                                    class="custom-th text-center">Remark</th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-center">Subject
-                                                    Name
-                                                </th>
-                                                <th width="20%" class="custom-th text-center">Grade</th>
-                                            </ng-container>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let sub of subjectArray">
-                                            <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv1">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                    <td class="custom-td text-left padding-left-8px" [attr.colspan]="2">
-                                                        {{sub.sub_name | titlecase}}</td>
-                                                    <td class="custom-td">{{calculateGradeCcePoint(sub.sub_id,term)}}
-                                                    </td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                        {{remarkOfSub(sub.sub_id) | titlecase}}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template #childdiv1>
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 1 && sub.eac_category == 'B'">
-                                                    <td class="custom-td text-left padding-left-8px"
-                                                        [attr.rowspan]="sub.childSub.length">{{sub.sub_name}}</td>
-                                                    <td class="custom-td text-left padding-left-8px">
-                                                        {{sub.childSub[0].sub_name}}</td>
-                                                    <td class="custom-td">
-                                                        {{calculateGradeCcePoint(sub.childSub[0].sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td"></td>
-                                                </tr>
-                                                <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                    <tr class="custom-tr" *ngIf="sub1.eac_type == 1 && i!=0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub1.sub_name}}
-                                                        </td>
-                                                        <td class="custom-td">
-                                                            {{calculateGradeCcePoint(sub1.sub_id,term)}}
-                                                        </td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                            {{remarkOfSub(sub1.sub_id) | titlecase}}</td>
-                                                    </tr>
-                                                </ng-container>
-                                            </ng-template>
-                                        </ng-container>
-                                    </tbody>
-
-                                </table>
-                            </ng-container>
-
-                        </div>
-                        <div class="col-12" *ngIf="sflag && eflag && gflag && cexamArray.length > 0">
-                            <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','A', subjectArray)">
-                                <table class="custom-table table-100">
-                                    <thead>
-                                        <tr class="custom-tr">
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-left">
-                                                    &nbsp;Co-Scholastic Area A
-                                                </th>
-                                                <th width="5%" class="custom-th text-center">Grade</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
-                                                    class="custom-th text-center">Remark</th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-left">
-                                                    &nbsp;Co-Scholastic Area A
-                                                </th>
-                                                <th width="20%" class="custom-th text-center">Grade</th>
-                                            </ng-container>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let sub of subjectArray">
-                                            <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv2">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 2 && sub.eac_category == 'A'">
-                                                    <td class="custom-td text-left padding-left-8px" [attr.colspan]="2">
-                                                        {{sub.sub_name | titlecase}}</td>
-                                                    <td class="custom-td">{{calculateGradePoint(sub.sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                        {{remarkOfSub(sub.sub_id) | titlecase}}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template #childdiv2>
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 2 && sub.eac_category == 'A'">
-                                                    <td class="custom-td text-left padding-left-8px"
-                                                        [attr.rowspan]="sub.childSub.length">{{sub.sub_name}}</td>
-                                                    <td class="custom-td text-left padding-left-8px">
-                                                        {{sub.childSub[0].sub_name}}</td>
-                                                    <td class="custom-td">
-                                                        {{calculateGradePoint(sub.childSub[0].sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td"></td>
-                                                </tr>
-                                                <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                    <tr class="custom-tr" *ngIf="sub1.eac_type == 2 && i!=0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub1.sub_name}}
-                                                        </td>
-                                                        <td class="custom-td">{{calculateGradePoint(sub1.sub_id,term)}}
-                                                        </td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                            {{remarkOfSub(sub1.sub_id) | titlecase}}</td>
-                                                    </tr>
-                                                </ng-container>
-                                            </ng-template>
-                                        </ng-container>
-                                    </tbody>
-                                </table>
-                            </ng-container>
-                            <ng-container *ngIf="getSubjectTypeAndCategoryStatus('2','B', subjectArray)">
-                                <br>
-                                <table class="custom-table table-100">
-                                    <thead>
-                                        <tr class="custom-tr">
-                                            <ng-container *ngIf="obtainedGradeAvgHighest.remark">
-                                                <th width="40%" [attr.colspan]="2" class="custom-th text-left">
-                                                    &nbsp;Co-Scholastic Area B
-                                                </th>
-                                                <th width="5%" class="custom-th text-center">Grade</th>
-                                                <th *ngIf="obtainedGradeAvgHighest.remark" width="55%"
-                                                    class="custom-th text-center">Remark</th>
-                                            </ng-container>
-                                            <ng-container *ngIf="!obtainedGradeAvgHighest.remark">
-                                                <th width="80%" [attr.colspan]="2" class="custom-th text-left">
-                                                    &nbsp;Co-Scholastic Area B
-                                                </th>
-                                                <th width="20%" class="custom-th text-center">Grade</th>
-                                            </ng-container>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <ng-container *ngFor="let sub of subjectArray">
-                                            <ng-template [ngIf]="sub.childSub.length == 0" [ngIfElse]="childdiv2">
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 2 && sub.eac_category == 'B'">
-                                                    <td class="custom-td text-left padding-left-8px" [attr.colspan]="2">
-                                                        {{sub.sub_name | titlecase}}</td>
-                                                    <td class="custom-td">{{calculateGradePoint(sub.sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                        {{remarkOfSub(sub.sub_id) | titlecase}}</td>
-                                                </tr>
-                                            </ng-template>
-                                            <ng-template #childdiv2>
-                                                <tr class="custom-tr"
-                                                    *ngIf="sub.eac_type == 2 && sub.eac_category == 'B'">
-                                                    <td class="custom-td text-left padding-left-8px"
-                                                        [attr.rowspan]="sub.childSub.length">{{sub.sub_name}}</td>
-                                                    <td class="custom-td text-left padding-left-8px">
-                                                        {{sub.childSub[0].sub_name}}</td>
-                                                    <td class="custom-td">
-                                                        {{calculateGradePoint(sub.childSub[0].sub_id,term)}}</td>
-                                                    <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td"></td>
-                                                </tr>
-                                                <ng-container *ngFor="let sub1 of sub.childSub; let i=index">
-                                                    <tr class="custom-tr" *ngIf="sub1.eac_type == 2 && i!=0">
-                                                        <td class="custom-td text-left padding-left-8px">
-                                                            {{sub1.sub_name}}
-                                                        </td>
-                                                        <td class="custom-td">{{calculateGradePoint(sub1.sub_id,term)}}
-                                                        </td>
-                                                        <td *ngIf="obtainedGradeAvgHighest.remark" class="custom-td">
-                                                            {{remarkOfSub(sub1.sub_id) | titlecase}}</td>
-                                                    </tr>
-                                                </ng-container>
-                                            </ng-template>
-                                        </ng-container>
-                                    </tbody>
-                                </table>
-                            </ng-container>
-
-                        </div>
-                    </div>
-                </ng-template>
-            </ng-container>
 
 
             <div class="row" *ngIf="resultdivflag">
