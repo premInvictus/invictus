@@ -126,7 +126,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.getSchool();
     this.getSession();
     this.getAllStudents();
-    //this.getStudentSubjects();
+    this.getStudentSubjects();
     //this.getTermWorkingAndHoliday();
     this.getClassGradeset();
     //this.getExamDetails();
@@ -250,6 +250,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (result && result.status === 'ok') {
         console.log(result.data);
         this.remarksArr = result.data;
+        this.resultdivflag = true;
       }
     })
   }
@@ -276,11 +277,13 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (result && result.status === 'ok') {
         console.log(result.data);
         this.resultRemarksArr = result.data;
+        this.resultdivflag = true;
       }
     })
   }
   remarkOfSub(sub_id = null) {
     let remarkstr = '';
+    console.log('remarksArr',this.remarksArr);
     if (sub_id) {
       if (this.remarksArr.length > 0) {
         const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
