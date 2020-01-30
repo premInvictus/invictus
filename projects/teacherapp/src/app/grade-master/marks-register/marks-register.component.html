@@ -39,7 +39,7 @@
           <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
               <mat-label>Subject_Type</mat-label>
               <mat-select placeholder="Subject" formControlName="eme_sub_type"
-                  (selectionChange)="getSubjectsByClass();getExamDetails();resetTableDiv();" required>
+                  (selectionChange)="ctForClass();getExamDetails();resetTableDiv();" required>
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of subTypeArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>
