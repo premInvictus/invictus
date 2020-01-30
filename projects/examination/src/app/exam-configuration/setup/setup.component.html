@@ -42,8 +42,7 @@
                               <mat-label>Enter Class Name</mat-label>
                               <input matInput placeholder="Enter Class Name" class="text-capitalize" type="text"
                                 formControlName="class_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('class_name').value | capitalize"
-                                required>
+                                [value]="formGroupArray[configValue-1].formGroup.get('class_name').value " required>
                               <mat-error>Please Enter Class Name</mat-error>
                             </mat-form-field>
                           </div>
@@ -58,8 +57,7 @@
                               <mat-label>Enter Section Name</mat-label>
                               <input matInput placeholder="Enter Section Name" class="text-capitalize" type="text"
                                 formControlName="sec_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('sec_name').value | capitalize"
-                                required>
+                                [value]="formGroupArray[configValue-1].formGroup.get('sec_name').value " required>
                               <mat-error>Please Enter Section Name</mat-error>
                             </mat-form-field>
                           </div>
@@ -74,8 +72,7 @@
                               <mat-label>Enter Grade Set Name</mat-label>
                               <input matInput placeholder="Enter Grade Set Name" type="text" class="text-capitalize"
                                 formControlName="egs_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('egs_name').value | capitalize"
-                                required>
+                                [value]="formGroupArray[configValue-1].formGroup.get('egs_name').value " required>
                               <mat-error>Please Enter Grade Set Name</mat-error>
                             </mat-form-field>
                           </div>
@@ -129,8 +126,7 @@
                                           <input matInput placeholder="Enter Grade Name" type="text"
                                             class="text-capitalize" formControlName="egs_grade_name"
                                             [errorStateMatcher]="confirmValidParentMatcher"
-                                            [value]="gradeDatafrm.formGroup.get('egs_grade_name').value | capitalize"
-                                            required>
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_name').value " required>
                                           <mat-error>Please Enter Grade Name</mat-error>
                                         </mat-form-field>
                                       </div>
@@ -144,8 +140,7 @@
                                           <input matInput placeholder="Enter Grade Value" type="text"
                                             class="text-capitalize" formControlName="egs_grade_value"
                                             [errorStateMatcher]="confirmValidParentMatcher"
-                                            [value]="gradeDatafrm.formGroup.get('egs_grade_value').value | capitalize"
-                                            required>
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_value').value " required>
                                           <mat-error>Please Enter Grade Value</mat-error>
                                         </mat-form-field>
                                       </div>
@@ -186,15 +181,13 @@
                                       <div [ngClass]="{
                                         'col-6':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '1',
                                         'col-4':formGroupArray[configValue-1].formGroup.get('egs_point_type').value == '2'
-                                      }" style="padding-right: 5px; padding-left: 2px;"
-                                        >
+                                      }" style="padding-right: 5px; padding-left: 2px;">
                                         <mat-form-field class="form-field" appearance="outline">
                                           <mat-label>Grade Text</mat-label>
                                           <input matInput placeholder="Enter Grade Text" type="text"
                                             class="text-capitalize" formControlName="egs_grade_text"
                                             [errorStateMatcher]="confirmValidParentMatcher"
-                                            [value]="gradeDatafrm.formGroup.get('egs_grade_text').value | capitalize"
-                                            required>
+                                            [value]="gradeDatafrm.formGroup.get('egs_grade_text').value " required>
                                           <mat-error>Please Enter Grade Text</mat-error>
                                         </mat-form-field>
                                       </div>
@@ -224,7 +217,7 @@
                               <textarea matInput placeholder="Enter Grade Description" type="text"
                                 class="text-capitalize" formControlName="egs_description"
                                 [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('egs_description').value | capitalize"
+                                [value]="formGroupArray[configValue-1].formGroup.get('egs_description').value "
                                 required></textarea>
                             </mat-form-field>
                           </div>
@@ -239,8 +232,7 @@
                               <mat-label>Enter Remark Set Name</mat-label>
                               <input matInput placeholder="Enter Remark Set Name" type="text" class="text-capitalize"
                                 formControlName="ers_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('ers_name').value | capitalize"
-                                required>
+                                [value]="formGroupArray[configValue-1].formGroup.get('ers_name').value " required>
                               <mat-error>Please Enter Remark Set Name</mat-error>
                             </mat-form-field>
                           </div>
@@ -266,7 +258,7 @@
                               <mat-label>Enter Remark Text</mat-label>
                               <textarea matInput placeholder="Enter Remark Text" type="text" class="text-capitalize"
                                 formControlName="ers_remark_description" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('ers_remark_description').value | capitalize"
+                                [value]="formGroupArray[configValue-1].formGroup.get('ers_remark_description').value "
                                 required></textarea>
                               <mat-error>Please Enter Remark Text</mat-error>
                             </mat-form-field>
@@ -297,8 +289,7 @@
                               <mat-label>Enter Activity Name</mat-label>
                               <input matInput placeholder="Enter Activity Name" type="text" class="text-capitalize"
                                 formControlName="ea_name" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('ea_name').value | capitalize"
-                                required>
+                                [value]="formGroupArray[configValue-1].formGroup.get('ea_name').value " required>
                               <mat-error>Please Enter Activity Name</mat-error>
                             </mat-form-field>
                           </div>
@@ -339,7 +330,7 @@
                               <mat-label>Activity Description</mat-label>
                               <textarea matInput placeholder="Activity Description" class="text-capitalize" type="text"
                                 formControlName="ea_description" [errorStateMatcher]="confirmValidParentMatcher"
-                                [value]="formGroupArray[configValue-1].formGroup.get('ea_description').value | capitalize"></textarea>
+                                [value]="formGroupArray[configValue-1].formGroup.get('ea_description').value "></textarea>
                             </mat-form-field>
                           </div>
                         </div>
@@ -832,7 +823,8 @@
                                           Date Of Declaration
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
-                                          <span *ngIf="item.etd_declaration_date">{{ item.etd_declaration_date | date:'d-MMM-y' }}</span>
+                                          <span
+                                            *ngIf="item.etd_declaration_date">{{ item.etd_declaration_date | date:'d-MMM-y' }}</span>
                                           <span *ngIf="!item.etd_declaration_date">-</span>
                                         </td>
                                       </ng-container>
