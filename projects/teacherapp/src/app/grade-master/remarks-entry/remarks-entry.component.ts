@@ -73,19 +73,15 @@ export class RemarksEntryComponent implements OnInit {
 			this.tableDivFlag = false;
 			this.getSubjectsByClass();
 			this.getClassTerm();
-			this.getExamDetails();
-			this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
 		} else {
 			this.tableDivFlag = false;
 			this.getRemarkSet();
 			this.getClassTerm();
-			this.getExamDetails();
 			this.subjectArray = [];
 			this.subexamArray = [];
 			this.examArray = [];
-			this.getSubExam();
 			this.getRemarkSet();
 			this.dataReset();
 			this.paramform.patchValue({
@@ -94,7 +90,6 @@ export class RemarksEntryComponent implements OnInit {
 				ere_exam_id: '',
 				ere_sub_exam_id: ''
 			});
-
 		}
 	}
 	getClassTerm() {
@@ -123,8 +118,12 @@ export class RemarksEntryComponent implements OnInit {
 		}
 	}
 	getExamDetails() {
+		this.paramform.patchValue({
+			ere_exam_id: '',
+		});
 		this.examArray = [];
-		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id }).subscribe((result: any) => {
+		this.subexamArray = [];
+		this.examService.getExamDetails({ exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.examArray = result.data;
 			} else {
@@ -133,10 +132,16 @@ export class RemarksEntryComponent implements OnInit {
 		});
 	}
 	getSubExam() {
+		this.paramform.patchValue({
+			ere_sub_exam_id: '',
+		});
 		this.subexamArray = [];
-		this.examService.getSubExam({}).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.subexamArray = result.data;
+		this.examService.getExamDetails({
+			exam_class: this.paramform.value.ere_class_id, term_id: this.paramform.value.ere_term_id,
+			exam_id: this.paramform.value.ere_exam_id
+		}).subscribe((result: any) => {
+			if (result && result.status === 'ok' && result.data && result.data[0]) {
+				this.subexamArray = result.data[0].exam_sub_exam_max_marks;
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -404,7 +409,8 @@ export class RemarksEntryComponent implements OnInit {
 	saveForm2(status = '0') {
 		this.remarksEntry = [];
 		let check_valid = false;
-		check_valid = this.subjectWiseRemark ? (this.paramform.value.ere_exam_id && this.paramform.value.ere_sub_id) : (this.paramform.value.ere_exam_id ? true : false);
+		check_valid = Number(this.examType) === 1 && this.subjectWiseRemark ? (this.paramform.value.ere_sub_id ? true : false) : (this.paramform.value.ere_term_id ? true : false);
+		//check_valid = this.subjectWiseRemark ? (this.paramform.value.ere_exam_id && this.paramform.value.ere_sub_id) : (this.paramform.value.ere_exam_id ? true : false);
 		if (check_valid) {
 			for (const item of this.formGroupArray2) {
 				for (const det of item.formGroup) {
@@ -470,12 +476,10 @@ export class RemarksEntryComponent implements OnInit {
 						subjectDes.push(
 							this.fbuild.group(obj)
 						);
-
 						this.formGroupArray2.push({
 							formGroup: subjectDes
 						});
 					}
-					console.log(this.formGroupArray2);
 					this.tableDivFlag = true;
 				}
 			});
@@ -506,6 +510,8 @@ export class RemarksEntryComponent implements OnInit {
 	getSectionsByClass() {
 		this.dataReset();
 		this.paramform.patchValue({
+			ere_sec_id: '',
+			ere_remarks_type: '',
 			ere_term_id: '',
 			ere_sub_id: '',
 			ere_exam_id: '',
@@ -544,7 +550,6 @@ export class RemarksEntryComponent implements OnInit {
 		this.examService.getClassTermGrade({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classGradeTerm = result.data;
-				console.log(this.classGradeTerm);
 			}
 		});
 	}

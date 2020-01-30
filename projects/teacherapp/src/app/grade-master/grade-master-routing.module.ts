@@ -9,6 +9,7 @@ import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.co
 import { AdditionalSubjectComponent } from './additional-subject/additional-subject.component';
 import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
+import { MarksInputComponent } from './marks-input/marks-input.component';
 
 const routes: Routes = [
 	{
@@ -34,6 +35,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'remarks-entry', component: RemarksEntryComponent
+	},
+	{
+		path: 'marks-input', component: MarksInputComponent
 	}
 ];
 

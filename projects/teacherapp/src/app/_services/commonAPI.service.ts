@@ -13,6 +13,7 @@ export class CommonAPIService {
 	question_subtype: any[] = [];
 	userData: any = {};
 	viewProfile = new Subject();
+	menus: any[] = [];
 	constructor(private http: HttpClient, private loaderService: LoaderService, private _cookieService: CookieService,
 		private _notificationService: NotificationsService) { }
 
@@ -102,5 +103,18 @@ export class CommonAPIService {
 	getMessage(value) {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
+	}
+	isExistUserAccessMenu(mod_id) {
+		if (this.menus.length === 0) {
+			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
+				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
+		} else {
+			for (const mitem of this.menus) {
+				if (Number(mitem.menu_mod_id) === Number(mod_id)) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

@@ -1,0 +1,24 @@
+.center-mr{
+    width: 70% ;
+    margin:auto ;
+}
+.option-group-parent-type {
+    display: block; margin-left:20px; margin-top: -10px;
+}
+
+.option-group-parent {
+    display: block; margin-left:10px;     margin-top: -10px;
+}
+
+.option-group-child {
+    display: block; margin-left:5px;    margin-top: -10px;
+}
+
+.remark-text {
+    border-left: 1px solid #ccc;
+    padding: 5px;
+    margin: 0;
+    text-align: center;
+    margin-left: 26%;
+    text-align: left;
+}
