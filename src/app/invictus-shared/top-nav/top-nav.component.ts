@@ -58,7 +58,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	projectId: any;
 	private _mobileQueryListener: () => void;
 	innerHeight: any;
-
+	resultArray: any[] = [];
 
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
@@ -408,11 +408,19 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	getPushNotification() {
 		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.notficationMsg = result.data;
+				this.resultArray = result.data;
+				let i = 0;
+				for (const item of this.resultArray) {
+					if (i < 5) {
+						this.notficationMsg.push(item);
+					}
+					i++;
+				}
 				for (const item of this.notficationMsg) {
 					item.msg_description = new TruncatetextPipe().transform(item.msg_description, 80);
 				}
 			} else {
+				this.resultArray = [];
 				this.notficationMsg = [];
 			}
 		});

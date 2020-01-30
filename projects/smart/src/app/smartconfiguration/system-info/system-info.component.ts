@@ -66,39 +66,39 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		// this.getClass();
 		// this.getDetailsCdpRelation();
 	}
-	advanceSearchToggle(){
+	advanceSearchToggle() {
 		this.searchtoggle = true;
 	}
-	getSubjectsByClass(){
+	getSubjectsByClass() {
 		this.psubArray = [];
-		this.smartService.getSubjectsByClass({class_id: this.paramform.value.param_class_id}).subscribe((result: any) => {
-			if(result && result.status === 'ok') {
+		this.smartService.getSubjectsByClass({ class_id: this.paramform.value.param_class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
 				this.psubArray = result.data;
 			}
 		})
 	}
-	getSubjectsByClassForTopic(){
-		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
+	getSubjectsByClassForTopic() {
+		const topicformgroup: FormGroup = this.formGroupArray[this.configValue - 1].formGroup;
 		const param: any = {};
-		if(topicformgroup.value.topic_class_id) {
+		if (topicformgroup.value.topic_class_id) {
 			param.class_id = topicformgroup.value.topic_class_id;
 		}
 		this.subArray = [];
 		this.smartService.getSubjectsByClass(param).subscribe((result: any) => {
-			if(result && result.status === 'ok') {
+			if (result && result.status === 'ok') {
 				this.subArray = result.data;
 			}
 		})
 	}
-	searchTopic(){
-		if(this.paramform.value.param_topic_id) {
+	searchTopic() {
+		if (this.paramform.value.param_topic_id) {
 			this.getSubTopic(this);
 		} else {
 			this.getTopic(this);
 		}
-		
+
 	}
-	resetTopic(){
+	resetTopic() {
 		this.paramform.reset();
 	}
 	ngAfterViewInit() {
@@ -314,7 +314,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 							position: item.sub_id,
 							name: item.sub_name,
 							sub_code: item.sub_code,
-							sub_timetable: item.sub_timetable,
+							sub_timetable: item.sub_timetable === '1' ? true : false,
 							sub_isexam: item.sub_isexam === '1' ? true : false,
 							sub_color: item.sub_color,
 							sub_type: item.sub_type,
@@ -367,10 +367,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	getTopicForParam() {
 		this.ptopicArray = [];
 		const param: any = {};
-		if(this.paramform.value.param_class_id) {
+		if (this.paramform.value.param_class_id) {
 			param.topic_class_id = this.paramform.value.param_class_id;
 		}
-		if(this.paramform.value.param_sub_id) {
+		if (this.paramform.value.param_sub_id) {
 			param.topic_sub_id = this.paramform.value.param_sub_id;
 		}
 		this.smartService.getTopic(param).subscribe((result: any) => {
@@ -382,11 +382,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	getTopicForSubtopic() {
 		this.stopicArray = [];
 		const param: any = {};
-		const topicformgroup: FormGroup = this.formGroupArray[this.configValue-1].formGroup;
-		if(topicformgroup.value.topic_class_id) {
+		const topicformgroup: FormGroup = this.formGroupArray[this.configValue - 1].formGroup;
+		if (topicformgroup.value.topic_class_id) {
 			param.topic_class_id = topicformgroup.value.topic_class_id;
 		}
-		if(topicformgroup.value.topic_sub_id) {
+		if (topicformgroup.value.topic_sub_id) {
 			param.topic_sub_id = topicformgroup.value.topic_sub_id;
 		}
 		this.smartService.getTopic(param).subscribe((result: any) => {
@@ -403,19 +403,19 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		const param: any = {};
-		if(that.paramform.value.param_class_id) {
+		if (that.paramform.value.param_class_id) {
 			param.topic_class_id = that.paramform.value.param_class_id;
 		}
-		if(that.paramform.value.param_sub_id) {
+		if (that.paramform.value.param_sub_id) {
 			param.topic_sub_id = that.paramform.value.param_sub_id;
 		}
 		that.smartService.getTopic(param).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				if(that.paramform.value.param_sub_id) {
+				if (that.paramform.value.param_sub_id) {
 					that.ptopicArray = result.data;
 				} else {
 					that.topicArray = result.data;
-				}				
+				}
 				if (that.configValue === '4') {
 					let pos = 1;
 					for (const item of result.data) {
@@ -446,13 +446,13 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		that.CONFIG_ELEMENT_DATA = [];
 		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
 		const param: any = {};
-		if(that.paramform.value.param_class_id) {
+		if (that.paramform.value.param_class_id) {
 			param.class_id = that.paramform.value.param_class_id;
 		}
-		if(that.paramform.value.param_sub_id) {
+		if (that.paramform.value.param_sub_id) {
 			param.sub_id = that.paramform.value.param_sub_id;
 		}
-		if(that.paramform.value.param_topic_id) {
+		if (that.paramform.value.param_topic_id) {
 			param.st_topic_id = that.paramform.value.param_topic_id;
 		}
 		that.smartService.getSubTopic(param).subscribe((result: any) => {
@@ -791,7 +791,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				sub_order: value.sub_order,
 				sub_status: value.sub_status,
 				sub_code: value.sub_code,
-				sub_timetable: value.sub_timetable,
+				sub_timetable: value.sub_timetable === '1' ? true : false,
 				sub_isexam: value.sub_isexam === '1' ? true : false,
 				sub_type_id: value.sub_type,
 				sub_category: value.sub_category,
@@ -857,7 +857,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 3) {
 			this.getSubjectType(this);
 			this.getSubject(this);
-			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable','sub_isexam', 'sub_type_name', 'sub_category', 'sub_color', 'order', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'sub_parent_id', 'sub_code', 'sub_timetable', 'sub_isexam', 'sub_type_name', 'sub_category', 'sub_color', 'order', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getTopic(this);

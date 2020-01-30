@@ -60,24 +60,15 @@
                     <span class="mat-button-wrapper">
                         <img class="header-notification-bell"
                             src="../../../assets/images/resvgiconsforfeemodule/notifications.svg">
-                        <img class="header-notification-dot"
-                            src="../../../assets/images/resvgiconsforfeemodule/new_notification_sign.svg"><span
-                            class="header-icon-spacer">Notifications</span>
-                        <!-- <span class="notif-value">5</span> -->
+                        <span *ngIf="resultArray.length > 0" class="header-notification-dot">{{resultArray.length}}</span>
+                        <span class="header-icon-spacer">Notifications</span>
                     </span>
                 </a>
-                <!-- </div>
-            <div styple="position:relative"> -->
                 <div class="dropdown-content-2"
                     *ngIf="showNotification && currentUser.role_id !=='2' && currentUser.role_id !=='1' && notficationMsg.length > 0">
                     <div class="row" style="margin-top: 0px;" *ngIf="notficationMsg.length > 0">
                         <div class="col-12">
                             <div class="notfication">
-                                <!-- <div class="row">
-                                    <div class="col-12">
-                                        <span>Notifcation</span>
-                                    </div>
-                                </div> -->
                                 <div class="row" *ngFor="let item of notficationMsg">
                                     <div class="col-12">
                                         <mat-card>
@@ -121,7 +112,6 @@
 
             <div class="dropdown">
                 <button class="axiom-icon-button mat-button username" mat-button>
-                    <!-- <img class="header-avatar-img" src="../../../assets/images/resvgiconsforfeemodule/man.svg"> -->
                     <img *ngIf="showImage" alt="invictus" class="header-avatar-img" src="{{image}}"
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
                     <img *ngIf="showImageBlank" class="header-avatar-img"

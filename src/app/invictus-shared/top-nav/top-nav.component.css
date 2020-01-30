@@ -110,3 +110,17 @@ span.invictus {
     padding: 0px;
     cursor: pointer;
 }
+.header-notification-dot {
+    color: #ffffff;
+    position: absolute;
+    top: 4px;
+    background-color: #f88468;
+    width: 18px;
+    height: 18px;
+    font-weight: 500;
+    font-size: 12px;
+    left: 33px;
+    padding: 4px;
+    line-height: 1;
+    border-radius: 12px;
+}
