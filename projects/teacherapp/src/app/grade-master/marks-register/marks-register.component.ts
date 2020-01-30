@@ -206,7 +206,54 @@ export class MarksRegisterComponent implements OnInit {
       eme_exam_id: ''
     });
   }
-  getSubjectsByClass() {
+  ctForClass() {
+    this.examService.ctForClass({
+      uc_login_id: this.currentUser.login_id,
+      uc_class_id: this.paramform.value.eme_class_id,
+      uc_sec_id: this.paramform.value.eme_sec_id,
+    }).subscribe(
+      (result: any) => {
+        if (result && result.status === 'ok') {
+          this.getSubjectsByClassTeacher();
+        } else {
+          this.getSubjectByTeacherIdClassIdSectionId();
+        }
+      }
+    );
+  }
+
+  getSubjectsByClassTeacher() {
+    this.subjectArray = [];
+    this.paramform.patchValue({
+      eme_sub_id: ''
+    });
+    this.smartService.getSubjectsByClass({
+      class_id: this.paramform.value.eme_class_id, sub_isexam: '1',
+      sub_type: this.paramform.value.eme_sub_type
+    }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.subSubjectArray = result.data;
+        const temp = result.data;
+        if (temp.length > 0) {
+          temp.forEach(element => {
+            if (element.sub_parent_id && element.sub_parent_id === '0') {
+              const childSub: any[] = [];
+              for (const item of temp) {
+                if (element.sub_id === item.sub_parent_id) {
+                  childSub.push(item);
+                }
+              }
+              element.childSub = childSub;
+              this.subjectArray.push(element);
+            }
+          });
+        }
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+  getSubjectByTeacherIdClassIdSectionId() {
     this.subjectArray = [];
     this.paramform.patchValue({
       eme_sub_id: ''

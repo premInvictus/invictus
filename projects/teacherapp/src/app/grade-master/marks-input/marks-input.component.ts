@@ -19,7 +19,7 @@ export class MarksInputComponent implements OnInit {
       main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
       report_main_image_class: '',
       report_middle_class: 'inline-flex',
-      report_check_icon_class: ''
+      report_check_icon_class: '' 
     }
   ];
   reportType: string;
@@ -92,24 +92,24 @@ export class MarksInputComponent implements OnInit {
 			this.reportHeader = $event.report_name;
 		}
 	}
-	isExistUserAccessMenu(actionT) {
-		if (actionT === '1') {
-			return this.CommonAPIService.isExistUserAccessMenu('588');
-		}
-		if (actionT === '2') {
-			return this.CommonAPIService.isExistUserAccessMenu('589');
-		}
-		if (actionT === '3') {
-			return true;
-		}
-		if (actionT === '4') {
-			return true;
-		}
-		if (actionT === '5') {
-			return true;
-		}
-		if (actionT === '6') {
-			return true;
-		}
-	}
+	// isExistUserAccessMenu(actionT) {
+	// 	if (actionT === '1') {
+	// 		return this.CommonAPIService.isExistUserAccessMenu('588');
+	// 	}
+	// 	if (actionT === '2') {
+	// 		return this.CommonAPIService.isExistUserAccessMenu('589');
+	// 	}
+	// 	if (actionT === '3') {
+	// 		return true;
+	// 	}
+	// 	if (actionT === '4') {
+	// 		return true;
+	// 	}
+	// 	if (actionT === '5') {
+	// 		return true;
+	// 	}
+	// 	if (actionT === '6') {
+	// 		return true;
+	// 	}
+	// }
 }
