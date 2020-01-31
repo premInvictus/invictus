@@ -69,3 +69,7 @@ td {
 .option-group-child {
   display: block; margin-left:5px;    margin-top: -10px;
 }
+
+::ng-deep .mat-option-text {
+  display: initial !important;
+}

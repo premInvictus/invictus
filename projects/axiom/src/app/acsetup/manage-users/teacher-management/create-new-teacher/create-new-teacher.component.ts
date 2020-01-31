@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 
 export class CreateNewTeacherComponent implements OnInit {
 	@ViewChild('cropModal') cropModal;
-	constructor( 
+	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
 		private userAccessMenuService: UserAccessMenuService,
@@ -37,6 +37,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		{ id: 'web', name: 'Desktop' },
 		{ id: 'app', name: 'Mobile' }
 	];
+	finalSubjectArray:any[] = [];
 	ctFlag = false;
 	Teacher_Form: FormGroup;
 	Cs_relation_Form: FormGroup;
@@ -69,7 +70,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	arrayCity: any[] = [];
 	currentClass: string;
 	currentSection: string;
-	currentSubject: string;
+	currentSubject: any[] = [];
 	mintoday: string;
 	updateFlag = false;
 	private file1: File;
@@ -183,9 +184,9 @@ export class CreateNewTeacherComponent implements OnInit {
 						}),
 							// tslint:disable-next-line:max-line-length
 							this.Cs_relation_Form.patchValue({
-								uc_class_id: csrelationdetail.uc_class_id,
-								uc_sec_id: csrelationdetail.uc_sec_id,
-								uc_sub_id: csrelationdetail.uc_sub_id,
+								//uc_class_id: csrelationdetail.uc_class_id,
+								//uc_sec_id: csrelationdetail.uc_sec_id,
+								//uc_sub_id: csrelationdetail.uc_sub_id,
 								uc_department: csrelationdetail.uc_department,
 								uc_designation: csrelationdetail.uc_designation
 
@@ -223,10 +224,17 @@ export class CreateNewTeacherComponent implements OnInit {
 		}
 	}
 	setCurrentSubject(value) {
-		const subObj = this.subjectArray.find(item => item.sub_id === value);
-		if (subObj) {
-			this.currentSubject = subObj.sub_name;
+		//console.log('value--', value, this.finalSubjectArray);
+		this.currentSubject = [];
+		for (var i=0; i<value.length;i++) {
+			//console.log('value[i]', value[i]);
+			const subObj = this.finalSubjectArray.find(item => item.sub_id === value[i]);
+			if (subObj) {
+				this.currentSubject.push(subObj.sub_name);
+			}
 		}
+		//console.log('this.currentSubject',this.currentSubject);
+		
 	}
 
 	deleteCSRelation(deletei) {
@@ -367,11 +375,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		if (this.Cs_relation_Form.valid) {
 			let relations: any = {};
 
-			relations = this.Cs_relation_Form.value;
-			relations.class_name = this.currentClass;
-			relations.sec_name = this.currentSection;
-			relations.sub_name = this.currentSubject;
-			relations.uc_class_teacher = '0';
+			
 			let pushFlag = 0;
 			for (const item of this.cs_relationArray) {
 				if (item.uc_class_id === relations.uc_class_id && item.uc_sec_id === relations.uc_sec_id && item.uc_sub_id === relations.uc_sub_id) {
@@ -379,8 +383,25 @@ export class CreateNewTeacherComponent implements OnInit {
 					break;
 				}
 			}
+			//console.log('pushFlag--',pushFlag, this.currentSubject);
 			if (pushFlag === 0) {
-				this.cs_relationArray.push(relations);
+				for (var i=0; i<this.currentSubject.length;i++) {
+					//console.log(this.Cs_relation_Form.value);
+					let relations: any = {};
+					//relations = this.Cs_relation_Form.value;
+					relations.uc_class_id = this.Cs_relation_Form.value.uc_class_id;
+					relations.uc_class_teacher = this.Cs_relation_Form.value.uc_class_teacher;
+					relations.uc_department = this.Cs_relation_Form.value.uc_department;
+					relations.uc_designation = this.Cs_relation_Form.value.uc_designation;
+					relations.uc_sec_id = this.Cs_relation_Form.value.uc_sec_id;
+					relations.uc_sub_id = this.Cs_relation_Form.value.uc_sub_id[i];
+					relations.class_name = this.currentClass;
+					relations.sec_name = this.currentSection;
+					relations.sub_name = this.currentSubject[i];
+					relations.uc_class_teacher = '0';
+					this.cs_relationArray.push(relations);
+				}
+				//console.log('this.cs_relationArray--',this.cs_relationArray);
 			}
 		}
 	}
@@ -509,6 +530,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.smartService.getSubjectsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const temp = result.data;
+				this.finalSubjectArray = result.data;
 				let scholastic_subject: any[] = [];
 				let coscholastic_subject: any[] = [];
 				if (temp.length > 0) {
@@ -611,7 +633,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			newTeacherFormData.append('au_role_id', '3');
 			newTeacherFormData.append('au_admission_no', this.userDetails.au_admission_no);
 			newTeacherFormData.append('cs_relations', JSON.stringify(this.cs_relationArray));
-			console.log(newTeacherFormData);
+			//console.log(newTeacherFormData);
 			this.qelementService.updateUser(newTeacherFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -701,4 +723,6 @@ export class CreateNewTeacherComponent implements OnInit {
 			this.cs_relationArray[findex].uc_class_teacher = this.ctValue;
 		}
 	}
+
+	
 }
