@@ -43,26 +43,24 @@
                                 <mat-option value="">Please select</mat-option>
                                 <mat-optgroup label="Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="item.sub_type == '1' && item.childSub.length != 0"
+                                        <mat-optgroup *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length != 0"
                                             [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
-                                                class="option-group-parent">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="item.sub_type == '1' && item.childSub.length == 0"
+                                        <mat-option *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length == 0"
                                             [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>
                                 </mat-optgroup>
                                 <mat-optgroup label="Co-Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="item.sub_type == '2' && item.childSub.length != 0"
+                                        <mat-optgroup *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length != 0"
                                             [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
-                                                class="option-group-parent">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="item.sub_type == '2' && item.childSub.length == 0"
+                                        <mat-option *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length == 0"
                                             [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>

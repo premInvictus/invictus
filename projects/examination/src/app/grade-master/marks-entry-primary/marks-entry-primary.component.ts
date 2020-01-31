@@ -220,7 +220,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
         if (temp.length > 0) {
 
           temp.forEach(element => {
-            if (element.sub_type === '1') {
+            if (element.sub_type === '1' || element.sub_type === '3') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
                 for (const item of temp) {
@@ -230,8 +230,8 @@ export class MarksEntryPrimaryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 scholastic_subject.push(element);
-              }
-            } else if (element.sub_type === '2') {
+              }                           
+            } else if (element.sub_type === '2' || element.sub_type === '4') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
                 for (const item of temp) {
@@ -241,7 +241,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 coscholastic_subject.push(element);
-              }
+              }              
             }
           });
         }
