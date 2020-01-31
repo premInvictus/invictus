@@ -858,17 +858,17 @@
                             <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1 && remarkOfSub()">
                                 <td width="10%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
-                                <td> {{remarkOfSub() | titlecase}}</td>
+                                <td> {{remarkOfSub()}}</td>
                             </tr>
                             <tr *ngIf="data.ect_exam_type == 2 && remarkOfSub()">
                                 <td width="10%" valign="top">Remarks</td>
                                 <td width="1%" valign="top">:</td>
-                                <td> {{remarkOfSub() | titlecase}}</td>
+                                <td> {{remarkOfSub()}}</td>
                             </tr>
-                            <tr *ngIf="isuserachivement == '1' && userachivement?.a_achievement != ''">
-                                <td width="20%" valign="top">Achievement</td>
+                            <tr *ngIf="isuserachivement == '1' && userachivement && userachivement?.a_achievement != ''">
+                                <td width="20%" valign="top">Achievements</td>
                                 <td width="1%" valign="top">:</td>
-                                <td> {{userachivement?.a_achievement | titlecase}}</td>
+                                <td> {{userachivement?.a_achievement}}</td>
                             </tr>
                             <tr><br></tr>
                             <!-- <tr class="margin-top-10" *ngIf="data.ect_exam_type == 2">
