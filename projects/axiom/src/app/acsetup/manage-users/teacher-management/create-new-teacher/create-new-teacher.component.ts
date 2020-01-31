@@ -17,7 +17,7 @@ import { DatePipe } from '@angular/common';
 
 export class CreateNewTeacherComponent implements OnInit {
 	@ViewChild('cropModal') cropModal;
-	constructor(
+	constructor( 
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
 		private userAccessMenuService: UserAccessMenuService,
@@ -45,7 +45,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	Documents_Form: FormGroup;
 	Remark_Form: FormGroup;
 	hosturl = appConfig.apiUrl;
-	subjectArray: any[];
+	subjectArray: any[] = [];
 	classArray: any[];
 	sectionArray: any[];
 	schoolinfoArray: any = {};
@@ -493,16 +493,65 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 
-	getSubjectsByClass(): void {
+	// getSubjectsByClass(): void { 
+	// 	this.subjectArray = [];
+	// 	this.smartService.getSubjectsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe(
+	// 		(result: any) => {
+	// 			if (result && result.status === 'ok') {
+	// 				this.subjectArray = result.data;
+	// 			}
+	// 		}
+	// 	);
+	// }
+
+	getSubjectsByClass() {
 		this.subjectArray = [];
-		this.smartService.getSubjectsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.subjectArray = result.data;
+		this.smartService.getSubjectsByClass({ class_id: this.Cs_relation_Form.value.uc_class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const temp = result.data;
+				let scholastic_subject: any[] = [];
+				let coscholastic_subject: any[] = [];
+				if (temp.length > 0) {
+					temp.forEach(element => {
+						if (element.sub_type === '1') {
+							if (element.sub_parent_id && element.sub_parent_id === '0') {
+								var childSub: any[] = [];
+								for (const item of temp) {
+									if (element.sub_id === item.sub_parent_id) {
+										childSub.push(item);
+									}
+								}
+								element.childSub = childSub;
+								scholastic_subject.push(element);
+							}
+						} else if (element.sub_type === '2') {
+							if (element.sub_parent_id && element.sub_parent_id === '0') {
+								var childSub: any[] = [];
+								for (const item of temp) {
+									if (element.sub_id === item.sub_parent_id) {
+										childSub.push(item);
+									}
+								}
+								element.childSub = childSub;
+								coscholastic_subject.push(element);
+							}
+						}
+					});
 				}
+				for (var i = 0; i < scholastic_subject.length; i++) {
+					this.subjectArray.push(scholastic_subject[i]);
+				}
+				for (var i = 0; i < coscholastic_subject.length; i++) {
+					this.subjectArray.push(coscholastic_subject[i]);
+				}
+			} else {
+				this.notif.showSuccessErrorMessage(result.message, 'error');
 			}
-		);
+		});
 	}
+
+
+
 
 	getSectionsByClass(): void {
 		this.sectionArray = [];

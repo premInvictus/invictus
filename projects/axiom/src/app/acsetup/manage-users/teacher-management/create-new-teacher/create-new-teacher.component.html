@@ -194,7 +194,7 @@
                                  </mat-form-field>
                               </div>
                               <div class="col-md-2 col-lg-2">
-                                 <mat-form-field class="form-field" appearance="outline">
+                                 <!-- <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Subject</mat-label>
                                     <mat-select formControlName="uc_sub_id" #inputsub
                                        (selectionChange)="setCurrentSubject(inputsub.value)" placeholder="Subject"
@@ -203,6 +203,41 @@
                                        <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                           {{item.sub_name}}
                                        </mat-option>
+                                    </mat-select>
+                                 </mat-form-field> -->
+
+                                 <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                                    <mat-label>Subject</mat-label>
+                                    <mat-select formControlName="uc_sub_id" #inputsub
+                                       (selectionChange)="setCurrentSubject(inputsub.value)" placeholder="Subject"
+                                       required>
+                                       <mat-option value="">Please select</mat-option>
+                                       <mat-optgroup label="Scholastic">
+                                          <ng-container *ngFor="let item of subjectArray">
+                                             <mat-optgroup *ngIf="item.sub_type == '1' && item.childSub.length != 0"
+                                                [label]="item.sub_name" class="option-group-parent-type">
+                                                <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                   class="option-group-parent">
+                                                   {{item1.sub_name}}</mat-option>
+                                             </mat-optgroup>
+                                             <mat-option *ngIf="item.sub_type == '1' && item.childSub.length == 0"
+                                                [value]="item.sub_id" class="option-group-child">
+                                                {{item.sub_name}}</mat-option>
+                                          </ng-container>
+                                       </mat-optgroup>
+                                       <mat-optgroup label="Co-Scholastic">
+                                          <ng-container *ngFor="let item of subjectArray">
+                                             <mat-optgroup *ngIf="item.sub_type == '2' && item.childSub.length != 0"
+                                                [label]="item.sub_name" class="option-group-parent-type">
+                                                <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                   class="option-group-parent">
+                                                   {{item1.sub_name}}</mat-option>
+                                             </mat-optgroup>
+                                             <mat-option *ngIf="item.sub_type == '2' && item.childSub.length == 0"
+                                                [value]="item.sub_id" class="option-group-child">
+                                                {{item.sub_name}}</mat-option>
+                                          </ng-container>
+                                       </mat-optgroup>
                                     </mat-select>
                                  </mat-form-field>
                               </div>
@@ -293,8 +328,7 @@
                                  <div class="col-lg-9">
                                     <mat-form-field class="form-field" appearance="outline">
                                        <mat-label>Select Project</mat-label>
-                                       <mat-select placeholder="Project" formControlName="pro_id"
-                                       [disabled]="isApp"
+                                       <mat-select placeholder="Project" formControlName="pro_id" [disabled]="isApp"
                                           (selectionChange)="getModuleList($event.value)">
                                           <mat-option value="">
                                              Select Project
@@ -324,10 +358,10 @@
                            </div>
                         </div>
                         <div class="row" *ngIf="moduleArray.length == 0">
-                              <div class="col-12">
-                                 <span>No Records Found</span>
-                              </div>
+                           <div class="col-12">
+                              <span>No Records Found</span>
                            </div>
+                        </div>
                         <br>
                         <div class="row">
                            <div class="col-12 mt-3 ">
