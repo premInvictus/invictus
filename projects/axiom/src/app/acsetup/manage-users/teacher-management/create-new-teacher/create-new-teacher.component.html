@@ -206,12 +206,13 @@
                                     </mat-select>
                                  </mat-form-field> -->
 
-                                 <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                                 <mat-form-field appearance="outline" class=" form-field">
                                     <mat-label>Subject</mat-label>
                                     <mat-select formControlName="uc_sub_id" #inputsub
                                        (selectionChange)="setCurrentSubject(inputsub.value)" placeholder="Subject"
-                                       required>
-                                       <mat-option value="">Please select</mat-option>
+                                       required multiple>
+                                       <!-- <mat-option value="">Please select</mat-option> -->
+
                                        <mat-optgroup label="Scholastic">
                                           <ng-container *ngFor="let item of subjectArray">
                                              <mat-optgroup *ngIf="item.sub_type == '1' && item.childSub.length != 0"
