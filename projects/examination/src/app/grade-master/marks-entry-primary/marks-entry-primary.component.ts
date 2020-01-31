@@ -65,9 +65,9 @@ export class MarksEntryPrimaryComponent implements OnInit {
     });
   }
   getSubType() {
-    const ind = this.subjectArray.findIndex(e => e.sub_id === this.paramform.value.eme_sub_id);
+    const ind = this.subSubjectArray.findIndex(e => e.sub_id === this.paramform.value.eme_sub_id);
     if (ind !== -1) {
-      return this.subjectArray[ind].sub_type;
+      return this.subSubjectArray[ind].sub_type;
     } else {
       return '1';
     }
