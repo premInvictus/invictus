@@ -26,7 +26,7 @@ import {
 	SmartService,
 	SisService,
 	AxiomService,
-	UserAccessMenuService
+	UserAccessMenuService,ExamService
 } from 'projects/teacherapp/src/app/_services';
 import { CommonAPIService } from 'projects/teacherapp/src/app/_services/commonAPI.service';
 import { UserTypeService } from 'projects/teacherapp/src/app/user-type-teacher/user-type.service';
@@ -34,7 +34,6 @@ import { AdminService } from 'projects/teacherapp/src/app/_services/admin.servic
 import { QelementService } from 'projects/teacherapp/src/app/questionbank/service/qelement.service';
 import { QbankService } from 'projects/teacherapp/src/app/questionbank/service/qbank.service';
 import { ReportService } from 'projects/teacherapp/src/app/_services/report.service';
-import { ExamService } from 'projects/teacherapp/src/app/_services/exam.service';
 const providers = [
 	AuthGuard,
 	RouteAccessGuard,
