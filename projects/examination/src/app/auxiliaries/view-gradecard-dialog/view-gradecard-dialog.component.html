@@ -149,12 +149,13 @@
                         <ng-container *ngIf="term == eachterm.term_id">
                             <ng-template [ngIf]="data.ect_exam_type == 2" [ngIfElse]="ccepatternso">
                                 <ng-container *ngIf="eachterm.so_exam[sub_category].length > 0">
+                                    <!-- subjectwise bifurcation -->
                                     <ng-template [ngIf]="obtainedGradeAvgHighest.subjectwise_bifurcation"
                                         [ngIfElse]="not_subjectwise_bifurcation_subexam">
                                         <table class="table-100 custom-table" style="margin-bottom: 15px">
                                             <thead>
                                                 <tr class="custom-tr">
-                                                    <th [attr.colspan]="2" class="custom-th text-center" width="200px">
+                                                    <th [attr.colspan]="2" class="custom-th text-left" width="200px">
                                                         Scholastic Area {{sub_category}}</th>
                                                     <th [attr.colspan]="eachterm.colspan[sub_category]"
                                                         class="custom-th text-center">
@@ -166,7 +167,7 @@
                                                     </th>
                                                 </tr>
                                                 <tr class="custom-tr">
-                                                    <th [attr.colspan]="2" class="custom-th text-center">Subject Name
+                                                    <th [attr.colspan]="2" class="custom-th text-left">Subject Name
                                                     </th>
                                                     <ng-container
                                                         *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
@@ -190,7 +191,7 @@
                                                                         <br>({{pexam.exam_weightage}})</th>
                                                                 </ng-container>
                                                                 <ng-container
-                                                                    *ngIf="!pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                    *ngIf="!(pexam.exam_bifurcate.bifurcated_marks == 1);">
                                                                     <th [attr.colspan]="1"
                                                                         class="custom-th text-center">
                                                                         {{pexam.exam_name | titlecase}}
@@ -213,7 +214,7 @@
                                                                             <br>({{pexam.exam_weightage}})</th>
                                                                     </ng-container>
                                                                     <ng-container
-                                                                        *ngIf="!pexam.exam_bifurcate.bifurcated_marks == 1;">
+                                                                        *ngIf="!(pexam.exam_bifurcate.bifurcated_marks == 1);">
                                                                         <th [attr.colspan]="1"
                                                                             class="custom-th text-center">
                                                                             {{pexam.exam_name | titlecase}}
@@ -490,11 +491,12 @@
                                             </tbody>
                                         </table>
                                     </ng-template>
+                                    <!-- not subjectwise bifurcation -->
                                     <ng-template #not_subjectwise_bifurcation_subexam>
                                         <table class="table-100 custom-table" style="margin-bottom: 15px">
                                             <thead>
                                                 <tr class="custom-tr">
-                                                    <th class="custom-th text-center" width="200px">
+                                                    <th class="custom-th text-left" width="200px">
                                                         Scholastic Area {{sub_category}}</th>
                                                     <th [attr.colspan]="eachterm.colspan[sub_category]"
                                                         class="custom-th text-center">
@@ -506,7 +508,7 @@
                                                     </th>
                                                 </tr>
                                                 <tr class="custom-tr">
-                                                    <th class="custom-th text-center">Subject Name
+                                                    <th class="custom-th text-left">Subject Name
                                                     </th>
                                                     <ng-container
                                                         *ngIf="(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
@@ -866,7 +868,7 @@
                                 <td> {{remarkOfSub()}}</td>
                             </tr>
                             <tr *ngIf="isuserachivement == '1' && userachivement && userachivement?.a_achievement != ''">
-                                <td width="20%" valign="top">Achievements</td>
+                                <td width="10%" valign="top">Achievements</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{userachivement?.a_achievement}}</td>
                             </tr>
