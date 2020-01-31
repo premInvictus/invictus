@@ -180,4 +180,12 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudentsByClassSection', value);
 	}
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	updateGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
+	}
 }
