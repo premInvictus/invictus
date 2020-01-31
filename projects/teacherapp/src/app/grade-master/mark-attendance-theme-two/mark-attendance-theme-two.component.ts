@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService, } from '../../_services';
+import { CommonAPIService, SisService, AxiomService, SmartService,ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
-import { ExamService } from '../../_services/exam.service';
 
 @Component({
   selector: 'app-mark-attendance-theme-two',

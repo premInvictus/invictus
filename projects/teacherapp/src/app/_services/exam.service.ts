@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { LoaderService } from '../_services/loader.service';
+import { LoaderService } from './loader.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
 @Injectable()
@@ -28,7 +28,7 @@ export class ExamService {
 		return this.http.post(environment.apiExamUrl + '/setup/getExamActivityCategory', value);
 	}
 	getExamActivityType(value) {
-		this.service.startLoading();
+		this.service.startLoading(); 
 		return this.http.post(environment.apiExamUrl + '/setup/getExamActivityType', value);
 	}
 	getExamCalculation(value) {

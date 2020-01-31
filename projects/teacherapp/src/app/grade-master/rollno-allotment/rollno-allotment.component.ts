@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService } from '../../_services';
-import { ExamService } from '../../_services/exam.service';
+import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { Element } from './rollno.model';
 import { MatSort, MatTableDataSource } from '@angular/material';
