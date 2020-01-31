@@ -11,10 +11,67 @@
             </div>
           </div>
           <div class="row">
-           
+            <div class="col-3 col-mobile-view-add-ques">
+              <div>
+                <div class="left-side-box">
+                  <div class="left-side-box-content">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Setup Option</mat-label>
+                      <mat-select (selectionChange)="loadConfiguration($event)" placeholder="Setup Options">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option value="1">Push Notification Settings</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-9 col-mobile-view-add-ques remove-col-modal-padding">
+              <div class="top-right-parameter">
+                <div class="top-right-box">
+                  <div>
+                    <div class="top-right-box-content-title">
+                      <div class="row">
+                        <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                          <div [hidden]="!configFlag">
+                            <div *ngIf="configValue === '1'">
+                              <ng-container *ngFor="let item of notifConfigArray">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <mat-checkbox [indeterminate]="checkSubMenuCheckLevel(item)"
+                                      [checked]="checkMenu(item)" (change)="changeMenu(item,$event)">
+                                      {{item.module_name | capitalize}}
+                                    </mat-checkbox>
+                                    <ng-container *ngIf="item.sub_module && item.sub_module.length > 0">
+                                      <div class="mod-div-2">
+                                        <div class="row" *ngFor="let sitem of item.sub_module">
+                                          <div class="col-12">
+                                            <mat-checkbox [checked]="getSubMenuCheck(sitem)"
+                                              (change)="changeSubMenu(sitem, $event)">
+                                              {{sitem.module_name | capitalize}}
+                                            </mat-checkbox>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </ng-container>
+                                  </div>
+                                </div>
+                              </ng-container>
+                              <div class="text-center" *ngIf="notifConfigArray.length > 0">
+                                <button mat-button class="text-uppercase btn-success"
+                                  (click)="updateGlobalSetting()">Submit</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>

@@ -533,6 +533,27 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			});
 	}
 	getParentDetails(value: any[]) {
+		let parent: any[] = [];
+		let ind = 0;
+		for (const item of value) {
+			for (const titem of value) {
+				if (ind === 0 && titem.epd_parent_type === 'F') {
+					parent.push(titem);
+					break; 
+				}
+				if (ind === 1 && titem.epd_parent_type === 'M') {
+					parent.push(titem);
+					break;
+				}
+				if (ind === 2 && titem.epd_parent_type === 'G') {
+					parent.push(titem);
+					break;
+				}
+			}
+			ind++;
+		}
+		value = [];
+		value = parent;
 		if (value.length > 0) {
 			let j = 0;
 			for (const item of this.formGroupArray) {
