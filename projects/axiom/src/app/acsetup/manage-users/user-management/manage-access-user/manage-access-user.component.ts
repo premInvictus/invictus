@@ -31,7 +31,7 @@ export class ManageAccessUserComponent implements OnInit {
 	manageAccessDiv = false;
 	isApp = false;
 	submitButton = true;
-	typeVal='web';
+	typeVal = 'web';
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -40,8 +40,8 @@ export class ManageAccessUserComponent implements OnInit {
 		maxHeight: 300
 	});
 	typeArray = [
-		{id: 'web', name: 'Desktop'},
-		{id: 'app', name: 'Mobile'}
+		{ id: 'web', name: 'Desktop' },
+		{ id: 'app', name: 'Mobile' }
 	];
 	constructor(
 		private adminService: AdminService,
@@ -178,13 +178,16 @@ export class ManageAccessUserComponent implements OnInit {
 		const pro_id = $event.value;
 		this.moduleItems = [];
 		this.moduleDivFlag = true;
-		this.adminService.getModuleList({ role_id: 2, pro_id: pro_id, mor_type: 'web' }).subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.moduleArray = result.data;
-					this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
-				}
-			});
+		if (pro_id) {
+			this.adminService.getModuleList({ role_id: 2, pro_id: pro_id, mor_type: 'web' }).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.moduleArray = result.data;
+						this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+					}
+				});
+		}
+
 	}
 	getModuleList3(proj_id) {
 		const pro_id = proj_id;
@@ -200,8 +203,10 @@ export class ManageAccessUserComponent implements OnInit {
 	}
 	submitModule() {
 		if (this.moduleValues.length > 0) {
-			const menuRelation: any = { login_id: this.login_id, pro_id: this.isApp ? '1' : this.ModuleForm.value.pro_id , menuRelation: this.moduleValues ,
-			type: this.isApp ? 'app' : 'web' };
+			const menuRelation: any = {
+				login_id: this.login_id, pro_id: this.isApp ? '1' : this.ModuleForm.value.pro_id, menuRelation: this.moduleValues,
+				type: this.isApp ? 'app' : 'web'
+			};
 			this.adminService.addUserAccessMenu(menuRelation).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

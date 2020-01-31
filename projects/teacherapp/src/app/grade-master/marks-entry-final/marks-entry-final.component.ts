@@ -65,9 +65,9 @@ export class MarksEntryFinalComponent implements OnInit {
     });
   }
   getSubType() {
-    const ind = this.subjectArray.findIndex(e => e.sub_id === this.paramform.value.eme_sub_id);
+    const ind = this.subSubjectArray.findIndex(e => e.sub_id === this.paramform.value.eme_sub_id);
     if (ind !== -1) {
-      return this.subjectArray[ind].sub_type;
+      return this.subSubjectArray[ind].sub_type;
     } else {
       return '1';
     }
@@ -420,7 +420,7 @@ export class MarksEntryFinalComponent implements OnInit {
             //   element.childSub = childSub;
             //   this.subjectArray.push(element);
             // }
-            if (element.sub_type === '1') {
+            if (element.sub_type === '1' || element.sub_type === '3') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
                 for (const item of temp) {
@@ -431,7 +431,7 @@ export class MarksEntryFinalComponent implements OnInit {
                 element.childSub = childSub;
                 scholastic_subject.push(element);
               }                           
-            } else if (element.sub_type === '2') {
+            } else if (element.sub_type === '2' || element.sub_type === '4') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
                 for (const item of temp) {

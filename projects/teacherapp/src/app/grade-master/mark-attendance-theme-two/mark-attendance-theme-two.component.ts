@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, SmartService,ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material';
+import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 
 @Component({
@@ -37,7 +37,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   termDataFlag = false;
-  displayedColumns = ['sr_no', 'au_admission_no', 'au_full_name', 'overall_attendance', 'present_days'];
+  displayedColumns = ['roll_no', 'au_admission_no', 'au_full_name', 'overall_attendance', 'present_days'];
+  @ViewChild(MatSort) sort: MatSort;
   constructor(
     private fbuild: FormBuilder,
     private smartService: SmartService,
@@ -208,6 +209,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     for (const item of this.studentArray) {
       this.ELEMENT_DATA.push({
         sr_no: counter,
+        roll_no:item.r_rollno,
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         present_days: item.present_days ? item.present_days : '',
@@ -229,6 +231,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       });
     }
     this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    this.termAttendanceDataSource.sort = this.sort;
   }
 
   finalSubmit() {
@@ -284,6 +287,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
 
 export interface Element {
   sr_no: any;
+  roll_no:any;
   au_admission_no: any;
   au_full_name: any;
   present_days: any;
