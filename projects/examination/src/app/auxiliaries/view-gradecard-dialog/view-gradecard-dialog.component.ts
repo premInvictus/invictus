@@ -84,7 +84,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.printGradecard();
     this.dateofdeclaration = new Date();
     console.log(this.data);
-    if (this.data.param.eme_exam_id || this.data.param.eme_subexam_id) {
+    if (this.data.param.eme_exam_id) {
       this.obtainedGradeAvgHighest.obtained = false;
     }
     if (this.data.ect_grade_avg_highest && this.data.ect_grade_avg_highest != '') {
@@ -105,19 +105,13 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (obj.subjectwise_bifurcation && obj.subjectwise_bifurcation == true) {
         this.obtainedGradeAvgHighest.subjectwise_bifurcation = true;
       }
-      // manage colspan for term
-      if (this.obtainedGradeAvgHighest.obtained) {
-        this.obtainedGradeAvgHighestCount++;
-      }
-      if (this.obtainedGradeAvgHighest.grade) {
-        this.obtainedGradeAvgHighestCount++;
-      }
-      if (this.obtainedGradeAvgHighest.highest) {
-        this.obtainedGradeAvgHighestCount++;
-      }
-      if (this.obtainedGradeAvgHighest.avg) {
-        this.obtainedGradeAvgHighestCount++;
-      }
+    }
+    if (this.data.param.eme_subexam_id.length > 0) {
+      this.obtainedGradeAvgHighest.obtained = false;
+      this.obtainedGradeAvgHighest.grade = false;
+      this.obtainedGradeAvgHighest.avg = false;
+      this.obtainedGradeAvgHighest.highest = false;
+      
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
     this.termArray.push(this.data.param.eme_term_id);
