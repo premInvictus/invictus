@@ -191,6 +191,41 @@ export class RollnoAllotmentComponent implements OnInit {
         }
       );
   }
+  // finalSubmit() {
+  //   this.finalArray = [];
+  //   for (const item of this.formgroupArray) {
+  //     this.finalArray.push(item.formGroup.value);
+  //   }
+  //   const checkParam: any = {};
+  //   checkParam.au_class_id = this.firstForm.value.syl_class_id;
+  //   checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+  //   checkParam.au_ses_id = this.session.ses_id;
+  //   this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
+  //     if (result && result.status === 'ok') {
+  //       this.examService.updateRollNo(this.finalArray).subscribe((result_u: any) => {
+  //         if (result_u && result_u.status === 'ok') {
+  //           this.finalCancel();
+  //           this.commonService.showSuccessErrorMessage('Roll No. Updated Successfully', 'success');
+  //           this.fetchDetails();
+  //         } else {
+  //           this.commonService.showSuccessErrorMessage('Update failed', 'error');
+  //         }
+  //       });
+  //     } else {
+  //       this.examService.insertRollNo(this.finalArray).subscribe((result_i: any) => {
+  //         if (result_i && result_i.status === 'ok') {
+  //           this.finalCancel();
+  //           this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
+  //           this.fetchDetails();
+  //         } else {
+  //           this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+
+
   finalSubmit() {
     this.finalArray = [];
     for (const item of this.formgroupArray) {
@@ -198,25 +233,18 @@ export class RollnoAllotmentComponent implements OnInit {
     }
     const checkParam: any = {};
     checkParam.au_class_id = this.firstForm.value.syl_class_id;
+    if (Number(this.firstForm.value.syl_board_id) === 1) {
+      checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+    }
     checkParam.au_sec_id = this.firstForm.value.syl_section_id;
     checkParam.au_ses_id = this.session.ses_id;
     this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.examService.updateRollNo(this.finalArray).subscribe((result_u: any) => {
-          if (result_u && result_u.status === 'ok') {
-            this.finalCancel();
-            this.commonService.showSuccessErrorMessage('Roll No. Updated Successfully', 'success');
-            this.fetchDetails();
-          } else {
-            this.commonService.showSuccessErrorMessage('Update failed', 'error');
-          }
-        });
-      } else {
         this.examService.insertRollNo(this.finalArray).subscribe((result_i: any) => {
           if (result_i && result_i.status === 'ok') {
             this.finalCancel();
-            this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
             this.fetchDetails();
+            this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
           } else {
             this.commonService.showSuccessErrorMessage('Insert failed', 'error');
           }
@@ -224,4 +252,8 @@ export class RollnoAllotmentComponent implements OnInit {
       }
     });
   }
+
+
+
+
 }

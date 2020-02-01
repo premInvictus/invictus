@@ -157,7 +157,7 @@
                             <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
                             <ng-container *ngIf="formGroupArray.length > 0">
                                 <ng-container *ngFor="let item of paramform.value.ere_sub_exam_id;let i=index">
-                                    <td class="custom-td text-center font-size-14 ">
+                                    <td class="custom-td text-left font-size-14 " style="padding:10px;">
                                         <form [formGroup]="formGroupArray[s].formGroup[i]">
                                             <ng-template [ngIf]="checkEditable(item, '0',editTable)"
                                                 [ngIfElse]="elseContaint">
@@ -193,7 +193,7 @@
                                 </ng-container>
                             </ng-container>
                             <ng-container *ngIf="formGroupArray2.length > 0">
-                                <td class="custom-td text-center font-size-14 ">
+                                <td class="custom-td text-left font-size-14 " style="padding:10px;">
                                     <form [formGroup]="formGroupArray2[s].formGroup[0]">
                                         <ng-template [ngIf]="checkExternalEdit('0',editTable)"
                                             [ngIfElse]="elseContaint">

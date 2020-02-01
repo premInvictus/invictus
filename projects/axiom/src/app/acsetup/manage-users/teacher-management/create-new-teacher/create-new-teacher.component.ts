@@ -37,7 +37,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		{ id: 'web', name: 'Desktop' },
 		{ id: 'app', name: 'Mobile' }
 	];
-	finalSubjectArray:any[] = [];
+	finalSubjectArray: any[] = [];
 	ctFlag = false;
 	Teacher_Form: FormGroup;
 	Cs_relation_Form: FormGroup;
@@ -226,7 +226,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	setCurrentSubject(value) {
 		//console.log('value--', value, this.finalSubjectArray);
 		this.currentSubject = [];
-		for (var i=0; i<value.length;i++) {
+		for (var i = 0; i < value.length; i++) {
 			//console.log('value[i]', value[i]);
 			const subObj = this.finalSubjectArray.find(item => item.sub_id === value[i]);
 			if (subObj) {
@@ -234,7 +234,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			}
 		}
 		//console.log('this.currentSubject',this.currentSubject);
-		
+
 	}
 
 	deleteCSRelation(deletei) {
@@ -375,7 +375,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		if (this.Cs_relation_Form.valid) {
 			let relations: any = {};
 
-			
+
 			let pushFlag = 0;
 			for (const item of this.cs_relationArray) {
 				if (item.uc_class_id === relations.uc_class_id && item.uc_sec_id === relations.uc_sec_id && item.uc_sub_id === relations.uc_sub_id) {
@@ -385,7 +385,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			}
 			//console.log('pushFlag--',pushFlag, this.currentSubject);
 			if (pushFlag === 0) {
-				for (var i=0; i<this.currentSubject.length;i++) {
+				for (var i = 0; i < this.currentSubject.length; i++) {
 					//console.log(this.Cs_relation_Form.value);
 					let relations: any = {};
 					//relations = this.Cs_relation_Form.value;
@@ -724,5 +724,5 @@ export class CreateNewTeacherComponent implements OnInit {
 		}
 	}
 
-	
+
 }

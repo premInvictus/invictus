@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 	styleUrls: ['./rollno-allotment.component.css']
 })
 export class RollnoAllotmentComponent implements OnInit,AfterViewInit {
-	defaultFlag = false;
+	defaultFlag = false; 
 	finalDivFlag = true;
 	submitFlag = false;
 	displayedColumns: string[] = [];
