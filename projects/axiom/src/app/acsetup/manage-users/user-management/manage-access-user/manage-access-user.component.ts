@@ -32,6 +32,7 @@ export class ManageAccessUserComponent implements OnInit {
 	isApp = false;
 	submitButton = true;
 	typeVal = 'web';
+	projectListArray: any[] = [];
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -229,6 +230,30 @@ export class ManageAccessUserComponent implements OnInit {
 		} else {
 			this.notif.showSuccessErrorMessage('Please select class', 'error');
 		}
+	}
+	assignProject(item) {
+		console.log(item.pro_id);
+		const findex = this.projectListArray.findIndex(f => Number(f.pro_id) === Number(item.pro_id));
+		if (findex !== -1) {
+			this.projectListArray.splice(findex, 1)
+		} else {
+			this.projectListArray.push(item);
+		}
+		console.log(this.projectListArray);
+	}
+	submitProject() {
+		const finayArray: any[] = [];
+		if (this.projectListArray.length > 0) {
+			for (let item of this.projectListArray) {
+				finayArray.push({
+					'pro_id': item.pro_id,
+					'pro_name': item.pro_name
+				});
+			}
+		} else {
+			this.notif.showSuccessErrorMessage('Please select project', 'error');
+		}
+
 	}
 
 }
