@@ -104,20 +104,17 @@ export class BmiCalculatorComponent implements OnInit {
     let ind = 0;
     const dataArr: any[] = [];
     for (const item of this.studentArray) {
-      if (this.formGroupArray[ind].formGroup.value['height' + ind]
-        && this.formGroupArray[ind].formGroup.value['weight' + ind]) {
-        dataArr.push({
-          bmi_class_id: this.paramform.value.bmi_class_id,
-          bmi_sec_id: this.paramform.value.bmi_sec_id,
-          bmi_login_id: item.au_login_id,
-          bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind],
-          bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind],
-          bmi_created_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-          bmi_updated_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-          bmi_created_by: this.currentUser.login_id
-        });
-        ind++;
-      }
+      dataArr.push({
+        bmi_class_id: this.paramform.value.bmi_class_id,
+        bmi_sec_id: this.paramform.value.bmi_sec_id,
+        bmi_login_id: item.au_login_id,
+        bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind] ? this.formGroupArray[ind].formGroup.value['height' + ind] : '',
+        bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind] ? this.formGroupArray[ind].formGroup.value['weight' + ind] : '',
+        bmi_created_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
+        bmi_updated_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
+        bmi_created_by: this.currentUser.login_id
+      });
+      ind++;
     }
     if (dataArr.length > 0) {
       this.examService.insertBMI({
