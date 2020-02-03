@@ -33,6 +33,7 @@ export class ManageAccessUserComponent implements OnInit {
 	submitButton = true;
 	typeVal = 'web';
 	projectListArray: any[] = [];
+	resultProjectListArray: any[] = [];
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -61,6 +62,7 @@ export class ManageAccessUserComponent implements OnInit {
 		this.getClass();
 		this.buildForm();
 		this.getProjectList();
+		this.getUserProjectList();
 		this.homeUrl = this.breadCrumbService.getUrl();
 
 	}
@@ -87,6 +89,7 @@ export class ManageAccessUserComponent implements OnInit {
 		});
 		this.ClassModuleForm = this.fbuild.group({
 			login_id: '',
+
 		});
 	}
 	isExistUserAccessMenu(mod_id) {
@@ -231,15 +234,22 @@ export class ManageAccessUserComponent implements OnInit {
 			this.notif.showSuccessErrorMessage('Please select class', 'error');
 		}
 	}
+	getUserProjectList() {
+		this.adminService.getUserProject({ au_login_id: this.login_id }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.resultProjectListArray = JSON.parse(result.data[0].au_project_mapped);
+					this.projectListArray = JSON.parse(result.data[0].au_project_mapped);
+				}
+			});
+	}
 	assignProject(item) {
-		console.log(item.pro_id);
 		const findex = this.projectListArray.findIndex(f => Number(f.pro_id) === Number(item.pro_id));
 		if (findex !== -1) {
 			this.projectListArray.splice(findex, 1)
 		} else {
 			this.projectListArray.push(item);
 		}
-		console.log(this.projectListArray);
 	}
 	submitProject() {
 		const finayArray: any[] = [];
@@ -247,13 +257,30 @@ export class ManageAccessUserComponent implements OnInit {
 			for (let item of this.projectListArray) {
 				finayArray.push({
 					'pro_id': item.pro_id,
-					'pro_name': item.pro_name
+					'pro_name': item.pro_name,
+					'pro_status': item.pro_status,
+					'pro_url': item.pro_url
 				});
 			}
+			this.adminService.updateUserProject({ au_login_id: this.login_id, au_project_mapped: JSON.stringify(finayArray) }).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.notif.showSuccessErrorMessage('Submitted Successfully', 'success');
+						this.getUserProjectList();
+					}
+				});
 		} else {
 			this.notif.showSuccessErrorMessage('Please select project', 'error');
 		}
 
+	}
+	getCheckStatus(pro_id) {
+		const findex = this.resultProjectListArray.findIndex(f => Number(f.pro_id) === Number(pro_id));
+		if (findex !== -1) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

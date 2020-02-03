@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LoaderService } from '../../../_services/index';
 import { environment } from 'src/environments/environment';
 
@@ -72,7 +72,7 @@ export class AdminService {
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessClass', param);
 	}
 	getUserAccessSubject(value) {
-			this.loaderService.startLoading();
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.login_id) {
 			param.login_id = value.login_id;
@@ -83,7 +83,7 @@ export class AdminService {
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessSubject', param);
 	}
 	getUserAccessTopic(value) {
-			this.loaderService.startLoading();
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.login_id) {
 			param.login_id = value.login_id;
@@ -201,5 +201,13 @@ export class AdminService {
 			param.es_status = value.es_status;
 		}
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getStudentRankInAllExams', param);
+	}
+	updateUserProject(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/updateUserProject', value);
+	}
+	getUserProject(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserProject', value);
 	}
 }

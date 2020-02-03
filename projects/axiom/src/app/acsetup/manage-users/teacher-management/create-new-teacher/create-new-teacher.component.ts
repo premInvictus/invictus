@@ -87,8 +87,6 @@ export class CreateNewTeacherComponent implements OnInit {
 		decoupleChildFromParent: false,
 		maxHeight: 400
 	});
-
-	t
 	au_email = new FormControl('', [
 		Validators.required,
 		Validators.email,
