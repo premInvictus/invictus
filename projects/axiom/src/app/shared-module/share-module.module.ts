@@ -45,12 +45,15 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
+import { AssignRightsMultipleComponent } from './assign-rights-multiple/assign-rights-multiple.component';
+import { TreeviewModule } from 'ngx-treeview';
 @NgModule({
 	imports: [
 		CommonModule,
 		MatNativeDateModule,
 		MatProgressBarModule,
 		MatSlideToggleModule,
+		TreeviewModule,
 		MatDialogModule,
 		MatDatepickerModule,
 		MatTableModule,
@@ -95,7 +98,8 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		EditobjectiveComponent,
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
-		ImagecropComponent
+		ImagecropComponent,
+		AssignRightsMultipleComponent
 	],
 	exports: [
 		DeleteModalComponent,
@@ -133,9 +137,10 @@ import { ImagecropComponent } from './imagecrop/imagecrop.component';
 		QuestionPaperDialogComponent,
 		AddInstructionComponent,
 		ImageCropperModule,
+		AssignRightsMultipleComponent,
 		ImagecropComponent
 	],
-	entryComponents: [ImagecropComponent]
+	entryComponents: [ImagecropComponent, AssignRightsMultipleComponent]
 })
 export class SharedModule {
 	constructor() {

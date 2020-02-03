@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { BreadCrumbService, UserAccessMenuService, NotificationService } from '../../../_services/index';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import {Element } from './user.model';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialogRef, MatDialog } from '@angular/material';
+import { Element } from './user.model';
+import { AssignRightsMultipleComponent } from '../../../shared-module/assign-rights-multiple/assign-rights-multiple.component';
 @Component({
 	selector: 'app-user-management',
 	templateUrl: './user-management.component.html',
@@ -12,7 +13,8 @@ export class UserManagementComponent implements OnInit {
 	constructor(
 		private userAccessMenuService: UserAccessMenuService,
 		private qelementService: QelementService,
-			private notif: NotificationService,
+		private notif: NotificationService,
+		private dialog: MatDialog,
 		private breadCrumbService: BreadCrumbService
 	) { }
 
@@ -20,6 +22,7 @@ export class UserManagementComponent implements OnInit {
 	userdetailArray: any[] = [];
 	public role_id: any;
 	homeUrl: string;
+	dialogRef: MatDialogRef<AssignRightsMultipleComponent>;
 	ELEMENT_DATA: Element[] = [];
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -44,18 +47,18 @@ export class UserManagementComponent implements OnInit {
 	getUser() {
 		this.userdetailArray = [];
 		this.ELEMENT_DATA = [];
-		this.qelementService.getUser({ role_id: '2'}).subscribe(
+		this.qelementService.getUser({ role_id: '2' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.userdetailArray = result.data;
 					let ind = 1;
 					for (const t of this.userdetailArray) {
-						this.ELEMENT_DATA.push({ 
-							position: ind, 
-							userId: t.au_username, 
-							name: t.au_full_name, 
-							status: t.au_status === '1' ? true : false, 
-							action: t 
+						this.ELEMENT_DATA.push({
+							position: ind,
+							userId: t.au_username,
+							name: t.au_full_name,
+							status: t.au_status === '1' ? true : false,
+							action: t
 						});
 						ind++;
 					}
@@ -85,7 +88,7 @@ export class UserManagementComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.getUser();
 					this.notif.showSuccessErrorMessage('User Deleted Successfully', 'success');
-					} else {
+				} else {
 					this.notif.showSuccessErrorMessage('Error Deleting the User', 'error');
 				}
 			},
@@ -93,11 +96,11 @@ export class UserManagementComponent implements OnInit {
 	}
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
-	deleteComCancel() {  }
+	deleteComCancel() { }
 
 	toggleStatus(au_login_id, status) {
 		console.log(status);
-		if(status === '1') {
+		if (status === '1') {
 			status = '0';
 		} else {
 			status = '1';
@@ -112,5 +115,14 @@ export class UserManagementComponent implements OnInit {
 				}
 			},
 		);
+	}
+	openAccessMenuModal() {
+		this.dialogRef = this.dialog.open(AssignRightsMultipleComponent, {
+			data: {
+				role_id: '2'
+			},
+			height: '65vh',
+			width: '60vh'
+		})
 	}
 }
