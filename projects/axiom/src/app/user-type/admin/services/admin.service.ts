@@ -210,4 +210,13 @@ export class AdminService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserProject', value);
 	}
+	getClassData(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
+	getUserAssignClass(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getUserAssignClass', value);
+	}
+	
 }
