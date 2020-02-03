@@ -37,6 +37,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		{ id: 'web', name: 'Desktop' },
 		{ id: 'app', name: 'Mobile' }
 	];
+	deletedItemArray: any[] = [];
 	finalSubjectArray: any[] = [];
 	ctFlag = false;
 	Teacher_Form: FormGroup;
@@ -78,6 +79,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	designation: any;
 	events: string[] = [];
 	ctValue: any;
+	checkedFlag = false;
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -86,7 +88,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		maxHeight: 400
 	});
 
-
+	t
 	au_email = new FormControl('', [
 		Validators.required,
 		Validators.email,
@@ -224,24 +226,55 @@ export class CreateNewTeacherComponent implements OnInit {
 		}
 	}
 	setCurrentSubject(value) {
-		//console.log('value--', value, this.finalSubjectArray);
 		this.currentSubject = [];
 		for (var i = 0; i < value.length; i++) {
-			//console.log('value[i]', value[i]);
 			const subObj = this.finalSubjectArray.find(item => item.sub_id === value[i]);
 			if (subObj) {
 				this.currentSubject.push(subObj.sub_name);
 			}
 		}
-		//console.log('this.currentSubject',this.currentSubject);
-
 	}
 
 	deleteCSRelation(deletei) {
 		this.cs_relationArray.splice(deletei, 1);
 	}
-
-
+	deleteSelected() {
+		let index = 0;
+		for (let item of this.deletedItemArray) {
+			this.cs_relationArray.splice(item.id, 1);
+			if (index === (this.deletedItemArray.length - 1)) {
+				this.deletedItemArray = [];
+			}
+			index++;
+		}
+	}
+	getDeleteEvent(index) {
+		if (index !== 'all') {
+			const rindex = this.deletedItemArray.findIndex(f => f.id === index);
+			if (rindex !== -1) {
+				this.deletedItemArray.splice(rindex, 1);
+			} else {
+				this.deletedItemArray.push({
+					'id': index
+				});
+			}
+		} else {
+			if (this.deletedItemArray.length > 0 && (this.deletedItemArray.length === this.cs_relationArray.length)) {
+				this.checkedFlag = false;
+				this.deletedItemArray = [];
+			} else {
+				this.deletedItemArray = [];
+				let index = 0;
+				this.checkedFlag = true;
+				for (let item of this.cs_relationArray) {
+					this.deletedItemArray.push({
+						'id': index
+					})
+					index++;
+				}
+			}
+		}
+	}
 
 	getAssignedModuleList() {
 		this.assignedModuleArray = [];
@@ -383,12 +416,9 @@ export class CreateNewTeacherComponent implements OnInit {
 					break;
 				}
 			}
-			//console.log('pushFlag--',pushFlag, this.currentSubject);
 			if (pushFlag === 0) {
 				for (var i = 0; i < this.currentSubject.length; i++) {
-					//console.log(this.Cs_relation_Form.value);
 					let relations: any = {};
-					//relations = this.Cs_relation_Form.value;
 					relations.uc_class_id = this.Cs_relation_Form.value.uc_class_id;
 					relations.uc_class_teacher = this.Cs_relation_Form.value.uc_class_teacher;
 					relations.uc_department = this.Cs_relation_Form.value.uc_department;
@@ -401,7 +431,6 @@ export class CreateNewTeacherComponent implements OnInit {
 					relations.uc_class_teacher = '0';
 					this.cs_relationArray.push(relations);
 				}
-				//console.log('this.cs_relationArray--',this.cs_relationArray);
 			}
 		}
 	}
@@ -617,7 +646,6 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	updateUser() {
-
 		if (this.Teacher_Form.valid) {
 			const newTeacherFormData = new FormData();
 			if (this.url) {
@@ -633,7 +661,6 @@ export class CreateNewTeacherComponent implements OnInit {
 			newTeacherFormData.append('au_role_id', '3');
 			newTeacherFormData.append('au_admission_no', this.userDetails.au_admission_no);
 			newTeacherFormData.append('cs_relations', JSON.stringify(this.cs_relationArray));
-			//console.log(newTeacherFormData);
 			this.qelementService.updateUser(newTeacherFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -681,6 +708,10 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.Teacher_Form.patchValue({ au_full_name: '', au_email: '', au_mobile: '' }),
 			// tslint:disable-next-line:max-line-length
 			this.Cs_relation_Form.patchValue({ uc_class_id: '', uc_sec_id: '', uc_sub_id: '', au_profileimage: '', uc_designation: '', uc_department: '' });
+		const rindex = this.cs_relationArray.findIndex(f => f.uc_class_teacher === '1');
+		if (rindex !== -1) {
+			this.cs_relationArray[rindex].uc_class_teacher = '0';
+		}
 	}
 	checkUserExists(value) {
 		if (value) {
@@ -701,6 +732,7 @@ export class CreateNewTeacherComponent implements OnInit {
 		this.prefixStatus = '';
 	}
 	checkStatus(index) {
+		//console.log('index', index);
 		if (Number(index) === 1) {
 			return true;
 		} else {
