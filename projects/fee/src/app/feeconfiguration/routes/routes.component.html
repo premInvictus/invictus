@@ -100,7 +100,7 @@
                 </div>
                 <div class="text-center margin-top-25">
                   <div class="inline-flex">
-                  <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()">Submit</button>
+                  <button mat-raised-button class="btn-primary btn-custom btn-success" (click)="saveForm()" [disabled]="btnDisable">Submit</button>
                   <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
                     (click)="resetForm()">Reset</button>
                   </div>

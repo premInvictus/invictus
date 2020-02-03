@@ -43,6 +43,7 @@ export class FeeModificationComponent implements OnInit {
 	inv_invoice_date: any;
 	inv_due_date: any;
 	showForm = false;
+	btnDisable = false;
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -165,6 +166,7 @@ export class FeeModificationComponent implements OnInit {
 	}
 
 	reset() {
+		this.btnDisable = false;
 		this.receiptArray = [];
 		this.modifyReceiptForm.patchValue({
 			'inv_id': [],
@@ -352,7 +354,9 @@ export class FeeModificationComponent implements OnInit {
 
 		console.log('this.modifyReceiptForm.value', this.modifyReceiptForm.value);
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.updateReceipt(this.modifyReceiptForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
@@ -361,6 +365,8 @@ export class FeeModificationComponent implements OnInit {
 					this.reset();
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	saveAndPrintReceipt() {
@@ -410,7 +416,9 @@ export class FeeModificationComponent implements OnInit {
 			}
 		}
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.updateReceipt(this.modifyReceiptForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					this.common.showSuccessErrorMessage(result.message, 'success');
@@ -421,6 +429,8 @@ export class FeeModificationComponent implements OnInit {
 					this.reset();
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 }

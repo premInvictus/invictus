@@ -40,6 +40,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	startMonth: any;
 	type: any = '';
 	feeRenderId: any = '';
+	btnDisable = false;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -445,7 +446,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			}
 		}
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
@@ -458,6 +461,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	saveAndPrint() {
@@ -516,7 +521,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			}
 		}
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					this.common.showSuccessErrorMessage(result.message, 'success');
@@ -531,6 +538,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	gotoIndividual($event) {
@@ -552,6 +561,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 
 	reset() {
+		this.btnDisable = false;
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'inv_invoice_no': '',

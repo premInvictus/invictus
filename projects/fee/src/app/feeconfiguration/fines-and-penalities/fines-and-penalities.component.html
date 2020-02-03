@@ -111,11 +111,11 @@
                         <div class="text-center margin-top-25">
                            <div class="inline-flex">
                               <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
-                                 (click)="submit()">Submit</button>
+                                 (click)="submit()" [disabled]="btnDisable">Submit</button>
                               <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
-                                 (click)="update()">Update</button>
+                                 (click)="update()" [disabled]="btnDisable">Update</button>
                               <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
-                                 (click)="finepenaltiesForm.reset()">Reset</button>
+                                 (click)="btnDisable=false;finepenaltiesForm.reset()">Reset</button>
                            </div>
                         </div>
                      </form>
