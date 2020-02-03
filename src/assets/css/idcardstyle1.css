@@ -412,7 +412,7 @@ span.empid-bar-code-span-ls {
     top: -66px !important;
 
 } */
-span.empid-bar-code-span-ls {
+/* span.empid-bar-code-span-ls {
     position: absolute;
     right: 60px;
     transform: rotate(-90deg);
@@ -420,4 +420,4 @@ span.empid-bar-code-span-ls {
     font-size: 9px;
     font-weight: bold;
     letter-spacing: 2.5px;
-}
+} */
