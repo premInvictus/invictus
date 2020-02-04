@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService,SmartService } from '../../_services/index';
 import { DynamicReport } from './dynamic-report.model';
 import { MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
 
@@ -53,6 +53,7 @@ export class DynamicReportComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService
 	) { }
 	ngOnInit() {
@@ -198,7 +199,7 @@ export class DynamicReportComponent implements OnInit {
 				this.dropdownArray = [];
 				switch (item.apiName) {
 					case 'getClass':
-						this.sisService.getClass({}).subscribe((result: any) => {
+						this.SmartService.getClassData({}).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								if (result.data.length > 0) {
 									for (const item1 of result.data) {

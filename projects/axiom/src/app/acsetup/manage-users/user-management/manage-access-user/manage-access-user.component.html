@@ -29,6 +29,42 @@
                                  <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
+                                          <span class="font-16">Manage Project</span>
+                                       </div>
+                                    </ng-template>
+                                    <div *ngIf="isExistUserAccessMenu('75')">
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <form>
+                                                <br>
+                                                <div class="row">
+                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
+                                                      <section class="example-section">
+                                                         <mat-checkbox name="switch" [id]="item.pro_id"
+                                                            (click)="assignProject(item)"
+                                                            [checked]="getCheckStatus(item.pro_id)">
+                                                            {{item.pro_name}}</mat-checkbox>
+                                                      </section>
+                                                   </div>
+                                                </div>
+                                             </form>
+                                          </div>
+                                       </div>
+                                       <br>
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <button mat-raised-button class="btn-primary btn-success"
+                                                (click)="submitProject()">Submit</button>
+                                             <a [routerLink]="['../../user-management']">
+                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
+                                             </a>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </mat-tab>
+                                 <mat-tab>
+                                    <ng-template mat-tab-label>
+                                       <div>
                                           <span class="font-16">Manage Forms & Events</span>
                                        </div>
                                     </ng-template>
@@ -117,6 +153,7 @@
                                        </div>
                                     </div>
                                  </mat-tab>
+
                                  <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
@@ -141,16 +178,11 @@
                                                    <div
                                                       class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
                                                       <div>
-                                                         <div>
-                                                            <div>
-                                                               <div class="col-apple-10">
-                                                                  <div class="module-list">
-                                                                     <ngx-treeview [config]="config"
-                                                                        [items]="classItems"
-                                                                        (selectedChange)="classValues = $event">
-                                                                     </ngx-treeview>
-                                                                  </div>
-                                                               </div>
+                                                         <div class="col-apple-10">
+                                                            <div class="module-list">
+                                                               <ngx-treeview [config]="config" [items]="classItems"
+                                                                  (selectedChange)="classValues = $event">
+                                                               </ngx-treeview>
                                                             </div>
                                                          </div>
                                                       </div>
@@ -171,7 +203,7 @@
                                        </div>
                                     </div>
                                  </mat-tab>
-                                 <!-- <mat-tab>
+                                 <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
                                           <span class="font-16">Manage Assessment Years</span>
@@ -239,42 +271,6 @@
                                                    class="btn-primary btn-success">Submit</button>
                                              </a>
                                              <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </mat-tab> -->
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Project</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('75')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <form>
-                                                <br>
-                                                <div class="row">
-                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
-                                                      <section class="example-section">
-                                                         <mat-checkbox name="switch" [id]="item.pro_id"
-                                                            (click)="assignProject(item)"
-                                                            [checked]="getCheckStatus(item.pro_id)">
-                                                            {{item.pro_name}}</mat-checkbox>
-                                                      </section>
-                                                   </div>
-                                                </div>
-                                             </form>
-                                          </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="submitProject()">Submit</button>
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
-                                             </a>
                                           </div>
                                        </div>
                                     </div>

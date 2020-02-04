@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input, OnChanges, ViewEncapsulation } fro
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { CommonAPIService } from '../../_services/commonAPI.service';
-import { SisService, ProcesstypeService } from '../../_services/index';
+import { SisService, ProcesstypeService, SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent, ErrorStateMatcher } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
@@ -77,7 +77,8 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	defaultsrc: any;
 	cityCountryArray: any[] = [];
 	constructor(public fbuild: FormBuilder, private notif: CommonAPIService, private sisService: SisService,
-		private formEnabledService: FormEnabledService, private processtypeService: ProcesstypeService) { }
+		private formEnabledService: FormEnabledService, private processtypeService: ProcesstypeService,
+		public SmartService: SmartService) { }
 
 
 	ngOnInit() {
@@ -349,7 +350,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 	getClass() {
 		const param: any = {};
 		param.login_id = this.currentUser.login_id;
-		this.sisService.getClass(param).subscribe((result: any) => {
+		this.SmartService.getClassData(param).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}
@@ -539,7 +540,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			for (const titem of value) {
 				if (ind === 0 && titem.epd_parent_type === 'F') {
 					parent.push(titem);
-					break; 
+					break;
 				}
 				if (ind === 1 && titem.epd_parent_type === 'M') {
 					parent.push(titem);

@@ -352,7 +352,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.common.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

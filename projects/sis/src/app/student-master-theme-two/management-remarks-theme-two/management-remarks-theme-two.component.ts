@@ -7,7 +7,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { take } from 'rxjs/operators';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
-import { CommonAPIService, ProcesstypeService, SisService } from '../../_services/index';
+import { CommonAPIService, ProcesstypeService, SisService,SmartService } from '../../_services/index';
 import { PreviewDocumentComponent } from './../../student-master/documents/preview-document/preview-document.component';
 import { formGroupNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -61,6 +61,7 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private processtypeService: ProcesstypeService,
 		private formEnabledService: FormEnabledService,
@@ -367,7 +368,7 @@ export class ManagementRemarksThemeTwoComponent implements OnInit, OnChanges {
 
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

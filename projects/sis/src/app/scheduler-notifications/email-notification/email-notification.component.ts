@@ -4,7 +4,7 @@ import { ckconfig } from '../../config/ckeditorconfig';
 import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService,SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -103,7 +103,7 @@ export class EmailNotificationComponent implements OnInit, AfterViewInit {
 
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
-		private router: Router,
+		private router: Router,private SmartService:SmartService,
 		private route: ActivatedRoute,
 		private dialog: MatDialog) { }
 
@@ -226,7 +226,7 @@ export class EmailNotificationComponent implements OnInit, AfterViewInit {
 	}
 
 	getClass() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
 				this.classDataArr = result.data;
 			}

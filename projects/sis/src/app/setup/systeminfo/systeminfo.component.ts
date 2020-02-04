@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroupDirective, FormControl, NgForm } from '@angular/forms';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -56,8 +56,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	// 	{ reason_type: '12', reason_type_desc: 'Change Book Status' }];
 	reason_type: any = '1';
 	constructor(private fbuild: FormBuilder,
+		private SmartService: SmartService,
 		private sisService: SisService,
-		private commonService: CommonAPIService) { }
+		private commonService: CommonAPIService,
+		) { }
 
 	ngOnInit() {
 		this.buildForm();
@@ -1706,7 +1708,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				});
 	}
 	getClassAll() {
-		this.sisService.getClass({}).subscribe((res: any) => {
+		this.SmartService.getClassData({}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.classArray = [];
 				this.classArray = res.data;

@@ -51,7 +51,7 @@ export class IssueToClassLibraryComponent implements OnInit {
   getClass(event) {
     this.classArray = [];
     this.currentClassName  = event ? event.target.innerText.trim() : '';
-		this.erpCommonService.getClass({}).subscribe((result: any) => {
+		this.erpCommonService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			} else {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, OnDestroy, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
@@ -71,6 +71,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private commonAPIService: CommonAPIService,
@@ -232,7 +233,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

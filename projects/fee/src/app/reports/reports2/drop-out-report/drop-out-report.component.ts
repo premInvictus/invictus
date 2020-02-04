@@ -25,7 +25,7 @@ import 'jspdf-autotable';
 })
 export class DropoutReportComponent implements OnInit {
 	totalRow: any;
-	gridHeight : any;
+	gridHeight: any;
 	columnDefinitions1: Column[] = [];
 	columnDefinitions2: Column[] = [];
 	gridOptions1: GridOption;
@@ -91,7 +91,7 @@ export class DropoutReportComponent implements OnInit {
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
-			'sd_type_value' : '1',
+			'sd_type_value': '1',
 			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
@@ -308,13 +308,13 @@ export class DropoutReportComponent implements OnInit {
 				// 		} else {
 				// 			return '-';
 				// 		}
-						
+
 				// 	},
 				// 	aggregators: this.aggregatearray,
 				// 	aggregateCollapsed: true,
 				// 	collapsed: false,
 				// },
-				
+
 			},
 			{
 				id: 'refund_status',
@@ -323,7 +323,7 @@ export class DropoutReportComponent implements OnInit {
 				sortable: true,
 				filterable: true
 			},
-			];
+		];
 		this.feeService.getDropoutReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.common.showSuccessErrorMessage(result.message, 'success');
@@ -371,7 +371,7 @@ export class DropoutReportComponent implements OnInit {
 				obj3['fh_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
 				obj3['refund_date'] = this.common.htmlToText('');
 				obj3['refund_status'] = '';
-				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));	
+				obj3['total'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t.fh_amount).reduce((acc, val) => acc + val, 0));
 				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
 					this.gridHeight = 300;
@@ -391,7 +391,7 @@ export class DropoutReportComponent implements OnInit {
 		});
 	}
 
-	
+
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
 		this.clearGrouping();
@@ -477,7 +477,7 @@ export class DropoutReportComponent implements OnInit {
 		} else {
 			return "-";
 		}
-		
+
 	}
 	srnTotalsFormatter(totals, columnDef) {
 		return '<b class="total-footer-report">Total</b>';
@@ -515,7 +515,7 @@ export class DropoutReportComponent implements OnInit {
 		}
 	}
 	getClassData() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.common.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classDataArray = result.data;
 				this.getClass();
@@ -773,16 +773,16 @@ export class DropoutReportComponent implements OnInit {
 		console.log('event', event);
 		if (event.value === 1) {
 			this.activeReport = 1;
-			
+
 		} else {
 			this.activeReport = 2;
-			
+
 		}
 	}
 
 	generate() {
-		
+
 		this.getDropoutReport(this.reportFilterForm.value);
-		
+
 	}
 }
