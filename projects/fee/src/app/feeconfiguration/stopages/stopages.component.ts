@@ -32,6 +32,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
+	btnDisable = false;
 	constructor(private fbuild: FormBuilder,
 		private commonAPIService: CommonAPIService, private sisService: SisService,
 		private feeService: FeeService,
@@ -127,6 +128,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 
 	callSaveAPI(inputJson) {
 		this.feeService.saveStoppage(inputJson).subscribe((result: any) => {
+			this.btnDisable = false;
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.resetForm();
@@ -142,6 +144,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 	saveForm() {
 		const slabArr = [];
 		if (this.transportStopagges.valid) {
+			this.btnDisable = true;
 			let inputJson = {};
 			inputJson = {
 				tsp_name: this.transportStopagges.value.transport_stop_name,
@@ -155,6 +158,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 			}
 			this.callSaveAPI(inputJson);
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
 		}
 	}
@@ -194,6 +198,7 @@ export class StopagesComponent implements OnInit, AfterViewInit {
 	}
 
 	resetForm() {
+		this.btnDisable = false;
 		this.stoppageStatus = '0';
 		this.prepareForm();
 	}

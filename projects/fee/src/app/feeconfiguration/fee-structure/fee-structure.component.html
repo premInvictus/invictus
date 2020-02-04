@@ -51,11 +51,11 @@
                 <div class="text-center margin-top-25 ">
                   <div class="inline-flex">
                     <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-custom btn-success"
-                      (click)="saveForm()">Submit</button>
+                      (click)="saveForm()" [disabled]="btnDisable">Submit</button>
                     <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-custom btn-success"
-                      (click)="saveForm()">Update</button>
+                      (click)="saveForm()" [disabled]="btnDisable">Update</button>
                     <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer" (click)="cancelForm()" >Cancel</button>
-                    <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer" (click)="feegroupform.reset()" >Reset</button>
+                    <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer" (click)="btnDisable=false;feestructureform.reset()" >Reset</button>
                   </div>
                 </div>
               </form>

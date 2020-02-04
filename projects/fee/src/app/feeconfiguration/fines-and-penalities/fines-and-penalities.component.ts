@@ -28,7 +28,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 	fin_is_hostel_fee = 0;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
-
+	btnDisable = false;
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
@@ -130,13 +130,16 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 	}
 	submit() {
 		if (!this.finepenaltiesForm.valid) {
+			this.btnDisable = false;
 			this.finepenaltiesForm.markAsDirty();
 		} else {
+			this.btnDisable = true;
 			this.finepenaltiesForm.markAsPristine();
 			this.finepenaltiesForm.updateValueAndValidity();
 			this.finepenaltiesForm.value['fin_status'] = '1';
 			this.finepenaltiesForm.value['fin_is_hostel_fee'] = this.fin_is_hostel_fee;
 			this.feeService.insertFineandPenalties(this.finepenaltiesForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fines and Penalties Added Succesfully', 'success');
 					this.getFinePenalties();
@@ -191,12 +194,15 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 	}
 	update() {
 		if (!this.finepenaltiesForm.valid) {
+			this.btnDisable = false;
 			this.finepenaltiesForm.markAsDirty();
 		} else {
+			this.btnDisable = true;
 			this.finepenaltiesForm.markAsPristine();
 			this.finepenaltiesForm.updateValueAndValidity();
 			this.finepenaltiesForm.value['fin_is_hostel_fee'] = this.fin_is_hostel_fee;
 			this.feeService.insertFineandPenalties(this.finepenaltiesForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Fines and Penalties Updated Succesfully', 'success');
 					this.getFinePenalties();
@@ -214,6 +220,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 	}
 
 	changeIsHostelFee(event) {
+		this.btnDisable = false;
 		if (event.checked) {
 			this.fin_is_hostel_fee = 1;
 		} else {

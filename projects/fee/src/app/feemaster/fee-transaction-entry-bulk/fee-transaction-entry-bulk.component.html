@@ -132,9 +132,9 @@
               </div>
               <div class="row">
                 <div class="col-12 text-center">
-                  <button *ngIf="isExist('369')" mat-button class="btn-success-green" (click)="submit()">Submit</button>
+                  <button *ngIf="isExist('369')" mat-button class="btn-success-green" (click)="submit()" [disabled]="btnDisable">Submit</button>
                   <button *ngIf="isExist('370')" mat-button class=" recalulate-invoice-btn btn-spacer"
-                    (click)="saveAndPrint()">save & print</button>
+                    (click)="saveAndPrint()" [disabled]="btnDisable">save & print</button>
                   <button mat-button class="btn-spacer btn-reset" (click)="reset()">Reset</button>
                 </div>
               </div>
@@ -467,9 +467,9 @@
               </div>
               <div class="row text-center">
                 <div class="col-12">
-                  <button *ngIf="isExist('369')" mat-button class=" btn-success-green"
+                  <button *ngIf="isExist('369')" mat-button class=" btn-success-green" [disabled]="btnDisable"
                     (click)="submit2()">submit</button>
-                  <button *ngIf="isExist('370')" mat-button class=" recalulate-invoice-btn btn-spacer"
+                  <button *ngIf="isExist('370')" mat-button class=" recalulate-invoice-btn btn-spacer" [disabled]="btnDisable"
                     (click)="saveAndPrint2()">save & print</button>
                   <button mat-button class=" btn-danger btn-spacer" (click)="reset()">reset</button>
                 </div>

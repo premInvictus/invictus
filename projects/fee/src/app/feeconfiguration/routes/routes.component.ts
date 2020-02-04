@@ -36,7 +36,7 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
-
+	btnDisable = false;
 	constructor(private fbuild: FormBuilder,
 		private commonAPIService: CommonAPIService, private sisService: SisService,
 		private feeService: FeeService,
@@ -159,6 +159,7 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (this.transportRoutes.valid) {
+			this.btnDisable = true;
 			if (stoppageArr.length > 0) {
 				let inputJson = {};
 				inputJson = {
@@ -179,16 +180,19 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 				}
 				this.callSaveAPI(inputJson);
 			} else {
+				this.btnDisable = false;
 				this.commonAPIService.showSuccessErrorMessage('Please Select Stoppage comes across this Route', 'error');
 			}
 
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
 		}
 	}
 
 	callSaveAPI(inputJson) {
 		this.feeService.saveRoute(inputJson).subscribe((result: any) => {
+			this.btnDisable = false;
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.resetForm();
@@ -224,6 +228,7 @@ export class RoutesComponent implements OnInit, AfterViewInit {
 	}
 
 	resetForm() {
+		this.btnDisable = false;
 		this.routeStatus = '0';
 		this.selectedStoppageData = [];
 		this.prepareForm();

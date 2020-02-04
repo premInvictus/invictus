@@ -126,7 +126,7 @@
 
 
                     <button mat-raised-button class="btn-primary btn-custom btn-success"
-                      (click)="saveForm()">Submit</button>
+                      (click)="saveForm()" [disabled]="btnDisable">Submit</button>
                     <button mat-raised-button class="btn-primary btn-custom btn-danger btn-spacer"
                       (click)="resetForm()">Reset</button>
                   </div>

@@ -25,6 +25,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModal') deleteModal;
 	editFlag = false;
+	btnDisable = false;
 	ngOnInit() {
 		this.buildForm();
 		this.getConcessionGroups();
@@ -50,11 +51,14 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 	}
 	submit() {
 		if (!this.conccesionCategoryForm.valid) {
+			this.btnDisable = false;
 			this.conccesionCategoryForm.markAsDirty();
 		} else {
+			this.btnDisable = true;
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
 			this.feeService.insertConcessionGroup(this.conccesionCategoryForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Concession Group Inserted Succesfully', 'success');
 					this.getConcessionGroups();
@@ -67,6 +71,7 @@ export class ConcessionGroupComponent implements OnInit, AfterViewInit {
 		}
 	}
 	reset() {
+		this.btnDisable = false;
 		this.conccesionCategoryForm.reset();
 		this.conccesionCategoryForm.markAsPristine();
 		this.conccesionCategoryForm.markAsUntouched();

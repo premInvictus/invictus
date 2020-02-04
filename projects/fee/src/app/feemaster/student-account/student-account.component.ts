@@ -561,6 +561,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				});
 			}
 		} else {
+			console.log(this.accountsForm.value);
 			this.commonAPIService.showSuccessErrorMessage('Please select required fields', 'error');
 		}
 	}
