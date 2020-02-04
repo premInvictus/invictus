@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormArray, FormControl } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatePipe } from '@angular/common';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
@@ -36,6 +36,7 @@ export class EducationDetailsComponent extends DynamicComponent implements OnIni
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private formEnabledService: FormEnabledService,
 		private processtypeService: ProcesstypeService
@@ -248,7 +249,7 @@ export class EducationDetailsComponent extends DynamicComponent implements OnIni
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

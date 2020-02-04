@@ -184,7 +184,7 @@ export class MarksRegisterComponent implements OnInit {
   }
   getClass() {
     this.classArray = [];
-    this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+    this.smartService.getClassData({ class_status: '1' }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.classArray = result.data;
       } else {

@@ -177,7 +177,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.commonAPIService.getClassData({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.classArray = result.data;
 			}

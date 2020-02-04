@@ -80,33 +80,13 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	ngOnDestroy(): void {
 		this.mobileQuery.removeListener(this._mobileQueryListener);
 	}
-
-
-	// @HostListener('window:resize', ['$event'])
-	// onResize(event) {
-	// 	if (this.mobileQuery.matches) {
-	// 		this.innerHeight = (window.innerHeight) - 150;
-	// 	} else {
-	// 		this.innerHeight = (window.innerHeight) - 150;
-	// 	}
-	// }
-
 	sidenavOpen() {
 		const element = document.getElementById('sidenav');
 		const elementTwo = document.getElementById('sidenav-content');
 		element.classList.toggle('custom-sidenav');
 		elementTwo.classList.toggle('custom-sidenav-content');
 	}
-
-
-
 	ngOnInit() {
-		// if (this.mobileQuery.matches) {
-		// 	this.innerHeight = (window.innerHeight) - 150;
-		// } else {
-		// 	this.innerHeight = (window.innerHeight) - 150;
-		// }
-		// console.log(this.mobileQuery);
 		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -139,7 +119,6 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
 		}
 		this.getSchool();
-		// this.getProjectList();
 		this.checkUpdateProfile();
 		this.checkViewProfile();
 		const param: any = {};

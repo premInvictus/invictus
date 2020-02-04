@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SisService, CommonAPIService } from '../../_services';
+import { SisService, CommonAPIService,SmartService } from '../../_services';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../student-master/documents/preview-document/preview-document.component';
@@ -27,6 +27,7 @@ export class CancelSlctcComponent implements OnInit {
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
 		private router: Router,
@@ -59,7 +60,7 @@ export class CancelSlctcComponent implements OnInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}
@@ -174,7 +175,7 @@ export class CancelSlctcComponent implements OnInit {
 	//   this.requestDoc = [];
 	// }
 	backUrl() {
-		history.back(-1);
+		history.back();
 	}
 	previewImage(imgArray, index) {
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {

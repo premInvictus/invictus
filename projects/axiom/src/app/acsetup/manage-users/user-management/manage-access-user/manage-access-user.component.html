@@ -29,6 +29,42 @@
                                  <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
+                                          <span class="font-16">Manage Project</span>
+                                       </div>
+                                    </ng-template>
+                                    <div *ngIf="isExistUserAccessMenu('75')">
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <form>
+                                                <br>
+                                                <div class="row">
+                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
+                                                      <section class="example-section">
+                                                         <mat-checkbox name="switch" [id]="item.pro_id"
+                                                            (click)="assignProject(item)"
+                                                            [checked]="getCheckStatus(item.pro_id)">
+                                                            {{item.pro_name}}</mat-checkbox>
+                                                      </section>
+                                                   </div>
+                                                </div>
+                                             </form>
+                                          </div>
+                                       </div>
+                                       <br>
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <button mat-raised-button class="btn-primary btn-success"
+                                                (click)="submitProject()">Submit</button>
+                                             <a [routerLink]="['../../user-management']">
+                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
+                                             </a>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </mat-tab>
+                                 <mat-tab>
+                                    <ng-template mat-tab-label>
+                                       <div>
                                           <span class="font-16">Manage Forms & Events</span>
                                        </div>
                                     </ng-template>
@@ -117,6 +153,7 @@
                                        </div>
                                     </div>
                                  </mat-tab>
+
                                  <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
@@ -125,11 +162,6 @@
                                     </ng-template>
                                     <div *ngIf="isExistUserAccessMenu('74')">
                                        <div class="row">
-                                          <div class="col-lg-12 col-apple-10">
-                                             <br>
-                                             <h6 class="text-center font-16">Manage Classes of Result Co-Ordinator</h6>
-                                             <br>
-                                          </div>
                                           <div class="col-lg-12">
                                              <form [formGroup]="ClassModuleForm" novalidate>
                                                 <div class="row">
@@ -140,33 +172,17 @@
                                                             value="{{userDetails.au_full_name}}" readonly>
                                                       </mat-form-field>
                                                    </div>
-                                                   <!-- <div class="col-lg-2 fin-tab-col-25  col-mobile-view-add-ques">
-                                                      <mat-form-field class="form-field" appearance="outline">
-                                                         <mat-label>Branch</mat-label>
-                                                         <mat-select id="exampleSelect1" placeholder="Branch">
-                                                            <mat-option>DPS School, Ranchi</mat-option>
-                                                            <mat-option>St. Xavier's School, Ranchi</mat-option>
-                                                            <mat-option>Loyala School, Ranchi</mat-option>
-                                                            <mat-option>St. Micheal School, Ranchi</mat-option>
-                                                         </mat-select>
-                                                      </mat-form-field>
-                                                   </div> -->
                                                 </div>
                                                 <br>
                                                 <div class="row">
                                                    <div
                                                       class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
                                                       <div>
-                                                         <div>
-                                                            <div>
-                                                               <div class="col-apple-10">
-                                                                  <div class="module-list">
-                                                                     <ngx-treeview [config]="config"
-                                                                        [items]="classItems"
-                                                                        (selectedChange)="classValues = $event">
-                                                                     </ngx-treeview>
-                                                                  </div>
-                                                               </div>
+                                                         <div class="col-apple-10">
+                                                            <div class="module-list">
+                                                               <ngx-treeview [config]="config" [items]="classItems"
+                                                                  (selectedChange)="classValues = $event">
+                                                               </ngx-treeview>
                                                             </div>
                                                          </div>
                                                       </div>
@@ -180,6 +196,9 @@
                                           <div class="col-lg-12">
                                              <button mat-raised-button class="btn-primary btn-success"
                                                 (click)="addUserAccessClass()">Submit</button>
+                                             <a [routerLink]="['../../user-management']">
+                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
+                                             </a>
                                           </div>
                                        </div>
                                     </div>
@@ -252,41 +271,6 @@
                                                    class="btn-primary btn-success">Submit</button>
                                              </a>
                                              <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </mat-tab>
-                                 <mat-tab>
-                                    <ng-template mat-tab-label>
-                                       <div>
-                                          <span class="font-16">Manage Project</span>
-                                       </div>
-                                    </ng-template>
-                                    <div *ngIf="isExistUserAccessMenu('75')">
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <form>
-                                                <br>
-                                                <div class="row">
-                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
-                                                      <section class="example-section">
-                                                         <mat-checkbox name="switch" [id]="item.pro_id"
-                                                            (click)="assignProject(item)" [checked]="getCheckStatus(item.pro_id)">
-                                                            {{item.pro_name}}</mat-checkbox>
-                                                      </section>                                                     
-                                                   </div>
-                                                </div>
-                                             </form>
-                                          </div>
-                                       </div>
-                                       <br>
-                                       <div class="row">
-                                          <div class="col-lg-12">
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="submitProject()">Submit</button>
-                                             <a [routerLink]="['../../user-management']">
-                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
-                                             </a>
                                           </div>
                                        </div>
                                     </div>

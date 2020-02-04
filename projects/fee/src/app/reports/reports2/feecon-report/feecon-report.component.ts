@@ -1019,7 +1019,8 @@ export class FeeconReportComponent implements OnInit {
 		}
 	}
 	getClassData() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.valueArray = [];
+		this.common.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classDataArray = result.data;
 				for (const item of this.classDataArray) {

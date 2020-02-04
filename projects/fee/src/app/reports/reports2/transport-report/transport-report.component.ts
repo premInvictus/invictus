@@ -1335,7 +1335,7 @@ export class TransportReportComponent implements OnInit {
 		}
 	}
 	getClassData() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.common.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classDataArray = result.data;
 			}

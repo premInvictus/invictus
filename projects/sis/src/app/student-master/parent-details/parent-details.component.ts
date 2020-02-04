@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { CommonAPIService } from '../../_services/commonAPI.service';
-import { SisService, ProcesstypeService } from '../../_services/index';
+import { SisService, ProcesstypeService,SmartService } from '../../_services/index';
 import { MatDatepickerInputEvent, ErrorStateMatcher } from '@angular/material';
 import { DatePipe } from '@angular/common';
 import { FormEnabledService } from '../../sharedmodule/dynamic-content/formEnabled.service';
@@ -64,7 +64,7 @@ export class ParentDetailsComponent extends DynamicComponent implements OnInit {
 	reqObj: any = {};
 	savedSettingsArray: any[] = [];
 	settingsArray: any[] = [];
-	constructor(private fbuild: FormBuilder, private notif: CommonAPIService, private sisService: SisService,
+	constructor(private fbuild: FormBuilder, private notif: CommonAPIService, private sisService: SisService,private SmartService: SmartService,
 		private formEnabledService: FormEnabledService, private processtypeService: ProcesstypeService) { super(); }
 
 	ngOnInit() {
@@ -138,7 +138,7 @@ export class ParentDetailsComponent extends DynamicComponent implements OnInit {
 	getClass() {
 		const param: any = {};
 		param.login_id = this.currentUser.login_id;
-		this.sisService.getClass(param).subscribe((result: any) => {
+		this.SmartService.getClassData(param).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService, RoutingStateService } from '../../_services';
+import { SisService, CommonAPIService, RoutingStateService,SmartService } from '../../_services';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
 import { slctable } from './slctc.table';
@@ -32,6 +32,7 @@ export class SlctcComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
 		private router: Router,
@@ -115,7 +116,7 @@ export class SlctcComponent implements OnInit, OnDestroy {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}
