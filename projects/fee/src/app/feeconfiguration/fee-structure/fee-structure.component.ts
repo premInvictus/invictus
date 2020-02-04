@@ -25,6 +25,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	feestructureArray: any[] = [];
 	updateFlag = false;
 	fs_is_hostel_fee = 0;
+	btnDisable = false;
 	constructor(
 		private fb: FormBuilder,
 		private feeService: FeeService,
@@ -87,6 +88,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 	}
 	saveForm() {
 		if (this.feestructureform.valid) {
+			this.btnDisable = true;
 			let apiactionname = '';
 			if (!this.feestructureform.value.fs_id) {
 				apiactionname = 'insertFeeStructure';
@@ -96,6 +98,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 			}
 			this.feestructureform.value['fs_is_hostel_fee'] = this.fs_is_hostel_fee;
 			this.feeService[apiactionname](this.feestructureform.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.getFeeStructure();
 					this.feestructureform.reset();
@@ -105,6 +108,7 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 				}
 			});
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
@@ -230,11 +234,13 @@ export class FeeStructureComponent implements OnInit, AfterViewInit {
 		});
 	}
 	cancelForm() {
+		this.btnDisable = false;
 		this.updateFlag = false;
 		this.feestructureform.reset();
 	}
 
 	changeIsHostelFee(event) {
+		this.btnDisable = false;
 		if (event.checked) {
 			this.fs_is_hostel_fee = 1;
 		} else {

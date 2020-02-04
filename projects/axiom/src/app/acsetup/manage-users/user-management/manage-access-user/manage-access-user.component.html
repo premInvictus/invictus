@@ -56,8 +56,7 @@
                                                    <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Interface</mat-label>
-                                                         <mat-select placeholder="Interface"
-                                                         [value]="typeVal"
+                                                         <mat-select placeholder="Interface" [value]="typeVal"
                                                             (selectionChange)="changeIsWebApp($event)">
                                                             <mat-option value="">Select Interface</mat-option>
                                                             <mat-option *ngFor="let item of typeArray"
@@ -141,7 +140,7 @@
                                                             value="{{userDetails.au_full_name}}" readonly>
                                                       </mat-form-field>
                                                    </div>
-                                                   <div class="col-lg-2 fin-tab-col-25  col-mobile-view-add-ques">
+                                                   <!-- <div class="col-lg-2 fin-tab-col-25  col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Branch</mat-label>
                                                          <mat-select id="exampleSelect1" placeholder="Branch">
@@ -151,7 +150,7 @@
                                                             <mat-option>St. Micheal School, Ranchi</mat-option>
                                                          </mat-select>
                                                       </mat-form-field>
-                                                   </div>
+                                                   </div> -->
                                                 </div>
                                                 <br>
                                                 <div class="row">
@@ -221,8 +220,7 @@
                                                    <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Project</mat-label>
-                                                         <mat-select formControlName="pro_id" id="exampleSelect1"
-                                                            placeholder="Project">
+                                                         <mat-select id="exampleSelect1" placeholder="Project">
                                                             <mat-option [value]="">Select Project</mat-option>
                                                             <mat-option>S.M.A.R.T</mat-option>
                                                             <mat-option>AXIOM</mat-option>
@@ -254,6 +252,41 @@
                                                    class="btn-primary btn-success">Submit</button>
                                              </a>
                                              <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </mat-tab>
+                                 <mat-tab>
+                                    <ng-template mat-tab-label>
+                                       <div>
+                                          <span class="font-16">Manage Project</span>
+                                       </div>
+                                    </ng-template>
+                                    <div *ngIf="isExistUserAccessMenu('75')">
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <form>
+                                                <br>
+                                                <div class="row">
+                                                   <div class="col-lg-12" *ngFor="let item of projectsArray">
+                                                      <section class="example-section">
+                                                         <mat-checkbox name="switch" [id]="item.pro_id"
+                                                            (click)="assignProject(item)" [checked]="getCheckStatus(item.pro_id)">
+                                                            {{item.pro_name}}</mat-checkbox>
+                                                      </section>                                                     
+                                                   </div>
+                                                </div>
+                                             </form>
+                                          </div>
+                                       </div>
+                                       <br>
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <button mat-raised-button class="btn-primary btn-success"
+                                                (click)="submitProject()">Submit</button>
+                                             <a [routerLink]="['../../user-management']">
+                                                <button mat-raised-button class="btn-danger btn-spacer">Back</button>
+                                             </a>
                                           </div>
                                        </div>
                                     </div>
