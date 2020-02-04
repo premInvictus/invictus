@@ -402,7 +402,7 @@ span.empid-bar-code-span-ls {
     font-weight: bold;
     letter-spacing: 2.5px;
 }
-.landscape-style5 .barcode img {
+/* .landscape-style5 .barcode img {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
     width: 118px !important;
@@ -411,8 +411,8 @@ span.empid-bar-code-span-ls {
     left: 196px !important;
     top: -66px !important;
 
-}
-span.empid-bar-code-span-ls {
+} */
+/* span.empid-bar-code-span-ls {
     position: absolute;
     right: 60px;
     transform: rotate(-90deg);
@@ -420,4 +420,4 @@ span.empid-bar-code-span-ls {
     font-size: 9px;
     font-weight: bold;
     letter-spacing: 2.5px;
-}
+} */
