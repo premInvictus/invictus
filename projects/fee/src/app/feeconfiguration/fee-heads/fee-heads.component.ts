@@ -39,6 +39,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	amountDetailArray: any[] = [];
 	formGroupArray: any[] = [];
 	newAmtDetails: any[] = [];
+	btnDisable = false;
 	constructor(
 		private fb: FormBuilder,
 		private feeService: FeeService,
@@ -166,6 +167,10 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 					this.dataSource.sort = this.sort;
 				}
+			} else {
+				this.feeheadArray = [];
+				this.ELEMENT_DATA = [];
+				this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 			}
 			this.resetForm();
 		});
@@ -267,6 +272,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (this.feeheadform.valid && validateFlag) {
+			this.btnDisable = true;
 			let apiactionname = '';
 			if (this.feeheadform.value.fh_id === '') {
 				apiactionname = 'insertFeeHeads';
@@ -277,6 +283,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			this.feeheadform.value['fh_is_hostel_fee'] = this.fh_is_hostel_fee;
 			this.feeheadform.value['fh_class_amount_detail'] = this.amountDetailArray;
 			this.feeService[apiactionname](this.feeheadform.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.getFeeHeads();
 					this.resetForm();
@@ -288,6 +295,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 				}
 			});
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
@@ -312,12 +320,14 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 		}
 	}
 	cancelForm() {
+		this.btnDisable = false;
 		this.updateFlag = false;
 		this.resetForm();
 		this.formGroupArray = [];
 		this.amountDetailArray = [];
 	}
 	resetForm() {
+		this.btnDisable = false;
 		this.feeheadform.patchValue({
 			fh_id: '',
 			fh_name: '',
@@ -339,6 +349,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	}
 
 	changeIsHostelFee(event) {
+		this.btnDisable = false;
 		if (event.checked) {
 			this.fh_is_hostel_fee = 1;
 		} else {

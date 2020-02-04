@@ -44,7 +44,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild(MatSort) sort: MatSort;
-
+	btnDisable = false;
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private commonAPIService: CommonAPIService, private sisService: SisService,
@@ -210,13 +210,14 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 
 	callSaveAPI(inputJson) {
 		this.feeService.saveTransportSlab(inputJson).subscribe((result: any) => {
+			this.btnDisable = false;
 			if (result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				this.slabStatus = '';
 				this.current_slab_id = 0;
 				this.resetForm();
 				this.getTransportSlabs();
-			} else {
+			} else {				
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
@@ -224,6 +225,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 
 	saveForm() {
 		if (this.transportSlabs.valid) {
+			this.btnDisable = true;
 			let inputJson = {};
 			inputJson = {
 				ts_name: this.transportSlabs.value.slab_name,
@@ -246,6 +248,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 			}
 			this.callSaveAPI(inputJson);
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please Fill Required Fields', 'error');
 		}
 	}
@@ -264,6 +267,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 	}
 
 	changeStatus(element, event) {
+		
 		const inputJson = {};
 		if (event.checked) {
 			this.slabStatus = '1';
@@ -278,6 +282,7 @@ export class TransportSlabsComponent implements OnInit, AfterViewInit {
 	}
 
 	resetForm() {
+		this.btnDisable = false;
 		this.slabStatus = '0';
 		this.prepareForm();
 	}

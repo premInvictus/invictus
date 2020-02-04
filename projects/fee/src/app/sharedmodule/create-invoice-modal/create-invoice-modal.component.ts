@@ -16,6 +16,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 	invoiceCreationForm: FormGroup;
 	studentFlag = true;
 	recalculation: any = '0';
+	btnDisable = false;
 	constructor(@Inject(MAT_DIALOG_DATA) public data,
 		private dialogRef: MatDialogRef<CreateInvoiceModalComponent>,
 		private processTypeService: ProcesstypeFeeService,
@@ -82,8 +83,9 @@ export class CreateInvoiceModalComponent implements OnInit {
 			}
 		});
 	}
-	insertInvoice() {
+	insertInvoice() {			
 		if (this.invoiceCreationForm.valid) {
+			this.btnDisable = true;
 			this.invoiceCreationForm.patchValue({
 				'inv_invoice_date': new DatePipe('en-in').transform(this.invoiceCreationForm.value.inv_invoice_date, 'yyyy-MM-dd'),
 				'inv_due_date': new DatePipe('en-in').transform(this.invoiceCreationForm.value.inv_due_date, 'yyyy-MM-dd'),
@@ -92,6 +94,7 @@ export class CreateInvoiceModalComponent implements OnInit {
 				'recalculation_flag': this.recalculation
 			});
 			this.feeService.insertInvoice(this.invoiceCreationForm.value).subscribe((res: any) => {
+				this.btnDisable = false;
 				if (res && res.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
 					this.dialogRef.close({ status: true });
@@ -100,6 +103,8 @@ export class CreateInvoiceModalComponent implements OnInit {
 					this.dialogRef.close({ status: false });
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	checkRecal($event) {

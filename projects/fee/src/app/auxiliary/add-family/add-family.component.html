@@ -146,10 +146,10 @@
                 </div>
                 <div class="row">
                     <div class="col-12 text-center">
-                        <button *ngIf="!addFamilyForm.value.fam_entry_number" mat-button
+                        <button *ngIf="!addFamilyForm.value.fam_entry_number" mat-button [disabled]="btnDisable"
                             class="font-size-14 font-white btn-success-green" (click)="addFamily()">Submit</button>
                         <button *ngIf="addFamilyForm.value.fam_entry_number" mat-button
-                            class="font-size-14 font-white btn-success-green" (click)="updateFamily()">Update</button>
+                            class="font-size-14 font-white btn-success-green" [disabled]="btnDisable" (click)="updateFamily()" >Update</button>
                         <button mat-button class="font-size-14 font-white margin-left-10 btn-reset"
                             (click)="resetAll($event)">Reset</button>
                     </div>

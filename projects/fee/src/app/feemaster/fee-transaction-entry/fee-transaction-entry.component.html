@@ -393,10 +393,10 @@
                </div>
                <div class="row text-center">
                   <div class="col-12">
-                     <button *ngIf="isExist('366')" mat-button class="text-uppercase btn-success"
+                     <button *ngIf="isExist('366')" mat-button class="text-uppercase btn-success" [disabled]="btnDisable"
                         (click)="submit()">submit</button>
                      <button *ngIf="isExist('367')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
-                        (click)="saveAndPrint()">save & print</button>
+                        (click)="saveAndPrint()" [disabled]="btnDisable">save & print</button>
                      <button mat-button class="text-uppercase btn-danger btn-spacer" (click)="reset()">reset</button>
                   </div>
                </div>
