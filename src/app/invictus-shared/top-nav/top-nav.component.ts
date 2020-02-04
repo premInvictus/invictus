@@ -139,7 +139,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
 		}
 		this.getSchool();
-		this.getProjectList();
+		// this.getProjectList();
 		this.checkUpdateProfile();
 		this.checkViewProfile();
 		const param: any = {};
@@ -364,14 +364,35 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 	getProjectList() {
+		let overALLProjectList = [];
+		let userProjectList = [];
+		this.projectsArray = [];
 		this.userTypeService.getProjectList({}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
-					this.projectsArray = result.data;
+					overALLProjectList = result.data;
+					this.adminService.getUserProject({ au_login_id: this.currentUser.login_id }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								userProjectList = JSON.parse(result.data[0].au_project_mapped);
+								for (let item of overALLProjectList) {
+									const findex = userProjectList.findIndex(f => Number(f.pro_id) === Number(item.pro_id));
+									if (findex !== -1) {
+										this.projectsArray.push(item);
+									}
+								}
+							} else {
+								this.projectsArray = [{
+									pro_id: "8",
+									pro_name: "HRMS",
+									pro_status: "1",
+									pro_url: "hr"
+								}];
+							}
+						});
 				}
 			});
 	}
-
 	logout() {
 		if (this._cookieService.get('userData')) {
 			this.userData = JSON.parse(this._cookieService.get('userData'));
@@ -427,7 +448,6 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	}
 	markRead(item) {
-		console.log(item.msg_to);
 		item.msg_to[0].msg_status = [{
 			'status_name': 'send'
 		}, {
