@@ -6,30 +6,35 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CookieModule } from 'ngx-cookie';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { AppRoutingModule} from './app.routing';
+import { AppRoutingModule } from './app.routing';
 import { CommonModule } from '@angular/common';
-import { AuthenticationService} from './login/login/authentication.service';
-import { CommonAPIService} from './_services/commonAPI.service';
-import { AuthGuard} from './_guards/index';
+import { AuthenticationService } from './login/login/authentication.service';
+import { CommonAPIService } from './_services/commonAPI.service';
+import { AuthGuard } from './_guards/index';
 import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers';
 import { UserAccessMenuService } from './_services';
 import { LOCALE_ID, Injector, APP_INITIALIZER } from '@angular/core';
 import { LOCATION_INITIALIZED } from "@angular/common";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
+import { UserIdleModule } from 'angular-user-idle';
 import { AngularSlickgridModule, CollectionService } from 'angular-slickgrid';
 import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { TimeoutModalComponent } from './timeout-modal/timeout-modal.component';
+import { MatDialogModule } from '@angular/material';
 
 @NgModule({
 	declarations: [
 		AppComponent,
+		TimeoutModalComponent,
 	],
 	imports: [
 		CommonModule,
 		BrowserModule,
+		MatDialogModule,
 		HttpClientModule,
 		AppRoutingModule,
+		UserIdleModule.forRoot({ idle: 600, timeout: 1, ping: 30 }),
 		LoadingModule,
 		RouterModule,
 		BrowserAnimationsModule,
@@ -39,10 +44,11 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 		AngularSlickgridModule.forRoot()
 	],
 	providers: [
-		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService,TranslateService,
-		{provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
-		{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true}],
-	bootstrap: [AppComponent]
+		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService, TranslateService,
+		{ provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
+		{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true }],
+	bootstrap: [AppComponent],
+	entryComponents: [TimeoutModalComponent]
 })
 export class AppModule { }
 

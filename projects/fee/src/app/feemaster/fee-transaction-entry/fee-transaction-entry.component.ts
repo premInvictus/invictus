@@ -412,7 +412,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.common.showSuccessErrorMessage('Please select a student', 'error');
 			validateFlag = false;
 		}
-		if (Number(this.invoice.fee_amount) === 0) {
+		if (this.selectedMode === '1' && Number(this.invoice.fee_amount) === 0) {
+			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (this.selectedMode !== '1' && Number(this.feeTransactionForm.value.ftr_amount) <= 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
 		}
@@ -648,7 +652,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		return this.common.isExistUserAccessMenu(mod_id);
 	}
 	setPayAmount(event) {
-		if (event.value === 2 || event.value === '2' ) {
+		if (event.value === 2 || event.value === '2') {
 			// tslint:disable-next-line: max-line-length
 			let netAmount = parseInt(this.invoice.fee_amount, 10) + parseInt(this.invoice.inv_fine_amount, 10) + parseInt(this.invoice.inv_prev_balance, 10);
 
