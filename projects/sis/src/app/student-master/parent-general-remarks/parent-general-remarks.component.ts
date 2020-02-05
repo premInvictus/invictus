@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
 import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
 import { DatePipe } from '@angular/common';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -52,6 +52,7 @@ export class ParentGeneralRemarksComponent extends DynamicComponent implements O
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private processtypeService: ProcesstypeService,
 		private formEnabledService: FormEnabledService,
@@ -371,7 +372,7 @@ export class ParentGeneralRemarksComponent extends DynamicComponent implements O
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

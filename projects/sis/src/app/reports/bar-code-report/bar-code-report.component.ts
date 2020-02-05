@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService } from 'src/app/_services';
-import { SisService, CommonAPIService } from 'projects/sis/src/app/_services';
+import { SisService, CommonAPIService,SmartService } from 'projects/sis/src/app/_services';
 
 @Component({
   selector: 'app-bar-code-report',
@@ -24,6 +24,7 @@ export class BarCodeReportComponent implements OnInit {
   constructor(private fbuild: FormBuilder,
     private common: CommonAPIService,
     private sisService: SisService,
+    private SmartService: SmartService,
     private erp: ErpCommonService) { }
 
   ngOnInit() {
@@ -39,7 +40,7 @@ export class BarCodeReportComponent implements OnInit {
     });
   }
   getClassAll() {
-    this.sisService.getClass({}).subscribe((res: any) => {
+    this.SmartService.getClassData({}).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.classArray = [];
         this.classArray = res.data;

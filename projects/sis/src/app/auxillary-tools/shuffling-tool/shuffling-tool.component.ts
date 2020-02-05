@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource } from '@angular/material';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService,SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Student } from './student.modal';
 
@@ -52,6 +52,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 
 	constructor(
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder
 	) { }
@@ -83,7 +84,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

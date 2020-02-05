@@ -1,7 +1,7 @@
 import { Component, OnInit, ElementRef, ViewChild, AfterViewInit, Input, OnChanges } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { FormEnabledTwoService } from '../../sharedmodule/dynamic-content-theme-two/formEnabledTwo.service';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService, SmartService } from '../../_services/index';
 
 @Component({
 	selector: 'app-child-details-theme-two',
@@ -71,7 +71,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		private el: ElementRef,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService,
-		private processtypeService: ProcesstypeService
+		private processtypeService: ProcesstypeService,
+		private SmartService: SmartService
 	) {
 	}
 
@@ -121,7 +122,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 
 	getStudentTags() {
 		this.studentTags = [];
-		this.sisService.getstudenttags({tag_status:'1'}).subscribe((result: any) => {
+		this.sisService.getstudenttags({ tag_status: '1' }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.studentTags = result.data;
 			}
@@ -332,7 +333,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

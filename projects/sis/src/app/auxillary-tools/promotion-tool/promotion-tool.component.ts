@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, ErrorStateMatcher } from '@angular/material';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService,SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Element } from './promotion-tool.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -57,6 +57,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 
 	constructor(private commonApiService: CommonAPIService,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
@@ -97,7 +98,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.demotedataSource.filter = filterValue.trim().toLowerCase();
 	}
 	getClass() {
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

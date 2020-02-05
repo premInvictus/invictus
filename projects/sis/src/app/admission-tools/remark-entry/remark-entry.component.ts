@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterContentInit, AfterContentChecked, DoCheck } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService,SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 // documents upload
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -52,6 +52,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private commonAPIService: CommonAPIService,
 		private route: ActivatedRoute,
 		private router: Router,
@@ -125,7 +126,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

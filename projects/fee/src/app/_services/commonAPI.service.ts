@@ -66,7 +66,7 @@ export class CommonAPIService {
 		if (this.menus.length === 0) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
 				(JSON.parse(localStorage.getItem('userAccessMenu'))).menus : [];
-		} 
+		}
 		for (const mitem of this.menus) {
 			if (Number(mitem.menu_mod_id) === Number(mod_id)) {
 				return true;
@@ -227,4 +227,8 @@ export class CommonAPIService {
 		return this.selectedChildData;
 	}
 
+	getClassData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
 }

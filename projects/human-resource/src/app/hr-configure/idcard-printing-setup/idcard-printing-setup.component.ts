@@ -37,7 +37,7 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	];
 	layoutArray: any[] = [
 		{ ps_card_layout: '1', ps_card_layout_name: 'Landscape' },
-		// { ps_card_layout: '2', ps_card_layout_name: 'Potrait' }
+		{ ps_card_layout: '2', ps_card_layout_name: 'Potrait' }
 	];
 	addressFontSize: any[] = [];
 	idCardSettings: any;

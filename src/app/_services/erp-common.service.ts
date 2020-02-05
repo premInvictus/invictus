@@ -440,7 +440,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/getClass', value);
 	}
-
+	getClassData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
 	getSection(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/setup/getSection', value);

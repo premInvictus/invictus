@@ -116,7 +116,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
 		classParam.class_status = '1';
-		this.smartService.getClass(classParam)
+		this.smartService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {

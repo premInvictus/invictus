@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ErrorStateMatcher, MatDatepickerInputEvent } from '@angular/material';
@@ -17,6 +17,7 @@ export class EducationDetailsThemeTwoComponent extends DynamicComponent implemen
 	savedSettingsArray: any[] = [];
 	educationValue: any;
 	constructor(private sisService: SisService,
+		private SmartService: SmartService,
 		private common: CommonAPIService,
 		private fbuild: FormBuilder,
 		private processtypeService: ProcesstypeService) { super(); }
@@ -90,7 +91,7 @@ export class EducationDetailsThemeTwoComponent extends DynamicComponent implemen
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result) {
 				this.classArray = result.data;
 			}

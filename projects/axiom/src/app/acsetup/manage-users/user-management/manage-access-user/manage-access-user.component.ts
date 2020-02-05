@@ -34,6 +34,7 @@ export class ManageAccessUserComponent implements OnInit {
 	typeVal = 'web';
 	projectListArray: any[] = [];
 	resultProjectListArray: any[] = [];
+	userAssignClass: any[] = [];
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -63,6 +64,7 @@ export class ManageAccessUserComponent implements OnInit {
 		this.buildForm();
 		this.getProjectList();
 		this.getUserProjectList();
+		this.getUserAssignClass();
 		this.homeUrl = this.breadCrumbService.getUrl();
 
 	}
@@ -97,7 +99,7 @@ export class ManageAccessUserComponent implements OnInit {
 	}
 	getClass() {
 		this.classItems = [];
-		this.qelementService.getClass().subscribe(
+		this.adminService.getClassData({ 'all_data': 'all_data' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
@@ -105,10 +107,26 @@ export class ManageAccessUserComponent implements OnInit {
 						const citem: any = {};
 						citem.text = classitem.class_name;
 						citem.value = classitem.class_id;
-						citem.checked = false;
+						citem.checked = this.checkedAssignClass(classitem.class_id);
 						this.classItems.push(new TreeviewItem(citem));
 					}
+				}
+			});
+	}
+	checkedAssignClass(class_id) {
+		const findex = this.userAssignClass.findIndex(f => Number(f.ucl_class_id) === Number(class_id));
+		if (findex !== -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
+	getUserAssignClass() {
+		this.adminService.getUserAssignClass({ au_login_id: this.login_id }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.userAssignClass = result.data;
 				}
 			});
 	}

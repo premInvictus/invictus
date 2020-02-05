@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, MatDialog, MatDialogRef } from '@angular/material';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, SisService,SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BulkElement } from './idcardbulkprint.model';
@@ -53,6 +53,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	sectionArray: any;
 	studentdetailsform: FormGroup;
 	constructor(private sisService: SisService,
+		private SmartService: SmartService,
 		private commonApiService: CommonAPIService,
 		private fbuild: FormBuilder,
 		private router: Router,
@@ -286,7 +287,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}

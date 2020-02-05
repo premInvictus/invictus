@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { ConfirmValidParentMatcher } from '../ConfirmValidParentMatcher';
@@ -55,6 +55,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
+		private SmartService: SmartService,
 		private route: ActivatedRoute,
 		private router: Router,
 		private commonAPIService: CommonAPIService,
@@ -192,7 +193,7 @@ export class StudentDetailsComponent implements OnInit, OnChanges {
 	}
 	getClass() {
 		this.classArray = [];
-		this.sisService.getClass({}).subscribe((result: any) => {
+		this.SmartService.getClassData({}).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.classArray = result.data;
 			}
