@@ -229,5 +229,8 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
-	
+	getCallLogs() {
+		this.loader.startLoading();
+		return this.http.get(environment.apiHRUrl + '/communication/findCallLogs');
+	}
 }
