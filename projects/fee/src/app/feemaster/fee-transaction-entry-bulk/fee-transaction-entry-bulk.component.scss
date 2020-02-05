@@ -10,6 +10,19 @@
 .custom-entry-button {
     width: auto !important;
 }
+.notSetteledInvoicesMessage {
+    color:#ff0000 !important;
+}
+
+.custom-table {
+    color:#ff0000 !important;
+}
+table.custom-table th {
+    border:  2px solid #ff0000 !important
+}
+table.custom-table td {
+    border:  2px solid #ff0000 !important
+}
 .text {
     z-index: 2000;
     position: absolute;
