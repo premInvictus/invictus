@@ -184,7 +184,6 @@ export class AppComponent implements OnInit {
 								this._cookieService.removeAll();
 								this.router.navigate(['/login']);
 							} else {
-								this.loaderService.showSuccessErrorMessage('Error While Logout', 'error');
 							}
 						});
 				} else {
