@@ -17,7 +17,7 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
               <mat-label>Section</mat-label>
-              <mat-select placeholder="Section" formControlName="eme_sec_id" (selectionChange)="getRollNoUser()"
+              <mat-select placeholder="Section" formControlName="eme_sec_id" (selectionChange)="sectionChange()"
                 required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
@@ -30,7 +30,7 @@
                 <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
               <mat-label>Exam</mat-label>
               <mat-select placeholder="Exam" formControlName="eme_exam_id"
                 (selectionChange)="resetTableDiv();getSubExam()">
@@ -39,7 +39,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
               <mat-label>Sub-Exam</mat-label>
               <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple
                 >
