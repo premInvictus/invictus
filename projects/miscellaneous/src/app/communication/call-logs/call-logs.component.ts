@@ -13,6 +13,7 @@ export class CallLogsComponent implements OnInit {
   USER_ELEMENT_DATA: any[] = [];
   selectedUserArr: any[] = [];
   allUserSelectFlag = false;
+  currentTab = 0;
   displayedColumns = ['no', 'start_time', 'call_id', 'destination', 'from_caller', 'call_duration', 'to_DID', 'call_type', 'media_s3_url'];
   DataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
   constructor(
@@ -21,11 +22,22 @@ export class CallLogsComponent implements OnInit {
 
   ngOnInit() {
     this.DataSource.sort = this.sort;
-    this.getCallLogs();
+    this.getCallLogs('Incoming');
   }
 
-  getCallLogs() {
-    this.commonAPIService.getCallLogs().subscribe((result: any) => {
+  changeTab(event) {
+    this.currentTab = event.index;
+    console.log(this.currentTab);
+    if (this.currentTab) {
+      this.getCallLogs('Outgoing');
+    } else {
+      this.getCallLogs('Incoming');
+    }
+  }
+
+  getCallLogs(value) {
+    this.USER_ELEMENT_DATA = [];
+    this.commonAPIService.getCallLogs({ 'call_type': value }).subscribe((result: any) => {
       if (result && result.data) {
         this.DataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
         let counter = 1;

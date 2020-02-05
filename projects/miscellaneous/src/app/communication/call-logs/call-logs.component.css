@@ -2,3 +2,8 @@
     padding-left: 10%;
     padding-right: 10%;
 }
+audio {
+    width: 200px !important;
+    margin-top: 5px !important;
+    height: 30px !important;
+}
