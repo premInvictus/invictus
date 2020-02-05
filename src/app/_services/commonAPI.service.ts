@@ -32,6 +32,7 @@ export class CommonAPIService {
 	familyData: any;
 	familyNumber: any;
 	selectedChildData: any;
+	counterTimer: any = 0;
 	searchDashboardData: any;
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
@@ -213,6 +214,10 @@ export class CommonAPIService {
 	getSchool() {
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
+	getSchool2() {
+		this.startLoading();
+		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
+	}
 	getQTypeFromApi() {
 		return this.http.get(environment.apiAxiomUrl + '/setup/question_type/1');
 	}
@@ -251,11 +256,15 @@ export class CommonAPIService {
 	getFamilyData() {
 		return this.familyData;
 	}
+	
 
 	setFamilyInformation(value) {
 		this.familyNumber = value;
 	}
-
+	logout(value: any) {
+		this.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/logout', value);
+	}
 	getFamilyInformation() {
 		return this.familyNumber;
 	}
@@ -292,5 +301,11 @@ export class CommonAPIService {
 	}
 	updateMessage(value) {
 		return this.http.post(environment.apiHRUrl + '/communication/update', value);
+	}
+	setCounter(count) {
+		this.counterTimer = count;
+	}
+	getCounter() {
+		return this.counterTimer;
 	}
 }
