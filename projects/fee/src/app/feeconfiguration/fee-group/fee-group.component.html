@@ -52,13 +52,13 @@
                 </div>
                 <div class="text-center margin-top-25">
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success"
-                    (click)="saveForm()">Submit</button>
+                    (click)="saveForm()" [disabled]="btnDisable">Submit</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success"
-                    (click)="saveForm()">Update</button>
+                    (click)="saveForm()" [disabled]="btnDisable">Update</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
                     (click)="cancelForm()">Cancel</button>
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-danger btn-spacer"
-                    (click)="feegroupform.reset()">Reset</button>
+                    (click)="btnDisable=false;feegroupform.reset()">Reset</button>
                 </div>
               </form>
             </div>

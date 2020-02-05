@@ -24,7 +24,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
         <mat-label>Exam</mat-label>
-        <mat-select placeholder="Exam" formControlName="eme_exam_id" (selectionChange)="resetTableDiv();getSubExam()">
+        <mat-select placeholder="Exam" formControlName="eme_exam_id" (selectionChange)="resetTableDiv();getSubExam()" required>
           <mat-option value="">Please select</mat-option>
           <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
           </mat-option>
@@ -86,7 +86,7 @@
               <td width="75px" class="custom-td text-center font-size-14">{{sub.percentage}}%</td>
             </tr>
           </ng-container>
-          <tr>
+          <tr *ngIf="responseMarksArray['subjectwiseFailureDetails'] && responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['subject'].length > 0">
             <td class="custom-td text-center font-size-14">TOTAL FAILURE</td>
             <ng-container
               *ngFor="let section of responseMarksArray['subjectwiseFailureDetails']['se_id'][0]['total_failure']; let m = index">

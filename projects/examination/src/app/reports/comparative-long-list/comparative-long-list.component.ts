@@ -34,15 +34,14 @@ export class ComparativeLongListComponent implements OnInit {
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   tableWidth = '100%';
   ect_grade_avg_highest: any = {grade: false}
-  subTypeArray: any[] = [
-    {id: '1', name: 'Scholastic'}
-  ];
+  subTypeArray: any[] = [];
   ect_exam_type = '0';
   globalsettings: any[] = [];
   ngOnInit() {
     this.buildForm();
     this.getClass();
     this.getGlobalSetting();
+    this.getExamActivityCategory();
   }
 
   constructor(
@@ -73,6 +72,22 @@ export class ComparativeLongListComponent implements OnInit {
       eme_exam_id: ''
     });
   }
+  getExamActivityCategory() {
+    const inputJson = {};
+    this.subTypeArray = [];
+		this.examService.getExamActivityCategory(inputJson)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+            result.data.forEach(element => {
+              if(element.eac_type === '1') {
+                this.subTypeArray.push(element);
+              }
+            });
+					}
+				}
+			);
+	}
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {

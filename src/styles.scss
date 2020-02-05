@@ -5487,7 +5487,7 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
 } */
 
 
-/** Shikar Css **/
+/** Shikhar Css **/
 .missing-fee-period {
     color: #2e93ec !important;
     text-decoration: underline;
@@ -5502,6 +5502,13 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     position: relative !important;
     left: 161px !important;
     top: -78px !important;
+}
+.potrait-style5 .barcode img {
+    width: 118px !important;
+    height: 24px !important;
+    position: relative !important;
+    left: -20px;
+    top: -7px;
 }
 .barcode-print-lib {
     width: 220px !important;

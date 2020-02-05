@@ -1,0 +1,78 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Manage Rights</span><span class="float-right margin-top-5"><i
+            (click)="closeDialog()" class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="row" style="margin-top: 30px;">
+      <div class="col-lg-12  col-remove-padding col-mobile-view-add-ques">
+        <form [formGroup]="ModuleForm" novalidate>
+          <div class="row">
+            <div class="col-lg-6 fin-tab-col-25 col-mobile-view-add-ques">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Interface</mat-label>
+                <mat-select placeholder="Interface" [value]="typeVal" (selectionChange)="changeIsWebApp($event)">
+                  <mat-option value="">Select Interface</mat-option>
+                  <mat-option *ngFor="let item of typeArray" [value]="item.id">
+                    {{item.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-lg-6 fin-tab-col-25 col-mobile-view-add-ques">
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>Project</mat-label>
+                <mat-select formControlName="pro_id" placeholder="Project" [disabled]="isApp"
+                  (selectionChange)="getModuleList($event.value)">
+                  <mat-option value="">Select Project</mat-option>
+                  <mat-option *ngFor="let item of projectsArray" [value]="item.pro_id">
+                    {{item.pro_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row" *ngIf="moduleArray.length > 0">
+            <div class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
+              <div>
+                <div>
+                  <div class="col-apple-10">
+                    <div class="module-list">
+                      <ngx-treeview [config]="config" [items]="moduleItems" (selectedChange)="moduleValues = $event">
+                      </ngx-treeview>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row" *ngIf="moduleArray.length == 0">
+            <div class="col-12">
+              <div style="height: 350px;text-align: center;">
+                <span><img style="width: 100%; height: 100%;"
+                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png"></span>
+                <br>
+                <span>No Records Found</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div class="row" *ngIf="moduleArray.length > 0">
+      <div class="col-lg-12">
+        <div class="text-center">
+          <button mat-raised-button class="btn-primary btn-success" (click)="submitModule()">Submit</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

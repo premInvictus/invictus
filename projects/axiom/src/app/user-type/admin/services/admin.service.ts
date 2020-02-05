@@ -19,6 +19,7 @@ export class AdminService {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getProjectList', param);
 	}
 	getModuleList(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.pro_id) {
 			param.pro_id = value.pro_id;
@@ -97,7 +98,12 @@ export class AdminService {
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessTopic', param);
 	}
 	addUserAccessMenu(value) {
+		this.loaderService.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/addUserAccessMenu', value);
+	}
+	addMultipleRights(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/addMultipleRights', value);
 	}
 	addSchool(value) {
 		this.loaderService.startLoading();

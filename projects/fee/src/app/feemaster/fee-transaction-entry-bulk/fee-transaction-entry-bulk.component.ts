@@ -49,6 +49,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	class_name: any;
 	section_name: any;
 	class_sec: any;
+	btnDisable = false;
+	notSetteledInvoicesMessage = '';
+	notSetteledInvoicesData:any[] = [];
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -209,15 +212,16 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.invoiceArray.splice(index, 1);
 		}
 	}
-	submit() {
-		this.checkBulkStatus = true;
-		this.loaderText = '';
+	submit() {		
 		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+			this.btnDisable = true;
+			this.checkBulkStatus = true;
+			this.loaderText = '';
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
 				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
-				'saveAndPrint': true
+				'saveAndPrint': false
 			});
 			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
 			this.feeTransactionForm.value.isBulk = true;
@@ -229,19 +233,32 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				i++;
 			}, 1);
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					clearInterval(x);
 					this.checkBulkStatus = false;
 					this.reset();
 					this.invoiceArray = [];
+					this.notSetteledInvoicesMessage = '';
+					this.notSetteledInvoicesData = [];
 				} else {
-					this.common.showSuccessErrorMessage(result.message, 'error');
+					clearInterval(x);
+					this.checkBulkStatus = false;
+					if (result.message && result.message.error_code && result.message.error_code==='1001') {
+						this.notSetteledInvoicesMessage = result.message.error_message;
+						this.notSetteledInvoicesData = result.message.error_data;
+						this.common.showSuccessErrorMessage(result.message.error_message, 'error');	
+					} else {
+						this.common.showSuccessErrorMessage(result.message, 'error');
+					}
+					
 					this.reset();
 					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
+			this.btnDisable = false;
 			this.checkBulkStatus = false;
 			this.common.showSuccessErrorMessage('Please add invoices to continue', 'error');
 		}
@@ -250,6 +267,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		this.checkBulkStatus = true;
 		this.loaderText = '';
 		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+			this.btnDisable = true;
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
 				'ftr_cheque_date': datePipe.transform(this.feeTransactionForm.value.ftr_cheque_date, 'yyyy-MM-dd'),
@@ -266,6 +284,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				i++;
 			}, 1);
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					clearInterval(x);
 					this.checkBulkStatus = false;
@@ -274,19 +293,31 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 					this.reset();
 					this.invoiceArray = [];
 					this.checkBulkStatus = false;
+					this.notSetteledInvoicesMessage = '';
+					this.notSetteledInvoicesData = [];
 				} else {
-					this.common.showSuccessErrorMessage(result.messsage, 'error');
+					clearInterval(x);
+					this.checkBulkStatus = false;
+					if (result.message && result.message.error_code && result.message.error_code==='1001') {
+						this.notSetteledInvoicesMessage = result.message.error_message;
+						this.notSetteledInvoicesData = result.message.error_data;
+						this.common.showSuccessErrorMessage(result.message.error_message, 'error');	
+					} else {
+						this.common.showSuccessErrorMessage(result.message, 'error');
+					}
 					this.reset();
 					this.invoiceArray = [];
 				}
 			});
 		} else if (this.invoiceArray.length === 0) {
+			this.btnDisable = false;
 			this.checkBulkStatus = false;
 			this.common.showSuccessErrorMessage('Please add invoices to continue', 'error');
 		}
 	}
 
-	reset() {
+	reset() {		
+		this.btnDisable = false;
 		this.feeTransactionForm.patchValue({
 			'inv_invoice_no': [],
 			'login_id': '',
@@ -464,7 +495,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			}
 		}
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm2.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');
 					this.reset();
@@ -473,6 +506,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 					this.reset();
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	saveAndPrint2() {
@@ -529,7 +564,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			}
 		}
 		if (validateFlag) {
+			this.btnDisable = true;
 			this.feeService.insertFeeTransaction(this.feeTransactionForm2.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					const length = result.data.split('/').length;
 					this.common.showSuccessErrorMessage(result.message, 'success');
@@ -540,6 +577,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 					this.reset();
 				}
 			});
+		} else {
+			this.btnDisable = false;
 		}
 	}
 	getFeePeriodName(fp_id) {

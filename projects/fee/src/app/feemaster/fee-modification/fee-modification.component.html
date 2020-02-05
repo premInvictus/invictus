@@ -361,7 +361,7 @@
           </div>
           <div class="row text-center">
             <div class="col-12">
-              <button *ngIf="isExist('369')" mat-button class="text-uppercase btn-success"
+              <button *ngIf="isExist('369')" mat-button class="text-uppercase btn-success" [disabled]="btnDisable"
                 (click)="updateReceipt()">submit</button>
               <button *ngIf="isExist('370')" mat-button class="text-uppercase recalulate-invoice-btn btn-spacer"
                 (click)="saveAndPrintReceipt()">save & print</button>

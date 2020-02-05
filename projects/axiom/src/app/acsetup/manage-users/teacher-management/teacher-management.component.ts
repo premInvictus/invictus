@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BreadCrumbService, UserAccessMenuService, NotificationService, SmartService } from '../../../_services/index';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialogRef, MatDialog } from '@angular/material';
 import { Element } from './teacher.model';
+import { AssignRightsMultipleComponent } from '../../../shared-module/assign-rights-multiple/assign-rights-multiple.component';
 
 @Component({
 	selector: 'app-teacher-management',
@@ -20,6 +21,7 @@ export class TeacherManagementComponent implements OnInit {
 	subjectArray: any[];
 	homeUrl: string;
 	ELEMENT_DATA: Element[] = [];
+	dialogRef: MatDialogRef<AssignRightsMultipleComponent>;
 	tableCollection = false;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -30,6 +32,7 @@ export class TeacherManagementComponent implements OnInit {
 
 	constructor(
 		private userAccessMenuService: UserAccessMenuService,
+		private dialog: MatDialog,
 		private fbuild: FormBuilder,
 		private breadCrumbService: BreadCrumbService,
 		private qelementService: QelementService,
@@ -84,15 +87,16 @@ export class TeacherManagementComponent implements OnInit {
 						that.userdetailArray = result.data;
 						let ind = 1;
 						for (const t of that.userdetailArray) {
-								// tslint:disable-next-line:max-line-length
-								that.ELEMENT_DATA.push({ 
-									position: ind, 
-									userId: t.au_username, 
-									name: t.au_full_name, 
-									mobile: t.au_mobile, 
-									email: t.au_email, 
-									status: t.au_status === '1' ? true : false,
-									action: t });
+							// tslint:disable-next-line:max-line-length
+							that.ELEMENT_DATA.push({
+								position: ind,
+								userId: t.au_username,
+								name: t.au_full_name,
+								mobile: t.au_mobile,
+								email: t.au_email,
+								status: t.au_status === '1' ? true : false,
+								action: t
+							});
 							ind++;
 						}
 						that.dataSource = new MatTableDataSource<Element>(that.ELEMENT_DATA);
@@ -106,7 +110,7 @@ export class TeacherManagementComponent implements OnInit {
 				}
 			);
 		}
-			that.tableCollection = true;
+		that.tableCollection = true;
 	}
 
 	deleteUsr(value) {
@@ -167,7 +171,7 @@ export class TeacherManagementComponent implements OnInit {
 
 	// changed for smart module
 	getClass() {
-		this.smartService.getClass({class_status: '1'}).subscribe(
+		this.smartService.getClass({ class_status: '1' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
@@ -178,7 +182,7 @@ export class TeacherManagementComponent implements OnInit {
 
 
 	getSubjectsByClass(): void {
-		this.smartService.getSubjectsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
+		this.smartService.getSubjectsByClass({ class_id: this.Filter_form.value.uc_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
@@ -190,7 +194,7 @@ export class TeacherManagementComponent implements OnInit {
 	}
 
 	getSectionsByClass(): void {
-		this.smartService.getSectionsByClass({class_id: this.Filter_form.value.uc_class_id}).subscribe(
+		this.smartService.getSectionsByClass({ class_id: this.Filter_form.value.uc_class_id }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
@@ -203,10 +207,10 @@ export class TeacherManagementComponent implements OnInit {
 	// end
 
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
-	deleteComCancel() {  }
+	deleteComCancel() { }
 	toggleStatus(au_login_id, status) {
 		console.log(status);
-		if(status === '1') {
+		if (status === '1') {
 			status = '0';
 		} else {
 			status = '1';
@@ -221,6 +225,15 @@ export class TeacherManagementComponent implements OnInit {
 				}
 			},
 		);
+	}
+	openAccessMenuModal() {
+		this.dialogRef = this.dialog.open(AssignRightsMultipleComponent, {
+			data: {
+				role_id: '3'
+			},
+			height: '65vh',
+			width: '60vh'
+		})
 	}
 }
 

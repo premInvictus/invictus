@@ -49,7 +49,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 	pageEvent: PageEvent;
 	type: any = '';
 	feeRenderId: any;
-
+	btnDisable = false;
 	getCalculationMethods() {
 		this.invoiceType = [];
 		this.feeService.getCalculationMethods({}).subscribe((result: any) => {
@@ -345,14 +345,15 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 			resolve(value);
 		});
 	}
-	async insertInvoice() {
+	async insertInvoice() {		
 		if (this.invoiceCreationForm.valid) {
-
+			this.btnDisable = true;
 			const formData: any = await this.insertInvoiceData(Object.assign({}, this.invoiceCreationForm.value));
 			const arrAdmno = [this.currentLoginId];
 			formData.login_id = arrAdmno;
 			this.feeService.insertInvoice(formData).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
+				this.btnDisable = false;
+				if (result && result.status === 'ok') {					
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.getInvoice({ inv_process_usr_no: this.currentAdmno });
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -372,6 +373,7 @@ export class InvoiceCreationIndividualComponent implements OnInit, AfterViewInit
 				}
 			});
 		} else {
+			this.btnDisable = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}

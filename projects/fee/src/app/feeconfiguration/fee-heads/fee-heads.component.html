@@ -158,9 +158,9 @@
                 </div>
                 <div class="text-center ">
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success-green"
-                    (click)="saveForm()">Submit</button>
+                    (click)="saveForm()" [disabled]="btnDisable">Submit</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success-green"
-                    (click)="saveForm()">Update</button>
+                    (click)="saveForm()" [disabled]="btnDisable">Update</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
                     (click)="cancelForm()">Cancel</button>
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
@@ -175,7 +175,7 @@
               <div class="row">
                 <div class="col-12 remove-col-padding">
                   <div>
-                    <mat-form-field [hidden]="ELEMENT_DATA.length < 1">
+                    <mat-form-field [hidden]="ELEMENT_DATA.length > 1">
                       <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
                         placeholder="Filter">
                       <mat-icon matPrefix>filter_list</mat-icon>

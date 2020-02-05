@@ -31,6 +31,7 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	{ fcc_head_type: 'hostel', name: 'Hostel' },
 	{ fcc_head_type: 'transport', name: 'Transport' }];
 	classArray: any[] = [];
+	btnDisable = false;
 	constructor(private fbuild: FormBuilder,
 		private feeService: FeeService,
 		private sisService: SisService,
@@ -65,12 +66,15 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 	}
 	submit() {
 		if (!this.conccesionCategoryForm.valid) {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please fill required fields', 'error');
 			this.conccesionCategoryForm.markAsDirty();
 		} else {
+			this.btnDisable = true;
 			this.conccesionCategoryForm.markAsPristine();
 			this.conccesionCategoryForm.updateValueAndValidity();
 			this.feeService.insertConcessionCategory(this.conccesionCategoryForm.value).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage('Inserted Successfully', 'success');
 					this.getConcessionCategory();
@@ -88,12 +92,14 @@ export class ConcessionCategoryComponent implements OnInit, AfterViewInit {
 					this.amountPlaceHolder = 'Concession';
 					this.schoolFlag = true;
 				} else {
+					this.btnDisable = false;
 					this.common.showSuccessErrorMessage(result.data, 'error');
 				}
 			});
 		}
 	}
 	reset() {
+		this.btnDisable = false;
 		this.conccesionCategoryForm.patchValue({
 			fcc_id: '',
 			fcc_name: '',

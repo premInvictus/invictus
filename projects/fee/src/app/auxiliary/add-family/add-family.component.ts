@@ -21,6 +21,7 @@ export class AddFamilyComponent implements OnInit {
 	currClassId = '';
 	currSectionId = '';
 	defaultsrc = '';
+	btnDisable = false;
 	@ViewChild('myInput') myInput: ElementRef;
 	constructor(
 		public feeService: FeeService,
@@ -75,12 +76,15 @@ export class AddFamilyComponent implements OnInit {
 		if (Object.keys(inputJson).length > 0) {
 			this.checkForChildExists(inputJson);
 		} else {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please choose Student to Add', 'error');
 		}
 	}
 
 	checkForChildExists(inputJson) {
+		this.btnDisable = true;
 		this.feeService.checkChildExists(inputJson).subscribe((result: any) => {
+			this.btnDisable = false;
 			if (result && result.status === 'error') {
 				this.common.showSuccessErrorMessage(result.message, 'error');
 			} else {
@@ -90,6 +94,7 @@ export class AddFamilyComponent implements OnInit {
 	}
 
 	reset(event) {
+		this.btnDisable = false;
 		this.addFamilyForm.patchValue({
 			adm_no: '',
 			class_id: '',
@@ -102,6 +107,7 @@ export class AddFamilyComponent implements OnInit {
 	}
 
 	resetAll(event) {
+		this.btnDisable = false;
 		this.addFamilyForm.patchValue({
 			fam_entry_number: '',
 			adm_no: '',
@@ -301,11 +307,13 @@ export class AddFamilyComponent implements OnInit {
 	addFamily() {
 		const keyChildCount = this.getKeyChildCount();
 		if (this.addFamilyForm.value.family_name && keyChildCount === 1) {
+			this.btnDisable = true;
 			const inputJson = {};
 			inputJson['childData'] = this.childData;
 			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
 			inputJson['fam_declaration_doc_url'] = this.declaration_doc_url;
 			this.feeService.addFamily(inputJson).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.childData = [];
@@ -316,8 +324,10 @@ export class AddFamilyComponent implements OnInit {
 				}
 			});
 		} else if (!keyChildCount || keyChildCount > 1) {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please Choose One Key Child', 'error');
 		} else {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please Enter Family Name', 'error');
 		}
 	}
@@ -325,12 +335,14 @@ export class AddFamilyComponent implements OnInit {
 	updateFamily() {
 		const keyChildCount = this.getKeyChildCount();
 		if (this.addFamilyForm.value.family_name && keyChildCount === 1) {
+			this.btnDisable = true;
 			const inputJson = {};
 			inputJson['childData'] = this.childData;
 			inputJson['fam_entry_number'] = this.addFamilyForm.value.fam_entry_number;
 			inputJson['fam_family_name'] = this.addFamilyForm.value.family_name;
 			inputJson['fam_declaration_doc_url'] = this.declaration_doc_url;
 			this.feeService.updateFamily(inputJson).subscribe((result: any) => {
+				this.btnDisable = false;
 				if (result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.childData = [];
@@ -341,8 +353,10 @@ export class AddFamilyComponent implements OnInit {
 				}
 			});
 		} else if (!keyChildCount || keyChildCount > 1) {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please Choose One Key Child', 'error');
 		} else {
+			this.btnDisable = false;
 			this.common.showSuccessErrorMessage('Please Enter Family Name', 'error');
 		}
 	}

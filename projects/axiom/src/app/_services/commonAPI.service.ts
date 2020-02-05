@@ -66,6 +66,14 @@ export class CommonAPIService {
 	downloadTeacherExcel(value) {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/bulkupload/downloadTeacherExcel', value);
-	}	
+	}
+	getGlobalSetting(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	updateGlobalSetting(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
+	}
 
 }
