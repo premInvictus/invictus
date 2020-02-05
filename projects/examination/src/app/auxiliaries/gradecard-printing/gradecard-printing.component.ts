@@ -51,6 +51,7 @@ export class GradecardPrintingComponent implements OnInit {
     item.param = this.paramform.value;
     item.ect_exam_type = this.classterm.ect_exam_type;
     item.ect_grade_avg_highest = this.classterm.ect_grade_avg_highest;
+    item.last_term_id = this.getTermid();
     const dialogRef = this.dialog.open(ViewGradecardDialogComponent, {
       width: '80%',
       height: '80%',
