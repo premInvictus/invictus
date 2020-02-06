@@ -94,6 +94,7 @@ export class IssueReturnComponent implements OnInit {
 	schoolInfo: any;
 	length: any;
 	settingData: any;
+	btnDisabled = false;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -487,6 +488,7 @@ export class IssueReturnComponent implements OnInit {
 
 		var limitFlag = this.checkForIssueBookLimit();
 		if (!limitFlag) {
+			
 			const inputJson = {
 				reservoir_data: updatedBookData,
 				user_login_id: this.userData.au_login_id,
@@ -502,7 +504,9 @@ export class IssueReturnComponent implements OnInit {
 			console.log('inputJson--', inputJson);
 			
 			if (!this.userHaveBooksData) {
+				this.btnDisabled=true;
 				this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
+					this.btnDisabled=false;
 					if (result && result.status === 'ok') {
 						this.bookData = [];
 						this.issueBookData = [];
@@ -513,7 +517,9 @@ export class IssueReturnComponent implements OnInit {
 					this.common.showSuccessErrorMessage(result.message, result.status);
 				});
 			} else {
+				this.btnDisabled=true;
 				this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
+					this.btnDisabled=false;
 					if (result && result.status === 'ok') {
 						this.bookData = [];
 						this.issueBookData = [];
@@ -525,6 +531,7 @@ export class IssueReturnComponent implements OnInit {
 				});
 			}
 		} else {
+			this.btnDisabled = true;
 			if (this.searchForm.value.user_role_id === '4') {
 				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_student']+' Book Cannot be Issued to Student', 'error');
 			} else if (this.searchForm.value.user_role_id === '3') {
@@ -593,6 +600,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	resetIssueReturn() {
+		this.btnDisabled = false;
 		this.bookData = [];		
 		this.finIssueBook = [];
 		this.returnIssueReservoirForm.reset();
@@ -601,6 +609,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	resetAll() {
+		this.btnDisabled = false;
 		this.bookData = [];
 		this.bookLogData = [];
 		this.issueBookData = [];
