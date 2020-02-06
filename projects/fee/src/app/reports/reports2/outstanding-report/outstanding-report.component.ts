@@ -445,6 +445,25 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'tag_name',
+										name: 'Tag',
+										field: 'tag_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'fp_name',
 										name: 'Fee Period',
 										field: 'fp_name',
@@ -507,6 +526,7 @@ export class OutstandingReportComponent implements OnInit {
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
@@ -697,6 +717,25 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'tag_name',
+										name: 'Tag',
+										field: 'tag_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date',
 										sortable: true,
 										filterable: true,
@@ -793,6 +832,7 @@ export class OutstandingReportComponent implements OnInit {
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
@@ -967,6 +1007,22 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
+						filterable: true,
+						width: 15,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'invoice_created_date', name: 'Invoice Date', field: 'invoice_created_date', sortable: true,
 						filterable: true,
 						width: 30,
@@ -1048,6 +1104,7 @@ export class OutstandingReportComponent implements OnInit {
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
@@ -1167,6 +1224,22 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
+						filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'fp_name', name: 'Fee Period', field: 'fp_name', sortable: true,
 						filterable: true,
 						width: 120,
@@ -1268,6 +1341,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
@@ -1402,6 +1477,27 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', filterable: true,
+						filterSearchType: FieldType.string,
+						width: 50,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							comparer: (a, b) => {
+								// (optional) comparer is helpful to sort the grouped data
+								// code below will sort the grouped value in ascending order
+								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'rpt_amount',
 						name: 'Amount Due',
 						field: 'rpt_amount',
@@ -1449,6 +1545,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
@@ -1588,6 +1686,25 @@ export class OutstandingReportComponent implements OnInit {
 											},
 										},
 										{
+											id: 'tag_name',
+											name: 'Tag',
+											field: 'tag_name',
+											sortable: true,
+											filterable: true,
+											width: 60,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText },
+											grouping: {
+												getter: 'tag_name',
+												formatter: (g) => {
+													return `${g.value}  <span style="color:green">(${g.count})</span>`;
+												},
+												aggregators: this.aggregatearray,
+												aggregateCollapsed: true,
+												collapsed: false,
+											},
+										},
+										{
 											id: 'invoice_created_date', name: 'Invoice. Date', field: 'invoice_created_date',
 											sortable: true,
 											filterable: true,
@@ -1696,6 +1813,7 @@ export class OutstandingReportComponent implements OnInit {
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+												obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 												if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 													obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 														repoArray[Number(keys)]['stu_sec_name'];

@@ -164,12 +164,15 @@ export class CollectionReportComponent implements OnInit {
 				report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise'
 			});
 		this.reportType = 'headwise';
-		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
-		this.reportFilterForm.patchValue({
-			'from_date': firstDay,
-			'to_date': date
-		});
+		if (this.sessionName) {
+			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay,
+				'to_date': date
+			});
+		}
+		
 		this.filterFlag = true;
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -455,6 +458,25 @@ export class CollectionReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'tag_name',
+										name: 'Tag',
+										field: 'tag_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
 										sortable: true,
 										filterable: true,
@@ -558,6 +580,8 @@ export class CollectionReportComponent implements OnInit {
 											} else {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 											}
+											//obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? repoArray[Number(keys)]['tag_name'] : ''
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 												repoArray[Number(keys)]['rpt_id'] : '-';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
@@ -774,6 +798,22 @@ export class CollectionReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag', name: 'Tag', field: 'tag', sortable: true,
+						filterable: true,
+						width: 15,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'tag',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 						filterable: true,
 						width: 30,
@@ -861,6 +901,9 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
+							
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ?
+							new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '-';
 							obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
@@ -985,6 +1028,22 @@ export class CollectionReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
+										filterable: true,
+										width: 40,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInput },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 										filterable: true,
 										formatter: this.checkDateFormatter,
@@ -1077,6 +1136,7 @@ export class CollectionReportComponent implements OnInit {
 											} else {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
 											}
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
 												repoArray[Number(keys)]['rpt_id'] : '0';
 											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
@@ -1240,6 +1300,22 @@ export class CollectionReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
+						filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 						filterable: true,
 						width: 120,
@@ -1381,6 +1457,8 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							
 							obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
 							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 								repoArray[Number(index)]['fp_name'] : '-';
@@ -1503,6 +1581,22 @@ export class CollectionReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
+						filterable: true,
+						width: 200,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
 						id: 'stu_opening_balance',
 						name: 'Opening Bal.',
 						field: 'stu_opening_balance',
@@ -1538,6 +1632,7 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['stu_opening_balance'] = repoArray[Number(index)]['stu_opening_balance'] ?
 								Number(repoArray[Number(index)]['stu_opening_balance']) : 0;
 							obj['inv_fp_id'] = repoArray[Number(index)]['inv_fp_id'];
@@ -1917,6 +2012,25 @@ export class CollectionReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'tag_name',
+										name: 'Tag',
+										field: 'tag_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
 										sortable: true,
 										filterable: true,
@@ -2014,6 +2128,7 @@ export class CollectionReportComponent implements OnInit {
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
