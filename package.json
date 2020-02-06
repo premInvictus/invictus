@@ -34,6 +34,7 @@
     "angular-gauge": "^3.1.0",
     "angular-slickgrid": "^1.7.6",
     "angular-tree-component": "^7.1.0",
+    "angular-user-idle": "^2.2.1",
     "angular2-notifications": "^2.0.0",
     "bootstrap": "^4.2.1",
     "core-js": "^2.5.4",

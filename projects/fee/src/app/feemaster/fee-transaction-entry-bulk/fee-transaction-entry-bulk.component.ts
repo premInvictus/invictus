@@ -460,7 +460,11 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 			this.common.showSuccessErrorMessage('Please select a student', 'error');
 			validateFlag = false;
 		}
-		if (Number(this.invoice.fee_amount) === 0) {
+		if (this.selectedMode === '1' && Number(this.invoice.fee_amount) === 0) {
+			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (this.selectedMode !== '1' && Number(this.feeTransactionForm.value.ftr_amount) <= 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
 		}

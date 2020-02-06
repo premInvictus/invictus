@@ -1,0 +1,44 @@
+<div class="modal-custom-cotainer" id="timeout-modal">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Session Expiring!</span><span
+          class="float-right margin-top-5"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<div class="row" style="margin-top: -5%;">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-3">
+        <img style="margin-top: 10px;margin-left: -15px;"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRRIseBNarzlwRVttw5lcm6LTnavoJhrFWph114AkgbeJ2pHsW_"
+          height="80px" width="80px">
+      </div>
+      <div class="col-9">
+        <div class="row">
+          <div class="col-12">
+            <p style="font-size: 16px;">You are being timed out due to inactivity. Please choose to stay signed in or
+              log
+              off.
+              Otherwise you will log off automatically in <b>{{common.counterTimer ? common.counterTimer : 0}}</b>
+              seconds</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center" style="margin-top: -10%; display: inline-flex;">
+          <button mat-raised-button class="btn-success" style="width: 180px !important"
+            (click)="expire();closeDialog()">Yes, Keep me signed
+            in</button>&nbsp; &nbsp; &nbsp; &nbsp;
+          <button mat-raised-button class="btn-danger" (click)="cancel()">No, Sign me out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

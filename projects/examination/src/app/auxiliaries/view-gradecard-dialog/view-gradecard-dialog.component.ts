@@ -7,6 +7,7 @@ import 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-view-gradecard-dialog',
@@ -70,6 +71,10 @@ export class ViewGradecardDialogComponent implements OnInit {
   gradingSystem:string = '';
   resultRemarksArr:any[] = [];
   printData: any = {};
+  printDataFlag = false;
+  all_term_subject_total_mark = 0;
+  all_term_student_total_mark = 0;
+  all_term_student_total_percentage = 0;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -113,8 +118,14 @@ export class ViewGradecardDialogComponent implements OnInit {
       this.obtainedGradeAvgHighest.highest = false;
       
     }
+    if (this.data.param.eme_term_id === 'comulative') {
+      this.obtainedGradeAvgHighest.obtained = true;
+      this.obtainedGradeAvgHighest.grade = false;
+      this.obtainedGradeAvgHighest.avg = false;
+      this.obtainedGradeAvgHighest.highest = false;      
+    }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
-    this.termArray.push(this.data.param.eme_term_id);
+    this.termArray.push(this.getTermid());
     this.ctForClass();
     this.getGlobalSetting();
     this.getSchool();
@@ -129,6 +140,13 @@ export class ViewGradecardDialogComponent implements OnInit {
     
 
   }
+  getTermid() {
+    if(this.data.param.eme_term_id == 'comulative') {
+      return this.data.last_term_id;
+    } else {
+      return this.data.param.eme_term_id;
+    }
+  }
   printGradecard(item=null) {
     const param: any = {};
     param.login_id = [this.data.au_login_id];
@@ -141,8 +159,14 @@ export class ViewGradecardDialogComponent implements OnInit {
     console.log("printGradecard ok");
     this.examService.printGradecard(param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
-        console.log("printGradecard",result.data);
         this.printData = result.data;
+        console.log("printGradecard",this.printData);
+        this.printData.so_printData.forEach(element => {
+          this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
+          this.all_term_student_total_mark += element.term_student_total_mark['A'];
+        });
+        this.all_term_student_total_percentage = this.getTwoDecimalValue(this.all_term_student_total_mark / this.all_term_subject_total_mark * 100);
+        this.printDataFlag = true;
       }
     })
 
@@ -150,7 +174,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   getClassTermDate() {
     this.classtermdate = {};
     const param: any = {};
-    param.etd_term = this.data.param.eme_term_id;
+    param.etd_term = this.getTermid();
     param.etd_class_id = this.data.param.eme_class_id;
     param.etd_status = '1';
     this.examService.getClassTermDate(param).subscribe((result: any) => {
@@ -165,7 +189,15 @@ export class ViewGradecardDialogComponent implements OnInit {
   getTermStudentAttendence2() {
     const param: any = {};
     param.au_login_id = this.data.au_login_id;
-    param.term_id = this.data.param.eme_term_id;
+    if(this.data.param.eme_term_id == 'comulative') {
+      const termsarr: any[] = [];
+      for (let index = 1; index <= this.getTermid(); index++) {
+        termsarr.push(index);        
+      }
+      param.term_id = termsarr;
+    } else {
+      param.term_id = this.getTermid();
+    }
     param.class_id = this.data.param.eme_class_id;
     param.sec_id = this.data.param.eme_sec_id;
 
@@ -175,25 +207,30 @@ export class ViewGradecardDialogComponent implements OnInit {
     if (this.data.param.eme_subexam_id) {
       param.subexam_id = this.data.param.eme_subexam_id;
     }
-
+    
     this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
       //console.log(result1);
       if (result1 && result1.status === 'ok') {
-        const termAttendence = result1.data[0];
-        this.totalpresentday = Number(termAttendence['mta_present_days']);
-        this.totalworkingdays = Number(termAttendence['mta_overall_attendance']);
-        this.attendenceInPercent = this.getTwoDecimalValue(this.totalpresentday / this.totalworkingdays * 100);
-      } else {
-        this.totalpresentday = 0;
-        this.totalworkingdays = 0;
-        this.attendenceInPercent = 0;
+        if(this.data.param.eme_term_id != 'comulative') {
+          const termAttendence = result1.data[0];
+          this.totalpresentday = Number(termAttendence['mta_present_days']);
+          this.totalworkingdays = Number(termAttendence['mta_overall_attendance']);
+          this.attendenceInPercent = this.getTwoDecimalValue(this.totalpresentday / this.totalworkingdays * 100);
+        } else {
+          const termAttendence = result1.data;
+          termAttendence.forEach(element => {
+            this.totalpresentday += Number(element['mta_present_days'])
+            this.totalworkingdays += Number(element['mta_overall_attendance']);
+          });
+          this.attendenceInPercent = this.totalworkingdays > 0 ? this.getTwoDecimalValue(this.totalpresentday / this.totalworkingdays * 100) : 0;
+        }
       }
     })
   }
   getTermWorkingAndHoliday() {
     const param: any = {};
     param.class_id = this.data.class_id;
-    param.term_id = this.data.param.eme_term_id;
+    param.term_id = this.getTermid();
     this.examService.getTermWorkingAndHoliday(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const termholidays = result.data;
@@ -224,7 +261,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     const param: any = {};
     param.ere_class_id = this.data.class_id;
     param.ere_sec_id = this.data.sec_id;
-    param.ere_term_id = this.data.param.eme_term_id;
+    param.ere_term_id = this.getTermid();
     param.ere_remarks_type = this.data.ect_exam_type;
     if (sub_id) {
       if(!this.obtainedGradeAvgHighest.remark) {
@@ -253,7 +290,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     const param: any = {};
     param.ere_class_id = this.data.class_id;
     param.ere_sec_id = this.data.sec_id;
-    param.ere_term_id = this.data.param.eme_term_id;    
+    param.ere_term_id = this.getTermid();    
     param.ere_remarks_type = '3';        
     if (this.studentDetails) {
       param.erem_login_id = this.studentDetails.au_login_id;
@@ -365,7 +402,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   getUserAchievement() {
     const param: any = {};
     param.au_class_id = this.data.param.eme_class_id;
-    param.au_term_id = this.data.param.eme_term_id
+    param.au_term_id = this.getTermid();
     param.au_login_id = this.data.au_login_id;
     this.examService.getUserAchievement(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -682,7 +719,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
     const grade = this.getTwoDecimalValue(gradeMarks);
     const gradePercentage = this.getTwoDecimalValue((gradeMarks / this.acedemicmarks) * 100);
-    if (Number(term) <= Number(this.data.param.eme_term_id)) {
+    if (Number(term) <= Number(this.getTermid())) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
         sub_id: sub_id,
@@ -713,7 +750,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     //const grade = Math.round(gradeMarks / this.sexamArray.length);
     const grade = this.getTwoDecimalValue(gradeMarks);
     const gradePercentage = this.getTwoDecimalValue((gradeMarks / this.acedemicmarks) * 100);
-    if (Number(term) <= Number(this.data.param.eme_term_id)) {
+    if (Number(term) <= Number(this.getTermid())) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
         sub_id: sub_id,
@@ -743,7 +780,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
     const grade = Math.round(gradeMarks / this.sexamArray.length);
-    if (Number(term) === Number(this.data.param.eme_term_id)) {
+    if (Number(term) === Number(this.getTermid())) {
       this.totalexecutedSolasticSubject++;
       this.gradePerTermOnScholastic.push({
         sub_id: sub_id,
@@ -827,7 +864,7 @@ export class ViewGradecardDialogComponent implements OnInit {
       param.exam_class = this.data.param.eme_class_id;
     }
     if (this.data.param.eme_class_id) {
-      param.term_id = this.data.param.eme_term_id;
+      param.term_id = this.getTermid();
     }
     this.examService.getExamDetails(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -954,5 +991,23 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   closeDialog() {
     this.dialogRef.close();
+  }
+  getFinalAssessment(sub_category){
+    let final_assessment = 0;
+    this.printData.so_printData.forEach(element => {
+      final_assessment += element.term_total_mark[sub_category]
+    });
+    return final_assessment;
+  }
+  finalAssessmentOfSubject(sub_id,so_printData){
+    let final_assessment = 0;
+    so_printData.forEach(element => {
+      element.sub_mark.forEach(psubject => {
+        if(psubject.sub_id == sub_id) {
+          final_assessment += psubject.sub_grade_mark
+        }        
+      });
+    });
+    return final_assessment;
   }
 }
