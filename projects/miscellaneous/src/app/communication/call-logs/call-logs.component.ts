@@ -1,7 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonAPIService } from '../../_services/index';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
-
+import { MatDialog } from '@angular/material';
+import { SearchViaNameComponent } from '../../misc-shared/search-via-name/search-via-name.component';
+import { CallRemarksComponent } from '../../misc-shared/call-remarks/call-remarks.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 @Component({
   selector: 'app-call-logs',
   templateUrl: './call-logs.component.html',
@@ -14,11 +18,19 @@ export class CallLogsComponent implements OnInit {
   selectedUserArr: any[] = [];
   allUserSelectFlag = false;
   currentTab = 0;
+  url: any;
   displayedColumns = ['no', 'start_time', 'call_id', 'destination', 'from_caller', 'call_duration', 'to_DID', 'call_type', 'media_s3_url'];
   DataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
   constructor(
-    private commonAPIService: CommonAPIService
+    private commonAPIService: CommonAPIService,
+    public http: HttpClient,
+    public dialog: MatDialog
   ) { }
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json'
+    })
+  }
 
   ngOnInit() {
     this.DataSource.sort = this.sort;
@@ -68,6 +80,71 @@ export class CallLogsComponent implements OnInit {
   applyFilterUser(filterValue: string) {
     this.DataSource.filter = filterValue.trim().toLowerCase();
   }
+  openSearchDialog() {
+    const diaogRef = this.dialog.open(SearchViaNameComponent, {
+      width: '20%',
+      height: '30%',
+      position: {
+        top: '10%'
+      },
+      data: {}
+    });
+    diaogRef.afterClosed().subscribe((result: any) => {
+      console.log(result);
+
+      if (result) {
+        this.url = 'http://ex4.zeotel.com/c2c?key=ossPBYWFI0XtCKiWGH0K0A-1580734293&ac=4000357&ph=8800214267&user_vars=AGENTNUMBER=9911291573&df=json';
+
+        this.http.get(this.url).subscribe((logReturn: any) => {
+          console.log('logReturn', logReturn);
+        });
+
+        const diaogRef = this.dialog.open(CallRemarksComponent, {
+          width: '30%',
+          height: '35%',
+          position: {
+            top: '10%'
+          },
+          data: {}
+        });
+      }
+      // if (result) {
+      //   let url = '';
+      //   if (Number(result.process_type) === 1) {
+      //     url = 'enquiry';
+      //   } else if (Number(result.process_type) === 2) {
+      //     url = 'registration';
+      //   } else if (Number(result.process_type) === 3) {
+      //     url = 'provisional';
+      //   } else if (Number(result.process_type) === 4) {
+      //     url = 'admission';
+      //   } else if (Number(result.process_type) === 5) {
+      //     url = 'alumini';
+      //   }
+      //   this.commonAPIService.setStudentData(result.adm_no, result.process_type);
+      //   if ((Number(result.process_type) === 1 && this.route.snapshot.routeConfig.path === 'enquiry')
+      //     || (Number(result.process_type) === 2 && this.route.snapshot.routeConfig.path === 'registration')
+      //     || (Number(result.process_type) === 3 && this.route.snapshot.routeConfig.path === 'provisional')
+      //     || (Number(result.process_type) === 4 && this.route.snapshot.routeConfig.path === 'admission')
+      //     || (Number(result.process_type) === 5 && this.route.snapshot.routeConfig.path === 'alumini')) {
+      //     this.getStudentDetailsByAdmno(result.adm_no);
+      //   } else {
+      //     this.router.navigate(['../' + url], { relativeTo: this.route });
+      //   }
+      // }
+
+    });
+  }
+
+
+  // HttpClient API get() method => Fetch employees list
+  // getEmployees(): Observable<CallLogsComponent> {
+  //   return this.http.get<CallLogsComponent>(this.apiURL + '/employees')
+  //     .pipe(
+  //       retry(1),
+  //       catchError(this.handleError)
+  //     )
+  // }
 }
 
 

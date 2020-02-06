@@ -39,6 +39,8 @@ import { ComposeMessageComponent } from './compose-message/compose-message.compo
 const moment = _moment;
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
+import { CallRemarksComponent } from './call-remarks/call-remarks.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -112,6 +114,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
+		SearchViaNameComponent,
+		CallRemarksComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -124,6 +128,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
+		SearchViaNameComponent,
+		CallRemarksComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
