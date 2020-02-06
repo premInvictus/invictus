@@ -95,6 +95,7 @@ export class IssueReturnComponent implements OnInit {
 	classTeacherSecId = '';
 	classTeacher = false;
 	finIssueBook : any = [];
+	btnDisabled = false;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -439,7 +440,9 @@ export class IssueReturnComponent implements OnInit {
 			user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 		};
 		if (!this.userHaveBooksData) {
+			this.btnDisabled = true;
 			this.erpCommonService.insertUserReservoirData(inputJson).subscribe((result: any) => {
+				this.btnDisabled = false;
 				if (result && result.status === 'ok') {
 					this.bookData = [];
 					this.issueBookData = [];
@@ -450,7 +453,9 @@ export class IssueReturnComponent implements OnInit {
 				this.common.showSuccessErrorMessage(result.message, result.status);
 			});
 		} else {
+			this.btnDisabled = true;
 			this.erpCommonService.updateUserReservoirData(inputJson).subscribe((result: any) => {
+				this.btnDisabled = false;
 				if (result && result.status === 'ok') {
 					this.bookData = [];
 					this.issueBookData = [];
@@ -506,6 +511,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	resetIssueReturn() {
+		this.btnDisabled = false;
 		this.bookData = [];
 		this.finIssueBook = [];
 		this.returnIssueReservoirForm.reset();
@@ -514,6 +520,7 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	resetAll() {
+		this.btnDisabled = false;
 		this.bookData = [];
 		this.bookLogData = [];
 		this.issueBookData = [];
