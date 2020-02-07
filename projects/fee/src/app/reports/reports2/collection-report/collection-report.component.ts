@@ -798,13 +798,13 @@ export class CollectionReportComponent implements OnInit {
 						},
 					},
 					{
-						id: 'tag', name: 'Tag', field: 'tag', sortable: true,
+						id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true,
 						filterable: true,
 						width: 15,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						grouping: {
-							getter: 'tag',
+							getter: 'tag_name',
 							formatter: (g) => {
 								return `${g.value}  <span style="color:green">(${g.count})</span>`;
 							},
@@ -2490,21 +2490,59 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		if (Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())) {
-			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
-			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
-			this.reportFilterForm.patchValue({
-				'from_date': firstDay2,
-				'to_date': date2
-			});
-		} else {
+		
+		//console.log('this.sessionName', this.sessionName);
+		//Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())
+		var currentYear = Number(new Date().getFullYear());
+		var sessionStartYear = Number(this.sessionName.split('-')[0]);
+		var sessionEndYear = Number(this.sessionName.split('-')[1]);
+		var sessionStartMonth = Number(this.schoolInfo.session_start_month);
+		var sessionEndMonth = Number(this.schoolInfo.session_end_month);
+		var sessionStartDate = sessionStartYear+'-'+this.schoolInfo.session_start_month+'-'+'01';
+		var sessionEndMonthLastDay = new Date(sessionEndYear, sessionEndMonth, 0).getDate();
+		var sessionEndDate = sessionEndYear+'-'+this.schoolInfo.session_start_month+'-'+sessionEndMonthLastDay;
+		var currentDate = new Date().getFullYear()+'-'+new Date().getMonth()+'-'+new Date().getDate();
+		// console.log(currentYear);
+		// console.log(sessionStartYear);
+		// console.log(sessionEndYear);
+		// console.log(sessionStartMonth);
+		// console.log(sessionEndMonth);
+		// console.log(sessionStartDate);
+		// console.log(sessionEndMonthLastDay);
+		// console.log(sessionEndDate);
+		// console.log(currentDate, (new Date(currentDate) >= new Date(sessionStartDate))), (new Date(currentDate) <= new Date(sessionEndDate));
+		if ((new Date(currentDate).getTime() >= new Date(sessionStartDate).getTime()) && (new Date(currentDate).getTime() <= new Date(sessionEndDate).getTime())) {
+			console.log('in');
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
 			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
 			this.reportFilterForm.patchValue({
 				'from_date': firstDay,
 				'to_date': date
 			});
+		} else {
+			console.log('in1');
+			const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
+			const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay2,
+				'to_date': date2
+			});
 		}
+		// if () {
+		// 	const date2 = new Date(Number(this.sessionName.split('-')[0]) + 1, Number(this.schoolInfo.session_end_month), 0);
+		// 	const firstDay2 = new Date(this.sessionName.split('-')[0], Number(this.schoolInfo.session_start_month) - 1, 1);
+		// 	this.reportFilterForm.patchValue({
+		// 		'from_date': firstDay2,
+		// 		'to_date': date2
+		// 	});
+		// } else {
+		// 	const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+		// 	const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+		// 	this.reportFilterForm.patchValue({
+		// 		'from_date': firstDay,
+		// 		'to_date': date
+		// 	});
+		// }
 		if ($event.value) {
 			this.displyRep.emit({ report_index: 1, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise' || $event.value === 'cumulativeheadwise') {

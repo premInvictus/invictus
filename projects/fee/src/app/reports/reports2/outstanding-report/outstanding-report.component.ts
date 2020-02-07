@@ -196,7 +196,10 @@ export class OutstandingReportComponent implements OnInit {
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			if (this.totalRow[columnId]) {
+				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			}
+			
 		}
 	}
 	buildForm() {
