@@ -49,7 +49,7 @@
           <div class="text-center">
               <br>
      
-              <button mat-raised-button class="btn-success" (click)="delete();">Yes</button>&nbsp;
+              <button mat-raised-button class="btn-success" (click)="$event.preventDefault();delete();">Yes</button>&nbsp;
               <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
            </div>
           </form>

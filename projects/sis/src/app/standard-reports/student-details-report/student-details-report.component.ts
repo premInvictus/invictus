@@ -49,6 +49,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 		'mother_name',
 		'guardian_name',
 		'gender',
+		'tag_name',
 		'full_name',
 		'admission_date',
 		'email',
@@ -207,6 +208,7 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			tempObj['contact'] = this.reportProcessWiseData[key]['au_mobile'];
 			tempObj['category'] = this.reportProcessWiseData[key]['category'];
 			tempObj['rel_name'] = this.reportProcessWiseData[key]['rel_name'];
+			tempObj['tag_name'] = this.reportProcessWiseData[key]['tag_name'] ? this.reportProcessWiseData[key]['tag_name'] : '';
 
 			this.REPORT_PROCESS_WISE_ELEMENT_DATA.push(tempObj);
 

@@ -78,11 +78,12 @@ export class SchoolDashboardComponent implements OnInit {
         this.issuedToStaff = 0;
         this.reissued = 0;
 
-        totalBookIssued = Number(this.dashboardIssueBookData.teachers) + Number(this.dashboardIssueBookData.students) + Number(this.dashboardIssueBookData.staff);
+        // totalBookIssued = Number(this.dashboardIssueBookData.teachers) + Number(this.dashboardIssueBookData.students) + Number(this.dashboardIssueBookData.staff);
+        totalBookIssued = Number(this.dashboardIssueBookData.teachers) + Number(this.dashboardIssueBookData.students);
 
         this.issuedToTeacher = Number(this.dashboardIssueBookData.teachers);
         this.issuedToStudent = Number(this.dashboardIssueBookData.students);
-        this.issuedToStaff = Number(this.dashboardIssueBookData.staff);
+        //this.issuedToStaff = Number(this.dashboardIssueBookData.staff);
         this.reissued = Number(this.dashboardIssueBookData.reissue);
 
         this.issueBookChart(this.issuedToTeacher, this.issuedToStudent, this.issuedToStaff, this.reissued, totalBookIssued);
@@ -167,7 +168,7 @@ export class SchoolDashboardComponent implements OnInit {
         data: [          
           ['Students', issuedToStudent],         
           ['Reissued', reissued],
-          ['Staff', issuedToStaff],
+          // ['Staff', issuedToStaff],
           ['Teachers', issuedToTeacher],
 
         ]
