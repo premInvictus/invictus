@@ -82,7 +82,8 @@
               Call Duration
             </th>
             <td mat-cell *matCellDef="let element">
-              {{element.call_duration}}
+              <span *ngIf="element.call_duration">{{element.call_duration }} sec</span> 
+              <span *ngIf="!element.call_duration">-</span> 
             </td>
           </ng-container>
           <ng-container matColumnDef="to_DID">
@@ -99,6 +100,14 @@
             </th>
             <td mat-cell *matCellDef="let element">
               {{element.call_type}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="remarks">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              Remarks
+            </th>
+            <td mat-cell *matCellDef="let element">
+              <i class="fa fa-eye" style="cursor: pointer;" (click)="openRemarkDialog(element.remarks)"></i>
             </td>
           </ng-container>
           <ng-container matColumnDef="media_s3_url">
@@ -127,12 +136,14 @@
           <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/smart-dashboard.png"
             class="smart-icon-img" />
           <br>
-          <span class="desc-span-smart-dash">No Message Record Found</span><br>
+          <span class="desc-span-smart-dash">No Call Logs Found</span><br>
         </div>
+      </div>
+      <div class="row">
+        <div class="col-11"></div>
+        <div class="col-1"> <button class="btn-call" (click)="openSearchDialog()">
+            <i class="fa fa-phone" style="font-size:14px"></i></button></div>
       </div>
     </mat-card>
   </div>
-</div>
-<div class="row">
-  <div class="col-12"> <button class="btn btn-success" (click)="openSearchDialog()"> kskljs</button></div>
 </div>

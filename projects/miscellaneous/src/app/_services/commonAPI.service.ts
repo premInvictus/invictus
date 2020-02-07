@@ -231,10 +231,19 @@ export class CommonAPIService {
 	}
 	getCallLogs(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/communication/findCallLogs',value);
+		return this.http.post(environment.apiHRUrl + '/communication/findCallLogs', value);
 	}
 	callToStudent(value) {
 		this.loader.startLoading();
-		return this.http.post(environment.apiHRUrl + '/communication/callToStudent',value);
+		return this.http.post(environment.apiHRUrl + '/communication/callToStudent', value);
 	}
+	callRemarksUpdate(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/callRemarksUpdate', value);
+	}
+	callRemarkslist(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/communication/callRemarkslist', value);
+	}
+
 }

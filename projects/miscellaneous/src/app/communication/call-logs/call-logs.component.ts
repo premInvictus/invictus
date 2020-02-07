@@ -4,8 +4,9 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { SearchViaNameComponent } from '../../misc-shared/search-via-name/search-via-name.component';
 import { CallRemarksComponent } from '../../misc-shared/call-remarks/call-remarks.component';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { CallLogRemarksModalComponent } from '../../misc-shared/call-log-remarks-modal/call-log-remarks-modal.component';
+import { CapitalizePipe } from '../../_pipes';
+
 @Component({
   selector: 'app-call-logs',
   templateUrl: './call-logs.component.html',
@@ -18,19 +19,15 @@ export class CallLogsComponent implements OnInit {
   selectedUserArr: any[] = [];
   allUserSelectFlag = false;
   currentTab = 0;
+  currentUser: any;
   url: any;
-  displayedColumns = ['no', 'start_time', 'call_id', 'destination', 'from_caller', 'call_duration', 'to_DID', 'call_type', 'media_s3_url'];
+  displayedColumns = ['no', 'start_time', 'call_id', 'destination', 'from_caller', 'call_duration', 'to_DID', 'call_type', 'remarks', 'media_s3_url'];
   DataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
   constructor(
     private commonAPIService: CommonAPIService,
-    public http: HttpClient,
     public dialog: MatDialog
-  ) { }
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  }
+  ) { this.currentUser = JSON.parse(localStorage.getItem('currentUser')); }
+
 
   ngOnInit() {
     this.DataSource.sort = this.sort;
@@ -64,6 +61,7 @@ export class CallLogsComponent implements OnInit {
           tempObj['call_duration'] = item.call_duration ? item.call_duration : '';
           tempObj['to_DID'] = item.to_DID ? item.to_DID : '';
           tempObj['call_type'] = item.call_type ? item.call_type : '';
+          tempObj['remarks'] = item.from_caller ? item.from_caller : '';
           this.USER_ELEMENT_DATA.push(tempObj);
           counter++;
         }
@@ -78,7 +76,9 @@ export class CallLogsComponent implements OnInit {
   }
 
   applyFilterUser(filterValue: string) {
-    this.DataSource.filter = filterValue.trim().toLowerCase();
+    if (filterValue) {
+      this.DataSource.filter = filterValue.trim();
+    }
   }
   openSearchDialog() {
     const diaogRef = this.dialog.open(SearchViaNameComponent, {
@@ -89,62 +89,54 @@ export class CallLogsComponent implements OnInit {
       },
       data: {}
     });
-    diaogRef.afterClosed().subscribe((result: any) => {
-      console.log(result);
-
-      if (result) {
-        this.url = 'http://ex4.zeotel.com/c2c?key=ossPBYWFI0XtCKiWGH0K0A-1580734293&ac=4000357&ph=8800214267&user_vars=AGENTNUMBER=9911291573&df=json';
-
-        this.http.get(this.url).subscribe((logReturn: any) => {
-          console.log('logReturn', logReturn);
-        });
-
-        const diaogRef = this.dialog.open(CallRemarksComponent, {
-          width: '30%',
-          height: '35%',
-          position: {
-            top: '10%'
-          },
-          data: {}
+    diaogRef.afterClosed().subscribe((result_m: any) => {
+      if (result_m) {
+        this.commonAPIService.getAllEmployeeDetail({ "emp_login_id": this.currentUser.login_id }).subscribe((result: any) => {
+          if (result && result[0].emp_personal_detail && result[0].emp_personal_detail.contact_detail &&
+            result[0].emp_personal_detail.contact_detail.primary_mobile_no) {
+            const parm: any = {
+              user_no: result_m.contact_no,
+              agent_no: result[0].emp_personal_detail.contact_detail.primary_mobile_no,
+              start_time: new Date(),
+              login_id: this.currentUser.login_id
+            }
+            this.commonAPIService.callToStudent(parm).subscribe((result_n: any) => {
+              if (result_n) {
+                const diaogRef = this.dialog.open(CallRemarksComponent, {
+                  width: '30%',
+                  height: '35%',
+                  disableClose: true,
+                  position: {
+                    top: '10%'
+                  },
+                });
+                diaogRef.afterClosed().subscribe((result_o: any) => {
+                  if (result_o) {
+                    this.commonAPIService.callRemarksUpdate({ 'id': result_n._id, 'remarks': result_o.req_reason_text }).subscribe((result_p: any) => {
+                      this.getCallLogs('Outgoing');
+                      this.commonAPIService.showSuccessErrorMessage('Call Logs Updated Successfully', 'success');
+                    });
+                  }
+                })
+              }
+            });
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Agent Number is not available', 'error');
+          }
         });
       }
-      // if (result) {
-      //   let url = '';
-      //   if (Number(result.process_type) === 1) {
-      //     url = 'enquiry';
-      //   } else if (Number(result.process_type) === 2) {
-      //     url = 'registration';
-      //   } else if (Number(result.process_type) === 3) {
-      //     url = 'provisional';
-      //   } else if (Number(result.process_type) === 4) {
-      //     url = 'admission';
-      //   } else if (Number(result.process_type) === 5) {
-      //     url = 'alumini';
-      //   }
-      //   this.commonAPIService.setStudentData(result.adm_no, result.process_type);
-      //   if ((Number(result.process_type) === 1 && this.route.snapshot.routeConfig.path === 'enquiry')
-      //     || (Number(result.process_type) === 2 && this.route.snapshot.routeConfig.path === 'registration')
-      //     || (Number(result.process_type) === 3 && this.route.snapshot.routeConfig.path === 'provisional')
-      //     || (Number(result.process_type) === 4 && this.route.snapshot.routeConfig.path === 'admission')
-      //     || (Number(result.process_type) === 5 && this.route.snapshot.routeConfig.path === 'alumini')) {
-      //     this.getStudentDetailsByAdmno(result.adm_no);
-      //   } else {
-      //     this.router.navigate(['../' + url], { relativeTo: this.route });
-      //   }
-      // }
-
     });
   }
-
-
-  // HttpClient API get() method => Fetch employees list
-  // getEmployees(): Observable<CallLogsComponent> {
-  //   return this.http.get<CallLogsComponent>(this.apiURL + '/employees')
-  //     .pipe(
-  //       retry(1),
-  //       catchError(this.handleError)
-  //     )
-  // }
+  openRemarkDialog(from_caller) {
+    const diaogRef = this.dialog.open(CallLogRemarksModalComponent, {
+      width: '50%',
+      height: '50%',
+      position: {
+        top: '10%'
+      },
+      data: { 'from_caller': from_caller }
+    });
+  }
 }
 
 

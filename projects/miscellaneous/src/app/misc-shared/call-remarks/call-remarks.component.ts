@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { SisService } from '../../_services/sis.service';
+import { CommonAPIService } from '../../_services/index';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
 
@@ -11,13 +11,12 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 export class CallRemarksComponent implements OnInit {
   remarksForm: FormGroup;
   searchStudent = false;
-  shouldSizeUpdate: boolean;
   studentArrayByName: any[] = [];
-  constructor(private sisService: SisService,
+  constructor(private commonAPIService: CommonAPIService,
     private fbuild: FormBuilder,
     public dialogRef: MatDialogRef<CallRemarksComponent>,
     @Inject(MAT_DIALOG_DATA) data: any) {
-    this.shouldSizeUpdate = data.shouldSizeUpdate;
+
   }
 
   ngOnInit() {
@@ -28,7 +27,13 @@ export class CallRemarksComponent implements OnInit {
       req_reason_text: ''
     });
   }
-  closeDialog() {
-    this.dialogRef.close();
+  submit() {
+    if (this.remarksForm.valid) {
+      this.dialogRef.close(this.remarksForm.value);
+    } else {
+      this.commonAPIService.showSuccessErrorMessage('Please fill required field', 'error');
+    }
+    //this.dialogRef.close();
+    //this.dialogRef.close({ adm_no: id, contact_no: contact_no });
   }
 }
