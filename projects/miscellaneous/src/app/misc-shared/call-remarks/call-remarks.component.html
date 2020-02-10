@@ -1,0 +1,30 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Remarks</span>
+        <!-- <span class="float-right margin-top-5">
+          <a (click)="closeDialog()"> <i
+              class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span> -->
+      </div>
+    </div>
+  </div>
+  <div class="reasonDiv">
+    <form [formGroup]="remarksForm">
+      <div class="row">
+        <div class="col-12 text-center">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Remarks</mat-label>
+            <textarea rows="5" matInput placeholder="Enter Remarks" formControlName="req_reason_text"
+              required></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="row margin-top-20">
+      <div class="col-12 text-center">
+        <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

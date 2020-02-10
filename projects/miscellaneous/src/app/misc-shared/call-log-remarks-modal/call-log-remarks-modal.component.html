@@ -1,0 +1,20 @@
+<div class="row remove-top-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="modal-title-box">
+      <span class="font-size-20 font-blue">Remarks</span>
+      <span class="float-right">
+        <i class="fa fa-times font-blue cursor-pointer font-size-20" (click)="closeDialog()"></i></span>
+    </div>
+  </div>
+</div>
+<ng-container *ngFor="let item of remarksArray; let i=index">
+  <div class="row" *ngIf="item.remarks">
+    <div class="col-3" stye="padding-right:0px">
+      {{item.start_time  | date : 'dd-MMM-y, hh:mm a'}}
+    </div>
+    <div class="col-9" stye="padding-left:0px">
+      {{item.remarks | titlecase}}
+    </div>
+
+  </div>
+</ng-container>

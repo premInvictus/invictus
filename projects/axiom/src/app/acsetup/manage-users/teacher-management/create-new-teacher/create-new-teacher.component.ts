@@ -701,7 +701,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			}
 		);
 	}
-
+ 
 	saveief() {
 		this.Teacher_Form.patchValue({ au_full_name: '', au_email: '', au_mobile: '' }),
 			// tslint:disable-next-line:max-line-length

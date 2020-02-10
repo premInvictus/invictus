@@ -1,0 +1,27 @@
+.table-pad{
+    padding-left: 10%;
+    padding-right: 10%;
+}
+audio {
+    width: 200px !important;
+    margin-top: 5px !important;
+    height: 30px !important;
+}
+.btn-call {
+    text-align: center;
+    border-radius: 25px;
+    color: white;
+    background-color: #114261c9;
+    border: 2px solid #114261c9;
+    text-transform: capitalize;
+    width: 50px;
+    height: 50px;
+    font-size: 13px;
+    cursor: pointer;
+    position: fixed;
+    bottom:90px;
+    right: 30px;
+}
+i.fa.fa-phone {
+    transform: rotate(90deg);
+}

@@ -37,8 +37,11 @@ import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/a
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 const moment = _moment;
-import {PopoverModule} from 'ngx-bootstrap/popover';
+import { PopoverModule } from 'ngx-bootstrap/popover';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
+import { CallRemarksComponent } from './call-remarks/call-remarks.component';
+import { CallLogRemarksModalComponent } from './call-log-remarks-modal/call-log-remarks-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -112,6 +115,9 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
+		SearchViaNameComponent,
+		CallRemarksComponent,
+		CallLogRemarksModalComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -124,6 +130,9 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
+		SearchViaNameComponent,
+		CallRemarksComponent,
+		CallLogRemarksModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -162,7 +171,7 @@ export const MY_FORMATS = {
 		ZerodashPipe,
 		CommonDynamicChartComponent,
 		AssignmentAttachmentDialogComponent,
-		NoDataComponent, 
+		NoDataComponent,
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
@@ -175,8 +184,8 @@ export const MY_FORMATS = {
 	]
 })
 
-export class MiscSharedModule { 
-  constructor() {
+export class MiscSharedModule {
+	constructor() {
 		const script: any = document.createElement('script');
 		if (!(CKEDITOR.type === '10')) {
 			CKEDITOR.type = '10';
@@ -198,7 +207,7 @@ export class MiscSharedModule {
 				CKEDITOR.plugins.addExternal('keystrokes', '/assets/js/keystrokes/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('eqneditor', '/assets/js/eqneditor/', 'plugin.js') +
 				CKEDITOR.plugins.addExternal('videoembed', '/assets/js/videoembed/', 'plugin.js');
-				CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
+			CKEDITOR.plugins.addExternal('strinsert', '/assets/js/strinsert/', 'plugin.js');
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
 	}
