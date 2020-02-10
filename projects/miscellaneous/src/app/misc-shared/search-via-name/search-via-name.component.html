@@ -1,0 +1,76 @@
+<div class="modal-custom-cotainer overflow-hidden">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Search Student</span><span
+          class="float-right margin-top-5"><i class="far fa-times-circle font-white cursor-pointer font-size-24"
+            (click)="closeDialog()"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="row">
+        <div class="col-lg-12">
+          <span class="font-size-16 font-black font-regular">Please Enter Student Details</span><br>
+          <mat-form-field appearance="outline">
+            <input id="search" matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
+              (blur)="searchStudentByName($event.target.value)">
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-dialog-content class="main-dialog-content">
+        <div class="row" *ngIf="searchStudent">
+          <div class="col-lg-12">
+            <div>
+              <div class="row">
+                <div class="col-lg-12 col-remove-padding">
+                  <div>
+                    <table class="table-fixed table-100 text-center" style="margin-bottom: 10px !important">
+                      <thead>
+                        <tr>
+                          <th style="width: 5%">S.No</th>
+                          <th style="width: 13%">Enrollment No</th>
+                          <th style="width: 25%">Name</th>
+                          <th>Class-Section</th>
+                          <th>Parent Name</th>
+                          <th>Contact No.</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let item of studentArrayByName let i = index">
+                          <td>{{i+1}}</td>
+                          <td>{{item.au_admission_no}}</td>
+                          <td style="text-align: left">
+                            <span class="icon-spacer">{{item.au_full_name}}
+                            </span>
+                          </td>
+                          <td>{{item.au_sec_id !== '0' ? (item.class_name + '-' + item.sec_name) : item.class_name}}
+                          </td>
+                          <td style="text-align: left">
+                            <span class="icon-spacer">{{item.epd_parent_name ? (item.epd_parent_name| titlecase) : '-'}}
+                            </span>
+                          </td>
+                          <td><a style="color: #007bff !important; cursor: pointer !important"
+                              (click)="setId(item.au_admission_no, item.epd_contact_no)">{{item.epd_contact_no ? (item.epd_contact_no | mask: '00000 00000') : '-' }}</a>
+                          </td>
+                        </tr>
+                        <tr *ngIf="studentArrayByName.length === 0">
+                          <td colspan="6">
+                            No Records Found
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-dialog-content>
+
+    </div>
+  </div>
+</div>

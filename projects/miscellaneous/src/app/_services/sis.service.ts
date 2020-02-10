@@ -188,4 +188,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
+	getAdmissionStudentDataPerName(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getAdmissionStudentDataPerName', value);
+	}
 }

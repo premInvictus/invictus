@@ -9,6 +9,7 @@ import { MessageComponent } from './message/message.component';
 import { NotificationComponent } from './notification/notification.component';
 import { BroadcastComponent } from './broadcast/broadcast.component';
 import { SmsDeliverStatusComponent } from './broadcast/sms-deliver-status/sms-deliver-status.component';
+import { CallLogsComponent } from './call-logs/call-logs.component';
 
 
 const moment = _moment;
@@ -34,7 +35,8 @@ export const MY_FORMATS = {
 		MessageComponent,
 		NotificationComponent,
 		BroadcastComponent,
-		SmsDeliverStatusComponent
+		SmsDeliverStatusComponent,
+		CallLogsComponent
 	],
 	entryComponents: [
 		SmsDeliverStatusComponent
