@@ -111,7 +111,7 @@ export class AppComponent implements OnInit {
 			this.loaderService.counterTimer--;
 			if (this.loaderService.counterTimer === 0) {
 				clearInterval(this.x);
-				this.dialogRef.close();
+				this.diaog.closeAll();
 				this.idle.stopTimer();
 				this.logout();
 				this.idle.stopWatching();
@@ -143,7 +143,7 @@ export class AppComponent implements OnInit {
 				this.idle.stopWatching();
 
 				this.dialogRef.beforeClosed().subscribe((res: any) => {
-					if (res.extend) {
+					if (res && res.extend) {
 						clearInterval(this.x);
 						this.idle.resetTimer();
 						this.loaderService.counterTimer = 60;
@@ -153,6 +153,7 @@ export class AppComponent implements OnInit {
 					} else {
 						clearInterval(this.x);
 						this.idle.stopTimer();
+						this.diaog.closeAll();
 						this.logout();
 						this.loaderService.counterTimer = 60;
 						this.idle.stopWatching();
