@@ -24,7 +24,7 @@
              <p [innerHTML]="deleteMessage" style="font-size: 18px;"></p>
              <br>
     
-             <button mat-raised-button class="btn-success" (click)="delete();closeDialog()">Yes</button>&nbsp;
+             <button mat-raised-button class="btn-success" (click)="$event.preventDefault();delete();closeDialog()">Yes</button>&nbsp;
              <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
           </div>
        </div>

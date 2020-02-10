@@ -216,6 +216,16 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			} },
+			{ id: 'tag_name', name: 'Tag', field: 'tag_name', sortable: true, filterable: true,
+			grouping: {
+				getter: 'tag_name',
+				formatter: (g) => {
+					return `${g.value}  <span style="color:green">(${g.count})</span>`;
+				},
+				aggregators: this.aggregatearray,
+				aggregateCollapsed: true,
+				collapsed: false,
+			} },
 			{ id: 'admission_date', name: 'Adm.Date', field: 'admission_date', sortable: true, filterable: true,
 			 	formatter: this.checkDateFormatter },
 			{ id: 'email', name: 'Email', field: 'email', sortable: true, filterable: true },
@@ -1168,6 +1178,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] ?
 				this.reportProcessWiseData[key]['student_parent_data'][2]['epd_contact_no'] : '-';
 			tempObj['gender'] = this.valueAndDash(this.reportProcessWiseData[key]['upd_gender']);
+			tempObj['tag_name'] = this.valueAndDash(this.reportProcessWiseData[key]['tag_name']);
+			
 			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[key]['au_full_name']));
 			tempObj['admission_date'] = this.valueAndDash(this.reportProcessWiseData[key]['em_admission_date']);
 			tempObj['email'] = this.valueAndDash(this.reportProcessWiseData[key]['au_email']);
