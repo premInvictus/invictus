@@ -280,6 +280,13 @@ export class GradecardPrintingComponent implements OnInit {
           this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
         });
         this.termsArray.push({id:'comulative', name: 'Cumulative'});
+        this.examService.getExamPerCumulativeExam({class_id: this.paramform.value.eme_class_id}).subscribe((result : any) => {
+          if(result && result.status === 'ok') {
+            this.termsArray.push({id:'percumulative', name: 'Percentage Cumulative'});
+          } else {
+
+          }
+        })
         console.log('termsArray',this.termsArray);
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
