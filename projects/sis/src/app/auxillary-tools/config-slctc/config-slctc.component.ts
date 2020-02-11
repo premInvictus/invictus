@@ -75,7 +75,7 @@ export class ConfigSlctcComponent implements OnInit {
 					const length = result.data.split('/').length;
 					saveAs(result.data, result.data.split('/')[length - 1]);
 					this.router.navigate(['../../auxilliarytool/slc'],
-					{ queryParams: { issue_status: true}, relativeTo: this.route });
+						{ queryParams: { issue_status: true }, relativeTo: this.route });
 				}
 
 			}
@@ -118,10 +118,12 @@ export class ConfigSlctcComponent implements OnInit {
 						});
 						for (const item of result2.data) {
 							if (item.sff_field_type === 'custom') {
-								this.customArray.push({
-									label: item.sff_label
-								});
-								this.ffIdArray.push({ usps_sff_id: item.sff_id });
+								if (Number(item.sff_id)!== 16 && Number(item.sff_id)!== 18) {
+									this.customArray.push({
+										label: item.sff_label
+									});
+									this.ffIdArray.push({ usps_sff_id: item.sff_id });
+								}
 							}
 						}
 						let i = 0;
