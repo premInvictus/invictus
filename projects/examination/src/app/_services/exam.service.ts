@@ -121,7 +121,7 @@ export class ExamService {
 	getMarksEntry(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/marksEntry/getMarksEntry', value);
-	}	
+	}
 	getMarksforRemarksEntry(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/gradeMaster/getMarksforRemarksEntry', value);
@@ -206,7 +206,7 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
-	
+
 	getTopTenDataPerSubject(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopTenDataPerSubject', value);
@@ -359,6 +359,11 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getExamSexamAlias', value);
 	}
+	deleteExamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteExamAlias', value);
+	}
+
 }
 
 

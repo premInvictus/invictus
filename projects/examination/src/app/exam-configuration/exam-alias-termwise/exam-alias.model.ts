@@ -4,4 +4,5 @@ export interface Element {
     exam: any;
     alias: any;
     action: any;
+    modify:any;
 }
