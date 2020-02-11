@@ -37,7 +37,7 @@
         <div class="text-center">
             <br>
    
-            <button mat-raised-button class="btn-success" (click)="search();">Submit</button>&nbsp;
+            <button mat-raised-button class="btn-success" (click)="$event.preventDefault();search();">Submit</button>&nbsp;
             <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
          </div>
         </form>

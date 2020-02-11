@@ -279,7 +279,7 @@ export class GradecardPrintingComponent implements OnInit {
         result.data.ect_no_of_term.split(',').forEach(element => {
           this.termsArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
         });
-        this.termsArray.push({id:'comulative', name: 'Comulative'});
+        this.termsArray.push({id:'comulative', name: 'Cumulative'});
         console.log('termsArray',this.termsArray);
       } else {
         // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 

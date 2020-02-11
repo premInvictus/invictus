@@ -122,7 +122,7 @@
             <div class="row"  *ngIf="issuedBookchartflag">
               <div class="col-6">
                 <div class="labeldiv">
-                  <div class="teacher-pink-gradiant"></div> <span class="chart-label">Teachers : <span
+                  <div class="teacher-pink-gradiant"></div> <span class="chart-label">Employee : <span
                       class="chart-label-count">{{issuedToTeacher}}</span></span>
                 </div>
                 <div class="labeldiv">
@@ -131,11 +131,11 @@
                 </div>
               </div>
               <div class="col-4">
-                <div class="labeldiv2">
+                <!-- <div class="labeldiv2">
                   <div class="staff-orange-gradiant"></div> <span class="chart-label">Staff
                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: <span
                       class="chart-label-count">{{issuedToStaff}}</span></span>
-                </div>
+                </div> -->
                 <div class="labeldiv2">
                   <div class="reissue-gray-gradiant"></div> <span class="chart-label">Reissued : <span
                       class="chart-label-count">{{reissued}} </span></span>
@@ -211,7 +211,7 @@
                 </div>
               </div>
             </mat-tab>
-            <mat-tab label="Teacher Wise">
+            <mat-tab label="Employee Wise">
               <div class="row tab-content-card">
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['teacher']">
@@ -244,7 +244,7 @@
                 </div>
               </div>
             </mat-tab>
-            <mat-tab label="Staff Wise">
+            <!-- <mat-tab label="Staff Wise">
               <div class="row tab-content-card">
                 <div class="col-12">
                   <table class="table-100" *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['staff']">
@@ -253,7 +253,6 @@
                         <tr>
                           <th class="font-bold padding-8">{{item?.au_full_name}}</th>
                           <th class="font-color-red padding-8">{{item?.due_count}} Books</th>
-                          <!-- <th><button class="btn-dash-return-button" mat-raised-button>Return</button></th> -->
                         </tr>
                       </ng-container>
 
@@ -263,9 +262,6 @@
                           <span>{{dashboardDueReservoirData?.staff_total_due_count}} Books</span></th>
                         <th></th>
                       </tr>
-                      <!-- <tr *ngIf="dashboardDueReservoirData?.staff_total_due_count == 0">
-                        <td class="text-center" colspan="2">No Record Found</td>
-                      </tr> -->
                     </tbody>
                   </table>
                 </div>
@@ -277,7 +273,7 @@
                   </div>
                 </div>
               </div>
-            </mat-tab>
+            </mat-tab> -->
             <mat-tab label="Over Due">
               <div class="row tab-content-card">
                 <div class="col-12 remove-col-padding">
@@ -297,11 +293,7 @@
                     </thead>
                     <tbody>
                       <ng-container *ngFor="let item of dashboardDueReservoirData['all'] | slice:0:7; let i = index;">
-                        <!-- <ng-container *ngFor="let subitem of item.reserv_user_logs; let j = index;"> -->
-                        <!-- <tr class="custom-tr" *ngIf="getMainLoopLength(i)+j+1 <= 8"> -->
                         <tr class="custom-tr">
-                          <!-- <td class="custom-td"><span *ngIf="i > 0">{{ getMainLoopLength(i)+j+1}}</span><span
-                              *ngIf="i === 0">{{j+1}}</span></td> -->
                           <td class="custom-td"><span>{{i+1}}</span></td>
                           <td class="custom-td">
                             <span class="font-skyblue cursor-pointer"
@@ -316,18 +308,10 @@
                               class="font-color-red">{{getDaysDiff(item?.reserv_user_logs?.due_date)}}
                               Days</span></td>
                         </tr>
-                        <!-- </tr> -->
-                        <!-- </ng-container> -->
                       </ng-container>
 
                     </tbody>
                   </table>
-                  <!-- <table class="table-100 custom-table"
-                    *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
-                    <tr class="custom-tr text-center">
-                      <td class="text-center" colspan="2">No Book Due Till Today</td>
-                    </tr>
-                  </table> -->
                   <div class="col-12"
                     *ngIf="dashboardDueReservoirData && dashboardDueReservoirData['all'].length  == 0">
 
@@ -337,12 +321,6 @@
                         [noDataText]="" [subText]="'No Due Books'"></app-no-data>
                     </div>
                   </div>
-                  <!-- <div class="text-center" >
-                    <button mat-button class="btn-spacer btn-lib-search margin-left-10" style="margin-top: 5px;"
-                      (click)="viewAllDue()">
-                      View All
-                    </button>
-                  </div> -->
                 </div>
               </div>
             </mat-tab>

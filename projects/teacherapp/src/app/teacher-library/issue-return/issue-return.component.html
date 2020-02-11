@@ -251,7 +251,7 @@
         <br />
         <div class="row text-center" *ngIf="bookData.length > 0">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()" [disabled]="btnDisabled">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
               Reset
             </button>
