@@ -22,7 +22,7 @@ import { ImageCropperModule } from 'ngx-image-cropper';
 import { ImagecropComponent } from './imagecrop/imagecrop.component';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe } from '../_pipes';
+import { CapitalizePipe, DateformatPipe, NumberToWordPipe, ZerodashPipe, SafePipe, TruncatetextPipe, IndianCurrency } from '../_pipes';
 import { NgxMaskModule } from 'ngx-mask';
 import * as _moment from 'moment';
 import { InvictusSharedModule } from '../../../../../src/app/invictus-shared/invictus-shared.module';
@@ -44,6 +44,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
+
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -95,7 +96,7 @@ export const MY_FORMATS = {
 		InvictusSharedModule,
 		PopoverModule.forRoot(),
 		NgxBarcodeModule,
-		ColorPickerModule
+		ColorPickerModule,
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -118,7 +119,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
 		ComposeMessageComponent,
-		MessagesAdvancedSearchModalComponent
+		MessagesAdvancedSearchModalComponent,
+		IndianCurrency,
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
@@ -180,7 +182,8 @@ export const MY_FORMATS = {
 		ColorPickerModule,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
-		CKEditorModule
+		CKEditorModule,
+		IndianCurrency
 		//EmployeeDetailsComponent
 	],
 	providers: [

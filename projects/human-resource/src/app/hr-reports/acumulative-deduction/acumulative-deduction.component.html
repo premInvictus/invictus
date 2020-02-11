@@ -1,0 +1,41 @@
+<form [formGroup]="acumulativeReport">
+  <div class="row">
+    <div class="col-2">
+      <mat-form-field appearance="outline">
+        <mat-label>Month</mat-label>
+        <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getEmployeeDeduction()" required>
+          <mat-option value="">Please select</mat-option>
+          <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-10 ">
+      <!-- <div class="margin-top-10 margin-bottom-10">
+        <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
+          filter
+        </button>
+        &nbsp;
+        <button class="btn-danger text-uppercase" mat-raised-button (click)="getAllEmployee('')">
+          reset
+        </button>
+      </div> -->
+    </div>
+  </div>
+</form>
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div *ngIf="nodataFlag">
+  <div class="text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+      [noDataText]="" [subText]="'Please select all required field'">
+    </app-no-data>
+  </div>
+  <br>
+</div>
+<app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
