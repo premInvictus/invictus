@@ -143,6 +143,8 @@ export class ViewGradecardDialogComponent implements OnInit {
   getTermid() {
     if(this.data.param.eme_term_id == 'comulative') {
       return this.data.last_term_id;
+    } else if(this.data.param.eme_term_id == 'percumulative') {
+      return '1';
     } else {
       return this.data.param.eme_term_id;
     }
