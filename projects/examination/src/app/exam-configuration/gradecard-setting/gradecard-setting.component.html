@@ -92,8 +92,14 @@
       Health Status
     </div>
     <div class="col-lg-4">
-      <mat-slide-toggle class="inline-form-radio-spacing" formControlName="gradecard_health_status">
-      </mat-slide-toggle>
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Class</mat-label>
+        <mat-select formControlName="gradecard_health_status" required placeholder="Class" multiple>
+          <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+            {{item.class_name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
   <div class="row">
