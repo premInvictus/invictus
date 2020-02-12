@@ -1,5 +1,7 @@
 export interface Element {
 		exam_name: any;
+		exam_alias: any;
+		exam_order: any;
 		exam_category: any;
 		exam_marks_type: any;
 		exam_class: any;
