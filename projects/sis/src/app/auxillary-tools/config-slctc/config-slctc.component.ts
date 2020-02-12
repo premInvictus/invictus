@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonAPIService, SisService } from '../../_services/index';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ViewSlctcPrintComponent } from './view-slctc-print/view-slctc-print.component';
 import { saveAs } from 'file-saver';
+import { DatePipe } from '@angular/common';
 @Component({
 	selector: 'app-config-slctc',
 	templateUrl: './config-slctc.component.html',
@@ -14,6 +15,7 @@ export class ConfigSlctcComponent implements OnInit {
 	printmechanism = true;
 	configEditorForm = false;
 	printTransferCertificate = false;
+	req_date2: any;
 	tc_id: any;
 	prefetchArray: any[] = [];
 	formGroupArray: any[] = [];
@@ -22,8 +24,10 @@ export class ConfigSlctcComponent implements OnInit {
 	ffIdArray: any[] = [];
 	ackFlag: any = '0';
 	valueArray: any[] = [];
+	dateform: FormGroup;
 	dialogRef: MatDialogRef<ViewSlctcPrintComponent>;
 	finalArray: any[] = [];
+	req_date: any;
 	constructor(private router: Router,
 		private route: ActivatedRoute,
 		private sisService: SisService,
@@ -31,6 +35,7 @@ export class ConfigSlctcComponent implements OnInit {
 		private dialog: MatDialog) { }
 
 	ngOnInit() {
+		this.buildForm();
 		this.route.queryParams.subscribe((result: any) => {
 			if (result) {
 				this.tc_id = result.tc_id;
@@ -43,6 +48,12 @@ export class ConfigSlctcComponent implements OnInit {
 		this.printmechanism = false;
 		this.router.navigateByUrl('/school/setup/slc-tc-printing');
 
+	}
+	buildForm() {
+		this.dateform = this.fbuild.group({
+			pdate: new Date(),
+			adate: ''
+		});
 	}
 
 	print() {
@@ -63,7 +74,9 @@ export class ConfigSlctcComponent implements OnInit {
 			usts_name: 'slctc',
 			usts_id: '1',
 			configRelation: this.finalArray,
-			ackFlag: this.ackFlag
+			ackFlag: this.ackFlag,
+			pdate: new DatePipe('en-in').transform(this.dateform.value.pdate, 'yyyy-MM-dd'),
+			adate: new DatePipe('en-in').transform(this.dateform.value.adate, 'yyyy-MM-dd'),
 		};
 		this.sisService.insertSlcTcPrintSetting(customJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -91,6 +104,10 @@ export class ConfigSlctcComponent implements OnInit {
 		this.sisService.getSlcTcPrintSetting({ tc_id: tc_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.printSettings = result.data[0];
+				this.dateform.patchValue({
+					adate: new DatePipe('en-in').transform(new Date(this.printSettings['tc_request_date']), 'yyyy-MM-dd')
+				});
+				this.req_date2 = this.dateform.value.adate
 				const subjArr: any[] = result.data;
 				console.log(this.printSettings);
 				let subName = '';
@@ -118,7 +135,7 @@ export class ConfigSlctcComponent implements OnInit {
 						});
 						for (const item of result2.data) {
 							if (item.sff_field_type === 'custom') {
-								if (Number(item.sff_id)!== 16 && Number(item.sff_id)!== 18) {
+								if (Number(item.sff_id) !== 16 && Number(item.sff_id) !== 18) {
 									this.customArray.push({
 										label: item.sff_label
 									});
@@ -157,7 +174,9 @@ export class ConfigSlctcComponent implements OnInit {
 			usps_tc_id: this.tc_id,
 			usts_name: 'slctc',
 			usts_id: '1',
-			configRelation: this.finalArray
+			configRelation: this.finalArray,
+			pdate: new DatePipe('en-in').transform(this.dateform.value.pdate, 'yyyy-MM-dd'),
+			adate: new DatePipe('en-in').transform(this.dateform.value.adate, 'yyyy-MM-dd'),
 		};
 		this.dialogRef = this.dialog.open(ViewSlctcPrintComponent, {
 			data: {
