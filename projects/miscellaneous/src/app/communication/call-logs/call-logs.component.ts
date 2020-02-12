@@ -92,12 +92,12 @@ export class CallLogsComponent implements OnInit {
     diaogRef.afterClosed().subscribe((result_m: any) => {
       if (result_m) {
         this.commonAPIService.getAllEmployeeDetail({ "emp_login_id": this.currentUser.login_id }).subscribe((result: any) => {
-          if (result && result[0].emp_personal_detail && result[0].emp_personal_detail.contact_detail &&
+          if (result[0] && result[0].emp_personal_detail && result[0].emp_personal_detail.contact_detail &&
             result[0].emp_personal_detail.contact_detail.primary_mobile_no) {
             const parm: any = {
               user_no: result_m.contact_no,
               agent_no: result[0].emp_personal_detail.contact_detail.primary_mobile_no,
-              start_time: new Date(),
+              start_time: new Date().getTime() / 1000,
               login_id: this.currentUser.login_id
             }
             this.commonAPIService.callToStudent(parm).subscribe((result_n: any) => {
