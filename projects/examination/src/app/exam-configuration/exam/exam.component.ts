@@ -13,7 +13,7 @@ import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 	styleUrls: ['./exam.component.css']
 })
 export class ExamComponent implements OnInit {
-	displayedColumns: string[] = ['exam_name', 'exam_category', 'exam_class',
+	displayedColumns: string[] = ['exam_name','exam_alias','exam_order', 'exam_category', 'exam_class',
 		'exam_sub_exam', 'exam_sub_exam_max_marks', 'exam_calculation_rule', 'exam_weightage','is_noncore', 'exam_bifurcate', 'status', 'action'];
 	@ViewChild('deleteModal') deleteModal;
 	examForm: FormGroup;
@@ -61,6 +61,8 @@ export class ExamComponent implements OnInit {
 		this.examForm = this.fbuild.group({
 			exam_id: '',
 			exam_name: '',
+			exam_alias:'',
+			exam_order:'',
 			exam_category: '',
 			exam_marks_type: '',
 			exam_class: '',
@@ -80,6 +82,8 @@ export class ExamComponent implements OnInit {
 		this.examForm.patchValue({
 			'exam_id': '',
 			'exam_name': '',
+			'exam_alias': '',
+			'exam_order': '',
 			'exam_category': '',
 			'exam_marks_type': '',
 			'exam_class': '',
@@ -248,6 +252,8 @@ export class ExamComponent implements OnInit {
 			this.examForm.value['exam_sub_exam_max_marks'] = this.amountDetailArray;
 			const insertJson = {
 				exam_name: this.examForm.value.exam_name,
+				exam_alias: this.examForm.value.exam_alias,
+				exam_order: this.examForm.value.exam_order,
 				exam_category: this.examForm.value.exam_category,
 				exam_marks_type: this.examForm.value.exam_marks_type,
 				exam_class: this.examForm.value.exam_class,
@@ -261,6 +267,8 @@ export class ExamComponent implements OnInit {
 			const updateJson = {
 				exam_id: this.examForm.value.exam_id,
 				exam_name: this.examForm.value.exam_name,
+				exam_alias: this.examForm.value.exam_alias,
+				exam_order: this.examForm.value.exam_order,
 				exam_category: this.examForm.value.exam_category,
 				exam_marks_type: this.examForm.value.exam_marks_type,
 				exam_class: this.examForm.value.exam_class,
@@ -326,6 +334,8 @@ export class ExamComponent implements OnInit {
 							class_name = class_name.substring(0, class_name.length - 2);
 						}
 						pushitem.exam_name = item.exam_name;
+						pushitem.exam_alias = item.exam_alias;
+						pushitem.exam_order = item.exam_order;
 						pushitem.exam_category = item.eac_name;
 						pushitem.exam_class = class_name;
 						pushitem.exam_sub_exam = sub_exam_name;
@@ -372,13 +382,15 @@ export class ExamComponent implements OnInit {
 		this.examForm.patchValue({
 			exam_id: value.exam_id,
 			exam_name: value.exam_name,
+			exam_alias: value.exam_alias,
+			exam_order: value.exam_order,
 			exam_category: value.exam_category,
 			exam_marks_type: value.exam_marks_type,
 			exam_class: class_id,
 			exam_sub_exam: subExamArray,
 			exam_calculation_rule: value.exam_calculation_rule,
 			exam_weightage: value.exam_weightage,
-			is_noncore: value.is_noncore,
+			is_noncore: value.is_noncore === '1' ? 1 : 0,
 			exam_bifurcate: value.exam_bifurcate
 		});
 	}
