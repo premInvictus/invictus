@@ -16,7 +16,7 @@
   </div>
   <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')" (click)="openDeleteDialog()">
-      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span> 
+      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
     </button>
   </div>
   <div class="row remove-top-margin">
@@ -36,6 +36,10 @@
             <div class="row remove-margin">
               <div class="col-12 text-center">
                 <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
+                <span class="font-size-16">
+                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
+                    (click)="openSearchDialog()"></i>
+                </span>
               </div>
             </div>
             <div class="row remove-top-margin">
@@ -109,12 +113,13 @@
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Employee Type</mat-label>
-                  <mat-select formControlName="emp_category_id" required placeholder="Employee Type" [disabled]="viewOnly">
+                  <mat-select formControlName="emp_category_id" required placeholder="Employee Type"
+                    [disabled]="viewOnly">
                     <mat-option value="">Please select</mat-option>
                     <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
                       {{item.cat_name}}
                     </mat-option>
-                  </mat-select> 
+                  </mat-select>
                   <mat-error>
                     This field is required
                   </mat-error>

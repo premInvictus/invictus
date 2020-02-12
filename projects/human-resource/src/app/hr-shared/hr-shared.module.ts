@@ -44,6 +44,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
+import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -121,6 +122,7 @@ export const MY_FORMATS = {
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		IndianCurrency,
+		SearchViaNameComponent,
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
@@ -135,7 +137,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
 		ComposeMessageComponent,
-		MessagesAdvancedSearchModalComponent
+		MessagesAdvancedSearchModalComponent,
+		SearchViaNameComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,

@@ -4,6 +4,7 @@ import { SisService, CommonAPIService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
+import { SearchViaNameComponent } from '../../hr-shared/search-via-name/search-via-name.component';
 
 @Component({
 	selector: 'app-employee-common',
@@ -12,9 +13,6 @@ import { MatDialog } from '@angular/material';
 })
 
 export class EmployeeCommonComponent implements OnInit {
-
-	// @Input() belongToForm: string;
-	// @Input() config: any;
 	@Input() employeedetails: any;
 	@ViewChild('cropModal') cropModal;
 	@ViewChild('editReference') editReference;
@@ -349,9 +347,9 @@ export class EmployeeCommonComponent implements OnInit {
 		this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		this.lastRecordId = event.target.value;
 		this.commonAPIService.employeeData.next(
-		{
-			last_record: event.target.value
-		});
+			{
+				last_record: event.target.value
+			});
 
 	}
 
@@ -396,11 +394,6 @@ export class EmployeeCommonComponent implements OnInit {
 	isExistUserAccessMenu(actionT) {
 	}
 
-
-	openSearchDialog() {
-
-	}
-
 	getCategoryOne() {
 		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
 			if (res) {
@@ -414,5 +407,26 @@ export class EmployeeCommonComponent implements OnInit {
 		if (findex !== -1) {
 			return this.categoryOneArray[findex].cat_name;
 		}
+	}
+	openSearchDialog() {
+		const diaogRef = this.dialog.open(SearchViaNameComponent, {
+			width: '20%',
+			height: '30%',
+			position: {
+				top: '10%'
+			},
+			data: {}
+		});
+		diaogRef.afterClosed().subscribe((result: any) => {
+			if (result) {
+				this.viewOnly = true;
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
+				this.lastRecordId = result.emp_id;
+				this.commonAPIService.employeeData.next(
+					{
+						last_record: result.emp_id
+					});
+			}
+		});
 	}
 }
