@@ -18,4 +18,5 @@ export interface FeeLedgerElement {
 	eachActionFlag: any;
 	action: any;
 	netpayableamount:any;
+	flgr_payment_mode:any;
 }

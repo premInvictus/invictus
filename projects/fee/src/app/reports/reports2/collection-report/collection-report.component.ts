@@ -2513,8 +2513,15 @@ export class CollectionReportComponent implements OnInit {
 		// console.log(currentDate, (new Date(currentDate) >= new Date(sessionStartDate))), (new Date(currentDate) <= new Date(sessionEndDate));
 		if ((new Date(currentDate).getTime() >= new Date(sessionStartDate).getTime()) && (new Date(currentDate).getTime() <= new Date(sessionEndDate).getTime())) {
 			console.log('in');
-			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			var currentMonth = new Date().getMonth();
+			var currentSessionYear = '';
+			if (currentMonth >= 1 && currentMonth <= sessionEndMonth) {
+				currentSessionYear = this.sessionName.split('-')[1];
+			} else {
+				currentSessionYear = this.sessionName.split('-')[0];
+			}
+			const date = new Date(Number(currentSessionYear), new Date().getMonth(), new Date().getDate());
+			const firstDay = new Date(Number(currentSessionYear), new Date().getMonth(), 1);
 			this.reportFilterForm.patchValue({
 				'from_date': firstDay,
 				'to_date': date

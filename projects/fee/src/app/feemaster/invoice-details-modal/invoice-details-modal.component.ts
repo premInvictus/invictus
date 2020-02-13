@@ -251,7 +251,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				netpay: Number(this.invoiceDetails.inv_prev_balance),
 				invg_id: ''
 			};
-			this.invoiceTotal += element.netpay;
+			this.invoiceTotal += element.netpay;			
 			this.ELEMENT_DATA.push(element);
 		}
 		arr.forEach(item => {
@@ -264,7 +264,11 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 				invg_id: item.invg_id
 			};
+			
+			
 			this.invoiceTotal += element.netpay;
+			console.log('item', item);
+			console.log('this.invoiceTotal',this.invoiceTotal);
 			this.ELEMENT_DATA.push(element);
 		});
 		// this.invoiceDetails.inv_fine_amount && Number(this.invoiceDetails.inv_fine_amount > 0
@@ -279,6 +283,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 				invg_id: ''
 			};
 			this.invoiceTotal += element.netpay;
+			
 			this.ELEMENT_DATA.push(element);
 		}
 		this.dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
@@ -286,7 +291,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	getInvoiceBifurcation(data: any) {
 		this.invoiceBifurcationArray = [];
 		if (this.data.invoiceNo) {
-			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo }).subscribe((result: any) => {
+			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];
