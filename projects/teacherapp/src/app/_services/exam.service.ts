@@ -197,6 +197,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getMarksRegister', value);
 	}
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	getRemarksEntryStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/gradeMaster/getRemarksEntryStudent', value);
+	}
 }
 
 
