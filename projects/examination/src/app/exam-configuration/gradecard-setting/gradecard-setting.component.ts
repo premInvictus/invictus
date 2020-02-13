@@ -64,6 +64,8 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_use_teacher_signature: '',
       school_attendance_theme: '',
       gradecard_health_status: '',
+      comparative_analysis:'',
+      student_performance:'',
       gradecard_date: '',
       gradecard_place: '',
       school_achievement:'',
@@ -121,6 +123,10 @@ export class GradecardSettingComponent implements OnInit {
                 control.setValue(element.gs_value && element.gs_value === '2' ? true : false);
               } else if(key === 'gradecard_health_status') {
                 control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
+              } else if(key === 'comparative_analysis') {
+                control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
+              } else if(key === 'student_performance') {
+                control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
               } else if(key === 'gradecard_date') {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else if(key === 'gradecard_place') {
@@ -146,6 +152,12 @@ export class GradecardSettingComponent implements OnInit {
     }
     if (this.gradecaredform.value && this.gradecaredform.value.gradecard_health_status) {
       this.gradecaredform.value.gradecard_health_status = this.gradecaredform.value.gradecard_health_status.join(',').toString();
+    }
+    if (this.gradecaredform.value && this.gradecaredform.value.comparative_analysis) {
+      this.gradecaredform.value.comparative_analysis = this.gradecaredform.value.comparative_analysis.join(',').toString();
+    }
+    if (this.gradecaredform.value && this.gradecaredform.value.student_performance) {
+      this.gradecaredform.value.student_performance = this.gradecaredform.value.student_performance.join(',').toString();
     }
     // console.log('this.gradecaredform.value---', this.gradecaredform.value);
     this.examService.updateGlobalSetting(this.gradecaredform.value).subscribe((result: any) => {
