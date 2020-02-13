@@ -13,6 +13,7 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 	studentProfileImage: any = 'https://via.placeholder.com/75';
 	schoolInfo: any = {};
 	authSign: any;
+	depts: any[] =[];
 	container_box_idheader: any;
 	container_box_idheader_bgColor: any;
 	showSchoolLogo = false;
@@ -46,6 +47,7 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 		private commonApiService: CommonAPIService) { }
 
 	ngOnInit() {
+		this.getDepartment();
 	}
 	ngOnChanges() {
 		this.sessionPromote = (this.currentDate.getFullYear().toString()) + '-'
@@ -161,6 +163,30 @@ export class IdcardStyle2Component implements OnInit, OnChanges {
 		const findex = this.bloodGroupArray.findIndex(f => f.bg_id === id);
 		if (findex !== -1) {
 			return this.bloodGroupArray[findex]['bg_name'];
+		}
+	}
+	getDepartment() {
+		this.commonApiService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+			if (result) {
+				this.depts = result;
+				console.log(this.depts);
+			} else {
+				this.depts = [];
+			}
+
+		});
+	}
+	getDepartmentName(id) {
+		if (id) {
+			const findex = this.depts.findIndex(f => Number(f.config_id) === Number(id));
+			if (findex !== -1) {
+				return this.depts[findex].name;
+			}
+			else {
+				return '-';
+			}
+		} else {
+			return '-';
 		}
 	}
 }

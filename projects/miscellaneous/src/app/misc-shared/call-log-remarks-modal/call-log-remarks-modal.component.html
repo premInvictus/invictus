@@ -10,11 +10,15 @@
 <ng-container *ngFor="let item of remarksArray; let i=index">
   <div class="row" *ngIf="item.remarks">
     <div class="col-3" stye="padding-right:0px">
-      {{item.start_time  | date : 'dd-MMM-y, hh:mm a'}}
+      {{item.start_time * 1000 | date : 'dd-MMM-y, hh:mm a'}}
     </div>
     <div class="col-9" stye="padding-left:0px">
       {{item.remarks | titlecase}}
     </div>
-
+  </div>
+  <div class="row" *ngIf="!item.remarks">
+    <div class="col-12 text-center font-size-20">
+      No Conversation Yet
+    </div>
   </div>
 </ng-container>

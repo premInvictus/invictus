@@ -43,6 +43,41 @@
                   </div>
                </form>
                <br>
+               <form [formGroup]="dateform">
+                  <div class="row ">
+                     <div class="col-1 margin-top-25">
+                        <h6><b>{{customArray.length + 1}}</b></h6>
+                     </div>
+                     <div class="col-7 margin-top-25">
+                        <span>Date of application for certificate</span>
+                     </div>
+                     <div class="col-4">
+                        <mat-form-field class="form-field" appearance="outline">
+                           <mat-label>Date of application for certificate</mat-label>
+                           <input matInput [matDatepicker]="picker2" placeholder="Date of application for certificate" formControlName="adate">
+                           <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                           <mat-datepicker #picker2></mat-datepicker>
+                        </mat-form-field>
+                     </div>
+                  </div>
+                  <div class="row ">
+                        <div class="col-1 margin-top-25">
+                           <h6><b>{{customArray.length + 2}}</b></h6>
+                        </div>
+                        <div class="col-7 margin-top-25">
+                           <span>Date of issue of certificate</span>
+                        </div>
+                        <div class="col-4">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Date of issue of certificate</mat-label>
+                              <input matInput [matDatepicker]="picker" placeholder="Date of issue of certificate" [min]="req_date2"
+                              formControlName="pdate">
+                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                              <mat-datepicker #picker></mat-datepicker>
+                           </mat-form-field>
+                        </div>
+                     </div>
+               </form>
                <div class="row">
                   <div class="col-12">
                      <mat-checkbox (change)="checkAck($event)">Do you want to print acknowledgement also ?
