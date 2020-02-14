@@ -13,7 +13,9 @@ export class GradecardSettingComponent implements OnInit {
   gradecaredform: FormGroup;
   ckeConfig: any = {};
   authImage: any;
-	showImage = false;
+  showImage = false;
+  currentUser: any; 
+  classArray: any[] = [];
   constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -23,8 +25,10 @@ export class GradecardSettingComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.buildForm();
     this.getGlobalSetting();
+    this.getClass();
     this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
@@ -60,6 +64,8 @@ export class GradecardSettingComponent implements OnInit {
       gradecard_use_teacher_signature: '',
       school_attendance_theme: '',
       gradecard_health_status: '',
+      comparative_analysis:'',
+      student_performance:'',
       gradecard_date: '',
       gradecard_place: '',
       school_achievement:'',
@@ -67,6 +73,19 @@ export class GradecardSettingComponent implements OnInit {
       failure_color:''
     })
   }
+  getClass() {
+		const classParam: any = {};
+		classParam.role_id = this.currentUser.role_id;
+		classParam.login_id = this.currentUser.login_id;
+		this.smartService.getClassData(classParam)
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.classArray = result.data;
+					}
+				}
+			);
+	}
   uploadPricipalSign($event) {
     const file: File = $event.target.files[0];
     const reader = new FileReader();
@@ -103,7 +122,11 @@ export class GradecardSettingComponent implements OnInit {
               } else if(key === 'school_attendance_theme') {
                 control.setValue(element.gs_value && element.gs_value === '2' ? true : false);
               } else if(key === 'gradecard_health_status') {
-                control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
+                control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
+              } else if(key === 'comparative_analysis') {
+                control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
+              } else if(key === 'student_performance') {
+                control.setValue(element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : false);
               } else if(key === 'gradecard_date') {
                 control.setValue(element.gs_value && element.gs_value === '1' ? true : false);
               } else if(key === 'gradecard_place') {
@@ -126,6 +149,15 @@ export class GradecardSettingComponent implements OnInit {
       this.gradecaredform.value.school_attendance_theme = '1';
     } else if (this.gradecaredform.value && (this.gradecaredform.value.school_attendance_theme)) { 
       this.gradecaredform.value.school_attendance_theme = '2';
+    }
+    if (this.gradecaredform.value && this.gradecaredform.value.gradecard_health_status) {
+      this.gradecaredform.value.gradecard_health_status = this.gradecaredform.value.gradecard_health_status.join(',').toString();
+    }
+    if (this.gradecaredform.value && this.gradecaredform.value.comparative_analysis) {
+      this.gradecaredform.value.comparative_analysis = this.gradecaredform.value.comparative_analysis.join(',').toString();
+    }
+    if (this.gradecaredform.value && this.gradecaredform.value.student_performance) {
+      this.gradecaredform.value.student_performance = this.gradecaredform.value.student_performance.join(',').toString();
     }
     // console.log('this.gradecaredform.value---', this.gradecaredform.value);
     this.examService.updateGlobalSetting(this.gradecaredform.value).subscribe((result: any) => {
