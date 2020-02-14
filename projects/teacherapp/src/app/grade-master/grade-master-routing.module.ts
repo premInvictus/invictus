@@ -10,6 +10,7 @@ import { AdditionalSubjectComponent } from './additional-subject/additional-subj
 import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 import { MarksInputComponent } from './marks-input/marks-input.component';
+import { ResultEntryComponent } from './result-entry/result-entry.component';
 
 const routes: Routes = [
 	{
@@ -38,7 +39,10 @@ const routes: Routes = [
 	},
 	{
 		path: 'marks-input', component: MarksInputComponent
-	}
+	},
+	{
+		path: 'result-entry', component: ResultEntryComponent
+	},
 ];
 
 @NgModule({
