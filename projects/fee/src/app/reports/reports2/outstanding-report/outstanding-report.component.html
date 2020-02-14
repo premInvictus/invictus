@@ -67,11 +67,20 @@
         </div>
     </div>
 </form>
+<div *ngIf="rowsChosen.length > 0" style="position: absolute;
+    right: 2.1%;
+    top: 15%;">
+    <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+        (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important">Notify &nbsp;<i
+            class="fas fa-paper-plane"></i></button>
+</div>
+<br>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length > 0">
     <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
         [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
         (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
-        (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+        (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)"
+        (sgOnSelectedRowsChanged)="onSelectedRowsChanged($event.detail.eventData, $event.detail.args)">
     </angular-slickgrid>
 </div>
 <div style="width: 100% !important; overflow: auto !important" *ngIf="tableFlag && dataset.length === 0">
@@ -81,3 +90,4 @@
         No Records Found
     </div>
 </div>
+<app-fee-communication-modal #smsFeeModal></app-fee-communication-modal>

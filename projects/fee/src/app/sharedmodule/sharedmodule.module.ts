@@ -42,6 +42,7 @@ import { SearchViaStudentComponent } from './search-via-student/search-via-stude
 import { DeleteWithReasonComponent } from './delete-with-reason/delete-with-reason.component';
 import { CreateInvoiceModalComponent } from './create-invoice-modal/create-invoice-modal.component';
 import { SearchDialogComponent } from './search-dialog/search-dialog.component';
+import { FeeCommunicationModalComponent } from './fee-communication-modal/fee-communication-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -115,7 +116,8 @@ export const MY_FORMATS = {
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
 		SearchDialogComponent,
-		TruncatetextPipe
+		TruncatetextPipe,
+		FeeCommunicationModalComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -161,7 +163,8 @@ export const MY_FORMATS = {
 		SearchDialogComponent,
 		IndianCurrency,
 		TruncatetextPipe,
-		TransactionModalComponent
+		TransactionModalComponent,
+		FeeCommunicationModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -174,7 +177,8 @@ export const MY_FORMATS = {
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
-		SearchDialogComponent
+		SearchDialogComponent,
+		FeeCommunicationModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
