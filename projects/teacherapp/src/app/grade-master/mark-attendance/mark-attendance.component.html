@@ -22,11 +22,21 @@
               </mat-form-field>
               <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                 <mat-label>Section</mat-label>
-                <mat-select formControlName="syl_section_id" (selectionChange)="fetchDetails()" required
+                <mat-select formControlName="syl_section_id" required
                   placeholder="Select Section" disabled>
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                     {{item.sec_name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
+                <mat-label>Event</mat-label>
+                <mat-select formControlName="syl_event" (selectionChange)="fetchDetails()" required
+                  placeholder="Select Section">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of eventArray" [value]="item.ae_id">
+                    {{item.ae_name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -101,12 +111,12 @@
       <br>
       <div class="row margin-top-25" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
-          <button mat-button class="btn-success-green" (click)="submit()">Submit</button>
+          <button mat-button class="btn-success-green" (click)="submit();$event.stopPropagation()">Submit</button>
           <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>
         </div>
-        <br>        
+        <br>
       </div>
-      <br>     
+      <br>
     </mat-card>
   </div>
 </div>

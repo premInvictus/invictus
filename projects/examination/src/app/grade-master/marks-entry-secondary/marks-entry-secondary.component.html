@@ -166,11 +166,11 @@
             <br>
             <div class="row margin-top-25">
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('2')">
-                    <button mat-button class="btn-success-green" (click)="saveForm()">Save</button>
+                    <button mat-button class="btn-success-green" (click)="saveForm();$event.stopPropagation()">Save</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('3','1')">Save & Submit</button>
+                        (click)="saveForm('3','1');$event.stopPropagation()">Save & Submit</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('4','1')">Final Publish</button>
+                        (click)="saveForm('4','1');$event.stopPropagation()">Final Publish</button>
                 </div>
             </div>
         </mat-card>

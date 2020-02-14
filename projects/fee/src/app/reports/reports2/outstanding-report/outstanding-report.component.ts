@@ -33,7 +33,7 @@ import { findIndex } from 'rxjs/operators';
 	styleUrls: ['./outstanding-report.component.css']
 })
 export class OutstandingReportComponent implements OnInit {
-	@ViewChild('smsFeeModal')smsFeeModal;
+	@ViewChild('smsFeeModal') smsFeeModal;
 	@Output() displyRep = new EventEmitter();
 	rowsChosen: any[] = [];
 	@Input() userName: any = '';
@@ -231,6 +231,8 @@ export class OutstandingReportComponent implements OnInit {
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
+		this.rowsChosen = [];
+		this.rowChosenData = [];
 		this.dataset = [];
 		this.tableFlag = false;
 		this.gridOptions = {
@@ -835,6 +837,8 @@ export class OutstandingReportComponent implements OnInit {
 												(Number(keys) + 1);
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
@@ -1107,6 +1111,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
@@ -1344,6 +1350,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 
@@ -1548,6 +1556,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 
@@ -1816,6 +1826,8 @@ export class OutstandingReportComponent implements OnInit {
 													(Number(keys) + 1);
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
+												obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+													repoArray[Number(keys)]['login_id'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 												obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 												if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
@@ -1984,7 +1996,7 @@ export class OutstandingReportComponent implements OnInit {
 				this.rowChosenData.push({
 					login_id: Number(item['login_id']),
 					data: item,
-					index : args.row
+					index: args.row
 				});
 			} else {
 				this.rowChosenData.splice(index2, 1);
@@ -3575,7 +3587,7 @@ export class OutstandingReportComponent implements OnInit {
 	sendMessage() {
 		console.log(this.rowChosenData);
 		this.smsFeeModal.openModal(this.rowChosenData);
-		const change : any = this.smsFeeModal.subscribeModalChange();
+		const change: any = this.smsFeeModal.subscribeModalChange();
 		change.afterClosed().subscribe((res: any) => {
 			if (res && res.data && res.data.length > 0) {
 				this.rowsChosen = [];
