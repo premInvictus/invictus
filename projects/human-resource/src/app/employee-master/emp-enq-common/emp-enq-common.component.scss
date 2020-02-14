@@ -1,0 +1,206 @@
+.functional-button-one {
+    z-index: 11111;
+    position: fixed;
+    top: 65px;
+    right: 20px;
+}
+.functional-button-one button {
+    background-color: #9E9E9E;
+    color: #fff;
+}
+.functional-button-one button:hover {
+    background-color: rgb(100, 100, 100);
+    color: #fff;
+}
+.blink{
+    background-color: #e11022;
+    text-align: center;
+    margin-top: -16px;
+}
+.blink span{
+    font-family: cursive;
+    color: white;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+    }
+.functional-button-two {
+    z-index: 11111;
+    position: fixed;
+    top: 140px;
+    right: 20px;
+}
+
+.functional-button-two button {
+    background-color: #02ed10;
+    color: #fff;
+}
+
+.functional-button-two button:hover {
+    background-color: #03b60e;
+    color: #fff;
+}
+
+.functional-button-three {
+    z-index: 11111;
+    position: fixed;
+    top: 215px;
+    right: 20px;
+}
+
+.functional-button-three button {
+    background-color: #0091EA;
+    color: #fff;
+}
+
+.functional-button-three button:hover {
+    background-color: rgb(0, 120, 194);
+    color: #fff;
+}
+
+.functional-button-four {
+    z-index: 11111;
+    position: fixed;
+    top: 290px;
+    right: 20px;
+}
+
+.functional-button-four button {
+    background-color: #e11022;
+    color: #fff;
+}
+
+.functional-button-four button:hover {
+    background-color: #b40c1a;
+    color: #fff;
+}
+
+.fa-user-edit {
+    font-size: 18px;
+}
+
+.right-btn-text {
+    color: #fff;
+    opacity: 0;
+    text-align: center;
+    padding-top: 0px;
+    transition: all .3s ease-in-out;
+    display: none;
+}
+
+  button.mat-fab:hover {
+    border-radius: 0%;
+    width: 120px;
+    height: 60px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    transition: all .3s ease-in-out;
+  }
+
+  button.float-btn-right:hover {
+    border-radius: 0%;
+    width: 120px;
+    height: 60px;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    transition: all .3s ease-in-out;
+  }
+
+  button.float-btn-right:hover .right-btn-text {
+    padding-top: 40px;
+    opacity: 1;
+    color: #fff;
+    text-align: center;
+    padding-top: 0px;
+    transition: all .3s ease-in-out;
+    display: block;
+    
+  }
+
+  button.mat-fab:hover .right-btn-text {
+    padding-top: 40px;
+    opacity: 1;
+    color: #fff;
+    text-align: center;
+    padding-top: 0px;
+    transition: all .3s ease-in-out;
+    display: block;
+    
+  }
+
+  button.mat-fab:hover .float-btn-right {
+    display:none;
+  }
+
+  button.mat-fab:hover mat-icon {
+    display:none;
+  }
+
+  .sis-student-pic__size {
+      height: 80px !important;
+      width: 80px !important;
+  }
+
+  .container-box__white {
+      padding: 5px 10px !important;
+  }
+
+  :host ::ng-deep #iemp_id .mat-form-field-infix {
+      padding : 1px !important;
+      border-top: 0 !important;
+  }
+  
+  .ribbon {
+    width: 100px;
+    height: 500px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 5px solid #2980b9;
+  }
+  .ribbon span {
+    position: absolute;
+    display: block;
+    width: 100px;
+    padding: 7px 0;
+    background-color: #3498db;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    color: #fff;
+    font: 700 18px/1 "Lato", sans-serif;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+    text-align: center;
+  }
+  
+  /* top left*/
+  .ribbon-top-left {
+    top: -10px;
+    left: -10px;
+  }
+  .ribbon-top-left::before,
+  .ribbon-top-left::after {
+    border-top-color: transparent;
+    border-left-color: transparent;
+  }
+  .ribbon-top-left::before {
+    top: 0;
+    right: 0;
+  }
+  .ribbon-top-left::after {
+    bottom: 0;
+    left: 0;
+  }
+  .ribbon-top-left span {
+    right: -25px;
+    top: 30px;
+    transform: rotate(-45deg);
+  }
