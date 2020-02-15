@@ -419,7 +419,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	getWingName(wing_id) {
 		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
-		if (findIndex !== -1) {
+		if (findIndex !== -1) { 
 			return this.wingArray[findIndex].name;
 		}
 	}
