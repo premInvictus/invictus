@@ -303,7 +303,7 @@ export class MarksRegisterComponent implements OnInit {
           this.responseMarksArray = result.data;
           console.log(this.responseMarksArray);
           if(this.responseMarksArray.length > 0) {
-            if(this.paramform.value.eme_sub_type === '1') {
+            if(this.paramform.value.eme_sub_type === '1' || this.paramform.value.eme_sub_type === '3') {
               this.thead_data = this.responseMarksArray[0]['so_printData']['sub_mark'];
             } else {
               this.thead_data = this.responseMarksArray[0]['co_printData']['sub_mark'];
