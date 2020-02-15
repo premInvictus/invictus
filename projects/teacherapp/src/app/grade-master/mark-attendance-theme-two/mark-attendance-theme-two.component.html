@@ -85,9 +85,9 @@
 
         <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
           <div class="col-12 text-center">
-            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()"
+            <button mat-raised-button class="btn-success-green" (click)="finalSubmit();$event.stopPropagation()"
               *ngIf="!termDataFlag">Submit</button>
-            <button mat-raised-button class="btn-success-green" (click)="finalUpdate()"
+            <button mat-raised-button class="btn-success-green" (click)="finalUpdate();$event.stopPropagation()"
               *ngIf="termDataFlag">Update</button>
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
           </div>

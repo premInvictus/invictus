@@ -6,12 +6,14 @@ import { EmployeeAttendanceComponent } from './employee-attendance/employee-atte
 import { EmployeeLeaveComponent } from './employee-leave/employee-leave.component';
 import { EmployeeLedgerComponent } from './employee-ledger/employee-ledger.component';
 import { LeaveMasterComponent } from './leave-master/leave-master.component';
+import { EmpEnqDetailsComponent } from './emp-enq-details/emp-enq-details.component';
 const routes: Routes = [
 	{ path: 'employee-details', component: EmployeeDetailComponent },
 	{ path: 'employee-attendance', component: EmployeeAttendanceComponent },
-	{ path: 'employee-leave', component: EmployeeLeaveComponent },	
-	{ path: 'employee-ledger', component: EmployeeLedgerComponent },	
+	{ path: 'employee-leave', component: EmployeeLeaveComponent },
+	{ path: 'employee-ledger', component: EmployeeLedgerComponent },
 	{ path: 'leave-master', component: LeaveMasterComponent },
+	{ path: 'employee-enquiry', component: EmpEnqDetailsComponent },
 ];
 
 @NgModule({

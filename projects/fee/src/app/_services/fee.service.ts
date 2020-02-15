@@ -489,6 +489,11 @@ export class FeeService {
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDropoutReport', value);
 	}
 
+	getSmsSendingDataUser(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getSmsSendingDataUser', value);
+	}
+
 	getAdditionFeeHeadComponent(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/feeAccount/getAdditionFeeHeadComponent', value);

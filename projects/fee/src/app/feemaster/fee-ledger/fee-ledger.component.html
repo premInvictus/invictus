@@ -10,12 +10,11 @@
       </mat-card>
     </div>
   </div>
-  <div class="row"> 
+  <div class="row">
     <div class="col-12 ">
-      <app-common-student-profile [loginId]="lastRecordId"  
-      [feeRenderId]="feeRenderId"
-      (next)="next($event)" (prev)="prev($event)"
-        (first)="first($event)" (last)="last($event)" (key)="key($event)" (processTypeEmit)="checkEmit($event)">
+      <app-common-student-profile [loginId]="lastRecordId" [feeRenderId]="feeRenderId" (next)="next($event)"
+        (prev)="prev($event)" (first)="first($event)" (last)="last($event)" (key)="key($event)"
+        (processTypeEmit)="checkEmit($event)">
       </app-common-student-profile>
     </div>
   </div>
@@ -25,7 +24,7 @@
         <i class="material-icons font-white">playlist_add</i>
         <span class="btn-spacer">Create Invoice</span></span>
     </button>
- </div>
+  </div>
   <div class="row">
     <div class="col-12 ">
       <mat-card class="card-top-title__container card-height-677 card-height-795">
@@ -41,7 +40,7 @@
           <button *ngIf="actionFlag.detach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
             (click)="openDetachReceiptDialog(fetchInvId())">Detach</button>
           <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-edit-inv btn-spacer"
-          (click)="openDialog1(true)">Edit Invoice</button>
+            (click)="openDialog1(true)">Edit Invoice</button>
           <button *ngIf="actionFlag.consolidate" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
             (click)="openConsolidateDialog({})">Consolidate</button>
           <button *ngIf="actionFlag.unconsolidate" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
@@ -66,25 +65,37 @@
                         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                       </mat-checkbox>
                     </th>
-                    <td width="3%" mat-cell *matCellDef="let row" [ngStyle]="{'background-color': getColor(row),'border': getBorder(row)}">
+
+                    <td width="3%" mat-cell *matCellDef="let row; let i=index"
+                      [ngStyle]="{'background-color': getColor(row),'border': getBorder(row)}"
+                      [attr.rowspan]="row?.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="row?.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''"
+                      >
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                       </mat-checkbox>
                     </td>
                     <td mat-footer-cell *matFooterCellDef></td>
-                  </ng-container>                  
+                  </ng-container>
 
                   <ng-container matColumnDef="feeperiod">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee Period </th>
-                    <td  width="5%" mat-cell *matCellDef="let item" class="text-nowrap" style="text-align: left !important;padding-left: 0.5%;" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">  {{item.feeperiod}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      style="text-align: left !important;padding-left: 0.5%;"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      {{item.feeperiod}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="invoiceno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. No. </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
-                      <span *ngIf="item.invoiceno != '0'"
-                        class="pointer font-bold font-skyblue font-underline">
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      <span *ngIf="item.invoiceno != '0'" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openDialog(item.action, false)">{{item.invoiceno}}</a>
                       </span>
                     </td>
@@ -92,80 +103,138 @@
                   </ng-container>
 
                   <ng-container matColumnDef="particular">
-                    <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Particulars </th>
-                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"
-                      style="text-align: left !important;padding-left: 0.5%;" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Particulars </th>
+                    <td width="10%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      style="text-align: left !important;padding-left: 0.5%;"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.particular}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="date">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.date}} </td>
+                    <td width="7%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
+                      {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="duedate">
-                    <th mat-header-cell *matHeaderCellDef  class="text-nowrap"> Due Date </th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.duedate | date: 'd-MMM-y'}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Due Date </th>
+                    <td width="7%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
+                      {{item.duedate | date: 'd-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
 
                   <ng-container matColumnDef="amount">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Due (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Due (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item"  class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.amount | number | zerodash}} </td>
+
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
+                      {{item.amount | number | zerodash}}</td>
+                    <!-- <ng-container *matCellDef="let item; let i=index">
+                      <td width="5%" mat-cell  class="text-nowrap" *ngIf="!(item.flgr_payment_mode)"
+                        [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                        >
+                        {{item.amount | number | zerodash}}</td>
+                      </ng-container> -->
+
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.feeduetotal | number}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="concession">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Con. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Con. (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.concession | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      {{item.concession | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="adjustment">
-                      <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Adj. (<span><i class="fas fa-rupee-sign"></i></span>)
-                      </th>
-                      <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.adjustment | number | zerodash}} </td>
-                      <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
-                    </ng-container>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Adj. (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '-' : 'none') : ''">
+                      {{item.adjustment | number | zerodash}} </td>
+                    <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
+                  </ng-container>
 
                   <ng-container matColumnDef="fine">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap" > Fine (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fine (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.fine | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      {{item.fine | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.finetotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="netpayableamount">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Net Payable (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Net Payable (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.netpayableamount | number | zerodash}} </td>
+                    <td width="5%" mat-cell class="text-nowrap" *matCellDef="let item; let i=index"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      {{item.netpayableamount | number | zerodash}} </td>
+
+
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.netpayabletotal | number | zerodash}} </td>
+
                   </ng-container>
 
                   <ng-container matColumnDef="reciept">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Rec. (<span><i class="fas fa-rupee-sign"></i></span>)
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amt. Rec. (<span><i
+                          class="fas fa-rupee-sign"></i></span>)
                     </th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.reciept | number | zerodash}} </td>
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                      {{item.reciept | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.receipttotal | number | zerodash}} </td>
                   </ng-container>
 
                   <ng-container matColumnDef="balance">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.balance | number}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Balance (<span><i
+                          class="fas fa-rupee-sign"></i></span>)</th>
+                    <td width="5%" mat-cell *matCellDef="let item; let  i=index" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
+                      {{item.balance | number}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.balancetotal | number}} </td>
                   </ng-container>
                   <ng-container matColumnDef="receiptdate">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. Date</th>
-                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.receiptdate | date:'d-MMM-y'}} </td>
+                    <td width="7%" mat-cell *matCellDef="let item" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                      {{item.receiptdate | date:'d-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="receiptno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Rpt. No</th>
-                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                    <td width="5%" mat-cell *matCellDef="let item" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       <span *ngIf="item.action.rpt_id" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openReceiptDialog(item.action.rpt_id, false)">{{item.receiptno}}</a>
                       </span></td>
@@ -173,10 +242,12 @@
                   </ng-container>
                   <ng-container matColumnDef="mop">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> MOP</th>
-                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.mop | titlecase}} </td>
+                    <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                      {{item.mop | titlecase}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
-                  
+
                   <!-- <ng-container matColumnDef="chqno">
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Chqno</th>
                     <td width="10%" mat-cell *matCellDef="let item" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"> {{item.chqno}} </td>
@@ -188,11 +259,13 @@
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container> -->
                   <ng-container matColumnDef="remarks">
-                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks<span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Remarks<span
+                        style="float:right; padding-right: 10px;"><img style="cursor: pointer"
                           src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
                     </th>
                     <td width="41%" mat-cell *matCellDef="let item"
-                      style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap" [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
+                      style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap"
+                      [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
                       {{item.remarks | capitalize}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
@@ -306,7 +379,8 @@
 </div>
 <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
-<app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteReciptConfirm($event)">
+<app-delete-modal #deleteReceiptModal [deleteMessage]="'Are you sure want to delete?'"
+  (deleteOk)="deleteReciptConfirm($event)">
 </app-delete-modal>
 <app-delete-modal #recalculateModal [deleteMessage]="'On re-calculation all adjustments/remarks if any, will be removed!<br>
 Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-modal>
@@ -320,10 +394,8 @@ Do you wish to continue?'" (deleteOk)="recalculateConfirm($event)"></app-delete-
   (deleteOk)="attachReceipt($event)">
 </app-search-dialog>
 <app-delete-with-reason #deleteWithReasonModal
-  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete Invoice'"
-  (deleteOk)="deleteInvoiceFinal($event)">
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete Invoice'" (deleteOk)="deleteInvoiceFinal($event)">
 </app-delete-with-reason>
 <app-delete-with-reason #deleteReceiptWithReasonModal
-  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete receipt'"
-  (deleteOk)="deleteReceiptFinal($event)">
+  [deleteMessage]="'Please Choose Reason and Enter Remarks to Delete receipt'" (deleteOk)="deleteReceiptFinal($event)">
 </app-delete-with-reason>
