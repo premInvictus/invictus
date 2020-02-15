@@ -48,8 +48,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	psubArray: any[] = [];
 	ptopicArray: any[] = [];
 	stopicArray: any[] = [];
-
-
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -914,6 +913,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.formGroupArray[value - 1].formGroup.value.class_status = '1';
@@ -951,6 +951,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClass', this.getClass);
@@ -1082,7 +1083,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	addEntry(data, serviceName, next) {
 		this.smartService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
-
+				this.disabledApiButton = false;
 				if (this.configValue === '4') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 						topic_name: this.configValue.topic_name
@@ -1097,6 +1098,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
 			} else {
+				this.disabledApiButton = false;
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
@@ -1104,6 +1106,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	updateEntry(data, serviceName, next) {
 		this.smartService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				this.disabledApiButton = false;
 				if (this.configValue === '4') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 						topic_name: this.configValue.topic_name
@@ -1119,6 +1122,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
 			} else {
+				this.disabledApiButton = false;
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});

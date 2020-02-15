@@ -22,12 +22,15 @@
         </form>
         <div class="row margin-top-20">
             <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green" (click)="submitsub()">Submit</button>
+                <button mat-raised-button class="btn-success-green" (click)="submitsub()"
+                    [disabled]="disabledApiButton">Submit</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
             </div>
         </div>
     </div>
     <div class="col-12 text-right" *ngIf="!subtopicflag">
-        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="" [subText]="'Please select class, subject and topic'"></app-no-data>
+        <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+            [noDataText]="" [subText]="'Please select class, subject and topic'"></app-no-data>
     </div>
 </div>

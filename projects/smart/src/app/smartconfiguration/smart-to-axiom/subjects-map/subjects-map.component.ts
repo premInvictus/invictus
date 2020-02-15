@@ -14,6 +14,7 @@ export class SubjectsMapComponent implements OnInit {
   sArray: any[] = [];
   gasArray: any[] = [];
   subflag = false;
+  disabledApiButton = false;
   constructor(
     private fbuild: FormBuilder,
     private axiomService: AxiomService,
@@ -101,11 +102,12 @@ export class SubjectsMapComponent implements OnInit {
   }
 
   submitsub() {
-    console.log(this.subForm.value);
+    this.disabledApiButton = true;
     const param: any = {};
     param.mapsubArr = this.subForm.value;
     param.tgam_config_type = '2';
     this.smartService.addSmartToAxiom(param).subscribe((result: any) => {
+      this.disabledApiButton = false;
       if (result && result.status === 'ok') {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
       }

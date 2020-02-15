@@ -35,6 +35,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	pageSizeOptions = [5, 10, 25, 100];
 	limit = this.pageSize;
 	offset = 0;
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -135,7 +136,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 			this.smartService.getAssignment(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.assignmentArray = result.data;
-					console.log(result.data);
+					//console.log(result.data);
 					if (this.assignmentArray.length > 0) {
 						this.nodataFlag = false;
 						let i = 0;
@@ -162,7 +163,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 						this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 						this.dataSource.paginator = this.paginator;
 						this.pageLength = this.ELEMENT_DATA.length;
-						console.log(this.ELEMENT_DATA);
+						//console.log(this.ELEMENT_DATA);
 
 					}
 				} else {
@@ -206,17 +207,19 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 				sub_id: currentAttachment.sub_id,
 				topic_id: currentAttachment.topic_id,
 				assignment_desc: currentAttachment.as_assignment_desc
-			}
+			} 
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log('clossing dialog');
-			console.log(dresult);
+			// console.log('clossing dialog');
+			// console.log(dresult);
 			if (dresult && dresult.assignment_desc) {
+				this.disabledApiButton = true;
 				const param: any = {};
 				param.as_id = currentAttachment.as_id;
 				param.as_assignment_desc = dresult.assignment_desc;
 				param.as_attachment = dresult.attachments;
 				this.smartService.assignmentUpdate(param).subscribe((result: any) => {
+					this.disabledApiButton = false;
 					if (result && result.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 						this.getAssignment();
@@ -244,10 +247,9 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 			}
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log('clossing dialog');
-			console.log(dresult);
+			// console.log('clossing dialog');
+			// console.log(dresult);
 			if (dresult && dresult.added) {
-				console.log(dresult);
 				this.getAssignment();
 			}
 		});
@@ -264,7 +266,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 		this.getSubject();
 	}
 	deleteAssignment(value) {
-		console.log('deleteAssignment', value);
+		//console.log('deleteAssignment', value);
 		if (value.as_id) {
 			this.smartService.assignmentDelete({ as_id: value.as_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -299,7 +301,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 	}
 
 	sendAssignment(asIdArray) {
-		console.log(asIdArray);
+		//console.log(asIdArray);
 		this.smartService.sendAssignment({ as_id: asIdArray }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				console.log(result.data);
@@ -331,7 +333,7 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 		this.dataSource.filter = value.trim();
 	}
 	changePage(pageEvent: PageEvent) {
-		console.log(pageEvent);
+		//console.log(pageEvent);
 		// this.paginator.length = 100;
 	}
 

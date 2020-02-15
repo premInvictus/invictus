@@ -52,6 +52,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	categoryOneArray: any[] = [];
+	disabledApiButton = false;
 	constructor(private sisService: SisService, private fbuild: FormBuilder,
 		public commonAPIService: CommonAPIService) { }
 	ngOnInit() {
@@ -187,6 +188,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	saveForm() {
 		if (this.personalContacts.valid) {
+			this.disabledApiButton = true;
 			if (this.employeedetails) {
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -240,9 +242,11 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 			};
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
+					this.disabledApiButton = false;
 					this.commonAPIService.renderTab.next({ tabMove: true });
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
 				} else {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
 				}
 			});
@@ -270,6 +274,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	updateForm(isview) {
 		if (this.personalContacts.valid) {
+			this.disabledApiButton = true;
 			if (this.employeedetails) {
 				this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -325,8 +330,10 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				if (result) {
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
 					if (isview) {
+						this.disabledApiButton = false;
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
+						this.disabledApiButton = false;
 						this.getPersonaContactsdata();
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
@@ -419,7 +426,7 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 	}
 	getWingName(wing_id) {
 		const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
-		if (findIndex !== -1) { 
+		if (findIndex !== -1) {
 			return this.wingArray[findIndex].name;
 		}
 	}

@@ -66,6 +66,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	empBankDetail: any[] = [];
+	disabledApiButton = false;
 	constructor(
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
@@ -451,6 +452,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			bankDetail.push(inputJson);
 		}
 		if (this.salaryDetails.valid) {
+			this.disabledApiButton = true;
 			this.employeedetails['emp_salary_detail'] = {
 				account_docment_detail: {
 					pan_no: this.salaryDetails.value.pan,
@@ -540,9 +542,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
+					this.disabledApiButton = false;
 					this.commonAPIService.renderTab.next({ tabMove: true });
 					this.commonAPIService.showSuccessErrorMessage('Employee Salary Detail Submitted Successfylly', 'success');
 				} else {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error While Inserting Employee Salary Details', 'error');
 				}
 			});
@@ -566,6 +570,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			bankDetail.push(inputJson);
 		}
 		if (this.salaryDetails.valid) {
+			this.disabledApiButton = true;
 			this.employeedetails['emp_salary_detail'] = {
 				account_docment_detail: {
 					pan_no: this.salaryDetails.value.pan,
@@ -655,8 +660,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					if (!moveNext) {
+						this.disabledApiButton = false;
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
+						this.disabledApiButton = false;
 						this.getSalartDetails();
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}

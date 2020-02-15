@@ -108,11 +108,12 @@
 
     <div class="row">
       <div class="col-12 text-center ">
-        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue"
-          (click)="saveForm()">Save</button>
-        <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm()">Submit</button>
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"
+          [disabled]="disabledApiButton">Save</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm()"
+          [disabled]="disabledApiButton">Submit</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-          (click)="updateForm()">Update </button>
+          (click)="updateForm()" [disabled]="disabledApiButton">Update </button>
         <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
           (click)="checkFormChangedValue()">Edit & Continue</button> -->
         <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
