@@ -42,7 +42,8 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Subject</mat-label>
-                                    <mat-select formControlName="syl_sub_id" required placeholder="Select Subject" (selectionChange)="getClassTerm()" >
+                                    <mat-select formControlName="syl_sub_id" required placeholder="Select Subject"
+                                        (selectionChange)="getClassTerm()">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                             {{item.sub_name}}
@@ -55,7 +56,8 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Term</mat-label>
-                                    <mat-select formControlName="syl_term_id" required placeholder="Select Term" (selectionChange)="getClassTerm()" >
+                                    <mat-select formControlName="syl_term_id" required placeholder="Select Term"
+                                        (selectionChange)="getClassTerm()">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of termsArray" [value]="item.id">
                                             {{item.name}}
@@ -165,7 +167,7 @@
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
                                             {{item.topic_name}}
-                                        </mat-option> 
+                                        </mat-option>
                                     </mat-select>
                                 </mat-form-field>
                             </div>
@@ -187,7 +189,7 @@
                             <div class="col-12 remove-col-padding">
                                 <mat-form-field class="form-field" appearance="outline">
                                     <mat-label>Period Required</mat-label>
-                                    <input matInput placeholder="Period Required" min="1"  type="number"
+                                    <input matInput placeholder="Period Required" min="1" type="number"
                                         formControlName="sd_period_req" required>
                                 </mat-form-field>
                             </div>
@@ -205,11 +207,11 @@
                                     (click)="updateSyllabussList()">Update</button>
                                 <button mat-raised-button class="btn-reset margin-left-10" *ngIf="cancelFlag"
                                     (click)="resetForm()">Reset</button>
-                                    <button mat-raised-button class="btn-reset margin-left-10" *ngIf="!cancelFlag"
+                                <button mat-raised-button class="btn-reset margin-left-10" *ngIf="!cancelFlag"
                                     (click)="finalCancel()">Cancel</button>
                             </div>
                             <!-- <div *ngIf="hideExcelupload"> -->
-                                <div>
+                            <div>
                                 <input type="file" id="file" style="display: none !important;"
                                     (change)="incomingfile($event)" placeholder="Upload file" accept=".xls">
                                 <span style="float:right; padding-right: 10px;font-size:12px;">
@@ -232,7 +234,7 @@
                 <div class="col-10">
                     <div class="row">
                         <div class="col-12 remove-col-padding">
-                            <table class="table table-borderd table-stripped custom-table" >
+                            <table class="table table-borderd table-stripped custom-table">
                                 <thead class="table-skill__head text-center">
                                     <tr class="custom-tr">
                                         <th class="custom-th" rowspan="2">Topic</th>
@@ -315,8 +317,8 @@
                     </div>
                     <div class="row margin-top-20" *ngIf="finalSubmitdivflag">
                         <div class="col-12 text-center">
-                            <button mat-raised-button class="btn-success-green"
-                                (click)="openSubmitModal()">Submit</button>
+                            <button mat-raised-button class="btn-success-green" style="cursor: pointer;"
+                                (click)="openSubmitModal()" [disabled]="disabledApiButton">Submit</button>
                             <button mat-raised-button class="btn-reset margin-left-10"
                                 (click)="finalCancel()">cancel</button>
                         </div>
@@ -326,5 +328,5 @@
         </mat-card>
     </div>
 </div>
-<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal> 
-<app-message-modal #messageModal ></app-message-modal> 
+<app-delete-modal #deleteModal (deleteOk)="finalSubmit($event)"></app-delete-modal>
+<app-message-modal #messageModal></app-message-modal>
