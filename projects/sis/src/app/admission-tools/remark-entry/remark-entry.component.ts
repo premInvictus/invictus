@@ -24,6 +24,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 	studentdetials: any = {};
 	pclass = false;
 	maxDate = new Date();
+	disableApiCall = false;
 	// documents upload
 	dialogRef: MatDialogRef<ViewDocumentsComponent>;
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
@@ -362,16 +363,20 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 			this.managementform.finalRemark = [this.finalremarksform.value];
 			this.managementform.process_type = '2';
 			this.managementform.markSplit = this.prepareMarkSplitData();
+			this.disableApiCall = true;
 			this.sisService.updateManagementRemarks(this.managementform).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.updateDocuments();
 					this.commonAPIService.showSuccessErrorMessage('Updated Successfully', 'success');
+					this.disableApiCall = false;
 					this.resetForm();
 				} else {
+					this.disableApiCall = false;
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				}
 			});
 		} else {
+			this.disableApiCall = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
 	}
@@ -550,6 +555,7 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 		});
 	}
 	verifyDocument() {
+		this.disableApiCall = true;
 		this.sisService.verifyDocuments({
 			ed_login_id: this.login_id,
 			ed_docreq_id: this.verifyArray,
@@ -564,6 +570,9 @@ export class RemarkEntryComponent implements OnInit, AfterContentInit, AfterCont
 						}
 					}
 				}
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

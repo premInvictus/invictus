@@ -10,6 +10,7 @@ declare var CKEDITOR: any;
 })
 export class SlctcPrintingSetupComponent implements OnInit {
 	templateForm: FormGroup;
+	disableApiCall = false;
 	configArray: any[] = [];
 	labelArray: any[] = ['Name of Pupil', 'Father\'s Name', 'Mother\'s Name',
 		'Nationality (Indian/Others)', 'Date of first admission in the school with class',
@@ -67,14 +68,18 @@ export class SlctcPrintingSetupComponent implements OnInit {
 		});
 	}
 	insertTemplate() {
+		this.disableApiCall = true;
 		this.templateForm.value['usts_name'] = this.templateArray[this.templateIndex]['usts_value'];
 		this.templateForm.value['usts_id'] = this.templateArray[this.templateIndex]['usts_id'];
 		this.sisService.insertSlcTcTemplateSetting(this.templateForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Template Added', 'success');
+				this.disableApiCall = false;
 				this.templateForm.reset();
 				// this.getTemplate();
 
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

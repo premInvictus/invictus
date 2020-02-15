@@ -13,6 +13,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	studentsArray: any[] = [];
 	shuffleStudentsArray: any[] = []; 
 	classArray = [];
+	disableApiCall = false;
 	sectionArray = [];
 	houseArray = [];
 	allselected = false;
@@ -116,6 +117,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	}
 	getMasterStudentDetail() {
 		if (this.shufflesortform.valid) {
+			this.disableApiCall = true;
 			this.resetTableAndSelection();
 			this.shufflesortform.value.pmap_status = '1';
 			this.shufflesortform.value.enrollment_type = '4';
@@ -138,11 +140,13 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 					});
 					this.studentdataSource = new MatTableDataSource(this.STUDENT_ELEMENT_DATA);
 					this.studentdataSource.sort = this.sortP;
+					this.disableApiCall = false;
 				} else {
 					this.sorttableflag = false;
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					this.STUDENT_ELEMENT_DATA = [];
 					this.studentdataSource = new MatTableDataSource(this.STUDENT_ELEMENT_DATA);
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -162,6 +166,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 			param.order_by = this.shufflesortform.value.order_by;
 			param.based_on = this.shufflebasedform.value.based_on;
 			param.login_id = this.loginArray;
+			this.disableApiCall = true;
 			if (this.loginArray.length > 0) {
 				this.sisService.getShuffleStudents(param).subscribe((result: any) => {
 					if (result.status === 'ok') {
@@ -187,11 +192,13 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 						});
 						this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
 						this.shuffledataSource.sort = this.sortD;
+						this.disableApiCall = false;
 					} else {
 						this.shuffletableflag = false;
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 						this.SHUFFLE_ELEMENT_DATA = [];
 						this.shuffledataSource = new MatTableDataSource(this.SHUFFLE_ELEMENT_DATA);
+						this.disableApiCall = false;
 					}
 				});
 			} else {
@@ -234,6 +241,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (paramArray.length > 0) {
+			this.disableApiCall = true;
 			this.sisService.shuffle({ students: paramArray }).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.selectedShuffleArrayValue = [];
@@ -247,6 +255,9 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 						based_on : ''
 					});
 					this.getMasterStudentDetail();
+					this.disableApiCall = false;
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 		} else {

@@ -11,6 +11,7 @@ export class EnquirySetupComponent implements OnInit {
 	finalFormTab: any[] = [{ label: 'Student Details', component: 'app-student-details', tab_id: '1' }];
 	formFieldArray: any[] = [];
 	finalFieldsArray: any[][] = [];
+	disableApiCall = false;
 	formLabelArray: any[] = [];
 	settingsArray: any[] = [];
 	savedSettingsArray: any[] = [];
@@ -75,10 +76,14 @@ export class EnquirySetupComponent implements OnInit {
 			cos_process_type: '1',
 			configRelation: this.settingsArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				this.disableApiCall = false;
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

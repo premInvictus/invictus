@@ -55,7 +55,7 @@
     <br>
     <div class="row tab-margin-button-bottom">
         <div class="col-12 text-center">
-          <button mat-raised-button class="btn-success" (click)="saveEnquirySettings()">Save Settings</button>
+          <button mat-raised-button class="btn-success" [disabled]= "disableApiCall" (click)="saveEnquirySettings()">Save Settings</button>
         </div>
       </div>
     </div>

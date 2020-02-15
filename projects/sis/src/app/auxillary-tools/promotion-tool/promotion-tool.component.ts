@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, ErrorStateMatcher } from '@angular/material';
-import { CommonAPIService, SisService,SmartService } from '../../_services/index';
+import { CommonAPIService, SisService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Element } from './promotion-tool.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -28,6 +28,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	promotionSectionArray: any[] = [];
 	demotionSectionArray: any[] = [];
 	promoteForm: FormGroup;
+	disableApiCall = false;
 	demoteForm: FormGroup;
 	sessionArray: any[] = [];
 	currentSessionStudentCount: any;
@@ -173,6 +174,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		} else if (!this.promoteForm.value.class_id) {
 			this.commonApiService.showSuccessErrorMessage('Previous Class needed', 'error');
 		} else {
+			this.disableApiCall = true;
 			this.sisService.getStudentsPromotionTool({
 				class_id: this.promoteForm.value.class_id,
 				ses_id: this.promoteSessionId,
@@ -198,11 +200,13 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 					this.promotedataSource.sort = this.sortP;
 					this.promoteFlag = true;
+					this.disableApiCall = false;
 				} else {
 					this.PROMOTE_ELEMENT_DATA = [];
 					this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 					this.commonApiService.showSuccessErrorMessage('No Records Found', 'error');
 					this.promoteFlag = false;
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -218,6 +222,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		} else if (!this.demoteForm.value.class_id) {
 			this.commonApiService.showSuccessErrorMessage('Current Class needed', 'error');
 		} else {
+			this.disableApiCall = true;
 			this.sisService.getStudentsPromotionTool({
 				class_id: this.demoteForm.value.class_id,
 				ses_id: this.demoteSessionId,
@@ -243,11 +248,13 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					this.demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
 					this.demotedataSource.sort = this.sortD;
 					this.demoteFlag = true;
+					this.disableApiCall = false;
 				} else {
 					this.DEMOTE_ELEMENT_DATA = [];
 					this.demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
 					this.commonApiService.showSuccessErrorMessage('No Records Found', 'error');
 					this.demoteFlag = false;
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -288,6 +295,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		if (!this.promoteForm.value.new_class_id) {
 			this.commonApiService.showSuccessErrorMessage('New Class Required', 'error');
 		} else {
+			this.disableApiCall = true;
 			this.demoteForm.patchValue({
 				'enrollment_type': this.promoteForm.value.enrollment_type,
 				'class_id': this.promoteForm.value.new_class_id,
@@ -310,6 +318,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					this.getDemotionList();
 					this.getCountCurrentYearStudents();
 					this.getCountNextYearStudents();
+					this.disableApiCall = false;
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -317,24 +328,29 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	demoteStudent(item) {
 		if (!this.demoteForm.value.class_id) {
 			this.commonApiService.showSuccessErrorMessage('Promoted Class Required', 'error');
+		} else {
+			this.disableApiCall = true;
+			this.sisService.demoteStudents({
+				students: [{
+					pmap_login_id: item.action.au_login_id,
+					pmap_id: item.action.pmap_id,
+					pmap_enrollment_type: this.demoteForm.value.enrollment_type,
+					pmap_ses_id: this.demoteSessionId,
+				}]
+			}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					// tslint:disable-next-line:max-line-length
+					this.commonApiService.showSuccessErrorMessage('Student of admission number ' + item.action.au_login_id + ' has been demoted', 'success');
+					this.getPromotionList();
+					this.getDemotionList();
+					this.getCountCurrentYearStudents();
+					this.getCountNextYearStudents();
+					this.disableApiCall = false;
+				} else {
+					this.disableApiCall = false;
+				}
+			});
 		}
-		this.sisService.demoteStudents({
-			students: [{
-				pmap_login_id: item.action.au_login_id,
-				pmap_id: item.action.pmap_id,
-				pmap_enrollment_type: this.demoteForm.value.enrollment_type,
-				pmap_ses_id: this.demoteSessionId,
-			}]
-		}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				// tslint:disable-next-line:max-line-length
-				this.commonApiService.showSuccessErrorMessage('Student of admission number ' + item.action.au_login_id + ' has been demoted', 'success');
-				this.getPromotionList();
-				this.getDemotionList();
-				this.getCountCurrentYearStudents();
-				this.getCountNextYearStudents();
-			}
-		});
 	}
 	checkAllPromotionList() {
 		this.allselectedP = this.allselectedP ? false : true;
@@ -368,6 +384,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		if (!this.promoteForm.value.new_class_id) {
 			this.commonApiService.showSuccessErrorMessage('New Class Required', 'error');
 		} else {
+			this.disableApiCall = true;
 			this.demoteForm.patchValue({
 				'enrollment_type': this.promoteForm.value.enrollment_type,
 				'class_id': this.promoteForm.value.new_class_id,
@@ -399,6 +416,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 						this.getDemotionList();
 						this.getCountCurrentYearStudents();
 						this.getCountNextYearStudents();
+						this.disableApiCall = false;
+					} else {
+						this.disableApiCall = false;
 					}
 				});
 			}
@@ -408,6 +428,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		if (!this.demoteForm.value.class_id) {
 			this.commonApiService.showSuccessErrorMessage('Promoted Class Required', 'error');
 		} else {
+			this.disableApiCall = true;
 			const demoteBulkArray: any[] = [];
 			for (const titem of this.toBeDemotedList) {
 				demoteBulkArray.push({
@@ -432,6 +453,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 						this.getDemotionList();
 						this.getCountCurrentYearStudents();
 						this.getCountNextYearStudents();
+						this.disableApiCall = false;
+					} else {
+						this.disableApiCall = false;
 					}
 				});
 			}

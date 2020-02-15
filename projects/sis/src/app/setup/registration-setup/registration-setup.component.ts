@@ -15,6 +15,7 @@ export class RegistrationSetupComponent implements OnInit {
 	formLabelArray: any[] = [];
 	settingsArray: any[] = [];
 	savedSettingsArray: any[] = [];
+	disableApiCall = false;
 	tabIdArray: any[] = [];
 	configArray: any[] = [];
 	vaccinationByDuration: any[] = [];
@@ -86,10 +87,14 @@ export class RegistrationSetupComponent implements OnInit {
 			cos_process_type: '2',
 			configRelation: this.settingsArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

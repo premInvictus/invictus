@@ -19,6 +19,7 @@ export class SuspensionComponent implements OnInit {
 	suspensionForm: FormGroup;
 	suspensionFormData: any[] = [];
 	reasonDataArray: any[] = [];
+	disableApiCall = false;
 	susp_docs: any;
 	events: string[] = [];
 	studentSuspensionData: any[] = [];
@@ -202,6 +203,7 @@ export class SuspensionComponent implements OnInit {
 	suspendStudent() {
 		this.setDate();
 		if (this.suspensionForm.valid) {
+			this.disableApiCall = true;
 			const inputJson = {
 				'susp_login_id': this.suspensionForm.value.au_login_id,
 				'susp_docs': this.susp_docs && this.susp_docs.length > 0 ? this.susp_docs : '',
@@ -218,8 +220,11 @@ export class SuspensionComponent implements OnInit {
 				if (result) {
 					this.studentSuspensionData = result.data;
 					this.notif.showSuccessErrorMessage('Student Suspended Successfully', 'success');
+					this.disableApiCall = false;
 					this.reset();
 
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 
@@ -231,6 +236,7 @@ export class SuspensionComponent implements OnInit {
 	revokeEnrolmentNumber() {
 		this.setDate();
 		if (this.suspensionForm.valid) {
+			this.disableApiCall = true;
 			const inputJson = {
 				'susp_id': this.suspensionForm.value.susp_id,
 				'susp_login_id': this.suspensionForm.value.au_login_id,
@@ -245,11 +251,14 @@ export class SuspensionComponent implements OnInit {
 				'susp_indefinitely': this.suspensionForm.value.susp_indefinitely ? '1' : '0'
 			};
 			this.sisService.revokeStudent(inputJson).subscribe((result: any) => {
-				if (result) {
+				if (result && result.status === 'ok') {
 					this.studentSuspensionData = result.data;
 					this.notif.showSuccessErrorMessage('Student Revoked Successfully', 'success');
 					this.showRevoke = false;
+					this.disableApiCall = false;
 					this.reset();
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 

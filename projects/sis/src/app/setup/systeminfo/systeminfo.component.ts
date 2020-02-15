@@ -18,6 +18,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
 	configValue: any;
+	disableApiCall = false;
 	vaccinationArray: any[] = [];
 	reasonTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
@@ -1218,6 +1219,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disableApiCall = true;
 			switch (value) {
 				case '1':
 					this.formGroupArray[value - 1].formGroup.value.bg_status = '1';
@@ -1613,6 +1615,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				this.resetForm(this.configValue);
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

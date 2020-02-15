@@ -416,7 +416,8 @@
          <br>
          <div class="row">
             <div class="col-12 text-center">
-               <button mat-raised-button class="btn-green" (click)="saveIdCardSettings()">Save Settings</button>
+               <button mat-raised-button class="btn-green" [disabled]= "disableApiCall" 
+               (click)="saveIdCardSettings()">Save Settings</button>
             </div>
          </div>
          <br>

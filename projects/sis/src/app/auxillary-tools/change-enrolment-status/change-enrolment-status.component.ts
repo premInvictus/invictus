@@ -19,6 +19,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	changeEnrollmentNumberData: any[] = [];
 	reasonDataArray: any[] = [];
 	events: string[] = [];
+	disableApiCall = false;
 	showCancelDate = false;
 	enrolmentPlaceholder = 'Enrolment';
 	enrollMentTypeArray: any[] = [{
@@ -267,6 +268,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	saveEnrolmentStatus() {
 		if (this.changeEnrolmentStatusForm.valid) {
+			this.disableApiCall = true;
 			const inputJson = {
 				login_id: this.changeEnrolmentStatusForm.value.login_id,
 				enrollment_no: this.changeEnrolmentStatusForm.value.au_login_id,
@@ -279,6 +281,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			};
 			this.sisService.changeEnrollmentStatus(inputJson).subscribe((result: any) => {
 				if (result.data && result.status === 'ok') {
+					this.disableApiCall = false;
 					this.notif.showSuccessErrorMessage(result.message, 'success');
 					if (inputJson['process_type_from'] === '1' || inputJson['process_type_from'] === '2') {
 						const invoiceJSOn = {
@@ -286,6 +289,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 							processTo: this.changeEnrolmentStatusForm.value.enrolment_to,
 							login_id: [result.data.toString()]
 						};
+						this.disableApiCall = true;
 						this.sisService.insertInvoice(invoiceJSOn).subscribe((result2: any) => {
 							if (result2.data && result2.status === 'ok') {
 								const length = result2.data.split('/').length;
@@ -294,7 +298,10 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 								this.showCancel = false;
 								this.showLeft = false;
 								this.showActive = false;
+								this.disableApiCall = false;
 								this.reset();
+							} else {
+								this.disableApiCall = false;
 							}
 						});
 					} else {
@@ -302,8 +309,11 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 						this.showCancel = false;
 						this.showLeft = false;
 						this.showActive = false;
+						this.disableApiCall = false;
 						this.reset();
 					}
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 

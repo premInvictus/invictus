@@ -18,6 +18,7 @@ export class GlobalFormFieldsComponent implements OnInit {
 	typeFlag = false;
 	prefetchFlag = false;
 	updateFlag = false;
+	disableApiCall = false;
 	checkRequire = false;
 	mappedFlag = false;
 	formfields: any[] = [];
@@ -180,10 +181,14 @@ export class GlobalFormFieldsComponent implements OnInit {
 		const customJson = {
 			configRelation: this.configArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertSlcTcFormConfig(customJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Custom fields Added', 'success');
 				this.getSLCTCFormConfig();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}
@@ -236,6 +241,7 @@ export class GlobalFormFieldsComponent implements OnInit {
 			configRelation: this.mappedArray,
 			tmap_usts_id: this.type_id
 		};
+		this.disableApiCall = true;
 		this.sisService.insertTemplateMapping(configJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Mapped Successfully', 'success');
@@ -247,6 +253,9 @@ export class GlobalFormFieldsComponent implements OnInit {
 						}
 					}
 				});
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

@@ -18,6 +18,7 @@ export class IdcardPrintingSetupComponent implements OnInit {
 	{ id: '4', name: 'Small' },
 	{ id: '5', name: 'Extra Small' }];
 	headerforecolor: any;
+	disableApiCall = false;
 	headerbackcolor: any;
 	stunameforecolor: any;
 	stunamebackcolor: any;
@@ -173,12 +174,15 @@ export class IdcardPrintingSetupComponent implements OnInit {
 		this.idcardForm.value.ps_template_image = this.templateImage;
 		this.idcardForm.value.ps_watermark_image = this.waterMarkImage;
 		this.idcardForm.value.ps_user_type = 'student';
+		this.disableApiCall = true;
 		this.sisService.addIdCardPrintSettings(this.idcardForm.value).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.commonService.showSuccessErrorMessage('Settings Saved', 'success');
+				this.disableApiCall = false;
 				this.getIdCardSettings();
 			} else {
 				this.commonService.showSuccessErrorMessage('Settings Not Saved', 'error');
+				this.disableApiCall = false;
 			}
 		});
 	}

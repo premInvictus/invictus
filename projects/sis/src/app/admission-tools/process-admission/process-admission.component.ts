@@ -60,6 +60,7 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 	processAdmissionData: any[] = [];
 	PROCESS_ELEMENT_DATA: any[] = [];
 	selectedUserArr: any[] = [];
+	disableApiCall = false;
 	allUserSelectFlag = false;
 	migrationMessage = 'Are you sure, you want to Approve this Student for Admission ?';
 	userDataSource = new MatTableDataSource<Element>(this.PROCESS_ELEMENT_DATA);
@@ -165,6 +166,7 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 		} else {
 			this.processType.setProcesstype('3');
 		}
+		this.disableApiCall = true;
 		this.sisService.migrgateProcessAdmission(inputJson).subscribe((result: any) => {
 			if (result.status === 'ok' && result.data) {
 				this.notif.showSuccessErrorMessage(result.message, 'success');
@@ -182,9 +184,11 @@ export class ProcessAdmissionComponent implements OnInit, AfterViewInit {
 						this.getProcessAdmissionData();
 					}
 				});
+				this.disableApiCall = false;
 			} else {
 				this.getProcessAdmissionData();
 				this.notif.showSuccessErrorMessage('Error While Admitting Student', 'error');
+				this.disableApiCall = false;
 			}
 		});
 	}
