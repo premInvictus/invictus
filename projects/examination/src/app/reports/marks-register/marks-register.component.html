@@ -378,7 +378,7 @@
                     </tbody>
                 </table>
             </ng-container>
-            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && paramform.value.eme_sub_type == '1' && ect_exam_type == '2'">
+            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && (paramform.value.eme_sub_type == '1' || paramform.value.eme_sub_type == '3') && ect_exam_type == '2'">
                 <table class="custom-table" style="display: block !important; overflow-x: auto;">
                     <thead>
                         <tr class="custom-tr">
@@ -471,7 +471,7 @@
                     </tbody>
                 </table>
             </ng-container>
-            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && paramform.value.eme_sub_type == '2'">
+            <ng-container *ngIf="paramform.value.eme_report_type == 'marksinput' && (paramform.value.eme_sub_type == '2' || paramform.value.eme_sub_type == '4')">
                 <table class="custom-table" style="display: block !important; overflow-x: auto;">
                     <thead>
                         <tr class="custom-tr">
@@ -555,7 +555,7 @@
                     </tbody>
                 </table>
             </ng-container>
-            <ng-container *ngIf="paramform.value.eme_sub_type == '1' && ect_exam_type == '1'">
+            <ng-container *ngIf="(paramform.value.eme_sub_type == '1' || paramform.value.eme_sub_type == '3') && ect_exam_type == '1'">
                 <table class="custom-table" style="display: block !important; overflow-x: auto;">
                     <thead>
                         <tr class="custom-tr">
