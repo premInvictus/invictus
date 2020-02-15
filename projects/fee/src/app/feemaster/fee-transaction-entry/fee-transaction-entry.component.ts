@@ -218,7 +218,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
 					});
 					// tslint:disable-next-line: max-line-length
+					
 					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
+					
+					
 					pos++;
 				}
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
