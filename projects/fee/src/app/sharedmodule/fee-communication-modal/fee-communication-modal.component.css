@@ -1,0 +1,25 @@
+.custom-entry-btn-icon {
+    font-size: 23px !important;
+    margin-left: 0px !important;
+    float: none !important;
+    margin-top: 0px !important;
+    margin-right: 0px !important;
+    color: #2980C2 !important;
+}
+.custom-entry-button {
+    width: auto !important;
+}
+.modal-custom-cotainer {
+    width: 40% !important;
+    background-color: #007d9e !important;
+    position: absolute !important;
+    z-index: 8 !important;
+}
+button.sms-button.mat-raised-button {
+    background-color: #e35b3a;
+    height: 34px;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    border-radius: 20px;
+}

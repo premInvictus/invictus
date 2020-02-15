@@ -23,6 +23,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getClassTermGrade', value);
 	}
+	getAttendanceEvent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getAttendanceEvent', value);
+	}
 	getExamActivityCategory(value) {
 		this.service.startLoading(); 
 		return this.http.post(environment.apiExamUrl + '/setup/getExamActivityCategory', value);
