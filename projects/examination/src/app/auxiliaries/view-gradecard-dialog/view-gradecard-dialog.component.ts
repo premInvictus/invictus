@@ -368,10 +368,14 @@ export class ViewGradecardDialogComponent implements OnInit {
           } else if (element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
           } else if (element.gs_alias === 'gradecard_health_status') {
-            if (Number(element.gs_value) === 1) {
-              this.showHealthStatus = true;
-            } else {
-              this.showHealthStatus = false;
+            const temp_arr = element.gs_value.split(',');
+            this.showHealthStatus = false;
+            if(temp_arr.length > 0) {
+              temp_arr.forEach(element => {
+              if(Number(element) === Number(this.data.class_id)) {
+                this.showHealthStatus = true;
+              }
+              });
             }
           } else if (element.gs_alias === 'gradecard_date') {
             if (Number(element.gs_value) === 1) {

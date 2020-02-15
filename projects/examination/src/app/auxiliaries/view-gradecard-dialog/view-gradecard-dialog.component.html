@@ -179,7 +179,7 @@
                                                             <ng-container
                                                                 *ngFor="let subexam of eachterm.so_exam[sub_category][0]['exam_sub_exam_max_marks']">
                                                                 <th [attr.colspan]="2" class="custom-th text-center">
-                                                                    {{subexam.sexam_name | titlecase}}
+                                                                    {{subexam.sexam_name}}
                                                                     <br>({{subexam.exam_max_marks}})</th>
                                                             </ng-container>
                                                         </ng-container>
@@ -192,14 +192,14 @@
                                                                         *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1;">
                                                                         <th [attr.colspan]="2"
                                                                             class="custom-th text-center">
-                                                                            {{pexam.exam_name | titlecase}}
+                                                                            {{pexam.exam_name}}
                                                                             <br>({{pexam.exam_weightage}})</th>
                                                                     </ng-container>
                                                                     <ng-container
                                                                         *ngIf="!(pexam.exam_bifurcate.bifurcated_marks == 1);">
                                                                         <th [attr.colspan]="1"
                                                                             class="custom-th text-center">
-                                                                            {{pexam.exam_name | titlecase}}
+                                                                            {{pexam.exam_name}}
                                                                             <br>({{pexam.exam_weightage}})</th>
                                                                     </ng-container>
                                                                 </ng-container>
@@ -215,14 +215,14 @@
                                                                             *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1;">
                                                                             <th [attr.colspan]="2"
                                                                                 class="custom-th text-center">
-                                                                                {{pexam.exam_name | titlecase}}
+                                                                                {{pexam.exam_name}}
                                                                                 <br>({{pexam.exam_weightage}})</th>
                                                                         </ng-container>
                                                                         <ng-container
                                                                             *ngIf="!(pexam.exam_bifurcate.bifurcated_marks == 1);">
                                                                             <th [attr.colspan]="1"
                                                                                 class="custom-th text-center">
-                                                                                {{pexam.exam_name | titlecase}}
+                                                                                {{pexam.exam_name}}
                                                                                 <br>({{pexam.exam_weightage}})</th>
                                                                         </ng-container>
                                                                     </ng-container>
@@ -231,8 +231,7 @@
                                                         </ng-container>
                                                         <th *ngIf="obtainedGradeAvgHighest.obtained"
                                                             class="custom-th text-center">
-                                                            Marks
-                                                            Obtained<br>({{eachterm.term_total_mark[sub_category]}})
+                                                            Grand Total<br>({{eachterm.term_total_mark[sub_category]}})
                                                         </th>
                                                         <th *ngIf="obtainedGradeAvgHighest.grade"
                                                             class="custom-th text-center">
@@ -519,7 +518,7 @@
                                                             <ng-container
                                                                 *ngFor="let subexam of eachterm.so_exam[sub_category][0]['exam_sub_exam_max_marks']">
                                                                 <th class="custom-th text-center">
-                                                                    {{subexam.sexam_name | titlecase}}
+                                                                    {{subexam.sexam_name}}
                                                                     <br>({{subexam.exam_max_marks}})</th>
                                                             </ng-container>
                                                         </ng-container>
@@ -529,7 +528,7 @@
                                                                 *ngFor="let pexam of eachterm.so_exam[sub_category]">
                                                                 <ng-container *ngIf="pexam.is_noncore == 0;">
                                                                     <th class="custom-th text-center">
-                                                                        {{pexam.exam_name | titlecase}}
+                                                                        {{pexam.exam_name}}
                                                                         <br>({{pexam.exam_weightage}})
                                                                     </th>
                                                                 </ng-container>
@@ -542,7 +541,7 @@
                                                                     *ngFor="let pexam of eachterm.so_exam[sub_category]">
                                                                     <ng-container *ngIf="pexam.is_noncore == 1;">
                                                                         <th class="custom-th text-center">
-                                                                            {{pexam.exam_name | titlecase}}
+                                                                            {{pexam.exam_name}}
                                                                             <br>({{pexam.exam_weightage}})</th>
 
                                                                     </ng-container>
@@ -551,8 +550,7 @@
                                                         </ng-container>
                                                         <th *ngIf="obtainedGradeAvgHighest.obtained"
                                                             class="custom-th text-center">
-                                                            Marks
-                                                            Obtained<br>({{eachterm.term_total_mark[sub_category]}})
+                                                            Grand Total<br>({{eachterm.term_total_mark[sub_category]}})
                                                         </th>
                                                         <th *ngIf="obtainedGradeAvgHighest.grade"
                                                             class="custom-th text-center">
@@ -912,13 +910,13 @@
                                                             <ng-container
                                                                 *ngIf="pexam.exam_bifurcate.bifurcated_marks == 1;">
                                                                 <th [attr.colspan]="2" class="custom-th text-center">
-                                                                    {{pexam.exam_name | titlecase}}
+                                                                    {{pexam.exam_name}}
                                                                     <br>({{pexam.exam_weightage}})</th>
                                                             </ng-container>
                                                             <ng-container
                                                                 *ngIf="!(pexam.exam_bifurcate.bifurcated_marks == 1);">
                                                                 <th [attr.colspan]="1" class="custom-th text-center">
-                                                                    {{pexam.exam_name | titlecase}}
+                                                                    {{pexam.exam_name}}
                                                                     <br>({{pexam.exam_weightage}})</th>
                                                             </ng-container>
                                                         </ng-container>
@@ -1114,7 +1112,7 @@
                                                         <ng-container
                                                             *ngFor="let pexam of eachterm.so_exam[eachterm.term_id][sub_category]">
                                                             <th class="custom-th text-center">
-                                                                {{pexam.exam_name | titlecase}}
+                                                                {{pexam.exam_name}}
                                                                 <br>({{pexam.exam_weightage}})
                                                             </th>
                                                         </ng-container>
