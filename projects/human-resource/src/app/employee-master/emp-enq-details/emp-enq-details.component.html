@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-12">
+    <div>
+      <app-emp-enq-common [employeedetails]="employeeRecord"></app-emp-enq-common>
+      <mat-tab-group [selectedIndex]="tabSelectedIndex" (selectedIndexChange)="setTabValue($event)">
+        <mat-tab label="Personal Details">
+          <app-emp-enq-tab-one *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails"></app-emp-enq-tab-one>
+        </mat-tab>
+        <mat-tab label="Personal Contact">
+          <app-emp-enq-tab-two *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails">
+          </app-emp-enq-tab-two>
+        </mat-tab>
+        <mat-tab label="Remarks">
+          <app-emp-enq-tab-three *ngIf="employeeCommonDetails" [employeedetails]="employeeRecord"
+            [employeeCommonDetails]="employeeCommonDetails">
+          </app-emp-enq-tab-three>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

@@ -63,7 +63,7 @@
             <div class="row">
               <div class="col-12">
                 <span class="font-size-16 font-light">Fee Period: </span><span
-                  class="font-size-16 font-regular">{{invoiceDetails?.fp_months}}</span>
+                  class="font-size-16 font-regular"><span *ngIf="invoiceDetails?.fp_months">{{invoiceDetails?.fp_months}}</span><span *ngIf="!(invoiceDetails?.fp_months)">-</span></span>
               </div>
             </div>
           </div>

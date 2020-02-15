@@ -71,6 +71,7 @@ export class AddSyllabusComponent implements OnInit {
 	add = 'Add';
 	startDate: any;
 	enddate: any;
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -479,7 +480,7 @@ export class AddSyllabusComponent implements OnInit {
 						} else {
 							this.syllabus_flag = false;
 							this.details_flag = true;
-						} 
+						}
 					});
 			const dateParam: any = {};
 			dateParam.datefrom = this.startDate;
@@ -815,6 +816,7 @@ export class AddSyllabusComponent implements OnInit {
 	// In this function database entry occur
 	finalSubmit($event) {
 		if ($event) {
+			this.disabledApiButton = true;
 			this.syllabusService.getSylIdByClassSubject(this.syllabusForm.value)
 				.subscribe(
 					(result: any) => {
@@ -839,6 +841,7 @@ export class AddSyllabusComponent implements OnInit {
 							}
 							this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
 								if (result1 && result1.status === 'ok') {
+									this.disabledApiButton = false;
 									this.finalSpannedArray = [];
 									this.finalSubmitArray = [];
 									const setParam: any = {};
@@ -873,6 +876,7 @@ export class AddSyllabusComponent implements OnInit {
 									}
 									this.syllabusService.insertSyllabusDetails(this.finalSubmitArray).subscribe((result1: any) => {
 										if (result1 && result1.status === 'ok') {
+											this.disabledApiButton = false;
 											this.finalSpannedArray = [];
 											this.finalSubmitArray = [];
 											const setParam: any = {};

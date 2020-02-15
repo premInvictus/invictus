@@ -12,6 +12,7 @@ import { IdcardStyle2Component } from './id-card-printing/idcard-style2/idcard-s
 import { IdcardStyle1Component } from './id-card-printing/idcard-style1/idcard-style1.component';
 import { IdCardPrintingComponent } from './id-card-printing/id-card-printing.component';
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
+import { ChangeStatusComponent } from './change-status/change-status.component';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
     IdcardStyle3Component,
     ViewIdCardComponent,
     PrintIdCardComponent,
-    BulkUpdatesComponent
+    BulkUpdatesComponent,
+    ChangeStatusComponent
   ],
   entryComponents: [ViewIdCardComponent, PrintIdCardComponent]
 })

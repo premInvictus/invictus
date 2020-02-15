@@ -19,6 +19,13 @@ import { EmployeeLeaveComponent } from './employee-leave/employee-leave.componen
 import { EmployeeLedgerComponent } from './employee-ledger/employee-ledger.component';
 import { LeaveMasterComponent } from './leave-master/leave-master.component';
 import { PreviewDocumentComponent } from './employee-tab-six-container/preview-document/preview-document.component';
+import { EmpEnqCommonComponent } from './emp-enq-common/emp-enq-common.component';
+import { EmpEnqDetailsComponent } from './emp-enq-details/emp-enq-details.component';
+import { EmpEnqTabOneComponent } from './emp-enq-tab-one/emp-enq-tab-one.component';
+import { EmpEnqTabTwoComponent } from './emp-enq-tab-two/emp-enq-tab-two.component';
+import { EmpEnqTabThreeComponent } from './emp-enq-tab-three/emp-enq-tab-three.component';
+import { EmpEnqTabFourComponent } from './emp-enq-tab-four/emp-enq-tab-four.component';
+import { EmpEnqTabFiveComponent } from './emp-enq-tab-five/emp-enq-tab-five.component';
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -50,7 +57,14 @@ export const MY_FORMATS = {
 		EmployeeLeaveComponent,
 		EmployeeLedgerComponent,
 		LeaveMasterComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		EmpEnqCommonComponent,
+		EmpEnqDetailsComponent,
+		EmpEnqTabOneComponent,
+		EmpEnqTabTwoComponent,
+		EmpEnqTabThreeComponent,
+		EmpEnqTabFourComponent,
+		EmpEnqTabFiveComponent
 	],
 	entryComponents: [PreviewDocumentComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

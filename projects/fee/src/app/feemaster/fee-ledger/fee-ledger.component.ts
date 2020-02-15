@@ -114,6 +114,8 @@ export class FeeLedgerComponent implements OnInit {
 		44: 'AR',
 
 	};
+
+	spans = [];
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
 		public processtypeService: ProcesstypeFeeService,
@@ -196,6 +198,7 @@ export class FeeLedgerComponent implements OnInit {
 		this.resetActionFlag();
 		let element: any = {};
 		this.FEE_LEDGER_ELEMENT = [];
+		this.spans = [];
 		this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 		this.feeService.getFeeLedger({ login_id: login_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -213,6 +216,7 @@ export class FeeLedgerComponent implements OnInit {
 					balancetotal: 0
 				};
 				this.recordArray = result.data;
+				var dupInvoiceArr = []
 				for (const item of this.recordArray) {
 					const tempactionFlag: any = {
 						deleteinvoice: false,
@@ -262,28 +266,111 @@ export class FeeLedgerComponent implements OnInit {
 						chequedate: item.ftr_cheque_date ? item.ftr_cheque_date : '-',
 						colorCode: item.color_code ? item.color_code : '',
 						// bank: item.tb_name ? item.tb_name : '-',
-						netpayableamount: item.net_payable_amount ? item.net_payable_amount : '0',
+						netpayableamount: item.flgr_particulars === 'Ad-Hoc Payment' ? '0' : ( item.net_payable_amount ? item.net_payable_amount : '0'),
 						eachActionFlag: tempactionFlag,
-						action: item
+						action: item,
+						flgr_payment_mode: item.flgr_payment_mode ? item.flgr_payment_mode : ''
 					};
+					
+					
+					// console.log('dupInvoiceArr--',dupInvoiceArr);
+					// console.log('element.invoiceno--',element.invoiceno);
+					// console.log('dupInvoiceArr.indexOf(element.invoiceno)-',dupInvoiceArr.indexOf(element.invoiceno));
+					
+					
+					if(element.flgr_payment_mode === 'partial') {
+						element['balance'] = this.getPartialInvoiceLastBalance(dupInvoiceArr, element.invoiceno);
+						console.log("element['flgr_balance']",element['flgr_balance']);
+					}
+
+					if(dupInvoiceArr.indexOf(element.invoiceno) < 0 ){
+						dupInvoiceArr.push(element.invoiceno);												
+						this.footerRecord.feeduetotal += Number(element.amount);
+						this.footerRecord.concessiontotal += Number(element.concession);
+						this.footerRecord.adjustmenttotal += Number(element.adjustment);					
+						this.footerRecord.netpayabletotal += Number(element.netpayableamount);
+						this.footerRecord.finetotal += Number(element.fine);
+						this.footerRecord.balancetotal += Number(element.balance);
+					} 
+
+					
+					
+					
+
+					this.footerRecord.receipttotal += Number(element.reciept);
+
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
-					this.footerRecord.feeduetotal += Number(element.amount);
-					this.footerRecord.concessiontotal += Number(element.concession);
-					this.footerRecord.adjustmenttotal += Number(element.adjustment);
-					this.footerRecord.receipttotal += Number(element.reciept);
-					this.footerRecord.netpayabletotal += Number(element.netpayableamount);
-					this.footerRecord.finetotal += Number(element.fine);
-					this.footerRecord.balancetotal += Number(element.balance);
-					console.log(this.FEE_LEDGER_ELEMENT);
+					
+					
+					//console.log(this.FEE_LEDGER_ELEMENT);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 				this.feeRenderId = '';
+				console.log('this.FEE_LEDGER_ELEMENT',this.FEE_LEDGER_ELEMENT);
+				
+				this.cacheSpan('select', d => d.select);
+				this.cacheSpan('feeperiod', d => d.feeperiod[0]);
+				this.cacheSpan('invoiceno', d => d.invoiceno);
+				this.cacheSpan('particular', d => d.particular);
+				this.cacheSpan('date', d => d.date);
+				this.cacheSpan('duedate', d => d.duedate);
+				this.cacheSpan('amount', d => d.amount);
+				this.cacheSpan('concession', d => d.concession);
+				this.cacheSpan('adjustment', d => d.adjustment);
+				this.cacheSpan('fine', d => d.fine);
+				this.cacheSpan('netpayableamount', d => d.netpayableamount);
+				this.cacheSpan('balance', d => d.balance);
+				
+				
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
 	}
+
+	getPartialInvoiceLastBalance(dupInvoiceArr, invoice_no) {
+		var tempArr = [];
+		for (let i=0; i<this.recordArray.length;i++) {
+			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
+				tempArr.push(this.recordArray[i]['flgr_balance']);
+			}
+		}
+		// console.log('tempArr--',tempArr.reverse());
+		return tempArr.reverse()[0];
+	}
+
+	getRowSpan(col, index) {
+		//console.log('col '+col, 'index'+index, this.spans);
+		return this.spans[index] && this.spans[index][col];
+	}
+	cacheSpan(key, accessor) {
+		//console.log(key, accessor);
+		for (let i = 0; i < this.FEE_LEDGER_ELEMENT.length;) {
+			let currentValue = accessor(this.FEE_LEDGER_ELEMENT[i]);
+			let count = 1;
+			//console.log('currentValue',currentValue);
+			// Iterate through the remaining rows to see how many match
+			// the current value as retrieved through the accessor.
+			for (let j = i + 1; j < this.FEE_LEDGER_ELEMENT.length; j++) {
+				if (currentValue != accessor(this.FEE_LEDGER_ELEMENT[j])) {
+					break;
+				}
+				count++;
+			}
+
+			if (!this.spans[i]) {
+				this.spans[i] = {};
+			}
+
+			// Store the number of similar values that were found (the span)
+			// and skip i to the next unique row.
+			this.spans[i][key] = count;
+			i += count;
+		}
+	}
+
+
 	// export excel code
 	exportAsExcel() {
 		let reportType: any = '';
@@ -370,7 +457,7 @@ export class FeeLedgerComponent implements OnInit {
 			this.commonStudentProfileComponent.studentdetails.em_admission_no + ')';
 		worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A4:' + this.alphabetJSON[7] + '4');
-		worksheet.getCell('A4').value = 'Class : ' + this.commonStudentProfileComponent.studentdetails.class_name +  ' ' +
+		worksheet.getCell('A4').value = 'Class : ' + this.commonStudentProfileComponent.studentdetails.class_name + ' ' +
 			this.commonStudentProfileComponent.studentdetails.sec_name;
 		worksheet.getCell(`A4`).alignment = { horizontal: 'left' };
 		worksheet.getCell('A6').value = 'Fee Period';
@@ -721,7 +808,7 @@ export class FeeLedgerComponent implements OnInit {
 				tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0;
 				tempactionFlag.consolidate = tempactionFlag.consolidate && item.eachActionFlag.consolidate && this.selection.selected.length > 1;
 				tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
-				tempactionFlag.detach = tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1;
+				tempactionFlag.detach = (tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1) || item.flgr_payment_mode === 'partial';
 				tempactionFlag.unconsolidate = tempactionFlag.unconsolidate && item.eachActionFlag.unconsolidate && this.selection.selected.length > 0;
 				// tslint:disable-next-line:max-line-length
 				tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
