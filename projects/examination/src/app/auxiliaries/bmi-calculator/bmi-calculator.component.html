@@ -74,7 +74,7 @@
         <br>
         <div class="col-12 text-center">
           <br>
-          <button mat-button class="btn-success-green btn-spacer" (click)="saveBMI() ">Submit</button>
+          <button mat-button class="btn-success-green btn-spacer" (click)="saveBMI();$event.stopPropagation()">Submit</button>
         </div>
       </div>
     </mat-card>

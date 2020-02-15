@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
@@ -26,13 +26,16 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { group } from '@angular/animations';
+import { findIndex } from 'rxjs/operators';
 @Component({
 	selector: 'app-outstanding-report',
 	templateUrl: './outstanding-report.component.html',
 	styleUrls: ['./outstanding-report.component.css']
 })
 export class OutstandingReportComponent implements OnInit {
+	@ViewChild('smsFeeModal') smsFeeModal;
 	@Output() displyRep = new EventEmitter();
+	rowsChosen: any[] = [];
 	@Input() userName: any = '';
 	totalRow: any;
 	groupColumns: any[] = [];
@@ -128,21 +131,8 @@ export class OutstandingReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
-	// monthArray = [
-	// 	{"id" : '04' , "name" : 'April'},
-	// 	{"id" : '05' , "name" : 'May'},
-	// 	{"id" : '06' , "name" : 'June'},
-	// 	{"id" : '07' , "name" : 'July'},
-	// 	{"id" : '08' , "name" : 'August'},
-	// 	{"id" : '09' , "name" : 'September'},
-	// 	{"id" : '10' , "name" : 'October'},
-	// 	{"id" : '11' , "name" : 'November'},
-	// 	{"id" : '12' , "name" : 'December'},
-	// 	{"id" : '01' , "name" : 'January'},
-	// 	{"id" : '02' , "name" : 'Feburary'},
-	// 	{"id" : '03' , "name" : 'March'}
-	// ];
 	monthArray = [];
+	rowChosenData: any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -151,14 +141,14 @@ export class OutstandingReportComponent implements OnInit {
 		private fbuild: FormBuilder) { }
 
 	ngOnInit() {
-		
+
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		
+
 		this.getSchool();
 		this.getInvoiceFeeMonths();
 		this.session = JSON.parse(localStorage.getItem('session'));
 		this.getSession();
-		
+
 		this.buildForm();
 		this.getClassData();
 		this.reportTypeArray.push({
@@ -181,7 +171,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
 			'to_date': date,
-			'month_id' : ''
+			'month_id': ''
 		});
 		this.filterFlag = true;
 	}
@@ -199,7 +189,7 @@ export class OutstandingReportComponent implements OnInit {
 			if (this.totalRow[columnId]) {
 				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 			}
-			
+
 		}
 	}
 	buildForm() {
@@ -208,7 +198,7 @@ export class OutstandingReportComponent implements OnInit {
 			'fee_value': '',
 			'from_date': '',
 			'to_date': '',
-			'month_id':'',
+			'month_id': '',
 			'downloadAll': '',
 			'hidden_value': '',
 			'hidden_value2': '',
@@ -236,14 +226,17 @@ export class OutstandingReportComponent implements OnInit {
 	}
 
 	getOutstandingReport(value: any) {
-		
+
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
 		this.dataArr = [];
 		this.aggregatearray = [];
 		this.columnDefinitions = [];
+		this.rowsChosen = [];
+		this.rowChosenData = [];
 		this.dataset = [];
 		this.tableFlag = false;
 		this.gridOptions = {
+
 			enableDraggableGrouping: true,
 			createPreHeaderPanel: true,
 			showPreHeaderPanel: true,
@@ -259,6 +252,14 @@ export class OutstandingReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			enableCheckboxSelector: true,
+			checkboxSelector: {
+				columnId: 'checkbox_select'
+			},
+			rowSelectionOptions: {
+				selectActiveRow: false
+			},
+			enableRowSelection: true,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -528,6 +529,8 @@ export class OutstandingReportComponent implements OnInit {
 												(Number(keys) + 1);
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
@@ -834,6 +837,8 @@ export class OutstandingReportComponent implements OnInit {
 												(Number(keys) + 1);
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
@@ -1106,6 +1111,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
@@ -1343,9 +1350,11 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
-							
+
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
@@ -1547,9 +1556,11 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
-							
+
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
 									repoArray[Number(index)]['stu_sec_name'];
@@ -1599,7 +1610,7 @@ export class OutstandingReportComponent implements OnInit {
 					'feeHeadId': value.fee_value,
 					// 'from_date': value.from_date,
 					// 'to_date': value.to_date,
-					'month_id' : this.reportFilterForm.value.month_id,
+					'month_id': this.reportFilterForm.value.month_id,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -1815,6 +1826,8 @@ export class OutstandingReportComponent implements OnInit {
 													(Number(keys) + 1);
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
+												obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+													repoArray[Number(keys)]['login_id'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 												obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 												if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
@@ -1832,7 +1845,7 @@ export class OutstandingReportComponent implements OnInit {
 													repoArray[Number(keys)]['invoice_no'] : '-';
 												obj['invoice_due_date'] = repoArray[Number(keys)]['invoice_due_date'] ?
 													repoArray[Number(keys)]['invoice_due_date'] : '-';
-													
+
 												obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
 												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
@@ -1922,7 +1935,7 @@ export class OutstandingReportComponent implements OnInit {
 						}
 					});
 				}
-				
+
 			} else {
 				this.common.showSuccessErrorMessage('Please select date also', 'error');
 			}
@@ -1970,11 +1983,51 @@ export class OutstandingReportComponent implements OnInit {
 		this.gridObj.setPreHeaderPanelVisibility(!this.gridObj.getOptions().showPreHeaderPanel);
 	}
 	onCellClicked(e, args) {
+		if (args.cell === args.grid.getColumnIndex('checkbox_select')) {
+			const index = this.rowsChosen.indexOf(args.row);
+			if (index === -1) {
+				this.rowsChosen.push(args.row);
+			} else {
+				this.rowsChosen.splice(index, 1);
+			}
+			const item = args.grid.getDataItem(args.row);
+			const index2 = this.rowChosenData.findIndex(f => Number(f.login_id) === Number(item['login_id']));
+			if (index2 === -1) {
+				this.rowChosenData.push({
+					login_id: Number(item['login_id']),
+					data: item,
+					index: args.row
+				});
+			} else {
+				this.rowChosenData.splice(index2, 1);
+			}
+			console.log(this.rowChosenData);
+		}
 		if (args.cell === args.grid.getColumnIndex('receipt_no')) {
 			const item: any = args.grid.getDataItem(args.row);
 			if (item['receipt_no'] !== '-') {
 				this.renderDialog(item['receipt_id'], false);
 			}
+		}
+	}
+	onSelectedRowsChanged(e, args) {
+		if (args.rows.length === this.dataset.length) {
+			this.rowChosenData = [];
+			this.rowsChosen = args.rows;
+			for (const item of this.rowsChosen) {
+				this.rowChosenData.push({
+					login_id: this.dataset[item].login_id,
+					data: this.dataset[item],
+					index: item
+				});
+			}
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else if (args.rows.length === 0) {
+			this.rowsChosen = [];
+			this.rowChosenData = [];
+			this.gridObj.setSelectedRows(this.rowsChosen);
+		} else {
+			this.gridObj.setSelectedRows(this.rowsChosen);
 		}
 	}
 	onCellChanged(e, args) {
@@ -2314,7 +2367,7 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulters list: ') + this.sessionName;
-		}else if (this.reportType === 'feedue') {
+		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues detail outstanding report: ') + this.sessionName;
 		}
 		let reportType2: any = '';
@@ -2327,9 +2380,9 @@ export class OutstandingReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('route wise_') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
-		}else if (this.reportType === 'feedue') {
+		} else if (this.reportType === 'feedue') {
 			reportType2 = new TitleCasePipe().transform('fee dues detail_') + this.sessionName;
-		} 
+		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
@@ -2970,7 +3023,7 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise outstanding report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
-		}else if (this.reportType === 'feedue') {
+		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues Detail outstanding report: ') + this.sessionName;
 		}
 		const doc = new jsPDF('p', 'mm', 'a0');
@@ -3530,5 +3583,26 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			}
 		}
+	}
+	sendMessage() {
+		console.log(this.rowChosenData);
+		this.smsFeeModal.openModal(this.rowChosenData);
+		const change: any = this.smsFeeModal.subscribeModalChange();
+		change.afterClosed().subscribe((res: any) => {
+			if (res && res.data && res.data.length > 0) {
+				this.rowsChosen = [];
+				this.rowChosenData = [];
+				for (const item of res.data) {
+					this.rowsChosen.push(item.index);
+				}
+				this.gridObj.setSelectedRows(this.rowsChosen);
+				this.rowChosenData = res.data;
+
+			} else {
+				this.rowsChosen = [];
+				this.rowChosenData = [];
+				this.gridObj.setSelectedRows(this.rowsChosen);
+			}
+		});
 	}
 }
