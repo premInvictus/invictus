@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-6 remove-col-padding-left margin-top-15">
+          <span class="font-size-24">Percentage Cumulative Setup</span>
+        </div>
+        <div class="col-6 remove-col-padding-right text-right">
+          <button
+            mat-button
+            class="btn-success-purple text-capitalize"
+            (click)="openDialog()">
+            Add
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-12">
+        <mat-tab-group (selectedIndexChange)="setIndex($event)">
+          <mat-tab label="Subject">
+            <ng-template matTabContent>
+              <app-percentage-cumulative-subject></app-percentage-cumulative-subject>
+            </ng-template>
+          </mat-tab>
+          <mat-tab label="Exam">
+            <ng-template matTabContent>
+              <app-percentage-cumulative-exam></app-percentage-cumulative-exam>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

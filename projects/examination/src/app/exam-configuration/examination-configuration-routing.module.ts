@@ -7,6 +7,8 @@ import { GradecardSettingComponent } from './gradecard-setting/gradecard-setting
 import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
 import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-termwise.component';
+import { PercentageCumulativeSetupComponent } from './percentage-cumulative-setup/percentage-cumulative-setup.component';
+
 
 
 const routes: Routes = [
@@ -30,6 +32,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'exam-alias-termwise', component: ExamAliasTermwiseComponent
+	},
+	{
+		path: 'percentage-cumulative-setup', component: PercentageCumulativeSetupComponent
 	}
 ];
 

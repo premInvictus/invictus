@@ -365,11 +365,15 @@ export class ExamService {
 	}
 	getExamPerCumulativeExam(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeSubject', value);
+		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeExam', value);
 	}
 	deleteExamAlias(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/deleteExamAlias', value);
+	}
+	addExamPerCumulativeSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeSubject', value);
 	}
 
 }

@@ -20,11 +20,13 @@
             <hr>
             <div class="row">
                 <div class="col-12 text-center" *ngIf="studentDetails">
-                    <span class="font-size-20 font-bold">Academic Session : {{currentSession.ses_name}}</span><br>
-                    <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id != 'comulative'">Report Card for
-                        Class {{studentDetails.class_name}}</span>
-                    <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id == 'comulative'">Cumulative
-                        Progress Report</span>
+                    <!-- <span class="font-size-20 font-bold">Academic Session : {{currentSession.ses_name}}</span><br> -->
+                    <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id != 'comulative'">
+                        <!-- Report Card for Class {{studentDetails.class_name}} -->
+                        Progress Report Academic Session : {{currentSession.ses_name}}
+                    </span>
+                    <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id == 'comulative'">
+                        Cumulative Progress Report Academic Session : {{currentSession.ses_name}}</span>
                 </div>
             </div>
             <div class="row">

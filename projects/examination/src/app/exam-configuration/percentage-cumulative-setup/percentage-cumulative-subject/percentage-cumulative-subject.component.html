@@ -1,0 +1,77 @@
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field appearance="legacy">
+                <input matInput (keyup)="applyFilter($event.target.value)" />
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-6 text-right"></div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <table
+                mat-table
+                [dataSource]="dataSource"
+                class="table-100 text-center"
+              >
+                <!-- Position Column -->
+                <ng-container matColumnDef="class_name">
+                  <th width="50" mat-header-cell *matHeaderCellDef>Class</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.class_name }}
+                  </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="subjects">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef>
+                    Subject
+                  </th>
+                  <td class="text-left" mat-cell *matCellDef="let element">
+                    {{ element.subjects }}
+                  </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef>Action</th>
+                  <td mat-cell *matCellDef="let element">
+                    <span
+                      ><i
+                        class="fas fa-edit icon-purple"
+                        (click)="openDialog(element.action)"
+                      ></i
+                    ></span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr
+                  mat-row
+                  *matRowDef="let row; columns: displayedColumns"
+                ></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <mat-card>
+      <app-no-data
+        [imgsrc]="
+          'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'
+        "
+        [noDataText]=""
+        [subText]="'No record found'"
+      ></app-no-data>
+    </mat-card>
+  </div>
+</div>
