@@ -28,6 +28,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
   exam_grade_type_arr: any[] = [];
   subSubjectArray: any[] = [];
   classterm: any;
+  disabledApiButton = false;
   absentData = [
     { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" },
     { "egs_grade_name": "AD", "egs_grade_value": "AD", "egs_range_start": "0", "egs_range_end": "0" },
@@ -77,7 +78,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
     this.paramform.patchValue({
       eme_exam_id: ''
     });
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(),term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(), term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
@@ -120,7 +121,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
       this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
     }
     this.subexamArray = [];
-    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
           this.subexamArray = result.data[0].exam_sub_exam_max_marks;
@@ -230,7 +231,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 scholastic_subject.push(element);
-              }                           
+              }
             } else if (element.sub_type === '2' || element.sub_type === '4') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
@@ -241,7 +242,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 coscholastic_subject.push(element);
-              }              
+              }
             }
           });
         }
@@ -349,7 +350,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage('Invalid input', 'error');
         marktarget.value = '';
       }
-    } else if (mark === 'AB'  || mark === 'AD' || mark === 'NAD' || mark === 'ML') {
+    } else if (mark === 'AB' || mark === 'AD' || mark === 'NAD' || mark === 'ML') {
       const ind = this.marksInputArray.findIndex(e => e.es_id === es_id && e.login_id === login_id);
       if (ind !== -1) {
         this.marksInputArray[ind].mark = mark;
@@ -386,32 +387,7 @@ export class MarksEntryPrimaryComponent implements OnInit {
   }
 
   saveForm(status = '1', savelog = '0') {
-    console.log('this.marksInputArray.length', this.marksInputArray.length);
-    console.log('this.paramform.value.eme_subexam_id.length * this.studentArray.length', this.paramform.value.eme_subexam_id.length * this.studentArray.length);
-    /* if(this.marksInputArray.length < this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
-      const dialogRef = this.dialog.open(MarkEntrySubmitDialogComponent, {
-        width: '600px',
-        height: '300px',
-        data: {text: 'Save',message: 'Still few student has empty mark! Do you wish to continue'}
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if(result && result.confirm === 'ok') {
-          if (this.paramform.valid && this.marksInputArray.length > 0) {
-            const param: any = {};
-            param.examEntry = this.paramform.value;
-            param.examEntryMapping = this.marksInputArray;
-            param.examEntryStatus = status;
-            param.savelog = savelog;
-            this.examService.addMarksEntry(param).subscribe((result: any) => {
-              if (result && result.status === 'ok') {
-                this.displayData();
-              }
-            })
-          }
-        }
-      });
-    } else */
+    this.disabledApiButton = true;
     if (status !== '1') {
       if (true) {
         if (this.paramform.valid && this.marksInputArray.length > 0) {
@@ -424,8 +400,10 @@ export class MarksEntryPrimaryComponent implements OnInit {
           param.savelog = savelog;
           this.examService.addMarksEntry(param).subscribe((result: any) => {
             if (result && result.status === 'ok') {
+              this.disabledApiButton = false;
               this.displayData();
             } else {
+              this.disabledApiButton = false;
               this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
           })
@@ -440,11 +418,13 @@ export class MarksEntryPrimaryComponent implements OnInit {
         param.examEntryMapping = this.marksInputArray;
         param.examEntryStatus = status;
         param.marksInputArrayLength = this.marksInputArray.length;
-          param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
+        param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
+            this.disabledApiButton = false;
             this.displayData();
           } else {
+            this.disabledApiButton = false;
             this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
           }
         })
