@@ -135,7 +135,9 @@
     <br />
     <div class="row text-center" *ngIf="vendorForm.value.showButtonStatus">
       <div class="col-12">
-          <button *ngIf="!vendorForm.value.ven_id" mat-raised-button class="btn-success-green" (click)="save()">Add</button>
+          <button *ngIf="!vendorForm.value.ven_id" mat-raised-button class="btn-success-green" 
+          [disabled]="disableApiCall"
+          (click)="save()">Add</button>
           <button *ngIf="vendorForm.value.ven_id != ''" mat-raised-button class="btn-success-green" (click)="update()">Update</button>
         <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
           Reset

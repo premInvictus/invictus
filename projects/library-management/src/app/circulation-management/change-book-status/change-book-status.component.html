@@ -212,7 +212,9 @@
             <br />
             <div class="row text-center" *ngIf="changeStatusForm?.value?.filters">
               <div class="col-12">
-                <button mat-raised-button class="btn-success-green" (click)="changeReservoirStatus()">
+                <button mat-raised-button class="btn-success-green" 
+                [disabled]="disableApiCall"
+                (click)="changeReservoirStatus()">
                   Submit
                 </button>
                 <button mat-raised-button class="btn-reset btn-spacer">

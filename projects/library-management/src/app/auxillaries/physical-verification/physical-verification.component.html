@@ -340,7 +340,9 @@
         <br />
         <div class="row text-center" *ngIf="VERIFICATION_BATCH_ELEMENT.length > 0">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="save($event)">Submit</button>
+            <button mat-raised-button class="btn-success-green" 
+            [disabled]="disableApiCall"
+            (click)="save($event)">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="reset($event)">
               Reset
             </button>

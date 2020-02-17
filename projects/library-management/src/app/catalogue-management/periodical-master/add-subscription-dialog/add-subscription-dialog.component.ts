@@ -13,7 +13,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 })
 export class AddSubscriptionDialog implements OnInit {
   subscriptionForm: FormGroup;
-
+  disableApiCall = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: any,
@@ -81,8 +81,10 @@ export class AddSubscriptionDialog implements OnInit {
 
   save() {
     if (this.subscriptionForm.valid) {
+      this.disableApiCall = true;
       if (this.common.dateConvertion(this.subscriptionForm.value.subscription_end_date, 'dd-MMM-yyyy') < this.common.dateConvertion(this.subscriptionForm.value.subscription_start_date, 'dd-MMM-yyyy')) {
         this.common.showSuccessErrorMessage('Start Date Cannot be greater than end date', 'error');
+        this.disableApiCall = false;
       } else {
         const inputJson = {
           subscription_name: this.subscriptionForm.value.subscription_name,
@@ -100,15 +102,18 @@ export class AddSubscriptionDialog implements OnInit {
             console.log('res', res);
             this.common.showSuccessErrorMessage(res.message, 'success');
             this.subscriptionForm.reset();
+            this.disableApiCall = false;
             this.dialogRef.close();
           } else {
             this.common.showSuccessErrorMessage(res.message, 'success');
+            this.disableApiCall = false;
           }
         });
       }
 
     } else {
       this.common.showSuccessErrorMessage('Please Fill All Required Fields', 'error');
+      this.disableApiCall = false;
     }
 
   }

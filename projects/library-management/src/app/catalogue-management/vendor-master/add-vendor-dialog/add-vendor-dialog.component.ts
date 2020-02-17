@@ -15,7 +15,7 @@ import { ConfirmValidParentMatcher } from '../../../ConfirmValidParentMatcher';
 export class AddVendorDialog implements OnInit {
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   vendorForm: FormGroup;
-
+  disableApiCall = false;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private dialogData: any,
@@ -81,19 +81,22 @@ export class AddVendorDialog implements OnInit {
   update() {
     if (this.vendorForm.valid) {
       const inputJson = this.vendorForm.value;
-
+      this.disableApiCall = true;
       this.erpCommonService.updateVendor(inputJson).subscribe((res: any) => {
         if (res && res.status == 'ok') {
           this.common.showSuccessErrorMessage(res.message, res.status);
           this.vendorForm.reset();
           this.dialogRef.close();
+          this.disableApiCall = false;
         } else {
           this.common.showSuccessErrorMessage(res.message, res.status);
+          this.disableApiCall = false;
         }
       });
     }
     else {
       this.common.showSuccessErrorMessage('Please Fill All Required Fields', 'error');
+      this.disableApiCall = false;
     }
 
 

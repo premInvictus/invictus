@@ -95,7 +95,9 @@
         <br />
         <div class="row text-center">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
+            <button mat-raised-button class="btn-success-green" 
+            [disabled]="disableApiCall"
+            (click)="finalSubmit()">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer">
               Reset
             </button>
