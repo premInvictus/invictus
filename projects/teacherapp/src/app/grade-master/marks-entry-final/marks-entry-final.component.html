@@ -32,24 +32,30 @@
                                 <mat-option value="">Please select</mat-option>
                                 <mat-optgroup label="Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length != 0"
+                                        <mat-optgroup
+                                            *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length != 0"
                                             [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length == 0"
+                                        <mat-option
+                                            *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length == 0"
                                             [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>
                                 </mat-optgroup>
                                 <mat-optgroup label="Co-Scholastic">
                                     <ng-container *ngFor="let item of subjectArray">
-                                        <mat-optgroup *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length != 0"
+                                        <mat-optgroup
+                                            *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length != 0"
                                             [label]="item.sub_name" class="option-group-parent-type">
-                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id" class="option-group-parent">
+                                            <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                                class="option-group-parent">
                                                 {{item1.sub_name}}</mat-option>
                                         </mat-optgroup>
-                                        <mat-option *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length == 0"
+                                        <mat-option
+                                            *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length == 0"
                                             [value]="item.sub_id" class="option-group-child">
                                             {{item.sub_name}}</mat-option>
                                     </ng-container>
@@ -101,15 +107,20 @@
             <table class="custom-table">
                 <thead>
                     <tr class="custom-tr">
-                            <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">Roll No. <i class="fas fa-sort"></i></th>
-                            <th rowspan="2" class="custom-th text-center" width="250" sortColumn [sortKey]="'au_full_name'" [data]="studentArray">Student name <i class="fas fa-sort"></i></th>
-                            <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'au_admission_no'" [data]="studentArray">Admission <i class="fas fa-sort"></i></th>
+                        <th rowspan="2" class="custom-th text-center" width="100" sortColumn [sortKey]="'r_rollno'"
+                            [data]="studentArray">Roll No. <i class="fas fa-sort"></i></th>
+                        <th rowspan="2" class="custom-th text-center" width="250" sortColumn [sortKey]="'au_full_name'"
+                            [data]="studentArray">Student name <i class="fas fa-sort"></i></th>
+                        <th rowspan="2" class="custom-th text-center" width="100" sortColumn
+                            [sortKey]="'au_admission_no'" [data]="studentArray">Admission <i class="fas fa-sort"></i>
+                        </th>
                         <th [attr.colspan]="paramform.value.eme_subexam_id.length" class="custom-th text-center">
                             {{getSubjectName() | titlecase}}</th>
                     </tr>
                     <tr class="custom-tr">
                         <th class="custom-th text-center" width="100"
-                            *ngFor="let item of paramform.value.eme_subexam_id">{{getSubexamName(item) | titlecase}} ({{getSubexamMarks(item)}})
+                            *ngFor="let item of paramform.value.eme_subexam_id">{{getSubexamName(item) | titlecase}}
+                            ({{getSubexamMarks(item)}})
                         </th>
                     </tr>
                 </thead>
@@ -123,14 +134,15 @@
                             *ngFor="let item of paramform.value.eme_subexam_id">
                             <ng-template [ngIf]="checkEditable(item, '3')" [ngIfElse]="elseContaint">
                                 <ng-container *ngIf="exam_grade_type == '2'">
-                                        <input matInput [value]="getInputMarks(item, stu.au_login_id)" placeholder="Please enter marks"
-                                            (change)="enterInputMarks(item, stu.au_login_id, $event.target)" pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[AB]{1}">
+                                    <input matInput [value]="getInputMarks(item, stu.au_login_id)"
+                                        placeholder="Please enter marks"
+                                        (change)="enterInputMarks(item, stu.au_login_id, $event.target)"
+                                        pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[AB]{1}">
                                 </ng-container>
                                 <ng-container *ngIf="exam_grade_type == '1'">
                                     <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                                         <mat-select [value]="getInputMarks(item, stu.au_login_id)"
-                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event)"
-                                            required>
+                                            (selectionChange)="enterInputMarks(item, stu.au_login_id, $event)" required>
                                             <mat-option *ngFor="let item of exam_grade_type_arr"
                                                 [value]="item.egs_grade_value">{{item.egs_grade_name}}
                                             </mat-option>
@@ -153,11 +165,12 @@
             <br>
             <div class="row margin-top-25">
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('3')">
-                    <button mat-button class="btn-success-green" (click)="saveForm()">Save</button>
+                    <button mat-button class="btn-success-green" [disabled]="disableApiCall"
+                        (click)="saveForm()">Save</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('4','1')">Save & Submit</button>
+                        [disabled]="disableApiCall" (click)="saveForm('4','1')">Save & Submit</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('4','1')">Final Publish</button>
+                        [disabled]="disableApiCall" (click)="saveForm('4','1')">Final Publish</button>
                 </div>
             </div>
         </mat-card>

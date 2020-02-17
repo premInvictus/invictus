@@ -17,6 +17,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   termsArray: any[] = [];
   classterm: any[] = [];
   currentUser: any;
+  disableApiCall = false;
   session: any;
   class_id: any;
   section_id: any;
@@ -241,14 +242,16 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     for (var i = 0; i < this.formgroupArray.length; i++) {
       inputJson.push(this.formgroupArray[i]['formGroup']['value']);
     }
-
+    this.disableApiCall = true;
     this.examService.insertTermAttendance(inputJson)
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
+            this.disableApiCall = false;
             this.commonService.showSuccessErrorMessage('Term Attendance Submitted Successfully', 'success');
           } else {
             this.commonService.showSuccessErrorMessage('Error While Submitting Term Attendance', 'error');
+            this.disableApiCall = false;
           }
         });
 

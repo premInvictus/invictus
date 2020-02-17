@@ -233,14 +233,14 @@
                 <div class="row margin-top-25">
                     <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
                         <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0"
-                            (click)="saveForm()">Save</button>
+                            [disabled]="disableApiCall" (click)="saveForm()">Save</button>
                         <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0"
-                            (click)="saveForm2()">Save</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 
-                                     " (click)="saveForm('1') ">Save &
+                            [disabled]="disableApiCall" (click)="saveForm2()">Save</button>
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 "
+                            [disabled]="disableApiCall" (click)="saveForm('1') ">Save &
                             Submit</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0
-                                 " (click)="saveForm2('1') ">Save &
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0"
+                            [disabled]="disableApiCall" (click)="saveForm2('1') ">Save &
                             Submit</button>
                     </div>
                 </div>

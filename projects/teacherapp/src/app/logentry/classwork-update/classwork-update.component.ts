@@ -16,6 +16,7 @@ export class ClassworkUpdateComponent implements OnInit {
 
 	classworkForm: FormGroup;
 	classworkforForm: FormGroup;
+	disableApiCall = false;
 	noOfPeriods = 2;
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	reviewClasswork: any[] = [];
@@ -438,6 +439,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	}
 	openReviewClasswork() {
 		if (this.classworkForm.valid) {
+			this.disableApiCall = true;
 			const dialogRef = this.dialog.open(ReviewClassworkComponent, {
 				width: '1000px',
 				height: '50%',
@@ -490,10 +492,11 @@ export class ClassworkUpdateComponent implements OnInit {
 						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-								// this.resetClasswork();
+								this.disableApiCall = false;
 								this.router.navigate(['../view-classwork'], { relativeTo: this.route });
 							} else {
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+								this.disableApiCall = false;
 							}
 						});
 					}
