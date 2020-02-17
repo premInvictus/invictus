@@ -126,7 +126,8 @@
                             Admit
                         </th>
                         <td mat-cell *matCellDef="let element">
-                            <button *ngIf="element.status == 'Approved' && isExistUserAccessMenu('279')" mat-raised-button class="btn-success btn-promote" (click)="openDeleteDialog(element)">Admit</button>
+                            <button *ngIf="element.status == 'Approved' && isExistUserAccessMenu('279')" mat-raised-button class="btn-success btn-promote" (click)="openDeleteDialog(element)"
+                            [disabled]="disableApiCall">Admit</button>
                         </td>
                     </ng-container>
                     <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>

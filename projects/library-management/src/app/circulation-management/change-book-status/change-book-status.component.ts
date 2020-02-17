@@ -16,6 +16,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 	bookData: any[] = [];
 	gridView = true;
 	barcodeValue;
+	disableApiCall = false;
 	enteredVal: any = false;
 	changeStatusForm: FormGroup;
 	searchForm: FormGroup;
@@ -316,6 +317,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			}
 		}
 		if (valid) {
+			this.disableApiCall = true;
 			const bookId: any[] = [];
 			for (const item of this.bookData) {
 				bookId.push(Number(item.reserv_id));
@@ -328,10 +330,12 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 					this.notif.showSuccessErrorMessage(res.message, 'success');
 					this.changeStatusForm.reset();
 					this.bookData = [];
+					this.disableApiCall = false;
 				} else {
 					this.notif.showSuccessErrorMessage(res.message, 'error');
 					this.changeStatusForm.reset();
 					this.bookData = [];
+					this.disableApiCall = false;
 				}
 			});
 		}

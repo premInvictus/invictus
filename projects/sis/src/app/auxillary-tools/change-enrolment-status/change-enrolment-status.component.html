@@ -213,6 +213,7 @@
                             <br>
                             <div class="text-center">
                                 <button mat-raised-button class="btn-success"
+                                [disabled]="disableApiCall"
                                     (click)="saveEnrolmentStatus()">Save</button>
                                 <button class="btn-danger btn-spacer" mat-raised-button (click)="reset()">Reset</button>
                             </div>

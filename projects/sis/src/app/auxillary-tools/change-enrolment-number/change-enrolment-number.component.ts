@@ -18,6 +18,7 @@ export class ChangeEnrolmentNumberComponent implements OnInit {
 	changeEnrollmentNumberData: any[] = [];
 	reasonDataArray: any[] = [];
 	events: string[] = [];
+	disableApiCall = false;
 	enrollMentTypeArray: any[] = [
 		{
 			au_process_type: '2', au_process_name: 'Registration'
@@ -186,6 +187,7 @@ export class ChangeEnrolmentNumberComponent implements OnInit {
 	saveEnrolmentNumber() {
 
 		if (this.changeNumberForm.valid) {
+			this.disableApiCall = true;
 			const inputJson = {
 				login_id: this.changeNumberForm.value.login_id,
 				process_type: this.changeNumberForm.value.enrolment_type,
@@ -210,20 +212,25 @@ export class ChangeEnrolmentNumberComponent implements OnInit {
 		this.sisService.maxEnrollmentNo(inputJson).subscribe((result: any) => {
 
 			if (result && result.status === 'ok') {
+				this.disableApiCall = false;
 				this.availabilityStatus = result['available_id'];
 				if (this.availabilityStatus) {
+					this.disableApiCall = true;
 					this.sisService.changeEnrolmentNumber(formJson).subscribe((resultn: any) => {
 						if (resultn && resultn.status === 'ok') {
 							this.notif.showSuccessErrorMessage('Student Enrolment Number Changed Successfully', 'success');
+							this.disableApiCall = false;
 							this.reset();
 						} else {
 							this.notif.showSuccessErrorMessage('Required Enrolment Number not available, please choose another ', 'error');
+							this.disableApiCall = false;
 						}
 					});
 				}
 			} else {
 				this.notif.showSuccessErrorMessage('Required Enrolment Number not available, please choose another', 'error');
 				this.availabilityStatus = 0;
+				this.disableApiCall = false;
 			}
 		});
 	}

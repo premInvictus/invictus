@@ -17,6 +17,7 @@ export class CancelSlctcComponent implements OnInit {
 	issueform: FormGroup;
 	classArray = [];
 	sectionArray = [];
+	disableApiCall = false;
 	selectedDepartmentArray = [];
 	currentImage: any;
 	multipleFileArray: any[] = [];
@@ -154,12 +155,15 @@ export class CancelSlctcComponent implements OnInit {
 		}
 		saveForm() {
 			if (this.issueform.valid) {
+				this.disableApiCall = true;
 				this.issueform.value.tcd_doc_type = 'cancel';
 				this.sisService.cancelSlcTc(this.issueform.value).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
+						this.disableApiCall = false;
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'success');
 						this.moveToSlc();
 					} else {
+						this.disableApiCall = false;
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 					}
 				});

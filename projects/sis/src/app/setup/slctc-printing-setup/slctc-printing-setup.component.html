@@ -41,7 +41,8 @@
   <div class="col-4"></div>
   <div class="col-4">
     <div class="text-center">
-     <button class="btn-success" mat-raised-button (click)="insertTemplate()">Submit</button>
+     <button class="btn-success" mat-raised-button [disabled]= "disableApiCall" 
+     (click)="insertTemplate()">Submit</button>
      </div>
   </div>
   <div class="col-4"></div>

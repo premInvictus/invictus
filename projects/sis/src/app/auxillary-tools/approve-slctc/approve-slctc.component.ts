@@ -16,6 +16,7 @@ export class ApproveSlctcComponent implements OnInit {
 	classArray = [];
 	sectionArray = [];
 	departmentArray = [];
+	disableApiCall = false;
 	selectedDepartmentArray = [];
 	reasonDataArray = [];
 	studentdetailsform: FormGroup;
@@ -207,6 +208,7 @@ export class ApproveSlctcComponent implements OnInit {
 
 	saveForm() {
 		if (this.studentdetailsform.valid) {
+			this.disableApiCall = true;
 			this.studentdetailsform.value.tc_approval_check_list = this.selectedDepartmentArray;
 			this.studentdetailsform.value.tcd_doc_type = 'approve';
 			this.studentdetailsform.value.tc_approval_date = this.commonAPIService.dateConvertion(new Date(), 'yyyy-MM-dd');
@@ -214,9 +216,11 @@ export class ApproveSlctcComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'success');
 					this.resetForm();
+					this.disableApiCall = false;
 					this.router.navigate(['../slc'], { relativeTo: this.route });
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+					this.disableApiCall = false;
 				}
 			});
 		}

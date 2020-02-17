@@ -105,7 +105,9 @@
         <br>
         <div class="row text-center">
           <div class="col-12">
-            <button mat-raised-button class="btn-success" (click)="saveForm()">Submit</button>
+            <button mat-raised-button class="btn-success" 
+            [disabled]="disableApiCall"
+            (click)="saveForm()">Submit</button>
             <!-- <button mat-raised-button class="btn-danger btn-spacer" (click)="resetForm()">Reset</button> -->
             <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()" >Back</button>
           </div>

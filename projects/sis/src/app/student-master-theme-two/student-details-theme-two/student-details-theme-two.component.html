@@ -69,7 +69,7 @@
                   <input class="text-center enroll-font-30 font-size-30" formControlName="au_enrollment_id" matInput
                     [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)" #myInput>
                 </mat-form-field><br>
-                <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_process_type=='5'"><span>LEFT</span>
+                <div class="font-size-16 font-bold blink" *ngIf="((viewOnly || editOnly) && studentdetails.au_process_type=='5')"><span>LEFT</span>
                 </div>
                 <br>
               </div>

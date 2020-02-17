@@ -88,6 +88,7 @@
                 </div>
                 <div class="col-6 ">
                   <button mat-raised-button class="btn-success margin-top-12"
+                  [disabled]="disableApiCall"
                     (click)="getPromotionList()">Generate</button>
                 </div>
               </div>
@@ -172,7 +173,8 @@
                           </th>
                           <td mat-cell *matCellDef="let item">
                             <span class="text-center"><i *ngIf="item.action.pmap_status !== '0' "
-                                class="fas fa-thumbs-up cursor-pointer icon-success"
+                                [class]=" !disableApiCall ? 'fas fa-thumbs-up cursor-pointer icon-success' : 
+                                'fas fa-thumbs-up cursor-pointer icon-success disable-pub'"
                                 (click)="promoteStudent(item)"></i></span>
                             <span style="color:#04a20d" class="text-center cursor-pointer"
                               [hidden]="!(item.action.pmap_status === '0') "><b>Promoted</b></span>
@@ -190,7 +192,9 @@
                   <br />
                   <br />
                   <div class="text-center" *ngIf="toBePromotedList.length > 0">
-                    <button mat-raised-button class="btn-success" (click)="promoteStudentInBulk()">Promote</button>
+                    <button mat-raised-button class="btn-success" 
+                    [disabled]="disableApiCall"
+                    (click)="promoteStudentInBulk()">Promote</button>
                   </div>
                   <br />
                   <br />
@@ -263,6 +267,7 @@
                 </div>
                 <div class="col-6 ">
                   <button mat-raised-button class="btn-success margin-top-12"
+                  [disabled]="disableApiCall"
                     (click)="getDemotionList()">Generate</button>
                 </div>
               </div>
@@ -343,7 +348,7 @@
                             Demote
                           </th>
                           <td mat-cell *matCellDef="let item">
-                            <i class="fas fa-thumbs-down icon-danger" (click)="demoteStudent(item)"></i>
+                            <i [class]="!disableApiCall ? 'fas fa-thumbs-down icon-danger' : 'fas fa-thumbs-down icon-danger disable-pub'" (click)="demoteStudent(item)"></i>
                           </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
@@ -356,6 +361,7 @@
                   <br />
                   <div class="text-center" *ngIf="toBeDemotedList.length > 0">
                     <button mat-raised-button class="btn-danger cursor-pointer"
+                    [disabled]="disableApiCall"
                       (click)="demoteStudentInBulk()">Demote</button>
                   </div>
                   <br />

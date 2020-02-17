@@ -25,6 +25,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	filters: any = {};
 	bookpagesize = 100;
 	pageEvent: PageEvent;
+	disableApiCall = false;
 	bookpageindex = 0;
 	bookpagesizeoptions = [100, 300, 500, 1000];
 	result: any = {};
@@ -695,6 +696,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 		}
 		this.bookForm.value['location'] = this.bookForm.value.stack + '-' + this.bookForm.value.row;
 		if (this.bookForm.valid) {
+			this.disableApiCall = true;
 			this.common.insertReservoirData({
 				bookDetails: this.bookForm.value
 			}).subscribe((res: any) => {
@@ -704,13 +706,16 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 						this.assessionMasterContainer = true;
 						this.addBookContainer = false;
 						this.getReservoirData();
+						this.disableApiCall = false;
 					}
 					this.builForm();
 					this.imageFlag = false;
 					this.bookDetails = {};
 					this.bookImage = '';
+					this.disableApiCall = false;
 				} else {
 					this.notif.showSuccessErrorMessage(res.message, 'error');
+					this.disableApiCall = false;
 				}
 			});
 		}

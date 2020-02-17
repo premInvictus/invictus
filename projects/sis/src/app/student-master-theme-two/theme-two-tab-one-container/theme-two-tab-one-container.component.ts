@@ -17,6 +17,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 
 	panelOpenState = true;
 	addOnly = false;
+	disabledApiCall = false;
 	editOnly = false;
 	viewOnly = true;
 	saveFlag = false;
@@ -114,8 +115,10 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
+				this.disabledApiCall = true;
 			if (this.childDetails.raddressform.value.ea_same_residential_address === false ||
 				(this.childDetails.raddressform.value.ea_same_residential_address === true && this.childDetails.raddressform.valid)) {
+					this.disabledApiCall = true;
 				this.taboneform = this.context.studentdetails.studentdetailsform.value;
 				this.childDetails.baseform.value.upd_doj =
 					this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_doj, 'yyyy-MM-dd');
@@ -152,15 +155,19 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 							au_enrollment_id: result.data.au_enrollment_id
 						});
 						this.commonAPIService.showSuccessErrorMessage('Student Details Inserted Successfully', 'success');
+						this.disabledApiCall = false;
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+						this.disabledApiCall = false;
 					}
 				});
 			} else {
+				this.disabledApiCall = false;
 				this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 			}
 		} else {
+			this.disabledApiCall = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
 		}
 	}

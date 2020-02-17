@@ -376,7 +376,9 @@
                 </mat-checkbox>{{item.docreq_name}}
               </ol>
               <div class="text-center">
-                <button mat-raised-button class="btn-success" (click)="verifyDocument()">Verify</button>
+                <button mat-raised-button class="btn-success" 
+                [disabled]="disableApiCall"
+                (click)="verifyDocument()">Verify</button>
               </div>
               <br>
             </div>
@@ -420,7 +422,8 @@
       <br>
       <br>
       <div class="text-center margin-bottom-65">
-        <button mat-raised-button class="btn-success" (click)="updateForm()">Submit</button>
+        <button mat-raised-button class="btn-success" (click)="updateForm()"
+        [disabled]="disableApiCall">Submit</button>
         <button class="btn-danger btn-spacer" mat-raised-button (click)="resetForm()">Reset</button>
       </div>
     </ng-container>

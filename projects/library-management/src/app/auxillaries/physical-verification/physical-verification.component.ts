@@ -54,7 +54,7 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
 
   // MatPaginator Output
   pageEvent: PageEvent;
-
+  disableApiCall = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -261,16 +261,19 @@ export class PhysicalVerificationComponent implements OnInit, AfterViewInit {
       'verfication_status' : '1',
       'verification_details' : JSON.stringify(batchArr)
     };
+    this.disableApiCall = true;
     this.erpCommonService.insertPhysicalVerification(inputJson).subscribe((res: any) => {
       if (res && res.status == 'ok') {
         this.common.showSuccessErrorMessage(res.message, res.status);
         this.showNewBatchStatus = false;
         this.showBookList = false;
         this.showVerifiedBookLog = true;
+        this.disableApiCall = false;
         this.reset();        
         this.getVerificationLog();
       } else {
         this.common.showSuccessErrorMessage(res.message, res.status);
+        this.disableApiCall = false;
       }
     });
     this.enteredVal = false;

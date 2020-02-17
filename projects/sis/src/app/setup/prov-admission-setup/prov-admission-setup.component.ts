@@ -13,6 +13,7 @@ export class ProvAdmissionSetupComponent implements OnInit {
 	formFieldArray: any[] = [];
 	finalFieldsArray: any[][] = [];
 	formLabelArray: any[] = [];
+	disableApiCall = false;
 	settingsArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	tabIdArray: any[] = [];
@@ -86,10 +87,14 @@ export class ProvAdmissionSetupComponent implements OnInit {
 			cos_process_type: '3',
 			configRelation: this.settingsArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}
