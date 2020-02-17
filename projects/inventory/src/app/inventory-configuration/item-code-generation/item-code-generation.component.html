@@ -79,9 +79,9 @@
                 </div>
                 <div class="text-center ">
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-success-green"
-                    (click)="saveForm()">Submit</button>
+                    (click)="saveForm()" [disabled]="disabledApiButton">Submit</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-success-green"
-                    (click)="saveForm()">Update</button>
+                    (click)="saveForm()" [disabled]="disabledApiButton">Update</button>
                   <button *ngIf="updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"
                     (click)="cancelForm()">Cancel</button>
                   <button *ngIf="!updateFlag" mat-raised-button class="btn-primary btn-reset btn-spacer"

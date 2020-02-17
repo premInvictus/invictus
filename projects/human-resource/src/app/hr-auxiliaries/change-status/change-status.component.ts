@@ -27,6 +27,7 @@ export class ChangeStatusComponent implements OnInit {
   showActive = false;
   change_status = '';
   currentUser: any;
+  disabledApiButton = false;
   constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
     private notif: CommonAPIService, private sisService: SisService,
     private router: Router,
@@ -91,6 +92,7 @@ export class ChangeStatusComponent implements OnInit {
   }
   saveEnrolmentStatus() {
     if (this.changeEnrolmentStatusForm.valid) {
+      this.disabledApiButton = true;
       const inputJson = {
         emp_status: "left",
         emp_id: this.changeEnrolmentStatusForm.value.emp_id,
@@ -103,6 +105,7 @@ export class ChangeStatusComponent implements OnInit {
 
       }
       this.notif.updateEmployee(inputJson).subscribe((result: any) => {
+        this.disabledApiButton = false;
         if (result) {
           this.notif.showSuccessErrorMessage('Status Change Successfully', 'success');
           this.reset();

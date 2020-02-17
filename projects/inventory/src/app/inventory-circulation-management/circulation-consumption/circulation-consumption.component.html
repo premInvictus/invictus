@@ -56,7 +56,7 @@
             [src]="userData?.au_profileimage" height="90px" width="90px"
             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'" />
         </div>
-       
+
         <div class="col-2 remove-col-padding-left margin-top-15">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
@@ -135,8 +135,8 @@
                   (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
                     class="fas fa-shopping-cart"></i></a> -->
 
-                <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button style="width:200px !important;"
-                  (click)="showReturnIssueSection=!showReturnIssueSection">
+                <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button
+                  style="width:200px !important;" (click)="showReturnIssueSection=!showReturnIssueSection">
                   Issue / Return Item
                 </button>
 
@@ -144,7 +144,7 @@
             </div>
           </div>
         </div>
-        
+
       </div>
     </mat-card>
   </div>
@@ -303,7 +303,8 @@
         <br />
         <div class="row text-center" *ngIf="itemData.length > 0">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()"
+              [disabled]="disabledApiButton">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
               Reset
             </button>

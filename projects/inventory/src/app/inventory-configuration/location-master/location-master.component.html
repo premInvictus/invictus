@@ -61,8 +61,10 @@
                       </form>
                     </div>
                     <div class="text-center margin-top-15">
-                      <button *ngIf="!editFlag" mat-raised-button class="btn-success" (click)="save()">Add</button>
-                      <button *ngIf="editFlag" mat-raised-button class="btn-success" (click)="save()">Update</button>
+                      <button *ngIf="!editFlag" mat-raised-button class="btn-success" (click)="save()"
+                        [disabled]="disabledApiButton">Add</button>
+                      <button *ngIf="editFlag" mat-raised-button class="btn-success" (click)="save()"
+                        [disabled]="disabledApiButton">Update</button>
                       <button mat-raised-button class="btn-danger btn-spacer" (click)="resetForm()">Reset</button>
                     </div>
                   </div>

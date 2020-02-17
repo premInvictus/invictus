@@ -52,6 +52,7 @@ export class BranchTransferComponent implements OnInit {
   schoolInfo: any = {};
   locations: any[] = [];
   datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
+  disabledApiButton = false;
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.getBranch();
@@ -365,6 +366,7 @@ export class BranchTransferComponent implements OnInit {
   }
   finalSubmit($event) {
     if ($event) {
+      this.disabledApiButton = true;
       if (!this.editBranchtransfer && !this.deleteFlag && !this.genFlag) {
         const JSON = {
           inv_bt_id: '',
@@ -390,6 +392,7 @@ export class BranchTransferComponent implements OnInit {
           branch_from: '',
         };
         this.service.createBranchTransfer(JSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res) {
             this.finalRequistionArray = [];
             this.createRequistionForm.reset();
@@ -411,6 +414,7 @@ export class BranchTransferComponent implements OnInit {
           }
         };
         this.service.updateBranchTransfer(JSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res) {
             this.finalRequistionArray = [];
             this.createRequistionForm.reset();
@@ -433,6 +437,7 @@ export class BranchTransferComponent implements OnInit {
           status: 'deleted'
         };
         this.service.updateBranchTransfer(JSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res) {
             this.finalRequistionArray = [];
             this.createRequistionForm.reset();
@@ -455,6 +460,7 @@ export class BranchTransferComponent implements OnInit {
           status: 'gatepass-created'
         };
         this.service.updateBranchTransfer(JSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res) {
             this.finalRequistionArray = [];
             this.createRequistionForm.reset();
@@ -485,6 +491,7 @@ export class BranchTransferComponent implements OnInit {
               branch_to: '',
             };
             this.service.branchInsert(JSON).subscribe((res: any) => {
+              this.disabledApiButton = false;
               if (res) {
                 this.service.updateMultiple({
                   inv_item_details: this.item_det.inv_item_details

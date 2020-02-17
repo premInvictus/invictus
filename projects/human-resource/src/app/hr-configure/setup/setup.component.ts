@@ -44,6 +44,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	configFlag = false;
 	calculationFlag = false;
 	multipleDropdownName: any;
+	disabledApiButton = false;
 	congigArray = [
 		{ id: "1", name: 'Master' },
 		{ id: "2", name: 'Salary Component' },
@@ -535,6 +536,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.setupDetails = {
@@ -608,6 +610,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.setupDetails = {
@@ -768,6 +771,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	addEntry(data, serviceName, next) {
 		this.commonService[serviceName](data).subscribe((result: any) => {
+			this.disabledApiButton = false;
 			if (result) {
 				if (this.configValue === '1') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -797,6 +801,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	updateEntry(data, serviceName, next) {
 		this.commonService[serviceName](data).subscribe((result: any) => {
+			this.disabledApiButton = false;
 			if (result) {
 				if (this.configValue === '1') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({

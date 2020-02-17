@@ -14,6 +14,7 @@ export class SystemInfoComponent implements OnInit {
 	configFlag = false;
 	notifConfigArray: any[] = [];
 	configValue: any;
+	disabledApiButton = false;
 	constructor(private fbuild: FormBuilder,
 		private commonService: CommonAPIService,
 		private sisService: SisService,
@@ -108,13 +109,15 @@ export class SystemInfoComponent implements OnInit {
 		}
 	}
 	updateGlobalSetting() {
-
+		this.disabledApiButton = true;
 		let inputJson = { 'school_push_notif': JSON.stringify(this.notifConfigArray) };
 		this.erpCommonService.updateGlobalSetting(inputJson).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.disabledApiButton = false;
 				this.commonService.showSuccessErrorMessage(result.message, result.status);
 				this.getGlobalSettings();
 			} else {
+				this.disabledApiButton = false;
 				this.commonService.showSuccessErrorMessage(result.message, result.status);
 			}
 		});

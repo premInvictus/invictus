@@ -6,7 +6,8 @@
           <mat-label>Changed SuperVisior</mat-label>
           <mat-select placeholder="Choose reasons" formControlName="change_supervisor" required>
             <mat-option value="">Please select</mat-option>
-            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name}} ({{item.emp_designation_detail.des_name}})</mat-option>
+            <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">{{item.emp_name}}
+              {{item.emp_designation_detail ? (item.emp_designation_detail.des_name):" "}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>

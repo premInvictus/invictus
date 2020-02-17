@@ -22,7 +22,7 @@
                         </ng-template>
                         <div class="col-12 text-right margin-top-10 position-right">
                             <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
-                                (click)="openLeaveApplicationForm()">Apply For Leave
+                                (click)="openLeaveApplicationForm()" [disabled]="disabledApiButton">Apply For Leave
                             </button>
                         </div>
                         <div class="row">
@@ -91,7 +91,10 @@
                                                     href="javascript:void(0)" (click)="viewReceipt(item?.action)"><i
                                                         class="fas fa-print"></i></a></span> -->
                                             <i class="fas fa-edit font-color-grey margin-right-15"
-                                                style="font-size:16px;" (click)="editLeave(item?.action)"></i>
+                                                style="font-size:16px;" (click)="editLeave(item?.action)"
+                                                *ngIf="!disabledApiButton"></i>
+                                            <i class="fas fa-edit font-color-grey margin-right-15"
+                                                style="font-size:16px;" *ngIf="disabledApiButton"></i>
                                             <i class="fas fa-times-circle font-color-grey margin-right-15"
                                                 style="font-size:16px;color:red"
                                                 (click)="deleteLeave(item?.action)"></i>
@@ -243,7 +246,7 @@
             </mat-card>
         </div>
     </div>
-</div> 
+</div>
 <app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteConfirm($event)"
     (deleteCancel)="deleteCancel()"></app-delete-modal>
 
