@@ -42,6 +42,7 @@ export class EmpEnqTabOneComponent implements OnInit {
 	settingsArray: any[] = [];
 	parentId;
 	categoryOneArray: any[] = [];
+	disabledApiButton = false;
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },
 		{ hon_id: "2", hon_name: 'Mrs.' },
@@ -211,6 +212,7 @@ export class EmpEnqTabOneComponent implements OnInit {
 
 	saveForm() {
 		if (this.personalDetails.valid) {
+			this.disabledApiButton = true;
 			if (this.addressFlag) {
 				this.personaldetails['emp_personal_detail'] = {
 					same_as_residential: false,
@@ -478,9 +480,11 @@ export class EmpEnqTabOneComponent implements OnInit {
 			}
 			this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
 				if (result) {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
 					this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
 				} else {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
 				}
 			});
@@ -491,6 +495,7 @@ export class EmpEnqTabOneComponent implements OnInit {
 
 	updateForm(moveStatus) {
 		if (this.personalDetails.valid) {
+			this.disabledApiButton = true;
 			if (this.addressFlag) {
 				this.personaldetails['emp_personal_detail'] = {
 					same_as_residential: false,
@@ -609,19 +614,23 @@ export class EmpEnqTabOneComponent implements OnInit {
 			if (!moveStatus) {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 					if (result) {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
 					}
 				});
 			} else {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 					if (result) {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
 						this.getPersonalDetailsdata();
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					} else {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
 					}
 				});

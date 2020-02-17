@@ -42,6 +42,7 @@ export class TimeTableComponent implements OnInit {
 	period: any;
 	tt_id: any;
 	zero: any;
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private syllabusService: SmartService,
@@ -313,6 +314,7 @@ export class TimeTableComponent implements OnInit {
 	}
 	// TimeTable details insert in database
 	finalSubmit() {
+		this.disabledApiButton = true;
 		this.finalTimeTableArray = [];
 		for (let i = 0; i < this.finalXlslArray.length; i++) {
 			if (this.finalXlslArray[i].monday_id !== '') {
@@ -445,6 +447,7 @@ export class TimeTableComponent implements OnInit {
 							}
 							this.syllabusService.insertTimetableDetails(this.finalTimeTableArray).subscribe((details_r: any) => {
 								if (details_r && details_r.status === 'ok') {
+									this.disabledApiButton = false;
 									this.finalXlslArray = [];
 									this.excelFlag = false;
 									this.defaultFlag = true;

@@ -17,7 +17,8 @@
                   </mat-form-field>
                 </div>
                 <div class="col-6 margin-top-10  text-right">
-                  <span class="cursor-pointer font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog($event)">Advanced
+                  <span class="cursor-pointer font-size-12 margin-top-15 font-skyblue"
+                    (click)="openSearchDialog($event)">Advanced
                     Search
                     <i class="fas fa-chevron-down"></i></span>
                 </div>
@@ -78,7 +79,8 @@
               <div class="col-12">
                 <mat-form-field class="form-field-150" appearance="outline">
                   <mat-label>Change Type</mat-label>
-                  <mat-select placeholder="Change Type" formControlName="change_type" (selectionChange)="resetFilter()" required>
+                  <mat-select placeholder="Change Type" formControlName="change_type" (selectionChange)="resetFilter()"
+                    required>
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of change_typeArray" [value]="item.id">
                       {{item.name}}
@@ -96,17 +98,18 @@
                   </mat-select>
                 </mat-form-field>
                 <ng-container *ngIf="changeStatusForm.value.change_type == 'location'">
-                    <mat-form-field class="margin-left-15 form-field-150" appearance="outline">
-                        <mat-label>Change Location</mat-label>
-                      <input matInput placeholder="Change Location" [matAutocomplete]="auto" (keyup)="getFilterLocation($event)" formControlName="change_location_name" />
-                    </mat-form-field>
-                    <mat-autocomplete flex #auto="matAutocomplete">
-                        <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
-                          (onSelectionChange)="setLocationId(item, i)">
-                          <!-- <small>{{item.location_hierarchy | capitalize}}</small> -->
-                          <span [innerHTML]="item.location_hierarchy | capitalize | highlight: toHighlight"></span>
-                        </mat-option>
-                    </mat-autocomplete>
+                  <mat-form-field class="margin-left-15 form-field-150" appearance="outline">
+                    <mat-label>Change Location</mat-label>
+                    <input matInput placeholder="Change Location" [matAutocomplete]="auto"
+                      (keyup)="getFilterLocation($event)" formControlName="change_location_name" />
+                  </mat-form-field>
+                  <mat-autocomplete flex #auto="matAutocomplete">
+                    <mat-option *ngFor="let item of allLocationData" [value]="item.location_id"
+                      (onSelectionChange)="setLocationId(item, i)">
+                      <!-- <small>{{item.location_hierarchy | capitalize}}</small> -->
+                      <span [innerHTML]="item.location_hierarchy | capitalize | highlight: toHighlight"></span>
+                    </mat-option>
+                  </mat-autocomplete>
                 </ng-container>
                 <mat-form-field class="margin-left-15 form-field-150" appearance="outline">
                   <mat-label>Quantity</mat-label>
@@ -141,7 +144,7 @@
             <br />
             <div class="row text-center">
               <div class="col-12">
-                <button mat-raised-button class="btn-success-green" (click)="submit()">
+                <button mat-raised-button class="btn-success-green" (click)="submit()" [disabled]="disabledApiButton">
                   Submit
                 </button>
                 <button mat-raised-button class="btn-reset btn-spacer" (click)="changeStatusForm.reset()">

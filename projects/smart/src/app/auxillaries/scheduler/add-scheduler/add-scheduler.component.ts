@@ -19,6 +19,7 @@ export class AddSchedulerComponent implements OnInit {
 	periodsLabel = ['', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	minDate = new Date();
 	maxDate = new Date();
+	disabledApiButton = false;
 	constructor(
 		public dialogRef: MatDialogRef<AddSchedulerComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -151,6 +152,7 @@ export class AddSchedulerComponent implements OnInit {
 
 	submit() {
 		if (this.schedulerform.valid) {
+			this.disabledApiButton = true;
 			this.schedulerform.value.sc_from = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_from);
 			this.schedulerform.value.sc_to = this.commonAPIService.dateConvertion(this.schedulerform.value.sc_to);
 			this.schedulerform.value.sc_partial_day_event = this.schedulerform.value.sc_partial_day_event ? '1' : '0';
@@ -159,6 +161,7 @@ export class AddSchedulerComponent implements OnInit {
 				this.schedulerform.value.sc_id = this.data.schedulerDetails.sc_id;
 			}
 			this.smartService.insertScheduler(this.schedulerform.value).subscribe((result: any) => {
+				this.disabledApiButton = false;
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.reset();

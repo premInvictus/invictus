@@ -24,7 +24,8 @@
                         <div class="col-2">
                             <mat-form-field class="form-field" appearance="outline">
                                 <mat-label> Message Type </mat-label>
-                                <mat-select formControlName="messageType" (selectionChange)="resetFormValues();getTemplate()">
+                                <mat-select formControlName="messageType"
+                                    (selectionChange)="resetFormValues();getTemplate()">
                                     <mat-option value="E" placeholder="Message Type">Mail</mat-option>
                                     <mat-option value="S" placeholder="Message Type">SMS</mat-option>
                                 </mat-select>
@@ -53,7 +54,7 @@
                             <div class="col-12 border-bottom">
                                 <!-- <mat-form-field class="form-field" appearance="outline"> -->
                                 <input matInput placeholder="To" type="input" formControlName="messageTo" style="width: 90%;
-                                padding: 10px;" readonly/>
+                                padding: 10px;" readonly />
                                 <div class="user-chips"
                                     *ngIf="messageForm.value.messageType === 'E' && selectedUserArr.length > 0">
                                     <button *ngFor="let item of selectedUserArr; let i= index;" mat-stroked-button
@@ -78,7 +79,8 @@
                                             style="cursor: pointer; z-index: 99999;"
                                             (click)="showUserContextMenu =!showUserContextMenu "></i>
                                     </span>
-                                    <span class="remove-all" *ngIf="this.messageForm.value.messageType != '' && selectedUserArr.length > 0"><i
+                                    <span class="remove-all"
+                                        *ngIf="this.messageForm.value.messageType != '' && selectedUserArr.length > 0"><i
                                             class="fas fa-trash-alt" style="color:#ff0000"
                                             (click)="removeAll()"></i></span>
                                 </span>
@@ -108,13 +110,17 @@
                                                         </section>
                                                     </div>
                                                     <div style="width: 25%; float:right">
-                                                        <a href="javascript:void(0)" style="float:right;font-size:16px;margin-top: -2px;"
-                                                            (click)="generateUserList()" title="Next"><i class="fas fa-arrow-circle-right" style="color:#82C91E"></i></a>
                                                         <a href="javascript:void(0)"
-                                                            style="float:right;"
-                                                            (click)="backToMain()" title="Back"><i class="fas fa-arrow-circle-left" style=" color:#ff0000; margin-right:5px;font-size:16px"></i>
-                                                           
-                                                            </a>&nbsp;&nbsp;
+                                                            style="float:right;font-size:16px;margin-top: -2px;"
+                                                            (click)="generateUserList()" title="Next"><i
+                                                                class="fas fa-arrow-circle-right"
+                                                                style="color:#82C91E"></i></a>
+                                                        <a href="javascript:void(0)" style="float:right;"
+                                                            (click)="backToMain()" title="Back"><i
+                                                                class="fas fa-arrow-circle-left"
+                                                                style=" color:#ff0000; margin-right:5px;font-size:16px"></i>
+
+                                                        </a>&nbsp;&nbsp;
                                                         <i *ngIf="!showSearchFlag" class="fa fa-search search-icon"
                                                             aria-hidden="true" (click)="showSearch()"></i>
                                                     </div>
@@ -160,11 +166,16 @@
 
                                         <div style="width: 25%; float:right">
 
-                                            <a href="javascript:void(0)" style="float:right;font-size:16px;margin-top: -2px;" (click)="done()" title="Done"><i class="fas fa-check-circle" style="color:#82C91E"></i></a>
+                                            <a href="javascript:void(0)"
+                                                style="float:right;font-size:16px;margin-top: -2px;" (click)="done()"
+                                                title="Done"><i class="fas fa-check-circle"
+                                                    style="color:#82C91E"></i></a>
                                             &nbsp;&nbsp;
                                             <a href="javascript:void(0)"
                                                 style="float:right; color:#ff0000; margin-right:5px;"
-                                                (click)="backToUserList()" title="Back"><i class="fas fa-arrow-circle-left" style=" color:#ff0000; margin-right:5px;font-size:16px"></i></a>&nbsp;&nbsp;
+                                                (click)="backToUserList()" title="Back"><i
+                                                    class="fas fa-arrow-circle-left"
+                                                    style=" color:#ff0000; margin-right:5px;font-size:16px"></i></a>&nbsp;&nbsp;
                                             <i *ngIf="!showSearchByUserFlag" class="fa fa-search search-icon"
                                                 aria-hidden="true" (click)="showSearchByUser()"></i>
                                         </div>
@@ -230,7 +241,8 @@
 
                         <div class="row" *ngIf="messageForm.value.messageType==='S'">
                             <div class="col-12" style="min-height: 400px;">
-                                <textarea class="message-textarea" formControlName="messageBody" (change)="onBodyChange($event)"></textarea>
+                                <textarea class="message-textarea" formControlName="messageBody"
+                                    (change)="onBodyChange($event)"></textarea>
                             </div>
                         </div>
 
@@ -263,11 +275,13 @@
                         </div>
                         <div class="col-3 template-check-box">
                             <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important">Send Message<i
+                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important"
+                                [disabled]="disabledApiButton">Send Message<i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button>
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important">Update Message <i
-                                    class="fa fa-caret-up float-right margin-top-10"></i></button>
+                                (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important"
+                                [disabled]="disabledApiButton">Update
+                                Message <i class="fa fa-caret-up float-right margin-top-10"></i></button>
                             &nbsp;
                             <!-- <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 [matMenuTriggerFor]="menu2" (click)="sendEmailSchedule()" style="margin-left:0 !important">Send <i
@@ -278,9 +292,11 @@
                                     <button mat-menu-item (click)="scheduleForLater()">Schedule For Later</button>
                                 </span>
                             </mat-menu> -->
-                            <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"><b>Save as template</b>
+                            <mat-checkbox (change)="saveTemplate()" *ngIf="!editTemplateFlag"
+                                [disabled]="disabledApiButton"><b>Save as template</b>
                             </mat-checkbox>
-                            <mat-checkbox (change)="saveTemplate()" *ngIf="editTemplateFlag"><b>Update as template</b>
+                            <mat-checkbox (change)="saveTemplate()" *ngIf="editTemplateFlag"
+                                [disabled]="disabledApiButton"><b>Update as template</b>
                             </mat-checkbox>
                         </div>
                     </div>

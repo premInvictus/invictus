@@ -30,6 +30,7 @@ export class PhysicalVerificationComponent implements OnInit {
   PHYSICAL_VERIFICATION_LIST_ELEMENT: PhysicalVerificationListElement[] = [];
   physicalVerificationdataSource = new MatTableDataSource<PhysicalVerificationListElement>(this.PHYSICAL_VERIFICATION_LIST_ELEMENT);
   displayedListColumns: string[] = ['srno', 'item_code', 'item_name', 'item_desc', 'item_nature', 'item_category', 'item_location', 'item_current_stock', 'last_verification_date', 'action'];
+  disabledApiButton = false;
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -96,6 +97,7 @@ export class PhysicalVerificationComponent implements OnInit {
   }
 
   approveVerification(item) {
+    this.disabledApiButton = true;
     var inputJson = {
       pv_item_code: Number(item.item_code),
       pv_location_id: Number(item.item_location_id),
@@ -103,6 +105,7 @@ export class PhysicalVerificationComponent implements OnInit {
       pv_item_stock: item.item_current_stock
     };
     this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result: any) => {
+      this.disabledApiButton = false;
       this.common.showSuccessErrorMessage('Physical Verification Approve Successfully', 'success');
       this.getPhysicalVerification({ location_id: Number(this.currentLocationId) })
     });
@@ -131,6 +134,7 @@ export class PhysicalVerificationComponent implements OnInit {
   }
 
   deleteVerification(data) {
+    this.disabledApiButton = true;
     console.log('data--', data);
     var inputJson = {
       pv_item_code: Number(data.item_code),
@@ -139,6 +143,7 @@ export class PhysicalVerificationComponent implements OnInit {
       pv_item_stock: data.quantity
     };
     this.erpCommonService.insertInventoryPhysicalVerification(inputJson).subscribe((result: any) => {
+      this.disabledApiButton = false;
       this.common.showSuccessErrorMessage('Physical Verification Updated Successfully', 'success');
       this.getPhysicalVerification({ location_id: Number(this.currentLocationId) })
     });

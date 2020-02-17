@@ -27,6 +27,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
   editRequestFlag = false;
   contactsArray: any = {};
   personalContacts: FormGroup;
+  disabledApiButton = false;
   relationshipArray: any[] = [
     { id: 1, name: 'Father' },
     { id: 2, name: 'Mother' },
@@ -188,6 +189,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
   }
   saveForm() {
     if (this.personalContacts.valid) {
+      this.disabledApiButton = true;
       if (this.employeedetails) {
         this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
         this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -241,9 +243,11 @@ export class EmpEnqTabTwoComponent implements OnInit {
       };
       this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
         if (result) {
+          this.disabledApiButton = false;
           this.commonAPIService.renderTab.next({ tabMove: true });
           this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
         } else {
+          this.disabledApiButton = false;
           this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
         }
       });
@@ -271,6 +275,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
   }
   updateForm(isview) {
     if (this.personalContacts.valid) {
+      this.disabledApiButton = true;
       if (this.employeedetails) {
         this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
         this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -324,6 +329,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
       };
       this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
         if (result) {
+          this.disabledApiButton = false;
           this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
           if (isview) {
             this.commonAPIService.renderTab.next({ tabMove: true });
@@ -332,6 +338,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
             this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
           }
         } else {
+          this.disabledApiButton = false;
           this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
         }
       });

@@ -18,7 +18,7 @@ export class PurchaseRequisitionComponent implements OnInit {
   requistionArray: any[] = [];
   itemCode: any;
   itemCodeArray: any[] = [];
-  finalRequistionArray: any = {};
+  finalRequistionArray: any = {}; 
   toBePromotedList: any[] = [];
   tableDivFlag = false;
   tabledataFlag = false;
@@ -35,6 +35,7 @@ export class PurchaseRequisitionComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   spans = [];
   allselectedP = false;
+  disabledApiButton = false;
   constructor(
     private fbuild: FormBuilder,
     public commonService: CommonAPIService,

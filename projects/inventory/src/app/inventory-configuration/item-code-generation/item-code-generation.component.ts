@@ -26,6 +26,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   currentUser: any = {};
   itempagesizeoptions = [100, 300, 500, 1000];
   datasource = new MatTableDataSource<any>(this.ITEM_MASTER_DATA);
+  disabledApiButton = false;
   @ViewChild('paginator') paginator: MatPaginator;
   @ViewChild('delete') deleteModal;
   displayedColumns = ['sno', 'code', 'name', 'nature', 'category', 'reorder', 'desc', 'action'];
@@ -164,6 +165,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
   }
   saveForm() {
     if (this.itemCodeForm.valid) {
+      this.disabledApiButton = true;
       if (!this.updateFlag) {
         let inputJSON = {};
         inputJSON['item_code'] = '';
@@ -198,6 +200,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
           id: this.currentUser.login_id
         }
         this.service.insertItemsMaster(inputJSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res && res.status === 'ok') {
             this.common.showSuccessErrorMessage('Item generated successfully', 'success');
             this.getAllItemsFromMaster();
@@ -232,6 +235,7 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
           id: this.currentUser.login_id
         }
         this.service.updateItemsMaster(inputJSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res && res.status === 'ok') {
             this.common.showSuccessErrorMessage('Item Updated successfully', 'success');
             this.getAllItemsFromMaster();

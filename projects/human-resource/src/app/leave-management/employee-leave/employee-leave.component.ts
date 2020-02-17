@@ -19,6 +19,7 @@ export class EmployeeLeaveComponent implements OnInit {
   myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'leave_to', 'action'];
   MY_LEAVE_ELEMENT_DATA: EmployeeLeave[] = [];
   myLeaveDataSource = new MatTableDataSource<EmployeeLeave>(this.MY_LEAVE_ELEMENT_DATA);
+  disabledApiButton = false;
   constructor(
     private common: CommonAPIService,
     public dialog: MatDialog
@@ -78,15 +79,18 @@ export class EmployeeLeaveComponent implements OnInit {
     });
   }
   update(result) {
+    this.disabledApiButton = true;
     var inputJson = {};
     inputJson['leave_to'] = result.change_supervisor;
     inputJson['leave_from'] = result.emp_login_id;
     inputJson['leave_id'] = result.leave_id;
     this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
       if (result) {
+        this.disabledApiButton = false;
         this.common.showSuccessErrorMessage('Supervisor Changed Successfully', 'success');
         this.getMyLeave();
       } else {
+        this.disabledApiButton = false;
         this.common.showSuccessErrorMessage('Error While Changed Supervisor', 'error');
       }
     });

@@ -29,7 +29,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	currentStatusName = '';
 	currentCategoryName = '';
 	editAllStatus = true;
-
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -119,16 +119,16 @@ export class EmployeeAttendanceComponent implements OnInit {
 										}
 										if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 											curr_total_leave_closing_balance = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
-	
+
 											leave_credited_count = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
-	
+
 											total_leave_closing_balance = Number(total_leave_closing_balance) + Number(leave_credited_count);
 										}
 									}
 									emp_leave_approved = item.emp_month_attendance_data.month_data[i].attendance_detail && item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved ? item.emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved : ''
 								}
 							}
-							
+
 						}
 
 						// console.log('total_leave_closing_balance', total_leave_closing_balance);
@@ -229,6 +229,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	saveEmployeeAttendance() {
+		this.disabledApiButton = true;
 		let inputJson = {};
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
@@ -283,8 +284,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 		}
 		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
 			if (result) {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 			} else {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 			}
 		});

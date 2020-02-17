@@ -48,6 +48,7 @@ export class AdminReturnComponent implements OnInit {
 	totalEarning: any = 0;
 	deduction: any = 0;
 	earning: any = 0;
+	disabledApiButton = false;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -500,6 +501,7 @@ export class AdminReturnComponent implements OnInit {
 	}
 
 	save() {
+		this.disabledApiButton = true;
 		var inputArr = [];
 		var edit = false;
 		let inputJson = {};
@@ -521,10 +523,12 @@ export class AdminReturnComponent implements OnInit {
 		finJson['emp_salary_compute_data'] = inputArr;
 		if (this.salaryComputeEmployeeData.length > 0) {
 			this.commonAPIService.updateAdminReturn(finJson).subscribe((result: any) => {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Admin Return Updated Successfully', 'success');
 			});
 		} else {
 			this.commonAPIService.insertAdminReturn(finJson).subscribe((result: any) => {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Admin Return Inserted Successfully', 'success');
 				this.getSalaryComputeEmployee();
 			});

@@ -35,6 +35,7 @@ export class SalaryComputationComponent implements OnInit {
 	editFlag = false;
 	fromFilter = false;
 	filterJson = {};
+	disabledApiButton = false;
 	paymentModeArray: any[] = [
 		// {
 		// 	pm_id: 'bank_transfer',
@@ -678,6 +679,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	save() {
+		this.disabledApiButton = true;
 		var inputArr = [];
 		var edit = false;
 		let inputJson = {};
@@ -717,11 +719,13 @@ export class SalaryComputationComponent implements OnInit {
 			//console.log('finJson', finJson);
 			if (!edit) {
 				this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					this.getAllEmployee();
 				});
 			} else {
 				this.commonAPIService.updateSalaryCompute(finJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 				});
 			}

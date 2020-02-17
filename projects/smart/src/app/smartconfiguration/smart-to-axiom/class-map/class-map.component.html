@@ -11,7 +11,8 @@
                             <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Class</mat-label>
                                 <mat-select formControlName="gclass_id">
-                                    <mat-option *ngFor="let item1 of gcArray" [value]="item1.class_id">{{item1.class_name}}
+                                    <mat-option *ngFor="let item1 of gcArray" [value]="item1.class_id">
+                                        {{item1.class_name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -20,7 +21,8 @@
                             <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Section</mat-label>
                                 <mat-select formControlName="gsec_id" multiple>
-                                    <mat-option *ngFor="let item1 of gsecArray" [value]="item1.sec_id" selected>{{item1.sec_name}}
+                                    <mat-option *ngFor="let item1 of gsecArray" [value]="item1.sec_id" selected>
+                                        {{item1.sec_name}}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
@@ -31,7 +33,8 @@
         </form>
         <div class="row margin-top-20">
             <div class="col-12 text-center">
-                <button mat-raised-button class="btn-success-green" (click)="submitClass()">Submit</button>
+                <button mat-raised-button class="btn-success-green" [disabled]="disabledApiButton"
+                    (click)="submitClass()">Submit</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
             </div>
         </div>

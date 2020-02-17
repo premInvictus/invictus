@@ -42,6 +42,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
   ];
   requiredAll = true;
   employeeCatDeptAvail = false;
+  disabledApiButton = false;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -299,6 +300,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
       }
     }
     if (this.requiredAll) {
+      this.disabledApiButton = true;
       const checkParam: any = {};
       checkParam.month_id = new Date(this.firstForm.value.entry_date).getMonth() + 1;
       checkParam.entrydate = this.firstForm.value.entry_date ? new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') : '';
@@ -310,6 +312,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
       checkParam.employeeList = this.finalArray;
       if (!this.employeeCatDeptAvail && !this.monthEntryAvailable) {
         this.commonService.insertAttendance(checkParam).subscribe((result: any) => {
+          this.disabledApiButton = false;
           if (result && result.status === 'ok') {
             this.commonService.showSuccessErrorMessage('Attendance Inserted Successfully', 'success');
             this.fetchDetails();
@@ -328,6 +331,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
           }
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res && res.status === 'ok') {
             this.commonService.showSuccessErrorMessage('Attendance Inserted Successfully', 'success');
             this.fetchDetails();
@@ -344,6 +348,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
           }
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
+          this.disabledApiButton = false;
           if (res && res.status === 'ok') {
             this.commonService.showSuccessErrorMessage('Attendance Updated Successfully', 'success');
             this.fetchDetails();

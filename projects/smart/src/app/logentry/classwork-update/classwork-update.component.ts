@@ -11,7 +11,7 @@ import * as moment from 'moment';
 @Component({
 	selector: 'app-classwork-update',
 	templateUrl: './classwork-update.component.html',
-	styleUrls: ['./classwork-update.component.css']
+	styleUrls: ['./classwork-update.component.css'] 
 })
 export class ClassworkUpdateComponent implements OnInit {
 
@@ -39,6 +39,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	disableClassArray: any[] = [];
 	disableSubjectArray: any[] = [];
 	timetabledata: any[] = [];
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -372,6 +373,7 @@ export class ClassworkUpdateComponent implements OnInit {
 				data: this.reviewClasswork
 			});
 			dialogRef.afterClosed().subscribe(dresult => {
+				this.disabledApiButton = true;
 				if (dresult && dresult.data) {
 					if (this.classworkForm.valid) {
 						this.Periods.controls.forEach((eachFormGroup: FormGroup) => {
@@ -417,10 +419,12 @@ export class ClassworkUpdateComponent implements OnInit {
 						});
 						this.smartService.classworkInsert(this.classworkForm.value).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
+								this.disabledApiButton = false;
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 								// this.resetClasswork();
 								this.router.navigate(['../view-classwork'], { relativeTo: this.route });
 							} else {
+								this.disabledApiButton = false;
 								this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 							}
 						});

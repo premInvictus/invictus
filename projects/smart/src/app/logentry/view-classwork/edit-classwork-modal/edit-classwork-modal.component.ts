@@ -21,7 +21,7 @@ export class EditClassworkModalComponent implements OnInit {
 	disableClass = false;
 	disableSubject = false;
 	disableTopic = false;
-
+	disabledApiButton = false;
 	constructor(
 		private dialogRef: MatDialogRef<EditClassworkModalComponent>,
 		@Inject(MAT_DIALOG_DATA) private data,
@@ -40,7 +40,7 @@ export class EditClassworkModalComponent implements OnInit {
 			this.getTopicByClassSubject();
 			this.getSubtopicByTopic();
 		});
-		this.disableSt({value: this.data.cw_ctr_id});
+		this.disableSt({ value: this.data.cw_ctr_id });
 	}
 	buildForm() {
 		//console.log('this.data', this.data);
@@ -74,15 +74,15 @@ export class EditClassworkModalComponent implements OnInit {
 	validateForm(event) {
 		if (event.value === '2' || event.value === '3' || event.value === '5' || event.value === '6') {
 			return this.editclassworkform.value.cw_sub_id !== '0' &&
-			this.editclassworkform.value.cw_class_id !== '0' &&
-			this.editclassworkform.value.cw_topic_id !== '0';
+				this.editclassworkform.value.cw_class_id !== '0' &&
+				this.editclassworkform.value.cw_topic_id !== '0';
 		} else if (event.value === '8') {
 			return true;
 		} else {
 			return this.editclassworkform.value.cw_sub_id !== '0' &&
-			this.editclassworkform.value.cw_class_id !== '0' &&
-			this.editclassworkform.value.cw_topic_id !== '0' &&
-			this.editclassworkform.value.cw_st_id !== '0';
+				this.editclassworkform.value.cw_class_id !== '0' &&
+				this.editclassworkform.value.cw_topic_id !== '0' &&
+				this.editclassworkform.value.cw_st_id !== '0';
 		}
 	}
 	disableSt(event) {
@@ -190,7 +190,7 @@ export class EditClassworkModalComponent implements OnInit {
 		if (resetFlag) {
 			this.resetClassworkFormForSubjectChange();
 		}
-		if(this.editclassworkform.value.cw_sub_id !== '0') {
+		if (this.editclassworkform.value.cw_sub_id !== '0') {
 			this.smartService.getClassSectionByTeacherIdSubjectId({
 				teacher_id: this.teacherId,
 				sub_id: this.editclassworkform.value.cw_sub_id
@@ -198,7 +198,7 @@ export class EditClassworkModalComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
 						const csArray = result.data;
-						console.log('csArray',csArray)
+						console.log('csArray', csArray)
 						if (csArray.length > 0) {
 							csArray.forEach(element => {
 								this.classSectionArray.push({
@@ -224,7 +224,7 @@ export class EditClassworkModalComponent implements OnInit {
 		this.topicArray = [];
 		const csArray = this.editclassworkform.value.cw_class_id.split('-');
 		const param = { class_id: csArray[0], sub_id: this.editclassworkform.value.cw_sub_id };
-		if(this.editclassworkform.value.cw_sub_id !== '0' && csArray[0] !== '0') {
+		if (this.editclassworkform.value.cw_sub_id !== '0' && csArray[0] !== '0') {
 			this.smartService.getTopicByClassIdSubjectId(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.topicArray = result.data;
@@ -236,7 +236,7 @@ export class EditClassworkModalComponent implements OnInit {
 	}
 	getSubtopicByTopic() {
 		this.subtopicArray = [];
-		if(this.editclassworkform.value.cw_topic_id !== '0') {
+		if (this.editclassworkform.value.cw_topic_id !== '0') {
 			this.smartService.getSubtopicByTopicId({ topic_id: this.editclassworkform.value.cw_topic_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subtopicArray = result.data;
@@ -268,7 +268,8 @@ export class EditClassworkModalComponent implements OnInit {
 		});
 	}
 	updateClasswork() {
-		if (this.editclassworkform.valid && this.validateForm({value: this.editclassworkform.value.cw_ctr_id})) {
+		this.disabledApiButton = true;
+		if (this.editclassworkform.valid && this.validateForm({ value: this.editclassworkform.value.cw_ctr_id })) {
 			const csArray = this.editclassworkform.value.cw_class_id.split('-');
 			if (csArray.length === 2) {
 				this.editclassworkform.patchValue({
@@ -277,6 +278,7 @@ export class EditClassworkModalComponent implements OnInit {
 				});
 			}
 			this.smartService.updateClasswork(this.editclassworkform.value).subscribe((result: any) => {
+				this.disabledApiButton = false;
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.dialogRef.close({ update: 'success' });

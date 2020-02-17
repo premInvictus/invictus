@@ -39,6 +39,7 @@ export class EmpEnqTabThreeComponent implements OnInit {
   remarksForm: FormGroup;
   taboneform: any = {};
   login_id = '';
+  disabledApiButton = false;
   divisonArray: any[] = [
     { id: 0, name: 'First Divison' },
     { id: 1, name: 'Second Divison' },
@@ -360,6 +361,7 @@ export class EmpEnqTabThreeComponent implements OnInit {
     }
   }
   saveForm() {
+    this.disabledApiButton = true;
     this.employeedetails['emp_remark_detail'] = {
       education_detail: this.educationsArray,
       experience_detail: this.experiencesArray,
@@ -394,15 +396,18 @@ export class EmpEnqTabThreeComponent implements OnInit {
     }
     this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
       if (result) {
+        this.disabledApiButton = false;
         this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Inserted Successfully', 'success');
         this.commonAPIService.renderTab.next({ tabMove: true });
       } else {
+        this.disabledApiButton = false;
         this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Remark Detail', 'error');
       }
     });
   }
 
   updateForm(moveNext) {
+    this.disabledApiButton = true;
     if (this.employeedetails) {
       this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
       this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -438,9 +443,11 @@ export class EmpEnqTabThreeComponent implements OnInit {
     if (!moveNext) {
       this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
         if (result) {
+          this.disabledApiButton = false;
           this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Updated Successfully', 'success');
           this.commonAPIService.renderTab.next({ tabMove: true });
         } else {
+          this.disabledApiButton = false;
           this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Remark Detail', 'error');
         }
       });

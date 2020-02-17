@@ -58,8 +58,8 @@
                                 </div>
                               </ng-container>
                               <div class="text-center" *ngIf="notifConfigArray.length > 0">
-                                <button mat-button class="text-uppercase btn-success"
-                                  (click)="updateGlobalSetting()">Submit</button>
+                                <button mat-button class="text-uppercase btn-success" (click)="updateGlobalSetting()"
+                                  [disabled]="disabledApiButton">Submit</button>
                               </div>
                             </div>
                           </div>

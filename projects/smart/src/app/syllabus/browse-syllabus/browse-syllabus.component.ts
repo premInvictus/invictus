@@ -40,6 +40,7 @@ export class BrowseSyllabusComponent implements OnInit {
 	session: any;
 	sessionName: any;
 	length: any;
+	disabledApiButton = false;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -480,6 +481,7 @@ export class BrowseSyllabusComponent implements OnInit {
 	// function for unpublish Syllabus list
 	unpublishSyllabus($event) {
 		if ($event) {
+			this.disabledApiButton = true;
 			const param2: any = {};
 			param2.sd_syl_id = this.UnpublishParam.syl_id;
 			param2.sd_topic_id = this.UnpublishParam.topic_id;
@@ -502,6 +504,7 @@ export class BrowseSyllabusComponent implements OnInit {
 							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
 									(updateResult: any) => {
+										this.disabledApiButton = false;
 										if (updateResult && updateResult.status === 'ok') {
 											this.fetchSyllabusDetails();
 											this.commonService.showSuccessErrorMessage('Syllabus Unpublish Successfully', 'success');

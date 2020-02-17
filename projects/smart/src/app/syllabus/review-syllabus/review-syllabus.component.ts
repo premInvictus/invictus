@@ -94,6 +94,7 @@ export class ReviewSyllabusComponent implements OnInit {
 	};
 	schooInfo: any;
 	termArray: any[] = ['', 'Term 1', 'Term 2', 'Term 3', 'Term 4', 'Term 5', 'Term 6', 'Term 7', 'Term 8', 'Term 9'];
+	disabledApiButton = false;
 	constructor(
 		public dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -539,6 +540,7 @@ export class ReviewSyllabusComponent implements OnInit {
 
 	// publish syllabus list
 	insertPublishSyllabus($event) {
+		this.disabledApiButton = true;
 		if ($event) {
 			const publishParam: any = {};
 			publishParam.sd_syl_id = this.publishParam.syl_id;
@@ -547,6 +549,7 @@ export class ReviewSyllabusComponent implements OnInit {
 			this.syllabusService.updatePublishStatus(publishParam)
 				.subscribe(
 					(result: any) => {
+						this.disabledApiButton = false;
 						if (result && result.status === 'ok') {
 							const param: any = {};
 							param.mod_review_row_id = publishParam.sd_syl_id + '-' + publishParam.sd_topic_id;
@@ -557,6 +560,7 @@ export class ReviewSyllabusComponent implements OnInit {
 							this.syllabusService.insertPublishSyllabus(param)
 								.subscribe(
 									(publishResult: any) => {
+										this.disabledApiButton = false;
 										if (publishResult && publishResult.status === 'ok') {
 											this.fetchSyllabusDetails();
 											this.commonService.showSuccessErrorMessage('Syllabus Publish Successfully', 'success');

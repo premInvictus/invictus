@@ -238,7 +238,8 @@
       </div>
       <div class="row text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length > 0">
         <div class="col-6" *ngIf="!editFlag" style="text-align: right">
-          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()">Confirm and
+          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()"
+            [disabled]="disabledApiButton">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
             Reset
