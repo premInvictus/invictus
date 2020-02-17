@@ -37,13 +37,13 @@
                               [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}">
                               <b>Name :</b></td>
                            <td [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
-                              valign="top" align="left">{{studentDetails?.au_full_name}}</td>
+                              valign="top" align="left">{{studentDetails?.au_full_name | titlecase}}</td>
                         </tr>
                         <tr>
                            <td [ngStyle]="{'font-weight':allContentBold}" align="right" valign="top"> <b> Parent :</b>
                            </td>
                            <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="left">
-                              {{studentDetails?.active_parent}}</td>
+                              {{studentDetails?.active_parent | titlecase}}</td>
                         </tr>
                         <tr>
                            <td [ngStyle]="{'font-weight':allContentBold}" valign="top" align="right"><b> Class :</b>
@@ -157,7 +157,7 @@
                         <tr>
                            <td align="center"
                               [ngStyle]="{'font-weight':allContentBold, 'color':studentNameForeColor, 'background':studentNameBgColor}"
-                              valign="top" style="font-size: 12px;">{{studentDetails?.au_full_name}}
+                              valign="top" style="font-size: 12px;">{{studentDetails?.au_full_name | titlecase}}
                               ({{studentDetails.class_name}} - {{studentDetails.sec_name}})</td>
                         </tr>
                      </tbody>
