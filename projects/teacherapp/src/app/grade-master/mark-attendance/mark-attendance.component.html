@@ -111,7 +111,8 @@
       <br>
       <div class="row margin-top-25" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
-          <button mat-button class="btn-success-green" (click)="submit();$event.stopPropagation()">Submit</button>
+          <button mat-button class="btn-success-green" [disabled]="disableApiCall" 
+          (click)="submit();$event.stopPropagation()">Submit</button>
           <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>
         </div>
         <br>

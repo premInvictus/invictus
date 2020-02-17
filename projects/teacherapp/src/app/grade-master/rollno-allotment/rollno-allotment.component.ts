@@ -17,6 +17,7 @@ export class RollnoAllotmentComponent implements OnInit {
   displayedColumns: string[] = [];
   firstForm: FormGroup;
   rollNoForm: FormGroup;
+  disableApiCall = false;
   classArray: any[];
   sectionArray: any[];
   studentArray: any[];
@@ -238,15 +239,18 @@ export class RollnoAllotmentComponent implements OnInit {
     }
     checkParam.au_sec_id = this.firstForm.value.syl_section_id;
     checkParam.au_ses_id = this.session.ses_id;
+    this.disableApiCall = true;
     this.examService.checkRollNoForClass(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examService.insertRollNo(this.finalArray).subscribe((result_i: any) => {
           if (result_i && result_i.status === 'ok') {
             this.finalCancel();
             this.fetchDetails();
+            this.disableApiCall = false;
             this.commonService.showSuccessErrorMessage('Roll No. Inserted Successfully', 'success');
           } else {
             this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+            this.disableApiCall = false;
           }
         });
       }

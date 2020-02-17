@@ -152,7 +152,9 @@
             </div>            
             <div class="row">
               <div class="col-12 remove-col-padding text-center">
-                <button mat-raised-button class="btn-add" *ngIf="viewOnly" (click)="saveForm()">Add</button>
+                <button mat-raised-button class="btn-add" *ngIf="viewOnly" 
+                [disabled]="disableApiCall"
+                (click)="saveForm()">Add</button>
                 <button *ngIf="updateFlag && !viewOnly" mat-raised-button class="btn-add"
                   (click)="saveForm()">Update</button>
                 <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>

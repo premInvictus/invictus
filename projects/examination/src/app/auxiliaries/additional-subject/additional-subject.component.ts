@@ -19,6 +19,7 @@ export class AdditionalSubjectComponent implements OnInit {
 	additionalFlag = false;
 	finalDivFlag = true;
 	submitFlag = false;
+	disableApiCall = false;
 	firstForm: FormGroup;
 	rollNoForm: FormGroup;
 	classArray: any[] = [];
@@ -196,21 +197,29 @@ export class AdditionalSubjectComponent implements OnInit {
 	finalSubmit() {
 		if(this.firstForm.value.syl_mapping_id === '0') {
 			if(this.selectionArray.length > 0) {
+				this.disableApiCall = true;
 				this.examService.insertExamSubjectStudent({insertData: this.selectionArray}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
 						this.datareset();
+						this.disableApiCall = false;
 						this.firstForm.reset();
+					} else {
+						this.disableApiCall = false;
 					}
 				});
 			}
 		} else {
 			if(this.addselectionArray.length > 0) {
+				this.disableApiCall = true;
 				this.examService.updateExamSubjectStudent({updatetData: this.addselectionArray}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
 						this.datareset();
+						this.disableApiCall = false;
 						this.firstForm.reset();
+					} else {
+						this.disableApiCall = false;
 					}
 				});
 			}

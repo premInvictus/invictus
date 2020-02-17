@@ -15,6 +15,7 @@ export class ResultEntryComponent implements OnInit {
   attendanceThemeTwoForm: FormGroup;
   classArray: any[] = [];
   sectionArray: any[] = [];
+  disableApiCall = false;
   termsArray: any[] = [];
   classterm: any[] = [];
   examArray: any[] = [];
@@ -379,9 +380,13 @@ export class ResultEntryComponent implements OnInit {
     inputJson['examEntryStatus'] = '1';
     inputJson['externalFlag'] = 3;
     inputJson['examEntryStatus'] = '1';
+    this.disableApiCall = true;
     this.examService.addReMarksEntry(inputJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.disableApiCall = false;
         //this.displayData();
+      } else {
+        this.disableApiCall = false;
       }
     });
   }

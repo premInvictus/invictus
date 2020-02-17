@@ -110,6 +110,7 @@
         <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
           <div class="col-12 text-center">
             <button mat-raised-button class="btn-success-green" (click)="finalSubmit()"
+            [disabled]="disableApiCall"
               *ngIf="!termDataFlag">Submit</button>
             <button mat-raised-button class="btn-success-green" (click)="finalUpdate()"
               *ngIf="termDataFlag">Update</button>

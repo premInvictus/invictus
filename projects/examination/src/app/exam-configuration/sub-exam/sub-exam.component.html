@@ -40,7 +40,8 @@
               </div>
               <div class="row">
                 <div class="col-12 remove-col-padding text-center">
-                  <button mat-raised-button class="btn-add"  *ngIf="viewOnly" (click)="submit()">Add</button>
+                  <button mat-raised-button class="btn-add"  *ngIf="viewOnly"  [disabled]="disableApiCall" 
+                  (click)="submit()">Add</button>
                   <button *ngIf="UpdateFlag && !viewOnly" mat-raised-button class="btn-add"
                     (click)="updateSubExam()">Update</button>
                   <button mat-raised-button class="btn-reset margin-left-10" (click)="resetForm()">Reset</button>

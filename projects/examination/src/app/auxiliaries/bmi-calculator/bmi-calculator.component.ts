@@ -14,6 +14,7 @@ export class BmiCalculatorComponent implements OnInit {
   classArray: any[] = [];
   sectionArray: any[] = [];
   tableDivFlag = false;
+  disableApiCall = false;
   studentArray: any[] = [];
   formGroupArray: any[] = [];
   currentUser: any = {};
@@ -117,16 +118,21 @@ export class BmiCalculatorComponent implements OnInit {
       ind++;
     }
     if (dataArr.length > 0) {
+      this.disableApiCall = true;
       this.examService.insertBMI({
         bmiData: dataArr
       }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
           this.getRollNoUser();
+          this.disableApiCall = false;
+        } else {
+          this.disableApiCall = false;
         }
       });
     } else {
       this.commonAPIService.showSuccessErrorMessage('Please enter a valid data', 'error');
+      this.disableApiCall = false;
     }
   }
 }

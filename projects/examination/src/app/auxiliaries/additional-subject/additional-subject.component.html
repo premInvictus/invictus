@@ -135,7 +135,8 @@
       </div>
       <div class="row margin-top-20" *ngIf="selectionArray.length > 0">
         <div class="col-12 text-center">
-          <button mat-raised-button class="btn-success-green" (click)="finalSubmit()">Submit</button>
+          <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall"
+          (click)="finalSubmit()">Submit</button>
         </div>
       </div>
     </mat-card>

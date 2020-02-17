@@ -16,6 +16,7 @@ export class RemarksEntryComponent implements OnInit {
 	sectionArray: any[] = [];
 	classGradeTerm: any[] = [];
 	subjectWiseRemark = false;
+	disableApiCall = false;
 	termsArray: any[] = [];
 	examArray: any[] = [];
 	subexamArray: any[] = [];
@@ -399,9 +400,13 @@ export class RemarksEntryComponent implements OnInit {
 		param.examEntryMapping = this.remarkArray;
 		param.examEntryStatus = status;
 		param.externalFlag = '0';
+		this.disableApiCall = true;
 		this.examService.addReMarksEntry(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.displayData();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}
@@ -438,9 +443,13 @@ export class RemarksEntryComponent implements OnInit {
 			param.examEntryMapping = this.remarksEntry;
 			param.examEntryStatus = status;
 			param.externalFlag = '1';
+			this.disableApiCall = true;
 			this.examService.addReMarksEntry(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.displayExternalType();
+					this.disableApiCall = false;
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 		} else {

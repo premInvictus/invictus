@@ -17,6 +17,7 @@ export class SubExamComponent implements OnInit {
 	subExamForm: FormGroup;
 	currentUser: any;
 	session: any;
+	disableApiCall = false;
 	ckeConfig: any = {};
 	subExamArray: any[] = [];
 	ELEMENT_DATA: Element[] = [];
@@ -64,6 +65,7 @@ export class SubExamComponent implements OnInit {
 	}
 	submit() {
 		if (this.subExamForm.valid) {
+			this.disableApiCall = true;
 			const inputJson = {
 				sexam_name: this.subExamForm.value.sexam_name,
 				sexam_desc: this.subExamForm.value.sexam_desc
@@ -72,9 +74,11 @@ export class SubExamComponent implements OnInit {
 				if (result_i && result_i.status === 'ok') {
 					this.getSubExam();
 					this.resetForm();
+					this.disableApiCall = false;
 					this.commonService.showSuccessErrorMessage('Sub Exam Added Successfully', 'success');
 				} else {
 					this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+					this.disableApiCall = false;
 				}
 			});
 		}

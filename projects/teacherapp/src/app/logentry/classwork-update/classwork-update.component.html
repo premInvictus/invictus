@@ -136,7 +136,8 @@
         [subText]="'Please select teacher'"></app-no-data></div>
       <div class="row margin-top-20" *ngIf="!noDataFlag">
         <div class="col-12 text-center">
-          <button mat-raised-button class="btn-success-green" (click)="openReviewClasswork()">Review</button>
+          <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" 
+          (click)="openReviewClasswork()">Review</button>
           <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
         </div>
       </div>
