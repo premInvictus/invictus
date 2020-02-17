@@ -21,6 +21,7 @@ export class SetupComponent implements OnInit {
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
 	dataset: any[] = [];
+	disableApiCall = false;
 	configValue: any;
 	currentUser: any;
 	session: any;
@@ -1057,12 +1058,15 @@ export class SetupComponent implements OnInit {
 	}
 	addEntry(data, serviceName, next) {
 		console.log('remarks',data);
+		this.disableApiCall = true;
 		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
+				this.disableApiCall = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
 			} else {
+				this.disableApiCall = false;
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});

@@ -593,6 +593,7 @@
 
                     <div class="text-center margin-top-15">
                       <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
+                      [disabled]="disableApiCall"
                         (click)="addConfiguration(configValue)">Add</button>
                       <button *ngIf="setupUpdateFlag" mat-raised-button class="btn-success"
                         (click)="updateConfiguration(configValue)">Update</button>

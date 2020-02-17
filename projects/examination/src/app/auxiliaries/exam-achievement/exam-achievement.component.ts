@@ -13,6 +13,7 @@ import { MatSort,MatTableDataSource } from '@angular/material';
 export class ExamAchievementComponent implements OnInit {
   paramform: FormGroup;
   defaultFlag = false;
+  disableApiCall = false;
   finalDivFlag = true;
   displayedColumns: string[] = ['roll_no', 'au_admission_no', 'au_full_name', 'au_achievement'];
   classArray: any[] = [];
@@ -152,14 +153,18 @@ export class ExamAchievementComponent implements OnInit {
     checkParam.au_sec_id = this.paramform.value.a_sec_id;
     checkParam.au_term_id = this.paramform.value.a_term_id;
     checkParam.au_ses_id = this.session.ses_id;
+    this.disableApiCall = true;
     this.examService.checkAchievement(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examService.insertAchievement(this.finalArray).subscribe((result_i: any) => {
           if (result_i && result_i.status === 'ok') {
-            this.finalCancel();
+            this.fetchDetails();
+            // this.finalCancel();
             this.commonAPIService.showSuccessErrorMessage('Achievement Inserted Successfully', 'success');
+            this.disableApiCall = false;
           } else {
             this.commonAPIService.showSuccessErrorMessage('Insert failed', 'error');
+            this.disableApiCall = false;
           }
         });
       }
