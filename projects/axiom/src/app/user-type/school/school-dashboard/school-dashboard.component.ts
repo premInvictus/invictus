@@ -372,7 +372,7 @@ export class SchoolDashboardComponent implements OnInit {
 												if (item.au_profileimage && item.au_profileimage.charAt(0) === '.') {
 														this.imageArray.push(item.au_profileimage.substring(1, item.au_profileimage.length));
 												} else if (item.au_profileimage === '') {
-														this.imageArray.push('https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg');
+														this.imageArray.push('https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png');
 												} else {
 														this.imageArray.push(item.au_profileimage);
 												}

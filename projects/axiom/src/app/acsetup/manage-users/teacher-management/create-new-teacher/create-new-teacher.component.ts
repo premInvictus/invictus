@@ -51,7 +51,7 @@ export class CreateNewTeacherComponent implements OnInit {
 	classArray: any[];
 	sectionArray: any[];
 	schoolinfoArray: any = {};
-	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 	checkAvailable = false;
 	prefixStatusicon: string;
 	prefixStatus: any;
@@ -192,7 +192,7 @@ export class CreateNewTeacherComponent implements OnInit {
 
 							});
 						this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 						this.cs_relationArray = this.userDetails.cs_relations;
 						for (const item of this.cs_relationArray) {
 							this.designation = item.uc_designation;

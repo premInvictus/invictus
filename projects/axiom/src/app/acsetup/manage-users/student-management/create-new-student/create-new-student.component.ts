@@ -49,7 +49,7 @@ export class CreateNewStudentComponent implements OnInit {
 	login_id: string;
 	userDetails: any = {};
 	updateFlag = false;
-	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	mintoday: string;
 	events: string[] = [];
 	private file1: File;
@@ -105,13 +105,13 @@ export class CreateNewStudentComponent implements OnInit {
 						if (this.userDetails.personal_details) {
 							if (userPersonalDetail.upd_gender === 'M') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 							} else if (userPersonalDetail.upd_gender === 'F') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 							} else if (userPersonalDetail.upd_gender === 'O') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 							}
 						}
 					}
@@ -313,13 +313,13 @@ export class CreateNewStudentComponent implements OnInit {
 	}
 	changeUrl($event) {
 		if ($event.value === 'M' && !this.userDetails.au_profileimage) {
-			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 		} else if ($event.value === 'F' && !this.userDetails.au_profileimage) {
-			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 		} else if ($event.value === 'O' && !this.userDetails.au_profileimage) {
-			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 		} else if (!$event.value && !this.userDetails.au_profileimage) {
-			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 		}
 	}
 }

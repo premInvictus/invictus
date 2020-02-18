@@ -51,11 +51,12 @@
       <div class="row">
         <div class="col-2 smart-col-12 remove-col-padding-left margin-top-8">
 
-          <img *ngIf="!userData?.au_profileimage" class="border-radius-50 student-profile-image-68" [src]="defaultSrc"
-            onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'" />
+          <img *ngIf="!userData?.au_profileimage" class="border-radius-50 student-profile-image-68"
+            [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultSrc + '&h=68&w=68'"
+            onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'" />
           <img *ngIf="userData?.au_profileimage" class="border-radius-50 student-profile-image-68"
             [src]="userData?.au_profileimage" height="90px" width="90px"
-            onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'" />
+            onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'" />
         </div>
         <div class="col-10 smart-col-88 remove-col-padding-left">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
@@ -106,7 +107,8 @@
                 </div>
                 <div class="col-6 remove-col-padding-right">
                   <span class="font-size-12 font-bold opacity-7" *ngIf="!stuOutStandingFine">-</span>
-                  <span class="font-size-12 font-bold opacity-7" *ngIf="stuOutStandingFine">{{stuOutStandingFine}}</span>
+                  <span class="font-size-12 font-bold opacity-7"
+                    *ngIf="stuOutStandingFine">{{stuOutStandingFine}}</span>
                 </div>
               </div>
               <div class="row remove-top-margin">
@@ -148,10 +150,13 @@
                 <tr class="custom-tr" *ngIf="item?.reserv_user_logs?.reserv_status === 'issued'">
                   <td class="custom-td"><span>{{i+1}}</span></td>
                   <td class="custom-td">
-                    <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
+                    <span class="font-skyblue"
+                      (click)="openBookModal(item.reserv_id)">{{item?.reserv_user_logs?.reserv_id}}</span>
                   </td>
-                  <td class="custom-td text-left"><span>{{item?.reserv_user_logs?.title | titlecase | truncatetext: 55}}</span></td>
-                  <td class="custom-td text-left">{{item?.reserv_user_logs?.publisher | titlecase | truncatetext: 20}}</td>
+                  <td class="custom-td text-left">
+                    <span>{{item?.reserv_user_logs?.title | titlecase | truncatetext: 55}}</span></td>
+                  <td class="custom-td text-left">{{item?.reserv_user_logs?.publisher | titlecase | truncatetext: 20}}
+                  </td>
                   <td class="custom-td">{{item?.reserv_user_logs?.issued_on | date: 'd-MMM-y' }}</td>
                   <td class="custom-td">{{item?.reserv_user_logs?.due_date | date: 'd-MMM-y' }}</td>
                 </tr>
@@ -194,7 +199,7 @@
               </div>
             </div>
           </div>
-        </div>        
+        </div>
       </mat-card>
       <mat-card class="margin-top-10 card-height-325">
         <div class="row margin-top-15 booklog" [hidden]="!(bookData.length > 0)">
@@ -216,19 +221,19 @@
                     <td width="5%" class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{i+1}}</span></td>
-                    <td  width="5%" class="custom-td"
+                    <td width="5%" class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span class="font-skyblue" (click)="openBookModal(item.reserv_id)">{{item?.reserv_id}}</span>
                     </td>
-                    <td  width="50%" class="custom-td text-left"
+                    <td width="50%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span>{{item?.title | titlecase | truncatetext: 45}}</span>
                     </td>
-                    <td  width="20%" class="custom-td text-left"
+                    <td width="20%" class="custom-td text-left"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       {{item?.publisher | titlecase | truncatetext: 20}}
                     </td>
-                    <td  width="15%" class="custom-td text-nowrap" 
+                    <td width="15%" class="custom-td text-nowrap"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <div class="inline-flex date-width-100">
                         <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
@@ -236,11 +241,12 @@
                           [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
                         <div class="inline-flex" [hidden]="(item?.reserv_status == 'available')">
-                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true" (click)="picker.open();"></i>
+                          <i class="fa fa-calendar" *ngIf="!(item?.reserv_status == 'available')" aria-hidden="true"
+                            (click)="picker.open();"></i>
                         </div>
                       </div>
                     </td>
-                    <td  width="5%" class="custom-td"
+                    <td width="5%" class="custom-td"
                       [ngClass]="item.reserv_status === 'issued' ? 'reserv_issued' : 'reserv_green'"><i
                         class="fas fa-trash font-color-red" (click)="removeBook(i)"></i></td>
                   </tr>
@@ -252,21 +258,22 @@
         <br />
         <div class="row text-center" *ngIf="bookData.length > 0">
           <div class="col-12">
-            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()" [disabled]="btnDisabled">Submit</button>
+            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()"
+              [disabled]="btnDisabled">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
               Reset
             </button>
           </div>
-        </div>    
+        </div>
         <div class="text-center" *ngIf="bookData.length == 0">
           <app-no-data
-          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-          [noDataText]="" [subText]="'Please Search Book To Issue / Return'"></app-no-data>
-        </div>    
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'Please Search Book To Issue / Return'"></app-no-data>
+        </div>
       </mat-card>
-      
+
     </form>
-    
+
   </div>
 </div>
 <div class="row" *ngIf="userData!=''">

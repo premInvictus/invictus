@@ -44,7 +44,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -174,7 +174,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.viewOnly = false;
 			this.deleteOnly = false;
 			this.studentdetailsform.reset();
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
 		}
@@ -269,11 +269,11 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 						this.studentdetails = result.data[0];
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 						} else if (this.gender === 'F') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 						} else {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 						}
 					}
 					if (result && result.data && result.data[0].navigation[0]) {

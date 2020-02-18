@@ -35,7 +35,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	currentUser: any;
 	session_id: any;
 	disabledApiButton = false;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('itemDet') itemDet;
