@@ -1,0 +1,67 @@
+<!-- pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}|[A-C]{1}" -->
+<div class="row">
+  <div class="col-12 ">
+    <button class="top-close-btn" mat-button (click)="closeDialog()">Close <i
+        class="fas fa-times font-size-16 margin-left-15"></i></button>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="left-side-box">
+            <div class="left-side-box-content">
+              <form [formGroup]="mappingForm" novalidate>
+                <div class="row">
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Class</mat-label>
+                      <mat-select formControlName="epce_class_id" required placeholder="Class"
+                        (selectionChange)="getExamDetails()">
+                        <mat-option *ngFor="let item of NoncceClassArray" [value]="item.class_id">
+                          {{item.class_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Type</mat-label>
+                      <mat-select formControlName="epce_exam_type" required placeholder="Type"
+                        >
+                        <mat-option *ngFor="let item of typeArr" [value]="item.id">
+                          {{item.name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Exam</mat-label>
+                      <mat-select formControlName="epce_exam_id" required placeholder="Class"
+                        >
+                        <mat-option *ngFor="let item of examArray" [value]="item.exam_id">
+                          {{item.exam_name}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                  <div class="col-12 remove-col-padding">
+                    <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                      <input formControlName="epce_exam_weightage" matInput placeholder="Please enter marks"
+                       pattern="[0-9]{1}|[0-9]{2}|[0-9]{3}" required>
+                    </mat-form-field>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 margin-top-15 text-center">
+                    <button mat-button class="btn-success-green" (click)="saveForm()">Submit</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
