@@ -375,6 +375,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeSubject', value);
 	}
+	addExamPerCumulativeExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeExam', value);
+	}
 
 }
 

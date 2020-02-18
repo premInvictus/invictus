@@ -31,6 +31,7 @@ export class PercentageCumulativeSubjectComponent implements OnInit {
     this.getExamPerCumulativeSubject();
   }
   openDialog(data=null): void {
+    console.log('data---',data);
     const dialogRef = this.dialog.open(PercentageCumulativeSubjectModalComponent, {
       width: '80%',
       height: '80%',
@@ -92,7 +93,6 @@ export class PercentageCumulativeSubjectComponent implements OnInit {
         this.tableDivFlag = true;
       }
     })
-
   }
 
 }

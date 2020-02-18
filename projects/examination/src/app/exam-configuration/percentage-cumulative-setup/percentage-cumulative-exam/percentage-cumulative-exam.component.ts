@@ -16,7 +16,7 @@ export class PercentageCumulativeExamComponent implements OnInit {
   subjectsubexamArr: any[] = [];
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
-  displayedColumns: string[] = ['class_name', 'exams', 'action'];
+  displayedColumns: string[] = ['class_name', 'exams','type', 'weightage','status', 'action'];
   dataSource = new MatTableDataSource<Element>();
   constructor(
     private fbuild: FormBuilder,
@@ -32,13 +32,13 @@ export class PercentageCumulativeExamComponent implements OnInit {
   }
   openDialog(data=null): void {
     const dialogRef = this.dialog.open(PercentageCumulativeExamModalComponent, {
-      width: '80%',
-      height: '80%',
+      width: '30%',
+      height: '50%',
       data: data
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The dialog was closed', result);
       if(result && result.list) {
         this.getExamPerCumulativeExam();
       }
@@ -62,37 +62,43 @@ export class PercentageCumulativeExamComponent implements OnInit {
     this.examService.getExamPerCumulativeExam({}).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         const temp = result.data;
-        let group_result = temp.reduce(function (r, a) {
-          r[a.epce_class_id] = r[a.epce_class_id] || [];
-          r[a.epce_class_id].push(a);
-          return r;
-          }, Object.create(null));
-        console.log(group_result);
-        if(group_result && Object.keys(group_result).length > 0) {
-          for(let key in group_result) {
-            const eachelement: any = {};
-            eachelement.epce_class_id = key;
-            const tempSub: any[] = [];
-            for(let item of group_result[key]) {
-              let temp_type = ';'
-              if(item.epce_exam_type === '1') {
-                temp_type = 'Theory';
-              } else if(item.epce_exam_type === '2') {
-                temp_type = 'Practical';
-              }
-              eachelement.class_name = item.class_name;
-              tempSub.push(item.exam_name + ' (' + temp_type + ' - ' + item.epce_exam_weightage + ')');
-            }
-            eachelement.exams = tempSub;
-            eachelement.action = group_result[key];
-            this.ELEMENT_DATA.push(eachelement);
+        temp.forEach(element => {
+          let temp_type = ';'
+          if(element.epce_exam_type === '1') {
+            temp_type = 'Theory';
+          } else if(element.epce_exam_type === '2') {
+            temp_type = 'Practical';
           }
-        }
+          this.ELEMENT_DATA.push({
+            class_name: element.class_name,
+            exams: element.exam_name,
+            type: temp_type,
+            weightage: element.epce_exam_weightage,
+            status: element.epce_status,
+            action: element
+          });
+          
+        });
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
         this.tableDivFlag = true;
       }
     })
 
+  }
+  toggleStatus(element) {
+    if(element.epce_status === '1') {
+      element.epce_status = '0';
+    } else {
+      element.epce_status = '1';
+    }
+    this.examService.addExamPerCumulativeExam(element).subscribe((result: any) => {
+      if(result && result.status === 'ok') {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
+        this.getExamPerCumulativeExam();
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    })
   }
 
 }

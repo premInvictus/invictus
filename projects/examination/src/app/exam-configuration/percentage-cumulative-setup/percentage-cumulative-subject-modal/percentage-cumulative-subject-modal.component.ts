@@ -12,7 +12,6 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class PercentageCumulativeSubjectModalComponent implements OnInit {
 
   mappingForm: FormGroup;
-  submarkForm: FormGroup;
   submarkFormArr: any[] = [];
   classterm: any[] = [];
   examArray: any[] = [];
@@ -41,22 +40,8 @@ export class PercentageCumulativeSubjectModalComponent implements OnInit {
     this.mappingForm = this.fbuild.group({
       epcs_class_id: ''
     });
-
-    this.submarkForm = this.fbuild.group({
-      submark: this.fbuild.array([])
-    })
   }
 
-  get SubjectMark() {
-    return this.submarkForm.get('submark') as FormArray;
-  }
-  addSubjectMark(sub_id, epcs_calculation_mark, type) {
-    this.SubjectMark.push(this.fbuild.group({
-      epcs_subject_id: sub_id,
-      epcs_calculation_mark: epcs_calculation_mark,
-      epcs_subject_type : type,
-    }))
-  }
   isexistId(arr:any[], id) {
     
     for(const item of arr) {
@@ -89,30 +74,12 @@ export class PercentageCumulativeSubjectModalComponent implements OnInit {
       this.mappingForm.patchValue({
         epcs_class_id: this.data[0].epcs_class_id
       });
-      this.getExamDetails();
+      this.getSubjectsByClass();
     }
     console.log(this.NoncceClassArray);
   }
-  getMaxMarksOfSubExam(se_id) {
-    return (this.subexamArray.find(e => e.se_id === se_id)).exam_max_marks;
-  }
-  getExamDetails() {
-    this.examArray = [];
-    this.examService.getExamDetails({ exam_class: this.mappingForm.value.epcs_class_id, exam_category: '1',egs_point_type: '2'}).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.examArray = result.data;
-        if(this.data && this.data.length > 0) {
-          this.mappingForm.patchValue({
-            ssm_exam_id: this.data[0].ssm_exam_id
-          });
-        }
-      } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-      }
-    });
-  }
  
-  getSubMark(sub_id, epcs_calculation_mark) {
+  getSubMark(sub_id, value, key) {
     //console.log(sub_id,epcs_calculation_mark);
     let item: any;
     if(this.data && this.data.length > 0) {
@@ -120,15 +87,14 @@ export class PercentageCumulativeSubjectModalComponent implements OnInit {
     }
     if(item) {
       //console.log(item.epcs_calculation_mark);
-      return item.epcs_calculation_mark;
+      return item[key];
     }
-    return epcs_calculation_mark;
+    return value;
 
   }
   getSubjectsByClass() {
     this.subjectArray = [];
     this.submarkFormArr = [];
-    //const se_max_mark = this.getMaxMarksOfSubExam(this.mappingForm.value.ssm_se_id)
     this.smartService.getSubjectsByClass({ class_id: this.mappingForm.value.epcs_class_id, sub_type: '1' }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         const temp = result.data;
@@ -142,20 +108,19 @@ export class PercentageCumulativeSubjectModalComponent implements OnInit {
                 }
               }
               element.childSub = childSub;
-              element.epcs_calculation_mark = 0;
               if(element.childSub.length === 0) {
                 //this.addSubjectMark(element.sub_id, se_max_mark);
                 this.submarkFormArr.push({
                   epcs_subject_id: element.sub_id,
-                  epcs_calculation_mark: 0,
-                  epcs_subject_type:'1'
+                  epcs_calculation_mark: this.getSubMark(element.sub_id,'0','epcs_calculation_mark'),
+                  epcs_subject_type:this.getSubMark(element.sub_id,'','epcs_subject_type')
                 })
               } else {
                 for(let item of element.childSub) {
                   this.submarkFormArr.push({
                     epcs_subject_id: item.sub_id,
-                    epcs_calculation_mark: 0,
-                    epcs_subject_type: '1'
+                    epcs_calculation_mark: this.getSubMark(item.sub_id,'0','epcs_calculation_mark'),
+                    epcs_subject_type:this.getSubMark(item.sub_id,'','epcs_subject_type')
                   })
                 }
               }
@@ -183,13 +148,14 @@ export class PercentageCumulativeSubjectModalComponent implements OnInit {
     const ind = this.submarkFormArr.findIndex(e => e.epcs_subject_id === sub.sub_id);
     this.submarkFormArr[ind].epcs_calculation_mark = event.value;
   }
-  getType(value) {
+  getType(value, value1) {
+    let tempstatus = false;
     for(let item of this.submarkFormArr) {
-      if(item.epcs_subject_id === value.sub_id) {
-        return item.epcs_subject_type;
+      if(item.epcs_subject_id === value.sub_id && item.epcs_subject_type === value1) {
+        tempstatus = true;
       }
     }
-    return '0';
+    return tempstatus;
   }
   enterType(sub, event) {
     console.log(event);

@@ -38,8 +38,8 @@
                 </div>
                 <div class="col-3 remove-col-padding">
                   <mat-radio-group aria-label="Select an option" (change)="enterType(item, $event)">
-                    <mat-radio-button value="1">Theory</mat-radio-button>
-                    <mat-radio-button value="2">Practical</mat-radio-button>
+                    <mat-radio-button value="1" [checked]="getType(item, '1')">Theory</mat-radio-button>
+                    <mat-radio-button value="2" [checked]="getType(item, '2')">Practical</mat-radio-button>
                   </mat-radio-group>
                 </div>
                 <div class="col-3 remove-col-padding">
@@ -58,8 +58,8 @@
                   </div>
                   <div class="col-4 margin-top-15 text-right">
                     <mat-radio-group aria-label="Select an option" (change)="enterType(child, $event)">
-                      <mat-radio-button value="1">Theory</mat-radio-button>
-                      <mat-radio-button value="2">Practical</mat-radio-button>
+                      <mat-radio-button value="1" [checked]="getType(child, '1')">Theory</mat-radio-button>
+                      <mat-radio-button value="2" [checked]="getType(child, '2')">Practical</mat-radio-button>
                     </mat-radio-group>
                   </div>
                   <div class="col-4 remove-col-padding">

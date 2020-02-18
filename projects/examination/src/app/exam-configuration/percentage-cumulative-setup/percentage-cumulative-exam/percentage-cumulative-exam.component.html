@@ -21,7 +21,7 @@
               >
                 <!-- Position Column -->
                 <ng-container matColumnDef="class_name">
-                  <th width="50" mat-header-cell *matHeaderCellDef>Class</th>
+                  <th width="100" mat-header-cell *matHeaderCellDef>Class</th>
                   <td mat-cell *matCellDef="let element">
                     {{ element.class_name }}
                   </td>
@@ -30,11 +30,39 @@
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="exams">
                   <th class="text-left" mat-header-cell *matHeaderCellDef>
-                    Subject
+                    Exam
                   </th>
                   <td class="text-left" mat-cell *matCellDef="let element">
                     {{ element.exams }}
                   </td>
+                </ng-container>
+                <ng-container matColumnDef="type">
+                  <th class="text-left" mat-header-cell *matHeaderCellDef>
+                    Type
+                  </th>
+                  <td class="text-left" mat-cell *matCellDef="let element">
+                    {{ element.type }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="weightage">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Weightage
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{ element.weightage }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef>
+                    Status
+                  </th>
+                  <td mat-cell *matCellDef="let element">
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                      [checked]="element.status == '1'" aria-hidden="true"
+                      (click)="toggleStatus(element.action)">
+                    </mat-slide-toggle>
+                  </td>
+                  >
                 </ng-container>
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="action">

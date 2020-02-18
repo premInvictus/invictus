@@ -4,6 +4,8 @@ import { AxiomService, SisService, SmartService, CommonAPIService, ExamService }
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { PercentageCumulativeExamModalComponent } from './percentage-cumulative-exam-modal/percentage-cumulative-exam-modal.component';
 import { PercentageCumulativeSubjectModalComponent } from './percentage-cumulative-subject-modal/percentage-cumulative-subject-modal.component';
+import { PercentageCumulativeExamComponent } from './percentage-cumulative-exam/percentage-cumulative-exam.component';
+import { PercentageCumulativeSubjectComponent } from './percentage-cumulative-subject/percentage-cumulative-subject.component';
 
 @Component({
   selector: 'app-percentage-cumulative-setup',
@@ -13,6 +15,8 @@ import { PercentageCumulativeSubjectModalComponent } from './percentage-cumulati
 export class PercentageCumulativeSetupComponent implements OnInit {
 
   currentTabIndex: any;
+  @ViewChild(PercentageCumulativeExamComponent) pcem: PercentageCumulativeExamComponent
+  @ViewChild(PercentageCumulativeSubjectComponent) pcsm: PercentageCumulativeSubjectComponent
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -26,7 +30,6 @@ export class PercentageCumulativeSetupComponent implements OnInit {
     this.currentTabIndex = 0;
   }
   setIndex(event) {
-		console.log(event);
 		this.currentTabIndex = event;
   }
   openDialog(data=null): void {
@@ -36,25 +39,24 @@ export class PercentageCumulativeSetupComponent implements OnInit {
         height: '80%',
         data: data
       });
-  
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
         if(result && result.list) {
+          this.pcsm.getExamPerCumulativeSubject();
         }
       });
     } else if(this.currentTabIndex === 1) {
       const dialogRef = this.dialog.open(PercentageCumulativeExamModalComponent, {
-        width: '80%',
-        height: '80%',
+        width: '30%',
+        height: '50%',
         data: data
       });
-  
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
         if(result && result.list) {
+          this.pcem.getExamPerCumulativeExam();
         }
       });
     }
   }
 
 }
+undefined
