@@ -19,6 +19,7 @@ export class ExamAliasTermwiseComponent implements OnInit {
 	currentUser: any;
 	session: any;
 	ckeConfig: any = {};
+	disableApiCall = false;
 	subExamArray: any[] = [];
 	ELEMENT_DATA: Element[] = [];
 	UpdateFlag = false;
@@ -159,13 +160,16 @@ export class ExamAliasTermwiseComponent implements OnInit {
 	submit() {
 		if (this.examAliasForm.valid) {
 			console.log(this.examAliasForm.value);
+			this.disableApiCall = true;
 			this.examService.insertExamSexamAlias(this.examAliasForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.commonService.showSuccessErrorMessage(result.message, 'success');
 					this.resetForm();
+					this.disableApiCall = false;
 					this.getExamSexamAlias();
 				} else {
 					this.commonService.showSuccessErrorMessage(result.message, 'error');
+					this.disableApiCall = false;
 				}
 			})
 		}

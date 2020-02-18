@@ -18,6 +18,7 @@ export class AdditionalSubjectComponent implements OnInit {
   rollNoForm: FormGroup;
   classArray: any[] = [];
   sectionArray: any[] = [];
+  disableApiCall = false;
   subjectArray: any[] = [];
   studentArray: any[] = [];
   currentUser: any;
@@ -126,10 +127,10 @@ export class AdditionalSubjectComponent implements OnInit {
     this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.defaultFlag = false;
     this.finalDivFlag = true;
-    this.firstForm.patchValue({
-      'syl_class_id': '',
-      'syl_section_id': ''
-    });
+    // this.firstForm.patchValue({
+    //   'syl_class_id': '',
+    //   'syl_section_id': ''
+    // });
   }
   fetchDetails() {
     this.firstForm.patchValue({
@@ -204,14 +205,17 @@ export class AdditionalSubjectComponent implements OnInit {
     checkParam.au_class_id = this.firstForm.value.syl_class_id;
     checkParam.au_sec_id = this.firstForm.value.syl_section_id;
     checkParam.au_ses_id = this.session.ses_id;
+    this.disableApiCall = true;
     this.examService.checkAdditionalSubjectForClass(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examService.updateAdditionalSubject(this.finalArray).subscribe((result_u: any) => {
           if (result_u && result_u.status === 'ok') {
+            this.disableApiCall = false;
             this.finalCancel();
             this.commonService.showSuccessErrorMessage('Additional Subject Updated Successfully', 'success');
             this.fetchDetails();
           } else {
+            this.disableApiCall = false;
             this.commonService.showSuccessErrorMessage('Update failed', 'error');
           }
         });
@@ -221,8 +225,10 @@ export class AdditionalSubjectComponent implements OnInit {
             this.finalCancel();
             this.commonService.showSuccessErrorMessage('Additional Subject Inserted Successfully', 'success');
             this.fetchDetails();
+            this.disableApiCall = false;
           } else {
             this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+            this.disableApiCall = false;
           }
         });
       }

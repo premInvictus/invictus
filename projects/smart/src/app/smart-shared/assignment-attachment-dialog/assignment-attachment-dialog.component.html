@@ -89,7 +89,7 @@
             <button mat-button class="upload-document-delete-btn" (click)="deleteFile(i)">
               <mat-icon class="btn-upload-icon">delete</mat-icon>
             </button>
-          </div> 
+          </div>
           <div class="inline-flex ">
             <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
             <img class="btn-doc-upload-preview margin-left-10" [src]="getuploadurl(img.file_url)"><br>
@@ -101,7 +101,8 @@
   </div>
   <div class="row margin-top-20" style="margin-bottom: 20px;">
     <div class="col-12 text-center">
-      <button *ngIf="!editFlag" mat-raised-button class="btn-success-green" (click)="submitAttachment()">Submit</button>
+      <button *ngIf="!editFlag" mat-raised-button class="btn-success-green" (click)="submitAttachment()"
+        [disabled]="disabledApiButton">Submit</button>
       <button *ngIf="!editFlag" mat-raised-button class="btn-reset margin-left-10"
         (click)="resetAttachment()">Reset</button>
       <button *ngIf="editFlag" mat-raised-button class="btn-success-green" (click)="addAttachment()">Submit</button>

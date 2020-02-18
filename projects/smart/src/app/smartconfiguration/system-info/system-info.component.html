@@ -518,9 +518,11 @@
                                         </div>
                                         <div class="text-center margin-top-15">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
-                                                (click)="addConfiguration(configValue)">Add</button>
+                                                (click)="addConfiguration(configValue)"
+                                                [disabled]="disabledApiButton">Add</button>
                                             <button *ngIf="setupUpdateFlag" mat-raised-button class="btn-success"
-                                                (click)="updateConfiguration(configValue)">Update</button>
+                                                (click)="updateConfiguration(configValue)"
+                                                [disabled]="disabledApiButton">Update</button>
                                             <button mat-raised-button class="btn-danger btn-spacer"
                                                 (click)="resetForm(configValue)">Reset</button>
                                         </div>

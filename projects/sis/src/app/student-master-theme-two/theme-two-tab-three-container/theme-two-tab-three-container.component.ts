@@ -18,6 +18,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 	viewOnly = true;
 	saveFlag = false;
 	isSubmit = false;
+	disabledApiCall = false;
 	login_id;
 	parentId;
 	generalRemarkData: any[] = [];
@@ -150,6 +151,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			if (result.status === 'ok') {
 				message = this.addOnly ? 'Remarks Added Successfully' : this.editOnly ? 'Remarks Updated Successfully' : '';
 				if (message) {
+					this.disabledApiCall = true;
 					this.commonAPIService.showSuccessErrorMessage(message, 'success');
 					const invoiceJSON = { login_id: [this.context.studentdetails.studentdetailsform.value.au_login_id] };
 					this.getRemarkData(this.context.studentdetails.studentdetailsform.value.au_login_id);
@@ -158,9 +160,11 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 						if (result2.data && result2.status === 'ok') {
 							const length = result2.data.split('/').length;
 							saveAs(result2.data, result2.data.split('/')[length - 1]);
+							this.disabledApiCall = false;
 							this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 						} else {
 							this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
+							this.disabledApiCall = false;
 						}
 					});
 				}
@@ -172,6 +176,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 				}
 			} else {
 				message = this.addOnly ? result.data : this.editOnly ? result.data : '';
+				this.disabledApiCall = false;
 				this.commonAPIService.showSuccessErrorMessage(message, 'error');
 			}
 		});

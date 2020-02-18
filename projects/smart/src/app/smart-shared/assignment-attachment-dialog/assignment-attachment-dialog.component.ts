@@ -29,7 +29,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	ckeConfig: any = {};
 	currentUser: any = {};
 	isTeacher = false;
-
+	disabledApiButton = false;
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -87,7 +87,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				}
 			});
 		} else {
-			this.smartService.getClass({class_status: '1'}).subscribe((result: any) => {
+			this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.classArray = result.data;
 					if (this.class_id) {
@@ -216,10 +216,10 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		}*/
 	}
 	getuploadurl(fileurl: string) {
-		const filetype = fileurl.substr(fileurl.lastIndexOf('.')+1);
-		if(filetype === 'pdf') {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
 			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
-		} else if(filetype === 'doc' || filetype === 'docx') {
+		} else if (filetype === 'doc' || filetype === 'docx') {
 			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
 		} else {
 			return fileurl;
@@ -231,6 +231,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	addAttachment() {
 		console.log('addAttachment');
 		if (this.class_id && this.sec_id && this.sub_id && this.topic_id && this.assignment_desc) {
+			this.disabledApiButton = true;
 			const param: any = {};
 			param.as_class_id = this.class_id;
 			param.as_sec_id = this.sec_id;
@@ -239,6 +240,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			param.as_assignment_desc = this.assignment_desc;
 			param.as_attachment = this.imageArray;
 			this.smartService.assignmentInsert(param).subscribe((result: any) => {
+				this.disabledApiButton = false;
 				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 					this.dialogRef.close({ added: true });

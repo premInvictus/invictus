@@ -28,6 +28,7 @@ export class MarksEntryFinalComponent implements OnInit {
   exam_grade_type_arr: any[] = [];
   subSubjectArray: any[] = [];
   classterm: any;
+  disabledApiButton = false;
   absentData = [
     { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" },
     { "egs_grade_name": "AD", "egs_grade_value": "AD", "egs_range_start": "0", "egs_range_end": "0" },
@@ -386,32 +387,7 @@ export class MarksEntryFinalComponent implements OnInit {
   }
 
   saveForm(status = '3', savelog = '0') {
-    console.log('this.marksInputArray.length', this.marksInputArray.length);
-    console.log('this.paramform.value.eme_subexam_id.length * this.studentArray.length', this.paramform.value.eme_subexam_id.length * this.studentArray.length);
-    /* if(this.marksInputArray.length < this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
-      const dialogRef = this.dialog.open(MarkEntrySubmitDialogComponent, {
-        width: '600px',
-        height: '300px',
-        data: {text: 'Save',message: 'Still few student has empty mark! Do you wish to continue'}
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if(result && result.confirm === 'ok') {
-          if (this.paramform.valid && this.marksInputArray.length > 0) {
-            const param: any = {};
-            param.examEntry = this.paramform.value;
-            param.examEntryMapping = this.marksInputArray;
-            param.examEntryStatus = status;
-            param.savelog = savelog;
-            this.examService.addMarksEntry(param).subscribe((result: any) => {
-              if (result && result.status === 'ok') {
-                this.displayData();
-              }
-            })
-          }
-        }
-      });
-    } else */
+    this.disabledApiButton = true;
     if (status !== '3') {
       if (true) {
         if (this.paramform.valid && this.marksInputArray.length > 0) {
@@ -424,8 +400,10 @@ export class MarksEntryFinalComponent implements OnInit {
           param.savelog = savelog;
           this.examService.addMarksEntry(param).subscribe((result: any) => {
             if (result && result.status === 'ok') {
+              this.disabledApiButton = false;
               this.displayData();
             } else {
+              this.disabledApiButton = false;
               this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
           })
@@ -443,8 +421,10 @@ export class MarksEntryFinalComponent implements OnInit {
           param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
+            this.disabledApiButton = false;
             this.displayData();
           } else {
+            this.disabledApiButton = false;
             this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
           }
         })

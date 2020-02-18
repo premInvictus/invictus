@@ -34,6 +34,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	sessionName: any;
 	currentUser: any;
 	session_id: any;
+	disabledApiButton = false;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -499,6 +500,7 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	saveIssueReturn() {
+		this.disabledApiButton = true;
 		const updateditemData = [];
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		for (let i = 0; i < itemData.length; i++) {
@@ -551,11 +553,7 @@ export class CirculationConsumptionComponent implements OnInit {
 				}
 			}
 		}
-
-
-
 		var limitFlag = this.checkForIssueItemLimit();
-
 		if (!limitFlag) {
 			const inputJson = {
 				user_inv_session: Number(this.session_id),
@@ -569,9 +567,9 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-
 			if (!this.userHaveItemsData) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
 					if (result) {
 						this.itemData = [];
 						this.issueItemData = [];
@@ -583,6 +581,7 @@ export class CirculationConsumptionComponent implements OnInit {
 				});
 			} else {
 				this.erpCommonService.updateUserItemData(inputJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
 					if (result) {
 						this.itemData = [];
 						this.issueItemData = [];

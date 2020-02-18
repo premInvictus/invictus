@@ -19,6 +19,7 @@ export class MarksEntryFinalComponent implements OnInit {
   subexamArray: any[] = [];
   studentArray: any[] = [];
   tableDivFlag = false;
+  disableApiCall = false;
   marksInputArray: any[] = [];
   marksEditable = true;
   responseMarksArray: any[] = [];
@@ -299,8 +300,8 @@ export class MarksEntryFinalComponent implements OnInit {
       });
     } else */
     if (status !== '3') {
-      if (true) {
         if (this.paramform.valid && this.marksInputArray.length > 0) {
+          this.disableApiCall = true;
           const param: any = {};
           param.examEntry = this.paramform.value;
           param.examEntryMapping = this.marksInputArray;
@@ -311,16 +312,16 @@ export class MarksEntryFinalComponent implements OnInit {
           this.examService.addMarksEntry(param).subscribe((result: any) => {
             if (result && result.status === 'ok') {
               this.displayData();
+              this.disableApiCall = false;
             } else {
               this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+              this.disableApiCall = false;
             }
           })
         }
-      } else {
-        this.commonAPIService.showSuccessErrorMessage('Still few student has empty mark!', 'error');
-      }
     } else {
       if (this.paramform.valid && this.marksInputArray.length > 0) {
+        this.disableApiCall = true;
         const param: any = {};
         param.examEntry = this.paramform.value;
         param.examEntryMapping = this.marksInputArray;
@@ -330,8 +331,10 @@ export class MarksEntryFinalComponent implements OnInit {
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
             this.displayData();
+            this.disableApiCall = false;
           } else {
             this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+            this.disableApiCall = false;
           }
         })
       }

@@ -130,11 +130,11 @@
   </div>
   <div class="row">
     <div class="col-12 text-center">
-      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()">Save &
+      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"  [disabled]="disabledApiButton" >Save &
         Continue</button>
-      <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(false)">Submit</button>
+      <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(false)"  [disabled]="disabledApiButton" >Submit</button>
       <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-        (click)="updateForm(true)">Update & Continue</button>
+        (click)="updateForm(true)"  [disabled]="disabledApiButton">Update & Continue</button>
       <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
             (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit &
             Continue</button> -->

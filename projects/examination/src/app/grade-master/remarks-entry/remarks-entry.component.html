@@ -233,24 +233,29 @@
                 <div class="row margin-top-25">
                     <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
                         <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0"
-                            (click)="saveForm();$event.stopPropagation()">Save</button>
+                            (click)="saveForm();$event.stopPropagation()" [disabled]="disabledApiButton">Save</button>
                         <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 "
-                            (click)="saveForm2();$event.stopPropagation()">Save</button>
+                            (click)="saveForm2();$event.stopPropagation()" [disabled]="disabledApiButton"> Save</button>
                         <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0
-                                 " (click)="saveForm('1');$event.stopPropagation() ">Save &
+                                 " (click)="saveForm('1');$event.stopPropagation() "
+                            [disabled]="disabledApiButton">Save &
                             Submit</button>
                         <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0
-                             " (click)="saveForm2('1');$event.stopPropagation() ">Save &
+                             " (click)="saveForm2('1');$event.stopPropagation() " [disabled]="disabledApiButton">Save &
                             Submit</button>
 
                     </div>
                     <div class="col-12 text-center" *ngIf="!isAnyoneEditable('0') && isExist('471')">
                         <button mat-button class="btn-success-green btn-spacer" *ngIf="!editTable "
-                            (click)="edit();$event.stopPropagation() ">Edit</button>
+                            (click)="edit();$event.stopPropagation() " [disabled]="disabledApiButton">Edit</button>
                         <button mat-button class="btn-success-green btn-spacer"
-                            *ngIf="editTable && formGroupArray.length > 0" (click)="saveForm('1');$event.stopPropagation() ">Update</button>
+                            *ngIf="editTable && formGroupArray.length > 0"
+                            (click)="saveForm('1');$event.stopPropagation() "
+                            [disabled]="disabledApiButton">Update</button>
                         <button mat-button class="btn-success-green btn-spacer"
-                            *ngIf="editTable && formGroupArray2.length > 0" (click)="saveForm2('1');$event.stopPropagation() ">Update</button>
+                            *ngIf="editTable && formGroupArray2.length > 0"
+                            (click)="saveForm2('1');$event.stopPropagation() "
+                            [disabled]="disabledApiButton">Update</button>
                     </div>
                 </div>
             </div>

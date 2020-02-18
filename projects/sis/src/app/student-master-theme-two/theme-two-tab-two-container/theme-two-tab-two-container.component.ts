@@ -19,6 +19,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	addOnly = false;
 	viewOnly = true;
 	editOnly = false;
+	disabledApiCall = false;
 	educationDetails: any[] = [];
 	educationDetailsNew: any[] = [];
 	awardsDetails: any[] = [];
@@ -116,7 +117,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		});
 	}
 	ngOnChanges() { }
-	saveForm() { 
+	saveForm() {
+		this.disabledApiCall = true;
 		for (const item of this.educationDetails) {
 			item.eed_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
 		}
@@ -129,6 +131,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		this.sisService.addAdditionalDetails(tabTwoJSON).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (this.common.isExistUserAccessMenuByLabel(this.parentId, 'Accounts')) {
+					this.disabledApiCall = false;
 					this.account.submit();
 				}
 				this.common.showSuccessErrorMessage('Additional Details Added Successfully', 'success');
@@ -148,6 +151,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				} else {
 					this.common.renderTab.next({ tabMove: true });
 				}
+			} else {
+				this.disabledApiCall = false;
 			}
 		});
 	}

@@ -15,6 +15,7 @@ export class SubtopicMapComponent implements OnInit, OnChanges {
   tArray: any[] = [];
   gatArray: any[] = [];
   subtopicflag = false;
+  disabledApiButton = false;
   constructor(
     private fbuild: FormBuilder,
     private axiomService: AxiomService,
@@ -112,11 +113,12 @@ export class SubtopicMapComponent implements OnInit, OnChanges {
   }
 
   submitsub() {
-    console.log(this.subtopicForm.value);
+    this.disabledApiButton = true;
     const param: any = {};
     param.mapsubtopicArr = this.subtopicForm.value;
     param.tgam_config_type = '4';
     this.smartService.addSmartToAxiom(param).subscribe((result: any) => {
+      this.disabledApiButton = false;
       if (result && result.status === 'ok') {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
       } else {

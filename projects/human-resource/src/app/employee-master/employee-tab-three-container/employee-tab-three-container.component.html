@@ -366,13 +366,13 @@
         </div>
         <div class="row">
             <div class="col-12 text-center ">
-                <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue"
-                    (click)="saveForm()">Save &
+                <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"
+                    [disabled]="disabledApiButton">Save &
                     Continue</button>
-                <button *ngIf="editOnly" mat-raised-button class="btn-success"
-                    (click)="updateForm(true)">Submit</button>
+                <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)"
+                    [disabled]="disabledApiButton">Submit</button>
                 <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-                    (click)="updateForm(false)">Update & Continue</button>
+                    (click)="updateForm(false)" [disabled]="disabledApiButton">Update & Continue</button>
                 <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer"
                     (click)="cancelForm()">Cancel</button>
             </div>

@@ -15,6 +15,7 @@ export class TopicMapComponent implements OnInit, OnChanges {
   tArray: any[] = [];
   gatArray: any[] = [];
   topicflag = false;
+  disabledApiButton = false;
   constructor(
     private fbuild: FormBuilder,
     private axiomService: AxiomService,
@@ -112,11 +113,12 @@ export class TopicMapComponent implements OnInit, OnChanges {
   }
 
   submitsub() {
-    console.log(this.topicForm.value);
+    this.disabledApiButton = true;
     const param: any = {};
     param.maptopicArr = this.topicForm.value;
     param.tgam_config_type = '3';
     this.smartService.addSmartToAxiom(param).subscribe((result: any) => {
+      this.disabledApiButton = false;
       if (result && result.status === 'ok') {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
       } else {

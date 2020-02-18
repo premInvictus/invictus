@@ -183,7 +183,8 @@
     <br>
     <br>
     <div class="text-center">
-      <button mat-raised-button class="btn-success" (click)="saveForm()" >Approve</button>
+      <button mat-raised-button class="btn-success" (click)="saveForm()"
+      [disabled]="disableApiCall" >Approve</button>
       <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()" >Back</button>
     </div>
     <br>

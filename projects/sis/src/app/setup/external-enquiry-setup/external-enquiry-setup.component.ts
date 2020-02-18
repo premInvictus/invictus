@@ -11,6 +11,7 @@ export class ExternalEnquirySetupComponent implements OnInit {
 	tabBifurCationEnqCumRegistration: any[] = [];
 	settingsArray: any[] = [];
 	configArray: any[] = [];
+	disableApiCall = false;
 	disabledArray: any[] = [
 		{ tab_id: 12, value: false },
 		{ tab_id: 13, value: false },
@@ -168,19 +169,25 @@ export class ExternalEnquirySetupComponent implements OnInit {
 			cos_process_type: '6',
 			configRelation: this.settingsArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				if (this.instructionsArray === {}) {
+					this.disableApiCall = true;
 					this.insForm2.value.schi_important_note = this.insForm1.value.schi_important_note;
 					this.insForm2.value.schi_banner_url = this.imageArray[0].imgName;
 					this.insForm2.value.schi_status = '1';
 					this.sisService.insertSchoolInstructions(this.insForm2.value).subscribe((result2: any) => {
 						if (result2.status === 'ok') {
 							this.common.showSuccessErrorMessage('Added SucessFully', 'succees');
+							this.disableApiCall = false;
+						} else {
+							this.disableApiCall = false;
 						}
 					});
 				} else {
+					this.disableApiCall = true;
 					this.insForm2.value.schi_important_note = this.insForm1.value.schi_important_note;
 					this.insForm2.value.schi_banner_url = this.imageArray[0].imgName;
 					this.insForm2.value.schi_status = '1';
@@ -188,10 +195,16 @@ export class ExternalEnquirySetupComponent implements OnInit {
 					this.sisService.updateSchoolInstructions(this.insForm2.value).subscribe((result2: any) => {
 						if (result2.status === 'ok') {
 							this.common.showSuccessErrorMessage('Updated SucessFully', 'succees');
+							this.disableApiCall = false;
+						} else {
+							this.disableApiCall = false;
 						}
 					});
 				}
 				this.getConfigureSetting();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}

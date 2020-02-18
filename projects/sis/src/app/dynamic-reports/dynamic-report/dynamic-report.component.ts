@@ -17,6 +17,7 @@ export class DynamicReportComponent implements OnInit {
 	fromvalue: any;
 	tovalue: any;
 	equaltoFC = '';
+	disableApiCall = false;
 	availableArray = [];
 	selectedArray = [];
 	filterArray = [];
@@ -487,6 +488,7 @@ export class DynamicReportComponent implements OnInit {
 	}
 	finalSubmit() {
 		if (this.selectedArray.length > 0) {
+			this.disableApiCall = true;
 			const selectsitemarray = [];
 			for (const item of this.selectedArray) {
 				selectsitemarray.push({
@@ -497,15 +499,21 @@ export class DynamicReportComponent implements OnInit {
 			this.generateReportForm.value.selects = selectsitemarray;
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Selected Field is empty', 'error');
+			this.disableApiCall = false;
 		}
 		if (this.generateReportForm.valid && this.selectedArray.length > 0) {
+			this.disableApiCall = true;
 			this.sisService.generateReport(this.generateReportForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.disableApiCall = false;
 					window.open(result.data, 'Report');
 					this.dropdownArray = [];
+				} else {
+					this.disableApiCall = false;
 				}
 			});
 		} else {
+			this.disableApiCall = false;
 			this.commonAPIService.showSuccessErrorMessage('Please Select Required Fields', 'error');
 		}
 	}

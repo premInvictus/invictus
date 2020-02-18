@@ -16,21 +16,15 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Employee Name</mat-label>
               <input matInput placeholder="Enter Employee Name" formControlName="emp_name" required
-                [matAutocomplete]="auto"  (keyup)="getFilterEmployee($event)"/>
+                [matAutocomplete]="auto" (keyup)="getFilterEmployee($event)" />
               <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let item of allEmployeeData" [value]="item.emp_id"
                   (onSelectionChange)="setEmployeeId(item)">
                   <small>{{item.emp_name | capitalize}}( {{item.emp_id}} )</small>
                 </mat-option>
               </mat-autocomplete>
-
-
-
             </mat-form-field>
           </div>
-
-
-
         </div>
       </form>
     </mat-card>
@@ -65,9 +59,9 @@
                 {{employeeData?.emp_status}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
-              class="font-size-14 opacity-7">
-              {{leave_opening_balance}}
-            </span>
+                class="font-size-14 opacity-7">
+                {{leave_opening_balance}}
+              </span>
             </div>
 
           </div>
@@ -89,7 +83,7 @@
               <table mat-table [dataSource]="employeedataSource" matSort class="table-80 text-center"
                 id="report_table67">
                 <ng-container matColumnDef="srno">
-                  <th mat-header-cell *matHeaderCellDef  class="text-nowrap" width="1%"> Sr. No. </th>
+                  <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="1%"> Sr. No. </th>
                   <ng-container *matCellDef="let element">
                     <td mat-cell *ngIf="element.srno==='Grand Total'" colspan="2">
                       <b>{{element?.srno}}</b>
@@ -103,7 +97,7 @@
 
                 </ng-container>
                 <ng-container matColumnDef="month_name">
-                  <th mat-header-cell *matHeaderCellDef  width="30%"> Month </th>
+                  <th mat-header-cell *matHeaderCellDef width="30%"> Month </th>
                   <ng-container *matCellDef="let element">
                     <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-left">{{element.month_name}}
                     </td>
@@ -118,32 +112,32 @@
                   </ng-container>
                 </ng-container> -->
                 <ng-container matColumnDef="leave_credited">
-                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Credited </th>
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Credited </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_credited"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_availed">
-                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Availed </th>
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Availed </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_availed"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_granted">
-                  <th mat-header-cell *matHeaderCellDef  width="5%"> Leave Granted </th>
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Granted </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_granted"></p>
                   </td>
 
                 </ng-container>
                 <ng-container matColumnDef="lwp">
-                  <th mat-header-cell *matHeaderCellDef  width="5%"> LWP</th>
+                  <th mat-header-cell *matHeaderCellDef width="5%"> LWP</th>
                   <td mat-cell *matCellDef="let element">
                     <p [innerHtml]="element.lwp"></p>
                   </td>
                 </ng-container>
                 <ng-container matColumnDef="leave_closing_balance">
-                  <th mat-header-cell *matHeaderCellDef  width="5%"> Closing Balance </th>
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Closing Balance </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
                     <p [innerHtml]="element.leave_closing_balance"></p>
                   </td>

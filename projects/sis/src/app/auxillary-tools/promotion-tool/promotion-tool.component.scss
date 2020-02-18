@@ -8,3 +8,7 @@ th.mat-header-cell {
 .mat-checkbox{
     padding: 2px;
 }
+.disable-pub {
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+}

@@ -15,6 +15,7 @@ export class MarkAttendanceComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   entry_date = new Date();
+  disableApiCall = false;
   eventArray: any[] = [];
   firstForm: FormGroup;
   attendanceForm: FormGroup;
@@ -271,6 +272,7 @@ export class MarkAttendanceComponent implements OnInit {
 			}
 		}
 		if (this.requiredAll) {
+      this.disableApiCall = true;
 			const checkParam: any = {};
 			checkParam.au_class_id = this.firstForm.value.syl_class_id;
 			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
@@ -282,18 +284,23 @@ export class MarkAttendanceComponent implements OnInit {
 					this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
 						if (result_u && result_u.status === 'ok') {
               this.commonService.showSuccessErrorMessage('Attendance  Updated Successfully', 'success');
+              this.disableApiCall = false;
               this.fetchDetails();
 						} else {
+              this.disableApiCall = false;
 							this.commonService.showSuccessErrorMessage('Update failed', 'error');
 						}
 					});
 				} else {
+          this.disableApiCall = true;
 					this.examService.insertAttendance(this.finalArray).subscribe((result_i: any) => {
 						if (result_i && result_i.status === 'ok') {
               this.commonService.showSuccessErrorMessage('Attendance Marked Successfully', 'success');
+              this.disableApiCall = false;
               this.fetchDetails();
 						} else {
-							this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+              this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+              this.disableApiCall = false;
 						}
 					});
 				}

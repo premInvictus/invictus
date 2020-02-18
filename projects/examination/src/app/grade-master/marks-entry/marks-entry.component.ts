@@ -33,6 +33,7 @@ export class MarksEntryComponent implements OnInit {
     { "egs_grade_name": "ML", "egs_grade_value": "ML", "egs_range_start": "0", "egs_range_end": "0" }
   ];
   editFlag = false;
+  disabledApiButton = false;
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -97,7 +98,7 @@ export class MarksEntryComponent implements OnInit {
     this.paramform.patchValue({
       eme_exam_id: ''
     });
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(),term_id: this.paramform.value.eme_term_id}).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, exam_category: this.getSubType(), term_id: this.paramform.value.eme_term_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.examArray = result.data;
       } else {
@@ -122,7 +123,7 @@ export class MarksEntryComponent implements OnInit {
       this.getGradeSet({ egs_number: this.examArray[ind].egs_number, sort: 'asc' });
     }
     this.subexamArray = [];
-    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
           this.subexamArray = result.data[0].exam_sub_exam_max_marks;
@@ -227,7 +228,7 @@ export class MarksEntryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 scholastic_subject.push(element);
-              }                           
+              }
             } else if (element.sub_type === '2' || element.sub_type === '4') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];
@@ -238,15 +239,15 @@ export class MarksEntryComponent implements OnInit {
                 }
                 element.childSub = childSub;
                 coscholastic_subject.push(element);
-              }              
+              }
             }
           });
         }
 
-        for(var i=0; i<scholastic_subject.length;i++) {
+        for (var i = 0; i < scholastic_subject.length; i++) {
           this.subjectArray.push(scholastic_subject[i]);
         }
-        for(var i=0; i<coscholastic_subject.length;i++) {
+        for (var i = 0; i < coscholastic_subject.length; i++) {
           this.subjectArray.push(coscholastic_subject[i]);
         }
       } else {
@@ -386,6 +387,7 @@ export class MarksEntryComponent implements OnInit {
   }
   updateForm(status = '0', savelog = '0') {
     this.editFlag = false;
+    this.disabledApiButton = true;
     console.log('this.marksInputArray.length', this.marksInputArray.length);
     if (true) {
       if (this.paramform.valid && this.marksInputArray.length > 0) {
@@ -399,44 +401,21 @@ export class MarksEntryComponent implements OnInit {
         param.savelog = savelog;
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
+            this.disabledApiButton = false;
             this.displayData();
           } else {
+            this.disabledApiButton = false;
             this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
           }
         })
       }
     } else {
-      
+
     }
   }
 
   saveForm(status = '0', savelog = '0') {
-    console.log('this.marksInputArray.length', this.marksInputArray.length);
-    console.log('this.paramform.value.eme_subexam_id.length * this.studentArray.length', this.paramform.value.eme_subexam_id.length * this.studentArray.length);
-    /* if(this.marksInputArray.length < this.paramform.value.eme_subexam_id.length * this.studentArray.length) {
-      const dialogRef = this.dialog.open(MarkEntrySubmitDialogComponent, {
-        width: '600px',
-        height: '300px',
-        data: {text: 'Save',message: 'Still few student has empty mark! Do you wish to continue'}
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if(result && result.confirm === 'ok') {
-          if (this.paramform.valid && this.marksInputArray.length > 0) {
-            const param: any = {};
-            param.examEntry = this.paramform.value;
-            param.examEntryMapping = this.marksInputArray;
-            param.examEntryStatus = status;
-            param.savelog = savelog;
-            this.examService.addMarksEntry(param).subscribe((result: any) => {
-              if (result && result.status === 'ok') {
-                this.displayData();
-              }
-            })
-          }
-        }
-      });
-    } else */
+    this.disabledApiButton = true;
     if (status !== '0') {
       if (true) {
         if (this.paramform.valid && this.marksInputArray.length > 0) {
@@ -449,14 +428,16 @@ export class MarksEntryComponent implements OnInit {
           param.savelog = savelog;
           this.examService.addMarksEntry(param).subscribe((result: any) => {
             if (result && result.status === 'ok') {
+              this.disabledApiButton = false;
               this.displayData();
             } else {
+              this.disabledApiButton = false;
               this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
             }
           })
         }
       } else {
-        
+
       }
     } else {
       if (this.paramform.valid && this.marksInputArray.length > 0) {
@@ -468,8 +449,10 @@ export class MarksEntryComponent implements OnInit {
         param.studentArrayLength = this.paramform.value.eme_subexam_id.length * this.studentArray.length;
         this.examService.addMarksEntry(param).subscribe((result: any) => {
           if (result && result.status === 'ok') {
+            this.disabledApiButton = false;
             this.displayData();
           } else {
+            this.disabledApiButton = false;
             this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
           }
         })

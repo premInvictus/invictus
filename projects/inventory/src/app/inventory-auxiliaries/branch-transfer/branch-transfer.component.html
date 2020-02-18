@@ -249,9 +249,9 @@
           <div class="row margin-top-20" *ngIf="this.finalRequistionArray.length > 0">
             <div class="col-12 text-center">
               <button *ngIf="!editBranchtransfer" mat-raised-button class="btn-success-green"
-                (click)="openSubmitModal()">Submit</button>
-              <button *ngIf="editBranchtransfer" mat-raised-button class="btn-success-green"
-                (click)="openSubmitModal()">Update</button>
+                (click)="openSubmitModal()" [disabled]="disabledApiButton">Submit</button>
+              <button *ngIf="editBranchtransfer" mat-raised-button class="btn-success-green" (click)="openSubmitModal()"
+                [disabled]="disabledApiButton">Update</button>
               <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
             </div>
           </div>

@@ -14,8 +14,9 @@ export class ClassMapComponent implements OnInit {
 	cArray: any[] = [];
 	gacArray: any[] = [];
 	gsecArray: any[] = [];
-	gsecValueArray: any[] = [];
+	gsecValueArray: any[] = []; 
 	classflag = false;
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private axiomService: AxiomService,
@@ -119,11 +120,13 @@ export class ClassMapComponent implements OnInit {
 	}
 
 	submitClass() {
-		console.log(this.classForm.value);
+		this.disabledApiButton = true;
+		//console.log(this.classForm.value);
 		const param: any = {};
 		param.mapclassArr = this.classForm.value;
 		param.tgam_config_type = '1';
 		this.smartService.addSmartToAxiom(param).subscribe((result: any) => {
+			this.disabledApiButton = false;
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 			}

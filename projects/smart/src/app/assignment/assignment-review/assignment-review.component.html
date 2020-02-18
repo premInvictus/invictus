@@ -19,28 +19,34 @@
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field> -->
-                            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                                appearance="outline">
                                 <mat-label>As on</mat-label>
-                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to" [min]="toMin" readonly>
+                                <input matInput [matDatepicker]="picker1" placeholder="Choose a date"
+                                    formControlName="to" [min]="toMin" readonly>
                                 <mat-datepicker-toggle matSuffix [for]="picker1" disabled></mat-datepicker-toggle>
                                 <mat-datepicker #picker1></mat-datepicker>
                             </mat-form-field>
-                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10" appearance="outline" *ngIf="!this.isTeacher">
+                            <mat-form-field class="form-field-150 remove-form-field-bottom-margin margin-left-10"
+                                appearance="outline" *ngIf="!this.isTeacher">
                                 <mat-label>Class</mat-label>
-                                <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass(); getAssignment()">
-                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                                <mat-select formControlName="class_id"
+                                    (selectionChange)="getSubjectsByClass(); getAssignment()">
+                                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                        {{item.class_name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline" *ngIf="!this.isTeacher">
+                            <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                                appearance="outline" *ngIf="!this.isTeacher">
                                 <mat-label>Subject</mat-label>
                                 <mat-select formControlName="sub_id" (selectionChange)="getAssignment()">
-                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</mat-option>
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
+                                        {{item.sub_name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
                             <span *ngIf="!isTeacher" style="padding:10px 0 0 20px">
-                <i class="material-icons reset_ass" tooltip="Reset"
-                (click)="reserParam()">replay</i>
-              </span>
+                                <i class="material-icons reset_ass" tooltip="Reset" (click)="reserParam()">replay</i>
+                            </span>
                         </div>
                     </div>
 
@@ -56,15 +62,18 @@
             <div class="row">
                 <div class="col-4">
                     <mat-form-field appearance="a">
-                        <input class="margin-left-10" matInput placeholder="Filter" (keyup)="doAssignmentFilter($event.target.value)">
+                        <input class="margin-left-10" matInput placeholder="Filter"
+                            (keyup)="doAssignmentFilter($event.target.value)">
                         <mat-icon matPrefix>filter_list</mat-icon>
                     </mat-form-field>
                 </div>
                 <div class="col-8 text-right margin-top-5">
-                    <button mat-raised-button class="btn-success-green" *ngIf="!isTeacher && (selection.selected.length > 0)" (click)="openSendModal({})"><i
-              class="fas fa-location-arrow"></i> Send</button>
-                    <button mat-raised-button class="btn-success-blue margin-left-10" (click)="openAddAttachmentDialog()">Add
-            Assignment</button>
+                    <button mat-raised-button class="btn-success-green"
+                        *ngIf="!isTeacher && (selection.selected.length > 0)" (click)="openSendModal({})"><i
+                            class="fas fa-location-arrow"></i> Send</button>
+                    <button mat-raised-button class="btn-success-blue margin-left-10"
+                        (click)="openAddAttachmentDialog()">Add
+                        Assignment</button>
                 </div>
             </div>
             <div class="row margin-top-10">
@@ -72,12 +81,17 @@
                     <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" id="report_table">
                         <ng-container matColumnDef="select" *ngIf="!isTeacher">
                             <th mat-header-cell *matHeaderCellDef class="select-checkbox">
-                                <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                                <mat-checkbox (change)="$event ? masterToggle() : null"
+                                    [checked]="selection.hasValue() && isAllSelected()"
+                                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                                    [aria-label]="checkboxLabel()">
                                 </mat-checkbox>
                             </th>
                             <th mat-header-cell *matHeaderCellDef>Select</th>
                             <td mat-cell *matCellDef="let row" class="select-checkbox">
-                                <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                                <mat-checkbox (click)="$event.stopPropagation()"
+                                    (change)="$event ? selection.toggle(row) : null"
+                                    [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                                 </mat-checkbox>
                             </td>
                         </ng-container>
@@ -87,11 +101,13 @@
                         </ng-container>
                         <ng-container matColumnDef="subject">
                             <th mat-header-cell *matHeaderCellDef> Subject </th>
-                            <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l"> {{element.subject | capitalize}} </td>
+                            <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l">
+                                {{element.subject | capitalize}} </td>
                         </ng-container>
                         <ng-container matColumnDef="topic">
                             <th mat-header-cell *matHeaderCellDef> Topic </th>
-                            <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l"> {{element.topic | capitalize}} </td>
+                            <td mat-cell *matCellDef="let element" class="p-l-10 t-a-l"> {{element.topic | capitalize}}
+                            </td>
                         </ng-container>
                         <ng-container matColumnDef="assignment">
                             <th mat-header-cell *matHeaderCellDef> Assignment </th>
@@ -109,28 +125,41 @@
                         </ng-container>
                         <ng-container matColumnDef="attachment">
                             <th mat-header-cell *matHeaderCellDef> Attachment </th>
-                            <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10" (click)="previewDocuments(element.action.as_attachment)"><span
-                    class="font-white font-size-16">{{element.attachment | zerodash}}</span></button></td>
+                            <td mat-cell *matCellDef="let element"> <button mat-mini-fab class="btn-blue margin-left-10"
+                                    (click)="previewDocuments(element.action.as_attachment)"><span
+                                        class="font-white font-size-16">{{element.attachment | zerodash}}</span></button>
+                            </td>
                         </ng-container>
                         <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef> Action </th>
                             <td mat-cell *matCellDef="let element" class="tab-display-flex">
-                                <i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer" *ngIf="!isTeacher" (click)="openSendModal({as_id: element.as_id})"></i><span class="margin-left-10 ver-line-divider"></span>
-                                <i class="far fa-edit font-size-16 font-color-gray cursor-pointer" (click)="attachmentDialog(element.action)"></i><span class="margin-left-10 ver-line-divider"></span>
-                                <i *ngIf="!isTeacher" class="fas fa-trash font-size-16 font-color-red cursor-pointer" (click)="openModal(element.action)"></i>
+                                <i class="fas fa-location-arrow font-size-16 font-color-green cursor-pointer"
+                                    *ngIf="!isTeacher" (click)="openSendModal({as_id: element.as_id})"></i><span
+                                    class="margin-left-10 ver-line-divider"></span>
+                                <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"
+                                    *ngIf="!disabledApiButton" (click)="attachmentDialog(element.action)"></i>
+                                <i class="far fa-edit font-size-16 font-color-gray cursor-pointer"
+                                    *ngIf="disabledApiButton"></i><span class="margin-left-10 ver-line-divider"></span>
+                                <i *ngIf="!isTeacher" class="fas fa-trash font-size-16 font-color-red cursor-pointer"
+                                    (click)="openModal(element.action)"></i>
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                         </tr>
                     </table>
-                    <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
+                    <mat-paginator [hidden]="nodataFlag" [length]="pageLength" [pageSize]="pageSize"
+                        [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true" (page)="changePage($event)">
                     </mat-paginator>
                     <div *ngIf="nodataFlag && !isTeacher" class="no-records" style="text-align: center">
-                        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]="" [subText]="'Please select class or subject'"></app-no-data>
                     </div>
                     <div *ngIf="nodataFlag && isTeacher" class="no-records" style="text-align: center">
-                        <app-no-data [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" [noDataText]=""></app-no-data>
+                        <app-no-data
+                            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                            [noDataText]=""></app-no-data>
                     </div>
                 </div>
             </div>

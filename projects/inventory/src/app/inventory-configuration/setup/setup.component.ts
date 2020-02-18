@@ -8,9 +8,9 @@ import * as XLSX from 'xlsx';
 import { SisService, CommonAPIService } from '../../_services/index';
 
 @Component({
-  selector: 'app-setup',
-  templateUrl: './setup.component.html',
-  styleUrls: ['./setup.component.css']
+	selector: 'app-setup',
+	templateUrl: './setup.component.html',
+	styleUrls: ['./setup.component.css']
 })
 export class SetupComponent implements OnInit, AfterViewInit {
 	@ViewChild('deleteModal') deleteModal;
@@ -44,6 +44,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	dptFormGroupArray: any[] = [];
 	configFlag = false;
 	calculationFlag = false;
+	disabledApiButton = false;
 	multipleDropdownName: any;
 	congigArray = [
 		{ id: "1", name: 'Master' }
@@ -295,6 +296,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.setupDetails = {
@@ -368,6 +370,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
+			this.disabledApiButton = true;
 			switch (value) {
 				case '1':
 					this.setupDetails = {
@@ -417,6 +420,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	addEntry(data, serviceName, next) {
 		this.commonService[serviceName](data).subscribe((result: any) => {
+			this.disabledApiButton = false;
 			if (result) {
 				if (this.configValue === '1') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -432,6 +436,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	}
 	updateEntry(data, serviceName, next) {
 		this.commonService[serviceName](data).subscribe((result: any) => {
+			this.disabledApiButton = false;
 			if (result) {
 				if (this.configValue === '1') {
 					this.formGroupArray[this.configValue - 1].formGroup.patchValue({

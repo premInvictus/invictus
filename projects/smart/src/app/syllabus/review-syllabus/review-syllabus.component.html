@@ -108,7 +108,8 @@
                                             <td class="custom-td text-left desc-width">
                                                 <div [innerHTML]="det.sd_desc"></div>
                                             </td>
-                                            <td class="custom-td text-center"  *ngIf="j == 0" [attr.rowspan]="item.details.length">
+                                            <td class="custom-td text-center" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
                                                 {{termArray[item.syl_term_id]}}
                                             </td>
                                             <td class="custom-td">
@@ -147,7 +148,11 @@
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <i class="fas fa-thumbs-up font-color-green cursor-pointer font-size-16"
                                                     matTooltip="Publish"
-                                                    (click)="openPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                                    (click)="openPublish(item.syl_id, item.sd_topic_id)"
+                                                    *ngIf="!disabledApiButton"></i>
+                                                <i class="fas fa-thumbs-up font-color-grey font-size-16"
+                                                    *ngIf="disabledApiButton"></i>
+                                            </td>
                                             <td class="custom-td" (click)="openAddDialog(item.syl_id, item.sd_topic_id)"
                                                 *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <i class="fas fa-plus" style="cursor:pointer" title="Add"> </i></td>

@@ -70,6 +70,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	categoryOneArray: any[] = [];
+	disabledApiButton = false;
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService, private dialog: MatDialog,
@@ -322,6 +323,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	saveForm() {
+		this.disabledApiButton = true;
 		if (this.employeedetails) {
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -352,10 +354,12 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		};
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Employee Documents Submitted Successfully', 'success');
 				//this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });				
-				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false,reRenderForm:true });
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm: true });
 			} else {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
 			}
 		});
@@ -363,6 +367,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	}
 
 	updateForm() {
+		this.disabledApiButton = true;
 		if (this.employeedetails) {
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -393,11 +398,13 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		};
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
+				this.disabledApiButton = false;
 				//this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });
-				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm:true });
-				
+				this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm: true });
+
 				this.commonAPIService.showSuccessErrorMessage('Employee Documents Updated Successfully', 'success');
 			} else {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
 			}
 		});

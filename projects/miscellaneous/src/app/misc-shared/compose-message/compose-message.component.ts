@@ -53,7 +53,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	finUserDataArr: any[] = [];
 	selectedUserCount = 0;
 	showSearchByUserFlag = false;
-
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -106,7 +106,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	setFormData(formData) {
-		console.log('formData--',formData);
+		console.log('formData--', formData);
 		this.editMode = true;
 		this.formData = formData;
 		// this.messageForm = this.fbuild.group({
@@ -141,14 +141,14 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	}
 
 	editTemplate(event) {
-		
+
 		(event && event.value != '0') ? this.editTemplateFlag = true : this.editTemplateFlag = false;
 		const templateData = this.templateDataArr.filter((tplObj) => {
 			return tplObj.tpl_id.toString() === event.value.toString();
 		});
 
 		this.selectedUserArr = [];
-		this.messageForm.patchValue({tpl_id: (event && event.value != '0') ? event.value : ''});
+		this.messageForm.patchValue({ tpl_id: (event && event.value != '0') ? event.value : '' });
 		if (templateData && templateData.length > 0) {
 			if (this.editMode) {
 				this.messageForm.patchValue({
@@ -213,6 +213,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	saveTemplate() {
 		console.log('this.messageForm.value--', this.messageForm.value);
 		if (this.messageForm.valid) {
+			this.disabledApiButton = true;
 			const inputJson = {
 				'tpl_title': this.messageForm.value.messageTitle,
 				'tpl_subject': this.messageForm.value.messageSubject,
@@ -224,6 +225,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				inputJson['tpl_id'] = this.messageForm.value.tpl_id;
 				this.sisService.updateTemplate(inputJson).subscribe((result: any) => {
 					if (result) {
+						this.disabledApiButton = false;
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
 						this.getTemplate();
@@ -233,12 +235,13 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			} else {
 				this.sisService.saveTemplate(inputJson).subscribe((result: any) => {
 					if (result) {
+						this.disabledApiButton = false;
 						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
 						this.getTemplate();
 						this.editTemplateFlag = true;
 						this.messageForm.patchValue({
-							tpl_id : this.templateDataArr && this.templateDataArr.length > 0 ? Number(this.templateDataArr.length)  : 1
+							tpl_id: this.templateDataArr && this.templateDataArr.length > 0 ? Number(this.templateDataArr.length) : 1
 						});
 					}
 				});
@@ -334,7 +337,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.commonAPIService.getAllEmployeeDetail({'emp_cat_id' : 1}).subscribe((result: any) => {
+			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 1 }).subscribe((result: any) => {
 				console.log('teacher data', result);
 				if (result) {
 					for (var i = 0; i < result.length; i++) {
@@ -369,7 +372,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.commonAPIService.getAllEmployeeDetail({'emp_cat_id' : 2}).subscribe((result: any) => {
+			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 2 }).subscribe((result: any) => {
 				if (result) {
 					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
@@ -582,10 +585,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		}
 	}
 
-	setSelectedUserData(userDataArr) {		
+	setSelectedUserData(userDataArr) {
 		if (userDataArr) {
 			var flag = false;
-			for (var i=0; i<this.selectedUserArr.length;i++) {
+			for (var i = 0; i < this.selectedUserArr.length; i++) {
 				if (Number(this.selectedUserArr[i]['login_id']) === Number(userDataArr['au_login_id'])) {
 					flag = true;
 					break;
@@ -641,6 +644,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	sendMessage() {
 		var validationFlag = this.checkValidation();
 		if (validationFlag) {
+			this.disabledApiButton = true;
 			var msgToArr = [];
 			for (var i = 0; i < this.selectedUserArr.length; i++) {
 				var userJson = {
@@ -677,10 +681,12 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				inputJson['msg_id'] = this.formData['msg_id'];
 				this.commonAPIService.updateMessage(inputJson).subscribe((result: any) => {
 					if (result) {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Message has been updated Successfully', 'success');
 						this.back();
 						this.resetForm();
 					} else {
+						this.disabledApiButton = false;
 						this.commonAPIService.showSuccessErrorMessage('Error While Updating Message', 'error');
 					}
 				});
@@ -695,10 +701,12 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				} else {
 					this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
 						if (result) {
+							this.disabledApiButton = false;
 							this.commonAPIService.showSuccessErrorMessage('Message has been sent Successfully', 'success');
 							this.back();
 							this.resetForm();
 						} else {
+							this.disabledApiButton = false;
 							this.commonAPIService.showSuccessErrorMessage('Error While Sending Message', 'error');
 						}
 					});
@@ -712,7 +720,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.messageForm.value.messageBody = this.messageForm.value.messageBody.replace(/(&nbsp;|<([^>]+)>)/ig, " ").trim();
 			this.msgMultipleCount = (this.messageForm.value.messageBody.length / 160);
 			this.msgMultipleCount = Math.ceil(this.msgMultipleCount);
-		}		
+		}
 	}
 
 	sendSMS(inputJson) {

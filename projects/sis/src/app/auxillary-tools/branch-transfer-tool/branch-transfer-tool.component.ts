@@ -27,6 +27,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	classArray: any[] = [];
 	tclassArray: any[] = [];
 	sectionArray: any[] = [];
+	disableApiCall = false;
 	promotionSectionArray: any[] = [];
 	promoteForm: FormGroup;
 	sessionArray: any[] = [];
@@ -161,6 +162,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		} else if (!this.promoteForm.value.class_id) {
 			this.commonApiService.showSuccessErrorMessage('Previous Class needed', 'error');
 		} else {
+			this.disableApiCall = true;
 			this.sisService.getStudentsPromotionTool({
 				class_id: this.promoteForm.value.class_id,
 				ses_id: this.promoteSessionId,
@@ -186,11 +188,13 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 					this.promotedataSource.sort = this.sortP;
 					this.promoteFlag = true;
+					this.disableApiCall = false;
 				} else {
 					this.PROMOTE_ELEMENT_DATA = [];
 					this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 					this.commonApiService.showSuccessErrorMessage('No Records Found', 'error');
 					this.promoteFlag = false;
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -219,6 +223,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		if (!this.promoteForm.value.new_class_id) {
 			this.commonApiService.showSuccessErrorMessage('New Class Required', 'error');
 		} else {
+			this.disableApiCall = true;
 			let enrollment_no = 0;
 			if (this.promoteForm.value.enrollment_type === '3') {
 				enrollment_no = item.action.em_provisional_admission_no;
@@ -244,8 +249,10 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					this.commonApiService.showSuccessErrorMessage('Student of admission number ' + item.action.au_login_id + ' has been transfered', 'success');
 					this.getPromotionList();
 					this.getCountCurrentYearStudents();
+					this.disableApiCall = false;
 				} else {
 					this.commonApiService.showSuccessErrorMessage(result.data, 'error');
+					this.disableApiCall = false;
 				}
 			});
 		}
@@ -272,6 +279,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		if (!this.promoteForm.value.new_class_id) {
 			this.commonApiService.showSuccessErrorMessage('New Class Required', 'error');
 		} else {
+			this.disableApiCall = true;
 			const promoteBulkArray: any[] = [];
 			console.log(this.toBePromotedList);
 			for (const titem of this.toBePromotedList) {
@@ -305,8 +313,10 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 						this.toBePromotedList = [];
 						this.getPromotionList();
 						this.getCountCurrentYearStudents();
+						this.disableApiCall = false;
 					} else {
 						this.commonApiService.showSuccessErrorMessage(result.data, 'error');
+						this.disableApiCall = false;
 					}
 				});
 			}

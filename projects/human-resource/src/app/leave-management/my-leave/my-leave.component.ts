@@ -48,6 +48,7 @@ export class MyLeaveComponent implements OnInit {
 	rejectMessage = 'Are you sure to Reject !';
 	approvedArray: any[] = [];
 	finalapprovedArray: any[] = [];
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -207,6 +208,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	submit(result, attachment) {
+		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
 		var startDate = datePipe.transform(result.leave_start_date, 'yyyy-MM-dd');
@@ -232,10 +234,12 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
 		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
+				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
 				this.showFormFlag = false;
 				this.getMyLeave();
 			} else {
+				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request of Selected date aleady exist', 'error');
 			}
 		});
@@ -243,6 +247,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	update(result, attachment) {
+		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
 		var startDate = datePipe.transform(result.leave_start_date, 'yyyy-MM-dd');
@@ -269,10 +274,12 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
 		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
+				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
 				this.showFormFlag = false;
 				this.getMyLeave();
 			} else {
+				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request of Selected date aleady exist', 'error');
 			}
 		});

@@ -59,6 +59,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	categoryOneArray: any[] = [];
+	disabledApiButton = false;
 	@ViewChild('editReference') editReference;
 	constructor(public commonAPIService: CommonAPIService, private fbuild: FormBuilder, private axiomService: AxiomService,
 		private sisService: SisService) {
@@ -360,6 +361,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	saveForm() {
+		this.disabledApiButton = true;
 		this.employeedetails['emp_remark_detail'] = {
 			education_detail: this.educationsArray,
 			experience_detail: this.experiencesArray,
@@ -394,15 +396,18 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 		this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 			if (result) {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Inserted Successfully', 'success');
 				this.commonAPIService.renderTab.next({ tabMove: true });
 			} else {
+				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Remark Detail', 'error');
 			}
 		});
 	}
 
 	updateForm(moveNext) {
+		this.disabledApiButton = true;
 		if (this.employeedetails) {
 			this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
 			this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
@@ -438,21 +443,25 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		if (!moveNext) {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Updated Successfully', 'success');
 					this.commonAPIService.renderTab.next({ tabMove: true });
 				} else {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Remark Detail', 'error');
 				}
 			});
 		} else {
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Employee Remark Detail Updated Successfully', 'success');
 					this.getQualifications();
 					this.getBoard();
 					this.getRemarksDetails();
 					this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 				} else {
+					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Remark Detail', 'error');
 				}
 			});

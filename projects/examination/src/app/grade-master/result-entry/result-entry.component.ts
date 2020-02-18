@@ -39,9 +39,10 @@ export class ResultEntryComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   termDataFlag = false;
+  disabledApiButton = false;
   resultEntryOptionsArray: any[] = [];
   resultEntryData: any[] = [];
-  displayedColumns = ['roll_no', 'au_full_name', 'au_admission_no','result_entry_option', 'result_entry'];
+  displayedColumns = ['roll_no', 'au_full_name', 'au_admission_no', 'result_entry_option', 'result_entry'];
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private fbuild: FormBuilder,
@@ -283,7 +284,7 @@ export class ResultEntryComponent implements OnInit {
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         roll_no: item.r_rollno,
-        result_entry_option:'',
+        result_entry_option: '',
         result_entry: this.getResultEntryRemark(item.au_login_id)
       });
       counter++;
@@ -292,7 +293,7 @@ export class ResultEntryComponent implements OnInit {
           class_id: this.attendanceThemeTwoForm.value.syl_class_id,
           sec_id: this.attendanceThemeTwoForm.value.syl_section_id,
           login_id: item.au_login_id,
-          result_entry_option:  '',
+          result_entry_option: '',
           result_entry: this.getResultEntryRemark(item.au_login_id),
           session_id: this.session.ses_id,
           created_by: this.currentUser.login_id,
@@ -352,21 +353,17 @@ export class ResultEntryComponent implements OnInit {
   }
 
   finalSubmit() {
-    console.log(this.ELEMENT_DATA);
-    console.log(this.formgroupArray);
+    this.disabledApiButton = true;
     let inputJson = {};
     let remarkArray = [];
     for (var i = 0; i < this.formgroupArray.length; i++) {
-
       remarkArray.push(
         {
           erem_login_id: this.formgroupArray[i]['formGroup']['value']['login_id'],
           erem_remark: this.formgroupArray[i]['formGroup']['value']['result_entry']
         }
       );
-
     }
-
     inputJson['examEntry'] = {
       ere_class_id: this.attendanceThemeTwoForm.value.syl_class_id,
       ere_sec_id: this.attendanceThemeTwoForm.value.syl_section_id,
@@ -381,12 +378,16 @@ export class ResultEntryComponent implements OnInit {
     inputJson['examEntryStatus'] = '1';
     this.examService.addReMarksEntry(inputJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.disabledApiButton = false;
         //this.displayData();
+      }else{
+        this.disabledApiButton = false;
       }
     });
   }
 
   finalUpdate() {
+    this.disabledApiButton = true;
     console.log(this.ELEMENT_DATA);
     console.log(this.formgroupArray);
     let inputJson = {};
@@ -416,7 +417,10 @@ export class ResultEntryComponent implements OnInit {
     inputJson['examEntryStatus'] = '1';
     this.examService.addReMarksEntry(inputJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
+        this.disabledApiButton = false;
         //this.displayData();
+      }else{
+        this.disabledApiButton = false;
       }
     });
   }
@@ -439,6 +443,6 @@ export interface Element {
   au_admission_no: any;
   roll_no: any;
   au_full_name: any;
-  result_entry_option:any;
+  result_entry_option: any;
   result_entry: any;
 }

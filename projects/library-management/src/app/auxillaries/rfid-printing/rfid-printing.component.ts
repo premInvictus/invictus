@@ -13,6 +13,7 @@ export class RfidPrintingComponent implements OnInit {
 	bookData: any[] = [];
 	formGroupArray: any[] = [];
 	finalDataArray: any[] = [];
+	disableApiCall = false;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('bookDet') bookDet;
@@ -83,12 +84,15 @@ export class RfidPrintingComponent implements OnInit {
 		for (const item of this.formGroupArray) {
 			this.finalDataArray.push(item.formGroup.value);
 		}
+		this.disableApiCall = true;
 		this.common.updateRFIDMapping({ rfid_data: this.finalDataArray }).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.getReservoirData();
+				this.disableApiCall = false;
 				this.notif.showSuccessErrorMessage(res.message, res.status);
 			} else {
 				this.notif.showSuccessErrorMessage(res.message, res.status);
+				this.disableApiCall = false;
 			}
 		});
 	}

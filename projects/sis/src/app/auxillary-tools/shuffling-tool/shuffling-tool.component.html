@@ -35,7 +35,9 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-4">
-                                    <button mat-raised-button class="btn-success btn-margin-top" (click)="getMasterStudentDetail()">Generate</button>
+                                    <button mat-raised-button class="btn-success btn-margin-top" 
+                                    [disabled]="disableApiCall"
+                                    (click)="getMasterStudentDetail()">Generate</button>
                                 </div>
                             </div>
                         </form>
@@ -122,7 +124,9 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-6">
-                                    <button mat-raised-button class="btn-success btn-margin-top" (click)="getShuffleStudents()">Generate</button>
+                                    <button mat-raised-button class="btn-success btn-margin-top" 
+                                    [disabled]="disableApiCall"
+                                    (click)="getShuffleStudents()">Generate</button>
                                 </div>
                             </div>
                         </form>
@@ -218,7 +222,8 @@
                                             <br>
                                             <br>
                                             <div class="text-center" *ngIf="selectedShuffleArray.length > 0">
-                                                <button mat-raised-button class="btn-green" (click)="freeze()">Freeze</button>
+                                                <button mat-raised-button class="btn-green" [disabled]="disableApiCall" 
+                                                (click)="freeze()">Freeze</button>
                                             </div>
                                             <br>
                                             <br>

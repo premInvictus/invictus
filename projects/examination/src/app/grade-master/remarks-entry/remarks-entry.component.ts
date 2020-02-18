@@ -30,7 +30,7 @@ export class RemarksEntryComponent implements OnInit {
 	remarkArray: any[] = [];
 	remarkInputArray: any[] = [];
 	marksEditable = true;
-	editTable = false;	
+	editTable = false;
 	examType: any;
 	classGradeTerm: any[] = [];
 	responseMarksArray: any[] = [];
@@ -39,6 +39,7 @@ export class RemarksEntryComponent implements OnInit {
 		{ rt_id: 2, rt_name: 'External Type' }
 	];
 	sortUp = false;
+	disabledApiButton = false;
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
@@ -525,6 +526,7 @@ export class RemarksEntryComponent implements OnInit {
 		}
 	}
 	saveForm(status = '0') {
+		this.disabledApiButton = true;
 		this.editTable = false;
 		this.remarkArray = [];
 		let i = 0;
@@ -562,11 +564,15 @@ export class RemarksEntryComponent implements OnInit {
 		param.externalFlag = '0';
 		this.examService.addReMarksEntry(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.disabledApiButton = false;
 				this.displayData();
+			} else {
+				this.disabledApiButton = false;
 			}
 		});
 	}
 	saveForm2(status = '0') {
+		this.disabledApiButton = true;
 		this.editTable = false;
 		this.remarksEntry = [];
 		let check_valid = false;
@@ -601,7 +607,10 @@ export class RemarksEntryComponent implements OnInit {
 			param.externalFlag = '1';
 			this.examService.addReMarksEntry(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
+					this.disabledApiButton = false;
 					this.displayExternalType();
+				} else {
+					this.disabledApiButton = false;
 				}
 			});
 		} else {

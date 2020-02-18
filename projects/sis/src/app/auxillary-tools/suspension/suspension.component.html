@@ -197,8 +197,10 @@
                             <br>
                             <br>
                             <div class="text-center">
-                                <button mat-raised-button class="btn-success" *ngIf="!showRevoke" (click)="suspendStudent()">Suspend</button>
-                                <button mat-raised-button class="btn-success" *ngIf="showRevoke" (click)="revokeEnrolmentNumber()">Revoke</button>
+                                <button mat-raised-button class="btn-success" *ngIf="!showRevoke" [disabled]="disableApiCall" (click)="suspendStudent()">Suspend</button>
+                                <button mat-raised-button class="btn-success" *ngIf="showRevoke" 
+                                [disabled]="disableApiCall"
+                                (click)="revokeEnrolmentNumber()">Revoke</button>
                                 <button class="btn-danger btn-spacer" mat-raised-button (click)="reset()">Reset</button>
                             </div>
                             <br>

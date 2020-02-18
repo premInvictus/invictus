@@ -275,7 +275,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Address</mat-label>
                     <input class="text-capitalize" formControlName="ea_address1" matInput placeholder="Address"
-                      [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" />
+                      [readonly]="viewOnly || (editOnly && !showAddressFlag)
+                      || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error>
                       This field is required
                     </mat-error>
@@ -284,7 +285,8 @@
                 <div class="col-12 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_city')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
-                    <input type="text" matInput placeholder="City" formControlName="ea_city" [readonly]="viewOnly"
+                    <input type="text" matInput placeholder="City" formControlName="ea_city" [readonly]="viewOnly || (editOnly && !showAddressFlag)
+                    || (addOnly && !showAddressFlag)"
                       [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup" autocomplete="off"
                       (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete">
@@ -332,7 +334,8 @@
                   <mat-form-field class="form-field " appearance="outline">
                     <mat-label>Pin Code</mat-label>
                     <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
-                      placeholder="Zip/Pin Code" [readonly]="viewOnly"
+                      placeholder="Zip/Pin Code" [readonly]="viewOnly || (editOnly && !showAddressFlag)
+                      || (addOnly && !showAddressFlag)"
                       [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error>
                       This field is required

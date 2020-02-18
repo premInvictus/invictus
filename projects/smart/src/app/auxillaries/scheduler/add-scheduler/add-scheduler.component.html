@@ -37,13 +37,14 @@
             </mat-form-field>
           </div>
           <div class="col-12">
-            <mat-checkbox formControlName="sc_partial_day_event" (change)="resetPeriod($event)">Partial-Day Event</mat-checkbox>
+            <mat-checkbox formControlName="sc_partial_day_event" (change)="resetPeriod($event)">Partial-Day Event
+            </mat-checkbox>
           </div>
           <div class="col-12" *ngIf="schedulerform.value.sc_partial_day_event">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Periods Affected</mat-label>
               <mat-select formControlName="sc_period_effect" multiple>
-                  <mat-option *ngFor="let item of periodsArray" [value]="item">{{item}}{{periodsLabel[item]}}</mat-option>
+                <mat-option *ngFor="let item of periodsArray" [value]="item">{{item}}{{periodsLabel[item]}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -55,8 +56,8 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Event Category</mat-label>
               <mat-select formControlName="sc_event_category" (selectionChange)="resetClass($event)" required>
-                  <mat-option value="">Please select</mat-option>
-                  <mat-option *ngFor="let item of ecArray" [value]="item.ec_id">{{item.ec_name}}</mat-option>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of ecArray" [value]="item.ec_id">{{item.ec_name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -78,7 +79,8 @@
   </form>
   <div class="row margin-top-20" style="margin-bottom: 20px;">
     <div class="col-12 text-center">
-      <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
+      <button mat-raised-button class="btn-success-green" [disabled]="disabledApiButton"
+        (click)="submit()">Submit</button>
       <button mat-raised-button class="btn-reset margin-left-10" (click)="reset()">Reset</button>
     </div>
   </div>

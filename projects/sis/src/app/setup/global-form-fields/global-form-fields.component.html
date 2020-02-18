@@ -161,7 +161,8 @@
          <div *ngIf="showFormFieldSetup" class="row">
             <div class="col-12">
                <div class="text-center">
-                  <button class="btn-success" mat-raised-button (click)="insertCustom()">Submit</button>
+                  <button class="btn-success" mat-raised-button [disabled]= "disableApiCall" 
+                  (click)="insertCustom()">Submit</button>
                </div>
             </div>
          </div>
@@ -241,7 +242,8 @@
          <div *ngIf="mappedFlag" class="row">
                <div class="col-12">
                   <div class="text-center">
-                     <button class="btn-success" mat-raised-button (click)="insertMappedFields()">Map Fields</button>
+                     <button class="btn-success" mat-raised-button [disabled]= "disableApiCall" 
+                     (click)="insertMappedFields()">Map Fields</button>
                   </div>
                </div>
             </div>

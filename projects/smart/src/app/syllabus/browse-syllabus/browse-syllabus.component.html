@@ -23,10 +23,11 @@
                             <mat-form-field class="form-field-220 margin-left-10 remove-form-field-bottom-margin"
                                 appearance="outline">
                                 <mat-label>Subject</mat-label>
-                                <mat-select formControlName="syl_sub_id" (selectionChange)="fetchSyllabusDetails();getClassTerm();"
-                                    required placeholder="Select Subject">
+                                <mat-select formControlName="syl_sub_id"
+                                    (selectionChange)="fetchSyllabusDetails();getClassTerm();" required
+                                    placeholder="Select Subject">
                                     <mat-option value="">Please select</mat-option>
-                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id"> 
+                                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                                         {{item.sub_name}}
                                     </mat-option>
                                 </mat-select>
@@ -104,9 +105,10 @@
                                             <td class="custom-td text-left">
                                                 <div [innerHTML]="det.sd_desc"></div>
                                             </td>
-                                            <td class="custom-td text-center" *ngIf="j == 0" [attr.rowspan]="item.details.length">
-                                                    {{termArray[item.syl_term_id]}}
-                                                </td>
+                                            <td class="custom-td text-center" *ngIf="j == 0"
+                                                [attr.rowspan]="item.details.length">
+                                                {{termArray[item.syl_term_id]}}
+                                            </td>
                                             <td class="custom-td">
                                                 {{det.sd_period_teacher}}
                                             </td>
@@ -124,8 +126,10 @@
                                             </td>
                                             <td class="custom-td" *ngIf="j == 0" [attr.rowspan]="item.details.length">
                                                 <i class="fas fa-thumbs-down font-color-red cursor-pointer font-size-16"
-                                                    matTooltip="Unpublish"
-                                                    (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i></td>
+                                                    matTooltip="Unpublish" *ngIf="!disabledApiButton"
+                                                    (click)="openunPublish(item.syl_id, item.sd_topic_id)"></i>
+                                                <i class="fas fa-thumbs-down font-color-grey font-size-16"
+                                                    *ngIf="disabledApiButton"></i></td>
                                         </tr>
                                     </ng-container>
                                 </ng-container>
@@ -139,7 +143,7 @@
                                 <td class="custom-td">
                                 </td>
                                 <td class="custom-td">
-                                    </td>
+                                </td>
                                 <td class="custom-td">
                                     {{teachingSum}}
                                 </td>

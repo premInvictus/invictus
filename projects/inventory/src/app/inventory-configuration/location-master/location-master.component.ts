@@ -29,7 +29,7 @@ export class LocationMasterComponent implements OnInit {
 	configFlag = false;
 	editFlag = false;
 	currentLocationId: any;
-
+	disabledApiButton = false;
 	constructor(
 		private fbuild: FormBuilder,
 		public commonAPIService: CommonAPIService,
@@ -116,6 +116,7 @@ export class LocationMasterComponent implements OnInit {
 
 	save() {
 		if (this.locationForm.valid) {
+			this.disabledApiButton = true;
 			var inputJson = {
 				location_id: this.locationForm.value.location_id ? this.locationForm.value.location_id : 0,
 				location_parent_id: this.locationForm.value.location_parent_id ? this.locationForm.value.location_parent_id : 0,
@@ -127,6 +128,7 @@ export class LocationMasterComponent implements OnInit {
 
 			if (this.locationForm.value.location_id) {
 				this.commonAPIService.updateLocation(inputJson).subscribe((result) => {
+					this.disabledApiButton = false;
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Location Updated Successfully', 'success');
 						this.resetForm();
@@ -136,6 +138,7 @@ export class LocationMasterComponent implements OnInit {
 					}
 				});
 			} else {
+				this.disabledApiButton = false;
 				this.commonAPIService.insertLocation(inputJson).subscribe((result) => {
 					if (result) {
 						this.commonAPIService.showSuccessErrorMessage('Location Saved Successfully', 'success');

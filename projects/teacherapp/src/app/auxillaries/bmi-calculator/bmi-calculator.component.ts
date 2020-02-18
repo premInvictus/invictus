@@ -14,6 +14,7 @@ export class BmiCalculatorComponent implements OnInit {
   classArray: any[] = [];
   sectionArray: any[] = [];
   tableDivFlag = false;
+  disableApiCall = false;
   studentArray: any[] = [];
   formGroupArray: any[] = [];
   currentUser: any = {};
@@ -73,7 +74,7 @@ export class BmiCalculatorComponent implements OnInit {
       );
   }
   // get section list according to selected class
-  getSectionsByClass() {    
+  getSectionsByClass() {
     const sectionParam: any = {};
     sectionParam.class_id = this.ctclass_id;
     this.smartService.getSectionsByClass(sectionParam)
@@ -82,13 +83,13 @@ export class BmiCalculatorComponent implements OnInit {
           if (result && result.status === 'ok') {
             this.sectionArray = result.data;
             this.paramform.patchValue({
-              'bmi_class_id' : this.ctclass_id,
-              'bmi_sec_id':this.ctsection_id
+              'bmi_class_id': this.ctclass_id,
+              'bmi_sec_id': this.ctsection_id
             });
             this.getRollNoUser();
           } else {
             this.paramform.patchValue({
-              'bmi_class_id' : this.ctclass_id
+              'bmi_class_id': this.ctclass_id
             });
             this.getRollNoUser();
             this.sectionArray = [];
@@ -157,32 +158,34 @@ export class BmiCalculatorComponent implements OnInit {
     let ind = 0;
     const dataArr: any[] = [];
     for (const item of this.studentArray) {
-      if (this.formGroupArray[ind].formGroup.value['height' + ind]
-        && this.formGroupArray[ind].formGroup.value['weight' + ind]) {
-        dataArr.push({
-          bmi_class_id: this.paramform.value.bmi_class_id,
-          bmi_sec_id: this.paramform.value.bmi_sec_id,
-          bmi_login_id: item.au_login_id,
-          bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind],
-          bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind],
-          bmi_created_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-          bmi_updated_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
-          bmi_created_by: this.currentUser.login_id
-        });
-        ind++;
-      }
+      dataArr.push({
+        bmi_class_id: this.paramform.value.bmi_class_id,
+        bmi_sec_id: this.paramform.value.bmi_sec_id,
+        bmi_login_id: item.au_login_id,
+        bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind],
+        bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind],
+        bmi_created_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
+        bmi_updated_date: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
+        bmi_created_by: this.currentUser.login_id
+      });
+      ind++;
     }
     if (dataArr.length > 0) {
+      this.disableApiCall = true;
       this.examService.insertBMI({
         bmiData: dataArr
       }).subscribe((res: any) => {
         if (res && res.status === 'ok') {
           this.commonAPIService.showSuccessErrorMessage(res.message, 'success');
           this.getRollNoUser();
+          this.disableApiCall = false;
+        } else {
+          this.disableApiCall = false;
         }
       });
     } else {
       this.commonAPIService.showSuccessErrorMessage('Please enter a valid data', 'error');
+      this.disableApiCall = false;
     }
   }
 }

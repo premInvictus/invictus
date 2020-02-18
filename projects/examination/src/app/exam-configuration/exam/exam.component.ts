@@ -22,6 +22,7 @@ export class ExamComponent implements OnInit {
 	ckeConfig: any = {};
 	subExamArray: any[] = [];
 	ELEMENT_DATA: Element[] = [];
+	disableApiCall = false;
 	termArray: any[] = [];
 	categoryArray: any[] = [];
 	classArray: any[] = [];
@@ -280,6 +281,7 @@ export class ExamComponent implements OnInit {
 				exam_bifurcate: this.examForm.value.exam_bifurcate
 			};
 			if (this.examForm.value.exam_id === '') {
+				this.disableApiCall = true;
 				this.examService.insertExam(insertJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.resetForm();
@@ -287,11 +289,14 @@ export class ExamComponent implements OnInit {
 						this.formGroupArray = [];
 						this.getExamDetails();
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
+						this.disableApiCall = false;
 					} else {
 						this.commonService.showSuccessErrorMessage(result.message, 'error');
+						this.disableApiCall = false;
 					}
 				});
 			} else {
+				this.disableApiCall = true;
 				this.examService.updateExam(updateJson).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.resetForm();
@@ -299,8 +304,10 @@ export class ExamComponent implements OnInit {
 						this.formGroupArray = [];
 						this.getExamDetails();
 						this.commonService.showSuccessErrorMessage(result.message, 'success');
+						this.disableApiCall = false;
 					} else {
 						this.commonService.showSuccessErrorMessage(result.message, 'error');
+						this.disableApiCall = false;
 					}
 				});
 			}

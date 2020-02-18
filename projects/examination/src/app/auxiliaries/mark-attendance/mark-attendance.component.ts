@@ -15,6 +15,7 @@ export class MarkAttendanceComponent implements OnInit {
 	submitFlag = false;
 	defaultFlag = false;
 	finalDivFlag = true;
+	disableApiCall = false;
 	entry_date = new Date()
 	firstForm: FormGroup;
 	attendanceForm: FormGroup;
@@ -263,6 +264,7 @@ export class MarkAttendanceComponent implements OnInit {
 			}
 		}
 		if (this.requiredAll) {
+			this.disableApiCall = true;
 			const checkParam: any = {};
 			checkParam.au_class_id = this.firstForm.value.syl_class_id;
 			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
@@ -273,10 +275,12 @@ export class MarkAttendanceComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
 						if (result_u && result_u.status === 'ok') {
+							this.disableApiCall = false;
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance  Updated Successfully', 'success');
 						} else {
 							this.commonService.showSuccessErrorMessage('Update failed', 'error');
+							this.disableApiCall = false;
 						}
 					});
 				} else {
@@ -284,8 +288,10 @@ export class MarkAttendanceComponent implements OnInit {
 						if (result_i && result_i.status === 'ok') {
 							this.resetForm();
 							this.commonService.showSuccessErrorMessage('Attendance Marked Successfully', 'success');
+							this.disableApiCall = false;
 						} else {
 							this.commonService.showSuccessErrorMessage('Insert failed', 'error');
+							this.disableApiCall = false;
 						}
 					});
 				}

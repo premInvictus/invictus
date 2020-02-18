@@ -16,6 +16,7 @@ export class AluminiSetupComponent implements OnInit {
 	settingsArray: any[] = [];
 	savedSettingsArray: any[] = [];
 	tabIdArray: any[] = [];
+	disableApiCall = false;
 	constructor(private studentFormConfigService: StudentFormConfigService,
 		private sisService: SisService,
 		private common: CommonAPIService) { }
@@ -81,10 +82,14 @@ export class AluminiSetupComponent implements OnInit {
 			cos_process_type: '5',
 			configRelation: this.settingsArray
 		};
+		this.disableApiCall = true;
 		this.sisService.insertConfigureSetting(settingsJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Form settings changed', ' success');
 				this.getConfigureSetting();
+				this.disableApiCall = false;
+			} else {
+				this.disableApiCall = false;
 			}
 		});
 	}
