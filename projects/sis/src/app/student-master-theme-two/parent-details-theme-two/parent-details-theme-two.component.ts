@@ -518,8 +518,14 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		event.target.value = '';
 	}
 	bindImageToForm(event, index) {
-		this.cropIndex = index;
-		this.openCropDialog(event, index);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.notif.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.cropIndex = index;
+			this.openCropDialog(event, index);
+		}
 	}
 	uploadImage(fileName, epd_profile_image, index) {
 		this.sisService.uploadDocuments([

@@ -273,7 +273,13 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 	// read image from html and bind with formGroup
 	bindImageToForm(event) {
-		this.openCropDialog(event);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.commonAPIService.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.openCropDialog(event);
+		}
 	}
 
 	uploadImage(fileName, au_profileimage) {

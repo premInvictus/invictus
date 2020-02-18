@@ -501,7 +501,13 @@ export class CreateNewTeacherComponent implements OnInit {
 	}
 
 	readUrl(event: any) {
-		this.openCropDialog(event);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.notif.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.openCropDialog(event);
+		}
 	}
 	openCropDialog = (imageFile) => this.cropModal.openModal(imageFile);
 
@@ -701,7 +707,7 @@ export class CreateNewTeacherComponent implements OnInit {
 			}
 		);
 	}
- 
+
 	saveief() {
 		this.Teacher_Form.patchValue({ au_full_name: '', au_email: '', au_mobile: '' }),
 			// tslint:disable-next-line:max-line-length
