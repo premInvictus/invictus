@@ -547,7 +547,7 @@ export class SchoolsetupComponent implements OnInit {
 			school_phone: value.school_phone,
 			school_smsid: value.school_smsid,
 			school_email: value.school_email,
-			school_hindi_font: value.school_hindi_fon,
+			school_hindi_font: value.school_hindi_font,
 			school_prefix: value.school_prefix,
 			school_total_students: value.school_total_students,
 			school_manager: value.school_manager,
