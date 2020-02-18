@@ -41,8 +41,8 @@ export class SchoolsetupComponent implements OnInit {
 	url: any;
 	furl: any;
 	hosturl = appConfig.apiUrl;
-	private file1: File;
-	private file2: File;
+	file1: any = 'https://invictus-data.s3.ap-south-1.amazonaws.com/invictus/sis/documents/logo/document_150_1582010338.png';
+	file2: any = 'https://invictus-data.s3.ap-south-1.amazonaws.com/invictus/sis/documents/favicon/document_50_1582010449.png';
 	prefixStatus: string;
 	prefixStatusicon: string;
 	loading = false;
@@ -75,6 +75,7 @@ export class SchoolsetupComponent implements OnInit {
 		'affiliation',
 		'address',
 		'city',
+		'pin',
 		'contact',
 		'email',
 		'manager',
@@ -129,6 +130,7 @@ export class SchoolsetupComponent implements OnInit {
 			school_state: '',
 			school_city: '',
 			school_website: '',
+			si_pincode: '',
 			school_phone: '',
 			school_smsid: '',
 			school_email: '',
@@ -165,6 +167,7 @@ export class SchoolsetupComponent implements OnInit {
 						board: t.school_board,
 						affiliation: t.school_afflication_no,
 						address: t.school_address,
+						pin: t.si_pincode,
 						contact: t.school_phone,
 						city: t.school_city,
 						email: t.school_email,
@@ -340,6 +343,9 @@ export class SchoolsetupComponent implements OnInit {
 		if (!this.newSchoolForm.value.school_prefix) {
 			this.notif.showSuccessErrorMessage('Assigned Prefix is required', 'error');
 		}
+		if (!this.newSchoolForm.value.si_pincode) {
+			this.notif.showSuccessErrorMessage('Pin Code is required', 'error');
+		}
 		if (!this.newSchoolForm.value.school_theme) {
 			this.notif.showSuccessErrorMessage('Theme is required', 'error');
 		}
@@ -437,6 +443,10 @@ export class SchoolsetupComponent implements OnInit {
 				'school_session_end_month',
 				this.newSchoolForm.value.school_session_end_month
 			);
+			newSchoolFormData.append(
+				'si_pincode',
+				this.newSchoolForm.value.si_pincode
+			);
 			this.adminService.addSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -484,6 +494,8 @@ export class SchoolsetupComponent implements OnInit {
 		);
 	}
 	resetNewSchoolForm() {
+		this.file1 = 'https://invictus-data.s3.ap-south-1.amazonaws.com/invictus/sis/documents/logo/document_150_1582010338.png';
+		this.file2 = 'https://invictus-data.s3.ap-south-1.amazonaws.com/invictus/sis/documents/favicon/document_50_1582010449.png';
 		this.newSchoolForm.patchValue({
 			school_id: '',
 			school_logo: '',
@@ -495,6 +507,7 @@ export class SchoolsetupComponent implements OnInit {
 			school_address: '',
 			school_country: '',
 			school_state: '',
+			si_pincode: '',
 			school_city: '',
 			school_website: '',
 			school_phone: '',
@@ -509,8 +522,6 @@ export class SchoolsetupComponent implements OnInit {
 			school_session_end_month: '',
 			school_fee_period: ''
 		});
-		this.file1 = null;
-		this.file2 = null;
 	}
 	editNewSchoolForm(value: any) {
 		this.createNewSchoolDiv = true;
@@ -531,6 +542,7 @@ export class SchoolsetupComponent implements OnInit {
 			school_country: value.school_country_id,
 			school_state: value.school_state_id,
 			school_city: value.school_city,
+			si_pincode: value.si_pincode,
 			school_website: value.school_website,
 			school_phone: value.school_phone,
 			school_smsid: value.school_smsid,
@@ -546,7 +558,7 @@ export class SchoolsetupComponent implements OnInit {
 		});
 	}
 	editNewSchool() {
-		if (this.newSchoolForm.valid) {			
+		if (this.newSchoolForm.valid) {
 			const newSchoolFormData = new FormData();
 			newSchoolFormData.append('school_logo', this.file1);
 			newSchoolFormData.append('school_favicon', this.file2);
@@ -631,6 +643,10 @@ export class SchoolsetupComponent implements OnInit {
 			newSchoolFormData.append(
 				'school_session_end_month',
 				this.newSchoolForm.value.school_session_end_month
+			);
+			newSchoolFormData.append(
+				'si_pincode',
+				this.newSchoolForm.value.si_pincode
 			);
 			this.adminService.editSchool(newSchoolFormData).subscribe(
 				(result: any) => {
