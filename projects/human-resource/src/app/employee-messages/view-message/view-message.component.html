@@ -57,7 +57,7 @@
                                 </label>
                             </div>
                             <div class="profile-detail">
-                                <span class="profie-name-detail">
+                                <div class="profie-name-detail">
                                     <!-- <span *ngIf="currentUser?.role_id === '3'">{{currentUser?.full_name}} {{item?.subject}}</span> -->
                                     <!-- <span *ngIf="currentUser?.role_id === '4'">
                                             <span *ngFor="let titem of item?.user_data" class="to-user-data">
@@ -75,12 +75,12 @@
                                     </span>
                                     
                                     <!-- 12458-Gaurav Kumar , X-A -->
-                                </span> <br>
-                                <span class="profile-to-detail">To:
+                                </div> <br>
+                                <div class="profile-to-detail">To:
                                     <span *ngFor="let titem of item?.msg_to" class="to-user-data">
                                         {{titem?.au_full_name}} ,
                                     </span>
-                                </span>
+                                </div>
                             </div>
                             <div class="message-utility-detail">
                                 <span class="message-utility-detail-attachment"

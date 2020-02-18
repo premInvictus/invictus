@@ -50,12 +50,10 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			disallowedContent: 'm:omathpara',
 			height: '300',
 			width: '100%',
-			// tslint:disable-next-line:max-line-length
-			extraPlugins: '',
 			scayt_multiLanguageMod: true,
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
-				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Image', 'Table', 'Templates']
+				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Table', 'Templates']
 			],
 			removeDialogTabs: 'image:advanced;image:Link'
 		};
