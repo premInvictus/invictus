@@ -89,9 +89,11 @@
                   </table>
                </td>
                <td width="20%" align="center" style="padding-right:5px;vertical-align:top;">
-                  <img [src]="studentProfileImage" height="65" width="60" style="border: 1px solid lightgray;">
+                  <img [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + 
+                  studentProfileImage + '&h=65&w=60'" height="65" width="60" style="border: 1px solid lightgray;">
                   <div style="width:100%;"><br></div>
-                  <img *ngIf="showAuthority" [src]="authSign" height="40" width="40">
+                  <img *ngIf="showAuthority" [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + authSign
+                  + '&h=40&w=40'" height="40" width="40">
                   <div style="width:100%;font-size: 9px !important;">Principal's Sign</div>
 
                </td>
@@ -110,7 +112,8 @@
       <img [src]="idCardConfig.ps_watermark_image ? 
          idCardConfig.ps_watermark_image: ''" class="watermark-image">
       <div class="assign-sign">
-         <img *ngIf="showAuthority" [src]="authSign" class="auth-sign-pot" height="40" width="40">
+            <img *ngIf="showAuthority" class="auth-sign-pot" [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + authSign
+            + '&h=40&w=40'" height="40" width="40">
          <div style="width:100%;font-size: 9px !important;">Principal's Sign</div>
       </div>
       <table cellpadding="5" cellspacing="5" width="100%">
@@ -138,7 +141,8 @@
                         <tr>
                            <td width="100%" align="center"
                               style="padding-right:5px;vertical-align:top;position: relative;">
-                              <img [src]="studentProfileImage" height="65" width="60"
+                              <img [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + 
+                              studentProfileImage + '&h=65&w=60' " height="65" width="60"
                                  style="border: 1px solid lightgray;">
                               <span class="session-desc">
                                  {{sessionPromote}}
