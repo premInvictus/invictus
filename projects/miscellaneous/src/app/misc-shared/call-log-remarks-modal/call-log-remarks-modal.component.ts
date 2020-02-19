@@ -11,6 +11,7 @@ import { CapitalizePipe } from '../../_pipes';
 export class CallLogRemarksModalComponent implements OnInit {
   fromCaller: any;
   remarksArray: any[] = [];
+  countRemarks = 0;
   constructor(private commonAPIService: CommonAPIService,
     public dialogRef: MatDialogRef<CallLogRemarksModalComponent>,
     @Inject(MAT_DIALOG_DATA) data: any) {
@@ -25,6 +26,11 @@ export class CallLogRemarksModalComponent implements OnInit {
     this.commonAPIService.callRemarkslist({ 'from_caller': this.fromCaller }).subscribe((result: any) => {
       if (result) {
         this.remarksArray = result;
+        for (let item of this.remarksArray) {
+          if (item.remarks) {
+            this.countRemarks = this.countRemarks + 1;
+          }
+        }
       }
     });
   }
