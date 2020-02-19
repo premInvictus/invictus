@@ -423,4 +423,16 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
 	}
+	getCareerEnq() {
+		return this.http.get(environment.apiHRUrl + '/career-enquiry/get-career-enquiry');
+	}
+	insertCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/insert-career-enquiry', value);
+	}
+	updateCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/update-career-enquiry', value);
+	}
+
 }
