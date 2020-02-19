@@ -18,7 +18,7 @@ export class ViewGradecardDialogComponent implements OnInit {
 
   studentDetails: any;
   currentSession: any;
-  defaultsrc: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultsrc: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
   defaultschoollogosrc = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDfHehrJZBsRnceQ7ZnsweW0APVykYhToalBr9WF-2zd4JC0QbFA";
   subjectArray: any[] = [];
   examArray: any[] = [];

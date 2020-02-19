@@ -25,7 +25,8 @@
         <div class="row" style="height:90px">
           <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img">
-              <img class="student-pic--imgone student-pic__circle sis-student-pic__size" [src]="defaultsrc">
+              <img class="student-pic--imgone student-pic__circle "
+                [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
               <img *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
             </label>

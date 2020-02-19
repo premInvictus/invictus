@@ -12,7 +12,7 @@
 
 <div class="row" *ngIf="childDataArr.length > 0">
   <div class="col-12">
-    
+
     <mat-card class="card-padding-5 ">
       <div class="row remove-top-margin">
         <span class="primary">Primary Parent</span>
@@ -21,8 +21,9 @@
         <div class="col-1 custom-fee-entry-col-5 ">
           <div class="row">
             <div class="col-12 text-center">
-              <img class="student-profile-image-68" [src]="defaultsrc"
-                onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+              <img class="student-profile-image-68"
+                [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=68&w=68'"
+                onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'">
             </div>
           </div>
         </div>
@@ -39,7 +40,8 @@
           <div class="row margin-top-1">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Family No.</span><br>
-              <span class="font-size-14">{{familyOutstandingArr.fam_family_name}} - {{familyOutstandingArr.fam_entry_number}}</span><br>
+              <span class="font-size-14">{{familyOutstandingArr.fam_family_name}} -
+                {{familyOutstandingArr.fam_entry_number}}</span><br>
             </div>
           </div>
         </div>
@@ -56,16 +58,20 @@
           <div class="row margin-top-15">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Net outstanding</span><br>
-              <span class="font-size-14">&#8377; {{familyOutstandingArr.family_total_outstanding_amt | number}}</span><br>
+              <span class="font-size-14">&#8377;
+                {{familyOutstandingArr.family_total_outstanding_amt | number}}</span><br>
             </div>
           </div>
         </div>
-        <div class="col-5 text-right margin-top-10 position-right" *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
-          
-          
+        <div class="col-5 text-right margin-top-10 position-right"
+          *ngIf="familyOutstandingArr.family_total_outstanding_amt > 0">
+
+
           <button mat-button class="font-size-14  font-white  btn-back" (click)="moveToFamilyReceipt()">Back</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue" (click)="printFamilyInvoice(familyOutstandingArr)">Print Summary</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay" (click)="orderPayment(familyOutstandingArr?.fam_entry_number)">Pay
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
+            (click)="printFamilyInvoice(familyOutstandingArr)">Print Summary</button>
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay"
+            (click)="orderPayment(familyOutstandingArr?.fam_entry_number)">Pay
             Now</button>
         </div>
       </div>
@@ -73,7 +79,7 @@
       <div class="row">
         <div class="col-12">
           <ng-container>
-            
+
             <!-- <mat-accordion>
               <mat-expansion-panel [expanded]="true">
                 <mat-expansion-panel-header class="family-panel-header">
@@ -90,41 +96,43 @@
                   <span class="font-size-16 font-white text-right margin-left-right-15 "> Net Payable :
                       &#8377; {{titem.outstanding_amt  | number}}</span>
                 </mat-expansion-panel-header> -->
-                <div class="row">
-                  <div class="col-12">
-                    <table class="table table-borderd table-stripped custom-table">
-                      <thead class="table-skill__head text-center">
-                        <tr class="custom-tr">
-                          <th class="custom-th">Admission No.</th>
-                          <th class="custom-th">Student Name</th>
-                          <th class="custom-th">Class</th>
-                          <th class="custom-th">Net Payable</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <!-- *ngFor="let det of titem.invoice_data" -->
-                        <ng-container *ngFor="let titem of childDataArr let i = index;">
-                          <tr>
-                            <td class="custom-td text-capitalize" width="8%">{{titem.au_admission_no}}</td>
-                            <td class="custom-td text-capitalize text-left" width="80%">{{titem.au_full_name}}</td>
-                            <td class="custom-td"  width="5%">
-                                <span *ngIf="titem.sec_name != ' ' && titem.sec_name != ''" class="font-size-14"> {{titem.class_name}} -
-                                    {{titem.sec_name}}</span>
-                                <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14"> {{titem.class_name}} </span>
-                            </td>
-                            <td class="custom-td text-right"  width="7%">&#8377; {{titem.outstanding_amt  | number}}</td>
-                          </tr>                          
-                        </ng-container>
-                        <tr *ngIf="childDataArr.length == 0">
-                            <td colspan="4" class="text-center">No Record Found</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                
-               
-              <!-- </mat-expansion-panel>
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-borderd table-stripped custom-table">
+                  <thead class="table-skill__head text-center">
+                    <tr class="custom-tr">
+                      <th class="custom-th">Admission No.</th>
+                      <th class="custom-th">Student Name</th>
+                      <th class="custom-th">Class</th>
+                      <th class="custom-th">Net Payable</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- *ngFor="let det of titem.invoice_data" -->
+                    <ng-container *ngFor="let titem of childDataArr let i = index;">
+                      <tr>
+                        <td class="custom-td text-capitalize" width="8%">{{titem.au_admission_no}}</td>
+                        <td class="custom-td text-capitalize text-left" width="80%">{{titem.au_full_name}}</td>
+                        <td class="custom-td" width="5%">
+                          <span *ngIf="titem.sec_name != ' ' && titem.sec_name != ''" class="font-size-14">
+                            {{titem.class_name}} -
+                            {{titem.sec_name}}</span>
+                          <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14">
+                            {{titem.class_name}} </span>
+                        </td>
+                        <td class="custom-td text-right" width="7%">&#8377; {{titem.outstanding_amt  | number}}</td>
+                      </tr>
+                    </ng-container>
+                    <tr *ngIf="childDataArr.length == 0">
+                      <td colspan="4" class="text-center">No Record Found</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+            <!-- </mat-expansion-panel>
             </mat-accordion> -->
           </ng-container>
           <div class="row">
@@ -134,7 +142,8 @@
                     Words : </span><span class="font-size-16 font-medium"> Rupees
                     {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
                     class="float-right font-size-16 font-medium"><span>Grand Total : </span><span
-                      class="font-size-16 font-medium">&#8377; {{familyOutstandingArr.family_total_outstanding_amt  | number}}</span></span>
+                      class="font-size-16 font-medium">&#8377;
+                      {{familyOutstandingArr.family_total_outstanding_amt  | number}}</span></span>
                 </div>
               </div>
             </div>

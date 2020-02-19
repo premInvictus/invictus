@@ -58,7 +58,7 @@ export class StudentAcademicProfileComponent implements OnInit {
   addOnly = true;
   iddesabled = true;
   backOnly = false;
-  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
   classArray = [];
   sectionArray = [];
   houseArray = [];
@@ -266,11 +266,11 @@ export class StudentAcademicProfileComponent implements OnInit {
               this.getStudentAttendance(this.previousLoginId);
               this.getGlobalSetting();
               if (this.gender === 'M') {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
               } else if (this.gender === 'F') {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
               } else {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
               }
               this.class_name = this.studentdetails.class_name;
               this.section_name = this.studentdetails.sec_name;

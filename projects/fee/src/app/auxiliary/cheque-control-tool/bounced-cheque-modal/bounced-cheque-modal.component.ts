@@ -10,7 +10,7 @@ import { FeeService, SisService, CommonAPIService } from '../../../_services';
 })
 export class BouncedChequeModalComponent implements OnInit {
 	studentDetails: any = {};
-	defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+	defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 	bouncedForm: FormGroup;
 	reasonArray: any[] = [];
 	gender: any;
@@ -33,11 +33,11 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.studentDetails = this.data;
 		this.gender = this.studentDetails.au_gender;
 		if (this.gender === 'M') {
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 		} else if (this.gender === 'F') {
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 		} else {
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 		}
 		this.defaultSrc = this.studentDetails.au_profileimage ? this.studentDetails.au_profileimage : this.defaultsrc;
 		if (!this.data.fcc_status) {
