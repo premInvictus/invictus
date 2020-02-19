@@ -5,12 +5,15 @@
   }
   
   .mat-expansion-panel-header.mat-row {
-    border-bottom: none;
+  
+    word-break: break-word;
+    width: 100%;
+    // padding: 20px 40px;
   }
   
   //copied from https://github.com/angular/material2/blob/master/src/lib/table/table.scss
-  $mat-header-row-height: 56px;
-  $mat-row-height: 70px;
+  $mat-header-row-height: 80px;
+  $mat-row-height: 80px;
   $mat-row-horizontal-padding: 24px;
   
   .mat-table {
@@ -18,12 +21,13 @@
   }
   
   .mat-header-row {
-    min-height: 56px;
+    // min-height: 56px;
   }
   
   .mat-row {
-    min-height: 80px !important;
+    min-height: 102px !important;
     background: none !important;
+    overflow-y:auto;
   }
   
   .mat-row, .mat-header-row {
@@ -55,24 +59,28 @@
   }
 
   .message-header {
-    float: left;
+    //float: left;
     width: 100%;
   }
 
   .sis-student-pic__size {
       width: 50px !important;
       height: 50px !important;
+      margin:20px 10px;
       float: left;
   }
 
 
   .circle-thumbnail {
       float:left;
+      width:10%;
   }
 
   .profile-detail {
-      float: left;
-      margin-left: 10px;
+      // float: left;
+      margin-left: 10%;
+      width: 75%;
+
   }
 
   .profile-to-detail {
