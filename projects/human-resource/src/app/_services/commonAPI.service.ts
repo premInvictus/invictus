@@ -423,8 +423,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
 	}
-	getCareerEnq() {
-		return this.http.get(environment.apiHRUrl + '/career-enquiry/get-career-enquiry');
+	getCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-career-enquiry', value);
 	}
 	insertCareerEnq(value) {
 		this.loader.startLoading();

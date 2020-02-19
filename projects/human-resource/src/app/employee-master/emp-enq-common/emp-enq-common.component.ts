@@ -153,8 +153,9 @@ export class EmpEnqCommonComponent implements OnInit {
       this.firstB = true;
       this.lastB = true;
       //this.setActionControls({viewMode : true})
-      this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+      this.commonAPIService.getCareerEnq({ enq_id: 1 }).subscribe((result: any) => {
         if (result) {
+          console.log(result,'result784784');
           let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
           let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
           let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
@@ -163,13 +164,8 @@ export class EmpEnqCommonComponent implements OnInit {
 
           this.employeeDetailsForm.patchValue({
             emp_profile_pic: result.emp_profile_pic,
-            emp_id: result.emp_id,
-            emp_name: result.emp_name,
-            emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
-            emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
-            emp_department_id: emp_department_id ? emp_department_id.toString() : '',
-            emp_category_id: emp_category_id ? Number(emp_category_id) : '',
-            emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
+            emp_id: result.enq_id,
+            emp_name: result.enq_personal_detail.enq_full_name,
             emp_status: result.emp_status
           });
           if (result.emp_profile_pic) {
