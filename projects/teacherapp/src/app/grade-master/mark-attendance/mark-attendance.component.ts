@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService, AxiomService, SmartService,ExamService } from '../../_services';
+import { CommonAPIService, SisService, AxiomService, SmartService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
@@ -168,11 +168,11 @@ export class MarkAttendanceComponent implements OnInit {
             let counter = 0;
             for (const item of this.studentArray) {
               if (item.upd_gender === 'M') {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
               } else if (item.upd_gender === 'F') {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
               } else {
-                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+                this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
               }
               this.studentAttendanceArray.push({
                 sr_no: counter,
@@ -265,68 +265,68 @@ export class MarkAttendanceComponent implements OnInit {
   //   });
   // }
   submit() {
-		this.requiredAll = true;
-		for (const item of this.finalArray) {
-			if (item.attendance === '') {
-				this.requiredAll = false;
-			}
-		}
-		if (this.requiredAll) {
+    this.requiredAll = true;
+    for (const item of this.finalArray) {
+      if (item.attendance === '') {
+        this.requiredAll = false;
+      }
+    }
+    if (this.requiredAll) {
       this.disableApiCall = true;
-			const checkParam: any = {};
-			checkParam.au_class_id = this.firstForm.value.syl_class_id;
-			checkParam.au_sec_id = this.firstForm.value.syl_section_id;
-			checkParam.au_event_id = this.firstForm.value.syl_event;
-			checkParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
-			checkParam.au_ses_id = this.session.ses_id;
-			this.examService.checkAttendanceForClass(checkParam).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
-						if (result_u && result_u.status === 'ok') {
+      const checkParam: any = {};
+      checkParam.au_class_id = this.firstForm.value.syl_class_id;
+      checkParam.au_sec_id = this.firstForm.value.syl_section_id;
+      checkParam.au_event_id = this.firstForm.value.syl_event;
+      checkParam.ma_created_date = this.commonService.dateConvertion(this.firstForm.value.cw_entry_date);
+      checkParam.au_ses_id = this.session.ses_id;
+      this.examService.checkAttendanceForClass(checkParam).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          this.examService.updateAttendance(this.finalArray).subscribe((result_u: any) => {
+            if (result_u && result_u.status === 'ok') {
               this.commonService.showSuccessErrorMessage('Attendance  Updated Successfully', 'success');
               this.disableApiCall = false;
               this.fetchDetails();
-						} else {
+            } else {
               this.disableApiCall = false;
-							this.commonService.showSuccessErrorMessage('Update failed', 'error');
-						}
-					});
-				} else {
+              this.commonService.showSuccessErrorMessage('Update failed', 'error');
+            }
+          });
+        } else {
           this.disableApiCall = true;
-					this.examService.insertAttendance(this.finalArray).subscribe((result_i: any) => {
-						if (result_i && result_i.status === 'ok') {
+          this.examService.insertAttendance(this.finalArray).subscribe((result_i: any) => {
+            if (result_i && result_i.status === 'ok') {
               this.commonService.showSuccessErrorMessage('Attendance Marked Successfully', 'success');
               this.disableApiCall = false;
               this.fetchDetails();
-						} else {
+            } else {
               this.commonService.showSuccessErrorMessage('Insert failed', 'error');
               this.disableApiCall = false;
-						}
-					});
-				}
-			});
-		} else {
-			this.commonService.showSuccessErrorMessage('Mark all student attendance', 'error');
-		}
+            }
+          });
+        }
+      });
+    } else {
+      this.commonService.showSuccessErrorMessage('Mark all student attendance', 'error');
+    }
 
   }
   getAttendanceEvent() {
-		this.eventArray = [];
-		this.resetdata();
-		this.firstForm.patchValue({
-			'syl_event': ''
-		});
-		this.examService.getAttendanceEvent({})
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
+    this.eventArray = [];
+    this.resetdata();
+    this.firstForm.patchValue({
+      'syl_event': ''
+    });
+    this.examService.getAttendanceEvent({})
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
             this.eventArray = result.data;
             this.firstForm.patchValue({
-              syl_event : this.eventArray[0].ae_id
+              syl_event: this.eventArray[0].ae_id
             });
-					}
-				}
-			);
-	}
+          }
+        }
+      );
+  }
 
 }

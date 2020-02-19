@@ -8,7 +8,8 @@
   </div>
   <div class="row">
     <div class="col-2 text-center">
-      <img class="student-profile-image-popup" [src]="defaultsrc">
+      <img 
+        [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
       <div class="">
         <div>
           <span class="font-size-16 font-bold">{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}}
@@ -205,22 +206,22 @@
           <table width="100%">
             <tr *ngIf="invoiceDetails.inv_fee_amount">
               <td width="70%">
-    
+
               </td>
               <td align="right" width="30%" style="padding-right: 50px;">
-                  <span class="float-right"><span class="font-size-16">Grand Total : </span>
+                <span class="float-right"><span class="font-size-16">Grand Total : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
                     {{invoiceDetails.inv_fee_amount | indianCurrency}} </span></span>
               </td>
             </tr>
             <tr class="grey-box" height="50">
               <td style="padding-left: 15px;">
-                  <span class="font-size-16 ">Amount in Words : </span><span class="font-size-16 font-medium">Rupees
-                      {{invoiceDetails.rpt_net_amount | numberToWord | titlecase}}
-                      Only</span>
+                <span class="font-size-16 ">Amount in Words : </span><span class="font-size-16 font-medium">Rupees
+                  {{invoiceDetails.rpt_net_amount | numberToWord | titlecase}}
+                  Only</span>
               </td>
               <td align="right" style="padding-right: 50px;">
-                  <span class="float-right"><span class="font-size-16">Amount Received : </span>
+                <span class="float-right"><span class="font-size-16">Amount Received : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
                     {{invoiceDetails.rpt_net_amount | indianCurrency}} </span></span>
               </td>
@@ -230,7 +231,7 @@
 
               </td>
               <td align="right" style="padding-right: 50px;">
-                  <span *ngIf="balance != 0" class="float-right"><span class="font-size-16">Balance : </span>
+                <span *ngIf="balance != 0" class="float-right"><span class="font-size-16">Balance : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i> {{balance | number}}
                   </span></span>
               </td>
