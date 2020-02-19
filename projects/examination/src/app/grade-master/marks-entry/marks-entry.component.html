@@ -172,11 +172,13 @@
                         <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green btn-spacer"
                             style="width: 150px !important" (click)="saveForm('1','1');$event.stopPropagation()"
                             [disabled]="disabledApiButton">Save & Submit</button>
-                        <button *ngIf="isAnyoneEditable('0') && isExistUserAccessMenu('475')" mat-button
+                        <button *ngIf="(isAnyoneEditableFinal('1') || isAnyoneEditableFinal('2')
+                        || isAnyoneEditableFinal('3')) && isExistUserAccessMenu('475')" mat-button
                             class="btn-success-green btn-spacer" style="width: 150px !important"
                             (click)="saveForm('4','1');$event.stopPropagation()" [disabled]="disabledApiButton">Final
                             Publish</button>
-                        <button *ngIf="!editFlag && isExistUserAccessMenu('474')" mat-button
+                        <button *ngIf="(isAnyoneEditableFinal('1') || isAnyoneEditableFinal('2')
+                        || isAnyoneEditableFinal('3') || isAnyoneEditableFinal('4')) && isExistUserAccessMenu('474')" mat-button
                             class="btn-success-green btn-spacer" (click)="enableEdit();$event.stopPropagation()"
                             [disabled]="disabledApiButton">Update</button>
                         <button *ngIf="editFlag" mat-button class="btn-success-green"

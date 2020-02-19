@@ -173,15 +173,19 @@
                     </tr>
                 </tbody>
             </table>
+            {{isAnyoneEditable('2')}}
+            {{isExistUserAccessMenu('621')}}
             <br>
             <div class="row margin-top-25">
-                <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('1')">
-                    <button mat-button class="btn-success-green" (click)="saveForm();$event.stopPropagation()"
-                        [disabled]="disabledApiButton">Save</button>
-                    <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        (click)="saveForm('2','1');$event.stopPropagation()" [disabled]="disabledApiButton">Save &
+                <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
+                    <button *ngIf="isAnyoneEditable('1')" mat-button class="btn-success-green"
+                        (click)="saveForm();$event.stopPropagation()" [disabled]="disabledApiButton">Save</button>
+                    <button *ngIf="isAnyoneEditable('1')" mat-button class="btn-success-green btn-spacer"
+                        style="width: 150px !important" (click)="saveForm('2','1');$event.stopPropagation()"
+                        [disabled]="disabledApiButton">Save &
                         Submit</button>
-                    <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
+                    <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important" *ngIf="(isAnyoneEditableFinal('2')
+                    || isAnyoneEditableFinal('3')) && isExistUserAccessMenu('621')"
                         (click)="saveForm('4','1');$event.stopPropagation()" [disabled]="disabledApiButton">Final
                         Publish</button>
                 </div>
