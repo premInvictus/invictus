@@ -151,7 +151,10 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 			this.studentdetailsflag = true;
 			this.getStudentInformation(this.loginId);
 		} else {
-			this.studentdetailsform.reset();
+			if (this.studentdetailsform) {
+				this.studentdetailsform.reset();
+			}
+			
 			this.studentdetails = [];
 		}
 		if (this.feeRenderId) {
