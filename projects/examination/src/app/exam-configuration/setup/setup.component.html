@@ -12,7 +12,6 @@
           </div>
           <div class="row">
             <div class="col-3 col-mobile-view-add-ques">
-
               <div class="left-side-box">
                 <div class="left-side-box-content" style="padding-left: 0px; padding-right: 0px;">
                   <div>
@@ -30,6 +29,7 @@
                             <mat-option value="6">Report Card (Print)</mat-option>
                             <mat-option value="7">Class Term Grade</mat-option>
                             <mat-option value="8">Class Term Date</mat-option>
+                            <mat-option value="9">Marks Entry Expiration Date</mat-option>
                           </mat-select>
                         </mat-form-field>
                       </div>
@@ -505,14 +505,16 @@
                             <mat-label>Grouped Cumulative</mat-label>
                           </div>
                           <div class="col-6" formGroupName="ect_grade_avg_highest">
-                            <mat-slide-toggle class="inline-form-radio-spacing"
-                              formControlName="grouped_cumulative" aria-hidden="true">
+                            <mat-slide-toggle class="inline-form-radio-spacing" formControlName="grouped_cumulative"
+                              aria-hidden="true">
                             </mat-slide-toggle>
                           </div>
-                          <div class="col-6" *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.grouped_cumulative">
+                          <div class="col-6"
+                            *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.grouped_cumulative">
                             <mat-label>Best Score (default Avg Score)</mat-label>
                           </div>
-                          <div class="col-6" formGroupName="ect_grade_avg_highest" *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.grouped_cumulative">
+                          <div class="col-6" formGroupName="ect_grade_avg_highest"
+                            *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.grouped_cumulative">
                             <mat-slide-toggle class="inline-form-radio-spacing"
                               formControlName="grouped_cumulative_best_score" aria-hidden="true">
                             </mat-slide-toggle>
@@ -590,10 +592,69 @@
                         </div>
                       </form>
                     </div>
+                    <div *ngIf="configValue == '9'">
+                      <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Class</mat-label>
+                              <mat-select formControlName="etd_class_id" placeholder="Select Class"
+                                (selectionChange)="getClassTerm()" [disabled]="editFlag"
+                                [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                  {{item.class_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Class Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
 
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Terms</mat-label>
+                              <mat-select formControlName="etd_term" placeholder="Select Term" [disabled]="editFlag"
+                                (selectionChange)="getExamDetails()" [errorStateMatcher]="confirmValidParentMatcher"
+                                required>
+                                <mat-option *ngFor="let item of classTermArray" [value]="item.id">
+                                  {{item.name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Term Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Exams</mat-label>
+                              <mat-select formControlName="etd_exam" placeholder="Select Exam" [disabled]="editFlag"
+                                (selectionChange)="resetExpirationDate()"
+                                [errorStateMatcher]="confirmValidParentMatcher" required>
+                                <mat-option *ngFor="let item of examArray" [value]="item.exam_id">
+                                  {{item.exam_name}}
+                                </mat-option>
+                              </mat-select>
+                              <mat-error>Please Choose Exam Name</mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-12">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Date Of Expiration</mat-label>
+                              <input matInput [matDatepicker]="picker2" placeholder="Choose a date"
+                                formControlName="marks_end_date" required>
+                              <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                              <mat-datepicker #picker2></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
                     <div class="text-center margin-top-15">
-                      <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
-                      [disabled]="disableApiCall"
+                      <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success" [disabled]="disableApiCall"
                         (click)="addConfiguration(configValue)">Add</button>
                       <button *ngIf="setupUpdateFlag" mat-raised-button class="btn-success"
                         (click)="updateConfiguration(configValue)">Update</button>
@@ -601,12 +662,9 @@
                         (click)="resetForm(configValue)">Reset</button>
                     </div>
                   </div>
-
                 </div>
               </div>
-
             </div>
-
             <div class="col-9  col-mobile-view-add-ques remove-col-modal-padding">
               <div class="top-right-parameter">
                 <div class="top-right-box">
@@ -646,8 +704,8 @@
                                           <span *ngIf="!item.name">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '7' || configValue == '8'"
-                                        matColumnDef="term_name">
+                                      <ng-container *ngIf="configValue == '7' || configValue == '8' 
+                                      || configValue == '9'" matColumnDef="term_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           Terms
                                         </th>
@@ -674,10 +732,10 @@
                                           <span *ngIf="!item.no_of_tiers">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '3' || configValue == '7'"
-                                        matColumnDef="grade_name">
+                                      <ng-container *ngIf="configValue == '3' || configValue == '7'
+                                      || configValue == '9'" matColumnDef="grade_name">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                          Grade Name
+                                          {{(configValue == '3' || configValue == '7') ? 'Grade Name' : 'Exam Name'}}
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span *ngIf="item.grade_name">{{ item.grade_name }}</span>
@@ -835,9 +893,10 @@
                                           <span *ngIf="!item.term_end">-</span>
                                         </td>
                                       </ng-container>
-                                      <ng-container *ngIf="configValue == '8'" matColumnDef="etd_declaration_date">
+                                      <ng-container *ngIf="configValue == '8' || configValue == '9'"
+                                        matColumnDef="etd_declaration_date">
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                                          Date Of Declaration
+                                          {{configValue == '8' ? 'Date Of Declaration' : 'Date of Expiration'}}
                                         </th>
                                         <td class="left" mat-cell *matCellDef="let item">
                                           <span
@@ -854,7 +913,7 @@
                                         <td mat-cell *matCellDef="let item">
                                           <mat-slide-toggle class="inline-form-radio-spacing"
                                             [checked]="getActiveStatus(item.action)" aria-hidden="true"
-                                            (click)="toggleStatus(item.action)">
+                                            (click)="toggleStatus(item.action, item.position)">
                                           </mat-slide-toggle>
                                         </td>
                                         >
@@ -867,10 +926,14 @@
                                         <td mat-cell *matCellDef="let item">
                                           <i class="far fa-edit table-edit-icon" data-toggle="tooltip"
                                             data-placement="top" matTooltip="Edit" aria-hidden="true"
-                                            (click)="formEdit(item.action)"></i>
-                                          <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip"
-                                            data-placement="top" matTooltip="Delete" aria-hidden="true"
+                                            (click)="formEdit(item.action, item.position)"></i>
+                                          <i *ngIf="configValue !== '9'" class="far fa-trash-alt table-delete-icon"
+                                            data-toggle="tooltip" data-placement="top" matTooltip="Delete"
+                                            aria-hidden="true"
                                             (click)="openDeleteDialog({data : item.action, type: configValue})"></i>
+                                          <i *ngIf="configValue === '9'" class="far fa-trash-alt table-delete-icon"
+                                            data-toggle="tooltip" data-placement="top" matTooltip="Delete"
+                                            aria-hidden="true" (click)="deleteMarksExtendedData(item.position)"></i>
                                         </td>
                                       </ng-container>
                                       <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns">
@@ -892,6 +955,11 @@
                     </div>
                   </div>
                 </div>
+              </div>
+              <div *ngIf="configValue == '9' && wasAddedUpdatedFlag &&
+              finalMarksExpiration.length > 0" class="text-center">
+                <button mat-raised-button class="btn-success" [disabled]="disableApiCall"
+                  (click)="updateGlobalSetting()">Submit</button>
               </div>
             </div>
 
