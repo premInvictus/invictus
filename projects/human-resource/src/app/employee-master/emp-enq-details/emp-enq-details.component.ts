@@ -61,16 +61,16 @@ export class EmpEnqDetailsComponent implements OnInit {
 	}
 
 	getEmployeeNavigationRecords() {
-		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
+		this.commonAPIService.getEnquiryNavigationRecords({}).subscribe((result: any) => {
 			this.getEmployeeDetail(result.last_record);
 		});
 	}
 
-	getEmployeeDetail(emp_id) {
-		if (emp_id) {
-			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+	getEmployeeDetail(enq_id) {
+		if (enq_id) {
+			this.commonAPIService.getCareerEnq({ enq_id: Number(enq_id) }).subscribe((result: any) => {
 				var finResult = result ? result : {}
-				finResult['last_record'] = emp_id ? emp_id : 0;
+				finResult['last_record'] = enq_id ? enq_id : 0;
 				this.employeeRecord = finResult;
 				this.rendorForm = true;
 			});
