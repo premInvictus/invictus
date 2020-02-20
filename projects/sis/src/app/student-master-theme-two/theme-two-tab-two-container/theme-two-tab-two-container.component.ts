@@ -71,8 +71,10 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			}
 		});
 		this.common.studentData.subscribe((data: any) => {
-			this.login_id = data.au_login_id;
-			this.editableStatus = data.editable_status;
+			if (data) {
+				this.login_id = data.au_login_id;
+				this.editableStatus = data.editable_status;
+			}			
 			if (this.currentTab === 1) {
 				this.getAdditionalDetails(data.au_login_id);
 				this.getFeeAccount(data.au_login_id);
