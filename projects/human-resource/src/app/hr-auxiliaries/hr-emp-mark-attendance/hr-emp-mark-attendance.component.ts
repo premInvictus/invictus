@@ -216,11 +216,11 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                 let counter = 0;
                 for (const item of this.studentArray) {
                   if (item.upd_gender === 'M') {
-                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
                   } else if (item.upd_gender === 'F') {
-                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
                   } else {
-                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+                    this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
                   }
                   this.studentAttendanceArray.push({
                     sr_no: counter,

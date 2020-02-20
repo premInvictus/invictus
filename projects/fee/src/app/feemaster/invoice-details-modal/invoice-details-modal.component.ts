@@ -33,7 +33,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	class_name: any;
 	section_name: any;
 	class_sec: any;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	gender: any;
 	inv_opening_balance: any;
 	inv_fine_amount: any;
@@ -313,11 +313,11 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						}
 						this.gender = this.invoiceDetails.au_gender;
 						if (this.gender === 'M') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 						} else if (this.gender === 'F') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 						} else {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 						}
 						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
 							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;

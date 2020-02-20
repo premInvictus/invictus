@@ -18,7 +18,7 @@ export class ViewGradecardDialogComponent implements OnInit {
 
   studentDetails: any;
   currentSession: any;
-  defaultsrc: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultsrc: any = "https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png&h=50&w=50";
   defaultschoollogosrc = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDfHehrJZBsRnceQ7ZnsweW0APVykYhToalBr9WF-2zd4JC0QbFA";
   subjectArray: any[] = [];
   examArray: any[] = [];
@@ -357,9 +357,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_name = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+    param.gs_alias = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
   'gradecard_health_status','gradecard_date','school_achievement'];
-    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+    this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = result.data;
         this.settings.forEach(element => {
@@ -976,7 +976,10 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.sisService.getAllStudents({ login_id: this.data.au_login_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.studentDetails = result.data[0];
-        this.defaultsrc = this.studentDetails.au_profileimage;
+        if(this.studentDetails.au_profileimage) {
+          this.defaultsrc = "https://apisis.invictusdigisoft.com/createonfly.php?src=" + this.studentDetails.au_profileimage + "&h=55&w=44";
+        }
+        //this.defaultsrc = this.studentDetails.au_profileimage;
 
         if(this.studentDetails.height && this.studentDetails.weight) {
           var heightInMeter = (Number(this.studentDetails.height)/100);

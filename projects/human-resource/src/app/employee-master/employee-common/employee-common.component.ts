@@ -42,7 +42,7 @@ export class EmployeeCommonComponent implements OnInit {
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	classArray = [];
 	sectionArray = [];
 	departmentArray = [];
@@ -177,7 +177,7 @@ export class EmployeeCommonComponent implements OnInit {
 					if (result.emp_profile_pic) {
 						this.defaultsrc = result.emp_profile_pic
 					} else {
-						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 					}
 					this.navigation_record = result.navigation;
 					//this.employeedetails['last_record'] = emp_id;
@@ -219,7 +219,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.employeedetails = {};
 			this.employeedetails.emp_status = 'live';
 			this.employeeDetailsForm.reset();
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 			this.enrolmentPlaceholder = 'New Emp. Id';
 
 		}
@@ -273,7 +273,13 @@ export class EmployeeCommonComponent implements OnInit {
 	}
 	// read image from html and bind with formGroup
 	bindImageToForm(event) {
-		this.openCropDialog(event);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.commonAPIService.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.openCropDialog(event);
+		}
 	}
 
 	uploadImage(fileName, au_profileimage) {

@@ -164,13 +164,16 @@
             </table>
             <br>
             <div class="row margin-top-25">
-                <div class="col-12 text-center" *ngIf="marksInputArray.length > 0 && isAnyoneEditable('0')">
-                    <button mat-button class="btn-success-green" [disabled]="disableApiCall"
-                        (click)="saveForm()">Save</button>
-                    <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        [disabled]="disableApiCall" (click)="saveForm('1','1')">Save & Submit</button>
-                    <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        [disabled]="disableApiCall" (click)="saveForm('4','1')">Final Publish</button>
+                <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
+                    <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green"
+                        [disabled]="disableApiCall" (click)="saveForm()">Save</button>
+                    <button *ngIf="isAnyoneEditable('0')" mat-button class="btn-success-green btn-spacer"
+                        style="width: 150px !important" [disabled]="disableApiCall" (click)="saveForm('1','1')">Save &
+                        Submit</button>
+                    <button *ngIf="(isAnyoneEditableFinal('1') || isAnyoneEditableFinal('2')
+                    || isAnyoneEditableFinal('3')) && isExistUserAccessMenu('624')" mat-button
+                        class="btn-success-green btn-spacer" style="width: 150px !important" [disabled]="disableApiCall"
+                        (click)="saveForm('4','1')">Final Publish</button>
                 </div>
             </div>
         </mat-card>

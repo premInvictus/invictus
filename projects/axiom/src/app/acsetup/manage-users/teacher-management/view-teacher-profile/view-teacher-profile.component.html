@@ -24,7 +24,9 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" [src]="url" style="width: 140px; border-radius: 50% !important;
+                                          <img class="img-fluid teacher-img"
+                                             [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + url + '&h=140&w=140'"
+                                             style="border-radius: 50% !important;
                                              border: 1px solid rgb(149, 145, 216);" />
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"

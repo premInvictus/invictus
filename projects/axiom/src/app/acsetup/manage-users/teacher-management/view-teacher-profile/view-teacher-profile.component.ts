@@ -28,7 +28,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 	hosturl = appConfig.apiUrl;
 	currentTeacherLoginIndex: number;
 	schoolId: number;
-	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 	cs_relationArray: any[] = [];
 	teacherArray: any[] = [];
 	teacherArrayByName: any[] = [];
@@ -119,7 +119,7 @@ export class ViewTeacherProfileComponent implements OnInit {
 						this.Teacher_Form.controls.au_email.setValue(this.userDetails.au_email);
 						this.Teacher_Form.controls.usr_signature.setValue(this.userDetails.usr_signature);
 						this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 						this.cs_relationArray = this.userDetails.cs_relations;
 						for (const item of this.cs_relationArray) {
 							this.designation = item.uc_designation;

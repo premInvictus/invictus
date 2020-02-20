@@ -86,7 +86,8 @@
           <div class="col-2">
             <div class="row">
               <div class="col-4 remove-col-padding-right text-center custom-tooltip">
-                <img class="mark-student-img" src="{{item.au_profileimage}}"
+                <img style="border-radius:50%"
+                  [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + item.au_profileimage + '&h=72&w=72'"
                   (click)="changeStudentAttendanceStatus($event,i)">
                 <div class="">
                   <i class="fas fa-check-circle mark-student-tick font-size-20 font-color-green"
@@ -121,8 +122,8 @@
       <br>
       <div class="row margin-top-25" *ngIf="defaultFlag && submitFlag">
         <div class="col-12 text-center">
-          <button mat-button class="btn-success-green" [disabled]="disableApiCall"  
-          (click)="submit();$event.stopPropagation()">Submit</button>
+          <button mat-button class="btn-success-green" [disabled]="disableApiCall"
+            (click)="submit();$event.stopPropagation()">Submit</button>
           <button mat-button class="btn-reset btn-spacer" (click)="resetForm()">Reset</button>
         </div>
       </div>

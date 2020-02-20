@@ -202,6 +202,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
+	getGlobalSettingReplace(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
+	}
 	updateGlobalSetting(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
@@ -365,11 +369,19 @@ export class ExamService {
 	}
 	getExamPerCumulativeExam(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeSubject', value);
+		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeExam', value);
 	}
 	deleteExamAlias(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/deleteExamAlias', value);
+	}
+	addExamPerCumulativeSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeSubject', value);
+	}
+	addExamPerCumulativeExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeExam', value);
 	}
 
 }

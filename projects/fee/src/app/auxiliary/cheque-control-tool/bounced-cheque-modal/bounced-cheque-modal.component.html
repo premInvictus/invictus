@@ -4,8 +4,9 @@
   </div>
   <div class="row">
     <div class="col-2 text-center">
-      <img class="student-image-bounce-modal" [src]="defaultSrc"
-        onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+      <img style="border-radius:50%"
+        [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultSrc + '&h=68&w=68'"
+        onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'" />
       <div class="row margin-top-8">
         <div class="col-12">
           <span class="font-size-14 font-bold">{{studentDetails?.au_full_name | capitalize}}</span><br>
@@ -79,7 +80,7 @@
           <mat-radio-button value="b"
             [disabled]="bouncedForm.value.fcc_status === 'd' || bouncedForm.value.fcc_status === 'cd'">Dishonoured
           </mat-radio-button>
-          <mat-radio-button value="cd"  *ngIf="isExistUserAccessMenu('604')"
+          <mat-radio-button value="cd" *ngIf="isExistUserAccessMenu('604')"
             [disabled]="bouncedForm.value.fcc_status !== 'cd'  && bouncedForm.value.fcc_status !== 'd'">Deposited &
             Cleared
           </mat-radio-button>

@@ -505,6 +505,20 @@ export class MarksEntryComponent implements OnInit {
       return true;
     }
   }
+  isAnyoneEditableFinal(eme_review_status) {
+    let status = false;
+    if (this.responseMarksArray.length > 0) {
+      for (const item of this.responseMarksArray) {
+        if (item.examEntry.eme_review_status === eme_review_status) {
+          status = true;
+          break;
+        }
+      }
+      return status;
+    } else {
+      return false;
+    }
+  }
   isExistUserAccessMenu(mod_id) {
     return this.commonAPIService.isExistUserAccessMenu(mod_id);
   }

@@ -12,6 +12,11 @@ import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subjec
 import { SubjectSubexamModalComponent } from './subject-subexam-mapping/subject-subexam-modal/subject-subexam-modal.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-termwise.component';
+import { PercentageCumulativeSetupComponent } from './percentage-cumulative-setup/percentage-cumulative-setup.component';
+import { PercentageCumulativeExamComponent } from './percentage-cumulative-setup/percentage-cumulative-exam/percentage-cumulative-exam.component';
+import { PercentageCumulativeSubjectComponent } from './percentage-cumulative-setup/percentage-cumulative-subject/percentage-cumulative-subject.component';
+import { PercentageCumulativeExamModalComponent } from './percentage-cumulative-setup/percentage-cumulative-exam-modal/percentage-cumulative-exam-modal.component';
+import { PercentageCumulativeSubjectModalComponent } from './percentage-cumulative-setup/percentage-cumulative-subject-modal/percentage-cumulative-subject-modal.component';
 
 
 @NgModule({
@@ -22,7 +27,7 @@ import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-ter
 		ExamSharedModule,
 		ColorPickerModule
 	],
-	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent, ExamAliasTermwiseComponent],
-	entryComponents: [SubjectSubexamModalComponent]
+	declarations: [SetupComponent, ExamComponent, SubExamComponent, GradecardSettingComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent, ExamAliasTermwiseComponent, PercentageCumulativeSetupComponent, PercentageCumulativeExamComponent, PercentageCumulativeSubjectComponent, PercentageCumulativeExamModalComponent, PercentageCumulativeSubjectModalComponent],
+	entryComponents: [SubjectSubexamModalComponent,PercentageCumulativeExamModalComponent,PercentageCumulativeSubjectModalComponent]
 })
 export class ExamConfigurationModule { }
