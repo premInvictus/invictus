@@ -36,7 +36,7 @@
           <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
             <div class="row remove-margin">
               <div class="col-12 text-center">
-                <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
+                <span class="font-size-16 font-medium">Enquiry ID</span>&nbsp;
                 <span class="font-size-16">
                   <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
                     (click)="openSearchDialog()"></i>
@@ -79,72 +79,9 @@
             <div class="row remove-top-margin">
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Honorific</mat-label>
-                  <mat-select formControlName="emp_honorific_id" placeholder="Honorific" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="1">Mr.</mat-option>
-                    <mat-option value="2">Mrs.</mat-option>
-                    <mat-option value="3">Miss.</mat-option>
-                    <mat-option value="4">Ms.</mat-option>
-                    <mat-option value="5">Mx.</mat-option>
-                    <mat-option value="6">Sir.</mat-option>
-                    <mat-option value="7">Dr.</mat-option>
-                    <mat-option value="8">Lady</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="emp_name" matInput placeholder="Full Name" required
                     [readonly]="viewOnly" [value]="employeeDetailsForm.get('emp_name').value | capitalize">
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Designation</mat-label>
-                  <mat-select formControlName="emp_designation_id" placeholder="Designation" required
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of designationArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Employee Type</mat-label>
-                  <mat-select formControlName="emp_category_id" required placeholder="Employee Type"
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
-                      {{item.cat_name}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Department</mat-label>
-                  <mat-select formControlName="emp_department_id" placeholder="Department" required
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Wing</mat-label>
-                  <mat-select formControlName="emp_wing_id" placeholder="Wing" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of wingArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
                 </mat-form-field>
               </div>
             </div>
