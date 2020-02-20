@@ -645,6 +645,7 @@
                             <mat-form-field class="form-field" appearance="outline">
                               <mat-label>Date Of Expiration</mat-label>
                               <input matInput [matDatepicker]="picker2" placeholder="Choose a date"
+                              [min]="maxDate"
                                 formControlName="marks_end_date" required>
                               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                               <mat-datepicker #picker2></mat-datepicker>

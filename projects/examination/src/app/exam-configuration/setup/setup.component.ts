@@ -22,6 +22,7 @@ export class SetupComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
+	maxDate = new Date();
 	dataset: any[] = [];
 	finalMarksExpiration: any[] = [];
 	disableApiCall = false;
