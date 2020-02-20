@@ -146,9 +146,12 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.router.navigate([`../${url}`], { relativeTo: this.route });
 	}
 	ngOnChanges() {
+		
 		if (this.loginId) {
 			this.studentdetailsflag = true;
 			this.getStudentInformation(this.loginId);
+		} else {
+			this.studentdetailsform.reset();
 		}
 		if (this.feeRenderId) {
 			this.studentdetailsflag = true;
@@ -179,7 +182,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	getStudentInformation(au_login_id) {
 		this.studentLoginId = '';
-		if (au_login_id && this.studentdetailsflag) {
+		if (au_login_id && this.studentdetailsflag) {			
 			this.studentdetailsflag = false;
 			this.sisService
 				.getStudentInformation({ au_login_id: au_login_id, au_status: '1' })
