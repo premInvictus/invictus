@@ -69,7 +69,8 @@
               style="cursor: pointer;" class="fas fa-search margin-left-10" matTooltip="Search Students"
               (click)="openSearchDialog()"></i><br>
             <span class="font-size-14">Class : {{class_sec}}</span><br>
-            <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_enrollment_status == 'left'"><span>LEFT</span> 
+            <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_process_type == '5' && studentdetails.au_enrollment_status == 'left'"><span>LEFT</span> 
+              <div class="font-size-16 font-bold blink" *ngIf="studentdetails.au_process_type != '5' && studentdetails.au_enrollment_status == 'left'"><span>Drop Out</span> 
             </div>
           </div>
         </div>

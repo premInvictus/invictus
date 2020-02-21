@@ -228,7 +228,7 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		}
 		this.enrollMentToArray = temp_arr;
 		if (this.changeEnrolmentStatusForm.value.enrolment_type === '3' || this.changeEnrolmentStatusForm.value.enrolment_type === '4') {
-			this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Left'});
+			this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Drop Out'});
 		}
 
 	}
