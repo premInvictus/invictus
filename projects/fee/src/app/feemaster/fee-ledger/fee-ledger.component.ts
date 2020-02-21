@@ -306,7 +306,7 @@ export class FeeLedgerComponent implements OnInit {
 					//console.log(this.FEE_LEDGER_ELEMENT);
 				}
 				this.dataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
-				this.feeRenderId = '';
+				//this.feeRenderId = '';
 				console.log('this.FEE_LEDGER_ELEMENT',this.FEE_LEDGER_ELEMENT);
 				
 				this.cacheSpan('select', d => d.select);
@@ -915,9 +915,9 @@ export class FeeLedgerComponent implements OnInit {
 		this.feeService.recalculateInvoice(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.feeRenderId = '';
-				this.getFeeLedger(this.loginId);
+				this.feeRenderId = '';				
 				this.feeRenderId = this.commonStudentProfileComponent.studentdetailsform.value.au_enrollment_id;
+				this.getFeeLedger(this.loginId);
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
