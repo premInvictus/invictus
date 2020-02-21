@@ -12,16 +12,8 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Gender</mat-label>
-              <mat-select formControlName="gender" placeholder="Gender" required
-                [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-option value="">Please Select</mat-option>
-                <mat-option value="male">Male</mat-option>
-                <mat-option value="female">Female</mat-option>
-                <mat-option value="other">Other</mat-option>
-              </mat-select>
-              <mat-error>
-                This field is required
-              </mat-error>
+              <input class="text-capitalize" matInput placeholder="Gender" required [readonly]="viewOnly"
+                formControlName="gender" [errorStateMatcher]="confirmValidParentMatcher" />
             </mat-form-field>
           </div>
           <div class="col-4 col-pad-5">
@@ -31,6 +23,16 @@
                 [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-4 col-pad-5">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Marital Status</mat-label>
+              <input matInput matInput placeholder="Marital Status" formControlName="enq_married_status" required
+                [readonly]="viewOnly" />
               <mat-error>
                 This field is required
               </mat-error>
@@ -55,8 +57,7 @@
               <mat-autocomplete #autoGroup="matAutocomplete">
                 <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="getCityPerId(item)"
                   (click)="getCityPerId(item)" *ngFor="let item of cityCountryArray" [value]="item.cit_id">
-                  {{item.cit_name}} -
-                  {{item.sta_name}} - {{item.cou_name}}</mat-option>
+                  {{item.cit_name}} - {{item.sta_name}} - {{item.cou_name}}</mat-option>
               </mat-autocomplete>
               <mat-error>
                 This field is required
@@ -83,49 +84,6 @@
               <mat-error>
                 This field is required
               </mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-4 col-pad-5" *ngIf="addressFlag">
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Residential Address</mat-label>
-              <input class="text-capitalize" matInput placeholder="Residential Address" [readonly]="viewOnly"
-                formControlName="r_address" [required]="requiredOnly" [errorStateMatcher]="confirmValidParentMatcher" />
-              <mat-error>
-                This field is required
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>City</mat-label>
-              <input type="text" matInput placeholder="City" formControlName="r_city" [required]="requiredOnly"
-                [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
-                (keyup)="filterCityStateCountry($event)">
-              <mat-autocomplete #autoGroup="matAutocomplete">
-                <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
-                  *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
-                  {{item.sta_name}} - {{item.cou_name}}</mat-option>
-              </mat-autocomplete>
-              <mat-error>
-                This field is required
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>State</mat-label>
-              <mat-select formControlName="r_state" placeholder="State" [required]="requiredOnly" disabled="true"
-                [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-option value="">Please Select</mat-option>
-                <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
-                  {{item.sta_name}}
-                </mat-option>
-              </mat-select>
-              <mat-error>
-                This field is required
-              </mat-error>
-            </mat-form-field>
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Pincode</mat-label>
-              <input matInput placeholder="Pincode" [readonly]="viewOnly" [required]="requiredOnly" minlength="6"
-                maxlength="6" pattern="[0-9]*" formControlName="r_pincode"
-                [errorStateMatcher]="confirmValidParentMatcher">
             </mat-form-field>
           </div>
 
@@ -160,32 +118,29 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-4 col-pad-5" *ngIf="!addressFlag">
+          <div class="col-4 col-pad-5">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Father's Name</mat-label>
+              <input class="text-capitalize" matInput placeholder="Father's Name" formControlName="enq_father_name" required
+                [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly" />
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
           </div>
         </div>
-        <div class="row">
-          <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6">
-            <span>Whether the address of correspondence is different from the Permanent address?</span>
-            <mat-slide-toggle class="btn-spacer" [disabled]="viewOnly" [checked]="addressFlag"
-              (change)="address_change($event)">
-            </mat-slide-toggle>
-          </div>
-        </div>
-
       </form>
     </div>
     <div class="row">
       <div class="col-12 text-center ">
         <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" [disabled]="disabledApiButton"
-          (click)="saveForm()">Save &
-          Continue</button>
+          (click)="saveForm()">Save & Continue
+        </button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(true)"
           [disabled]="disabledApiButton">Submit</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-          (click)="updateForm(false)" [disabled]="disabledApiButton">Update &
-          Continue</button>
-        <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
-          (click)="checkFormChangedValue()">Edit & Continue</button> -->
+          (click)="updateForm(false)" [disabled]="disabledApiButton">Update & Continue
+        </button>
         <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
       </div>
     </div>
