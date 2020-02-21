@@ -383,6 +383,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeExam', value);
 	}
+	getSubmissionClasswise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getSubmissionClasswise', value);
+	}
 
 }
 
