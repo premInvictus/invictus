@@ -39,6 +39,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	remarksForm: FormGroup;
 	taboneform: any = {};
 	login_id = '';
+	otherFlag = false;
 	divisonArray: any[] = [
 		{ id: 0, name: 'First Divison' },
 		{ id: 1, name: 'Second Divison' },
@@ -184,6 +185,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		this.Education_Form = this.fbuild.group({
 			qualification: '',
 			board: '',
+			other_board: '',
 			year: '',
 			division: '',
 			percentage: '',
@@ -206,11 +208,14 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 
 	}
 	addPreviousEducations() {
-		if (this.Education_Form.valid) {
+		if (this.Education_Form.value.qualification && this.Education_Form.value.board && this.Education_Form.value.year
+			&& this.Education_Form.value.percentage && this.Education_Form.value.subject) {
 			this.educationsArray.push(this.Education_Form.value);
+			this.otherFlag = false;
 			this.Education_Form.patchValue({
 				qualification: '',
 				board: '',
+				other_board: '',
 				year: '',
 				division: '',
 				percentage: '',
@@ -252,11 +257,19 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getBoard() {
-		this.axiomService.getBoard().subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.boardArray = result.data;
+		this.commonAPIService.getMaster({ type_id: '12' }).subscribe((result: any) => {
+			if (result) {
+				this.boardArray = result;
+			} else {
+				this.boardArray = [];
 			}
+
 		});
+		// this.axiomService.getBoard().subscribe((result: any) => {
+		// 	if (result.status === 'ok') {
+		// 		this.boardArray = result.data;
+		// 	}
+		// });
 	}
 	getQualificationsName(value) {
 		const findex = this.qualficationArray.findIndex(f => Number(f.qlf_id) === Number(value));
@@ -265,9 +278,9 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getBoardName(value) {
-		const findex = this.boardArray.findIndex(f => Number(f.board_id) === Number(value));
+		const findex = this.boardArray.findIndex(f => Number(f.config_id) === Number(value));
 		if (findex !== -1) {
-			return this.boardArray[findex].board_name;
+			return this.boardArray[findex].name;
 		}
 	}
 	getdivisonName(value) {
@@ -277,6 +290,13 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	editEducation(value) {
+		console.log(this.educationsArray[value].other_board);
+		if (this.educationsArray[value].other_board) {
+			this.otherFlag = true;
+			this.Education_Form.patchValue({
+				other_board: this.educationsArray[value].other_board
+			});
+		}
 		this.educationUpdateFlag = true;
 		this.educationValue = value;
 		this.Education_Form.patchValue({
@@ -291,6 +311,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	}
 	updateEducation() {
 		this.educationsArray[this.educationValue] = this.Education_Form.value;
+		this.otherFlag = false;
 		this.commonAPIService.showSuccessErrorMessage('Education List Updated', 'success');
 		this.Education_Form.reset();
 		this.educationUpdateFlag = false;
@@ -521,5 +542,17 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	}
 	setMinTo(event) {
 		this.toMin = event.value;
+	}
+	getBoardValue($event) {
+		console.log($event.value);
+		if ($event.value) {
+			var boardName = this.getBoardName($event.value);
+			boardName = boardName.toLowerCase();
+			if (boardName === 'others') {
+				this.otherFlag = true;
+			} else {
+				this.otherFlag = false;
+			}
+		}
 	}
 } 

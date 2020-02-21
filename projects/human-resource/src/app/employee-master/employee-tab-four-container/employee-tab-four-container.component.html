@@ -33,11 +33,11 @@
           <div class="col-2 ">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Board/University</mat-label>
-              <mat-select formControlName="board" required [errorStateMatcher]="confirmValidParentMatcher"
-                placeholder="Board/University" [disabled]="viewOnly">
+              <mat-select (selectionChange)="getBoardValue($event)" formControlName="board" required
+                [errorStateMatcher]="confirmValidParentMatcher" placeholder="Board/University" [disabled]="viewOnly">
                 <mat-option>Please Select</mat-option>
-                <mat-option *ngFor="let item of boardArray" [value]="item.board_id">
-                  {{item.board_name}}
+                <mat-option *ngFor="let item of boardArray" [value]="item.config_id">
+                  {{item.name}}
                 </mat-option>
               </mat-select>
               <mat-error>
@@ -45,6 +45,15 @@
               </mat-error>
             </mat-form-field>
           </div>
+
+          <div class="col-1" *ngIf="otherFlag">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Other Board</mat-label>
+              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+                formControlName="other_board" matInput placeholder="Other Board" [readonly]="viewOnly">            
+            </mat-form-field>
+          </div>
+
           <div class="col-1">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Year</mat-label>
@@ -55,7 +64,7 @@
               </mat-error>
             </mat-form-field>
           </div>
-          <div class="col-2 ">
+          <div class="col-1 ">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Division</mat-label>
               <mat-select formControlName="division" [errorStateMatcher]="confirmValidParentMatcher"
@@ -118,7 +127,8 @@
               <tr class="custom-tr" *ngFor="let item of educationsArray;let i=index">
                 <td class="custom-td">{{i+1}}</td>
                 <td class="custom-td">{{getQualificationsName(item.qualification)}}</td>
-                <td class="custom-td">{{getBoardName(item.board)}}</td>
+                <td class="custom-td">{{getBoardName(item.board)}} <span *ngIf="item.other_board"> -
+                    {{item.other_board}}</span></td>
                 <td class="custom-td">{{item.year}}</td>
                 <td class="custom-td">{{getdivisonName(item.division)}}</td>
                 <td class="custom-td">{{item.percentage}}</td>
