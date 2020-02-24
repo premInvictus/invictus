@@ -30,9 +30,62 @@
                      <div>
                         <div class="col-apple-10">
                            <div class="module-list">
-                              <ngx-treeview [config]="config" [items]="moduleItems"
-                                 (selectedChange)="moduleValues = $event">
-                              </ngx-treeview>
+                              <div class="module-list">
+                                 <!-- <ngx-treeview [config]="config" [items]="moduleItems"
+                                    (selectedChange)="moduleValues = $event">
+                                 </ngx-treeview> -->
+                                 <ng-container *ngFor="let item of moduleArray; let i = index">
+                                    <div class="row">
+                                       <div class="col-12">
+                                          <i *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0" [class]="item.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
+                                             : 'fas fa-chevron-right icon-collapse-show'"
+                                             (click)="toggleTopMenu(i)"></i>
+                                          <mat-checkbox [value]="item.mod_id" [checked]="checkIfValueExist(item.mod_id)"
+                                             (change)="setMenuAssigned($event, item)">
+                                             {{item.mod_name}}
+                                          </mat-checkbox>
+                                       </div>
+                                    </div>
+                                    <ng-container *ngIf="item.submenu_level_1 && item.submenu_level_1.length > 0">
+                                       <div class="mod-div-2" [style.display]="item.display">
+                                          <ng-container *ngFor="let submenu of item.submenu_level_1;let j = index">
+                                             <div class="row">
+                                                <div class="col-12">
+                                                   <i *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0"
+                                                      [class]="submenu.display === 'block' ? 'fas fa-chevron-down icon-collapse-show'
+                                                         : 'fas fa-chevron-right icon-collapse-show'"
+                                                      (click)="toggleSubMenu1(i, j)"></i>
+                                                   <mat-checkbox [checked]="checkIfValueExist(submenu.mod_id)"
+                                                      (change)="setMenuAssignedLevel2($event, submenu)"
+                                                      [value]="submenu.mod_id">
+                                                      {{submenu.mod_name}}
+                                                   </mat-checkbox>
+                                                </div>
+
+                                             </div>
+                                             <ng-container
+                                                *ngIf="submenu.submenu_level_2 && submenu.submenu_level_2.length > 0">
+                                                <div class="mod-div-3" [style.display]="submenu.display">
+                                                   <ng-container *ngFor="let submenu2 of submenu.submenu_level_2;
+                                                      let k = index">
+                                                      <div class="row">
+                                                         <div class="col-12">
+                                                            <mat-checkbox [checked]="checkIfValueExist(submenu2.mod_id)"
+                                                               [value]="submenu2.mod_id"
+                                                               (change)="setMenuAssignedLevel3($event, submenu2)">
+                                                               {{submenu2.mod_name}}
+                                                            </mat-checkbox>
+                                                         </div>
+
+                                                      </div>
+                                                   </ng-container>
+                                                </div>
+                                             </ng-container>
+                                          </ng-container>
+                                       </div>
+                                    </ng-container>
+                                 </ng-container>
+                              </div>
                            </div>
                         </div>
                      </div>
