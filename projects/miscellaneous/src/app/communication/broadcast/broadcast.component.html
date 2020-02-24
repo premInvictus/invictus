@@ -155,7 +155,7 @@
                                 Status
                             </th>
                             <td mat-cell *matCellDef="let element">
-                                {{element.status}}
+                                <span class='capitalize'>{{element.status | titlecase}}</span>
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="action">
