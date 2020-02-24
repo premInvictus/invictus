@@ -229,7 +229,8 @@ export class TeacherManagementComponent implements OnInit {
 	openAccessMenuModal() {
 		this.dialogRef = this.dialog.open(AssignRightsMultipleComponent, {
 			data: {
-				role_id: '3'
+				role_id: '3',
+				loginArray: this.userdetailArray
 			},
 			height: '65vh',
 			width: '60vh'
