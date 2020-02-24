@@ -1353,7 +1353,13 @@ export class SetupComponent implements OnInit {
 		this.examService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const settings = result.data;
-				this.finalMarksExpiration = JSON.parse(settings[0]['gs_value'])
+				let marksExp: any[] = [];
+				marksExp = JSON.parse(settings[0]['gs_value']);
+				for (const item of marksExp) {
+					if (Number(item.status) !== 5) {
+						this.finalMarksExpiration.push(item);
+					}
+				}
 				console.log('settings=--', settings, this.finalMarksExpiration);
 				this.getMarksExtendedDate(this);
 			}
