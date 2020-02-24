@@ -119,7 +119,8 @@ export class UserManagementComponent implements OnInit {
 	openAccessMenuModal() {
 		this.dialogRef = this.dialog.open(AssignRightsMultipleComponent, {
 			data: {
-				role_id: '2'
+				role_id: '2',
+				loginArray: this.userdetailArray
 			},
 			height: '65vh',
 			width: '60vh'

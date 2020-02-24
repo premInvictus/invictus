@@ -40,7 +40,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   termDataFlag = false;
-  displayedColumns = ['roll_no', 'au_full_name','au_admission_no',  'overall_attendance', 'present_days'];
+  displayedColumns = ['roll_no', 'au_full_name', 'au_admission_no', 'overall_attendance', 'present_days'];
   @ViewChild(MatSort) sort: MatSort;
   constructor(
     private fbuild: FormBuilder,
@@ -198,9 +198,11 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
         (result: any) => {
           if (result && result.status === 'ok') {
             this.studentArray = result.data;
+            this.disableApiCall = false;
             this.setGridData();
           } else {
             this.commonService.showSuccessErrorMessage('No record found', 'error');
+            this.disableApiCall = false;
             //this.finalCancel();
           }
         }
@@ -210,15 +212,14 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
   displayData() {
     this.formgroupArray = [];
     this.ELEMENT_DATA = [];
+    this.disableApiCall = true;
     this.termAttendanceDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const studentParam: any = {};
     studentParam.au_class_id = this.attendanceThemeTwoForm.value.syl_class_id;
-    if (Number(this.attendanceThemeTwoForm.value.syl_board_id) === 1) {
-      studentParam.au_sec_id = this.attendanceThemeTwoForm.value.syl_section_id;
-    }
+    studentParam.au_sec_id = this.attendanceThemeTwoForm.value.syl_section_id;
     studentParam.term_id = this.attendanceThemeTwoForm.value.syl_term_id;
     studentParam.exam_id = this.attendanceThemeTwoForm.value.syl_exam_id ? this.attendanceThemeTwoForm.value.syl_exam_id : '0';
-    studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id? this.attendanceThemeTwoForm.value.syl_subexam_id : '0';
+    studentParam.subexam_id = this.attendanceThemeTwoForm.value.syl_subexam_id ? this.attendanceThemeTwoForm.value.syl_subexam_id : '0';
     studentParam.au_role_id = '4';
     studentParam.au_status = '1';
 
@@ -236,6 +237,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
               }
             }
             this.setGridData();
+            this.disableApiCall = false;
           } else {
             this.termDataFlag = false;
             this.fetchDetails();
@@ -254,7 +256,7 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
     for (const item of this.studentArray) {
       this.ELEMENT_DATA.push({
         sr_no: counter,
-        roll_no:item.r_rollno,
+        roll_no: item.r_rollno,
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         present_days: item.present_days ? item.present_days : '',
@@ -294,7 +296,6 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
           if (result && result.status === 'ok') {
             this.displayData();
             this.commonService.showSuccessErrorMessage('Term Attendance Submitted Successfully', 'success');
-            this.disableApiCall = false;
           } else {
             this.commonService.showSuccessErrorMessage('Error While Submitting Term Attendance', 'error');
             this.disableApiCall = false;
@@ -337,8 +338,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
 
 export interface Element {
   sr_no: any;
-  roll_no:any;
-  au_admission_no:any;
+  roll_no: any;
+  au_admission_no: any;
   au_full_name: any;
   present_days: any;
   overall_attendance: any;

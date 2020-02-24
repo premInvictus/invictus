@@ -28,28 +28,13 @@ export class EmpEnqTabTwoComponent implements OnInit {
   contactsArray: any = {};
   personalContacts: FormGroup;
   disabledApiButton = false;
-  relationshipArray: any[] = [
-    { id: 1, name: 'Father' },
-    { id: 2, name: 'Mother' },
-    { id: 3, name: 'Guardian' },
-    { id: 4, name: 'Spouse' }
-  ];
+
   editableStatus = '0';
   cityId: any;
   cityCountryArray: any[] = [];
   arrayState: any[] = [];
   @ViewChild('editReference') editReference;
-  honrificArr = [
-    { hon_id: "1", hon_name: 'Mr.' },
-    { hon_id: "2", hon_name: 'Mrs.' },
-    { hon_id: "3", hon_name: 'Miss.' },
-    { hon_id: "4", hon_name: 'Ms.' },
-    { hon_id: "5", hon_name: 'Mx.' },
-    { hon_id: "6", hon_name: 'Sir.' },
-    { hon_id: "7", hon_name: 'Dr.' },
-    { hon_id: "8", hon_name: 'Lady.' }
 
-  ];
   departmentArray;
   designationArray;
   wingArray;
@@ -78,19 +63,21 @@ export class EmpEnqTabTwoComponent implements OnInit {
       this.editOnly = false;
       this.viewOnly = false;
       this.personalContacts.patchValue({
-        relationship: '',
-        fullname: '',
-        occupation: '',
-        education: '',
-        mobile: '',
-        email: '',
+        enq_applied_for: '',
+        enq_department: '',
+        enq_subject: '',
         organisation: '',
         designation: '',
-        address: '',
-        city: '',
-        state: '',
-        pincode: '',
-        reference: ''
+        from_date: '',
+        to_date: '',
+        salary_drawn: '',
+        enq_expected_salary: '',
+        enq_present_salary: '',
+        qualification: '',
+        university: '',
+        year: '',
+        division: '',
+        percentage: '',
       });
     }
     if (data.editMode) {
@@ -106,23 +93,23 @@ export class EmpEnqTabTwoComponent implements OnInit {
       this.saveFlag = false;
     }
   }
-
-
   buildForm() {
     this.personalContacts = this.fbuild.group({
-      relationship: '',
-      fullname: '',
-      occupation: '',
-      education: '',
-      mobile: '',
-      email: '',
+      enq_applied_for: '',
+      enq_department: '',
+      enq_subject: '',
       organisation: '',
       designation: '',
-      address: '',
-      city: '',
-      state: '',
-      pincode: '',
-      reference: ''
+      from_date: '',
+      to_date: '',
+      salary_drawn: '',
+      enq_expected_salary: '',
+      enq_present_salary: '',
+      qualification: '',
+      university: '',
+      year: '',
+      division: '',
+      percentage: '',
     });
   }
   ngOnChanges() {
@@ -168,21 +155,32 @@ export class EmpEnqTabTwoComponent implements OnInit {
     });
   }
   getPersonaContactsdata() {
-    if (this.employeedetails && this.employeedetails.emp_personal_contact && this.employeedetails.emp_personal_contact.relationship_personal_detail) {
+    console.log(this.employeedetails);
+    if (this.employeedetails) {
       this.personalContacts.patchValue({
-        relationship: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_category.rel_id,
-        fullname: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_full_name,
-        occupation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_occupation,
-        education: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_education,
-        mobile: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_mobile_no,
-        email: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_contact_detail.rel_email,
-        organisation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_organisation,
-        designation: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_designation,
-        address: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.address,
-        city: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.city,
-        state: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.state,
-        pincode: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_address_detail.pin,
-        reference: this.employeedetails.emp_personal_contact.relationship_personal_detail.rel_reference_detail.ref_person_name
+        enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
+          this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_id : '',
+        enq_department: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_department ?
+          this.employeedetails.enq_applied_job_detail[0].enq_department.dept_id : '',
+        enq_subject: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
+          this.employeedetails.enq_applied_job_detail[0].enq_subject.subject_id : '',
+        enq_expected_salary: this.employeedetails.enq_expected_salary ? this.employeedetails.enq_expected_salary : '',
+        enq_present_salary: this.employeedetails.enq_present_salary ? this.employeedetails.enq_present_salary : '',
+        organisation: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].organisation ?
+          this.employeedetails.enq_work_experience_detail[0].organisation : '',
+        designation: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].designation ?
+          this.employeedetails.enq_work_experience_detail[0].designation : '',
+        from_date: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].from_date ?
+          this.employeedetails.enq_work_experience_detail[0].from_date : '',
+        to_date: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].to_date ?
+          this.employeedetails.enq_work_experience_detail[0].to_date : '',
+        salary_drawn: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].salary_drawn ?
+          this.employeedetails.enq_work_experience_detail[0].salary_drawn : '',
+        qualification: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].qualification : '',
+        university: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].university : '',
+        year: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].year : '',
+        division: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].division : '',
+        percentage: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].percentage : '',
       });
     }
 
@@ -190,67 +188,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
   saveForm() {
     if (this.personalContacts.valid) {
       this.disabledApiButton = true;
-      if (this.employeedetails) {
-        this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
-        this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
-        this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
-        this.employeedetails.emp_department_detail = {
-          dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
-          dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
-        };
-        this.employeedetails.emp_designation_detail = {
-          des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
-          des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
-        };
-        this.employeedetails.emp_honorific_detail = {
-          hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
-          hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
-        };
-        this.employeedetails.emp_wing_detail = {
-          wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
-          wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
-        };
-        this.employeedetails.emp_category_detail = {
-          cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
-          cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
-        };
-      }
-      this.employeedetails['emp_personal_contact'] = {
-        relationship_personal_detail: {
-          rel_category: {
-            rel_id: this.personalContacts.value.relationship,
-            rel_name: this.getRelationShipName(this.personalContacts.value.relationship)
-          },
-          rel_full_name: this.personalContacts.value.fullname,
-          rel_occupation: this.personalContacts.value.occupation,
-          rel_education: this.personalContacts.value.education,
-          rel_organisation: this.personalContacts.value.organisation,
-          rel_designation: this.personalContacts.value.designation,
-          rel_contact_detail: {
-            rel_mobile_no: this.personalContacts.value.mobile,
-            rel_email: this.personalContacts.value.email
-          },
-          rel_address_detail: {
-            address: this.personalContacts.value.address,
-            city: this.personalContacts.value.city,
-            state: this.personalContacts.value.state,
-            pin: this.personalContacts.value.pincode
-          },
-          rel_reference_detail: {
-            ref_person_name: this.personalContacts.value.reference
-          }
-        }
-      };
-      this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
-        if (result) {
-          this.disabledApiButton = false;
-          this.commonAPIService.renderTab.next({ tabMove: true });
-          this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
-        } else {
-          this.disabledApiButton = false;
-          this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
-        }
-      });
+
 
     } else {
       this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
@@ -275,73 +213,6 @@ export class EmpEnqTabTwoComponent implements OnInit {
   }
   updateForm(isview) {
     if (this.personalContacts.valid) {
-      this.disabledApiButton = true;
-      if (this.employeedetails) {
-        this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
-        this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
-        this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
-        this.employeedetails.emp_department_detail = {
-          dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
-          dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
-        };
-        this.employeedetails.emp_designation_detail = {
-          des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
-          des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
-        };
-        this.employeedetails.emp_honorific_detail = {
-          hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
-          hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
-        };
-        this.employeedetails.emp_wing_detail = {
-          wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
-          wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
-        };
-        this.employeedetails.emp_category_detail = {
-          cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
-          cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
-        };
-      }
-      this.employeedetails['emp_personal_contact'] = {
-        relationship_personal_detail: {
-          rel_category: {
-            rel_id: this.personalContacts.value.relationship,
-            rel_name: this.getRelationShipName(this.personalContacts.value.relationship)
-          },
-          rel_full_name: this.personalContacts.value.fullname,
-          rel_occupation: this.personalContacts.value.occupation,
-          rel_education: this.personalContacts.value.education,
-          rel_organisation: this.personalContacts.value.organisation,
-          rel_designation: this.personalContacts.value.designation,
-          rel_contact_detail: {
-            rel_mobile_no: this.personalContacts.value.mobile,
-            rel_email: this.personalContacts.value.email
-          },
-          rel_address_detail: {
-            address: this.personalContacts.value.address,
-            city: this.personalContacts.value.city,
-            state: this.personalContacts.value.state,
-            pin: this.personalContacts.value.pincode
-          },
-          rel_reference_detail: {
-            ref_person_name: this.personalContacts.value.reference
-          }
-        }
-      };
-      this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
-        if (result) {
-          this.disabledApiButton = false;
-          this.commonAPIService.showSuccessErrorMessage('Employee Personal Contact Saved Successfully', 'success');
-          if (isview) {
-            this.commonAPIService.renderTab.next({ tabMove: true });
-          } else {
-            this.getPersonaContactsdata();
-            this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-          }
-        } else {
-          this.disabledApiButton = false;
-          this.commonAPIService.showSuccessErrorMessage('Error While Save Employee Personal Contact', 'error');
-        }
-      });
 
     } else {
       this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
@@ -371,12 +242,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
       state: item.sta_id,
     });
   }
-  getRelationShipName(id) {
-    const findIndex = this.relationshipArray.findIndex(f => f.id === id);
-    if (findIndex !== -1) {
-      return this.relationshipArray[findIndex].name;
-    }
-  }
+
   getCityName(id) {
     const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
     if (findIndex !== -1) {
@@ -405,12 +271,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
     }
   }
 
-  getHonorificName(hon_id) {
-    const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
-    if (findIndex !== -1) {
-      return this.honrificArr[findIndex].hon_name;
-    }
-  }
+
   getCategoryOne() {
     this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
       if (res) {

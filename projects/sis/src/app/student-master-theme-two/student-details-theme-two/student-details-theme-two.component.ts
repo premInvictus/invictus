@@ -431,7 +431,9 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
-				this.studentdetailsform.reset();
+				if (this.studentdetailsform) {
+					this.studentdetailsform.reset();
+				}				
 				this.commonAPIService.reRenderForm.next(
 					{ reRenderForm: true, addMode: false, editMode: false, deleteMode: false, viewMode: true });
 			}
