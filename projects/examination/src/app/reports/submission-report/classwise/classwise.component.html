@@ -95,6 +95,7 @@
                               {{tempSubject.childSub[0].sub_name}}</td>
                           <ng-container *ngIf="printData.examArr[sub_category].length > 0">
                             <ng-container *ngFor="let section of printData.sectionArr">
+                              <td class="custom-td text-center text-nowrap">{{getTeacherName(this.param.eme_class_id,tempSubject.sub_id,section.sec_id)}}</td>
                               <ng-container
                                 *ngFor="let pexam of printData.examArr[sub_category]"
                               >
@@ -118,6 +119,7 @@
                               </td>
                               <ng-container *ngIf="printData.examArr[sub_category].length > 0">
                                 <ng-container *ngFor="let section of printData.sectionArr">
+                                  <td class="custom-td text-center text-nowrap">{{getTeacherName(this.param.eme_class_id,tempsubsubject.sub_id,section.sec_id)}}</td>
                                   <ng-container
                                     *ngFor="let pexam of printData.examArr[sub_category]"
                                   >
