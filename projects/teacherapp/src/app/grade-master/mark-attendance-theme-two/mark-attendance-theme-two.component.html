@@ -30,10 +30,25 @@
               </mat-form-field>
               <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                 <mat-label>Term</mat-label>
-                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="displayData();"
+                <mat-select placeholder="Term" formControlName="syl_term_id" (selectionChange)="getExamDetails();displayData();"
                   required>
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of termsArray" [value]="item?.id">{{item.name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                <mat-label>Exam</mat-label>
+                <mat-select placeholder="Exam" formControlName="syl_exam_id"
+                  (selectionChange)="getSubExam();displayData();">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of examArray" [value]="item?.exam_id">{{item.exam_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                <mat-label>SubExam</mat-label>
+                <mat-select placeholder="SubExam" formControlName="syl_subexam_id" (selectionChange)="displayData();">
+                  <mat-option value="">Please select</mat-option>
+                  <mat-option *ngFor="let item of subexamArray" [value]="item?.se_id">{{item.sexam_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -85,9 +100,8 @@
 
         <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
           <div class="col-12 text-center">
-            <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall"  
-            (click)="finalSubmit();$event.stopPropagation()"
-              *ngIf="!termDataFlag">Submit</button>
+            <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall"
+              (click)="finalSubmit();$event.stopPropagation()" *ngIf="!termDataFlag">Submit</button>
             <button mat-raised-button class="btn-success-green" (click)="finalUpdate();$event.stopPropagation()"
               *ngIf="termDataFlag">Update</button>
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
