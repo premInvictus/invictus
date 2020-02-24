@@ -107,6 +107,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>{{classPlaceHolder}}</mat-label>
                   <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
+                  (selectionChange)="getSectionsByClass()"
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -119,6 +120,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Class Applied Forr</mat-label>
                   <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
+                  (selectionChange)="getSectionsByClass()"
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
