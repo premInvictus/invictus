@@ -18,34 +18,13 @@ export class SubmissionReportComponent implements OnInit {
   sectionArray: any[] = [];
   termsArray: any[] = [];
   examArray: any[] = [];
-  subexamArray: any[] = [];
-  finalSubexamArray: any[] = [];
-  studentArray: any[] = [];
-  tableDivFlag = false;
-  marksInputArray: any[] = [];
-  marksEditable = true;
-  responseMarksArray: any[] = [];
-  exam_grade_type = '0';
-  exam_grade_type_arr: any[] = [];
   subExamArray: any[] = [];
-  student_sub_exam_data_arr: any[] = [];
-  thead_data: any[] = [];
-  classterm: any;
-  absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
-  tableWidth = '100%';
-  ect_grade_avg_highest: any = {grade: false}
-  subTypeArray: any[] = [
-    {id: '1', name: 'Scholastic'}
-  ];
-  ect_exam_type = '0';
-  globalsettings: any[] = [];
   currentTabIndex = 0;
   teacherArray: any[] = [];
   teacherId = '';
   ngOnInit() {
     this.buildForm();
     this.getClass();
-    this.getGlobalSetting();
   }
 
   constructor(
@@ -61,32 +40,23 @@ export class SubmissionReportComponent implements OnInit {
     this.paramform = this.fbuild.group({
       teacher_name:'',
       teacher_id: '',
-      eme_sub_type: '',
       eme_class_id: '',
+      eme_term_id: '',
       eme_sec_id: '',
       eme_sub_id: '',
-      eme_term_id: '',
-      eme_exam_id: ''
+      eme_exam_id: '',
+      eme_submit: ''
     })
   }
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.classterm = result.data;
-        console.log(this.classterm);
-        this.ect_exam_type = this.classterm.ect_exam_type;
-        if(this.classterm.ect_grade_avg_highest) {
-          const temp_grade_config = JSON.parse(this.classterm.ect_grade_avg_highest);
-          if(temp_grade_config.grade) {
-            this.ect_grade_avg_highest.grade = temp_grade_config.grade;
-          }
-        }
         result.data.ect_no_of_term.split(',').forEach(element => {
           this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
         });
       } else {
-        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
       }
     });
   }
@@ -98,52 +68,10 @@ export class SubmissionReportComponent implements OnInit {
       return '1';
     }
   }
-  getExamDetails() {
-    this.examArray = [];
-    this.subexamArray = [];
-    this.examService.getExamDetails({ exam_class: this.paramform.value.eme_class_id}).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.examArray = result.data;
-        this.subexamArray.push(result.data[0].exam_sub_exam_max_marks);
-        for (const item of this.examArray) {
-          for (const dety of item.exam_sub_exam_max_marks) {   
-            const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) === Number(dety.se_id));
-            if (ind === -1) {
-              this.finalSubexamArray.push(dety);
-            }
-          }
-        }
-      } 
-    });  
-  }
-  getGradeSet(param) {
-    this.examService.getGradeSet(param).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.exam_grade_type_arr = result.data[0].egs_grade_data;
-        this.exam_grade_type_arr.push(this.absentData);
-      }
-    })
-  }
   getExamName(e_id) {
     const ind = this.examArray.findIndex(e => Number(e.exam_id) === Number(e_id));
     if (ind !== -1) {
       return this.examArray[ind].exam_name;
-    } else {
-      return '-';
-    }
-  }
-  getSubexamName(se_id) {
-    const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) ===  Number(se_id));
-    if (ind !== -1) {
-      return this.finalSubexamArray[ind].sexam_name;
-    } else {
-      return '-';
-    }
-  }
-  getSubexamMarks(se_id) {
-    const ind = this.finalSubexamArray.findIndex(e => Number(e.se_id) === Number(se_id));
-    if (ind !== -1) {
-      return this.finalSubexamArray[ind].exam_max_marks;
     } else {
       return '-';
     }
@@ -160,14 +88,6 @@ export class SubmissionReportComponent implements OnInit {
   }
 
   getSectionsByClass() {
-    this.paramform.patchValue({
-      eme_sub_type:'',
-      eme_sec_id: '',
-      eme_term_id: '',
-      eme_sub_id: '',
-      eme_exam_id: ''
-    });
-    this.tableDivFlag = false;
     this.sectionArray = [];
     this.smartService.getSectionsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -177,17 +97,8 @@ export class SubmissionReportComponent implements OnInit {
       }
     });
   }
-  resetFormONSecitonChange() {
-    this.paramform.patchValue({
-      eme_sub_id: '',
-      eme_exam_id: ''
-    });
-  }
   getSubjectsByClass() {
     this.subjectArray = [];
-    this.paramform.patchValue({
-      eme_sub_id: ''
-    });
     this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id, sub_isexam : '1'}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.subSubjectArray = result.data;
@@ -210,23 +121,6 @@ export class SubmissionReportComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
-  }
-  getRollNoUser() {
-    this.paramform.patchValue({
-      eme_term_id: '',
-      eme_exam_id: '',
-    });
-    this.tableDivFlag = false;
-    if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id) {
-      this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id }).subscribe((result: any) => {
-        if (result && result.status === 'ok') {
-          this.studentArray = result.data;
-        } else {
-          this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-        }
-      });
-    }
   }
   getSubjectName(sub_id) {
     for (const item of this.subSubjectArray) {
@@ -256,150 +150,33 @@ export class SubmissionReportComponent implements OnInit {
       });
     }
   }
-  displayData() {
-    if (this.paramform.value.eme_exam_id.length > 0) {
-      this.responseMarksArray = [];
-      this.marksInputArray = [];
-      this.tableDivFlag = true;
-      const param: any = {};
-      param.examEntry = this.paramform.value;
-      param.eme_review_status = ['0', '1', '2', '3', '4'];
-      this.examService.getComparativeList(this.paramform.value).subscribe((result: any) => {
-        if (result && result.status === 'ok') {
-          this.responseMarksArray = result.data;
-          console.log(this.responseMarksArray);
-          if(this.responseMarksArray.length > 0) {
-            if(this.paramform.value.eme_sub_type === '1') {
-              this.thead_data = this.responseMarksArray[0]['so_printData']['sub_mark'];
-            }
-            console.log(this.thead_data);
-          }
-        }
-      })
-    } else {
-      this.marksInputArray = [];
-      this.tableDivFlag = false;
+  resetTableDiv(changesFrom) {
+    if(changesFrom == 'class') {
+      this.paramform.patchValue({
+        eme_term_id: '',
+        eme_sec_id: '',
+        eme_submit: ''
+      });
+    } else if(changesFrom == 'term') {
+      this.paramform.patchValue({
+        eme_sec_id: '',
+        eme_submit:''
+      });
+    } else if(changesFrom == 'section') {
+      this.paramform.patchValue({
+        eme_submit:''
+      });
     }
-  }
-  getInputMarksSubsubject(login_id,sub_id,exam_id,se_id,ssub_id,printDatakey='so_printData'){
-    let tempvalue = '-';
-    for (let index = 0; index < this.responseMarksArray.length; index++) {
-      const element = this.responseMarksArray[index];
-      if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element[printDatakey].sub_mark.length; index1++) {
-          const element1 = element[printDatakey].sub_mark[index1];
-          if(element1.sub_id === sub_id) {
-            for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
-              const element2 = element1.sub_exam_mark[index2];
-              if(element2.exam_id === exam_id) {
-                for (let index3 = 0; index3 < element2.student_mark_subexam.length; index3++) {
-                  const element3 = element2.student_mark_subexam[index3];
-                  if(element3.se_id === se_id) {
-                    for (let index4 = 0; index4 < element3.subsubject_marks.length; index4++) {
-                      const element4 = element3.subsubject_marks[index4];
-                      if(element4.sub_id === ssub_id) {
-                        tempvalue = element4.student_mark_100_per;
-                      }                      
-                    }
-                  }                  
-                }
-              }              
-            }
-          }          
-        }
-      }      
-    }
-    return tempvalue;
-  }
-  getInputMarksSubexam(login_id,sub_id,exam_id,se_id,key,printDatakey='so_printData'){
-    let tempvalue = '-';
-    for (let index = 0; index < this.responseMarksArray.length; index++) {
-      const element = this.responseMarksArray[index];
-      if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element[printDatakey].sub_mark.length; index1++) {
-          const element1 = element[printDatakey].sub_mark[index1];
-          if(element1.sub_id === sub_id) {
-            for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
-              const element2 = element1.sub_exam_mark[index2];
-              if(element2.exam_id === exam_id) {
-                for (let index3 = 0; index3 < element2.student_mark_subexam.length; index3++) {
-                  const element3 = element2.student_mark_subexam[index3];
-                  if(element3.se_id === se_id) {
-                    tempvalue = element3[key];
-                  }                  
-                }
-              }              
-            }
-          }          
-        }
-      }      
-    }
-    return tempvalue;
-  }
-  getInputMarksExam(login_id,sub_id,exam_id,key){
-    let tempvalue = '-';
-    for (let index = 0; index < this.responseMarksArray.length; index++) {
-      const element = this.responseMarksArray[index];
-      if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element.so_printData.sub_mark.length; index1++) {
-          const element1 = element.so_printData.sub_mark[index1];
-          if(element1.sub_id === sub_id) {
-            for (let index2 = 0; index2 < element1.sub_exam_mark.length; index2++) {
-              const element2 = element1.sub_exam_mark[index2];
-              if(element2.exam_id === exam_id) {
-                tempvalue = element2[key];
-              }              
-            }
-          }          
-        }
-      }      
-    }
-    return tempvalue;
-  }
-  getInputMarkssubject(login_id,sub_id,key){
-    let tempvalue = '-';
-    for (let index = 0; index < this.responseMarksArray.length; index++) {
-      const element = this.responseMarksArray[index];
-      if(element.au_login_id === login_id) {
-        for (let index1 = 0; index1 < element.so_printData.sub_mark.length; index1++) {
-          const element1 = element.so_printData.sub_mark[index1];
-          if(element1.sub_id === sub_id) {
-            tempvalue = element1[key];
-          }          
-        }
-      }      
-    }
-    return tempvalue;
-  }
-  resetTableDiv() {
-    this.responseMarksArray = [];
-    this.tableDivFlag = false;
-    this.paramform.patchValue({
-      eme_exam_id: ''
-    });
-  }
-  getGlobalSetting() {
-    let param: any = {};
-    param.gs_name = ['failure_percentage', 'failure_color'];
-    this.examService.getGlobalSetting(param).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        const setting = result.data;
-        setting.forEach(element => {
-          this.globalsettings[element.gs_alias] = element.gs_value;
-        });
-        console.log(this.globalsettings);
-      }
-    })
   }
   setIndex(event) {
 		console.log(event);
 		this.currentTabIndex = event;
 		this.paramform.patchValue({
-			teacher_name: '',
-			teacher_id: '',
-			class_id: '',
-			sec_id: '',
-			sub_id: '',
+			teacher_name:'',
+      teacher_id: '',
+      eme_class_id: '',
+      eme_term_id: '',
+      eme_sec_id: '',
 		});
   }
   getTeacherInfo(event) {
@@ -423,6 +200,13 @@ export class SubmissionReportComponent implements OnInit {
 		});
 		this.teacherId = teacherDetails.au_login_id;
 		// this.getClasswork();
-	}
+  }
+  displayData(){
+    if(this.paramform.valid) {
+      this.paramform.patchValue({
+        eme_submit:true
+      });
+    }
+  }
 
 }
