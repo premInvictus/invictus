@@ -10,14 +10,14 @@
     </button>
   </div>
   <div class="functional-button-three" *ngIf="employeedetails?.last_record > 0">
-    <button mat-fab *ngIf="editOnly && !(employeedetails.emp_status=='left')" (click)="editForm()"><i
+    <button mat-fab *ngIf="editOnly && !(employeedetails.enq_status=='left')" (click)="editForm()"><i
         class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
         Employee</span></button>
   </div>
   <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
-    <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')" (click)="openDeleteDialog()">
+    <button mat-fab *ngIf="deleteOnly && !(employeedetails.enq_status=='left')" (click)="openDeleteDialog()">
       <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
-    </button>
+    </button> 
   </div>
   <div class="row remove-top-margin">
     <div class="col-12 remove-col-padding">
@@ -25,7 +25,8 @@
         <div class="row" style="height:90px">
           <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img">
-              <img class="student-pic--imgone student-pic__circle sis-student-pic__size" [src]="defaultsrc">
+              <img class="student-pic--imgone student-pic__circle "
+                [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
               <img *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
             </label>
@@ -35,7 +36,7 @@
           <div class="col-12  col-sm-12 col-md-8 col-lg-2 col-xl-2 remove-col-padding">
             <div class="row remove-margin">
               <div class="col-12 text-center">
-                <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
+                <span class="font-size-16 font-medium">Enquiry ID</span>&nbsp;
                 <span class="font-size-16">
                   <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
                     (click)="openSearchDialog()"></i>
@@ -54,11 +55,11 @@
                 </button>
               </div>
               <div class="col-4 text-center remove-col-padding">
-                <mat-form-field class="form-field text-center" id="iemp_id">
-                  <input class="text-center enroll-font-30 font-size-30" formControlName="emp_id" matInput
+                <mat-form-field class="form-field text-center" id="ienq_id">
+                  <input class="text-center enroll-font-30 font-size-30" formControlName="enq_id" matInput
                     [readonly]="!viewOnly" (keydown.enter)="$event.preventDefault();loadEmployee($event)" #myInput>
                 </mat-form-field><br>
-                <div class="font-size-16 font-bold blink" *ngIf="employeedetails.emp_status=='left'"><span>LEFT</span>
+                <div class="font-size-16 font-bold blink" *ngIf="employeedetails.enq_status=='left'"><span>LEFT</span>
                 </div>
                 <br>
               </div>
@@ -78,72 +79,9 @@
             <div class="row remove-top-margin">
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Honorific</mat-label>
-                  <mat-select formControlName="emp_honorific_id" placeholder="Honorific" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="1">Mr.</mat-option>
-                    <mat-option value="2">Mrs.</mat-option>
-                    <mat-option value="3">Miss.</mat-option>
-                    <mat-option value="4">Ms.</mat-option>
-                    <mat-option value="5">Mx.</mat-option>
-                    <mat-option value="6">Sir.</mat-option>
-                    <mat-option value="7">Dr.</mat-option>
-                    <mat-option value="8">Lady</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
-                  <input class="text-capitalize" formControlName="emp_name" matInput placeholder="Full Name" required
-                    [readonly]="viewOnly" [value]="employeeDetailsForm.get('emp_name').value | capitalize">
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Designation</mat-label>
-                  <mat-select formControlName="emp_designation_id" placeholder="Designation" required
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of designationArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Employee Type</mat-label>
-                  <mat-select formControlName="emp_category_id" required placeholder="Employee Type"
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
-                      {{item.cat_name}}
-                    </mat-option>
-                  </mat-select>
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Department</mat-label>
-                  <mat-select formControlName="emp_department_id" placeholder="Department" required
-                    [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Wing</mat-label>
-                  <mat-select formControlName="emp_wing_id" placeholder="Wing" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of wingArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
+                  <input class="text-capitalize" formControlName="enq_name" matInput placeholder="Full Name" required
+                    [readonly]="viewOnly" [value]="employeeDetailsForm.get('enq_name').value | capitalize">
                 </mat-form-field>
               </div>
             </div>

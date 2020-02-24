@@ -45,7 +45,7 @@ export class ViewStudentProfileComponent implements OnInit {
 	updateFlag = false;
 	studentArrayByName: any[] = [];
 	dialogRef: MatDialogRef<SearchStudentComponent>;
-	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	url: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 
 
 	constructor(
@@ -144,16 +144,16 @@ export class ViewStudentProfileComponent implements OnInit {
 						if (this.userDetails.personal_details.length > 0) {
 							if (userPersonalDetail.upd_gender === 'M') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 							} else if (userPersonalDetail.upd_gender === 'F') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 							} else if (userPersonalDetail.upd_gender === 'O') {
 								this.url = this.userDetails.au_profileimage ? this.userDetails.au_profileimage :
-									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+									'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 							}
 						} else {
-							this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							this.url = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 						}
 					} else {
 						this.errorNotification('No record found');

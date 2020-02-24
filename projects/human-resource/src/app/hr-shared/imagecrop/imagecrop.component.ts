@@ -32,8 +32,8 @@ export class ImagecropComponent implements OnInit {
 			this.fileChangeEvent(event);
 		}
 		this.dialogRef = this.dialog.open(this.cropModal, {
-			'height': '100vh',
-			'width': '100vw',
+			'height': '80vh',
+			'width': '80vh',
 			position: {
 				'top': '5%'
 			}

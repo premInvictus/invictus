@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, OnDestroy, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, CommonAPIService, ProcesstypeService,SmartService } from '../../_services/index';
+import { SisService, CommonAPIService, ProcesstypeService, SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
@@ -44,7 +44,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	addOnly = true;
 	iddesabled = true;
 	backOnly = false;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	classArray = [];
 	sectionArray = [];
 	houseArray = [];
@@ -174,7 +174,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.viewOnly = false;
 			this.deleteOnly = false;
 			this.studentdetailsform.reset();
-			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+			this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 			this.enrolmentPlaceholder = 'New Enrollment Id';
 
 		}
@@ -269,11 +269,11 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 						this.studentdetails = result.data[0];
 						this.gender = this.studentdetails.au_gender;
 						if (this.gender === 'M') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
 						} else if (this.gender === 'F') {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
 						} else {
-							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 						}
 					}
 					if (result && result.data && result.data[0].navigation[0]) {
@@ -336,7 +336,13 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 
 	// read image from html and bind with formGroup
 	bindImageToForm(event) {
-		this.openCropDialog(event);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.commonAPIService.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.openCropDialog(event);
+		}
 	}
 	patchStudentDetails() {
 		this.studentdetailsform.patchValue({
@@ -425,6 +431,11 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 					});
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+				if (this.studentdetailsform) {
+					this.studentdetailsform.reset();
+				}				
+				this.commonAPIService.reRenderForm.next(
+					{ reRenderForm: true, addMode: false, editMode: false, deleteMode: false, viewMode: true });
 			}
 		});
 	}

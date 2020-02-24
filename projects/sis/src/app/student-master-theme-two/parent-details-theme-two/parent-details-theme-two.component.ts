@@ -85,9 +85,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.maxDate.setFullYear(this.maxDate.getFullYear() - 18);
 		this.buildForm();
-		this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
-			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
-			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
+		this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png',
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png',
+			'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png'];
 		this.getQualifications();
 		this.getAnnualIncome();
 		this.getOccupationType();
@@ -518,8 +518,14 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		event.target.value = '';
 	}
 	bindImageToForm(event, index) {
-		this.cropIndex = index;
-		this.openCropDialog(event, index);
+		let files = event.target.files[0].name;
+		var ext = files.substring(files.lastIndexOf('.') + 1);
+		if (ext === 'svg') {
+			this.notif.showSuccessErrorMessage('Only Jpeg and Png image allowed.', 'error');
+		} else {
+			this.cropIndex = index;
+			this.openCropDialog(event, index);
+		}
 	}
 	uploadImage(fileName, epd_profile_image, index) {
 		this.sisService.uploadDocuments([
@@ -840,9 +846,9 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 			this.addressStatus = ['No', 'No', 'No'];
 			this.aluminiStatusArray = [false, false, false];
 			this.showHideGuardianField = false;
-			this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg',
-				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.svg',
-				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'];
+			this.profileImageArray = ['https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png',
+				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png',
+				'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png'];
 		}
 	}
 	getCityPerId(item: any, index) {

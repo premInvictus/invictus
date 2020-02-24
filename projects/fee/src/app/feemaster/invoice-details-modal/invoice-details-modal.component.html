@@ -10,7 +10,8 @@
   <form [formGroup]="modifyInvoiceForm">
     <div class="row">
       <div class="col-2 text-center">
-        <img class="student-profile-image-popup" [src]="defaultsrc">
+        <img style="border-radius:50%"
+          [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
         <div class="margin-top-20">
           <div class="font-size-16 font-bold">
             <span>{{invoiceDetails?.process_name}} {{invoiceDetails?.au_admission_no}} </span>
@@ -62,8 +63,9 @@
             </div>
             <div class="row">
               <div class="col-12">
-                <span class="font-size-16 font-light">Fee Period: </span><span
-                  class="font-size-16 font-regular"><span *ngIf="invoiceDetails?.fp_months">{{invoiceDetails?.fp_months}}</span><span *ngIf="!(invoiceDetails?.fp_months)">-</span></span>
+                <span class="font-size-16 font-light">Fee Period: </span><span class="font-size-16 font-regular"><span
+                    *ngIf="invoiceDetails?.fp_months">{{invoiceDetails?.fp_months}}</span><span
+                    *ngIf="!(invoiceDetails?.fp_months)">-</span></span>
               </div>
             </div>
           </div>
@@ -77,7 +79,8 @@
                 <span class="font-size-16 font-regular"
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_invoice_date | date:'dd MMM, yyyy'}}</span>
                 <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
-                  <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date" (dateChange)="changeDate($event)">
+                  <input matInput [matDatepicker]="picker" formControlName="inv_invoice_date"
+                    (dateChange)="changeDate($event)">
                   <mat-datepicker #picker></mat-datepicker>
                 </div>
                 <div class="inline-flex" [hidden]="!modificationFlag">
@@ -93,7 +96,8 @@
                   *ngIf="!(modificationFlag)">{{invoiceDetails?.inv_due_date | date:'dd MMM, yyyy'}}</span>
 
                 <div class="inline-flex date-width-100" [hidden]="!modificationFlag">
-                  <input matInput [matDatepicker]="picker1" formControlName="inv_due_date" (dateChange)="changeDueDate($event)">
+                  <input matInput [matDatepicker]="picker1" formControlName="inv_due_date"
+                    (dateChange)="changeDueDate($event)">
                   <mat-datepicker #picker1></mat-datepicker>
                 </div>
                 <div class="inline-flex" [hidden]="!modificationFlag">
@@ -182,8 +186,9 @@
               *ngIf="this.data.edit && (commonAPIService.isExistUserAccessMenu('354') || commonAPIService.isExistUserAccessMenu('361'))"
               mat-raised-button class="btn-primary btn-180 recalulate-invoice-btn"
               (click)="openRecalculateDialog()">Recalculate Invoice</button>
-            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button class="btn-primary btn-danger btn-spacer make-payement-btn"
-              (click)="makePayment(invoiceDetails)">Make Payment</button>
+            <button *ngIf="!this.data.edit && this.data.paidStatus !== 'paid'" mat-raised-button
+              class="btn-primary btn-danger btn-spacer make-payement-btn" (click)="makePayment(invoiceDetails)">Make
+              Payment</button>
             <button mat-raised-button class="btn-primary btn-danger btn-spacer print-invoice-btn"
               (click)="printInvoice()">Print Invoice</button>
             <button
@@ -206,17 +211,18 @@
         </ng-container>
         <ng-container matColumnDef="feehead">
           <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Particulars </th>
-          <td mat-cell *matCellDef="let element"  class="text-nowrap" style="text-align: left !important;"> {{element.feehead | titlecase}}
+          <td mat-cell *matCellDef="let element" class="text-nowrap" style="text-align: left !important;">
+            {{element.feehead | titlecase}}
           </td>
         </ng-container>
         <ng-container matColumnDef="feedue">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Fee Due (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element"  class="text-nowrap">
-            <ng-template [ngIf]="modificationFlag && !element.invg_id && element.feehead !== 'Previous Balance'" [ngIfElse]="elseFeeContaintent">
+          <td mat-cell *matCellDef="let element" class="text-nowrap">
+            <ng-template [ngIf]="modificationFlag && !element.invg_id && element.feehead !== 'Previous Balance'"
+              [ngIfElse]="elseFeeContaintent">
               <mat-form-field class="margin-top-10 form-field-60">
-                <input matInput type="number" [value]="element.feedue"
-                  (change)="changeOpeningAndFine(element, $event)">
+                <input matInput type="number" [value]="element.feedue" (change)="changeOpeningAndFine(element, $event)">
               </mat-form-field>
             </ng-template>
             <ng-template #elseFeeContaintent>
@@ -227,14 +233,14 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="concession">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Concession (<span><i
-                class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element"  class="text-nowrap"> {{element.concession | number | zerodash}} </td>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Concession
+            (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.concession | number | zerodash}} </td>
         </ng-container>
         <ng-container matColumnDef="adjustment">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Adjustment (<span><i
-                class="fas fa-rupee-sign"></i></span>)</th>
-          <td mat-cell *matCellDef="let element"  class="text-nowrap">
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Adjustment
+            (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap">
             <ng-template [ngIf]="modificationFlag && element.invg_id" [ngIfElse]="elseContaint">
               <mat-form-field class="margin-top-10 form-field-60">
                 <input matInput type="number" [value]="element.adjustment"
@@ -247,8 +253,8 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="netpay">
-          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Net Payable (<span><i
-                class="fas fa-rupee-sign"></i></span>)</th>
+          <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Net Payable
+            (<span><i class="fas fa-rupee-sign"></i></span>)</th>
           <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.netpay | number}} </td>
         </ng-container>
 

@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-12">
     <mat-card>
@@ -21,8 +20,8 @@
         <div class="col-1 custom-fee-entry-col-5 ">
           <div class="row">
             <div class="col-12 text-center">
-              <img class="student-profile-image-68" [src]="defaultsrc"
-                onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'">
+              <img [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=68&w=68'"
+                onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=&h=68&w=68'" />
             </div>
           </div>
         </div>
@@ -39,7 +38,8 @@
           <div class="row margin-top-1">
             <div class="col-12 text-center">
               <span class="font-size-16 font-bold">Family No.</span><br>
-              <span class="font-size-14">{{familyOutstandingArr?.fam_family_name}} - {{familyOutstandingArr.fam_entry_number}}</span><br>
+              <span class="font-size-14">{{familyOutstandingArr?.fam_family_name}} -
+                {{familyOutstandingArr.fam_entry_number}}</span><br>
             </div>
           </div>
         </div>
@@ -60,10 +60,12 @@
             </div>
           </div>
         </div>
-        <div class="col-5 text-right margin-top-10 position-right" *ngIf="netOutstanding > 0">                   
+        <div class="col-5 text-right margin-top-10 position-right" *ngIf="netOutstanding > 0">
           <button mat-button class="font-size-14 font-white  btn-back" (click)="moveToFamilyReceipt()">Back</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue" (click)="printFamilyInvoice(familyOutstandingArr)">Print Summary</button>
-          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay" (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
+            (click)="printFamilyInvoice(familyOutstandingArr)">Print Summary</button>
+          <button mat-button class="font-size-14 margin-left-10 font-white  btn-pay"
+            (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
             Now</button>
         </div>
       </div>
@@ -81,9 +83,11 @@
                     <span class="margin-left-right-15 font-white "> | </span>
                     <span class="font-size-14 font-white">Student Name : {{titem.au_full_name}} </span>
                     <span class="margin-left-right-15  font-white "> | </span>
-                    <span *ngIf="titem.sec_name != ' ' && titem.sec_name != ''" class="font-size-14 font-white "> Class : {{titem.class_name}} -
-                        {{titem.sec_name}}</span>
-                    <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14 font-white "> Class : {{titem.class_name}} </span>
+                    <span *ngIf="titem.sec_name != ' ' && titem.sec_name != ''" class="font-size-14 font-white "> Class
+                      : {{titem.class_name}} -
+                      {{titem.sec_name}}</span>
+                    <span *ngIf="titem.sec_name == ' ' || titem.sec_name == ''" class="font-size-14 font-white "> Class
+                      : {{titem.class_name}} </span>
                   </mat-panel-title>
                   <span class="font-size-16 font-white text-right margin-left-right-15 "> Net Payable :
                     &#8377; {{titem.outstanding_amt  | number}}</span>
@@ -106,7 +110,8 @@
                         <ng-container *ngFor="let det of titem.invoice_data">
                           <tr *ngIf="det.inv_invoice_no">
                             <td class="custom-td ">
-                              <mat-checkbox [checked]="det.checked" (change)="setInvoiceCheck(det.inv_invoice_no)"></mat-checkbox>
+                              <mat-checkbox [checked]="det.checked" (change)="setInvoiceCheck(det.inv_invoice_no)">
+                              </mat-checkbox>
                             </td>
                             <td class="custom-td">{{det.inv_invoice_no}}</td>
                             <td class="custom-td">{{det.inv_fee_period}}</td>
@@ -114,12 +119,12 @@
                             <td class="custom-td">{{det.inv_due_date | date: 'd-MMM-y'}}</td>
                             <td class="custom-td">{{det.inv_paid_status}}</td>
                             <td class="custom-td">&#8377; {{det.flgr_balance  | number}}</td>
-                          </tr>                          
+                          </tr>
                         </ng-container>
                         <ng-container *ngIf="titem.invoice_data.length == 1">
                           <tr>
                             <td class="custom-td" colspan="7">
-                                <p class="text-center">No Invoice Available</p>
+                              <p class="text-center">No Invoice Available</p>
                             </td>
                           </tr>
                         </ng-container>
@@ -139,7 +144,8 @@
                     Words : </span><span class="font-size-16 font-medium"> Rupees
                     {{familyOutstandingArr.family_total_outstanding_amt | numberToWord | titlecase}} Only </span><span
                     class="float-right font-size-16 font-medium"><span>Grand Total : </span><span
-                      class="font-size-16 font-medium">&#8377; {{familyOutstandingArr.family_total_outstanding_amt  | number}}</span></span>
+                      class="font-size-16 font-medium">&#8377;
+                      {{familyOutstandingArr.family_total_outstanding_amt  | number}}</span></span>
                 </div>
               </div>
             </div>
@@ -148,7 +154,8 @@
             <div class="col-12 text-center">
               <button mat-button class="font-size-14 font-white btn-blue">Print
                 Summary</button>
-              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay" (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
+              <button mat-button class="font-size-14 margin-left-10 font-white btn-pay"
+                (click)="payFamilyOutstanding(familyOutstandingArr?.fam_entry_number)">Pay
                 Now</button>
             </div>
           </div>

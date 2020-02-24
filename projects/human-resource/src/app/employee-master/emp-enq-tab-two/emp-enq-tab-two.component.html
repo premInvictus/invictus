@@ -10,123 +10,161 @@
       <form [formGroup]="personalContacts">
         <div class="padding-15">
           <div class="row remove-top-margin">
-            <div class="col-4 col-pad-5">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Relationship</mat-label>
-                <mat-select formControlName="relationship" placeholder="Relationship" required
-                  [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
-                  <mat-option value="">Please Select</mat-option>
-                  <mat-option *ngFor="let item of relationshipArray" [value]="item.id">
-                    {{item.name}}
-                  </mat-option>
-                </mat-select>
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Full Name</mat-label>
-                <input type="text" matInput placeholder="Full Name" formControlName="fullname" required
-                  [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Occupation</mat-label>
-                <input type="text" matInput placeholder="Occupation" [readonly]="viewOnly" formControlName="occupation"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Education</mat-label>
-                <input type="text" matInput placeholder="Education" [readonly]="viewOnly" formControlName="education"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Phone/Mobile</mat-label>
-                <input minlength="10" maxlength="10" pattern="[0-9]*" matInput placeholder="Phone/Mobile"
-                  [readonly]="viewOnly" formControlName="mobile" [errorStateMatcher]="confirmValidParentMatcher">
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Email</mat-label>
-                <input pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$" type="email" matInput
-                  placeholder="Email" [readonly]="viewOnly" formControlName="email"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-4 col-pad-5">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Organisation</mat-label>
-                <input class="text-capitalize" matInput placeholder="Organisation" [readonly]="viewOnly"
-                  formControlName="organisation" [errorStateMatcher]="confirmValidParentMatcher" />
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Designation</mat-label>
-                <input type="text" matInput placeholder="Designation" [readonly]="viewOnly"
-                  formControlName="designation" [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Address</mat-label>
-                <input type="text" matInput placeholder="Address" [readonly]="viewOnly" formControlName="address"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>City</mat-label>
-                <input type="text" matInput placeholder="City" [readonly]="viewOnly" formControlName="city"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>State</mat-label>
-                <input type="text" matInput placeholder="State" [readonly]="viewOnly" formControlName="state"
-                  [errorStateMatcher]="confirmValidParentMatcher">
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Pincode</mat-label>
-                <input minlength="6" maxlength="6" pattern="[0-9]*" matInput placeholder="Pincode" [readonly]="viewOnly"
-                  formControlName="pincode" [errorStateMatcher]="confirmValidParentMatcher">
-              </mat-form-field>
-            </div>
 
             <div class="col-4 col-pad-5">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Reference/Resource(optional)</mat-label>
-                <input class="text-capitalize" matInput placeholder="Reference/Resource(optional)" [readonly]="viewOnly"
-                  formControlName="reference" [errorStateMatcher]="confirmValidParentMatcher" />
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
+              <fieldset class=" fieldset_invoice">
+                <legend class="invoice_legend"> <b>Applied Job Details</b></legend>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Applied Position </mat-label>
+                  <mat-select formControlName="enq_applied_for" placeholder="Applied Position" required
+                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
+                      {{item.cat_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Department</mat-label>
+                  <mat-select formControlName="enq_department" placeholder="Department" required
+                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Subject</mat-label>
+                  <mat-select formControlName="enq_subject" placeholder="Subject" required
+                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
+                    <mat-option value="">Please Select</mat-option>
+                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Expected Salary</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Expected Salary" [readonly]="viewOnly"
+                    formControlName="enq_expected_salary" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Current Salary</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Current Salary" [readonly]="viewOnly"
+                    formControlName="enq_present_salary" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </fieldset>
             </div>
+            <div class="col-4 col-pad-5">
+              <fieldset class=" fieldset_invoice">
+                <legend class="invoice_legend"> <b>Work Experience</b></legend>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Organisation</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Organisation" [readonly]="viewOnly"
+                    formControlName="organisation" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Designation</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Designation" [readonly]="viewOnly"
+                    formControlName="designation" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Salary Drawn</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Salary Drawn" [readonly]="viewOnly"
+                    formControlName="salary_drawn" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>From Date</mat-label>
+                  <input class="text-capitalize" matInput placeholder="From Date" [readonly]="viewOnly"
+                    formControlName="from_date" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>To Date</mat-label>
+                  <input class="text-capitalize" matInput placeholder="To Date" [readonly]="viewOnly"
+                    formControlName="to_date" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </fieldset>
+            </div>
+            <div class="col-4 col-pad-5">
+              <fieldset class=" fieldset_invoice">
+                <legend class="invoice_legend"> <b>Academics Details</b></legend>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Qualification</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Qualification" [readonly]="viewOnly"
+                    formControlName="qualification" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>University</mat-label>
+                  <input class="text-capitalize" matInput placeholder="University" [readonly]="viewOnly"
+                    formControlName="university" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Year</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Year" [readonly]="viewOnly"
+                    formControlName="year" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Division</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Division" [readonly]="viewOnly"
+                    formControlName="division" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Percentage</mat-label>
+                  <input class="text-capitalize" matInput placeholder="Percentage" [readonly]="viewOnly"
+                    formControlName="percentage" [errorStateMatcher]="confirmValidParentMatcher" />
+                  <mat-error>
+                    This field is required
+                  </mat-error>
+                </mat-form-field>
+              </fieldset>
+            </div>
+
+
+
           </div>
         </div>
       </form>
     </div>
   </div>
+
   <div class="row">
     <div class="col-12 text-center">
       <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"

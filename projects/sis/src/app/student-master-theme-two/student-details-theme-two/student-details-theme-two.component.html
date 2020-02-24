@@ -26,8 +26,8 @@
         <div class="row">
           <div class="col-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 text-center">
             <label for="image" class="main-label-img margin-top-10">
-              <img class="student-pic--imgone student-pic__circle sis-student-pic__size" [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + 
-              defaultsrc + '&h=100&w=100'">
+              <img class="student-pic--imgone student-pic__circle "
+                [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=100&w=100'" />
               <img *ngIf="!viewOnly" class="sis-student-pic--imgtwo sis-student-pictwo__size student-pictwo__color"
                 src="/assets/images/twitpic-symbol.svg">
             </label>
@@ -70,7 +70,8 @@
                   <input class="text-center enroll-font-30 font-size-30" formControlName="au_enrollment_id" matInput
                     [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)" #myInput>
                 </mat-form-field><br>
-                <div class="font-size-16 font-bold blink" *ngIf="((viewOnly || editOnly) && studentdetails.au_process_type=='5')"><span>LEFT</span>
+                <div class="font-size-16 font-bold blink"
+                  *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type != '5' && studentdetails.au_enrollment_status == 'left'))"><span>Dropout</span>
                 </div>
                 <br>
               </div>

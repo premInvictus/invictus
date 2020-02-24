@@ -33,7 +33,7 @@ export class IssueReturnComponent implements OnInit {
 	sessionName: any;
 	currentUser: any;
 	session_id: any;
-	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('bookDet')bookDet;

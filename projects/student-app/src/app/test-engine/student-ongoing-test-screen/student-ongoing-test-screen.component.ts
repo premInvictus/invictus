@@ -61,7 +61,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	getRandom: any;
 	getCurrentQp: any;
 	userDetails: any = {};
-	userprofileimage = 'https://g21.digialm.com//OnlineAssessment/images/NewCandidateImage.jpg';
+	userprofileimage = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	currentUser: any = {};
 	userDetailsFlag = false;
 	singleIntegerArray: any[] = [{ id: '0' },

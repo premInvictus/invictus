@@ -40,7 +40,7 @@ export class EmpEnqCommonComponent implements OnInit {
   addOnly = true;
   iddesabled = true;
   backOnly = false;
-  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+  defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
   classArray = [];
   sectionArray = [];
   departmentArray = [];
@@ -49,7 +49,7 @@ export class EmpEnqCommonComponent implements OnInit {
   multipleFileArray: any[] = [];
   savedSettingsArray: any[] = [];
   settingsArray: any[] = [];
-  enrolmentPlaceholder = 'Enrollment Id';
+  enrolmentPlaceholder = 'Enquiry Id';
   deleteMessage = 'Are you sure, you want to delete ?';
   studentdetailsflag = false;
   lastRecordId;
@@ -80,7 +80,7 @@ export class EmpEnqCommonComponent implements OnInit {
         this.lastRecordId = data.last_record;
         this.lastEmployeeDetails = {};
         if (this.lastrecordFlag) {
-          this.lastEmployeeDetails.emp_id = this.lastRecordId;
+          this.lastEmployeeDetails.enq_id = this.lastRecordId;
           this.lastrecordFlag = false;
         }
         this.getEmployeeDetail(data.last_record);
@@ -93,102 +93,57 @@ export class EmpEnqCommonComponent implements OnInit {
       if (data) {
         if ((data && data.reRenderForm) || (data && data.viewMode)) {
           //this.employeedetails = {};
-          this.employeedetails.emp_status = 'live';
+          this.employeedetails.enq_status = 'enquiry';
           this.getEmployeeDetail(this.lastRecordId);
         }
       }
       this.setActionControls(data);
     });
 
-    this.getEmployeeDetail(result.emp_id);
+    this.getEmployeeDetail(result.enq_id);
 
   }
 
   ngOnChanges() {
     this.buildForm();
-    this.employeedetails.emp_status == 'live';
-    this.getDepartment();
-    this.getDesignation();
-    this.getWing();
-    this.getCategoryOne();
+    this.employeedetails.enq_status == 'enquiry';
     if (this.employeedetails) {
-      this.getEmployeeDetail(this.employeedetails.emp_id);
+      this.getEmployeeDetail(this.employeedetails.enq_id);
     }
   }
-  getDepartment() {
-    this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
-      if (result) {
-        this.departmentArray = result;
-      } else {
-        this.departmentArray = [];
-      }
 
-    });
-  }
-
-  getDesignation() {
-    this.commonAPIService.getMaster({ type_id: '2' }).subscribe((result: any) => {
-      if (result) {
-        this.designationArray = result;
-      } else {
-        this.designationArray = [];
-      }
-
-    });
-  }
-  getWing() {
-    this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
-      if (result) {
-        this.wingArray = result;
-      } else {
-        this.wingArray = [];
-      }
-
-    });
-  }
-  getEmployeeDetail(emp_id) {
-    if (emp_id) {
+  getEmployeeDetail(enq_id) {
+    if (enq_id) {
       this.previousB = true;
       this.nextB = true;
       this.firstB = true;
       this.lastB = true;
       //this.setActionControls({viewMode : true})
-      this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+      this.commonAPIService.getCareerEnq({ enq_id: enq_id }).subscribe((result: any) => {
         if (result) {
-          let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
-          let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
-          let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
-          let emp_category_id = result.emp_category_detail ? result.emp_category_detail.cat_id : '';
-          let emp_wing_id = result.emp_wing_detail ? result.emp_wing_detail.config_id : '';
-
           this.employeeDetailsForm.patchValue({
-            emp_profile_pic: result.emp_profile_pic,
-            emp_id: result.emp_id,
-            emp_name: result.emp_name,
-            emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
-            emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
-            emp_department_id: emp_department_id ? emp_department_id.toString() : '',
-            emp_category_id: emp_category_id ? Number(emp_category_id) : '',
-            emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
-            emp_status: result.emp_status
+            enq_profile_pic: result.enq_personal_detail.enq_profile_pic,
+            enq_id: result.enq_id,
+            enq_name: result.enq_personal_detail.enq_full_name,
+            enq_status: result.enq_status
           });
-          if (result.emp_profile_pic) {
-            this.defaultsrc = result.emp_profile_pic
+          if (result.enq_profile_pic) {
+            this.defaultsrc = result.enq_profile_pic
           } else {
-            this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
+            this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
           }
           this.navigation_record = result.navigation;
-          //this.employeedetails['last_record'] = emp_id;
+          //this.employeedetails['last_record'] = enq_id;
         }
 
         if (this.navigation_record) {
           if (this.navigation_record.first_record &&
-            this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
+            this.navigation_record.first_record !== this.employeeDetailsForm.value.enq_id &&
             this.viewOnly) {
             this.firstB = false;
           }
           if (this.navigation_record.last_record &&
-            this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_id &&
+            this.navigation_record.last_record !== this.employeeDetailsForm.value.enq_id &&
             this.viewOnly) {
             this.lastB = false;
           }
@@ -215,10 +170,10 @@ export class EmpEnqCommonComponent implements OnInit {
       this.viewOnly = false;
       this.deleteOnly = false;
       this.employeedetails = {};
-      this.employeedetails.emp_status = 'live';
+      this.employeedetails.enq_status = 'enquiry';
       this.employeeDetailsForm.reset();
-      this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg';
-      this.enrolmentPlaceholder = 'New Emp. Id';
+      this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+      this.enrolmentPlaceholder = 'New Enq. Id';
 
     }
     if (data.editMode) {
@@ -228,7 +183,7 @@ export class EmpEnqCommonComponent implements OnInit {
       this.deleteOnly = false;
       this.stopFlag = true;
       this.divFlag = true;
-      this.enrolmentPlaceholder = 'Emp. Id';
+      this.enrolmentPlaceholder = 'Enq. Id';
     }
     if (data.viewMode) {
       this.viewOnly = true;
@@ -240,7 +195,7 @@ export class EmpEnqCommonComponent implements OnInit {
       const inputElem = <HTMLInputElement>this.myInput.nativeElement;
       inputElem.select();
       this.lastEmployeeDetails = {};
-      if (this.lastEmployeeDetails['emp_id'] === this.employeeDetailsForm.value.emp_id) {
+      if (this.lastEmployeeDetails['enq_id'] === this.employeeDetailsForm.value.enq_id) {
         this.firstB = false;
         this.previousB = false;
         this.lastB = true;
@@ -248,7 +203,7 @@ export class EmpEnqCommonComponent implements OnInit {
       } else {
         this.navigationEmployeeDetails(false);
       }
-      this.enrolmentPlaceholder = 'Emp. Id';
+      this.enrolmentPlaceholder = 'Enq. Id';
     }
   }
 
@@ -257,15 +212,10 @@ export class EmpEnqCommonComponent implements OnInit {
 
   buildForm() {
     this.employeeDetailsForm = this.fbuild.group({
-      emp_profile_pic: '',
-      emp_id: '',
-      emp_name: '',
-      emp_category_id: '',
-      emp_honorific_id: '',
-      emp_designation_id: '',
-      emp_department_id: '',
-      emp_wing_id: '',
-      emp_status: 'live'
+      enq_profile_pic: '',
+      enq_id: '',
+      enq_name: '',
+      enq_status: 'enquiry'
     });
 
   }
@@ -280,12 +230,12 @@ export class EmpEnqCommonComponent implements OnInit {
         if (result.status === 'ok') {
           this.defaultsrc = result.data[0].file_url;
           this.employeeDetailsForm.patchValue({
-            emp_profile_pic: result.data[0].file_url
+            enq_profile_pic: result.data[0].file_url
           });
-          if (result.data[0].file_url && this.employeeDetailsForm.value.emp_id) {
+          if (result.data[0].file_url && this.employeeDetailsForm.value.enq_id) {
             this.commonAPIService.updateEmployee({
-              emp_id: this.employeeDetailsForm.value.emp_id,
-              emp_profile_pic: result.data[0].file_url
+              enq_id: this.employeeDetailsForm.value.enq_id,
+              enq_profile_pic: result.data[0].file_url
             }).subscribe((result1: any) => {
               if (result1 && result1.status === 'ok') {
                 this.commonAPIService.showSuccessErrorMessage(result1.data, 'success');
@@ -376,7 +326,7 @@ export class EmpEnqCommonComponent implements OnInit {
   }
 
   deleteUser() {
-    this.commonAPIService.deleteEmployee({ emp_id: this.employeeDetailsForm.value.emp_id, emp_status: 'left' }).subscribe((result: any) => {
+    this.commonAPIService.deleteEmployee({ enq_id: this.employeeDetailsForm.value.enq_id, enq_status: 'left' }).subscribe((result: any) => {
       if (result) {
         this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
         this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
@@ -391,21 +341,6 @@ export class EmpEnqCommonComponent implements OnInit {
   }
   isExistUserAccessMenu(actionT) {
   }
-
-  getCategoryOne() {
-    this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
-      if (res) {
-        this.categoryOneArray = [];
-        this.categoryOneArray = res;
-      }
-    });
-  }
-  getCategoryOneName(cat_id) {
-    const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
-    if (findex !== -1) {
-      return this.categoryOneArray[findex].cat_name;
-    }
-  }
   openSearchDialog() {
     const diaogRef = this.dialog.open(SearchViaNameComponent, {
       width: '20%',
@@ -419,10 +354,10 @@ export class EmpEnqCommonComponent implements OnInit {
       if (result) {
         this.viewOnly = true;
         this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
-        this.lastRecordId = result.emp_id;
+        this.lastRecordId = result.enq_id;
         this.commonAPIService.employeeData.next(
           {
-            last_record: result.emp_id
+            last_record: result.enq_id
           });
       }
     });

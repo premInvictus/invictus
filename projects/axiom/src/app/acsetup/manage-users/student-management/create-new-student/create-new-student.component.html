@@ -29,11 +29,12 @@
                                  <div class="form-group row">
                                     <div class="image-upload">
                                        <label for="file-input">
-                                          <img class="img-fluid teacher-img" [src]="url" 
-                                          style="width: 140px; border-radius: 50% !important;
+                                          <img class="img-fluid teacher-img" [src]="url"
+                                             [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + url + '&h=140&w=140'"
+                                             style="border-radius: 50% !important;
                                              border: 1px solid rgb(149, 145, 216);"
                                              matTooltip="upload-image 109px*145px"
-                                             onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.svg'" />
+                                             onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png&h=140&w=140'" />
                                        </label>
                                        <input id="file-input" formControlName="au_profileimage" name="file-input"
                                           type="file" (change)="readUrl($event)" />

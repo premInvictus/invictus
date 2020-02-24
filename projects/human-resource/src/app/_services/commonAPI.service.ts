@@ -240,6 +240,7 @@ export class CommonAPIService {
 		return this.http.post(environment.apiHRUrl + '/employee/getNavigationId', value);
 	}
 
+
 	getAllDesignation(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/designation/getAll', value);
@@ -423,4 +424,23 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/lastMessageId', value);
 	}
+	getCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-career-enquiry', value);
+	}
+	insertCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/insert-career-enquiry', value);
+	}
+	updateCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/update-career-enquiry', value);
+	}
+	getEnquiryNavigationRecords(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-career-navigation-id', value);
+	}
+
+	
+
 }
