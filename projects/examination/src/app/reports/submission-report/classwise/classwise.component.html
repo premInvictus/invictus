@@ -6,7 +6,7 @@
         <thead>
           <tr class="custom-tr">
             <th [attr.colspan]="2" class="custom-th text-left" width="200px">
-              {{ sub_category }}
+              {{ examActivityCategoryName(sub_category) }}
             </th>
             <ng-container *ngFor="let section of printData.sectionArr">
               <th
@@ -69,8 +69,8 @@
                               <ng-container
                                 *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
                               >
-                                <td class="custom-td text-center">
-                                  {{ getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id) }}
+                                <td class="custom-td text-center text-nowrap">
+                                  <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
                                 </td>
                               </ng-container>
                             </ng-container>
@@ -78,58 +78,28 @@
                         </ng-container>
                       </tr>
                   </ng-template>
-                  <!-- <ng-template #childdiv>
+                  <ng-template #childdiv>
                       <tr class="custom-tr">
-                          <ng-container *ngIf="tempSubject.ess_additional == 0">
-                              <td [attr.rowspan]="tempSubject.childSub.length"
-                                  class="custom-td text-left padding-left-8px">
-                                  {{tempSubject.sub_name}}
-                              </td>
-                          </ng-container>
-                          <ng-container *ngIf="tempSubject.ess_additional == 1">
-                              <td [attr.rowspan]="tempSubject.childSub.length"
-                                  class="custom-td text-left padding-left-8px">
-                                  {{tempSubject.sub_name}}
-                                  (Add.)
-                              </td>
-                          </ng-container>
+                          <td [attr.rowspan]="tempSubject.childSub.length"
+                          class="custom-td text-left padding-left-8px">
+                          {{tempSubject.sub_name}}
+                          </td>
                           <td class="custom-td text-left padding-left-8px">
                               {{tempSubject.childSub[0].sub_name}}</td>
-                          <ng-container
-                              *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                          <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+                            <ng-container *ngFor="let section of printData.sectionArr">
                               <ng-container
-                                  *ngFor="let eachterm of printData.so_printData">
-                                  <ng-container
-                                      *ngFor="let psubject of eachterm.sub_mark">
-                                      <ng-container
-                                          *ngIf="tempSubject.sub_id == psubject.sub_id">
-                                          <ng-container
-                                              *ngFor="let psubexam of psubject.sub_exam_mark">
-                                              <ng-container
-                                                  *ngFor="let childsubexam of psubject.childSub[0].sub_exam_mark">
-                                                  <ng-container
-                                                      *ngIf="psubexam.exam_id == childsubexam.exam_id">
-                                                      <td class="custom-td"
-                                                          *ngIf="psubexam.bifurcated_marks">
-                                                          {{childsubexam.student_mark}}
-                                                      </td>
-                                                  </ng-container>
-                                              </ng-container>
-                                              <td [attr.rowspan]="psubject.childSub_count"
-                                                  class="custom-td">
-                                                  {{psubexam.student_mark}}</td>
-                                          </ng-container>
-                                          <td [attr.rowspan]="psubject.childSub_count" *ngIf="obtainedGradeAvgHighest.obtained"
-                                              class="custom-td">
-                                              {{psubject.sub_grade_mark}}
-                                              {{psubject.fail_status}}</td>
-                                      </ng-container>
-
-                                  </ng-container>
+                                *ngFor="let pexam of printData.examArr[sub_category]"
+                              >
+                                <ng-container
+                                  *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                                >
+                                  <td class="custom-td text-center text-nowrap">
+                                    <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.childSub[0].sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                  </td>
+                                </ng-container>
                               </ng-container>
-                              <td [attr.rowspan]="tempSubject.childSub.length" class="custom-td">
-                                  {{finalAssessmentOfSubject(tempSubject.sub_id, printData.so_printData)}}
-                              </td>
+                            </ng-container>
                           </ng-container>
                       </tr>
                       <ng-container
@@ -138,44 +108,24 @@
                               <td class="custom-td text-left padding-left-8px">
                                   {{tempsubsubject.sub_name}}
                               </td>
-                              <ng-container
-                                  *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0)">
+                              <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+                                <ng-container *ngFor="let section of printData.sectionArr">
                                   <ng-container
-                                  *ngFor="let eachterm of printData.so_printData">
-                                      <ng-container
-                                      *ngFor="let psubject of eachterm.sub_mark">
-                                          <ng-container
-                                          *ngIf="tempSubject.sub_id == psubject.sub_id">
-                                              <ng-container
-                                                  *ngFor="let psubexam of psubject.sub_exam_mark">
-                                                  <ng-container
-                                                  *ngFor="let cvalue of psubject.childSub">
-                                                      <ng-container
-                                                      *ngIf="cvalue.sub_id == tempsubsubject.sub_id">
-
-                                                          <ng-container
-                                                              *ngFor="let childsubexam of cvalue.sub_exam_mark">
-                                                              <ng-container
-                                                                  *ngIf="psubexam.exam_id == childsubexam.exam_id">
-                                                                  <td class="custom-td"
-                                                                      *ngIf="psubexam.bifurcated_marks">
-                                                                      {{childsubexam.student_mark}}
-                                                                  </td>
-                                                              </ng-container>
-                                                          </ng-container>
-                                                      </ng-container>
-                                                  </ng-container>
-
-                                              </ng-container>
-                                          </ng-container>
-                                      </ng-container>
+                                    *ngFor="let pexam of printData.examArr[sub_category]"
+                                  >
+                                    <ng-container
+                                      *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                                    >
+                                      <td class="custom-td text-center text-nowrap">
+                                        <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempsubsubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                      </td>
+                                    </ng-container>
                                   </ng-container>
-
+                                </ng-container>
                               </ng-container>
                           </tr>
                       </ng-container>
-
-                  </ng-template> -->
+                  </ng-template>
               </ng-container>
           </ng-container>
       </tbody>
@@ -183,3 +133,10 @@
     </ng-container>
   </ng-container>
 </ng-container>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+      [noDataText]="" [subText]="'Please select all required field'"></app-no-data>
+  </div>
+</div>

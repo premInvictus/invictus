@@ -23,6 +23,8 @@ export class ClasswiseComponent implements OnInit, OnChanges {
     console.log(this.param);
     if(this.param.eme_submit == true) {
       this.displayData();
+    } else {
+      this.tableDivFlag = false;
     }
   }
 
@@ -41,11 +43,27 @@ export class ClasswiseComponent implements OnInit, OnChanges {
       this.printData.examMarkArr.forEach(element => {
         if(element.eme_class_id === eme_class_id && element.eme_term_id === eme_term_id && element.eme_sub_id === eme_sub_id
           && element.eme_sec_id === eme_sec_id && element.eme_exam_id === eme_exam_id && element.eme_subexam_id === eme_subexam_id){
-            status = element.eme_review_status;
+            //status = element.eme_review_status;
+            const tstatus = Number(element.eme_review_status);
+            if(tstatus === 4) {
+              status = 'fas fa-thumbs-up text-published'
+            } else if(tstatus > 0 && tstatus < 4) {
+              status = 'fas fa-check text-submitted';
+            }
           }
       });
     }
     return status;
+  }
+
+  examActivityCategoryName(id) {
+    let name = '';
+    this.printData.examActivityArr.forEach(element => {
+      if(element.eac_id == id) {
+        name = element.eac_name;
+      }
+    });
+    return name;
   }
 
 }
