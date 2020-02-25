@@ -1,11 +1,11 @@
 export const environment = {
 	production: false,
-	apiAxiomUrl: 'http://localhost/invictus/axiom-backend/index.php',
-	apiSisUrl: 'http://localhost/invictus/sis-backend/index.php',
-	apiFeeUrl: 'http://localhost/invictus/feesmanagementbackend/index.php',
-	apiSmartUrl: 'http://localhost/invictus/smartbackend/index.php',
-	apiExamUrl: 'http://localhost/invictus/examination-backend/index.php',
-	apiReservUrl: 'http://localhost/invictus/reservoir-backend/index.php',
+	apiAxiomUrl: 'http://13.234.2.36/axiom-backend/index.php',
+	apiSisUrl: 'http://13.234.2.36/SIS-backend/index.php',
+	apiFeeUrl: 'http://13.234.2.36/feesmanagementbackend/index.php',
+	apiSmartUrl: 'http://13.234.2.36/smartbackend/index.php',
+	apiExamUrl: 'http://13.234.2.36/examination-backend/index.php',
+	apiReservUrl: 'http://13.234.2.36/reservoir-backend/index.php',
 	apiHRUrl: 'http://localhost:3000',
 	apiInvUrl: 'http://localhost:3010',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
@@ -15,7 +15,7 @@ export const environment = {
 	testOngoingCode: 'T102',
 	testSubmitCode: 'T103',
 	testInternetErrorCode: 'T104',
-	testSuspiciousErrorCode: 'T105',                                                                    
+	testSuspiciousErrorCode: 'T105',
 	testExtendCode: 'T106',
 	testEndCode: 'T107'
 };
