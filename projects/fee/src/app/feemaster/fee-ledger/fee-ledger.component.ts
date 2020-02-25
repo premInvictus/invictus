@@ -116,6 +116,8 @@ export class FeeLedgerComponent implements OnInit {
 	};
 
 	spans = [];
+	showMore = false;
+	currentShowMoreId = '';
 	constructor(private sisService: SisService,
 		private feeService: FeeService,
 		public processtypeService: ProcesstypeFeeService,
@@ -1006,6 +1008,16 @@ export class FeeLedgerComponent implements OnInit {
 		} else {
 			return false;
 		}
+	}
+
+	getShowMore(i) {
+		console.log(i,this.FEE_LEDGER_ELEMENT);
+		console.log('this.dataSource[i]',this.FEE_LEDGER_ELEMENT[i]);
+		this.FEE_LEDGER_ELEMENT[i]['showMore'] = true;
+	}
+
+	getShowLess(i) {
+		this.FEE_LEDGER_ELEMENT[i]['showMore'] = false;
 	}
 
 }
