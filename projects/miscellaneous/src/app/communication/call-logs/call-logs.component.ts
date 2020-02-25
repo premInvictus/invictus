@@ -130,7 +130,7 @@ export class CallLogsComponent implements OnInit {
   openRemarkDialog(from_caller) {
     const diaogRef = this.dialog.open(CallLogRemarksModalComponent, {
       width: '50%',
-      height: '50%',
+      height: '30%',
       position: {
         top: '10%'
       },
