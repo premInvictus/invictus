@@ -178,6 +178,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPersonalDetailsdata() {
+		console.log('employeedetails',this.employeedetails);
 		if (this.employeedetails && this.employeedetails.emp_personal_detail) {
 			this.personalDetails.patchValue({
 				p_address: this.employeedetails.emp_personal_detail && this.employeedetails.emp_personal_detail.address_detail ? this.employeedetails.emp_personal_detail.address_detail.address : '',
@@ -495,6 +496,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	}
 
 	updateForm(moveStatus) {
+		console.log('update',this.employeedetails);
 		if (this.personalDetails.valid) {
 			this.disabledApiButton = true;
 			if (this.addressFlag) {

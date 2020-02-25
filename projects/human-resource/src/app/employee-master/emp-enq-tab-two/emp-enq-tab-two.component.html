@@ -1,184 +1,121 @@
-<div class="container-box__white padding-overall">
-  <div class="functional-button-five">
-    <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && editableStatus === '1')" mat-raised-button
-      (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
-      <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
-    </button>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <form [formGroup]="personalContacts">
-        <div class="padding-15">
-          <div class="row remove-top-margin">
+<div class="container-box__white">
+  <ng-container>
+    <div class="functional-button-five">
+      <button mat-fab *ngIf="(viewOnly && isExistUserAccessMenu('request') && studentdetails?.editable_status == '1')"
+        (click)="editRequest()" (keydown.enter)="$event.preventDefault()">
+        <mat-icon class="btn-top-icon">create</mat-icon><span class="right-btn-text">Edit Request</span>
+      </button>
+    </div>
 
-            <div class="col-4 col-pad-5">
-              <fieldset class=" fieldset_invoice">
-                <legend class="invoice_legend"> <b>Applied Job Details</b></legend>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Applied Position </mat-label>
-                  <mat-select formControlName="enq_applied_for" placeholder="Applied Position" required
-                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
-                      {{item.cat_name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Department</mat-label>
-                  <mat-select formControlName="enq_department" placeholder="Department" required
-                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Subject</mat-label>
-                  <mat-select formControlName="enq_subject" placeholder="Subject" required
-                    [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
-                    <mat-option value="{{item?.config_id}}" *ngFor="let item of departmentArray">{{item?.name}}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Expected Salary</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Expected Salary" [readonly]="viewOnly"
-                    formControlName="enq_expected_salary" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Current Salary</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Current Salary" [readonly]="viewOnly"
-                    formControlName="enq_present_salary" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </fieldset>
+    <div class="container-box__white ">
+      <div>
+        <div class="row remove-top-margin">
+          <div class="col-6 remove-col-padding vertical-line-1">
+            <div class="row remove-top-margin">
+              <div class="col-12 remove-col-padding-left">
+                <div class="document-main-card border-bottom" *ngFor="let item of documentsArray;let i =index">
+                  <div class="row margin-top-10 margin-bottom-20">
+                    <div class="col-12">
+                      <span class="document-title font-size-16"><b>{{item.docreq_name}}</b></span>
+                    </div>
+                  </div>
+                  <div class="row height-100">
+                    <div class="col-2 text-center" *ngIf="!viewOnly">
+                      <input type="file" class="form-control form-control-sm mv_top" multiple="true"
+                        (change)="fileChangeEvent($event,item.docreq_id)" [id]="item.docreq_id"
+                        style="display: none !important" [disabled]="viewOnly">
+
+                      <a class=" text-center cursor-pointer">
+                        <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
+                        &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" [for]="item.docreq_id">Choose
+                          File</label>
+                      </a>
+                    </div>
+                    <ng-container *ngFor="let img of imageArray;let i = index">
+                      <div class="col-1 tab-custom-col-20 col-doc-img-3 custom-col-15"
+                        *ngIf="img.docreq_id === item.docreq_id">
+                        <div class="remove-col-padding">
+                          <div>
+                            <div>
+                              <div>
+                                <div *ngIf="img.docreq_id === item.docreq_id" style="float:right;">
+                                  <button mat-button class="upload-document-delete-btn" *ngIf="!viewOnly"
+                                    (click)="deleteFile(img.imgName,img.docreq_id)">
+                                    <mat-icon class="btn-upload-icon">delete</mat-icon>
+                                  </button>
+                                </div>
+                                <div *ngIf="img.docreq_id ===  item.docreq_id">
+                                  <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                    [src]="img.imgName" (click)="previewImage(imageArray, i)">
+                                  <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                    src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                    (click)="previewImage(imageArray, i)"><br>
+                                </div>
+                                <br>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-4 col-pad-5">
-              <fieldset class=" fieldset_invoice">
-                <legend class="invoice_legend"> <b>Work Experience</b></legend>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Organisation</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Organisation" [readonly]="viewOnly"
-                    formControlName="organisation" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Designation</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Designation" [readonly]="viewOnly"
-                    formControlName="designation" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Salary Drawn</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Salary Drawn" [readonly]="viewOnly"
-                    formControlName="salary_drawn" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>From Date</mat-label>
-                  <input class="text-capitalize" matInput placeholder="From Date" [readonly]="viewOnly"
-                    formControlName="from_date" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>To Date</mat-label>
-                  <input class="text-capitalize" matInput placeholder="To Date" [readonly]="viewOnly"
-                    formControlName="to_date" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </fieldset>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <span><b>Instruction for Uploading Instruction</b></span>
+                  <br>
+                  <br>
+                  <ol>
+                    <li>You can upload multiple file</li>
+                    <li>Try selecting more than one file when browsing for file in particular section.
+                    </li>
+                    <li>Please compress your file to 154kb before uploading.</li>
+                    <li>Uploading file format can be of following instruction jpeg, jpg, pdf, doc.
+                    </li>
+                  </ol>
+                </div>
+              </div>
             </div>
-            <div class="col-4 col-pad-5">
-              <fieldset class=" fieldset_invoice">
-                <legend class="invoice_legend"> <b>Academics Details</b></legend>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Qualification</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Qualification" [readonly]="viewOnly"
-                    formControlName="qualification" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>University</mat-label>
-                  <input class="text-capitalize" matInput placeholder="University" [readonly]="viewOnly"
-                    formControlName="university" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Year</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Year" [readonly]="viewOnly"
-                    formControlName="year" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Division</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Division" [readonly]="viewOnly"
-                    formControlName="division" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="form-field" appearance="outline">
-                  <mat-label>Percentage</mat-label>
-                  <input class="text-capitalize" matInput placeholder="Percentage" [readonly]="viewOnly"
-                    formControlName="percentage" [errorStateMatcher]="confirmValidParentMatcher" />
-                  <mat-error>
-                    This field is required
-                  </mat-error>
-                </mat-form-field>
-              </fieldset>
+            <div class="row">
+              <div class="col-12">
+                <div>
+                  <span><b>List of Document Required for Admission</b></span>
+                  <br>
+                  <br>
+                  <ol class="remove-col-padding" *ngFor="let item of documentsArray;let i =index">
+                    <mat-checkbox [disabled]="viewOnly" class="inline-form-doc-checkbox"
+                      [checked]="item?.verified_status" [value]="item.docreq_id" (change)="insertVerifyId($event)">
+                    </mat-checkbox>{{item.docreq_name}}
+                  </ol>
+                  <br>
+                  <div>
+                  </div>
+                </div>
+              </div>
             </div>
-
-
-
           </div>
         </div>
-      </form>
+      </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="col-12 text-center">
-      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"
-        [disabled]="disabledApiButton">Save &
-        Continue</button>
-      <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(false)"
-        [disabled]="disabledApiButton">Submit</button>
-      <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-        (click)="updateForm(true)" [disabled]="disabledApiButton">Update & Continue</button>
-      <!-- <button mat-raised-button class="btn-neutral" *ngIf="editRequestFlag"
-            (click)="checkFormChangedValue();openEditDialog({data: [finalArray] ,reqParam: params})">Edit &
-            Continue</button> -->
-      <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+    <div class="row">
+      <div class="col-12 text-center ">
+        <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"
+          [disabled]="disabledApiButton">Save</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm()"
+          [disabled]="disabledApiButton">Submit</button>
+        <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
+          (click)="updateForm()" [disabled]="disabledApiButton">Update </button>
+        <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
+          (click)="checkFormChangedValue()">Edit & Continue</button> -->
+        <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>
+      </div>
     </div>
-  </div>
 
-  <!-- <app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal> -->
+  </ng-container>
+</div>
+<app-edit-request-modal #editReference (confirm)="editConfirm()"></app-edit-request-modal>
