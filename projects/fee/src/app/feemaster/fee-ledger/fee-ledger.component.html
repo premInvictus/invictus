@@ -263,10 +263,13 @@
                         style="float:right; padding-right: 10px;"><img style="cursor: pointer"
                           src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
                     </th>
-                    <td width="41%" mat-cell *matCellDef="let item"
+                    <td width="41%" mat-cell *matCellDef="let item; let i= index"
                       style="text-align: left !important;padding-left: 0.5%;" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}">
-                      {{item.remarks | capitalize}} </td>
+                      <span *ngIf="item?.remarks?.length > 60 && !item.showMore">{{item.remarks | capitalize | slice:0:60 }} <a herf="javascript:void(0)" (click)="getShowMore(i)" title="View More" class="view-less"> ... </a></span>
+                      <span *ngIf="item?.remarks?.length > 60 && item.showMore">{{item.remarks | capitalize }} <a href="javascript:void(0)" (click)="getShowLess(i)" class="view-less"> View Less </a></span>
+                      <span *ngIf="item?.remarks?.length <= 60">{{item.remarks | capitalize}}</span>
+                       </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
