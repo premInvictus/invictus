@@ -10,7 +10,7 @@
             </th>
             <ng-container *ngFor="let section of printData.sectionArr">
               <th
-                [attr.colspan]="printData.section_colspan[sub_category]"
+                [attr.colspan]="printData.section_colspan[sub_category] + 1"
                 class="custom-th text-center"
               >
                 {{ section.sec_name }}
@@ -21,6 +21,9 @@
             <th [attr.colspan]="2" class="custom-th text-left">Subject Name</th>
             <ng-container *ngIf="printData.examArr[sub_category].length > 0">
               <ng-container *ngFor="let section of printData.sectionArr">
+                <th class="custom-th text-center" >
+                    Teacher Name
+                </th>
                 <ng-container
                   *ngFor="let pexam of printData.examArr[sub_category]"
                 >
@@ -38,6 +41,8 @@
             <th [attr.colspan]="2" class="custom-th text-left"></th>
             <ng-container *ngIf="printData.examArr[sub_category].length > 0">
               <ng-container *ngFor="let section of printData.sectionArr">
+                <th class="custom-th text-center" >
+                </th>
                 <ng-container
                   *ngFor="let pexam of printData.examArr[sub_category]"
                 >
@@ -63,6 +68,7 @@
                         {{tempSubject.sub_name}}</td>
                         <ng-container *ngIf="printData.examArr[sub_category].length > 0">
                           <ng-container *ngFor="let section of printData.sectionArr">
+                            <td class="custom-td text-center text-nowrap">{{getTeacherName(this.param.eme_class_id,tempSubject.sub_id,section.sec_id)}}</td>
                             <ng-container
                               *ngFor="let pexam of printData.examArr[sub_category]"
                             >
@@ -70,7 +76,8 @@
                                 *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
                               >
                                 <td class="custom-td text-center text-nowrap">
-                                  <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                  <!-- <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i> -->
+                                  <div [innerHTML]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></div>
                                 </td>
                               </ng-container>
                             </ng-container>
@@ -88,6 +95,7 @@
                               {{tempSubject.childSub[0].sub_name}}</td>
                           <ng-container *ngIf="printData.examArr[sub_category].length > 0">
                             <ng-container *ngFor="let section of printData.sectionArr">
+                              <td class="custom-td text-center text-nowrap">{{getTeacherName(this.param.eme_class_id,tempSubject.sub_id,section.sec_id)}}</td>
                               <ng-container
                                 *ngFor="let pexam of printData.examArr[sub_category]"
                               >
@@ -95,7 +103,8 @@
                                   *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
                                 >
                                   <td class="custom-td text-center text-nowrap">
-                                    <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.childSub[0].sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                    <!-- <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.childSub[0].sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i> -->
+                                    <div [innerHTML]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.childSub[0].sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></div>
                                   </td>
                                 </ng-container>
                               </ng-container>
@@ -110,6 +119,7 @@
                               </td>
                               <ng-container *ngIf="printData.examArr[sub_category].length > 0">
                                 <ng-container *ngFor="let section of printData.sectionArr">
+                                  <td class="custom-td text-center text-nowrap">{{getTeacherName(this.param.eme_class_id,tempsubsubject.sub_id,section.sec_id)}}</td>
                                   <ng-container
                                     *ngFor="let pexam of printData.examArr[sub_category]"
                                   >
@@ -117,7 +127,8 @@
                                       *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
                                     >
                                       <td class="custom-td text-center text-nowrap">
-                                        <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempsubsubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                        <!-- <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempsubsubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i> -->
+                                        <div [innerHTML]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempsubsubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></div>
                                       </td>
                                     </ng-container>
                                   </ng-container>

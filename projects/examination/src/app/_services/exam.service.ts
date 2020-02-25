@@ -387,6 +387,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getSubmissionClasswise', value);
 	}
+	getSubmissionTeacherwise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getSubmissionTeacherwise', value);
+	}
 
 }
 
