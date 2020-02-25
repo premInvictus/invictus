@@ -44,7 +44,7 @@
                 <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
                     <mat-label>Term</mat-label>
                     <mat-select placeholder="Term" formControlName="eme_term_id"
-                        required (selectionChange)="resetTableDiv('term');">
+                        required (selectionChange)="resetTableDiv('term');getExamDetails()">
                         <mat-option value="">Please select</mat-option>
                         <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
                     </mat-select>
@@ -56,6 +56,23 @@
                         <!-- <mat-option value="">Please select</mat-option> -->
                         <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                         </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                    <mat-label>Exam</mat-label>
+                    <mat-select placeholder="Exam" formControlName="eme_exam_id"
+                      (selectionChange)="resetTableDiv('exam');getSubExam()">
+                      <mat-option value="">Please select</mat-option>
+                      <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
+                      </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field *ngIf="currentTabIndex == 1" appearance="outline" class="margin-left-15 form-field-150">
+                    <mat-label>Sub-Exam</mat-label>
+                    <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple
+                    (selectionChange)="resetTableDiv('sexam')">
+                      <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">
+                        {{item.sexam_name | titlecase}}</mat-option>
                     </mat-select>
                 </mat-form-field>
                 <button class="btn-success margin-top-15" style="margin-left: 15px;" mat-raised-button

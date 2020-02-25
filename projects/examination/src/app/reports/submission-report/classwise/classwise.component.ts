@@ -83,14 +83,22 @@ export class ClasswiseComponent implements OnInit, OnChanges {
     });
     return name;
   }
-  getTeacherName(class_id,sub_id,sec_id){
+  getTeacherName(class_id,sub_id,sec_id,sub_category){
     let name = '';
     if(this.printData.teacherArr.length > 0) {
-      this.printData.teacherArr.forEach(element => {
-        if(element.uc_class_id === class_id && element.uc_sec_id === sec_id && element.uc_sub_id === sub_id) {
-          name = element.au_full_name;
-        }
-      });
+      if(sub_category == '1' || sub_category == '3') {
+        this.printData.teacherArr.forEach(element => {
+          if(element.uc_class_id === class_id && element.uc_sec_id === sec_id && element.uc_sub_id === sub_id) {
+            name = element.au_full_name;
+          }
+        });
+      } else {
+        this.printData.teacherArr.forEach(element => {
+          if(element.uc_class_id === class_id && element.uc_sec_id === sec_id && element.uc_class_teacher === '1') {
+            name = element.au_full_name;
+          }
+        });
+      }
     }
     return name;
   }
