@@ -283,7 +283,7 @@ export class FeeLedgerComponent implements OnInit {
 						console.log("element['flgr_balance']",element['flgr_balance']);
 					}
 
-					if(dupInvoiceArr.indexOf(element.invoiceno) < 0 ){
+					if((dupInvoiceArr.indexOf(element.invoiceno) < 0) || item.flgr_inv_id === "0" ){
 						dupInvoiceArr.push(element.invoiceno);												
 						this.footerRecord.feeduetotal += Number(element.amount);
 						this.footerRecord.concessiontotal += Number(element.concession);

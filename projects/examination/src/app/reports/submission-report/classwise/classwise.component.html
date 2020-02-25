@@ -1,3 +1,142 @@
-<p>
-  classwise works!
-</p>
+<ng-container *ngIf="tableDivFlag">
+  <ng-container *ngFor="let sub_category of printData.exam_category">
+    <ng-container>
+      <!-- subjectwise bifurcation -->
+      <table class="table-100 custom-table" style="margin-bottom: 15px;overflow-x: auto;display: block;">
+        <thead>
+          <tr class="custom-tr">
+            <th [attr.colspan]="2" class="custom-th text-left" width="200px">
+              {{ examActivityCategoryName(sub_category) }}
+            </th>
+            <ng-container *ngFor="let section of printData.sectionArr">
+              <th
+                [attr.colspan]="printData.section_colspan[sub_category]"
+                class="custom-th text-center"
+              >
+                {{ section.sec_name }}
+              </th>
+            </ng-container>
+          </tr>
+          <tr class="custom-tr">
+            <th [attr.colspan]="2" class="custom-th text-left">Subject Name</th>
+            <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+              <ng-container *ngFor="let section of printData.sectionArr">
+                <ng-container
+                  *ngFor="let pexam of printData.examArr[sub_category]"
+                >
+                  <th
+                    [attr.colspan]="pexam.exam_sub_exam_max_marks.length"
+                    class="custom-th text-center"
+                  >
+                    {{ pexam.exam_name }}
+                  </th>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tr>
+          <tr class="custom-tr">
+            <th [attr.colspan]="2" class="custom-th text-left"></th>
+            <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+              <ng-container *ngFor="let section of printData.sectionArr">
+                <ng-container
+                  *ngFor="let pexam of printData.examArr[sub_category]"
+                >
+                  <ng-container
+                    *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                  >
+                    <th class="custom-th text-center">
+                      {{ sexam.sexam_name }}
+                    </th>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let tempSubject of printData.type_subjectArr[sub_category]">
+              <ng-container>
+                  <ng-template [ngIf]="tempSubject.childSub.length == 0"
+                      [ngIfElse]="childdiv">
+                      <tr class="custom-tr">
+                        <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
+                        {{tempSubject.sub_name}}</td>
+                        <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+                          <ng-container *ngFor="let section of printData.sectionArr">
+                            <ng-container
+                              *ngFor="let pexam of printData.examArr[sub_category]"
+                            >
+                              <ng-container
+                                *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                              >
+                                <td class="custom-td text-center text-nowrap">
+                                  <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                </td>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                        </ng-container>
+                      </tr>
+                  </ng-template>
+                  <ng-template #childdiv>
+                      <tr class="custom-tr">
+                          <td [attr.rowspan]="tempSubject.childSub.length"
+                          class="custom-td text-left padding-left-8px">
+                          {{tempSubject.sub_name}}
+                          </td>
+                          <td class="custom-td text-left padding-left-8px">
+                              {{tempSubject.childSub[0].sub_name}}</td>
+                          <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+                            <ng-container *ngFor="let section of printData.sectionArr">
+                              <ng-container
+                                *ngFor="let pexam of printData.examArr[sub_category]"
+                              >
+                                <ng-container
+                                  *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                                >
+                                  <td class="custom-td text-center text-nowrap">
+                                    <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempSubject.childSub[0].sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                  </td>
+                                </ng-container>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                      </tr>
+                      <ng-container
+                          *ngFor="let tempsubsubject of tempSubject.childSub; let i=index">
+                          <tr *ngIf="i != 0">
+                              <td class="custom-td text-left padding-left-8px">
+                                  {{tempsubsubject.sub_name}}
+                              </td>
+                              <ng-container *ngIf="printData.examArr[sub_category].length > 0">
+                                <ng-container *ngFor="let section of printData.sectionArr">
+                                  <ng-container
+                                    *ngFor="let pexam of printData.examArr[sub_category]"
+                                  >
+                                    <ng-container
+                                      *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
+                                    >
+                                      <td class="custom-td text-center text-nowrap">
+                                        <i [ngClass]="getReviewStatus(this.param.eme_class_id, this.param.eme_term_id,tempsubsubject.sub_id,section.sec_id,pexam.exam_id,sexam.se_id)"></i>
+                                      </td>
+                                    </ng-container>
+                                  </ng-container>
+                                </ng-container>
+                              </ng-container>
+                          </tr>
+                      </ng-container>
+                  </ng-template>
+              </ng-container>
+          </ng-container>
+      </tbody>
+      </table>
+    </ng-container>
+  </ng-container>
+</ng-container>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+      [noDataText]="" [subText]="'Please select all required field'"></app-no-data>
+  </div>
+</div>
