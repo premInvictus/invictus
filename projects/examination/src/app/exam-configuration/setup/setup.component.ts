@@ -1127,7 +1127,7 @@ export class SetupComponent implements OnInit {
 	}
 	deleteMarksExtendedData(index) {
 		this.currentIndex = index - 1;
-		this.finalMarksExpiration.splice(this.currentIndex , 1);
+		this.finalMarksExpiration.splice(this.currentIndex, 1);
 		this.getMarksExtendedDate(this);
 	}
 
@@ -1349,11 +1349,16 @@ export class SetupComponent implements OnInit {
 	}
 	getMarksEntryDateOptions() {
 		let param: any = {};
+		this.finalMarksExpiration = [];
 		param.gs_name = ['marks_extend_time'];
 		this.examService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const settings = result.data;
-				this.finalMarksExpiration = JSON.parse(settings[0]['gs_value'])
+				let marksExp: any[] = [];
+				marksExp = JSON.parse(settings[0]['gs_value']);
+				for (const item of marksExp) {
+					this.finalMarksExpiration.push(item);
+				}
 				console.log('settings=--', settings, this.finalMarksExpiration);
 				this.getMarksExtendedDate(this);
 			}
