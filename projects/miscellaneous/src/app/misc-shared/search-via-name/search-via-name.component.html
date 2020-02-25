@@ -13,7 +13,9 @@
 
       <div class="row">
         <div class="col-lg-12">
-          <span class="font-size-16 font-black font-regular">Please Enter Student Details</span><br>
+          <span class="font-size-16 font-black font-regular">Search Via Student, Parent Name, Admission No.
+            , Contact No.
+            </span><br>
           <mat-form-field appearance="outline">
             <input id="search" matInput placeholder="Search" (keydown.enter)="searchStudentByName($event.target.value)"
               (blur)="searchStudentByName($event.target.value)">
@@ -43,7 +45,7 @@
                           <td>{{i+1}}</td>
                           <td>{{item.au_admission_no}}</td>
                           <td style="text-align: left">
-                            <span class="icon-spacer">{{item.au_full_name}}
+                            <span class="icon-spacer">{{item.au_full_name | titlecase}}
                             </span>
                           </td>
                           <td>{{item.au_sec_id !== '0' ? (item.class_name + '-' + item.sec_name) : item.class_name}}
