@@ -232,6 +232,11 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		this.accountsForm.patchValue({
 			accd_remark_id: '',
 		});
+		if (this.accountsForm.value.accd_fcg_id === this.feeDet.accd_fcg_id) {
+			this.accountsForm.patchValue({
+				accd_remark_id: this.feeDet.accd_remark_id,
+			});
+		}
 		const cindex = this.conGroupArray.findIndex(e => e.fcg_id === event.value);
 		if (cindex !== -1) {
 			this.conDesc = this.conGroupArray[cindex].fcg_description;

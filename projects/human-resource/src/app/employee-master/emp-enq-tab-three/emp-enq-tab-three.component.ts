@@ -163,12 +163,12 @@ export class EmpEnqTabThreeComponent implements OnInit {
     this.finalDocumentArray = [];
     this.imageArray = [];
     if (this.employeedetails) {
-      this.remarksForm.patchValue({
-        management_remarks: this.employeedetails && this.employeedetails.enq_remarks[0] && this.employeedetails.enq_remarks[0].management_remark ?
-          this.employeedetails.enq_remarks[0].management_remark : '-',
-        interview_remarks: this.employeedetails && this.employeedetails.enq_remarks[0] && this.employeedetails.enq_remarks[0].interview_remark ?
-          this.employeedetails.enq_remarks[0].interview_remark : '-',
-      });
+      // this.remarksForm.patchValue({
+      //   management_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks[0].management_remark ?
+      //     this.employeedetails.enq_remarks[0].management_remark : '-',
+      //   interview_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks[0].interview_remark ?
+      //     this.employeedetails.enq_remarks[0].interview_remark : '-',
+      // });
       this.experiencesArray = this.employeedetails.enq_work_experience_detail ? this.employeedetails.enq_work_experience_detail : [];
       this.educationsArray = this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail : [];
     } else {

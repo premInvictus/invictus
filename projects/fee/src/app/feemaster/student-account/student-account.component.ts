@@ -415,8 +415,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_remark_id) {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approval') {
+			if (!this.accountsForm.value.accd_remark_id.trim()) {
 				validateFlag = false;
 			}
 		}
@@ -513,8 +513,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_remark_id) {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approval') {
+			if (!this.accountsForm.value.accd_remark_id.trim()) {
 				validateFlag = false;
 			}
 		}
