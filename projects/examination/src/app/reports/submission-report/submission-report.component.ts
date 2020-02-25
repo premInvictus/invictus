@@ -18,7 +18,7 @@ export class SubmissionReportComponent implements OnInit {
   sectionArray: any[] = [];
   termsArray: any[] = [];
   examArray: any[] = [];
-  subExamArray: any[] = [];
+  subexamArray: any[] = [];
   currentTabIndex = 0;
   teacherArray: any[] = [];
   teacherId = '';
@@ -45,6 +45,7 @@ export class SubmissionReportComponent implements OnInit {
       eme_sec_id: '',
       eme_sub_id: '',
       eme_exam_id: '',
+      eme_subexam_id: '',
       eme_submit: ''
     })
   }
@@ -66,6 +67,28 @@ export class SubmissionReportComponent implements OnInit {
       return this.subjectArray[ind].sub_type;
     } else {
       return '1';
+    }
+  }
+  getExamDetails() {
+    this.examArray = [];
+    this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id}).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.examArray = result.data;
+      } else {
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+  getSubExam() {
+    this.subexamArray = [];
+    if (this.paramform.value.eme_exam_id) {
+      this.examService.getExamDetails({exam_class: this.paramform.value.eme_class_id,term_id: this.paramform.value.eme_term_id, exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+        if (result && result.status === 'ok') {
+          if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
+            this.subexamArray = result.data[0].exam_sub_exam_max_marks;
+          }
+        }
+      });
     }
   }
   getExamName(e_id) {
@@ -155,14 +178,27 @@ export class SubmissionReportComponent implements OnInit {
       this.paramform.patchValue({
         eme_term_id: '',
         eme_sec_id: '',
+        eme_exam_id: '',
+        eme_subexam_id: '',
         eme_submit: ''
       });
     } else if(changesFrom == 'term') {
       this.paramform.patchValue({
         eme_sec_id: '',
+        eme_exam_id: '',
+        eme_subexam_id: '',
         eme_submit:''
       });
     } else if(changesFrom == 'section') {
+      this.paramform.patchValue({
+        eme_submit:''
+      });
+    } else if(changesFrom == 'exam') {
+      this.paramform.patchValue({
+        eme_subexam_id: '',
+        eme_submit:''
+      });
+    } else if(changesFrom == 'sexam') {
       this.paramform.patchValue({
         eme_submit:''
       });
