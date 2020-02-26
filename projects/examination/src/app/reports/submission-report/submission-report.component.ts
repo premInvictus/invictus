@@ -213,6 +213,10 @@ export class SubmissionReportComponent implements OnInit {
       eme_class_id: '',
       eme_term_id: '',
       eme_sec_id: '',
+      eme_sub_id: '',
+      eme_exam_id: '',
+      eme_subexam_id: '',
+      eme_submit: ''
 		});
   }
   getTeacherInfo(event) {
@@ -239,6 +243,10 @@ export class SubmissionReportComponent implements OnInit {
   }
   displayData(){
     if(this.paramform.valid) {
+      this.paramform.patchValue({
+        eme_submit:true
+      });
+    } else if(this.paramform.value.teacher_id) {
       this.paramform.patchValue({
         eme_submit:true
       });
