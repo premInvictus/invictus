@@ -2,29 +2,41 @@
   <ng-container *ngFor="let class of printData.csRelationClass">
     <ng-container *ngFor="let section of printData.sectionArr[class.class_id]">
       <ng-container *ngFor="let term of class.term">
-        <h3>{{class.class_name}}-{{section}}-{{term}}</h3>
-        <ng-container *ngFor="let sub_category of printData.examArr[class.class_id][term]">
+        <h3>{{ class.class_name }}-{{ section.sec_name }}-Term{{ term }}</h3>
+        <ng-container
+          *ngFor="let sub_category of class.exam_category"
+        >
           <!-- subjectwise bifurcation -->
+          <ng-container *ngIf="printData.type_subject_exist_arr[sub_category] && printData.type_subject_exist_arr[sub_category].length > 0">
           <table
             class="table-100 custom-table"
             style="margin-bottom: 15px;overflow-x: auto;display: block;"
           >
             <thead>
               <tr class="custom-tr">
-                <th
-                  [attr.colspan]="2"
-                  class="custom-th text-left"
-                  width="200px"
-                >
+                <th [attr.colspan]="2" class="custom-th text-left">
                   {{ examActivityCategoryName(sub_category) }}
                 </th>
-                <ng-container *ngFor="let section of printData.sectionArr">
-                  <th
-                    [attr.colspan]="printData.section_colspan[sub_category]"
-                    class="custom-th text-center"
+                <ng-container
+                  *ngIf="
+                    printData.examArr[class.class_id][term][sub_category]
+                      .length > 0
+                  "
+                >
+                  <ng-container
+                    *ngFor="
+                      let pexam of printData.examArr[class.class_id][term][
+                        sub_category
+                      ]
+                    "
                   >
-                    {{ section.sec_name }}
-                  </th>
+                    <th
+                      [attr.colspan]="pexam.exam_sub_exam_max_marks.length"
+                      class="custom-th text-center"
+                    >
+                      {{ pexam.exam_name }}
+                    </th>
+                  </ng-container>
                 </ng-container>
               </tr>
               <tr class="custom-tr">
@@ -32,38 +44,24 @@
                   Subject Name
                 </th>
                 <ng-container
-                  *ngIf="printData.examArr[sub_category].length > 0"
+                  *ngIf="
+                    printData.examArr[class.class_id][term][sub_category]
+                      .length > 0
+                  "
                 >
-                  <ng-container *ngFor="let section of printData.sectionArr">
+                  <ng-container
+                    *ngFor="
+                      let pexam of printData.examArr[class.class_id][term][
+                        sub_category
+                      ]
+                    "
+                  >
                     <ng-container
-                      *ngFor="let pexam of printData.examArr[sub_category]"
+                      *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
                     >
-                      <th
-                        [attr.colspan]="pexam.exam_sub_exam_max_marks.length"
-                        class="custom-th text-center"
-                      >
-                        {{ pexam.exam_name }}
+                      <th class="custom-th text-center">
+                        {{ sexam.sexam_name }}
                       </th>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-              </tr>
-              <tr class="custom-tr">
-                <th [attr.colspan]="2" class="custom-th text-left"></th>
-                <ng-container
-                  *ngIf="printData.examArr[sub_category].length > 0"
-                >
-                  <ng-container *ngFor="let section of printData.sectionArr">
-                    <ng-container
-                      *ngFor="let pexam of printData.examArr[sub_category]"
-                    >
-                      <ng-container
-                        *ngFor="let sexam of pexam.exam_sub_exam_max_marks"
-                      >
-                        <th class="custom-th text-center">
-                          {{ sexam.sexam_name }}
-                        </th>
-                      </ng-container>
                     </ng-container>
                   </ng-container>
                 </ng-container>
@@ -72,7 +70,7 @@
             <tbody>
               <ng-container
                 *ngFor="
-                  let tempSubject of printData.type_subjectArr[sub_category]
+                  let tempSubject of printData.type_subjectArr[class.class_id][section.sec_id][sub_category]
                 "
               >
                 <ng-container>
@@ -88,38 +86,30 @@
                         {{ tempSubject.sub_name }}
                       </td>
                       <ng-container
-                        *ngIf="printData.examArr[sub_category].length > 0"
+                        *ngIf="printData.examArr[class.class_id][term][sub_category].length > 0"
                       >
-                        <ng-container
-                          *ngFor="let section of printData.sectionArr"
-                        >
-                          <ng-container
-                            *ngFor="
-                              let pexam of printData.examArr[sub_category]
-                            "
-                          >
-                            <ng-container
-                              *ngFor="
-                                let sexam of pexam.exam_sub_exam_max_marks
-                              "
-                            >
-                              <td class="custom-td text-center text-nowrap">
-                                <i
-                                  [ngClass]="
-                                    getReviewStatus(
-                                      this.param.eme_class_id,
-                                      this.param.eme_term_id,
-                                      tempSubject.sub_id,
-                                      section.sec_id,
-                                      pexam.exam_id,
-                                      sexam.se_id
-                                    )
-                                  "
-                                ></i>
-                              </td>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
+                      <ng-container
+                      *ngFor="
+                        let pexam of printData.examArr[class.class_id][term][sub_category]
+                      "
+                    >
+                      <ng-container
+                        *ngFor="
+                          let sexam of pexam.exam_sub_exam_max_marks
+                        "
+                      >
+                        <td class="custom-td text-center text-nowrap">
+                          <div [innerHTML]="getReviewStatus(
+                            class.class_id,
+                            term,
+                            tempSubject.sub_id,
+                            section.sec_id,
+                            pexam.exam_id,
+                            sexam.se_id
+                          )"></div>
+                        </td>
+                      </ng-container>
+                    </ng-container>
                       </ng-container>
                     </tr>
                   </ng-template>
@@ -135,38 +125,30 @@
                         {{ tempSubject.childSub[0].sub_name }}
                       </td>
                       <ng-container
-                        *ngIf="printData.examArr[sub_category].length > 0"
+                        *ngIf="printData.examArr[class.class_id][term][sub_category].length > 0"
                       >
-                        <ng-container
-                          *ngFor="let section of printData.sectionArr"
-                        >
-                          <ng-container
-                            *ngFor="
-                              let pexam of printData.examArr[sub_category]
-                            "
-                          >
-                            <ng-container
-                              *ngFor="
-                                let sexam of pexam.exam_sub_exam_max_marks
-                              "
-                            >
-                              <td class="custom-td text-center text-nowrap">
-                                <i
-                                  [ngClass]="
-                                    getReviewStatus(
-                                      this.param.eme_class_id,
-                                      this.param.eme_term_id,
-                                      tempSubject.childSub[0].sub_id,
-                                      section.sec_id,
-                                      pexam.exam_id,
-                                      sexam.se_id
-                                    )
-                                  "
-                                ></i>
-                              </td>
-                            </ng-container>
-                          </ng-container>
-                        </ng-container>
+                      <ng-container
+                      *ngFor="
+                        let pexam of printData.examArr[class.class_id][term][sub_category]
+                      "
+                    >
+                      <ng-container
+                        *ngFor="
+                          let sexam of pexam.exam_sub_exam_max_marks
+                        "
+                      >
+                        <td class="custom-td text-center text-nowrap">
+                          <div [innerHTML]="getReviewStatus(
+                            class.class_id,
+                            term,
+                            tempSubject.childSub[0].sub_id,
+                            section.sec_id,
+                            pexam.exam_id,
+                            sexam.se_id
+                          )"></div>
+                        </td>
+                      </ng-container>
+                    </ng-container>
                       </ng-container>
                     </tr>
                     <ng-container
@@ -180,38 +162,30 @@
                           {{ tempsubsubject.sub_name }}
                         </td>
                         <ng-container
-                          *ngIf="printData.examArr[sub_category].length > 0"
+                          *ngIf="printData.examArr[class.class_id][term][sub_category].length > 0"
                         >
-                          <ng-container
-                            *ngFor="let section of printData.sectionArr"
-                          >
-                            <ng-container
-                              *ngFor="
-                                let pexam of printData.examArr[sub_category]
-                              "
-                            >
-                              <ng-container
-                                *ngFor="
-                                  let sexam of pexam.exam_sub_exam_max_marks
-                                "
-                              >
-                                <td class="custom-td text-center text-nowrap">
-                                  <i
-                                    [ngClass]="
-                                      getReviewStatus(
-                                        this.param.eme_class_id,
-                                        this.param.eme_term_id,
-                                        tempsubsubject.sub_id,
-                                        section.sec_id,
-                                        pexam.exam_id,
-                                        sexam.se_id
-                                      )
-                                    "
-                                  ></i>
-                                </td>
-                              </ng-container>
-                            </ng-container>
-                          </ng-container>
+                        <ng-container
+                        *ngFor="
+                          let pexam of printData.examArr[class.class_id][term][sub_category]
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
+                            let sexam of pexam.exam_sub_exam_max_marks
+                          "
+                        >
+                          <td class="custom-td text-center text-nowrap">
+                            <div [innerHTML]="getReviewStatus(
+                              class.class_id,
+                              term,
+                              tempsubsubject.sub_id,
+                              section.sec_id,
+                              pexam.exam_id,
+                              sexam.se_id
+                            )"></div>
+                          </td>
+                        </ng-container>
+                      </ng-container>
                         </ng-container>
                       </tr>
                     </ng-container>
@@ -220,6 +194,7 @@
               </ng-container>
             </tbody>
           </table>
+        </ng-container>
         </ng-container>
       </ng-container>
     </ng-container>
