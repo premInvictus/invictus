@@ -29,6 +29,7 @@ export class TeacherwiseComponent implements OnInit {
   }
 
   displayData() {
+    this.tableDivFlag = false;
     this.examService.getSubmissionTeacherwise(this.param).subscribe((result: any) => {
       if(result && result.status === 'ok') {
         console.log(result.data);
@@ -38,7 +39,7 @@ export class TeacherwiseComponent implements OnInit {
     })
   }
   getReviewStatus(eme_class_id, eme_term_id,eme_sub_id,eme_sec_id,eme_exam_id,eme_subexam_id) {
-    status = '';
+    status = '-';
     if(this.printData.examMarkArr.length > 0) {
       this.printData.examMarkArr.forEach(element => {
         if(element.eme_class_id === eme_class_id && element.eme_term_id === eme_term_id && element.eme_sub_id === eme_sub_id
@@ -46,12 +47,30 @@ export class TeacherwiseComponent implements OnInit {
             //status = element.eme_review_status;
             const tstatus = Number(element.eme_review_status);
             if(tstatus === 4) {
-              status = 'fas fa-thumbs-up text-published'
+              // status = 'fas fa-thumbs-up text-published'
+              //status = 'Published'
+              status = '<span class="text-published">Published</span>';
             } else if(tstatus > 0 && tstatus < 4) {
-              status = 'fas fa-check text-submitted';
+              //status = 'Submitted';
+              status = '<span class="text-submitted">Submitted</span>';
+            } else if(tstatus === 0) {
+              //status = 'Inprogress';
+              status = '<span class="text-inprogress">Inprogress</span>';
             }
           }
       });
+    }
+    if(status === '-') {
+      if(this.printData.subjectSubexamArr.length > 0) {
+        this.printData.subjectSubexamArr.forEach(element => {
+          if(element.ssm_class_id === eme_class_id && element.ssm_exam_id === eme_exam_id && element.ssm_se_id === eme_subexam_id && element.ssm_sub_id === eme_sub_id) {
+            if(Number(element.ssm_sub_mark) > 0) {
+              //status = 'Yet to start';
+              status = '<span class="text-yettostart">Yet to start</span>';
+            }
+          }
+        });
+      }
     }
     return status;
   }
