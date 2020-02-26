@@ -1,10 +1,10 @@
 export const environment = {
 	production: false,
-	apiAxiomUrl: 'http://13.234.2.36/axiom-backend/index.php',
-	apiSisUrl: 'http://13.234.2.36/SIS-backend/index.php',
+	apiAxiomUrl: 'http://localhost/axiom-backend/index.php',
+	apiSisUrl: 'http://localhost/sis-backend/index.php',
 	apiFeeUrl: 'http://13.234.2.36/feesmanagementbackend/index.php',
 	apiSmartUrl: 'http://13.234.2.36/smartbackend/index.php',
-	apiExamUrl: 'http://13.234.2.36/examination-backend/index.php',
+	apiExamUrl: 'http://localhost/examination-backend/index.php',
 	apiReservUrl: 'http://13.234.2.36/reservoir-backend/index.php',
 	apiHRUrl: 'http://localhost:3000',
 	apiInvUrl: 'http://localhost:3010',
@@ -17,5 +17,15 @@ export const environment = {
 	testInternetErrorCode: 'T104',
 	testSuspiciousErrorCode: 'T105',
 	testExtendCode: 'T106',
-	testEndCode: 'T107'
+	testEndCode: 'T107',
+	firebase: {
+		apiKey: 'AIzaSyAg88lKw0PB73i3wI_fnyNbk_sdWU2VTQU',
+		authDomain: 'test-notification-17c3a.firebaseapp.com',
+		databaseURL: 'https://test-notification-17c3a.firebaseio.com',
+		projectId: 'test-notification-17c3a',
+		storageBucket: 'test-notification-17c3a.appspot.com',
+		messagingSenderId: '7217963122',
+		appId: '1:7217963122:web:a8b0e7b9743e355a92e2eb',
+		measurementId: 'G-6DBS3LE9LF'
+	}
 };

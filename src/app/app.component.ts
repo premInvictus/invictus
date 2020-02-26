@@ -15,6 +15,7 @@ import { TimeoutModalComponent } from './timeout-modal/timeout-modal.component';
 import { CookieService } from 'ngx-cookie';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 import { UserIdleService } from 'angular-user-idle';
+import { MessagingService } from './_services';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -37,7 +38,9 @@ export class AppComponent implements OnInit {
 	proUrl: any;
 	schoolInfo: any;
 	x: NodeJS.Timer;
+	message: any;
 	constructor(private router: Router, private loaderService: CommonAPIService,
+		private messagingService: MessagingService,
 		private _cookieService: CookieService,
 		private route: ActivatedRoute,
 		private diaog: MatDialog,
@@ -70,6 +73,9 @@ export class AppComponent implements OnInit {
 	}
 
 	ngOnInit() {
+	this.messagingService.receiveMessage();
+	this.message = this.messagingService.currentMessage;
+	console.log(this.message);
 		document.addEventListener("mousemove", (e) => {
 			this.idle.resetTimer();
 		});
