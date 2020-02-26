@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnChanges, Input, ComponentRef } from '@angular/core';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { DatePipe } from '@angular/common';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -44,11 +44,12 @@ export class EmpEnqTabOneComponent implements OnInit {
 	categoryOneArray: any[] = [];
 	disabledApiButton = false;
 	currentUser: any;
-
+	subjectArray: any[] = [];
+	departmentArray: any[] = [];
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
-		private sisService: SisService, private fbuild: FormBuilder) {
+		private sisService: SisService, private fbuild: FormBuilder, private smartService: SmartService) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
 	}
@@ -70,7 +71,9 @@ export class EmpEnqTabOneComponent implements OnInit {
 				gender: '',
 				dob: '',
 				enq_married_status: '',
-				enq_father_name: ''
+				enq_father_name: '',
+				enq_expected_salary: '',
+				enq_present_salary: '',
 			});
 			this.addressFlag = false;
 			this.requiredOnly = false;
@@ -108,6 +111,9 @@ export class EmpEnqTabOneComponent implements OnInit {
 		this.buildForm();
 		this.getState();
 		this.getPersonalDetailsdata();
+		this.getAllSubjects();
+		this.getCategoryOne();
+		this.getDepartment();
 	}
 	buildForm() {
 		this.personalDetails = this.fbuild.group({
@@ -123,7 +129,9 @@ export class EmpEnqTabOneComponent implements OnInit {
 			dob: '',
 			enq_status: 'enquiry',
 			enq_married_status: '',
-			enq_father_name: ''
+			enq_father_name: '',
+			enq_expected_salary: '',
+			enq_present_salary: '',
 		});
 	}
 	getPersonalDetailsdata() {
@@ -144,6 +152,8 @@ export class EmpEnqTabOneComponent implements OnInit {
 				dob: this.employeedetails.enq_personal_detail ? this.employeedetails.enq_personal_detail.enq_dob : '',
 				enq_married_status: this.employeedetails.enq_personal_detail ? this.employeedetails.enq_personal_detail.enq_married_status : '',
 				enq_father_name: this.employeedetails.enq_personal_detail ? this.employeedetails.enq_personal_detail.enq_father_name : '',
+				enq_expected_salary: this.employeedetails.enq_expected_salary ? this.employeedetails.enq_expected_salary : '',
+				enq_present_salary: this.employeedetails.enq_present_salary ? this.employeedetails.enq_present_salary : '',
 			});
 		}
 	}
@@ -176,17 +186,17 @@ export class EmpEnqTabOneComponent implements OnInit {
 			this.personaldetails['enq_applied_job_detail'] = [
 				{
 					enq_applied_for: {
-						post_id: "",
-						post_name: ""
+						post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+						post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
 					},
 					enq_department: {
-						dept_id: "",
-						dept_name: ""
+						dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
+						dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
 					},
 					enq_subject: [
 						{
-							sub_id: "",
-							sub_name: ""
+							sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
+							sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
 						}
 					]
 				}];
@@ -276,8 +286,8 @@ export class EmpEnqTabOneComponent implements OnInit {
 			if (this.employeedetails) {
 				this.employeedetails.enq_id = this.employeeCommonDetails.employeeDetailsForm.value.enq_id;
 				this.employeedetails.enq_status = "enquiry";
-				this.employeedetails.enq_present_salary = "";
-				this.employeedetails.enq_expected_salary = "";
+				this.employeedetails.enq_present_salary = this.personalDetails.value.enq_present_salary;
+				this.employeedetails.enq_expected_salary = this.personalDetails.value.enq_expected_salary;
 				this.employeedetails.enq_cover_letter_detail = "";
 				this.employeedetails.enq_prefix = "";
 				this.employeedetails.enq_created_by = this.currentUser.login_id;
@@ -329,19 +339,39 @@ export class EmpEnqTabOneComponent implements OnInit {
 				enq_full_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_name,
 				enq_dob: this.personalDetails.value.dob,
 				enq_age: "",
-				enq_father_name: "",
-				enq_married_status: "",
+				enq_father_name: this.personalDetails.value.enq_father_name,
+				enq_married_status: this.personalDetails.value.enq_married_status,
 				enq_gender: this.personalDetails.value.gender,
 				enq_profile_pic: this.employeeCommonDetails.employeeDetailsForm.value.enq_profile_pic
 			};
+			this.personaldetails['enq_applied_job_detail'] = [
+				{
+					enq_applied_for: {
+						post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+						post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+					},
+					enq_department: {
+						dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
+						dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
+					},
+					enq_subject: [
+						{
+							sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
+							sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
+						}
+					]
+				}];
 
 			this.employeedetails['enq_personal_detail'] = this.personaldetails['enq_personal_detail'];
 			this.employeedetails['enq_communication_detail'] = this.personaldetails['enq_communication_detail'];
 			this.employeedetails['enq_address_detail'] = this.personaldetails['enq_address_detail'];
+			this.employeedetails['enq_applied_job_detail'] = this.personaldetails['enq_applied_job_detail'];
 			if (this.employeedetails) {
 				this.employeedetails.enq_id = this.employeeCommonDetails.employeeDetailsForm.value.enq_id;
 				this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
 				this.employeedetails.enq_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.enq_profile_pic;
+				this.employeedetails.enq_present_salary = this.personalDetails.value.enq_present_salary;
+				this.employeedetails.enq_expected_salary = this.personalDetails.value.enq_expected_salary;
 			}
 			console.log(this.employeedetails, 'hdgj ds');
 			if (!moveStatus) {
@@ -450,4 +480,52 @@ export class EmpEnqTabOneComponent implements OnInit {
 			});
 		}
 	}
+	getCategoryOneName(cat_id) {
+		console.log(this.categoryOneArray);
+		console.log(cat_id);
+		const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+		if (findex !== -1) {
+			return this.categoryOneArray[findex].cat_name;
+		}
+	}
+	//  Get Class List function
+	getAllSubjects() {
+		this.smartService.getAllSubjects({})
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.subjectArray = result.data;
+					}
+				}
+			);
+	}
+	getSubjectName(sub_id) {
+		const findex = this.subjectArray.findIndex(e => Number(e.sub_id) === Number(sub_id));
+		if (findex !== -1) {
+			return this.subjectArray[findex].sub_name;
+		}
+	}
+	getDepartmentName(dept_id) {
+		const findex = this.departmentArray.findIndex(e => Number(e.config_id) === Number(dept_id));
+		if (findex !== -1) {
+			return this.departmentArray[findex].name;
+		}
+	}
+	getDepartment() {
+		this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+			if (result) {
+				this.departmentArray = result;
+			} else {
+				this.departmentArray = [];
+			}
+		});
+	}
+	getCategoryOne() {
+		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+		  if (res) {
+			this.categoryOneArray = [];
+			this.categoryOneArray = res;
+		  }
+		});
+	  }
 }

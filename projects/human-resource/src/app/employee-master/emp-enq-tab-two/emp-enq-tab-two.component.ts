@@ -1,8 +1,9 @@
 import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
+import { PreviewDocumentComponent } from '../employee-tab-six-container/preview-document/preview-document.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { saveAs } from 'file-saver';
+import { FormControl } from '@angular/forms';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 
 @Component({
@@ -11,37 +12,91 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
   styleUrls: ['./emp-enq-tab-two.component.scss']
 })
 export class EmpEnqTabTwoComponent implements OnInit {
-  confirmValidParentMatcher = new ConfirmValidParentMatcher();
-  @Input() employeeCommonDetails;
+  dialogRef2: MatDialogRef<PreviewDocumentComponent>;
   @Input() employeedetails;
+  @Input() employeeCommonDetails;
+  confirmValidParentMatcher = new ConfirmValidParentMatcher();
+  panelOpenState = true;
   addOnly = false;
-  viewOnly = true;
   editOnly = false;
-  educationDetails: any[] = [];
-  educationDetailsNew: any[] = [];
-  awardsDetails: any[] = [];
-  awardsDetailsNew: any[] = [];
-  documentDetails: any[] = [];
-  login_id: any;
+  viewOnly = true;
   saveFlag = false;
   editRequestFlag = false;
-  contactsArray: any = {};
-  personalContacts: FormGroup;
-  disabledApiButton = false;
+  taboneform: any = {};
+  login_id = '';
+  studentdetails: any = {};
+  parentDetails2: any = {};
+  addressDetails: any[] = [];
+  parentJson: any[] = [];
+  reqParamArray = [];
+  finalSibReqArray = [];
+  finalSibReqArray2 = [];
+  checkChangedFieldsArray: any = [];
+  finalArray: any = [];
+  settingsArray: any[] = [];
+  finalDocumentArray: any[] = [];
+  verifyArray: any[] = [];
+  currentFileChangeEvent: any;
+  multipleFileArray: any[] = [];
+  counter: any = 0;
+  currentImage: any;
+  currentUser: any;
+  documentArray: any[] = []; 
+  imageArray: any[] = [];
+  documentFormData: any[] = [];
+  finalJSon: any[] = [];
+  documentsArray: any[] = [
+    { docreq_id: 1, docreq_name: "Id & Address Proof", docreq_alias: "Id", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 2, docreq_name: "Education", docreq_alias: "Education", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
+  ];
+  parentId;
+  honrificArr = [
+    { hon_id: "1", hon_name: 'Mr.' },
+    { hon_id: "2", hon_name: 'Mrs.' },
+    { hon_id: "3", hon_name: 'Miss.' },
+    { hon_id: "4", hon_name: 'Ms.' },
+    { hon_id: "5", hon_name: 'Mx.' },
+    { hon_id: "6", hon_name: 'Sir.' },
+    { hon_id: "7", hon_name: 'Dr.' },
+    { hon_id: "8", hon_name: 'Lady.' }
 
-  editableStatus = '0';
-  cityId: any;
-  cityCountryArray: any[] = [];
-  arrayState: any[] = [];
-  @ViewChild('editReference') editReference;
-
+  ];
   departmentArray;
   designationArray;
   wingArray;
   categoryOneArray: any[] = [];
-  constructor(private sisService: SisService, private fbuild: FormBuilder,
-    public commonAPIService: CommonAPIService) { }
+  disabledApiButton = false;
+  @ViewChild('editReference') editReference;
+
+  constructor(public commonAPIService: CommonAPIService, private dialog: MatDialog,
+    private sisService: SisService) {
+
+  }
+
+  setActionControls(data) {
+    if (data.addMode) {
+      this.addOnly = true;
+      this.editOnly = false;
+      this.viewOnly = false;
+    }
+    if (data.editMode) {
+      this.editOnly = true;
+      this.viewOnly = false;
+      this.saveFlag = true;
+      this.addOnly = false;
+    }
+    if (data.viewMode) {
+      this.viewOnly = true;
+      this.editOnly = false;
+      this.saveFlag = false;
+      this.addOnly = false;
+    }
+  }
+
   ngOnInit() {
+    // this.getDocuments();
     this.commonAPIService.reRenderForm.subscribe((data: any) => {
       if (data) {
         if (data.addMode) {
@@ -53,75 +108,22 @@ export class EmpEnqTabTwoComponent implements OnInit {
         if (data.viewMode) {
           this.setActionControls({ viewMode: true });
         }
+
       }
     });
   }
-
-  setActionControls(data) {
-    if (data.addMode) {
-      this.addOnly = true;
-      this.editOnly = false;
-      this.viewOnly = false;
-      this.personalContacts.patchValue({
-        enq_applied_for: '',
-        enq_department: '',
-        enq_subject: '',
-        organisation: '',
-        designation: '',
-        from_date: '',
-        to_date: '',
-        salary_drawn: '',
-        enq_expected_salary: '',
-        enq_present_salary: '',
-        qualification: '',
-        university: '',
-        year: '',
-        division: '',
-        percentage: '',
-      });
-    }
-    if (data.editMode) {
-      this.editOnly = true;
-      this.addOnly = false;
-      this.viewOnly = false;
-      this.saveFlag = true;
-    }
-    if (data.viewMode) {
-      this.viewOnly = true;
-      this.addOnly = false;
-      this.editOnly = false;
-      this.saveFlag = false;
-    }
-  }
-  buildForm() {
-    this.personalContacts = this.fbuild.group({
-      enq_applied_for: '',
-      enq_department: '',
-      enq_subject: '',
-      organisation: '',
-      designation: '',
-      from_date: '',
-      to_date: '',
-      salary_drawn: '',
-      enq_expected_salary: '',
-      enq_present_salary: '',
-      qualification: '',
-      university: '',
-      year: '',
-      division: '',
-      percentage: '',
-    });
-  }
   ngOnChanges() {
-    this.buildForm();
     this.getCategoryOne();
-    this.getState();
     this.getDepartment();
     this.getDesignation();
     this.getWing();
-    if (this.employeedetails) {
-      this.getPersonaContactsdata();
-    }
+    this.documentsArray = [
+      { docreq_id: 1, docreq_name: "Id & Address Proof", docreq_alias: "Id", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+      { docreq_id: 2, docreq_name: "Education", docreq_alias: "Education", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+      { docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+      { docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
+    ];
+    this.getDocuments();
   }
 
   getDepartment() {
@@ -154,124 +156,297 @@ export class EmpEnqTabTwoComponent implements OnInit {
 
     });
   }
-  getPersonaContactsdata() {
-    console.log(this.employeedetails);
-    if (this.employeedetails) {
-      this.personalContacts.patchValue({
-        enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
-          this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_id : '',
-        enq_department: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_department ?
-          this.employeedetails.enq_applied_job_detail[0].enq_department.dept_id : '',
-        enq_subject: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
-          this.employeedetails.enq_applied_job_detail[0].enq_subject.subject_id : '',
-        enq_expected_salary: this.employeedetails.enq_expected_salary ? this.employeedetails.enq_expected_salary : '',
-        enq_present_salary: this.employeedetails.enq_present_salary ? this.employeedetails.enq_present_salary : '',
-        organisation: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].organisation ?
-          this.employeedetails.enq_work_experience_detail[0].organisation : '',
-        designation: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].designation ?
-          this.employeedetails.enq_work_experience_detail[0].designation : '',
-        from_date: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].from_date ?
-          this.employeedetails.enq_work_experience_detail[0].from_date : '',
-        to_date: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].to_date ?
-          this.employeedetails.enq_work_experience_detail[0].to_date : '',
-        salary_drawn: this.employeedetails.enq_work_experience_detail && this.employeedetails.enq_work_experience_detail[0].salary_drawn ?
-          this.employeedetails.enq_work_experience_detail[0].salary_drawn : '',
-        qualification: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].qualification : '',
-        university: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].university : '',
-        year: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].year : '',
-        division: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].division : '',
-        percentage: this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail[0].percentage : '',
-      });
-    }
+  isExistUserAccessMenu(actionT) {
+    // if (this.context && this.context.studentdetails) {
+    // 	return this.context.studentdetails.isExistUserAccessMenu(actionT);
+    // }
+  }
+  editConfirm() { }
+  previewImage(imgArray, index) {
+    this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+      data: {
+        imageArray: imgArray,
+        index: index
+      },
+      height: '100vh',
+      width: '100vh'
+    });
+  }
+  getDocuments() {
+    this.documentArray = [];
+    this.verifyArray = [];
+    this.finalDocumentArray = [];
+    this.imageArray = [];
+    this.documentArray = this.employeedetails.emp_document_detail && this.employeedetails.emp_document_detail.document_data ? this.employeedetails.emp_document_detail.document_data : [];
 
+    this.finalJSon = this.documentArray;
+
+    for (const item of this.documentArray) {
+      if (item && item.files_data) {
+        for (const iitem of item.files_data) {
+          this.imageArray.push({
+            docreq_id: item.document_id,
+            imgName: iitem.file_url
+          });
+        }
+
+      }
+      if (item.document_id === 1) {
+        this.documentsArray[0]['verified_status'] = true;
+      }
+      if (item.document_id === 2) {
+        this.documentsArray[1]['verified_status'] = true;
+      }
+      if (item.document_id === 3) {
+        this.documentsArray[2]['verified_status'] = true;
+      }
+      if (item.document_id === 4) {
+        this.documentsArray[3]['verified_status'] = true;
+      }
+    }
+    const tempArray: any[] = [];
+    for (const item of this.documentArray) {
+      const findex = tempArray.indexOf(item.docreq_id);
+      if (findex === -1) {
+        tempArray.push(item.docreq_id);
+      }
+    }
+    this.verifyArray = tempArray;
+  }
+  getFileName(doc_req_id) {
+    const findIndex = this.documentsArray.findIndex(f => f.docreq_id === doc_req_id);
+    if (findIndex !== -1) {
+      return this.documentsArray[findIndex].docreq_alias;
+    }
+  }
+  fileChangeEvent(fileInput, doc_req_id) {
+    this.multipleFileArray = [];
+    this.counter = 0;
+    this.currentFileChangeEvent = fileInput;
+    const files = fileInput.target.files;
+    for (let i = 0; i < files.length; i++) {
+      this.IterateFileLoop(files[i], doc_req_id);
+    }
+  }
+
+  IterateFileLoop(files, doc_req_id) {
+    const reader = new FileReader();
+    reader.onloadend = (e) => {
+      this.currentImage = reader.result;
+      const fileJson = {
+        fileName: files.name,
+        imagebase64: this.currentImage,
+        module: 'attachment'
+      };
+      this.multipleFileArray.push(fileJson);
+      this.counter++;
+      if (this.counter === this.currentFileChangeEvent.target.files.length) {
+        this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+          if (result) {
+            for (const item of result.data) {
+              const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
+              const findex2 = this.imageArray.findIndex(f => f.imgName === item.file_url && f.docreq_id === doc_req_id);
+              if (findex === -1) {
+                this.finalDocumentArray.push({
+                  docreq_id: doc_req_id,
+                  ed_name: item.file_name,
+                  ed_link: item.file_url,
+                });
+                this.finalJSon.push({
+                  document_id: doc_req_id,
+                  document_name: this.getFileName(doc_req_id),
+                  verified_staus: false,
+                  files_data: [
+                    {
+                      file_name: item.file_name,
+                      file_url: item.file_url
+                    }
+                  ]
+
+                });
+              } else {
+                this.finalJSon.splice(findex, 1);
+              }
+              if (findex2 === -1) {
+                this.imageArray.push({
+                  docreq_id: doc_req_id,
+                  imgName: item.file_url
+                });
+              } else {
+                this.imageArray.splice(findex2, 1);
+              }
+
+            }
+          }
+        });
+      }
+    };
+    reader.readAsDataURL(files);
+  }
+  // checkVerifiedStatus(value) {
+  // 	const index = this.verifyArray.indexOf(value);
+  // 	if (index !== -1) {
+  // 		return true;
+  // 	} else {
+  // 		return false;
+  // 	}
+  // }
+  checkThumbnail(url: any) {
+    if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
+      url.match(/gif/) || url.match(/jpeg/) ||
+      url.match(/JPG/) || url.match(/PNG/) || url.match(/BMP/) ||
+      url.match(/GIF/) || url.match(/JPEG/)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  fileUploadedStatus(doc_req_id) {
+    for (let i = 0; i < this.finalDocumentArray.length; i++) {
+      if (this.finalDocumentArray[i]['docreq_id'] === doc_req_id) {
+        return true;
+      }
+    }
+  }
+  deleteFile(doc_name, doc_req_id) {
+    const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
+    const findex2 = this.imageArray.findIndex(f => f.docreq_id === doc_req_id && f.imgName === doc_name);
+    if (findex !== -1) {
+      this.finalJSon.splice(findex, 1);
+    }
+    if (findex2 !== -1) {
+      this.imageArray.splice(findex2, 1);
+    }
   }
   saveForm() {
-    if (this.personalContacts.valid) {
-      this.disabledApiButton = true;
-
-
-    } else {
-      this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
+    this.disabledApiButton = true;
+    if (this.employeedetails) {
+      this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+      this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+      this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+      this.employeedetails.emp_department_detail = {
+        dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+        dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+      };
+      this.employeedetails.emp_designation_detail = {
+        des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+        des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+      };
+      this.employeedetails.emp_honorific_detail = {
+        hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+        hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+      };
+      this.employeedetails.emp_wing_detail = {
+        wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+        wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+      };
+      this.employeedetails.emp_category_detail = {
+        cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+        cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+      };
     }
+    this.employeedetails['emp_document_detail'] = {
+      document_data: this.finalJSon
+    };
+    this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+      if (result) {
+        this.disabledApiButton = false;
+        this.commonAPIService.showSuccessErrorMessage('Employee Documents Submitted Successfully', 'success');
+        //this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });				
+        this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm: true });
+      } else {
+        this.disabledApiButton = false;
+        this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
+      }
+    });
+
   }
-  isExistUserAccessMenu(actionT) {
-    //return this.context.studentdetails.isExistUserAccessMenu(actionT);
+
+  updateForm() {
+    this.disabledApiButton = true;
+    if (this.employeedetails) {
+      this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
+      this.employeedetails.emp_name = this.employeeCommonDetails.employeeDetailsForm.value.emp_name;
+      this.employeedetails.emp_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.emp_profile_pic;
+      this.employeedetails.emp_department_detail = {
+        dpt_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id,
+        dpt_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.emp_department_id)
+      };
+      this.employeedetails.emp_designation_detail = {
+        des_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id,
+        des_name: this.getDesignationName(this.employeeCommonDetails.employeeDetailsForm.value.emp_designation_id)
+      };
+      this.employeedetails.emp_honorific_detail = {
+        hon_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id,
+        hon_name: this.getHonorificName(this.employeeCommonDetails.employeeDetailsForm.value.emp_honorific_id)
+      };
+      this.employeedetails.emp_wing_detail = {
+        wing_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id,
+        wing_name: this.getWingName(this.employeeCommonDetails.employeeDetailsForm.value.emp_wing_id)
+      };
+      this.employeedetails.emp_category_detail = {
+        cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
+        cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
+      };
+    }
+    this.employeedetails['emp_document_detail'] = {
+      document_data: this.finalJSon
+    };
+    this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+      if (result) {
+        this.disabledApiButton = false;
+        //this.commonAPIService.renderTab.next({ tabMove: true, renderForLast : true });
+        this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false, reRenderForm: true });
+
+        this.commonAPIService.showSuccessErrorMessage('Employee Documents Updated Successfully', 'success');
+      } else {
+        this.disabledApiButton = false;
+        this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Documents', 'error');
+      }
+    });
+
   }
-  editRequest() {
-    this.viewOnly = false;
-    this.editOnly = false;
-    this.editRequestFlag = true;
-    this.saveFlag = false;
-  }
+
   cancelForm() {
     if (this.addOnly) {
       this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
     } else if (this.saveFlag || this.editRequestFlag) {
-      this.getPersonaContactsdata();
+      this.getDocuments();
       this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
     }
   }
-  updateForm(isview) {
-    if (this.personalContacts.valid) {
 
-    } else {
-      this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
-    }
-  }
-  dateConversion(value, format) {
-    const datePipe = new DatePipe('en-in');
-    return datePipe.transform(value, format);
-  }
-  filterCityStateCountry($event) {
-    // keyCode
-    if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
-      if ($event.target.value !== '' && $event.target.value.length >= 3) {
-        this.cityCountryArray = [];
-        this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
-          if (result.status === 'ok') {
-            this.cityCountryArray = result.data;
-          }
-        });
-      }
-    }
-  }
-  getCityPerId(item: any) {
-    this.cityId = item.cit_id;
-    this.personalContacts.patchValue({
-      city: this.getCityName(item.cit_id),
-      state: item.sta_id,
-    });
-  }
-
-  getCityName(id) {
-    const findIndex = this.cityCountryArray.findIndex(f => f.cit_id === id);
-    if (findIndex !== -1) {
-      return this.cityCountryArray[findIndex].cit_name;
-    }
-  }
-  getStateName(id) {
-    const findIndex = this.arrayState.findIndex(f => f.sta_id === id);
-    if (findIndex !== -1) {
-      return this.arrayState[findIndex].sta_name;
-    }
-  }
-  getState() {
-    this.sisService.getState().subscribe(
-      (result: any) => {
-        if (result.status === 'ok') {
-          this.arrayState = result.data;
+  insertVerifyId($event) {
+    if ($event.checked) {
+      for (var i = 0; i < this.documentArray.length; i++) {
+        if (Number(this.documentArray[i].document_id) === ($event.source.value)) {
+          this.documentArray[i].verified_staus = true;
         }
       }
-    );
+    } else {
+      for (var i = 0; i < this.documentArray.length; i++) {
+        if (Number(this.documentArray[i].document_id) === ($event.source.value)) {
+          this.documentArray[i].verified_staus = false;
+        }
+      }
+    }
+
+
   }
+
   getDepartmentName(dpt_id) {
     const findIndex = this.departmentArray.findIndex(f => Number(f.dept_id) === Number(dpt_id));
     if (findIndex !== -1) {
       return this.departmentArray[findIndex].dept_name;
     }
   }
-
-
+  getHonorificName(hon_id) {
+    const findIndex = this.honrificArr.findIndex(f => Number(f.hon_id) === Number(hon_id));
+    if (findIndex !== -1) {
+      return this.honrificArr[findIndex].hon_name;
+    }
+  }
   getCategoryOne() {
     this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
       if (res) {
@@ -286,6 +461,7 @@ export class EmpEnqTabTwoComponent implements OnInit {
       return this.categoryOneArray[findex].cat_name;
     }
   }
+
   getWingName(wing_id) {
     const findIndex = this.wingArray.findIndex(f => Number(f.config_id) === Number(wing_id));
     if (findIndex !== -1) {
@@ -298,4 +474,5 @@ export class EmpEnqTabTwoComponent implements OnInit {
       return this.designationArray[findIndex].name;
     }
   }
+
 }

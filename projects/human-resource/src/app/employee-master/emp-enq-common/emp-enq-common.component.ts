@@ -1,6 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, OnDestroy, ElementRef } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, Input, ViewChild, OnChanges, ElementRef } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService, SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
@@ -41,7 +41,7 @@ export class EmpEnqCommonComponent implements OnInit {
   iddesabled = true;
   backOnly = false;
   defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
-  classArray = [];
+  subjectArray: any[] = [];
   sectionArray = [];
   departmentArray = [];
   wingArray = [];
@@ -53,6 +53,7 @@ export class EmpEnqCommonComponent implements OnInit {
   deleteMessage = 'Are you sure, you want to delete ?';
   studentdetailsflag = false;
   lastRecordId;
+  currentUser: any;
   categoryOneArray: any[] = [];
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('myInput') myInput: ElementRef;
@@ -69,8 +70,10 @@ export class EmpEnqCommonComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private commonAPIService: CommonAPIService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public smartService: SmartService
   ) {
+    this.currentUser = JSON.parse(localStorage.getItem('currenrUser'));
   }
   ngOnInit() {
     var result = this.employeedetails;
@@ -99,13 +102,14 @@ export class EmpEnqCommonComponent implements OnInit {
       }
       this.setActionControls(data);
     });
-
     this.getEmployeeDetail(result.enq_id);
-
   }
 
   ngOnChanges() {
     this.buildForm();
+    this.getCategoryOne();
+    this.getDepartment();
+    this.getAllSubjects();
     this.employeedetails.enq_status == 'enquiry';
     if (this.employeedetails) {
       this.getEmployeeDetail(this.employeedetails.enq_id);
@@ -125,6 +129,12 @@ export class EmpEnqCommonComponent implements OnInit {
             enq_profile_pic: result.enq_personal_detail.enq_profile_pic,
             enq_id: result.enq_id,
             enq_name: result.enq_personal_detail.enq_full_name,
+            enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
+              this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_id : '',
+            enq_department: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_department ?
+              this.employeedetails.enq_applied_job_detail[0].enq_department.dept_id.toString() : '',
+            enq_subject: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
+              this.employeedetails.enq_applied_job_detail[0].enq_subject.sub_id : '',
             enq_status: result.enq_status
           });
           if (result.enq_profile_pic) {
@@ -215,6 +225,9 @@ export class EmpEnqCommonComponent implements OnInit {
       enq_profile_pic: '',
       enq_id: '',
       enq_name: '',
+      enq_applied_for: '',
+      enq_department: '',
+      enq_subject: '',
       enq_status: 'enquiry'
     });
 
@@ -361,5 +374,51 @@ export class EmpEnqCommonComponent implements OnInit {
           });
       }
     });
+  }
+  getCategoryOne() {
+    this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
+      if (res) {
+        this.categoryOneArray = [];
+        this.categoryOneArray = res;
+      }
+    });
+  }
+  getCategoryOneName(cat_id) {
+    const findex = this.categoryOneArray.findIndex(e => Number(e.cat_id) === Number(cat_id));
+    if (findex !== -1) {
+      return this.categoryOneArray[findex].cat_name;
+    }
+  }
+  getDepartment() {
+    this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+      if (result) {
+        this.departmentArray = result;
+      } else {
+        this.departmentArray = [];
+      }
+    });
+  }
+  getDepartmentName(dept_id) {
+    const findex = this.departmentArray.findIndex(e => Number(e.config_id) === Number(dept_id));
+    if (findex !== -1) {
+      return this.departmentArray[findex].name;
+    }
+  }
+  //  Get Class List function
+  getAllSubjects() {
+    this.smartService.getAllSubjects({})
+      .subscribe(
+        (result: any) => {
+          if (result && result.status === 'ok') {
+            this.subjectArray = result.data;
+          }
+        }
+      );
+  }
+  getSubjectName(sub_id) {
+    const findex = this.subjectArray.findIndex(e => Number(e.sub_id) === Number(sub_id));
+    if (findex !== -1) {
+      return this.subjectArray[findex].sub_name;
+    }
   }
 }

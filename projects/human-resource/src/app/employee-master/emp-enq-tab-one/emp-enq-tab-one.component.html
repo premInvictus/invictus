@@ -121,8 +121,24 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Father's Name</mat-label>
-              <input class="text-capitalize" matInput placeholder="Father's Name" formControlName="enq_father_name" required
-                [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly" />
+              <input class="text-capitalize" matInput placeholder="Father's Name" formControlName="enq_father_name"
+                required [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly" />
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Expected Salary</mat-label>
+              <input class="text-capitalize" matInput placeholder="Expected Salary" [readonly]="viewOnly"
+                formControlName="enq_expected_salary" [errorStateMatcher]="confirmValidParentMatcher" />
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Current Salary</mat-label>
+              <input class="text-capitalize" matInput placeholder="Current Salary" [readonly]="viewOnly"
+                formControlName="enq_present_salary" [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>

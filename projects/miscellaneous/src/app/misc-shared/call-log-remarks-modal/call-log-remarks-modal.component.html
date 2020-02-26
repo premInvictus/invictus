@@ -1,24 +1,50 @@
-<div class="row remove-top-margin">
-  <div class="col-12 remove-col-padding">
-    <div class="modal-title-box">
-      <span class="font-size-20 font-blue">Remarks</span>
-      <span class="float-right">
-        <i class="fa fa-times font-blue cursor-pointer font-size-20" (click)="closeDialog()"></i></span>
+<div class="modal-custom-cotainer overflow-hidden">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Remarks</span><span class="float-right margin-top-5"><i
+            class="far fa-times-circle font-white cursor-pointer font-size-24" (click)="closeDialog()"></i></span>
+      </div>
     </div>
   </div>
-</div>
-<ng-container *ngFor="let item of remarksArray; let i=index">
-  <div class="row" *ngIf="item.remarks">
-    <div class="col-3" stye="padding-right:0px">
-      {{item.start_time * 1000 | date : 'dd-MMM-y, hh:mm a'}}
+  <div class="row">
+    <div class="col-12">
+      <div class="row" *ngIf="remarksArray.length > 0">
+        <div class="col-lg-12">
+          <div>
+            <div class="row">
+              <div class="col-lg-12 col-remove-padding">
+                <div>
+                  <table class="table-fixed table-100 text-center" style="margin-bottom: 10px !important">
+                    <thead>
+                      <tr>
+                        <th style="width: 5%">S.No</th>
+                        <th style="width: 25%">Time</th>
+                        <th style="width: 70%">Remarks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of remarksArray; let i=index">
+                        <td>{{i+1}}</td>
+                        <td style="text-align: left"> {{item.start_time * 1000 | date : 'dd-MMM-y, hh:mm a'}}</td>
+                        <td style="text-align: left">
+                          <span class="icon-spacer">{{item.remarks ? (item.remarks | titlecase) : '-'}}
+                          </span>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row" *ngIf="remarksArray.length === 0">
+        <div class="col-12 text-center font-size-20">
+          No Conversation Yet
+        </div>
+      </div>
     </div>
-    <div class="col-9" stye="padding-left:0px">
-      {{item.remarks | titlecase}}
-    </div>
-  </div>
-</ng-container>
-<div class="row" *ngIf="countRemarks === 0">
-  <div class="col-12 text-center font-size-20">
-    No Conversation Yet
   </div>
 </div>

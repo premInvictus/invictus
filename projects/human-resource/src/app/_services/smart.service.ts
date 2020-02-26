@@ -452,6 +452,11 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getHolidayOnly', value);
 	}
+	getAllSubjects(value){
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getAllSubjects', value);
+	}
+	
 }
 
 

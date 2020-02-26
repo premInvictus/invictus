@@ -421,8 +421,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_remark_id) {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approval') {
+			if (!this.accountsForm.value.accd_remark_id.trim()) {
 				validateFlag = false;
 			}
 		}
@@ -519,9 +519,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_reason_id ||
-				!this.accountsForm.value.accd_remark_id) {
+		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approval') {
+			if (!this.accountsForm.value.accd_remark_id.trim()) {
 				validateFlag = false;
 			}
 		}
@@ -604,8 +603,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		}
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0') {
-			if (!this.accountsForm.value.accd_reason_id ||
-				!this.accountsForm.value.accd_remark_id) {
+			if (!this.accountsForm.value.accd_remark_id) {
 				this.accountsForm.get('accd_fcg_id').markAsDirty();
 				this.accountsForm.get('accd_reason_id').markAsDirty();
 				this.accountsForm.get('accd_remark_id').markAsDirty();
