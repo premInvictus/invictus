@@ -7,7 +7,7 @@
           *ngFor="let sub_category of class.exam_category"
         >
           <!-- subjectwise bifurcation -->
-          <ng-container *ngIf="printData.type_subject_exist_arr[sub_category] && printData.type_subject_exist_arr[sub_category].length > 0">
+          <ng-container *ngIf="printData.type_subjectArr[class.class_id][section.sec_id][sub_category] && printData.type_subjectArr[class.class_id][section.sec_id][sub_category].length > 0">
           <table
             class="table-100 custom-table"
             style="margin-bottom: 15px;overflow-x: auto;display: block;"
