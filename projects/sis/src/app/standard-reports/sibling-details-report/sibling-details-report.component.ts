@@ -145,6 +145,8 @@ export class SiblingDetailsReportComponent implements OnInit, AfterViewInit {
 			honorific = 'Dr.';
 		} else if (value === '8') {
 			honorific = 'Lady';
+		} else if (value === '9') {
+			honorific = 'Late';
 		}
 
 		return honorific;

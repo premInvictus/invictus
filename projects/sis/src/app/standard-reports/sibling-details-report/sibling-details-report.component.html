@@ -169,7 +169,8 @@
                                                     element.father_honorific === '5' ? 'Mx.' :
                                                     element.father_honorific === '6' ? 'Sir.' :
                                                     element.father_honorific === '7' ? 'Dr.' :
-                                                    element.father_honorific === '8' ? 'Lady' : ''
+                                                    element.father_honorific === '8' ? 'Lady' :
+                                                    element.father_honorific === '9' ? 'Late' : ''
                                                   }}
                                                 
                                                 {{ element.father_name | titlecase }}</span>
@@ -190,7 +191,8 @@
                                                     element.mother_honorific === '5' ? 'Mx.' :
                                                     element.mother_honorific === '6' ? 'Sir.' :
                                                     element.mother_honorific === '7' ? 'Dr.' :
-                                                    element.mother_honorific === '8' ? 'Lady' : ''
+                                                    element.mother_honorific === '8' ? 'Lady' :
+                                                    element.mother_honorific === '9' ? 'Late' : ''
                                                   }}
                                                 {{ element.mother_name | titlecase }}</span>
                                             <span *ngIf="!element.mother_name">N/A</span>
@@ -210,7 +212,8 @@
                                                     element.guardian_honorific === '5' ? 'Mx.' :
                                                     element.guardian_honorific === '6' ? 'Sir.' :
                                                     element.guardian_honorific === '7' ? 'Dr.' :
-                                                    element.guardian_honorific === '8' ? 'Lady' : ''
+                                                    element.guardian_honorific === '8' ? 'Lady' :
+                                                    element.guardian_honorific === '9' ? 'Late' : ''
                                                   }}
                                                 {{ element.guardian_name | titlecase }}</span>
                                             <span *ngIf="!element.guardian_name">N/A</span>
