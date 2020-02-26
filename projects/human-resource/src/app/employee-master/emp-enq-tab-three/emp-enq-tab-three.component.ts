@@ -61,7 +61,8 @@ export class EmpEnqTabThreeComponent implements OnInit {
     { docreq_id: 1, docreq_name: "Id & Address Proof", docreq_alias: "Id", docreq_is_required: "1", docreq_status: "1", verified_status: false },
     { docreq_id: 2, docreq_name: "Education", docreq_alias: "Education", docreq_is_required: "1", docreq_status: "1", verified_status: false },
     { docreq_id: 3, docreq_name: "Experience", docreq_alias: "Experience", docreq_is_required: "1", docreq_status: "1", verified_status: false },
-    { docreq_id: 4, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
+    { docreq_id: 4, docreq_name: "Resume", docreq_alias: "Resume", docreq_is_required: "1", docreq_status: "1", verified_status: false },
+    { docreq_id: 5, docreq_name: "Others", docreq_alias: "Others", docreq_is_required: "1", docreq_status: "1", verified_status: false }
   ];
   divisonArray: any[] = [
     { id: 0, name: 'First Divison' },
@@ -162,6 +163,7 @@ export class EmpEnqTabThreeComponent implements OnInit {
     this.verifyArray = [];
     this.finalDocumentArray = [];
     this.imageArray = [];
+    console.log('employeedjhjhjhetails', this.employeedetails);
     if (this.employeedetails) {
       // this.remarksForm.patchValue({
       //   management_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks[0].management_remark ?
