@@ -7,6 +7,8 @@ import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import { ptBrLocale } from 'ngx-bootstrap';
+import { DatePipe } from '@angular/common';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 @Component({
 	selector: 'app-setup',
@@ -20,13 +22,17 @@ export class SetupComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
+	maxDate = new Date();
 	dataset: any[] = [];
+	finalMarksExpiration: any[] = [];
 	disableApiCall = false;
 	configValue: any;
+	wasAddedUpdatedFlag = false;
 	currentUser: any;
 	session: any;
 	param: any = {};
 	classArray: any[] = [];
+	currentIndex = 0;
 	termArray: any[] = [];
 	classTermArray: any[] = [];
 	classTermDateArray: any[] = [];
@@ -55,13 +61,15 @@ export class SetupComponent implements OnInit {
 	examTypeArray: any[] = [{ 'e_id': '1', 'e_name': 'CC' }, { 'e_id': '2', 'e_name': 'Non CC' }];
 	rangeArray: any[] = [];
 	XlslArray: any[] = [];
+	marksEntryOptions: any[] = [];
 	arrayBuffer: any;
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
 	displayedColumns: any[] = [];
-	firstHeaderArray: any[] = ['Exam Name', 'Sub Exam Name', 'Grade Set Name', 'Remark Name', 'Activity Name', 'Report Card Name','Class Name','Class Name'];
+	firstHeaderArray: any[] = ['Exam Name', 'Sub Exam Name', 'Grade Set Name', 'Remark Name', 'Activity Name', 'Report Card Name', 'Class Name', 'Class Name', 'Class Name'];
 	secondHeaderArray: any[] = ['Order', 'Order', 'Order', 'Order', 'Order', 'Order'];
 	configFlag = false;
+	examArray: any[];
 
 
 	constructor(
@@ -165,9 +173,9 @@ export class SetupComponent implements OnInit {
 					ect_grade_avg_highest: this.fbuild.group({
 						grade: '',
 						avg: '',
-						highest:'',
-						remark:'',
-						subjectwise_bifurcation:'',
+						highest: '',
+						remark: '',
+						subjectwise_bifurcation: '',
 						grouped_cumulative: '',
 						grouped_cumulative_best_score: ''
 					})
@@ -180,7 +188,18 @@ export class SetupComponent implements OnInit {
 					etd_term: '',
 					etd_start: '',
 					etd_end: '',
-					etd_declaration_date:'',
+					etd_declaration_date: '',
+					etd_ses_id: '',
+					etd_status: ''
+				})
+			},
+			{ // for Class Term Grade setup
+				formGroup: this.fbuild.group({
+					etd_id: '',
+					etd_class_id: '',
+					etd_term: '',
+					etd_exam: '',
+					marks_end_date: '',
 					etd_ses_id: '',
 					etd_status: ''
 				})
@@ -203,6 +222,56 @@ export class SetupComponent implements OnInit {
 			}
 		});
 	}
+	// getChangedDate($event) {
+	// 	if ($event) {
+	// 		const choosenDate: any = $event._d;
+	// 		this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+	// 			'marks_end_date' : new DatePipe('en-in').transform(choosenDate, 'yyyy-MM-dd')
+	// 		});
+	// 	}
+	// }
+	getExamDetails() {
+		if (Number(this.configValue) === 9) {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				etd_exam: ''
+			});
+		}
+		this.examArray = [];
+		this.examService.getExamDetails({
+			exam_class: this.formGroupArray[this.configValue - 1].formGroup.value.etd_class_id,
+			term_id: this.formGroupArray[this.configValue - 1].formGroup.value.etd_term
+		}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.examArray = result.data;
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	getExamDetails2(index) {
+		if (Number(this.configValue) === 9) {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				etd_exam: ''
+			});
+		}
+		this.examArray = [];
+		this.examService.getExamDetails({
+			exam_class: this.finalMarksExpiration[index].class_id,
+			term_id: this.finalMarksExpiration[index].term_id
+		}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.examArray = result.data;
+				this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+					'etd_class_id': this.finalMarksExpiration[index].class_id,
+					'etd_term': this.finalMarksExpiration[index].term_id,
+					'etd_exam': this.finalMarksExpiration[index].exam_id,
+					'marks_end_date': this.finalMarksExpiration[index].expirationDate
+				});
+			} else {
+				this.commonService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
 
 	getExamActivityType(that) {
 		that.examService.getExamActivityType().subscribe((result: any) => {
@@ -221,7 +290,25 @@ export class SetupComponent implements OnInit {
 			}
 		});
 	}
+	getActiveClass2(that) {
+		that.classArray = [];
+		that.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				that.classArray = result.data;
+				if (this.marksEntryOptions.length === 0) {
+					for (const item of that.classArray) {
+						this.marksEntryOptions.push({
+							class_name: item.class_name,
+							class_id: item.class_id,
+							details: [],
+						});
+					}
+				}
+			}
+		});
+	}
 	getTermList(that) {
+		this.termArray = [];
 		this.smartService.getTermList()
 			.subscribe(
 				(result: any) => {
@@ -232,15 +319,44 @@ export class SetupComponent implements OnInit {
 			);
 	}
 	getClassTerm() {
-		this.classTermArray = [];
-		this.examService.getClassTerm({class_id: this.formGroupArray[this.configValue-1].formGroup.get('etd_class_id').value}).subscribe((result: any) => {
-		  if (result && result.status === 'ok') {
-			result.data.ect_no_of_term.split(',').forEach(element => {
-			  this.classTermArray.push({id: element, name: result.data.ect_term_alias + ' ' +element});
+		if (Number(this.configValue) === 9) {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				etd_term: '',
+				etd_exam: '',
+				marks_end_date: ''
+
 			});
-		  }
+			this.examArray = [];
+		}
+		this.classTermArray = [];
+		this.examService.getClassTerm({ class_id: this.formGroupArray[this.configValue - 1].formGroup.get('etd_class_id').value }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.classTermArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+			}
 		});
-	  }
+	}
+	getClassTerm2(index) {
+		if (Number(this.configValue) === 9) {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				etd_term: '',
+				etd_exam: '',
+				marks_end_date: ''
+
+			});
+			this.examArray = [];
+		}
+		this.classTermArray = [];
+		this.examService.getClassTerm({ class_id: this.finalMarksExpiration[index].class_id }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.ect_no_of_term.split(',').forEach(element => {
+					this.classTermArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+				});
+				this.getExamDetails2(index);
+			}
+		});
+	}
 	getDropdownGradeSet(that) {
 		this.examService.getDropdownGradeSet({})
 			.subscribe(
@@ -251,7 +367,7 @@ export class SetupComponent implements OnInit {
 					}
 				}
 			);
-	}	
+	}
 	getClassName(classId) {
 		for (const item of this.classArray) {
 			if (Number(item.class_id) === Number(classId)) {
@@ -266,6 +382,20 @@ export class SetupComponent implements OnInit {
 			}
 		}
 	}
+	getClassTermName(termId) {
+		for (const item of this.classTermArray) {
+			if (Number(item.id) === Number(termId)) {
+				return item.name;
+			}
+		}
+	}
+	getExamName(examId) {
+		for (const item of this.examArray) {
+			if (Number(item.exam_id) === Number(examId)) {
+				return item.exam_name;
+			}
+		}
+	}
 	getGradeName(gradeId) {
 		for (const item of this.gradesetDropdownArray) {
 			if (Number(item.egs_number) === Number(gradeId)) {
@@ -275,32 +405,32 @@ export class SetupComponent implements OnInit {
 	}
 	get_ect_grade_avg_highest(value) {
 		let ect_grade_avg_highest_str = '';
-		if(value.grade) {
+		if (value.grade) {
 			ect_grade_avg_highest_str += 'Grade - Yes, '
 		} else {
 			ect_grade_avg_highest_str += 'Grade - No, '
 		}
-		if(value.avg) {
+		if (value.avg) {
 			ect_grade_avg_highest_str += 'Average - Yes, '
 		} else {
 			ect_grade_avg_highest_str += 'Average - No, '
 		}
-		if(value.highest) {
+		if (value.highest) {
 			ect_grade_avg_highest_str += 'Highest - Yes, '
 		} else {
 			ect_grade_avg_highest_str += 'Highest - No, '
 		}
-		if(value.remark) {
+		if (value.remark) {
 			ect_grade_avg_highest_str += 'Subjectwise Remark - Yes, '
 		} else {
 			ect_grade_avg_highest_str += 'Subjectwise Remark - No, '
 		}
-		if(value.subjectwise_bifurcation) {
+		if (value.subjectwise_bifurcation) {
 			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes'
 		} else {
 			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - No'
 		}
-		if(value.grouped_cumulative) {
+		if (value.grouped_cumulative) {
 			ect_grade_avg_highest_str += 'Grouped Cumulative - Yes'
 		} else {
 			ect_grade_avg_highest_str += 'Grouped Cumulative - No'
@@ -352,7 +482,7 @@ export class SetupComponent implements OnInit {
 							grade_name: that.getGradeName(item.ect_gradeset_id),
 							co_grade_name: that.getGradeName(item.ect_co_gradeset_id),
 							exam_type: that.getExamTypeName(item.ect_exam_type),
-							ect_grade_avg_highest: item.ect_grade_avg_highest ? that.get_ect_grade_avg_highest(JSON.parse(item.ect_grade_avg_highest)): '',
+							ect_grade_avg_highest: item.ect_grade_avg_highest ? that.get_ect_grade_avg_highest(JSON.parse(item.ect_grade_avg_highest)) : '',
 							action: item
 						});
 						pos++;
@@ -415,7 +545,7 @@ export class SetupComponent implements OnInit {
 					for (const item of result.data) {
 						const eachElement: any = {};
 						eachElement.position = pos++;
-						eachElement.name= item.egs_name;
+						eachElement.name = item.egs_name;
 						eachElement.point_type_id = item.egs_point_type;
 						eachElement.no_of_tiers = item.egs_no_of_tiers;
 						eachElement.grade_set_description = item.egs_description;
@@ -425,23 +555,23 @@ export class SetupComponent implements OnInit {
 						eachElement.grade_value = '';
 						eachElement.range_start = '';
 						eachElement.range_end = '';
-						const tempgradevalue: any[] = [];						
+						const tempgradevalue: any[] = [];
 						for (const det of item.egs_grade_data) {
-							if(item.egs_point_type === '1') {
-								if (det.egs_grade_text)  {
-									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +') : '+det.egs_grade_text+' ');
+							if (item.egs_point_type === '1') {
+								if (det.egs_grade_text) {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value + ') : ' + det.egs_grade_text + ' ');
 								} else {
-									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value +') ');
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_grade_value + ') ');
 								}
-								
-							} else if(item.egs_point_type === '2') {
-								if (det.egs_grade_text)  {
-									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +') : '+det.egs_grade_text+' ');
+
+							} else if (item.egs_point_type === '2') {
+								if (det.egs_grade_text) {
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end + ') : ' + det.egs_grade_text + ' ');
 								} else {
-									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end +') ');
+									tempgradevalue.push(det.egs_grade_name + ' (' + det.egs_range_start + '-' + det.egs_range_end + ') ');
 								}
-							}							
-							
+							}
+
 						}
 
 						eachElement.grade_name = tempgradevalue;
@@ -581,7 +711,7 @@ export class SetupComponent implements OnInit {
 			this.gradeDataFrmArr.push({
 				formGroup: this.fbuild.group({
 					egs_grade_name: '',
-					egs_grade_text:'',
+					egs_grade_text: '',
 					egs_grade_value: '',
 					egs_range_start: '',
 					egs_range_end: ''
@@ -620,6 +750,7 @@ export class SetupComponent implements OnInit {
 
 	resetForm(value) {
 		this.formGroupArray[value - 1].formGroup.reset();
+		this.wasAddedUpdatedFlag = false;
 		this.setupUpdateFlag = false;
 	}
 
@@ -669,11 +800,16 @@ export class SetupComponent implements OnInit {
 			if (value.etd_status === '1') {
 				return true;
 			}
+		} else if (Number(this.configValue) === 9) { // for class term grade setup
+			if (Number(value) === 1) {
+				return true;
+			}
 		}
 	}
 
-	formEdit(value: any) {
+	formEdit(value: any, index) {
 		//console.log('value', value);
+		this.currentIndex = index - 1;
 		if (Number(this.configValue) === 1) { // for exam setup
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
@@ -758,6 +894,10 @@ export class SetupComponent implements OnInit {
 				etd_status: value.etd_status
 			});
 			this.getClassTerm();
+		} else if (Number(this.configValue) === 9) {
+			this.editFlag = true;
+			this.setupUpdateFlag = true;
+			this.getClassTerm2(index - 1);
 		}
 	}
 
@@ -765,7 +905,7 @@ export class SetupComponent implements OnInit {
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
 		this.configValue = event.value;
-		this.formGroupArray[this.configValue-1].formGroup.reset();
+		this.formGroupArray[this.configValue - 1].formGroup.reset();
 		if (Number(this.configValue) === 1) { // for exam setup
 			this.getExam(this);
 			this.displayedColumns = ['position', 'name', 'order', 'action', 'modify'];
@@ -797,18 +937,24 @@ export class SetupComponent implements OnInit {
 		} else if (Number(this.configValue) === 7) { // for exam class term garde		
 			this.getActiveClass(this);
 			this.getTermList(this);
-			this.getDropdownGradeSet(this);			
+			this.getDropdownGradeSet(this);
 			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'ect_grade_avg_highest', 'exam_type', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 8) { // for exam class term garde	
-			this.getClassTermDate(this);	
-			this.getActiveClass(this);	
+			this.getClassTermDate(this);
+			this.getActiveClass(this);
 			this.displayedColumns = ['position', 'name', 'term_name', 'term_start', 'term_end', 'etd_declaration_date', 'action', 'modify'];
 			this.configFlag = true;
-		} 
+		} else if (Number(this.configValue) === 9) {
+			this.getMarksEntryDateOptions();
+			this.getActiveClass2(this);
+			this.configFlag = true;
+			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'etd_declaration_date', 'action', 'modify'];
+			// this.displayedColumns = ['position', 'name', 'term_name', 'exam_name', 'marks_end_date', 'action', 'modify'];
+		}
 	}
-	deleteCancel(){ 
-		
+	deleteCancel() {
+
 	}
 	deleteConfirm({ data, type }) {
 		switch (type) {
@@ -889,8 +1035,100 @@ export class SetupComponent implements OnInit {
 					this.formGroupArray[value - 1].formGroup.value.etd_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermDate', this.getClassTermDate);
 					break;
+				case '9':
+					// this.updateGlobalSetting();
+					this.setEntryDataMarksEntry(this);
+					break;
 			}
 		}
+	}
+	resetExpirationDate() {
+		this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+			'marks_end_date': ''
+		});
+	}
+	setEntryDataMarksEntry(that) {
+		const findexR = that.finalMarksExpiration.findIndex(f => Number(f.class_id) === Number(that.formGroupArray[that.configValue - 1]
+			.formGroup.value.etd_class_id) &&
+			Number(f.term_id) === Number(that.formGroupArray[that.configValue - 1]
+				.formGroup.value.etd_term) &&
+			Number(f.exam_id) === Number(that.formGroupArray[that.configValue - 1]
+				.formGroup.value.etd_exam));
+		if (findexR === -1) {
+			that.finalMarksExpiration.push({
+				class_id: that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_class_id,
+				class_name: that.getClassName(that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_class_id),
+				term_id: that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_term,
+				term_name: that.getClassTermName(that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_term),
+				exam_id: that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_exam,
+				exam_name: that.getExamName(that.formGroupArray[that.configValue - 1]
+					.formGroup.value.etd_exam),
+				expirationDate: new DatePipe('en-in').transform(that.formGroupArray[that.configValue - 1]
+					.formGroup.value.marks_end_date, 'yyyy-MM-dd'),
+				status: '1'
+			});
+			this.getMarksExtendedDate(this);
+			this.wasAddedUpdatedFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.reset();
+		} else {
+			this.commonService.showSuccessErrorMessage('Duplicate entry not allowed', 'error');
+			this.formGroupArray[this.configValue - 1].formGroup.reset();
+		}
+
+	}
+	getMarksExtendedDate(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		let pos = 0;
+		for (const item of that.finalMarksExpiration) {
+			that.CONFIG_ELEMENT_DATA.push({
+				position: pos + 1,
+				name: item.class_name,
+				term_name: item.term_name,
+				grade_name: item.exam_name,
+				etd_declaration_date: item.expirationDate,
+				action: item.status,
+				modify: item
+
+			})
+			pos++;
+		}
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.configDataSource.paginator = that.paginator;
+		that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+		that.configDataSource.sort = that.sort;
+	}
+	updateGlobalSetting() {
+		let inputJson = { 'marks_extend_time': JSON.stringify(this.finalMarksExpiration) };
+		if (this.finalMarksExpiration.length > 0) {
+			this.disableApiCall = true;
+			this.examService.updateGlobalSetting(inputJson).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage(result.message, result.status);
+					this.getMarksEntryDateOptions();
+					this.disableApiCall = false;
+					this.wasAddedUpdatedFlag = false;
+				} else {
+					this.commonService.showSuccessErrorMessage(result.message, result.status);
+					this.disableApiCall = false;
+					this.wasAddedUpdatedFlag = false;
+				}
+			});
+		} else {
+			this.commonService.showSuccessErrorMessage('Please enter values to proceed', 'error');
+			this.wasAddedUpdatedFlag = false;
+		}
+
+	}
+	deleteMarksExtendedData(index) {
+		this.currentIndex = index - 1;
+		this.finalMarksExpiration.splice(this.currentIndex, 1);
+		this.getMarksExtendedDate(this);
 	}
 
 	updateConfiguration(value) {
@@ -927,11 +1165,25 @@ export class SetupComponent implements OnInit {
 					this.formGroupArray[value - 1].formGroup.value.etd_status = '1';
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'insertClassTermDate', this.getClassTermDate);
 					break;
+				case '9':
+					this.updateMarksExtendEntry();
+					break;
 			}
 		}
 	}
+	updateMarksExtendEntry() {
+		this.finalMarksExpiration[this.currentIndex].expirationDate =
+			new DatePipe('en-in').
+				transform(this.formGroupArray[this.configValue - 1].formGroup.value.marks_end_date, 'yyyy-MM-dd');
+		this.getMarksExtendedDate(this);
+		this.wasAddedUpdatedFlag = true;
+		this.formGroupArray[this.configValue - 1].formGroup.reset();
+		this.setupUpdateFlag = false;
+		this.editFlag = false;
+	}
 
-	toggleStatus(value: any) {
+	toggleStatus(value: any, index) {
+		this.currentIndex = index - 1;
 		if (Number(this.configValue) === 1) { // for exam setup
 			if (value.class_status === '1') {
 				value.class_status = '0';
@@ -1033,6 +1285,16 @@ export class SetupComponent implements OnInit {
 					this.getClassTermDate(this);
 				}
 			});
+		} else if (Number(this.configValue) === 9) {
+			this.wasAddedUpdatedFlag = false;
+			if (Number(this.finalMarksExpiration[this.currentIndex].status) === 1) {
+				this.finalMarksExpiration[this.currentIndex].status = '0';
+				this.wasAddedUpdatedFlag = true;
+			} else {
+				this.finalMarksExpiration[this.currentIndex].status = '1';
+				this.wasAddedUpdatedFlag = true;
+			}
+
 		}
 	}
 
@@ -1057,7 +1319,7 @@ export class SetupComponent implements OnInit {
 		});
 	}
 	addEntry(data, serviceName, next) {
-		console.log('remarks',data);
+		console.log('remarks', data);
 		this.disableApiCall = true;
 		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
@@ -1079,8 +1341,26 @@ export class SetupComponent implements OnInit {
 				this.setupUpdateFlag = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
+				this.getMarksEntryDateOptions();
 			} else {
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
+			}
+		});
+	}
+	getMarksEntryDateOptions() {
+		let param: any = {};
+		this.finalMarksExpiration = [];
+		param.gs_name = ['marks_extend_time'];
+		this.examService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const settings = result.data;
+				let marksExp: any[] = [];
+				marksExp = JSON.parse(settings[0]['gs_value']);
+				for (const item of marksExp) {
+					this.finalMarksExpiration.push(item);
+				}
+				console.log('settings=--', settings, this.finalMarksExpiration);
+				this.getMarksExtendedDate(this);
 			}
 		});
 	}

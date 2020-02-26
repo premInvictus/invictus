@@ -146,14 +146,20 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		this.router.navigate([`../${url}`], { relativeTo: this.route });
 	}
 	ngOnChanges() {
-		if (this.loginId) {
-			this.studentdetailsflag = true;
-			this.getStudentInformation(this.loginId);
-		}
-		if (this.feeRenderId) {
-			this.studentdetailsflag = true;
-			this.getStudentInformation(this.feeRenderId);
-		}
+		console.log('this.loginId', this.loginId);
+		console.log('this.feeRenderId', this.feeRenderId);
+		// if (this.loginId) {
+		// 	this.studentdetailsflag = true;
+		// 	this.getStudentInformation(this.loginId);
+		// }
+		// if (this.feeRenderId) {
+		// 	this.studentdetailsflag = true;
+		// 	this.getStudentInformation(this.feeRenderId);
+		// }
+
+		this.studentdetailsflag = true;
+		let floginID = this.loginId ? this.loginId : (this.feeRenderId ? this.feeRenderId : '');
+		this.getStudentInformation(floginID);
 		// document.getElementById('blur_id').focus();
 		const fe = <HTMLInputElement>this.enrollmentFocus.nativeElement;
 		fe.focus();
@@ -179,7 +185,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	}
 	getStudentInformation(au_login_id) {
 		this.studentLoginId = '';
-		if (au_login_id && this.studentdetailsflag) {
+		console.log('au_login_id--',au_login_id, 'this.studentdetailsflag--',this.studentdetailsflag);
+		if (au_login_id && this.studentdetailsflag) {			
 			this.studentdetailsflag = false;
 			this.sisService
 				.getStudentInformation({ au_login_id: au_login_id, au_status: '1' })
@@ -443,6 +450,11 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						this.next.emit(this.previousLoginId);
 					}
 				});
+		} else {
+			this.studentdetails = [];
+			if (this.studentdetailsform) {
+				this.studentdetailsform.reset();
+			}			
 		}
 	}
 	loadOnEnrollmentId($event) {

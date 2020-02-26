@@ -131,7 +131,7 @@ export class BroadcastComponent implements OnInit {
 			tempObj['send_by'] = this.scheduleMessageData[i]['msg_created_by'] ? this.scheduleMessageData[i]['msg_created_by']['login_name'] : '';
 			tempObj['attachment'] = this.scheduleMessageData[i]['msg_attachment'] ? this.scheduleMessageData[i]['msg_attachment'] : '';
 
-			tempObj['status'] = this.scheduleMessageData[i]['not_sent_status'] === 'P' ? 'Pending' : this.scheduleMessageData[i]['not_sent_status'] === 'C' ? 'Complete' : 'Sent';
+			tempObj['status'] = this.scheduleMessageData[i]['status'] && this.scheduleMessageData[i]['status'][0] && this.scheduleMessageData[i]['status'][0]['status_name'] ? this.scheduleMessageData[i]['status'][0]['status_name'] : 'pending';
 			tempObj['receiver_contact'] = this.scheduleMessageData[i]['not_receiver_contact'];
 			tempObj['tpl_id'] = this.scheduleMessageData[i]['msg_template_id'];
 			tempObj['tpl_title'] = this.scheduleMessageData[i]['tpl_title'];

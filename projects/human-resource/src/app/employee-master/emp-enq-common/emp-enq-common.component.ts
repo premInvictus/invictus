@@ -125,16 +125,22 @@ export class EmpEnqCommonComponent implements OnInit {
       //this.setActionControls({viewMode : true})
       this.commonAPIService.getCareerEnq({ enq_id: enq_id }).subscribe((result: any) => {
         if (result) {
+          var subjectArray: any = this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
+            this.employeedetails.enq_applied_job_detail[0].enq_subject : [];
+          let sub_id_array: any[] = [];
+          for (let item of subjectArray) {
+            sub_id_array.push(item.sub_id);
+          }
+          console.log(sub_id_array);
           this.employeeDetailsForm.patchValue({
             enq_profile_pic: result.enq_personal_detail.enq_profile_pic,
             enq_id: result.enq_id,
             enq_name: result.enq_personal_detail.enq_full_name,
             enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
-              this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_id : '',
+              this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_name : '',
             enq_department: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_department ?
               this.employeedetails.enq_applied_job_detail[0].enq_department.dept_id.toString() : '',
-            enq_subject: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
-              this.employeedetails.enq_applied_job_detail[0].enq_subject.sub_id : '',
+            enq_subject: sub_id_array ? sub_id_array : [],
             enq_status: result.enq_status
           });
           if (result.enq_profile_pic) {

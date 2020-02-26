@@ -163,14 +163,13 @@ export class EmpEnqTabThreeComponent implements OnInit {
     this.verifyArray = [];
     this.finalDocumentArray = [];
     this.imageArray = [];
-    console.log('employeedjhjhjhetails', this.employeedetails);
     if (this.employeedetails) {
-      // this.remarksForm.patchValue({
-      //   management_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks[0].management_remark ?
-      //     this.employeedetails.enq_remarks[0].management_remark : '-',
-      //   interview_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks[0].interview_remark ?
-      //     this.employeedetails.enq_remarks[0].interview_remark : '-',
-      // });
+      this.remarksForm.patchValue({
+        management_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks.length > 0 ?
+          this.employeedetails.enq_remarks[0].management_remark : '',
+        interview_remarks: this.employeedetails && this.employeedetails.enq_remarks && this.employeedetails.enq_remarks.length > 0 ?
+          this.employeedetails.enq_remarks[0].interview_remark : '',
+      });
       this.experiencesArray = this.employeedetails.enq_work_experience_detail ? this.employeedetails.enq_work_experience_detail : [];
       this.educationsArray = this.employeedetails.enq_academic_detail ? this.employeedetails.enq_academic_detail : [];
     } else {
@@ -313,11 +312,6 @@ export class EmpEnqTabThreeComponent implements OnInit {
       }
 
     });
-    // this.axiomService.getBoard().subscribe((result: any) => {
-    // 	if (result.status === 'ok') {
-    // 		this.boardArray = result.data;
-    // 	}
-    // });
   }
   getQualificationsName(value) {
     const findex = this.qualficationArray.findIndex(f => Number(f.qlf_id) === Number(value));
@@ -431,26 +425,25 @@ export class EmpEnqTabThreeComponent implements OnInit {
   }
   saveForm() {
     this.disabledApiButton = true;
+    var subjectArray: any[] = [];
+    for (let item of this.employeeCommonDetails.employeeDetailsForm.value.enq_subject) {
+      subjectArray.push({
+        sub_id: item,
+        sub_name: this.getSubjectName(item)
+      });
+    }
     if (this.employeedetails) {
-      this.employeedetails['enq_personal_detail'] = {
-        enq_full_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_name,
-      };
+      this.employeedetails.enq_personal_detail.enq_full_name = this.employeeCommonDetails.employeeDetailsForm.value.enq_name;
       this.employeedetails['enq_applied_job_detail'] = [
         {
           enq_applied_for: {
-            post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
-            post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+            post_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for,
           },
           enq_department: {
             dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
             dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
           },
-          enq_subject: [
-            {
-              sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
-              sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
-            }
-          ]
+          enq_subject: subjectArray
         }];
       this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
       this.employeedetails.enq_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.enq_profile_pic;
@@ -479,26 +472,25 @@ export class EmpEnqTabThreeComponent implements OnInit {
 
   updateForm(moveNext) {
     this.disabledApiButton = true;
+    var subjectArray: any[] = [];
+    for (let item of this.employeeCommonDetails.employeeDetailsForm.value.enq_subject) {
+      subjectArray.push({
+        sub_id: item,
+        sub_name: this.getSubjectName(item)
+      });
+    }
     if (this.employeedetails) {
-      this.employeedetails['enq_personal_detail'] = {
-        enq_full_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_name,
-      };
+      this.employeedetails.enq_personal_detail.enq_full_name = this.employeeCommonDetails.employeeDetailsForm.value.enq_name;
       this.employeedetails['enq_applied_job_detail'] = [
         {
           enq_applied_for: {
-            post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
-            post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+            post_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for,
           },
           enq_department: {
             dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
             dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
           },
-          enq_subject: [
-            {
-              sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
-              sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
-            }
-          ]
+          enq_subject: subjectArray
         }];
       this.employeedetails.emp_id = this.employeeCommonDetails.employeeDetailsForm.value.emp_id;
       this.employeedetails.enq_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.enq_profile_pic;

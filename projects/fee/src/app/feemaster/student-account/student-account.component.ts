@@ -84,10 +84,16 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	ngOnChanges() {
 		//console.log('this.feeLoginId', this.feeLoginId);
 		if (this.feeLoginId) {
-
 			this.getFeeAccount(this.feeLoginId);
-
-
+		} else {
+			this.accountsForm.reset();
+			this.transportFlag = false;
+			this.hostelFlag = false;
+			this.modeFlag = false;
+			this.terminationFlag = false;
+			this.existFlag = false;
+			this.hostelTerminateFlag = false;
+			this.showTransport = false;
 		}
 	}
 	buildForm() {

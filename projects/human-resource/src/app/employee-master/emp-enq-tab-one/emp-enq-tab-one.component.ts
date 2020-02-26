@@ -160,6 +160,14 @@ export class EmpEnqTabOneComponent implements OnInit {
 
 	saveForm() {
 		if (this.personalDetails.valid) {
+			this.disabledApiButton = true;
+			var subjectArray: any[] = [];
+			for (let item of this.employeeCommonDetails.employeeDetailsForm.value.enq_subject) {
+				subjectArray.push({
+					sub_id: item,
+					sub_name: this.getSubjectName(item)
+				});
+			}
 			this.personaldetails['enq_address_detail'] = [{
 				address: this.personalDetails.value.p_address,
 				city: {
@@ -186,19 +194,13 @@ export class EmpEnqTabOneComponent implements OnInit {
 			this.personaldetails['enq_applied_job_detail'] = [
 				{
 					enq_applied_for: {
-						post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
-						post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+						post_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for,
 					},
 					enq_department: {
 						dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
 						dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
 					},
-					enq_subject: [
-						{
-							sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
-							sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
-						}
-					]
+					enq_subject: subjectArray
 				}];
 			this.personaldetails['enq_academic_detail'] = [
 				{
@@ -311,7 +313,14 @@ export class EmpEnqTabOneComponent implements OnInit {
 
 	updateForm(moveStatus) {
 		if (this.personalDetails.valid) {
-			//this.disabledApiButton = true;
+			this.disabledApiButton = true;
+			var subjectArray: any[] = [];
+			for (let item of this.employeeCommonDetails.employeeDetailsForm.value.enq_subject) {
+				subjectArray.push({
+					sub_id: item,
+					sub_name: this.getSubjectName(item)
+				});
+			}
 			this.personaldetails['enq_address_detail'] = [{
 				address: this.personalDetails.value.p_address,
 				city: {
@@ -347,19 +356,13 @@ export class EmpEnqTabOneComponent implements OnInit {
 			this.personaldetails['enq_applied_job_detail'] = [
 				{
 					enq_applied_for: {
-						post_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
-						post_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for),
+						post_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_applied_for,
 					},
 					enq_department: {
 						dept_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_department),
 						dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
 					},
-					enq_subject: [
-						{
-							sub_id: Number(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject),
-							sub_name: this.getSubjectName(this.employeeCommonDetails.employeeDetailsForm.value.enq_subject)
-						}
-					]
+					enq_subject: subjectArray
 				}];
 
 			this.employeedetails['enq_personal_detail'] = this.personaldetails['enq_personal_detail'];
@@ -373,7 +376,6 @@ export class EmpEnqTabOneComponent implements OnInit {
 				this.employeedetails.enq_present_salary = this.personalDetails.value.enq_present_salary;
 				this.employeedetails.enq_expected_salary = this.personalDetails.value.enq_expected_salary;
 			}
-			console.log(this.employeedetails, 'hdgj ds');
 			if (!moveStatus) {
 				this.commonAPIService.updateCareerEnq(this.employeedetails).subscribe((result: any) => {
 					if (result) {
@@ -522,10 +524,10 @@ export class EmpEnqTabOneComponent implements OnInit {
 	}
 	getCategoryOne() {
 		this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
-		  if (res) {
-			this.categoryOneArray = [];
-			this.categoryOneArray = res;
-		  }
+			if (res) {
+				this.categoryOneArray = [];
+				this.categoryOneArray = res;
+			}
 		});
-	  }
+	}
 }

@@ -459,6 +459,23 @@ export class MarksEntryFinalComponent implements OnInit {
     }
     return status;
   }
+  isAnyoneEditableFinal(eme_review_status) {
+    let status = false;
+    if (this.responseMarksArray.length > 0) {
+      for (const item of this.responseMarksArray) {
+        if (Number(item.examEntry.eme_review_status) === Number(eme_review_status)) {
+          status = true;
+          break;
+        }
+      }
+      return status;
+    } else {
+      return false;
+    }
+  }
+  isExistUserAccessMenu(mod_id) {
+    return this.commonAPIService.isExistUserAccessMenu(mod_id);
+  }
 
 }
 

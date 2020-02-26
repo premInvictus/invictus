@@ -45,15 +45,21 @@ export class StudentProfileComponent implements OnInit {
 		});
 	}
 	checkEmit(process_type) {
+		console.log('processType--', process_type);
 		if (process_type) {
 			this.sisService.getStudentLastRecordPerProcessType().subscribe((result: any) => {
+				console.log('result--', result);
 				if (result.status === 'ok') {
 					if (result.data[0].last_record && result.data[0].au_login_id) {
 						this.studentDetails = this.commonStu;
 						this.lastRecordId = result.data[0].last_record;
 						this.loginId = result.data[0].au_login_id;
+					} else {
+						this.studentDetails = this.commonStu;
+						this.lastRecordId = 0;
+						this.loginId = 0;
 					}
-				}
+				} 
 			});
 		}
 	}

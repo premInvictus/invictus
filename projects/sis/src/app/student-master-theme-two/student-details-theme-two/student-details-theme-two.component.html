@@ -71,7 +71,7 @@
                     [readonly]="!viewOnly" (keydown.enter)="loadOnEnrollmentId($event)" #myInput>
                 </mat-form-field><br>
                 <div class="font-size-16 font-bold blink"
-                  *ngIf="((viewOnly || editOnly) && studentdetails.au_process_type=='5')"><span>LEFT</span>
+                  *ngIf="((viewOnly || editOnly) && (studentdetails.au_process_type != '5' && studentdetails.au_enrollment_status == 'left'))"><span>Dropout</span>
                 </div>
                 <br>
               </div>
@@ -107,6 +107,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>{{classPlaceHolder}}</mat-label>
                   <mat-select formControlName="au_class_id" [placeholder]="classPlaceHolder" required
+                  (selectionChange)="getSectionsByClass()"
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">
@@ -119,6 +120,7 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Class Applied Forr</mat-label>
                   <mat-select formControlName="au_class_id" placeholder="Class Applied For" required
+                  (selectionChange)="getSectionsByClass()"
                     [disabled]="viewOnly">
                     <mat-option value="">Please Select</mat-option>
                     <mat-option *ngFor="let item of classArray" [value]="item.class_id">

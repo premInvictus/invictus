@@ -13,6 +13,7 @@ export class MarksEntryComponent implements OnInit {
   paramform: FormGroup
   classArray: any[] = [];
   subSubjectArray: any[] = [];
+  finalMarksExtendedData: any[] = [];
   subjectArray: any[] = [];
   sectionArray: any[] = [];
   termsArray: any[] = [];
@@ -37,6 +38,7 @@ export class MarksEntryComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getMarksEntryTimeExpiration();
     this.buildForm();
     this.getClass();
   }
@@ -487,6 +489,60 @@ export class MarksEntryComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
       }
     });
+  }
+  isAnyoneEditableFinal(eme_review_status) {
+    let status = false;
+    if (this.responseMarksArray.length > 0) {
+      for (const item of this.responseMarksArray) {
+        if (item.examEntry.eme_review_status === eme_review_status) {
+          status = true;
+          break;
+        }
+      }
+      return status;
+    } else {
+      return false;
+    }
+  }
+  isExistUserAccessMenu(mod_id) {
+    return this.commonAPIService.isExistUserAccessMenu(mod_id);
+  }
+  getMarksEntryTimeExpiration() {
+    let param: any = {};
+    param.gs_alias = ['marks_extend_time'];
+    this.examService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        const settings = result.data;
+        this.finalMarksExtendedData = JSON.parse(settings[0]['gs_value'])
+        console.log('settings=--', settings, this.finalMarksExtendedData);
+      }
+    });
+  }
+  checkIfNotExpired() {
+    let flag = false;
+    if (this.finalMarksExtendedData.length > 0) {
+      for (const item of this.finalMarksExtendedData) {
+        if (Number(item.class_id) === Number(this.paramform.value.eme_class_id)
+          && Number(item.term_id) === Number(this.paramform.value.eme_term_id)
+          && Number(item.exam_id) === Number(this.paramform.value.eme_exam_id)) {
+          if (item.expirationDate) {
+            if (Number(item.status) === 5) {
+              flag = false;
+              break;
+            }
+            if (Number(item.status) === 1) {
+              flag = true;
+              break;
+            }
+          }
+        } else {
+          flag = true;
+        }
+      }
+    } else {
+      flag = true;
+    }
+    return flag;
   }
 
 }

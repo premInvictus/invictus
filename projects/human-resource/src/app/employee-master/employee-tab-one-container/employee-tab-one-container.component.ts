@@ -613,6 +613,21 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					cat_id: this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id,
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
+
+				if (this.employeedetails['emp_salary_detail'] && this.employeedetails['emp_salary_detail'].emp_salary_structure && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_id) {
+					this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale = {
+						pc_id:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_id,
+						pc_name:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_scale.ss_name
+					};
+				}
+				
+				if (this.employeedetails['emp_salary_detail'] && this.employeedetails['emp_salary_detail'].emp_salary_structure && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode && this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.config_id) {
+					this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode = {
+						pm_id:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.config_id,
+						pm_name:   this.employeedetails['emp_salary_detail'].emp_salary_structure.emp_pay_mode.name
+					};
+				}
+				
 			}
 			if (!moveStatus) {
 				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
