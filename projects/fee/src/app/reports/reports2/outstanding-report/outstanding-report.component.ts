@@ -14,7 +14,7 @@ import * as Excel from 'exceljs/dist/exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../../_pipes';
+import { CapitalizePipe, IndianCurrency } from '../../../_pipes';
 import { ReceiptDetailsModalComponent } from '../../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { MatDialog } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -165,9 +165,14 @@ export class OutstandingReportComponent implements OnInit {
 			},
 			{
 				report_type: 'feedue', report_name: 'Fee dues'
-			});
-		const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			},
+			{
+				report_type: 'aging', report_name: 'Aging'
+			}
+		);
+		var session = this.sessionName ? this.sessionName.split('-')[0] : '';
+		const date = new Date(session, new Date().getMonth(), new Date().getDate());
+		const firstDay = new Date(session, new Date().getMonth(), 1);
 		this.reportFilterForm.patchValue({
 			'from_date': firstDay,
 			'to_date': date,
@@ -236,7 +241,6 @@ export class OutstandingReportComponent implements OnInit {
 		this.dataset = [];
 		this.tableFlag = false;
 		this.gridOptions = {
-
 			enableDraggableGrouping: true,
 			createPreHeaderPanel: true,
 			showPreHeaderPanel: true,
@@ -252,7 +256,7 @@ export class OutstandingReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			enableCheckboxSelector: true,
+			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
 			},
@@ -1936,7 +1940,97 @@ export class OutstandingReportComponent implements OnInit {
 					});
 				}
 
-			} else {
+			}
+			else if (this.reportType === 'aging') {
+				this.columnDefinitions = [
+					{
+						id: 'srno', name: 'SNo.', field: 'srno',
+						sortable: true,
+						width: 2
+					},
+					{
+						id: 'class_name', name: 'Class Name', field: 'class_name', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+					},
+					{
+						id: 'ltm', name: 'Less Than Month', field: 'ltm', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+					},
+					{
+						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+					},
+					{
+						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+					},
+					{
+						id: 'total', name: 'Total', field: 'total', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+					}
+				];
+				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly' }).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data;
+						let index = 0;
+						var total = 0;
+						for (const item of repoArray) {
+							const obj: any = {};
+							obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['class_name'] = item.class_name;
+							obj['ltm'] = item.resultData.ltm.total_fee_amount
+							obj['m13'] = item.resultData.m13.total_fee_amount
+							obj['m3'] = item.resultData.m3.total_fee_amount
+							total = Number(item.resultData.ltm.total_fee_amount) + Number(item.resultData.m13.total_fee_amount) + Number(item.resultData.m3.total_fee_amount);
+							obj['total'] = total;
+							this.dataset.push(obj);
+							index++;
+						}
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['class_name'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['ltm'] = new IndianCurrency().transform(this.dataset.map(t => t['ltm']).reduce((acc, val) => acc + val, 0));
+						obj3['m13'] = new IndianCurrency().transform(this.dataset.map(t => t['m13']).reduce((acc, val) => acc + val, 0));
+						obj3['m3'] = new IndianCurrency().transform(this.dataset.map(t => t['m3']).reduce((acc, val) => acc + val, 0));
+						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0));
+						this.totalRow = obj3;
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+					} else {
+						this.tableFlag = true;
+					}
+				});
+			}
+			else {
 				this.common.showSuccessErrorMessage('Please select date also', 'error');
 			}
 		} else {
@@ -2035,8 +2129,6 @@ export class OutstandingReportComponent implements OnInit {
 		console.log(args);
 	}
 	sumTotalsFormatter(totals, columnDef) {
-		console.log(totals);
-		console.log(columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
 			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
@@ -2210,6 +2302,8 @@ export class OutstandingReportComponent implements OnInit {
 			} else if ($event.value === 'feedue') {
 				this.valueLabel = 'Fee Dues';
 				this.getFeeHeads();
+			} else if ($event.value === 'aging') {
+				this.valueLabel = '';
 			}
 			this.filterFlag = true;
 		} else {
@@ -2369,6 +2463,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('defaulters list: ') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues detail outstanding report: ') + this.sessionName;
+		} else if (this.reportType === 'aging') {
+			reportType = new TitleCasePipe().transform('Aging outstanding report: ') + this.sessionName;
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
@@ -2382,6 +2478,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			reportType2 = new TitleCasePipe().transform('fee dues detail_') + this.sessionName;
+		} else if (this.reportType === 'aging') {
+			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
 		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
@@ -2952,6 +3050,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
 		} else if (this.reportType === 'defaulter') {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
+		} else if (this.reportType === 'aging') {
+			reportType = new TitleCasePipe().transform('aging repot: ') + this.sessionName;
 		}
 		this.angularGrid.exportService.exportToFile({
 			delimiter: (type === 'csv') ? DelimiterType.comma : DelimiterType.tab,
@@ -3025,6 +3125,8 @@ export class OutstandingReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('defaulter list: ') + this.sessionName;
 		} else if (this.reportType === 'feedue') {
 			reportType = new TitleCasePipe().transform('Fee dues Detail outstanding report: ') + this.sessionName;
+		} else if (this.reportType === 'aging') {
+			reportType = new TitleCasePipe().transform('Aging outstanding report: ') + this.sessionName;
 		}
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
