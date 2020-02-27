@@ -319,7 +319,7 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeConcessionAllotedSummaryReport', value);
 	}
-	
+
 	getFeeAdjustmentReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeAdjustmentReport', value);
@@ -511,5 +511,8 @@ export class FeeService {
 	addMultipleCheckControlTool(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/checkControlTool/addMultipleCheckControlTool', value);
+	}
+	getClassWiseMonthWiseSeperation(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperation', value);
 	}
 }
