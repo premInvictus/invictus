@@ -170,14 +170,15 @@ export class OutstandingReportComponent implements OnInit {
 				report_type: 'aging', report_name: 'Aging'
 			}
 		);
-		var session = this.sessionName ? this.sessionName.split('-')[0] : '';
-		const date = new Date(session, new Date().getMonth(), new Date().getDate());
-		const firstDay = new Date(session, new Date().getMonth(), 1);
-		this.reportFilterForm.patchValue({
-			'from_date': firstDay,
-			'to_date': date,
-			'month_id': ''
-		});
+		if (this.sessionName) {
+			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
+			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
+			this.reportFilterForm.patchValue({
+				'from_date': firstDay,
+				'to_date': date,
+				'month_id': ''
+			});
+		}
 		this.filterFlag = true;
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -1961,6 +1962,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
+						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
@@ -1968,6 +1970,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
+						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
@@ -1975,6 +1978,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
+						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'total', name: 'Total', field: 'total', filterable: true,
@@ -1982,6 +1986,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						sortable: true,
+						formatter: this.checkCurrencyFormatter
 					}
 				];
 				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly' }).subscribe((result: any) => {
@@ -3706,5 +3711,17 @@ export class OutstandingReportComponent implements OnInit {
 				this.gridObj.setSelectedRows(this.rowsChosen);
 			}
 		});
+	}
+	checkCurrencyFormatter(row, cell, value, columnDef, dataContext) {
+		if (value === 0) {
+			return '-';
+		} else {
+			if (value > 0) {
+				return new IndianCurrency().transform(value);
+			} else {
+				return '-' + new IndianCurrency().transform(-value);
+			}
+
+		}
 	}
 }
