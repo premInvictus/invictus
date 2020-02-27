@@ -1,7 +1,7 @@
 ﻿﻿import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonAPIService } from '../../_services/index';
+import { CommonAPIService, MessagingService } from '../../_services/index';
 import { AuthenticationService } from '../login/authentication.service';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
@@ -51,6 +51,7 @@ export class LoginComponent implements OnInit {
 		private notif: CommonAPIService,
 		private fpasswordService: AuthenticationService,
 		private loaderService: CommonAPIService,
+		private messagingService: MessagingService,
 		private fbuild: FormBuilder,
 		private _cookieService: CookieService
 	) {
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit {
 		// reset login status
 		// this.authenticationService.logout();
 		// get return url from route parameters or default to '/'
+		this.messagingService.requestPermission();
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
 		this.buildForm();
 		this.checkLoginStatus();

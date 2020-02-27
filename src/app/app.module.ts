@@ -12,7 +12,7 @@ import { AuthenticationService } from './login/login/authentication.service';
 import { CommonAPIService } from './_services/commonAPI.service';
 import { AuthGuard } from './_guards/index';
 import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers';
-import { UserAccessMenuService } from './_services';
+import { UserAccessMenuService, MessagingService } from './_services';
 import { LOCALE_ID, Injector, APP_INITIALIZER } from '@angular/core';
 import { LOCATION_INITIALIZED } from "@angular/common";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -22,6 +22,11 @@ import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-transla
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TimeoutModalComponent } from './timeout-modal/timeout-modal.component';
 import { MatDialogModule } from '@angular/material';
+import { environment } from 'src/environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 @NgModule({
 	declarations: [
@@ -41,10 +46,15 @@ import { MatDialogModule } from '@angular/material';
 		CookieModule.forRoot(),
 		SimpleNotificationsModule.forRoot(),
 		TranslateModule.forRoot({}),
-		AngularSlickgridModule.forRoot()
+		AngularSlickgridModule.forRoot(),
+		AngularFireDatabaseModule,
+		AngularFireAuthModule,
+		AngularFireMessagingModule,
+		AngularFireModule.initializeApp(environment.firebase),
 	],
 	providers: [
 		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService, TranslateService,
+		MessagingService,
 		{ provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true }],
 	bootstrap: [AppComponent],
