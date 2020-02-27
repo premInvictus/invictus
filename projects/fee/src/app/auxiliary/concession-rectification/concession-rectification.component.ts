@@ -4,6 +4,8 @@ import { FeeService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ConcessionList } from './concession-list.model';
+import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 
 @Component({
 	selector: 'app-concession-rectification',
@@ -11,21 +13,22 @@ import { ConcessionList } from './concession-list.model';
 	styleUrls: ['./concession-rectification.component.scss']
 })
 export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
-
+	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('concessionremarkmodal') concessionremarkmodal;
 	displayedColumns: string[] =
-		['srno', 'enrollment', 'name','class_sec','remarks', 'concession', 'proposed_by', 'action'];
+		['srno', 'enrollment', 'name', 'class_sec', 'remarks', 'concession', 'proposed_by', 'action'];
 	ELEMENT_DATA: ConcessionList[] = [];
 	dataSource = new MatTableDataSource<ConcessionList>(this.ELEMENT_DATA);
 	crArray: any[] = [];
-	review_array: any[] = [];	
+	review_array: any[] = [];
 	classSectionName: any;
 	constructor(
+		private dialog: MatDialog,
 		public feeService: FeeService,
 		public commonAPIService: CommonAPIService
 	) { }
- 
+
 	ngOnInit() {
 		this.getConcessionRectification();
 	}
@@ -45,15 +48,15 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 				this.review_array = result.data.review_result;
 				if (this.crArray.length > 0) {
 					let sno = 0;
-					this.crArray.forEach(element => { 
-						if(element.sec_name !== null){
+					this.crArray.forEach(element => {
+						if (element.sec_name !== null) {
 							this.classSectionName = element.class_name + ' - ' + element.sec_name;
-						} else{
+						} else {
 							this.classSectionName = element.class_name;
 						}
 						this.ELEMENT_DATA.push({
 							srno: ++sno,
-							enrollment: element.accd_login_id,							
+							enrollment: element.accd_login_id,
 							class_sec: this.classSectionName,
 							remarks: this.getRemarks(element.mod_rev_id),
 							admno: element.au_admission_no,
@@ -87,11 +90,11 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		if (event.callee_data.accd_id) {
 			param.accd_id = event.callee_data.accd_id;
 		}
-		param.accd_fcg_status = 'approved'; 
+		param.accd_fcg_status = 'approved';
 		this.feeService.updateConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-				this.getConcessionRectification(); 
+				this.getConcessionRectification();
 			} else {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
@@ -100,16 +103,28 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	applyFilter(filterValue: string) {
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 	}
-	getRemarks(mod_rev_id){
+	getRemarks(mod_rev_id) {
 		const findex = this.review_array.findIndex(f => f.mod_rev_id === mod_rev_id);
 		if (findex !== -1) {
 			return this.review_array[findex].mod_review_remark;
 		}
 	}
-	getProposedBy(mod_rev_id){
+	getProposedBy(mod_rev_id) {
 		const findex = this.review_array.findIndex(f => f.mod_rev_id === mod_rev_id);
 		if (findex !== -1) {
 			return this.review_array[findex].proposed_by;
 		}
+	}
+	previewImage(imgArray, index) {
+		const imgArrays: any[] = [];
+		imgArrays.push({ 'file_url': imgArray });
+		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				imageArray: imgArrays,
+				index: index
+			},
+			height: '100vh',
+			width: '100vh'
+		});
 	}
 }
