@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { take, mergeMap, mergeMapTo } from 'rxjs/operators';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFireDatabase } from '@angular/fire/database';
-import { CommonAPIService } from '../_services/index';
+import { CommonAPIService } from './commonAPI.service';
 @Injectable()
 export class MessagingService {
 	currentMessage = new BehaviorSubject(null);

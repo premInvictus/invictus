@@ -60,36 +60,43 @@
                     <span class="mat-button-wrapper">
                         <img class="header-notification-bell"
                             src="../../../assets/images/resvgiconsforfeemodule/notifications.svg">
-                        <span *ngIf="resultArray.length > 0" class="header-notification-dot">{{resultArray.length}}</span>
+                        <span *ngIf="resultArray.length > 0"
+                            class="header-notification-dot">{{resultArray.length}}</span>
                         <span class="header-icon-spacer">Notifications</span>
                     </span>
                 </a>
-                <div class="dropdown-content-2"
+                <div class="dropdown-content-2 main-card-notif"
                     *ngIf="showNotification && currentUser.role_id !=='2' && currentUser.role_id !=='1' && notficationMsg.length > 0">
                     <div class="row" style="margin-top: 0px;" *ngIf="notficationMsg.length > 0">
                         <div class="col-12">
-                            <div class="notfication">
+                            <div class="notfication" style="margin-left: -5%;
+                            margin-right: -5%;">
                                 <div class="row" *ngFor="let item of notficationMsg">
                                     <div class="col-12">
-                                        <mat-card>
+                                        <mat-card class="main-card-child-notif">
                                             <div class="row">
-                                                <div class="col-2 calender-class">
+                                                <div class="col-3 calender-class">
                                                     <i class="fas fa-calendar-alt"></i>
                                                     <span
                                                         style="margin-left:4px">{{item.msg_date | date:'MMM-d' }}</span>
                                                 </div>
-                                                <div class="col-10" style=" padding-right: 0px; padding-left: 5px;">
-                                                    <div class="row" style="margin-top: 0px;">
-                                                        <div (click)="$event.preventDefault();redirectModule(item)"
-                                                            class="col-11">{{item.msg_subject}}</div>
-                                                        <div (click)="$event.preventDefault();deleteNofiy(item);"
-                                                            class="col-1 trash-class">
-                                                            <i class="fas fa-trash"></i>
+                                                <div class="col-9 remove-col-padding"
+                                                    style=" padding-right: 0px; padding-left: 5px;">
+                                                    <div style="position: relative;">
+                                                        <div (click)="$event.preventDefault();deleteNofiy(item);" style="position: absolute;
+                                                        right: 0;">
+                                                            <i style="color:#fff" class="fas fa-trash"></i>
                                                         </div>
+                                                    </div>
+                                                    <div class="row" style="margin-top: 0px;">
+                                                        <div style="color: #fff"
+                                                            (click)="$event.preventDefault();redirectModule(item)"
+                                                            class="col-12"><b>{{item.msg_subject}}</b></div>
                                                     </div>
                                                     <div class="row desc_class"
                                                         (click)="$event.preventDefault();redirectModule(item)">
-                                                        <div class="col-12">{{item.msg_description }}
+                                                        <div style="color: #fff; opacity: 0.6;" class="col-12">
+                                                            {{item.msg_description }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -99,7 +106,8 @@
                                 </div>
                                 <div class="row" style="margin-top: 0px;">
                                     <div class="col-12 view_all">
-                                        <span (click)="$event.preventDefault();viewAll();"> View All</span>
+                                        <span style="color:#fff !important; opacity: 0.9;"
+                                            (click)="$event.preventDefault();viewAll();"> View All</span>
                                     </div>
                                 </div>
                             </div>
@@ -118,13 +126,13 @@
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'"
                         src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg">
                     <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
-                <div class="dropdown-content">
-                    <button mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
+                <div class="dropdown-content logout-drop-down">
+                    <button style="color:#fff" mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
                     <a routerLink="./user-credential">
-                        <button mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change
+                        <button style="color:#fff" mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change
                             Credential</button></a>
                     <a href="javascript:void(0);">
-                        <button mat-menu-item class="profile-submenu" (click)="logout()"><i
+                        <button style="color:#fff" mat-menu-item class="profile-submenu" (click)="logout()"><i
                                 class="fas fa-sign-out-alt"></i> Logout</button></a>
                 </div>
             </div>
@@ -186,8 +194,8 @@
             </a>
             <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false"
                 [matMenuTriggerFor]="academicyear">
-                <mat-menu #academicyear="matMenu">
-                    <button *ngFor="let item of sessionArray" mat-menu-item class="profile-submenu"
+                <mat-menu #academicyear="matMenu" class="logout-drop-down">
+                    <button style="color:#fff" *ngFor="let item of sessionArray" mat-menu-item class="profile-submenu"
                         (click)="setSession(item?.ses_id)">
                         <i class="fas fa-calendar-alt"></i>
                         {{item?.ses_name}}

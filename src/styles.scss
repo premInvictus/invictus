@@ -5494,6 +5494,13 @@ body.sidenav-toggled .navbar-sidenav-tooltip.show {
     font-weight: 600;
     cursor: pointer;
 }
+.mat-menu-panel {
+    background-color: #0f4261 !important;
+    box-shadow: none !important;
+    margin-top: 8px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
 .landscape-style5 .barcode img {
     -webkit-transform: rotate(90deg);
     transform: rotate(90deg);
