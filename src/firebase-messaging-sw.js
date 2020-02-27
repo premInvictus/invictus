@@ -8,12 +8,13 @@ importScripts('https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js');
 // Initialize the Firebase app in the service worker by passing in the
 // messagingSenderId.
 var config = {
-	apiKey: "AIzaSyAg88lKw0PB73i3wI_fnyNbk_sdWU2VTQU",
-    authDomain: "test-notification-17c3a.firebaseapp.com",
-    databaseURL: "https://test-notification-17c3a.firebaseio.com",
-    projectId: "test-notification-17c3a",
-    storageBucket: "test-notification-17c3a.appspot.com",
-    messagingSenderId: "7217963122",
+    apiKey: "AIzaSyAD31jc55BGw7Iiic79wFLUsrBEqQTkGTM",
+    authDomain: "invictus-erp.firebaseapp.com",
+    databaseURL: "https://invictus-erp.firebaseio.com",
+    projectId: "invictus-erp",
+    storageBucket: "invictus-erp.appspot.com",
+    messagingSenderId: "103028680703",
+
 };
 firebase.initializeApp(config);
 

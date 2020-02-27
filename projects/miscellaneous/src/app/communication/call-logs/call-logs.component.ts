@@ -21,7 +21,7 @@ export class CallLogsComponent implements OnInit {
   currentTab = 0;
   currentUser: any;
   url: any;
-  displayedColumns = ['no', 'start_time', 'call_id', 'destination', 'from_caller', 'call_duration', 'to_DID', 'call_type', 'remarks', 'media_s3_url'];
+  displayedColumns = ['no', 'start_time', 'from_caller', 'destination', 'call_duration', 'to_DID', 'remarks', 'media_s3_url'];
   DataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
   constructor(
     private commonAPIService: CommonAPIService,

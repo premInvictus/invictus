@@ -19,13 +19,13 @@ export const environment = {
 	testExtendCode: 'T106',
 	testEndCode: 'T107',
 	firebase: {
-		apiKey: 'AIzaSyAg88lKw0PB73i3wI_fnyNbk_sdWU2VTQU',
-		authDomain: 'test-notification-17c3a.firebaseapp.com',
-		databaseURL: 'https://test-notification-17c3a.firebaseio.com',
-		projectId: 'test-notification-17c3a',
-		storageBucket: 'test-notification-17c3a.appspot.com',
-		messagingSenderId: '7217963122',
-		appId: '1:7217963122:web:a8b0e7b9743e355a92e2eb',
-		measurementId: 'G-6DBS3LE9LF'
+		apiKey: "AIzaSyAD31jc55BGw7Iiic79wFLUsrBEqQTkGTM",
+		authDomain: "invictus-erp.firebaseapp.com",
+		databaseURL: "https://invictus-erp.firebaseio.com",
+		projectId: "invictus-erp",
+		storageBucket: "invictus-erp.appspot.com",
+		messagingSenderId: "103028680703",
+		appId: "1:103028680703:web:318e4f721b2c4fdbcb29ca",
+		measurementId: "G-4KS52C6DVQ"
 	}
 };

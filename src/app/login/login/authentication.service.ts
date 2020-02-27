@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 export class AuthenticationService {
 	constructor(private http: HttpClient, private loaderService: CommonAPIService) { }
 
-	login(username: string, password: any) {
+	login(username: string, password: any, device_details: any) {
 		this.loaderService.startLoading();
 		let prefixOptions;
 		if (username.match(/-/g)) {
@@ -18,9 +18,9 @@ export class AuthenticationService {
 		const headers = new HttpHeaders(prefixOptions);
 		// tslint:disable-next-line:max-line-length
 		if (this.loaderService.getUserPrefix()) {
-			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password });
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_details: device_details });
 		} else {
-			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password }, { headers: headers });
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_details: device_details }, { headers: headers });
 		}
 	}
 
