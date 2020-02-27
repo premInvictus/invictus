@@ -440,7 +440,10 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-career-navigation-id', value);
 	}
+	getAllCareerEnq(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-all-career-enquiry', value);
+	}
 
-	
 
 }

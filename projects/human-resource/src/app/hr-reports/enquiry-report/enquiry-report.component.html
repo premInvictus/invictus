@@ -1,0 +1,16 @@
+<div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
+  <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+    [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+    (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+    (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+  </angular-slickgrid>
+</div>
+<div *ngIf="nodataFlag">
+  <div class="text-center">
+    <app-no-data
+      [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+      [noDataText]="" [subText]="'Please select all required field'">
+    </app-no-data>
+  </div>
+  <br>
+</div>
