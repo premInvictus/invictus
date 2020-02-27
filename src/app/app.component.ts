@@ -15,6 +15,9 @@ import { TimeoutModalComponent } from './timeout-modal/timeout-modal.component';
 import { CookieService } from 'ngx-cookie';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 import { UserIdleService } from 'angular-user-idle';
+import { MessagingService } from './_services';
+import { mergeMap } from 'rxjs/operators';
+import { AngularFireMessaging } from '@angular/fire/messaging';
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -37,7 +40,10 @@ export class AppComponent implements OnInit {
 	proUrl: any;
 	schoolInfo: any;
 	x: NodeJS.Timer;
+	message: any;
 	constructor(private router: Router, private loaderService: CommonAPIService,
+		private angularFireMessaging: AngularFireMessaging,
+		private messagingService: MessagingService,
 		private _cookieService: CookieService,
 		private route: ActivatedRoute,
 		private diaog: MatDialog,
@@ -68,8 +74,17 @@ export class AppComponent implements OnInit {
 			}
 		});
 	}
-
+	deleteToken() {
+		this.angularFireMessaging.getToken
+		  .pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
+		  .subscribe(
+			(token) => { console.log('Deleted!'); },
+		  );
+	  }
 	ngOnInit() {
+	this.messagingService.receiveMessage();
+	this.message = this.messagingService.currentMessage;
+	console.log(this.message);
 		document.addEventListener("mousemove", (e) => {
 			this.idle.resetTimer();
 		});
@@ -178,6 +193,7 @@ export class AppComponent implements OnInit {
 					}).subscribe(
 						(result: any) => {
 							if (result.status === 'ok') {
+								this.deleteToken();
 								localStorage.clear();
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';

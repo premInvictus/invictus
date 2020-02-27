@@ -54,12 +54,12 @@
               <span class="text-left">{{ element?.start_time * 1000 | date : 'dd-MMM-y, hh:mm a'}}</span>
             </td>
           </ng-container>
-          <ng-container matColumnDef="call_id">
+          <ng-container matColumnDef="from_caller">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Call Id
+              From Caller
             </th>
-            <td mat-cell *matCellDef="let element" class="text-left">
-              <span class="text-left">{{element?.call_id }}</span>
+            <td mat-cell *matCellDef="let element">
+              {{element?.from_caller }}
             </td>
           </ng-container>
           <ng-container matColumnDef="destination">
@@ -68,14 +68,6 @@
             </th>
             <td mat-cell *matCellDef="let element" class="text-left">
               <span class="text-left">{{element?.destination | titlecase}}</span>
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="from_caller">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              From Caller
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{element?.from_caller }}
             </td>
           </ng-container>
           <ng-container matColumnDef="call_duration">
@@ -93,14 +85,6 @@
             </th>
             <td mat-cell *matCellDef="let element">
               {{element.to_DID}}
-            </td>
-          </ng-container>
-          <ng-container matColumnDef="call_type">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>
-              Call Type
-            </th>
-            <td mat-cell *matCellDef="let element">
-              {{element.call_type}}
             </td>
           </ng-container>
           <ng-container matColumnDef="remarks">

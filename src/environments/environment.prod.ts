@@ -17,5 +17,15 @@ export const environment = {
 	testInternetErrorCode : 'T104',
 	testSuspiciousErrorCode : 'T105',
 	testExtendCode: 'T106',
-	testEndCode: 'T107'
+	testEndCode: 'T107',
+	firebase: {
+		apiKey: "AIzaSyAD31jc55BGw7Iiic79wFLUsrBEqQTkGTM",
+		authDomain: "invictus-erp.firebaseapp.com",
+		databaseURL: "https://invictus-erp.firebaseio.com",
+		projectId: "invictus-erp",
+		storageBucket: "invictus-erp.appspot.com",
+		messagingSenderId: "103028680703",
+		appId: "1:103028680703:web:318e4f721b2c4fdbcb29ca",
+		measurementId: "G-4KS52C6DVQ"
+	}
 };

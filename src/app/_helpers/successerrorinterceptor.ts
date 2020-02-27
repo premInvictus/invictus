@@ -5,18 +5,20 @@ import {
 	HttpErrorResponse
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { map, catchError, retry } from 'rxjs/operators';
+import { map, catchError, retry, mergeMap } from 'rxjs/operators';
 import { CommonAPIService } from '../_services/index';
 import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
 import { ProcesstypeService } from 'projects/sis/src/app/_services';
 import { ProcesstypeFeeService } from 'projects/fee/src/app/_services';   
 import { ProcesstypeExamService } from 'projects/examination/src/app/_services';   
+import { AngularFireMessaging } from '@angular/fire/messaging';
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
 	constructor(private service: CommonAPIService, private cookieService: CookieService,
 		private router: Router,
 		private processtypeService: ProcesstypeService,
+		private angularFireMessaging: AngularFireMessaging,
 		private processtypeFeeService: ProcesstypeFeeService,
 		private processtypeExamService: ProcesstypeExamService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -59,6 +61,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 					if (event.body && event.body.status === 'error' &&
 						(event.body.data === 'Token Expired' || event.body.data === 'Logout Successfully' ||
 							event.body.data === 'Token Not Matched')) {
+						this.deleteToken();
 						localStorage.clear();
 						this.cookieService.removeAll();
 						this.router.navigate(['/login']);
@@ -77,4 +80,11 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 				return throwError(error);
 			}));
 	}
+	deleteToken() {
+		this.angularFireMessaging.getToken
+		  .pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
+		  .subscribe(
+			(token) => { console.log('Deleted!'); },
+		  );
+	  }
 }

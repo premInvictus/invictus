@@ -27,6 +27,7 @@ export class CommonAPIService {
 	studentData = new Subject();
 	reRenderForm = new Subject();
 	renderTab = new Subject();
+	messageSub = new Subject();
 	unsubscribePayAPI = new Subject();
 	userPrefix: any = '';
 	familyData: any;

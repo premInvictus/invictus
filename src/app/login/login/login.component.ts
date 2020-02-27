@@ -1,10 +1,11 @@
 ﻿﻿import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommonAPIService } from '../../_services/index';
+import { CommonAPIService, MessagingService } from '../../_services/index';
 import { AuthenticationService } from '../login/authentication.service';
 import { CookieService } from 'ngx-cookie';
 import { environment } from 'src/environments/environment';
+import { tokenKey } from '@angular/core/src/view';
 
 @Component({
 	templateUrl: 'login.component.html',
@@ -27,7 +28,7 @@ export class LoginComponent implements OnInit {
 	resendOTPActive = false;
 	otpActive = true;
 	emailActive = true;
-
+	device_details: any[] = [{ device_id: "", "platform": "web", type: "web" }, { device_id: "", "platform": "android", type: "app" }];
 	verifyOtp = false;
 	newPassword = false;
 	private otpdiv = false;
@@ -39,7 +40,7 @@ export class LoginComponent implements OnInit {
 	private validateNewPasswordForm: FormGroup;
 	schoolInfo: any = {};
 	userSaveData: any;
-
+	webDeviceToken: any = {};
 	private OTPstatus: any = {};
 
 	/*Forgot passwrd Ends*/
@@ -51,6 +52,7 @@ export class LoginComponent implements OnInit {
 		private notif: CommonAPIService,
 		private fpasswordService: AuthenticationService,
 		private loaderService: CommonAPIService,
+		private messagingService: MessagingService,
 		private fbuild: FormBuilder,
 		private _cookieService: CookieService
 	) {
@@ -126,10 +128,12 @@ export class LoginComponent implements OnInit {
 			event.stopPropagation();
 			return false;
 		}
+		this.messagingService.requestPermission();
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
-		this.authenticationService.login(this.model.username, this.model.password)
+		console.log(this.messagingService.device_details);
+		this.authenticationService.login(this.model.username, this.model.password, this.messagingService.device_details)
 			.subscribe(
 				(result: any) => {
 					if (result.status === 'ok' && result.data) {

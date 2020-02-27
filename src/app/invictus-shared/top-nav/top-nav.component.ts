@@ -13,6 +13,8 @@ import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/ad
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
 import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-store.service';
 import { TruncatetextPipe } from '../../_pipes/truncatetext.pipe'
+import { AngularFireMessaging } from '@angular/fire/messaging';
+import { mergeMap } from 'rxjs/operators';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -62,6 +64,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+		private angularFireMessaging: AngularFireMessaging,
 		private sisService: SisService,
 		private router: Router,
 		private qelementService: QelementService,
@@ -158,6 +161,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.projectId = '12';
 			}
 		}
+		this.commonAPIService.messageSub.subscribe((res: any) => {
+			if (res.message === 'Sent') {
+				this.getPushNotification();
+			}
+		});
 	}
 	checkUpdateProfile() {
 		if (this.currentUser.role_id === '4' || this.currentUser.role_id === '3') {
@@ -372,6 +380,13 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				}
 			});
 	}
+	deleteToken() {
+		this.angularFireMessaging.getToken
+		  .pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
+		  .subscribe(
+			(token) => { console.log('Deleted!'); },
+		  );
+	  }
 	logout() {
 		if (this._cookieService.get('userData')) {
 			this.userData = JSON.parse(this._cookieService.get('userData'));
@@ -387,6 +402,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					}).subscribe(
 						(result: any) => {
 							if (result.status === 'ok') {
+								this.deleteToken();
 								localStorage.clear();
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
@@ -406,6 +422,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 	}
 	getPushNotification() {
+		this.notficationMsg = [];
 		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resultArray = result.data;
