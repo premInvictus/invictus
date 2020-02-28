@@ -1,18 +1,90 @@
 <div class="add-question-content">
     <div class="row">
-        <div class="col-lg-12 col-mobile-view-add-ques">
-            <div class="white-box">
-                <div class="container-box__white">
-                    <div class="row">
-                        <div class="col-lg-12 col-mobile-view-add-ques">
-                            <div class="white-box-content-title">
-                                <h4 class="text-uppercase text-center"><b>Misc Setup Configuration</b></h4>
-                            </div>
-                        </div>
-                    </div>
-                    
+      <div class="col-lg-12 col-mobile-view-add-ques">
+        <div class="white-box">
+          <div class="container-box__white">
+            <div class="row">
+              <div class="col-lg-12 col-mobile-view-add-ques">
+                <div class="white-box-content-title">
+                  <h4 class="text-uppercase text-center"><b>Misc Setup</b></h4>
                 </div>
+              </div>
             </div>
+            <div class="row">
+              <div class="col-3 col-mobile-view-add-ques">
+                <div>
+                  <div class="left-side-box">
+                    <div class="left-side-box-content">
+                      <mat-form-field class="form-field" appearance="outline">
+                        <mat-label>Setup Option</mat-label>
+                        <mat-select (selectionChange)="getGlobalSetting($event.value)" placeholder="Setup Options">
+                          <mat-option value="">Please Select</mat-option>
+                          <mat-option *ngFor="let item of gsettingGroupArr" [value]="item.gs_group">{{item.gs_group}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-9 col-mobile-view-add-ques remove-col-modal-padding" *ngIf="formFlag">
+                <div class="top-right-parameter">
+                  <div class="top-right-box">
+                    <div>
+                      <div class="top-right-box-content-title">
+                        <div class="row">
+                          <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                            <form [formGroup]="settingForm">
+                                <ng-container *ngFor="let control of gsettingArr">
+                                    <div class="row">
+                                        <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                                            <ng-container *ngIf="control.gs_type == 'text'">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>{{control.gs_name}}</mat-label>
+                                                    <input matInput [placeholder]="control.gs_name" type="text" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                    >
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_type == 'toggle'">
+                                                <div class="row">
+                                                    <div class="col-lg-4 col-mobile-view-add-ques remove-col-modal-padding">
+                                                        <mat-label>{{control.gs_name}}</mat-label>
+                                                    </div>
+                                                    <div class="col-lg-8 col-mobile-view-add-ques remove-col-modal-padding">
+                                                        <mat-slide-toggle class="inline-form-radio-spacing" [formControlName]="control.gs_alias">
+                                                        </mat-slide-toggle>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_type == 'color'">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>{{control.gs_name}}</mat-label>
+                                                    <input matInput [placeholder]="control.gs_name" type="color" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                    >
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_type == 'number'">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>{{control.gs_name}}</mat-label>
+                                                    <input matInput [placeholder]="control.gs_name" type="number" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                    >
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_type == 'editor'">
+                                                <ckeditor [config]="ckeConfig" [formControlName]="control.gs_alias"></ckeditor>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-   
