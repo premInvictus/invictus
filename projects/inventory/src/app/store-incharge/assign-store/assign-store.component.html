@@ -1,0 +1,42 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-12 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Assign Store</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card class="mat-card-108">
+      <form [formGroup]="assignStoreForm" novalidate>
+        <div class="row">
+          <div class="col-2">
+            <app-location-search-and-add (renderData)="getFilterLocation($event)">
+            </app-location-search-and-add>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Employee</mat-label>
+              <input type="text" matInput placeholder="Employee" formControlName="emp_id" autocomplete="off" required>
+              <mat-error>
+                This field is required
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-1" style="padding:12px">
+            <button mat-raised-button class="btn-success-green" (click)="getItemList()">Submit</button>
+          </div>
+          <div class="col-7">
+
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>

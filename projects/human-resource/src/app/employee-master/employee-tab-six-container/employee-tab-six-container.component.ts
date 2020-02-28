@@ -328,7 +328,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	deleteFile(doc_name, doc_req_id) {
-		console.log(this.finalJSon , 'before');
+		//console.log(this.finalJSon , 'before');
 		const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
 		if (findex !== -1) {
 			const findex_1 = this.finalJSon[findex].files_data.findIndex(e => e.file_url === doc_name);
@@ -338,7 +338,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		if (findex2 !== -1) {
 			this.imageArray.splice(findex2, 1);
 		}
-		console.log(this.finalJSon , 'delete');
+		//console.log(this.finalJSon , 'delete');
 	}
 	saveForm() {
 		this.disabledApiButton = true;
