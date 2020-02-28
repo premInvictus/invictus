@@ -243,6 +243,39 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			};
 			this.multipleFileArray.push(fileJson);
 			this.counter++;
+
+			// if (this.counter === this.currentFileChangeEvent.target.files.length) {
+			// 	this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+			// 		if (result) {
+			// 			for (const item of result.data) {
+			// 				const findex = this.finalDocumentArray.findIndex(f =>
+			// 					f.ed_login_id === item.login_id && f.ed_docreq_id === doc_req_id);
+			// 				const findex2 = this.imageArray.findIndex(f =>
+			// 					f.imgName === item.file_url && f.ed_docreq_id === doc_req_id);
+			// 				if (findex === -1) {
+			// 					this.finalDocumentArray.push({
+			// 						ed_login_id: this.docContext,
+			// 						ed_docreq_id: doc_req_id,
+			// 						ed_name: item.file_name,
+			// 						ed_link: item.file_url,
+			// 						ed_is_verify: 'N'
+			// 					});
+			// 				} else {
+			// 					this.finalDocumentArray.splice(findex, 1);
+			// 				}
+			// 				if (findex2 === -1) {
+			// 					this.imageArray.push({
+			// 						ed_docreq_id: doc_req_id,
+			// 						imgName: item.file_url
+			// 					});
+			// 				} else {
+			// 					this.imageArray.splice(findex2, 1);
+			// 				}
+			// 			}
+			// 		}
+			// 	});
+			// }
+
 			if (this.counter === this.currentFileChangeEvent.target.files.length) {
 				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
@@ -250,25 +283,15 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 							const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
 							const findex2 = this.imageArray.findIndex(f => f.imgName === item.file_url && f.docreq_id === doc_req_id);
 							if (findex === -1) {
-								this.finalDocumentArray.push({
-									docreq_id: doc_req_id,
-									ed_name: item.file_name,
-									ed_link: item.file_url,
-								});
 								this.finalJSon.push({
 									document_id: doc_req_id,
 									document_name: this.getFileName(doc_req_id),
 									verified_staus: false,
-									files_data: [
-										{
-											file_name: item.file_name,
-											file_url: item.file_url
-										}
-									]
-
+									files_data: [item]
 								});
-							} else {
-								this.finalJSon.splice(findex, 1);
+							}
+							else {
+								this.finalJSon[findex].files_data.push(item);
 							}
 							if (findex2 === -1) {
 								this.imageArray.push({
@@ -286,14 +309,6 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		};
 		reader.readAsDataURL(files);
 	}
-	// checkVerifiedStatus(value) {
-	// 	const index = this.verifyArray.indexOf(value);
-	// 	if (index !== -1) {
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// }
 	checkThumbnail(url: any) {
 		if (url.match(/jpg/) || url.match(/png/) || url.match(/bmp/) ||
 			url.match(/gif/) || url.match(/jpeg/) ||
@@ -306,21 +321,24 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 	}
 
 	fileUploadedStatus(doc_req_id) {
-		for (let i = 0; i < this.finalDocumentArray.length; i++) {
-			if (this.finalDocumentArray[i]['docreq_id'] === doc_req_id) {
+		for (let i = 0; i < this.finalJSon.length; i++) {
+			if (this.finalJSon[i]['document_id'] === doc_req_id) {
 				return true;
 			}
 		}
 	}
 	deleteFile(doc_name, doc_req_id) {
+		console.log(this.finalJSon , 'before');
 		const findex = this.finalJSon.findIndex(f => f.document_id === doc_req_id);
-		const findex2 = this.imageArray.findIndex(f => f.docreq_id === doc_req_id && f.imgName === doc_name);
 		if (findex !== -1) {
-			this.finalJSon.splice(findex, 1);
+			const findex_1 = this.finalJSon[findex].files_data.findIndex(e => e.file_url === doc_name);
+			this.finalJSon[findex].files_data.splice(findex_1, 1);
 		}
+		const findex2 = this.imageArray.findIndex(f => f.docreq_id === doc_req_id && f.imgName === doc_name);
 		if (findex2 !== -1) {
 			this.imageArray.splice(findex2, 1);
 		}
+		console.log(this.finalJSon , 'delete');
 	}
 	saveForm() {
 		this.disabledApiButton = true;
