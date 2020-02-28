@@ -28,12 +28,12 @@
                         class="fas fa-school"></i><span>{{schoolInfo?.school_name}}</span> </button>
             </mat-menu>
             <div [hidden]="!(currentUser.role_id === '2')" class="header-menu-divider"></div>
-            <button [hidden]="!(currentUser.role_id === '2')"
+            <button style="color:#fff" [hidden]="!(currentUser.role_id === '2')"
                 class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="erpmodule" mat-button>
                 <img class="header-erp-module" src="../../../assets/images/resvgiconsforfeemodule/erp_module.svg"><span
                     class="header-icon-spacer">{{defaultProject}}</span></button>
             <mat-menu #erpmodule="matMenu">
-                <button *ngFor="let item of projectsArray"
+                <button style="color:#fff" *ngFor="let item of projectsArray"
                     (click)="goToProject(item?.pro_url, item?.pro_status, item.pro_id)" mat-menu-item
                     class="profile-submenu">
                     <i class="fas fa-project-diagram"></i>
@@ -126,7 +126,7 @@
                         onError="this.src='https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg'"
                         src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.svg">
                     <span class="header-icon-spacer header-profile-name">Hi, {{usernane}}</span></button>
-                <div class="dropdown-content logout-drop-down">
+                <div class="dropdown-content logout-drop-down2">
                     <button style="color:#fff" mat-menu-item class="profile-submenu"><i class="fas fa-eye"></i> View Profile</button>
                     <a routerLink="./user-credential">
                         <button style="color:#fff" mat-menu-item class="profile-submenu"><i class="fas fa-user-edit"></i> Change
