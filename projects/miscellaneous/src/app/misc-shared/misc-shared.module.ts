@@ -43,6 +43,7 @@ import { SearchViaNameComponent } from './search-via-name/search-via-name.compon
 import { CallRemarksComponent } from './call-remarks/call-remarks.component';
 import { CallLogRemarksModalComponent } from './call-log-remarks-modal/call-log-remarks-modal.component';
 import { CreateFolderComponent } from './create-folder/create-folder.component';
+import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -120,6 +121,7 @@ export const MY_FORMATS = {
 		CallRemarksComponent,
 		CallLogRemarksModalComponent,
 		CreateFolderComponent,
+		UploadFileModalComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -135,7 +137,8 @@ export const MY_FORMATS = {
 		SearchViaNameComponent,
 		CallRemarksComponent,
 		CallLogRemarksModalComponent,
-		CreateFolderComponent
+		CreateFolderComponent,
+		UploadFileModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -179,7 +182,8 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
-		CreateFolderComponent
+		CreateFolderComponent,
+		UploadFileModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

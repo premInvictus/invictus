@@ -37,6 +37,15 @@ button.upload-btn-file.mat-raised-button {
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     /* border-bottom: 1px solid; */
 }
-i.fas.fa-folder.folder-paren {
+.folder-paren {
     color: #e2a74f;
+    font-size: 18px;
+}
+.home-ico {
+    font-size: 16px;
+    color: #83becf;
+}
+span.breadcrum-span {
+    color: #83becf;
+    font-size: 16px;
 }
