@@ -1,1 +1,103 @@
-<div> School Records</div>
+<div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-top-title__container" style="padding:20px !important">
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-sm-6">
+                        <h1 class="remove-bottom-margin font-size-24">School Records</h1>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row margin-left-10">
+        <div class="col-12 remove-col-padding-left">
+            <mat-card>
+                <div class="file-manager-div">
+                    <form [formGroup]="searchForm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="position: relative;width: 100%;">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>&nbsp; &nbsp; &nbsp;Filter</mat-label>
+                                        <input matInput type="text" formControlName="search"
+                                            placeholder=" Type a prefix and press enter to search. Press ESC to clear">
+                                        <i class="fas fa-search" style="position: absolute; left: 0;
+                                    top: 34%;"></i>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file">
+                                        <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
+                                    </button>
+                                </div>
+                                <div style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file"
+                                        style="background: #267733 !important;" (click)="openFolderCreate()">
+                                        <i class="fas fa-folder upload-icon"></i> &nbsp; <b>Create Folder</b>
+                                    </button>
+                                </div>
+                                <div style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file" style="    background: transparent !important;
+                                    color: #000 !important;
+                                    border: 1px dashed !important;">
+                                        <i class="fas fa-download upload-icon"></i> &nbsp; <b>Download</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row" *ngIf="fileArray.length > 0">
+                        <div class="col-12">
+                            <div class="headerr-file-upload">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="text-align: center;">Name</span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span style="text-align: center;">Last Modified Date</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span style="text-align: center;">Size</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span style="text-align: center;">Action</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container *ngFor="let item of fileArray">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="file-div">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <span style="text-align: center;">
+                                                        <i class="fas fa-folder folder-paren"></i> &nbsp;{{item.name}}
+                                                    </span>
+                                                </div>
+                                                <div class="col-3">
+                                                    <span style="text-align: center;">
+                                                        {{item.updatedDate.date | date: 'd-MMM-y'}}
+                                                        {{item.updatedDate.time }}
+                                                    </span>
+                                                </div>
+                                                <div class="col-2">
+                                                    <span style="text-align: center;">
+                                                        {{item.size ? item.size : '-'}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

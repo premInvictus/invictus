@@ -42,6 +42,7 @@ import { PreviewDocumentComponent } from './preview-document/preview-document.co
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { CallRemarksComponent } from './call-remarks/call-remarks.component';
 import { CallLogRemarksModalComponent } from './call-log-remarks-modal/call-log-remarks-modal.component';
+import { CreateFolderComponent } from './create-folder/create-folder.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -118,6 +119,7 @@ export const MY_FORMATS = {
 		SearchViaNameComponent,
 		CallRemarksComponent,
 		CallLogRemarksModalComponent,
+		CreateFolderComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -132,7 +134,8 @@ export const MY_FORMATS = {
 		PreviewDocumentComponent,
 		SearchViaNameComponent,
 		CallRemarksComponent,
-		CallLogRemarksModalComponent
+		CallLogRemarksModalComponent,
+		CreateFolderComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -175,7 +178,8 @@ export const MY_FORMATS = {
 		AngularCalendarYearViewComponent,
 		AdvancedSearchModalComponent,
 		ComposeMessageComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		CreateFolderComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
