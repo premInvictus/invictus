@@ -57,16 +57,16 @@ export class ReportComponent implements OnInit {
 			report_main_image_class: '',
 			report_middle_class: 'inline-flex',
 			report_check_icon_class: ''
-		},
-		{
-			report_id: '6',
-			report_name: 'Negative Report',
-			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
-			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
-			report_main_image_class: '',
-			report_middle_class: 'inline-flex',
-			report_check_icon_class: ''
 		}
+		// {
+		// 	report_id: '6',
+		// 	report_name: 'Negative Report',
+		// 	report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+		// 	main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+		// 	report_main_image_class: '',
+		// 	report_middle_class: 'inline-flex',
+		// 	report_check_icon_class: ''
+		// }
 	];
 	reportType: string;
 	reportHeader: any;
@@ -146,13 +146,13 @@ export class ReportComponent implements OnInit {
 			return this.CommonAPIService.isExistUserAccessMenu('589');
 		}
 		if (actionT === '3') {
-			return true;
+			return this.CommonAPIService.isExistUserAccessMenu('637');
 		}
 		if (actionT === '4') {
-			return true;
+			return this.CommonAPIService.isExistUserAccessMenu('638');
 		}
 		if (actionT === '5') {
-			return true;
+			return this.CommonAPIService.isExistUserAccessMenu('639');
 		}
 		if (actionT === '6') {
 			return true;

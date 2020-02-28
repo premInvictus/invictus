@@ -16,13 +16,14 @@ import { SecurityDepositComponent } from './security-deposit/security-deposit.co
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { DropoutComponent } from './dropout/dropout.component';
 import { BouncedChequeMultipleComponent } from './cheque-control-tool/bounced-cheque-multiple/bounced-cheque-multiple.component';
+import { PreviewDocumentComponent } from './concession-rectification/preview-document/preview-document.component';
 @NgModule({
 	imports: [
 		CommonModule,
 		AuxiliaryRoutingModule,
 		SharedmoduleModule
 	],
-	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent,BouncedChequeMultipleComponent],
+	entryComponents: [BouncedChequeModalComponent, ConcessionRemarkModalComponent,BouncedChequeMultipleComponent,PreviewDocumentComponent],
 	declarations: [
 		BouncedChequeModalComponent,
 		ChequeControlToolComponent,
@@ -36,7 +37,8 @@ import { BouncedChequeMultipleComponent } from './cheque-control-tool/bounced-ch
 		SecurityDepositComponent,
 		DropoutComponent,
 		BulkUpdatesComponent,
-		BouncedChequeMultipleComponent
+		BouncedChequeMultipleComponent,
+		PreviewDocumentComponent
 	]
 })
 export class AuxiliaryModule { }
