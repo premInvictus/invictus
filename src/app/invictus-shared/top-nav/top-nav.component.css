@@ -39,6 +39,13 @@ mat-card.main-card-child-notif.mat-card {
     border-top-left-radius: 0px !important;
     border-top-right-radius: 0px !important;
 }
+.logout-drop-down2 {
+    background-color: #0f4261 !important;
+    box-shadow: none !important;
+    margin-top: 0px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
 
 .dropdown-content-2 {
     margin-top: 10px;
@@ -51,8 +58,12 @@ mat-card.main-card-child-notif.mat-card {
     margin-left: -50px;
     border-radius: 5px;
 }
-.dropdown:hover .dropdown-content {
+.dropdown button:hover .dropdown-content {
     display: block;
+}
+.dropdown-content a:hover {
+    background-color: #0f4261 !important;
+    opacity: 0.4 !important;
 }
 .wrapper-menu {
     width: 30px;
