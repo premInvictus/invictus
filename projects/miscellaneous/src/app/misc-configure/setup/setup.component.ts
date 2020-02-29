@@ -46,7 +46,10 @@ export class SetupComponent implements OnInit {
 	}
 	getGs_value(element){
 		if(element.gs_type == 'json') {
-			return element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+			if(element.gs_alias === 'library_user_setting') {
+				const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+				return this.fbuild.array([this.fbuild.group(jsontemp)]);
+			}
 		}
 		if(element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance') {
 			return element.gs_value && element.gs_value !== '' ? [element.gs_value.split(',')] : [''];
@@ -84,6 +87,9 @@ export class SetupComponent implements OnInit {
 		  }
 		  if (this.settingForm.value && this.settingForm.value.student_performance) {
 			this.settingForm.value.student_performance = this.settingForm.value.student_performance.join(',').toString();
+		  }
+		  if (this.settingForm.value && this.settingForm.value.library_user_setting) {
+			this.settingForm.value.library_user_setting = JSON.stringify(this.settingForm.value.library_user_setting[0]);
 		  }
 		this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

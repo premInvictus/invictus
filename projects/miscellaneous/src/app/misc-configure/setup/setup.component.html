@@ -98,15 +98,93 @@
                                               </mat-form-field>
                                             </ng-container>
                                           </ng-container>
+
                                           <ng-container *ngIf="control.gs_type == 'json'">
-                                            <ng-container *ngIf="control.gs_alias == 'result_entry_options'">
-                                              <mat-form-field class="form-field" appearance="outline">
-                                                <mat-select [formControlName]="control.gs_alias" multiple>
-                                                  <mat-option *ngFor="let item of control.gs_value" [value]="item.id">
-                                                    {{item.value}}
-                                                  </mat-option>
-                                                </mat-select>
-                                              </mat-form-field>
+                                            <ng-container *ngIf="control.gs_alias == 'library_user_setting'">
+                                              <div [formArrayName]="control.gs_alias"
+                                                *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;">
+                                                <div [formGroupName]="i">
+                                                  <div class="container">
+                                                    <div class="row">
+                                                      <div class="col-2">
+                                                      </div>
+                                                      <div class="col-3">
+                                                        Issue Book Limit
+                                                      </div>
+                                                      <div class="col-3">
+                                                        Return Book (In No. of Days)
+                                                      </div>
+                                                      <div class="col-3">
+                                                        Class Book Issue Limit
+                                                      </div>
+                                                    </div>
+                                                    <div class="row">
+                                                      <div class="col-2 middle">
+                                                        Staff
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Books Issue for Staff"
+                                                            class="text-capitalize" type="text" formControlName="book_issued_limit_staff"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
+                                                            type="text" formControlName="book_return_days_staff"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                    </div>
+                                                    <div class="row">
+                                                      <div class="col-2 middle">
+                                                        Teacher
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Books Issue for Teacher"
+                                                            class="text-capitalize" type="text" formControlName="book_issued_limit_teacher"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
+                                                            type="text" formControlName="book_return_days_teacher"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                    </div>
+                                                    <div class="row">
+                                                      <div class="col-2 middle">
+                                                        Student
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Books Issue for Student"
+                                                            class="text-capitalize" type="text" formControlName="book_issued_limit_student"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Days to Return Book" class="text-capitalize"
+                                                            type="text" formControlName="book_return_days_student"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                      <div class="col-3">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="No. of Class Book Issue for Student"
+                                                            class="text-capitalize" type="text" formControlName="class_book_issue_for_student"
+                                                            >
+                                                        </mat-form-field>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                              </div>
                                             </ng-container>
                                           </ng-container>
                                       </div>
