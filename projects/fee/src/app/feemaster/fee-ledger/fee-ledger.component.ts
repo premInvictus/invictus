@@ -58,6 +58,7 @@ export class FeeLedgerComponent implements OnInit {
 		unconsolidate: false,
 		receiptmodification: false
 	};
+	dupInvArr = [];
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('table') table: ElementRef;
 	schoolInfo: any;
@@ -280,10 +281,10 @@ export class FeeLedgerComponent implements OnInit {
 					// console.log('dupInvoiceArr.indexOf(element.invoiceno)-',dupInvoiceArr.indexOf(element.invoiceno));
 					
 					
-					// if(element.flgr_payment_mode === 'partial') {
+					if(element.flgr_payment_mode === 'partial') {
 						element['balance'] = this.getPartialInvoiceLastBalance(dupInvoiceArr, element.invoiceno);
-						console.log("element['flgr_balance']",element['flgr_balance']);
-					// }
+						//console.log("element['flgr_balance']",element['flgr_balance']);
+					}
 
 					if((dupInvoiceArr.indexOf(element.invoiceno) < 0) || item.flgr_inv_id === "0" ){
 						dupInvoiceArr.push(element.invoiceno);												
@@ -332,20 +333,28 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getPartialInvoiceLastBalance(dupInvoiceArr, invoice_no) {
+		// var tempArr = [];
+		// var inv_amount ;
+		// var flgr_balance = 0;
+		// for (let i=0; i<this.recordArray.length;i++) {			
+		// 	if(this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
+		// 		inv_amount = this.recordArray[i]['flgr_amount'];
+		// 		flgr_balance =  Number(flgr_balance) +  Number(this.recordArray[i]['flgr_receipt']);
+		// 		console.log('flgr_balance--',flgr_balance);
+		// 		tempArr.push(this.recordArray[i]['flgr_balance']);
+		// 	}
+		// }
+		// var finAmt = Number(inv_amount)  - Number(flgr_balance);
+		// console.log(inv_amount, 'tempArr--',tempArr.reverse(),finAmt);
+		// return finAmt;
 		var tempArr = [];
-		var inv_amount ;
-		var flgr_balance = 0;
-		for (let i=0; i<this.recordArray.length;i++) {			
-			if(this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
-				inv_amount = this.recordArray[i]['flgr_amount'];
-				flgr_balance =  Number(flgr_balance) +  Number(this.recordArray[i]['flgr_receipt']);
-				console.log('flgr_balance--',flgr_balance);
+		for (let i=0; i<this.recordArray.length;i++) {
+			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
 				tempArr.push(this.recordArray[i]['flgr_balance']);
 			}
 		}
-		var finAmt = Number(inv_amount)  - Number(flgr_balance);
-		console.log(inv_amount, 'tempArr--',tempArr.reverse(),finAmt);
-		return finAmt;
+		console.log('tempArr--',tempArr.reverse());
+		return tempArr.reverse()[0];
 	}
 
 	getRowSpan(col, index) {
