@@ -257,6 +257,14 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/file-management/insertFileType', value);
 	}
+	insertMultipleFiles(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/insertMultipleFiles', value);
+	}
+	uploadFilesToS3(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/uploadFilesToS3', value);
+	}
 
 
 }

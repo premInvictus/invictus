@@ -28,7 +28,24 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div style="display: inline-flex;">
+                                            <ng-container *ngFor="let item of breadcrumArr;let i = index">
+                                                <span style="cursor: pointer;" class="breadcrum-span"
+                                                    (click)="setParentId2(item.parent_id)">
+                                                    <i *ngIf="i === 0"
+                                                        class="fas fa-home home-ico"></i>&nbsp;{{item.name}}
+                                                    &nbsp; <i *ngIf="i !== breadcrumArr.length -1"
+                                                        class="fas fa-caret-right home-ico"></i></span>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12">
                                 <div style="display:inline-flex">
@@ -49,27 +66,14 @@
                                         <i class="fas fa-download upload-icon"></i> &nbsp; <b>Download</b>
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-                    </form>
-                    <br>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-12">
-                                    <div style="display: inline-flex;">
-                                        <ng-container *ngFor="let item of breadcrumArr;let i = index">
-                                            <span style="cursor: pointer;" class="breadcrum-span" (click)="setParentId2(item.parent_id)">
-                                                <i *ngIf="i === 0" class="fas fa-home home-ico"></i>&nbsp;{{item.name}}
-                                                &nbsp; <i *ngIf="i !== breadcrumArr.length -1"
-                                                    class="fas fa-caret-right home-ico"></i></span>
-                                        </ng-container>
-                                    </div>
+                                <div style="float: right;" [hidden]="!(fileArray.length > 0)">
+                                    <mat-paginator #paginator [pageSize]="bookpagesize"
+                                        [pageSizeOptions]="bookpagesizeoptions" showFirstLastButtons
+                                        (page)="pageEvent = fetchData($event)"></mat-paginator>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <br>
+                    </form>
                     <div class="row" *ngIf="fileArray.length > 0">
                         <div class="col-12">
                             <div class="headerr-file-upload">
@@ -98,9 +102,12 @@
                                                 <div class="col-6">
                                                     <span style="text-align: center;">
                                                         <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
-                                                        <i class="fas fa-folder-open folder-paren"></i>
+                                                        <i *ngIf="item.element_type === 'folder'"
+                                                            class="fas fa-folder-open folder-paren"></i>
+                                                        <i *ngIf="item.element_type !== 'folder'"
+                                                            class="fas fa-file file-paren"></i>
                                                         &nbsp;<span style="cursor: pointer;"
-                                                            (click)="setParentId(item.file_type_id, item.name)">{{item.name}}</span>
+                                                            (click)="setParentId(item.file_type_id, item.name, item)">{{item.name}}</span>
                                                     </span>
                                                 </div>
                                                 <div class="col-3">
@@ -111,7 +118,13 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <span style="text-align: center;">
-                                                        {{item.size ? item.size : '-'}}</span>
+                                                        {{item.size ? (getTotalSize(item.size) | number) : '-'}}</span>
+                                                    <span *ngIf="item.size"> KB</span>
+                                                </div>
+                                                <div class="col-1">
+                                                    <span style="display:inline-flex" matTooltip="Download">
+                                                        <i class="fas fa-download" style="color:red"></i>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

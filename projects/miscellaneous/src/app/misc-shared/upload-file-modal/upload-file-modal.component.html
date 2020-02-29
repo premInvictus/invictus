@@ -24,28 +24,42 @@
       </div>
       <div class="file-uploader-div" *ngIf="finalDocumentArray.length > 0">
         <label class="hedaer-sub">
-          <div style="display: inline-flex;">
+          <div style="float:right">
+            <button mat-raised-button class="upload-btn-file" (click)="submitFiles()">
+              <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
+            </button>
+          </div>
+          <div style="display: inline-flex;
+          position: relative;
+          top: 10px;">
             <span>{{finalDocumentArray.length}} {{finalDocumentArray.length === 1 ? 'File' : 'Files'}}</span> &nbsp;
             &nbsp;
             <span><b>Size:</b>{{getTotalSize()}} KB</span>
           </div>
           <br>
         </label>
-        <ng-container *ngFor="let item of finalDocumentArray">
+        <label for="file2" class="add-label">
+          <span class="add-file">
+            <i class="fas fa-plus" style="font-size: 13px;"></i> &nbsp; Add More Files
+          </span>
+          <input type="file" class="form-control form-control-sm mv_top" multiple="true"
+            (change)="fileChangeEvent($event)" id="file2" style="display: none !important">
+        </label>
+        <ng-container *ngFor="let item of finalDocumentArray;let i = index">
           <div class="row">
             <div class="col-12">
               <div class="file-list-div">
                 <div class="row">
-                  <div class="col-2">
-                    <i class="fas fa-file" style="font-size: 18px;"></i>
+                  <div class="col-1">
+                    <i class="fas fa-file" style="font-size: 18px;float: right;"></i>
                   </div>
-                  <div class="col-8">
+                  <div class="col-10">
                     <span style="text-align: left;">
                       {{item.ed_name}}
                     </span>
                   </div>
-                  <div class="col-2">
-                    <i class="fas fa-times" style="font-size: 18px;"></i>
+                  <div class="col-1">
+                    <i class="fas fa-times" (click)="deleteFile(i)" style="font-size: 18px;"></i>
                   </div>
                 </div>
               </div>

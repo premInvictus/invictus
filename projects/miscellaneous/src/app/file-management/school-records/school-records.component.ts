@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -7,21 +7,34 @@ import { MatDialog } from '@angular/material';
 import { CreateFolderComponent } from '../../misc-shared/create-folder/create-folder.component';
 import { type } from 'os';
 import { UploadFileModalComponent } from '../../misc-shared/upload-file-modal/upload-file-modal.component';
+import { PreviewDocumentComponent } from '../../misc-shared/preview-document/preview-document.component';
+import { MatPaginatorI18n } from '../../misc-shared/customPaginatorClass';
 @Component({
 	selector: 'app-school-records',
 	templateUrl: './school-records.component.html',
-	styleUrls: ['./school-records.component.scss']
+	styleUrls: ['./school-records.component.scss'],
+	providers: [
+		{ provide: MatPaginatorIntl, useClass: MatPaginatorI18n }
+	]
 })
-export class SchoolRecordsComponent implements OnInit {
+export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 
 	fileArray: any[] = [];
+	totalRecords: number;
 	currentIndex = 0;
+	bookpagesize = 100;
 	parent_id = 0;
+	pageEvent: PageEvent;
+	@ViewChild('paginator') paginator: MatPaginator
+	datasource = new MatTableDataSource<any>(this.fileArray);
+	bookpageindex = 0;
+	bookpagesizeoptions = [100, 300, 500, 1000];
 	searchForm: FormGroup;
 	breadcrumArr: any[] = [{ name: 'Home', parent_id: '' }];
 	currentUser: any = {};
 	dialogRef: MatDialogRef<CreateFolderComponent>;
 	dialogRef2: MatDialogRef<UploadFileModalComponent>;
+	dialogRef3: MatDialogRef<PreviewDocumentComponent>;
 	constructor(
 		private dialog: MatDialog,
 		private fbuild: FormBuilder,
@@ -30,11 +43,21 @@ export class SchoolRecordsComponent implements OnInit {
 		private sisService: SisService
 	) {
 	}
+	fetchData(event?: PageEvent) {
+		this.bookpageindex = event.pageIndex;
+		this.bookpagesize = event.pageSize;
+		this.getRecordsBasedOnSchool();
+		return event;
+	}
 
 	ngOnInit() {
+		localStorage.removeItem('invoiceBulkRecords');
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.buildForm();
 		this.getRecordsBasedOnSchool();
+	}
+	ngAfterViewInit() {
+		this.datasource.paginator = this.paginator;
 	}
 	buildForm() {
 		this.searchForm = this.fbuild.group({
@@ -43,14 +66,23 @@ export class SchoolRecordsComponent implements OnInit {
 	}
 
 	getRecordsBasedOnSchool() {
+		this.fileArray = [];
+		this.datasource = new MatTableDataSource<any>(this.fileArray);
 		this.commonAPIService.getFolderPerLevel({
 			findAll: false,
 			parent_id: this.parent_id,
+			pageIndex: this.bookpageindex,
+			pageSize: this.bookpagesize,
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.fileArray = [];
-				this.fileArray = res.data;
+				this.totalRecords = Number(res.data.totalRecords);
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				this.fileArray = res.data.records;
 				console.log(this.fileArray);
+				this.datasource = new MatTableDataSource<any>(this.fileArray);
+				this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+				this.datasource.paginator = this.paginator;
 			}
 		});
 	}
@@ -95,19 +127,91 @@ export class SchoolRecordsComponent implements OnInit {
 		this.dialogRef2 = this.dialog.open(UploadFileModalComponent,
 			{
 				height: 'auto',
-				width: '70%'
+				width: '70%',
+				hasBackdrop: false
 			});
+		this.dialogRef2.afterClosed().subscribe((res: any) => {
+			if (res.files && res.files.length > 0) {
+				const files: any[] = res.files;
+				const json: any[] = [];
+				let path: any = "";
+				let ind = 0;
+				for (const item of this.breadcrumArr) {
+					if (item.parent_id === '') {
+						item.name = '';
+					}
+					path = path + item.name + '/';
+					if (ind === 0) {
+						item.name = "Home";
+					}
+					ind++;
+				}
+				path = path.substring(0, path.length - 1);
+				for (const item of files) {
+					json.push({
+						'file_type_id': '',
+						'type': 'school',
+						'url': item.ed_link,
+						'size': item.size,
+						'name': item.ed_name,
+						'parent_id': this.parent_id,
+						'element_type': 'file',
+						'userDetails': {
+							'full_name': this.currentUser.full_name,
+							'login_id': this.currentUser.login_id,
+							'role_id': this.currentUser.role_id
+						},
+						'entryDate': '',
+						'updatedDate': ''
+					});
+				}
+				this.commonAPIService.insertMultipleFiles(json).subscribe((res: any) => {
+					if (res && res.status === 'ok') {
+						this.commonAPIService.showSuccessErrorMessage('Inserted Successfully', 'success');
+						this.getRecordsBasedOnSchool();
+					}
+				});
+				for (const item of files) {
+					this.commonAPIService.uploadFilesToS3({
+						projectType: 'school',
+						path: path,
+						name: item.ed_name,
+						data: item.base64
+					}).subscribe((res: any) => {
+
+					});
+				}
+			}
+		});
 	}
-	setParentId(id, name) {
-		this.parent_id = id;
-		const findex = this.breadcrumArr.findIndex(f => f.name.toLowerCase() === name.toLowerCase && f.parent_id === id);
-		if (findex === -1) {
-			this.breadcrumArr.push({
-				'name': name,
-				'parent_id': id
-			});
+	previewImage(imgUrl, index) {
+		let imgArray = [];
+		imgArray.push({
+			imgUrl: imgUrl
+		})
+		this.dialogRef3 = this.dialog.open(PreviewDocumentComponent, {
+			data: {
+				images: imgArray,
+				index: index
+			},
+			height: '80vh',
+			width: '80vh'
+		});
+	}
+	setParentId(id, name, item) {
+		if (item.element_type === 'folder') {
+			this.parent_id = id;
+			const findex = this.breadcrumArr.findIndex(f => f.name.toLowerCase() === name.toLowerCase && f.parent_id === id);
+			if (findex === -1) {
+				this.breadcrumArr.push({
+					'name': name,
+					'parent_id': id
+				});
+			}
+			this.getRecordsBasedOnSchool();
+		} else {
+			this.previewImage(item.url, 0);
 		}
-		this.getRecordsBasedOnSchool();
 	}
 	setParentId2(id) {
 		let index = 0;
@@ -119,8 +223,9 @@ export class SchoolRecordsComponent implements OnInit {
 			this.getRecordsBasedOnSchool();
 		} else {
 			this.parent_id = id;
+			const findex = this.breadcrumArr.findIndex(f => Number(f.parent_id) === this.parent_id);
 			for (const item of this.breadcrumArr) {
-				if (index > 0) {
+				if (index > findex) {
 					if (item.parent_id !== this.parent_id) {
 						this.breadcrumArr.splice(index, 1);
 					}
@@ -129,6 +234,9 @@ export class SchoolRecordsComponent implements OnInit {
 			}
 			this.getRecordsBasedOnSchool();
 		}
+	}
+	getTotalSize(size) {
+		return (size / 1024).toFixed(2);
 	}
 }
 

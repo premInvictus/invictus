@@ -27,12 +27,15 @@ button.upload-btn-file.mat-raised-button {
     font-size: 18px !important;
 }
 .headerr-file-upload {
-    background: #d4d4d4;
+    background: #c8d6e5 !important;
+    color: #5b626e;
     padding: 5px;
     box-shadow: 0px 2px 3px;
     font-family: Roboto Bold, sans-serif;
     font-weight: 600;
 }
+
+
 .file-div {
     border-top: 1px solid rgba(0, 0, 0, 0.3);
     /* border-bottom: 1px solid; */
@@ -47,5 +50,9 @@ button.upload-btn-file.mat-raised-button {
 }
 span.breadcrum-span {
     color: #83becf;
-    font-size: 16px;
+    font-size: 14px;
+}
+.file-paren {
+    font-size: 18px;
+    color: #277d9e;
 }
