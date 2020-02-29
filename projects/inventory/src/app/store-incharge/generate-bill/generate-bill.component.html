@@ -1,0 +1,296 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-7 margin-top-15">
+            <span class="font-size-24">Generate Bill</span>
+          </div>
+          <div class="col-2">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Choose User Type</mat-label>
+              <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
+                <mat-option value="4">Student</mat-option>
+                <mat-option value="3">Employee</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-3">
+            <div class="search-container">
+              <div class="row remove-top-margin">
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input matInput
+                      [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
+                      formControlName="searchId" autocomplete="off" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                    Search
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="userData!=''">
+  <div class="col-12">
+    <mat-card class="mat-card-108">
+      <div class="row">
+        <div class="col-1 remove-col-padding-left margin-top-8">
+          <img *ngIf="!userData?.au_profileimage" class="border-radius-50 student-profile-image-68"
+            [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultSrc + '&h=68&w=68'"
+            onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=80&w=80'" />
+          <img *ngIf="userData?.au_profileimage" class="border-radius-50 student-profile-image-68"
+            [src]="userData?.au_profileimage" height="80px" width="80px"
+            onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=80&w=80'" />
+        </div>
+
+        <div class="col-2 remove-col-padding-left margin-top-15">
+          <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
+          <br />
+          <span class="font-size-16 text-capitalize"> ( <span *ngIf="userData?.au_role_id == '4'"> S -
+              {{userData?.em_admission_no}}</span> <span *ngIf="userData?.au_role_id == '3'"> T -
+              {{userData?.emp_id}}</span> <span *ngIf="userData?.au_role_id == '2'"> A
+              -{{userData?.emp_id}}</span> )
+          </span>
+        </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
+        <div class="col-2 remove-col-padding margin-top-15">
+          <div class="row remove-top-margin">
+            <div class="col-4 remove-col-padding">
+              <span class="font-size-16 font-bold">Class</span>
+              <span class="font-size-16 font-bold float-right">:</span>
+            </div>
+            <div class="col-8 remove-col-padding-right">
+              <span class="font-size-16 font-bold opacity-7" *ngIf="userData?.sec_name">
+                {{userData?.class_name}} -
+                {{userData?.sec_name}}
+              </span>
+              <span class="font-size-16 font-bold opacity-7" *ngIf="!(userData?.sec_name)">
+                {{userData?.class_name}}
+              </span>
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-4 remove-col-padding">
+              <span class="font-size-16 font-bold">House</span>
+              <span class="font-size-16 font-bold float-right">:</span>
+            </div>
+            <div class="col-8 remove-col-padding-right">
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.hou_house_name">{{userData?.hou_house_name}}</span>
+                <span *ngIf="!(userData?.hou_house_name)">-</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
+        <div class="col-3 remove-col-padding margin-top-15">
+          <div class="row remove-top-margin">
+            <div class="col-6 remove-col-padding">
+              <span class="font-size-16 font-bold">Mobile No.</span>
+              <span class="font-size-16 font-bold float-right">:</span>
+            </div>
+            <div class="col-6 remove-col-padding-right">
+              <span class="font-size-16 font-bold opacity-7">
+                <span *ngIf="userData?.au_mobile">{{userData?.au_mobile}}</span>
+                <span *ngIf="!(userData?.au_mobile)">-</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1 smart-col-1 vertical-divide"></div>
+        <div class="col-1 remove-col-padding margin-top-15">
+          <div class="row remove-top-margin">
+            <div class="col-12 remove-col-padding-right">
+              <span class="font-size-16 font-bold">
+                <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button
+                  style="width:200px !important;" (click)="showReturnIssueSection=!showReturnIssueSection">
+                  Add Item
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="(userData!='' && showReturnIssueSection)">
+  <div class="col-12 remove-col-padding-left">
+    <form [formGroup]="returnIssueItemsForm">
+      <mat-card class="mat-card-108">
+        <div class="row">
+          <div class="col-9 margin-top-15">
+            <span class="font-size-20 font-bold">Return/Issue Items</span>
+          </div>
+          <div class="col-3">
+            <div class="search-container">
+              <div class="row remove-top-margin">
+                <div class="col-8">
+                  <mat-form-field class="lib-form form-field">
+                    <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                  </mat-form-field>
+                </div>
+                <div class="col-4 margin-top-10  text-right">
+                  <button mat-button class="btn-spacer btn-lib-search-big margin-left-10 margin-top-8"
+                    (click)="searchItemData()">
+                    Add To List
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row margin-top-15 itemlog" [hidden]="!(itemData.length > 0)">
+          <div class="col-12 remove-col-padding">
+            <table class="table-100 custom-table">
+              <thead>
+                <tr class="custom-tr text-center">
+                  <th class="custom-th">Sr No.</th>
+                  <th class="custom-th">Item Code</th>
+                  <th class="custom-th">Item Name</th>
+                  <th class="custom-th">Nature</th>
+                  <th class="custom-th">Current Stock</th>
+                  <th class="custom-th">Location</th>
+                  <th class="custom-th">Stock</th>
+                  <th class="custom-th">Issued/ Return Quantity</th>
+                  <th class="custom-th">Due Date</th>
+                  <th class="custom-th">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let item of itemData; let i=index;">
+                  <tr class="custom-tr book-list">
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{i+1}}</span></td>
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span class="font-skyblue cursor-pointer"
+                        (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
+                    </td>
+                    <td width="25%" class="custom-td text-left"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{item?.item_name | titlecase | truncatetext: 45}}</span>
+                    </td>
+                    <td width="15%" class="custom-td text-left"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{item?.item_nature?.name | titlecase | truncatetext: 45}}</span>
+                    </td>
+                    <td width="10%" class="custom-td text-center"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span>{{item?.current_stock}} {{item?.item_units?.name}}</span>
+                    </td>
+                    <td width="15%" class="custom-td text-left"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span *ngIf="!(item?.item_status === 'issued') && formGroupArray?.length > 0">
+                        <form [formGroup]="formGroupArray[i]">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Location</mat-label>
+                            <mat-select formControlName="item_location">
+                              <mat-option *ngFor="let item of formGroupArray[i]?.value?.location_data"
+                                [value]="item.location_id" (onSelectionChange)="setLocationId(item, i)">
+                                <small>{{item?.location_hierarchy | capitalize}}</small>
+                              </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                        </form>
+                      </span>
+
+                      <span
+                        *ngIf="(item?.item_status === 'issued')">{{getLocationName(item?.item_location?.location_id) | titlecase}}</span>
+
+                    </td>
+                    <td width="5%" class="custom-td text-center"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <span *ngIf="!(item?.item_status === 'issued')">{{item?.current_location_stock}}
+                        {{item?.item_units?.name}}</span>
+                      <span
+                        *ngIf="item?.item_status === 'issued'">{{getItemLocationStock(item, item?.item_location?.location_id)}}
+                        {{item?.item_units?.name}}</span>
+                    </td>
+                    <td width="8%" class="custom-td text-center"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <div>
+                        <span *ngIf="formGroupArray?.length > 0 && (item?.item_status === 'issued')">
+                          <form [formGroup]="formGroupArray[i]">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Return Quantity</mat-label>
+                              <input matInput type="number" placeholder="Issued Quantity"
+                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)"
+                                value="{{item?.issued_quantity}}" />
+                            </mat-form-field>
+                          </form>
+                        </span>
+                        <span *ngIf="formGroupArray?.length > 0 && !(item?.item_status === 'issued')">
+                          <form [formGroup]="formGroupArray[i]">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Issued Quantity</mat-label>
+                              <input matInput type="number" placeholder="Issued Quantity"
+                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)" />
+                            </mat-form-field>
+                          </form>
+
+                        </span>
+                        <!-- <span *ngIf="(item?.item_status === 'issued')"> {{item?.item_units?.name}}</span> -->
+                      </div>
+                    </td>
+                    <td width="10%" class="custom-td text-nowrap"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+                      <div class="inline-flex date-width-100">
+                        <div class="inline-flex" *ngIf="(item?.item_status == 'issued')">
+                          {{item?.due_date | date : 'd-MMM-y'}}
+                        </div> &nbsp;
+                        <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
+                          (dateChange)="setDueDate(i, returnIssueItemsForm.value.due_date)" [value]="item?.fdue_date">
+                        <mat-datepicker #picker></mat-datepicker>
+
+                        <div class="inline-flex" style="margin-top:2px;" [hidden]="(item?.item_status == 'active')">
+                          <i class="fa fa-calendar" *ngIf="!(item?.item_status == 'active')" aria-hidden="true"
+                            (click)="picker.open();"></i>
+                        </div>
+
+                      </div>
+                    </td>
+                    <td width="5%" class="custom-td"
+                      [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
+
+                      <span *ngIf="item?.item_status === 'issued'"><i class="fas fa-plus font-color-blue"
+                          (click)="addItem(item,i)"></i> | </span>
+                      <i class="fas fa-trash font-color-red" (click)="removeItem(i)"></i>
+                    </td>
+                  </tr>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <br />
+        <div class="row text-center" *ngIf="itemData.length > 0">
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="saveIssueReturn()"
+              [disabled]="disabledApiButton">Submit</button>
+            <button mat-raised-button class="btn-reset btn-spacer" (click)="resetIssueReturn()">
+              Reset
+            </button>
+          </div>
+        </div>
+        <div class="text-center" *ngIf="itemData.length == 0">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'Please Search Items To Issue / Return'"></app-no-data>
+        </div>
+      </mat-card>
+
+
+    </form>
+
+  </div>
+</div>

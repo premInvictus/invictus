@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-12 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Store Assign List</span>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="assignListArray.length > 0">
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center center-mr" style="padding-left:20%;padding-right: 20%;">
+        <table class="custom-table">
+          <thead>
+            <tr class="custom-tr">
+              <th rowspan="2" class="custom-th text-center" width="7%">Sr No.</th>
+              <th rowspan="2" class="custom-th text-center" width="43%">Employee Name</th>
+              <th rowspan="2" class="custom-th text-center" width="40%">Store Location</th>
+              <th rowspan="2" class="custom-th text-center" width="10%">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of assignListArray; let i = index">
+              <td class="custom-td text-center font-size-14">{{i + 1}}</td>
+              <td class="custom-td text-left font-size-14"><span
+                  class="margin-left-15">{{item.emp_name | titlecase}}</span> </td>
+              <td class="custom-td text-center font-size-14">
+                {{item.location_id ? item.location_id.location_hierarchy:'-'}}
+              </td>
+              <td class="custom-td text-center font-size-14"><i (click)="viewData(item)" class="fas fa-eye"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+      </div>
+    </mat-card>
+  </div>
+</div>

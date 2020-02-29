@@ -265,5 +265,9 @@ export class CommonAPIService {
 	getBranchItems() {
 		return this.branchItems;
 	}
+	getFilterData(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getFilterData', value);
+	}
 
 }
