@@ -28,10 +28,11 @@
                                 </div>
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-12">
                                 <div style="display:inline-flex">
-                                    <button mat-raised-button class="upload-btn-file">
+                                    <button mat-raised-button class="upload-btn-file" (click)="openUploadModal()">
                                         <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
                                     </button>
                                 </div>
@@ -51,12 +52,32 @@
                             </div>
                         </div>
                     </form>
+                    <br>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div style="display: inline-flex;">
+                                        <ng-container *ngFor="let item of breadcrumArr;let i = index">
+                                            <span style="cursor: pointer;" class="breadcrum-span" (click)="setParentId2(item.parent_id)">
+                                                <i *ngIf="i === 0" class="fas fa-home home-ico"></i>&nbsp;{{item.name}}
+                                                &nbsp; <i *ngIf="i !== breadcrumArr.length -1"
+                                                    class="fas fa-caret-right home-ico"></i></span>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
                     <div class="row" *ngIf="fileArray.length > 0">
                         <div class="col-12">
                             <div class="headerr-file-upload">
                                 <div class="row">
                                     <div class="col-6">
-                                        <span style="text-align: center;">Name</span>
+                                        <span style="text-align: center;">
+                                            <mat-checkbox></mat-checkbox>&nbsp;Name
+                                        </span>
                                     </div>
                                     <div class="col-3">
                                         <span style="text-align: center;">Last Modified Date</span>
@@ -76,7 +97,10 @@
                                             <div class="row">
                                                 <div class="col-6">
                                                     <span style="text-align: center;">
-                                                        <i class="fas fa-folder folder-paren"></i> &nbsp;{{item.name}}
+                                                        <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
+                                                        <i class="fas fa-folder-open folder-paren"></i>
+                                                        &nbsp;<span style="cursor: pointer;"
+                                                            (click)="setParentId(item.file_type_id, item.name)">{{item.name}}</span>
                                                     </span>
                                                 </div>
                                                 <div class="col-3">
@@ -90,6 +114,37 @@
                                                         {{item.size ? item.size : '-'}}</span>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="fileArray.length === 0">
+                        <div class="col-12">
+                            <div class="headerr-file-upload">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="text-align: center;">
+                                            Name
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span style="text-align: center;">Last Modified Date</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span style="text-align: center;">Size</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span style="text-align: center;">Action</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div style="text-align: center;">
+                                            <span>No Records Found</span>
                                         </div>
                                     </div>
                                 </div>

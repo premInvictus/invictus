@@ -1,0 +1,58 @@
+<div class="modal-custom-cotainer overflow-hidden">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Upload Files</span><span class="float-right margin-top-5"><i
+            class="far fa-times-circle font-white cursor-pointer font-size-24" (click)="closeDialog()"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="file-uploader-div" *ngIf="finalDocumentArray.length === 0">
+        <label class="upload-box" for="bulkupdate">
+          <div class="text-center">
+            <i class="material-icons bulk-upload-icon">
+              save_alt
+            </i>
+            <br>
+            <span class="choose-span">Choose file or drag to upload</span>
+          </div>
+          <input type="file" class="form-control form-control-sm mv_top" multiple="true"
+            (change)="fileChangeEvent($event)" id="bulkupdate" style="display: none !important">
+        </label>
+      </div>
+      <div class="file-uploader-div" *ngIf="finalDocumentArray.length > 0">
+        <label class="hedaer-sub">
+          <div style="display: inline-flex;">
+            <span>{{finalDocumentArray.length}} {{finalDocumentArray.length === 1 ? 'File' : 'Files'}}</span> &nbsp;
+            &nbsp;
+            <span><b>Size:</b>{{getTotalSize()}} KB</span>
+          </div>
+          <br>
+        </label>
+        <ng-container *ngFor="let item of finalDocumentArray">
+          <div class="row">
+            <div class="col-12">
+              <div class="file-list-div">
+                <div class="row">
+                  <div class="col-2">
+                    <i class="fas fa-file" style="font-size: 18px;"></i>
+                  </div>
+                  <div class="col-8">
+                    <span style="text-align: left;">
+                      {{item.ed_name}}
+                    </span>
+                  </div>
+                  <div class="col-2">
+                    <i class="fas fa-times" style="font-size: 18px;"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
