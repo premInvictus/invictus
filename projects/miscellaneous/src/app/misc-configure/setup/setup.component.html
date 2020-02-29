@@ -6,7 +6,7 @@
             <div class="row">
               <div class="col-lg-12 col-mobile-view-add-ques">
                 <div class="white-box-content-title">
-                  <h4 class="text-uppercase text-center"><b>Misc Setup</b></h4>
+                  <h4 class="text-uppercase text-center"><b>Setup</b></h4>
                 </div>
               </div>
             </div>
@@ -19,7 +19,7 @@
                         <mat-label>Setup Option</mat-label>
                         <mat-select (selectionChange)="getGlobalSetting($event.value)" placeholder="Setup Options">
                           <mat-option value="">Please Select</mat-option>
-                          <mat-option *ngFor="let item of gsettingGroupArr" [value]="item.gs_group">{{item.gs_group}}</mat-option>
+                          <mat-option *ngFor="let item of gsettingGroupArr" [value]="item.gs_group">{{item.gs_group | titlecase}}</mat-option>
                         </mat-select>
                       </mat-form-field>
                     </div>
@@ -36,46 +36,87 @@
                             <form [formGroup]="settingForm">
                                 <ng-container *ngFor="let control of gsettingArr">
                                     <div class="row">
-                                        <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
-                                            <ng-container *ngIf="control.gs_type == 'text'">
-                                                <mat-form-field class="form-field" appearance="outline">
-                                                    <mat-label>{{control.gs_name}}</mat-label>
-                                                    <input matInput [placeholder]="control.gs_name" type="text" class="text-capitalize" [formControlName]="control.gs_alias"
-                                                    >
-                                                </mat-form-field>
+                                      <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding" style="margin-top: 10px;">
+                                        <mat-label>{{control.gs_name | titlecase}}</mat-label>
+                                      </div>
+                                      <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
+                                          <ng-container *ngIf="control.gs_type == 'text'">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                  <input matInput type="text" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                  >
+                                              </mat-form-field>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'date'">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                              <input matInput [matDatepicker]="picker" placeholder="Choose a date" [formControlName]="control.gs_alias">
+                                              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                              <mat-datepicker #picker></mat-datepicker>
+                                            </mat-form-field>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'toggle'">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                            <mat-select [formControlName]="control.gs_alias">
+                                              <mat-option *ngFor="let item of toggleArray" [value]="item.id">
+                                                {{item.name}}
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'color'">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                  <input matInput type="color" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                  >
+                                              </mat-form-field>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'number'">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                  <input matInput type="number" class="text-capitalize" [formControlName]="control.gs_alias"
+                                                  >
+                                              </mat-form-field>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'editor'">
+                                              <ckeditor [config]="ckeConfig" [formControlName]="control.gs_alias"></ckeditor>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'file'">
+                                            <button mat-stroked-button class="btn-outline-green">
+                                              <label [for]="control.gs_alias">Choose File
+                                                &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                                            <input style="display:none" type="file" accept="image/*" (change)="uploadFile($event, control.gs_alias)"
+                                              [id]="control.gs_alias">
+                                            <img *ngIf="settingForm.value[control.gs_alias]"
+                                              style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
+                                              [src]="settingForm.value[control.gs_alias]">
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'dropdown'">
+                                            <ng-container *ngIf="control.gs_alias == 'gradecard_health_status' || control.gs_alias == 'comparative_analysis' || control.gs_alias == 'student_performance'">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-select [formControlName]="control.gs_alias" multiple>
+                                                  <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                    {{item.class_name}}
+                                                  </mat-option>
+                                                </mat-select>
+                                              </mat-form-field>
                                             </ng-container>
-                                            <ng-container *ngIf="control.gs_type == 'toggle'">
-                                                <div class="row">
-                                                    <div class="col-lg-4 col-mobile-view-add-ques remove-col-modal-padding">
-                                                        <mat-label>{{control.gs_name}}</mat-label>
-                                                    </div>
-                                                    <div class="col-lg-8 col-mobile-view-add-ques remove-col-modal-padding">
-                                                        <mat-slide-toggle class="inline-form-radio-spacing" [formControlName]="control.gs_alias">
-                                                        </mat-slide-toggle>
-                                                    </div>
-                                                </div>
+                                          </ng-container>
+                                          <ng-container *ngIf="control.gs_type == 'json'">
+                                            <ng-container *ngIf="control.gs_alias == 'result_entry_options'">
+                                              <mat-form-field class="form-field" appearance="outline">
+                                                <mat-select [formControlName]="control.gs_alias" multiple>
+                                                  <mat-option *ngFor="let item of control.gs_value" [value]="item.id">
+                                                    {{item.value}}
+                                                  </mat-option>
+                                                </mat-select>
+                                              </mat-form-field>
                                             </ng-container>
-                                            <ng-container *ngIf="control.gs_type == 'color'">
-                                                <mat-form-field class="form-field" appearance="outline">
-                                                    <mat-label>{{control.gs_name}}</mat-label>
-                                                    <input matInput [placeholder]="control.gs_name" type="color" class="text-capitalize" [formControlName]="control.gs_alias"
-                                                    >
-                                                </mat-form-field>
-                                            </ng-container>
-                                            <ng-container *ngIf="control.gs_type == 'number'">
-                                                <mat-form-field class="form-field" appearance="outline">
-                                                    <mat-label>{{control.gs_name}}</mat-label>
-                                                    <input matInput [placeholder]="control.gs_name" type="number" class="text-capitalize" [formControlName]="control.gs_alias"
-                                                    >
-                                                </mat-form-field>
-                                            </ng-container>
-                                            <ng-container *ngIf="control.gs_type == 'editor'">
-                                                <ckeditor [config]="ckeConfig" [formControlName]="control.gs_alias"></ckeditor>
-                                            </ng-container>
-                                        </div>
-                                    </div>
+                                          </ng-container>
+                                      </div>
+                                  </div>
                                 </ng-container>
                             </form>
+                          </div>
+                          <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                            <button mat-button class="text-uppercase btn-success" (click)="updateGlobalSetting()"
+                                  [disabled]="disabledApiButton">Submit</button>
                           </div>
                         </div>
                       </div>
