@@ -58,7 +58,6 @@ export class FeeLedgerComponent implements OnInit {
 		unconsolidate: false,
 		receiptmodification: false
 	};
-	dupInvArr = [];
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('table') table: ElementRef;
 	schoolInfo: any;
@@ -283,7 +282,7 @@ export class FeeLedgerComponent implements OnInit {
 					
 					if(element.flgr_payment_mode === 'partial') {
 						element['balance'] = this.getPartialInvoiceLastBalance(dupInvoiceArr, element.invoiceno);
-						//console.log("element['flgr_balance']",element['flgr_balance']);
+						console.log("element['flgr_balance']",element['flgr_balance']);
 					}
 
 					if((dupInvoiceArr.indexOf(element.invoiceno) < 0) || item.flgr_inv_id === "0" ){
@@ -353,7 +352,7 @@ export class FeeLedgerComponent implements OnInit {
 				tempArr.push(this.recordArray[i]['flgr_balance']);
 			}
 		}
-		console.log('tempArr--',tempArr.reverse());
+		// console.log('tempArr--',tempArr.reverse());
 		return tempArr.reverse()[0];
 	}
 
