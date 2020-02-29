@@ -56,7 +56,7 @@
                           <td>
                             {{item.emp_personal_detail.contact_detail.primary_mobile_no ? (item.emp_personal_detail.contact_detail.primary_mobile_no | mask: '00000 00000') : '-' }}
                           </td>
-                          <td>{{item.emp_category_detail.cat_name}}</td>
+                          <td>{{item.emp_category_detail ?item.emp_category_detail.cat_name : '-'}}</td>
                         </tr>
                         <tr *ngIf="studentArrayByName.length === 0">
                           <td colspan="6">
