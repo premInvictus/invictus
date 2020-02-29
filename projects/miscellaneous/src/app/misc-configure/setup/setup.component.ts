@@ -26,6 +26,7 @@ export class SetupComponent implements OnInit {
 		{id:'1', name:'Yes'},
 		{id:'0', name:'No'},
 	];
+	departmentArray: any[] = [];
 	constructor(private fbuild: FormBuilder,
 		private commonService: CommonAPIService,
 		private sisService: SisService,
@@ -35,6 +36,18 @@ export class SetupComponent implements OnInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getGlobalSettingGroup();
 		this.getClass();
+		this.getDepartment();
+	}
+	getDepartment() {
+		this.sisService.getDepartment({}).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+				this.departmentArray = result.data;
+
+			} else {
+				this.departmentArray = [];
+			}
+
+		});
 	}
 	getGlobalSettingGroup() {
 		this.gsettingGroupArr = [];
@@ -49,6 +62,17 @@ export class SetupComponent implements OnInit {
 			if(element.gs_alias === 'library_user_setting') {
 				const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
 				return this.fbuild.array([this.fbuild.group(jsontemp)]);
+			} else if(element.gs_alias === 'employee_monthly_leave_credit') {
+				const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+				const jsontemp = [];
+				for(let i=0; i<this.departmentArray.length;i++) {
+					jsontemp.push(this.fbuild.group({
+						dpt_id: this.departmentArray[i]['dept_id'],
+						leave_credit_count: temp[i] ? temp[i]['leave_credit_count'] : ''
+					}))
+					
+				}
+				return this.fbuild.array(jsontemp);
 			}
 		}
 		if(element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance') {
@@ -90,6 +114,9 @@ export class SetupComponent implements OnInit {
 		  }
 		  if (this.settingForm.value && this.settingForm.value.library_user_setting) {
 			this.settingForm.value.library_user_setting = JSON.stringify(this.settingForm.value.library_user_setting[0]);
+		  }
+		  if (this.settingForm.value && this.settingForm.value.employee_monthly_leave_credit) {
+			this.settingForm.value.employee_monthly_leave_credit = JSON.stringify(this.settingForm.value.employee_monthly_leave_credit);
 		  }
 		this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

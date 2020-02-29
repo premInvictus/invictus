@@ -186,6 +186,25 @@
                                                 </div>
                                               </div>
                                             </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'employee_monthly_leave_credit'">
+                                              <ng-container [formArrayName]="control.gs_alias" >
+                                                <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
+                                                  <ng-container *ngFor="let dept of departmentArray;" >
+                                                    <div class="row" *ngIf="dept.dept_id == item.value.dpt_id">
+                                                      <div class="col-2 middle">
+                                                        {{dept.dept_name}}
+                                                      </div>
+                                                      <div class="col-10">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                          <input type="number" matInput placeholder="Leave Count" class="text-capitalize" type="text"
+                                                            formControlName="leave_credit_count">
+                                                        </mat-form-field>
+                                                      </div>
+                                                    </div>
+                                                  </ng-container>
+                                                </ng-container>
+                                              </ng-container>
+                                            </ng-container>
                                           </ng-container>
                                       </div>
                                   </div>
