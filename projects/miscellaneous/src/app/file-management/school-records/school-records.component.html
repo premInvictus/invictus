@@ -80,7 +80,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span style="text-align: center;">
-                                            <mat-checkbox></mat-checkbox>&nbsp;Name
+                                            &nbsp;<mat-checkbox></mat-checkbox>&nbsp; Name
                                         </span>
                                     </div>
                                     <div class="col-3">
@@ -94,43 +94,46 @@
                                     </div>
                                 </div>
                             </div>
-                            <ng-container *ngFor="let item of fileArray">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="file-div">
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <span style="text-align: center;">
-                                                        <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
-                                                        <i *ngIf="item.element_type === 'folder'"
-                                                            class="fas fa-folder-open folder-paren"></i>
-                                                        <i *ngIf="item.element_type !== 'folder'"
-                                                            class="fas fa-file file-paren"></i>
-                                                        &nbsp;<span style="cursor: pointer;"
-                                                            (click)="setParentId(item.file_type_id, item.name, item)">{{item.name}}</span>
-                                                    </span>
-                                                </div>
-                                                <div class="col-3">
-                                                    <span style="text-align: center;">
-                                                        {{item.updatedDate.date | date: 'd-MMM-y'}}
-                                                        {{item.updatedDate.time }}
-                                                    </span>
-                                                </div>
-                                                <div class="col-2">
-                                                    <span style="text-align: center;">
-                                                        {{item.size ? (getTotalSize(item.size) | number) : '-'}}</span>
-                                                    <span *ngIf="item.size"> KB</span>
-                                                </div>
-                                                <div class="col-1">
-                                                    <span style="display:inline-flex" matTooltip="Download">
-                                                        <i class="fas fa-download" style="color:red"></i>
-                                                    </span>
-                                                </div>
+                            <div class="row file-row" *ngFor="let item of fileArray">
+                                <div class="col-12">
+                                    <div class="file-div">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span style="text-align: center;">
+                                                    <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
+                                                    <i *ngIf="item.element_type === 'folder'"
+                                                        class="fas fa-folder-open folder-paren"></i>
+                                                    <i *ngIf="item.element_type !== 'folder'"
+                                                        class="fas fa-file file-paren"></i>
+                                                    &nbsp;<span style="cursor: pointer;"
+                                                        (click)="setParentId(item.file_type_id, item.name, item)">{{item.name}}</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span style="text-align: center;">
+                                                    {{item.updatedDate.date | date: 'd-MMM-y'}}
+                                                    {{item.updatedDate.time }}
+                                                </span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span style="text-align: center;">
+                                                    {{item.size ? (getTotalSize(item.size) | number) : '-'}}</span>
+                                                <span *ngIf="item.size"> KB</span>
+                                            </div>
+                                            <div class="col-1">
+                                                <span style="display:inline-flex" matTooltip="Download">
+                                                    <i class="fas fa-download" style="color: #267733;
+                                                    font-size: 16px;margin-right: 10px;"></i>
+                                                </span>
+                                                <span style="display:inline-flex" matTooltip="Delete" (click)="openDeleteModal(item)">
+                                                    <i class="fas fa-trash" style="color: #de310b;
+                                                    font-size: 16px;margin-right: 10px;"></i>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </ng-container>
+                            </div>
                         </div>
                     </div>
                     <div class="row" *ngIf="fileArray.length === 0">
@@ -169,3 +172,5 @@
         </div>
     </div>
 </div>
+<app-delete-modal #deleteModal (deleteOk)="deleteFiles($event)" (deleteCancel)="cancelDelete($event)"
+    [deleteMessage]="delMsg"></app-delete-modal>

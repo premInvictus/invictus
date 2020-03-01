@@ -265,6 +265,10 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/file-management/uploadFilesToS3', value);
 	}
+	deleteFilesFromS3(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/deleteFilesFromS3', value);
+	}
 
 
 }

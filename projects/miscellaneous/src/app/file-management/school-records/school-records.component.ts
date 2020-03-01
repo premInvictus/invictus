@@ -23,9 +23,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 	totalRecords: number;
 	currentIndex = 0;
 	bookpagesize = 100;
+	@ViewChild('deleteModal') deleteModal;
 	parent_id = 0;
 	pageEvent: PageEvent;
-	@ViewChild('paginator') paginator: MatPaginator
+	@ViewChild('paginator') paginator: MatPaginator;
+	delMsg = 'delmsg';
 	datasource = new MatTableDataSource<any>(this.fileArray);
 	bookpageindex = 0;
 	bookpagesizeoptions = [100, 300, 500, 1000];
@@ -86,6 +88,9 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+	openDeleteModal(item) {
+		this.deleteModal.openModal(item);
+	}
 	openFolderCreate() {
 		this.dialogRef = this.dialog.open(CreateFolderComponent,
 			{
@@ -134,7 +139,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			if (res.files && res.files.length > 0) {
 				const files: any[] = res.files;
 				const json: any[] = [];
-				let path: any = "";
+				let path: any = '';
 				let ind = 0;
 				for (const item of this.breadcrumArr) {
 					if (item.parent_id === '') {
@@ -142,7 +147,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 					}
 					path = path + item.name + '/';
 					if (ind === 0) {
-						item.name = "Home";
+						item.name = 'Home';
 					}
 					ind++;
 				}
@@ -178,17 +183,58 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 						name: item.ed_name,
 						data: item.base64
 					}).subscribe((res: any) => {
-
 					});
 				}
 			}
 		});
 	}
+	deleteFiles($event) {
+		if ($event) {
+			const files: any = $event;
+			let filesJson = {};
+			if (files.element_type === 'folder') {
+				filesJson = {
+					projectType: 'school',
+					path: files.name,
+					element_type: files.element_type,
+					file_type_id: files.file_type_id,
+					parent_id: files.parent_id
+				};
+			} else {
+				let path: any = '';
+				let ind = 0;
+				for (const item of this.breadcrumArr) {
+					if (item.parent_id === '') {
+						item.name = '';
+					}
+					path = path + item.name + '/';
+					if (ind === 0) {
+						item.name = 'Home';
+					}
+					ind++;
+				}
+				path = path.substring(0, path.length - 1);
+				filesJson = {
+					projectType: 'school',
+					path: path,
+					name: files.name,
+					element_type: files.element_type,
+					file_type_id: files.file_type_id,
+					parent_id: files.parent_id
+				};
+			}
+			this.commonAPIService.deleteFilesFromS3(filesJson).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.getRecordsBasedOnSchool();
+				}
+			});
+		}
+	}
 	previewImage(imgUrl, index) {
-		let imgArray = [];
+		const imgArray = [];
 		imgArray.push({
 			imgUrl: imgUrl
-		})
+		});
 		this.dialogRef3 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
 				images: imgArray,

@@ -30,15 +30,14 @@ button.upload-btn-file.mat-raised-button {
     background: #c8d6e5 !important;
     color: #5b626e;
     padding: 5px;
-    box-shadow: 0px 2px 3px;
     font-family: Roboto Bold, sans-serif;
     font-weight: 600;
 }
 
 
-.file-div {
-    border-top: 1px solid rgba(0, 0, 0, 0.3);
-    /* border-bottom: 1px solid; */
+.file-row {
+    margin-top: 0px !important;
+    height: 40px;
 }
 .folder-paren {
     color: #e2a74f;
@@ -46,13 +45,16 @@ button.upload-btn-file.mat-raised-button {
 }
 .home-ico {
     font-size: 16px;
-    color: #83becf;
+    color: #22708e;
 }
 span.breadcrum-span {
-    color: #83becf;
+    color: #22708e;
     font-size: 14px;
 }
 .file-paren {
     font-size: 18px;
     color: #277d9e;
+}
+.file-row:nth-child(odd) {
+    background-color: #f1f4f7 !important;
 }
