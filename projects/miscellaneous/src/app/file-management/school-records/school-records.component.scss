@@ -8,9 +8,53 @@
 .mat-card {
     padding:5px !important;
 }
+input.mat-input-element {
+    margin-left: 20px !important;
+}
 
 .overflow {
     overflow-x: auto;
     overflow-y: auto;
     height: 600px;
+}
+button.upload-btn-file.mat-raised-button {
+    box-shadow: none !important;
+    background: #20789a;
+    color: #fff;
+    margin-right: 10px;
+}
+.upload-icon {
+    font-size: 18px !important;
+}
+.headerr-file-upload {
+    background: #c8d6e5 !important;
+    color: #5b626e;
+    padding: 5px;
+    font-family: Roboto Bold, sans-serif;
+    font-weight: 600;
+}
+
+
+.file-row {
+    margin-top: 0px !important;
+    height: 40px;
+}
+.folder-paren {
+    color: #e2a74f;
+    font-size: 18px;
+}
+.home-ico {
+    font-size: 16px;
+    color: #22708e;
+}
+span.breadcrum-span {
+    color: #22708e;
+    font-size: 14px;
+}
+.file-paren {
+    font-size: 18px;
+    color: #277d9e;
+}
+.file-row:nth-child(odd) {
+    background-color: #f1f4f7 !important;
 }

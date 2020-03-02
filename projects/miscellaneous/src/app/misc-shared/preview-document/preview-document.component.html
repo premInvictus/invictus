@@ -1,6 +1,18 @@
-<app-image-viewer
-  [images]="finalImageArray" 
-  [currentImageIndex] = "data.index"
-  [idContainer]="'idOnHTML'" 
-  [loadOnInit]="true" 
-  [download]="false"></app-image-viewer>
+<ng-container *ngIf="finalImageArray.length > 0">
+  <app-image-viewer [images]="finalImageArray" [currentImageIndex]="data.index" [idContainer]="'idOnHTML'"
+    [loadOnInit]="true" [download]="false"></app-image-viewer>
+</ng-container>
+<ng-container *ngIf="finalImageArray.length === 0">
+  <div class="modal-custom-cotainer overflow-hidden">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Preview Documents</span>
+        </div>
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <img style="width:100%"[src]="previewSRC" />
+    </div>
+  </div>
+</ng-container>

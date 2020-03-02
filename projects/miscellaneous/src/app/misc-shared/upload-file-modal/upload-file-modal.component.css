@@ -1,0 +1,55 @@
+.file-uploader-div {
+    margin-right: -1%;
+    margin-left: -1%;
+    margin-top: -1%;
+    overflow-y: scroll;
+    height: 350px;
+    background: rgb(77, 101, 115) !important;
+}
+label.upload-box {
+    width: 100%;
+    height: 100%;
+}
+.bulk-upload-icon {
+    color: #fff !important;
+    position: relative;
+    top: 50px;
+}
+span.choose-span {
+    font-size: 30px;
+    position: relative;
+    top: 80px;
+    color: #fff;
+}
+label.add-label {
+    position: relative;
+    color: #65ccdc;
+    top: 20px;
+    left: 7%;
+    font-size: 13px;
+}
+label.hedaer-sub {
+    background: rgba(220, 238, 248, 1);
+    width: 100%;
+    padding: 10px;
+    top: 20px;
+    z-index: 999;
+    position: sticky;
+}
+.file-list-div {
+    color: #fff;
+    font-size: 16px;
+    top: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    position: relative;
+}
+button.upload-btn-file.mat-raised-button {
+    box-shadow: none !important;
+    background: transparent;
+    border: 1px dashed rgba(0, 0, 0, 0.9);
+    color: rgba(0, 0, 0, 0.9);
+    margin-right: 10px;
+}
+.upload-icon {
+    font-size: 18px !important;
+}
