@@ -55,10 +55,7 @@
 
   <div class="col-12 ">
     <mat-card>
-
-
       <div class="row" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)" class="overflow">
-
         <div class="col-12">
           <div class="row ">
             <div class="col-9 remove-col-padding-left">
@@ -83,11 +80,6 @@
                     matTooltip="Export as excel" (click)="downloadExcel()" />
                 </div>
               </div>
-              <!-- <div class="inline-flex btn-spacer text-right margin-bottom-5">
-                <button mat-raised-button class="btn-success-blue" (click)="print()">
-                  Print
-                </button>
-              </div> -->
             </div>
 
           </div>
@@ -159,7 +151,7 @@
               </td>
             </ng-container> -->
 
-            <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef">
+            <ng-container *ngFor="let column of shacolumns; let i = index;" [matColumnDef]="column?.columnDef + column?.data.sc_id">
 
               <th mat-header-cell *matHeaderCellDef width="5%">{{column?.header}} <br />(<span><i
                     class="fas fa-rupee-sign"></i></span>)</th>
@@ -181,7 +173,7 @@
                 [ngStyle]="{'background-color':element?.colorCode}"> <span
                   *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings | number )}} </span> </td>
             </ng-container>
-            <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef">
+            <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef + column?.data.sc_id">
               <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.header}} <br />(<span><i
                     class="fas fa-rupee-sign"></i></span>)</th>
               <td mat-cell *matCellDef="let element" class="text-center"
@@ -309,13 +301,9 @@
                 <span [ngClass]="element.emp_status === 'live' ? 'green':'red'">{{element.emp_status}} </span>
               </td>
             </ng-container>
-
-
-
             <tr mat-header-row *matHeaderRowDef="displayedSalaryComputeColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedSalaryComputeColumns;">
             </tr>
-
           </table>
 
           <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
@@ -328,7 +316,8 @@
       </div>
       <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
         <div class="col-6" *ngIf="!editFlag" style="text-align: right">
-          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()" [disabled]="disabledApiButton">Confirm and
+          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()"
+            [disabled]="disabledApiButton">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
             Reset
@@ -339,7 +328,6 @@
           </mat-paginator>
         </div>
       </div>
-
       <div class="text-center" *ngIf="SALARY_COMPUTE_ELEMENT.length == 0">
         <app-no-data
           [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
