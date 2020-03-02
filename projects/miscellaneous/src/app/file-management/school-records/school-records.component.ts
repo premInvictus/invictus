@@ -22,6 +22,9 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 
 	fileArray: any[] = [];
 	totalRecords: number;
+	filterFlag = false;
+	filterValue = '';
+	uploadFlag = false;
 	currentIndex = 0;
 	bookpagesize = 100;
 	@ViewChild('deleteModal') deleteModal;
@@ -49,7 +52,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 	fetchData(event?: PageEvent) {
 		this.bookpageindex = event.pageIndex;
 		this.bookpagesize = event.pageSize;
+		if (this.filterValue) {
+			this.getRecordsBasedOnFilter(this.filterValue);
+		} else {
 		this.getRecordsBasedOnSchool();
+		}
 		return event;
 	}
 
@@ -70,6 +77,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 
 	getRecordsBasedOnSchool() {
 		this.fileArray = [];
+		this.uploadFlag = true;
 		this.datasource = new MatTableDataSource<any>(this.fileArray);
 		this.commonAPIService.getFolderPerLevel({
 			findAll: false,
@@ -79,16 +87,52 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			pageSize: this.bookpagesize,
 		}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
+				this.uploadFlag = false;
 				this.fileArray = [];
 				this.totalRecords = Number(res.data.totalRecords);
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				this.fileArray = res.data.records;
-				console.log(this.fileArray);
 				this.datasource = new MatTableDataSource<any>(this.fileArray);
 				this.datasource.paginator.length = this.paginator.length = this.totalRecords;
 				this.datasource.paginator = this.paginator;
+			} else {
+				this.uploadFlag = false;
 			}
 		});
+	}
+	getRecordsBasedOnFilter(val) {
+		if (val) {
+			this.uploadFlag = true;
+			this.fileArray = [];
+			this.filterFlag = true;
+			this.filterValue = val;
+			this.datasource = new MatTableDataSource<any>(this.fileArray);
+			this.commonAPIService.getFolderPerLevel({
+				findMatch: true,
+				type: 'school',
+				parent_id: this.parent_id,
+				pageIndex: this.bookpageindex,
+				pageSize: this.bookpagesize,
+				name: this.filterValue
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.fileArray = [];
+					this.totalRecords = Number(res.data.totalRecords);
+					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+					this.fileArray = res.data.records;
+					console.log(this.fileArray);
+					this.datasource = new MatTableDataSource<any>(this.fileArray);
+					this.datasource.paginator.length = this.paginator.length = this.totalRecords;
+					this.datasource.paginator = this.paginator;
+					this.uploadFlag = false;
+				}
+			});
+		} else {
+			this.filterValue = '';
+			this.filterFlag = false;
+			this.uploadFlag = false;
+			this.getRecordsBasedOnSchool();
+		}
 	}
 	openDeleteModal(item) {
 		this.deleteModal.openModal(item);
@@ -121,7 +165,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 					}).subscribe((res: any) => {
 						if (res && res.status === 'ok') {
 							this.commonAPIService.showSuccessErrorMessage('Inserted Successfully', 'success');
-							this.getRecordsBasedOnSchool();
+							if (this.filterValue) {
+								this.getRecordsBasedOnFilter(this.filterValue);
+							} else {
+								this.getRecordsBasedOnSchool();
+							}
 						}
 					});
 				} else {
@@ -175,7 +223,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 				this.commonAPIService.insertMultipleFiles(json).subscribe((res: any) => {
 					if (res && res.status === 'ok') {
 						this.commonAPIService.showSuccessErrorMessage('Inserted Successfully', 'success');
-						this.getRecordsBasedOnSchool();
+						if (this.filterValue) {
+							this.getRecordsBasedOnFilter(this.filterValue);
+						} else {
+							this.getRecordsBasedOnSchool();
+						}
 					}
 				});
 				for (const item of files) {
@@ -229,7 +281,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			}
 			this.commonAPIService.deleteFilesFromS3(filesJson).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
-					this.getRecordsBasedOnSchool();
+					if (this.filterValue) {
+						this.getRecordsBasedOnFilter(this.filterValue);
+					} else {
+						this.getRecordsBasedOnSchool();
+					}
 				}
 			});
 		}
@@ -258,7 +314,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 					'parent_id': id
 				});
 			}
-			this.getRecordsBasedOnSchool();
+			if (this.filterValue) {
+				this.getRecordsBasedOnFilter(this.filterValue);
+			} else {
+				this.getRecordsBasedOnSchool();
+			}
 		} else {
 			this.previewImage(item.url, 0);
 		}
@@ -270,7 +330,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			this.breadcrumArr = [
 				{ name: 'Home', parent_id: '' }
 			];
-			this.getRecordsBasedOnSchool();
+			if (this.filterValue) {
+				this.getRecordsBasedOnFilter(this.filterValue);
+			} else {
+				this.getRecordsBasedOnSchool();
+			}
 		} else {
 			this.parent_id = id;
 			const findex = this.breadcrumArr.findIndex(f => Number(f.parent_id) === this.parent_id);
@@ -282,7 +346,11 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 				}
 				index++;
 			}
-			this.getRecordsBasedOnSchool();
+			if (this.filterValue) {
+				this.getRecordsBasedOnFilter(this.filterValue);
+			} else {
+				this.getRecordsBasedOnSchool();
+			}
 		}
 	}
 	getTotalSize(size) {

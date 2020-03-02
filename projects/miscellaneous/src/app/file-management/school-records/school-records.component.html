@@ -21,7 +21,8 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>&nbsp; &nbsp; &nbsp;Filter</mat-label>
                                         <input matInput type="text" formControlName="search"
-                                            placeholder=" Type a prefix and press enter to search. Press ESC to clear">
+                                            placeholder=" Type a prefix and press enter to search. Press ESC to clear"
+                                            (keydown.enter)="getRecordsBasedOnFilter($event.target.value)">
                                         <i class="fas fa-search" style="position: absolute; left: 0;
                                     top: 34%;"></i>
                                     </mat-form-field>
@@ -49,7 +50,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <div style="display:inline-flex">
-                                    <button mat-raised-button class="upload-btn-file" (click)="openUploadModal()">
+                                    <button [disabled]="uploadFlag" 
+                                    mat-raised-button class="upload-btn-file" (click)="openUploadModal()">
                                         <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
                                     </button>
                                 </div>
