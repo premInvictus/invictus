@@ -298,8 +298,10 @@ export class FeeLedgerComponent implements OnInit {
 					
 					
 					
-
-					this.footerRecord.receipttotal += Number(element.reciept);
+					if (item.ftr_status !== "2") {
+						this.footerRecord.receipttotal += Number(element.reciept);
+					}
+					
 
 					this.FEE_LEDGER_ELEMENT.push(element);
 					pos++;
@@ -332,20 +334,6 @@ export class FeeLedgerComponent implements OnInit {
 	}
 
 	getPartialInvoiceLastBalance(dupInvoiceArr, invoice_no) {
-		// var tempArr = [];
-		// var inv_amount ;
-		// var flgr_balance = 0;
-		// for (let i=0; i<this.recordArray.length;i++) {			
-		// 	if(this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
-		// 		inv_amount = this.recordArray[i]['flgr_amount'];
-		// 		flgr_balance =  Number(flgr_balance) +  Number(this.recordArray[i]['flgr_receipt']);
-		// 		console.log('flgr_balance--',flgr_balance);
-		// 		tempArr.push(this.recordArray[i]['flgr_balance']);
-		// 	}
-		// }
-		// var finAmt = Number(inv_amount)  - Number(flgr_balance);
-		// console.log(inv_amount, 'tempArr--',tempArr.reverse(),finAmt);
-		// return finAmt;
 		var tempArr = [];
 		for (let i=0; i<this.recordArray.length;i++) {
 			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
