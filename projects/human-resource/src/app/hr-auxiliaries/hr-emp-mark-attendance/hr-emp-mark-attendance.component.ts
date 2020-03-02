@@ -199,10 +199,10 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
         const filterJSON = {
           "generalFilters": {
             "emp_department_detail.dpt_id": [
-              this.firstForm.value.dept_id.toString()
+              Number(this.firstForm.value.dept_id)
             ],
             "emp_category_detail.cat_id": [
-              this.firstForm.value.cat_id.toString()
+              Number(this.firstForm.value.cat_id)
             ]
           }
         };
@@ -361,11 +361,13 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
 
   }
   getDepartment() {
-    this.sisService.getDepartment({}).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
+    this.commonService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+      if (result) {
+        this.departmentArray = result;
+      } else {
         this.departmentArray = [];
-        this.departmentArray = res.data;
       }
+
     });
   }
 

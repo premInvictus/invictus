@@ -20,14 +20,14 @@ export class AdvancedSearchModalComponent implements OnInit {
   fieldType: any[] = [];
   genderArray: any[] = [];
   wingArray: any[] = [];
-  monthArray:any[] = [];
-  departmentArray:any[] = [];
-  designationArray:any[] = [];
-  categoryOneArray:any[] = [];
-  categoryTwoArray:any[] = [];
-  categoryThreeArray:any[] = [];
-  scaleArray:any[] = [];
-  bankArray:any[] = [];
+  monthArray: any[] = [];
+  departmentArray: any[] = [];
+  designationArray: any[] = [];
+  categoryOneArray: any[] = [];
+  categoryTwoArray: any[] = [];
+  categoryThreeArray: any[] = [];
+  scaleArray: any[] = [];
+  bankArray: any[] = [];
   currentUser: any = {};
   constructor(private dialog: MatDialog, private fbuild: FormBuilder,
     private common: ErpCommonService,
@@ -64,7 +64,7 @@ export class AdvancedSearchModalComponent implements OnInit {
       cat_name: 'Class IV Staff',
     }
   ];
-  paymentModeArray:any[] = [
+  paymentModeArray: any[] = [
     {
       pm_id: '1',
       pm_name: 'Bank Transfer',
@@ -78,7 +78,7 @@ export class AdvancedSearchModalComponent implements OnInit {
       pm_name: 'Cheque Payment',
     },
   ]
-  
+
   filterArray: any[] = [
   ];
   generalFilterForm: FormGroup;
@@ -86,48 +86,48 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   openModal(data) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    
-      this.filterArray = [
-        {
-          id: 'emp_id',
-          name: 'Emp. Id',
-          type: 'text',
-          placeholder: 'Search employee by Emp. Id'
-        },
-        {
-          id: 'emp_name',
-          name: 'Employee Name',
-          type: 'text',
-          placeholder: 'Search employee by Employee Name'
-        },
-        // {
-        //   id: 'doj',
-        //   name: 'Join Date',
-        //   placeholder: 'Search employee by Joined Date',
-        //   type: 'text',
-        // },
-        // {
-        //   id: 'left_date',
-        //   name: 'Left Date',
-        //   placeholder: 'Search employee by  Left Date',
-        //   type: 'text',
-        // }
-      ];
-    
-      this.monthArray = [
-        {month_id : '1' , month_name : 'January'},
-        {month_id : '2' , month_name : 'February'},
-        {month_id : '3' , month_name : 'March'},
-        {month_id : '4' , month_name : 'April'},
-        {month_id : '5' , month_name : 'May'},
-        {month_id : '6' , month_name : 'June'},
-        {month_id : '7' , month_name : 'July'},
-        {month_id : '8' , month_name : 'August'},
-        {month_id : '9' , month_name : 'September'},
-        {month_id : '10' , month_name : 'October'},
-        {month_id : '11' , month_name : 'November'},
-        {month_id : '12' , month_name : 'December'},
-      ]
+
+    this.filterArray = [
+      {
+        id: 'emp_id',
+        name: 'Emp. Id',
+        type: 'text',
+        placeholder: 'Search employee by Emp. Id'
+      },
+      {
+        id: 'emp_name',
+        name: 'Employee Name',
+        type: 'text',
+        placeholder: 'Search employee by Employee Name'
+      },
+      // {
+      //   id: 'doj',
+      //   name: 'Join Date',
+      //   placeholder: 'Search employee by Joined Date',
+      //   type: 'text',
+      // },
+      // {
+      //   id: 'left_date',
+      //   name: 'Left Date',
+      //   placeholder: 'Search employee by  Left Date',
+      //   type: 'text',
+      // }
+    ];
+
+    this.monthArray = [
+      { month_id: '1', month_name: 'January' },
+      { month_id: '2', month_name: 'February' },
+      { month_id: '3', month_name: 'March' },
+      { month_id: '4', month_name: 'April' },
+      { month_id: '5', month_name: 'May' },
+      { month_id: '6', month_name: 'June' },
+      { month_id: '7', month_name: 'July' },
+      { month_id: '8', month_name: 'August' },
+      { month_id: '9', month_name: 'September' },
+      { month_id: '10', month_name: 'October' },
+      { month_id: '11', month_name: 'November' },
+      { month_id: '12', month_name: 'December' },
+    ]
     this.dialogRef = this.dialog.open(this.searchModal, {
       width: '750px',
     });
@@ -168,18 +168,29 @@ export class AdvancedSearchModalComponent implements OnInit {
     });
   }
   getDepartment() {
-    this.sisService.getDepartment({}).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
+    this.commonAPIService.getMaster({ type_id: '7' }).subscribe((result: any) => {
+      if (result) {
         this.departmentArray = [];
-        this.departmentArray = res.data;
+        for (const item of result) {
+          item.config_id = Number(item.config_id);
+          this.departmentArray.push(item);
+        }
+      } else {
+        this.departmentArray = [];
       }
+
     });
   }
   getCategoryOne() {
     this.commonAPIService.getCategoryOne({}).subscribe((res: any) => {
       if (res) {
         this.categoryOneArray = [];
-        this.categoryOneArray = res;
+        for (const item of res) {
+          item.cat_id = Number(item.cat_id);
+          this.categoryOneArray.push(item);
+        }
+      } else {
+        this.categoryOneArray = [];
       }
     });
   }
@@ -282,19 +293,19 @@ export class AdvancedSearchModalComponent implements OnInit {
       dataArr.push(item.formGroup.value);
     }
     if (this.generalFilterForm.value.contract_from_date) {
-      this.generalFilterForm.patchValue({        
-        'contract_from_date' : [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_from_date, 'yyyy-MM-dd')],
+      this.generalFilterForm.patchValue({
+        'contract_from_date': [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_from_date, 'yyyy-MM-dd')],
       });
     }
 
     if (this.generalFilterForm.value.contract_to_date) {
-      this.generalFilterForm.patchValue({        
-        'contract_to_date' : [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_to_date, 'yyyy-MM-dd')],
+      this.generalFilterForm.patchValue({
+        'contract_to_date': [new DatePipe('en-in').transform(this.generalFilterForm.value.contract_to_date, 'yyyy-MM-dd')],
       });
     }
 
     //delete this.generalFilterForm.value.contract_from_date;
-    
+
 
     this.searchOk.emit({
       filters: dataArr,
