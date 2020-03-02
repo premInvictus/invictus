@@ -9,6 +9,7 @@ import { type } from 'os';
 import { UploadFileModalComponent } from '../../misc-shared/upload-file-modal/upload-file-modal.component';
 import { PreviewDocumentComponent } from '../../misc-shared/preview-document/preview-document.component';
 import { MatPaginatorI18n } from '../../misc-shared/customPaginatorClass';
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-school-records',
 	templateUrl: './school-records.component.html',
@@ -72,6 +73,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 		this.datasource = new MatTableDataSource<any>(this.fileArray);
 		this.commonAPIService.getFolderPerLevel({
 			findAll: false,
+			type: 'school',
 			parent_id: this.parent_id,
 			pageIndex: this.bookpageindex,
 			pageSize: this.bookpagesize,
@@ -196,6 +198,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 				filesJson = {
 					projectType: 'school',
 					path: files.name,
+					type: 'school',
 					element_type: files.element_type,
 					file_type_id: files.file_type_id,
 					parent_id: files.parent_id
@@ -216,6 +219,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 				path = path.substring(0, path.length - 1);
 				filesJson = {
 					projectType: 'school',
+					type: 'school',
 					path: path,
 					name: files.name,
 					element_type: files.element_type,
@@ -283,6 +287,12 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 	}
 	getTotalSize(size) {
 		return (size / 1024).toFixed(2);
+	}
+	downLoadFile(item) {
+		if (item.element_type === 'file') {
+			saveAs(item.url, item.name);
+			this.commonAPIService.showSuccessErrorMessage('Downloaded SuccessFully', 'success');
+		}
 	}
 }
 

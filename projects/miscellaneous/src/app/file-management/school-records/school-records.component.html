@@ -121,11 +121,13 @@
                                                 <span *ngIf="item.size"> KB</span>
                                             </div>
                                             <div class="col-1">
-                                                <span style="display:inline-flex" matTooltip="Download">
+                                                <span style="display:inline-flex" matTooltip="Download"
+                                                    (click)="downLoadFile(item)">
                                                     <i class="fas fa-download" style="color: #267733;
                                                     font-size: 16px;margin-right: 10px;"></i>
                                                 </span>
-                                                <span style="display:inline-flex" matTooltip="Delete" (click)="openDeleteModal(item)">
+                                                <span style="display:inline-flex" matTooltip="Delete"
+                                                    (click)="openDeleteModal(item)">
                                                     <i class="fas fa-trash" style="color: #de310b;
                                                     font-size: 16px;margin-right: 10px;"></i>
                                                 </span>
