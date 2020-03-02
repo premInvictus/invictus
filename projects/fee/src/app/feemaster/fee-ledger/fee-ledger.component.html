@@ -68,8 +68,8 @@
 
                     <td width="3%" mat-cell *matCellDef="let row; let i=index"
                       [ngStyle]="{'background-color': getColor(row),'border': getBorder(row)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'"
+                      [attr.rowspan]="row?.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="row?.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''"
                       >
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
@@ -83,8 +83,8 @@
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       style="text-align: left !important;padding-left: 0.5%;"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.feeperiod}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
@@ -93,8 +93,8 @@
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. No. </th>
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       <span *ngIf="item.invoiceno != '0'" class="pointer font-bold font-skyblue font-underline">
                         <a (click)="openDialog(item.action, false)">{{item.invoiceno}}</a>
                       </span>
@@ -107,8 +107,8 @@
                     <td width="10%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       style="text-align: left !important;padding-left: 0.5%;"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.particular}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
@@ -117,8 +117,8 @@
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Inv. Date </th>
                     <td width="7%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
                       {{item.date}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
@@ -127,8 +127,8 @@
                     <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Due Date </th>
                     <td width="7%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial' ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
                       {{item.duedate | date: 'd-MMM-y'}} </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
@@ -140,8 +140,8 @@
 
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : '-'">
                       {{item.amount | number | zerodash}}</td>
                     <!-- <ng-container *matCellDef="let item; let i=index">
                       <td width="5%" mat-cell  class="text-nowrap" *ngIf="!(item.flgr_payment_mode)"
@@ -159,8 +159,8 @@
                     </th>
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial' ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.concession | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.concessiontotal | number | zerodash}} </td>
                   </ng-container>
@@ -171,8 +171,8 @@
                     </th>
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '-' : 'none') : ''">
                       {{item.adjustment | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.adjustmenttotal | number | zerodash}} </td>
                   </ng-container>
@@ -183,8 +183,8 @@
                     </th>
                     <td width="5%" mat-cell *matCellDef="let item; let i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.fine | number | zerodash}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.finetotal | number | zerodash}} </td>
                   </ng-container>
@@ -195,8 +195,8 @@
                     </th>
                     <td width="5%" mat-cell class="text-nowrap" *matCellDef="let item; let i=index"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.netpayableamount | number | zerodash}} </td>
 
 
@@ -219,8 +219,8 @@
                           class="fas fa-rupee-sign"></i></span>)</th>
                     <td width="5%" mat-cell *matCellDef="let item; let  i=index" class="text-nowrap"
                       [ngStyle]="{'background-color': getColor(item),'border': getBorder(item)}"
-                      [attr.rowspan]="getRowSpan('invoiceno',i)"
-                      [style.display]="getRowSpan('invoiceno', i) ? '' : 'none'">
+                      [attr.rowspan]="item.flgr_payment_mode === 'partial'  ? getRowSpan('invoiceno',i) : ''"
+                      [style.display]="item.flgr_payment_mode === 'partial'  ? (getRowSpan('invoiceno', i) ? '' : 'none') : ''">
                       {{item.balance | number}} </td>
                     <td mat-footer-cell *matFooterCellDef> {{footerRecord.balancetotal | number}} </td>
                   </ng-container>
