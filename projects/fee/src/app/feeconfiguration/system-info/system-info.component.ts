@@ -17,8 +17,8 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
-	headerFooterFlag = false;
-	receiptHeaderFooterFlag = false;
+	headerFooterFlag = true;
+	receiptHeaderFooterFlag = true;
 	configValue: any;
 	vaccinationArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
@@ -236,12 +236,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				if (Number(this.settings.spt_print_format) === 2) {
 					this.headerFooterFlag = true;
 				} else {
-					this.headerFooterFlag = false;
+					this.headerFooterFlag = true;
 				}
 				if (Number(this.settings.spt_print_format_receipt) === 2) {
 					this.receiptHeaderFooterFlag = true;
 				} else {
-					this.receiptHeaderFooterFlag = false;
+					this.receiptHeaderFooterFlag = true;
 				}
 				this.printForm.patchValue({
 					'spt_id': this.settings.spt_id,
@@ -304,15 +304,15 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if (Number($event.value) === 2) {
 			this.headerFooterFlag = true;
 		} else {
-			this.headerFooterFlag = false;
+			this.headerFooterFlag = true;
 		}
 	}
 
 	enableReceiptHeaderFooter($event) {
 		if (Number($event.value) === 2) {
-			this.headerFooterFlag = false;
+			this.headerFooterFlag = true;
 		} else {
-			this.receiptHeaderFooterFlag = false;
+			this.receiptHeaderFooterFlag = true;
 		}
 	}
 	numberOnly(event): boolean {
