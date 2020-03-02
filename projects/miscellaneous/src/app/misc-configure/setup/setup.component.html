@@ -205,13 +205,88 @@
                                                 </ng-container>
                                               </ng-container>
                                             </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'school_push_notif'">
+                                              <ng-container *ngFor="let item of notifConfigArray">
+                                                <div class="row">
+                                                  <div class="col-12">
+                                                    <mat-checkbox [indeterminate]="checkSubMenuCheckLevel(item)"
+                                                      [checked]="checkMenu(item)" (change)="changeMenu(item,$event)">
+                                                      {{item.module_name | capitalize}}
+                                                    </mat-checkbox>
+                                                    <ng-container *ngIf="item.sub_module && item.sub_module.length > 0">
+                                                      <div class="mod-div-2">
+                                                        <div class="row" *ngFor="let sitem of item.sub_module">
+                                                          <div class="col-12">
+                                                            <mat-checkbox [checked]="getSubMenuCheck(sitem)"
+                                                              (change)="changeSubMenu(sitem, $event)">
+                                                              {{sitem.module_name | capitalize}}
+                                                            </mat-checkbox>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </ng-container>
+                                                  </div>
+                                                </div>
+                                              </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'curl_call_url'">
+                                              <ng-container [formArrayName]="control.gs_alias" >
+                                                <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
+                                                  <div class="row">
+                                                    <div class="col-4 middle">
+                                                      {{item.value.type | titlecase}}
+                                                    </div>
+                                                    <div class="col-8">
+                                                      <mat-form-field class="form-field" appearance="outline">
+                                                        <input type="text" matInput type="text"
+                                                          formControlName="url">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                              </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'result_entry_options'">
+                                              <ng-container [formArrayName]="control.gs_alias" >
+                                                <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
+                                                  <div class="row">
+                                                    <div class="col-4 middle">
+                                                      {{item.value.id | titlecase}}
+                                                    </div>
+                                                    <div class="col-8">
+                                                      <mat-form-field class="form-field" appearance="outline">
+                                                        <input type="text" matInput type="text"
+                                                          formControlName="value">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                              </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'mis_report_admin'">
+                                              <ng-container [formArrayName]="control.gs_alias" >
+                                                <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
+                                                  <div class="row">
+                                                    <div class="col-4 middle">
+                                                      {{item.value.name | titlecase}}
+                                                    </div>
+                                                    <div class="col-8">
+                                                      <mat-form-field class="form-field" appearance="outline">
+                                                        <input type="text" matInput type="text"
+                                                          formControlName="email">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                </ng-container>
+                                              </ng-container>
+                                            </ng-container>
                                           </ng-container>
                                       </div>
                                   </div>
                                 </ng-container>
                             </form>
                           </div>
-                          <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding">
+                          <div class="col-lg-12 col-mobile-view-add-ques remove-col-modal-padding text-center">
                             <button mat-button class="text-uppercase btn-success" (click)="updateGlobalSetting()"
                                   [disabled]="disabledApiButton">Submit</button>
                           </div>
@@ -226,3 +301,4 @@
         </div>
       </div>
     </div>
+    
