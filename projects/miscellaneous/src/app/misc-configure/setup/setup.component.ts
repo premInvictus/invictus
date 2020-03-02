@@ -131,7 +131,7 @@ export class SetupComponent implements OnInit {
 				}
 				this.formFlag = true;
 			}
-			console.log(this.settingForm);
+			//console.log(this.settingForm);
 		});
 	}
 	updateGlobalSetting() {
