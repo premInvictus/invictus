@@ -175,5 +175,8 @@ export class InventoryService {
   resetAssignEmp() {
     this.assignEmp = null;
   }
-
+  getStoreIncharge(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/get-store-incharge', value);
+  }
 }

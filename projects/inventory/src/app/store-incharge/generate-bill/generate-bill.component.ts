@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { InventoryService } from '../../_services/index';
 
 @Component({
   selector: 'app-generate-bill',
@@ -10,16 +11,22 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 })
 export class GenerateBillComponent implements OnInit {
   searchForm: FormGroup;
+  itemSearchForm: FormGroup;
   userData: any = '';
   itemData: any = [];
   itemLogData: any = [];
+  currentUser: any;
   showReturnIssueSection = false;
+  itemArray: any = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
     private erpCommonService: ErpCommonService,
-    public dialog: MatDialog
-  ) { }
+    public dialog: MatDialog,
+    public inventory: InventoryService,
+  ) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  }
 
   ngOnInit() {
     this.buildForm();
@@ -28,6 +35,12 @@ export class GenerateBillComponent implements OnInit {
     this.searchForm = this.fbuild.group({
       searchId: '',
       user_role_id: ''
+    });
+    this.itemSearchForm = this.fbuild.group({
+      scanItemId: '',
+      due_date: '',
+      issue_date: '',
+      return_date: ''
     });
   }
   searchUser() {
@@ -70,15 +83,28 @@ export class GenerateBillComponent implements OnInit {
     }
   }
   resetAll() {
-		this.itemData = [];
-		this.itemLogData = [];
-		// this.issueItemData = [];
-		// this.finIssueItem = [];
-		// this.userData = [];
-		// this.formGroupArray = [];
-		// this.searchForm.controls['searchId'].setValue('');
-		// this.returnIssueItemsForm.reset();
-		// this.ITEM_LOG_LIST_ELEMENT = [];
-		// this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
-	}
+    this.itemData = [];
+    this.itemLogData = [];
+    // this.issueItemData = [];
+    // this.finIssueItem = [];
+    // this.userData = [];
+    // this.formGroupArray = [];
+    // this.searchForm.controls['searchId'].setValue('');
+    // this.returnIssueItemsForm.reset();
+    // this.ITEM_LOG_LIST_ELEMENT = [];
+    // this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
+  }
+  searchItemData() {
+    let inputJson: any = {};
+    inputJson = {
+      emp_id: Number(this.currentUser.login_id),
+      item_code: Number(this.itemSearchForm.value.scanItemId)
+    }
+    console.log(this.itemSearchForm.value.scanItemId);
+    this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+      if (result) {
+        this.itemArray.push(result[0].item_assign);
+      }
+    })
+  }
 }

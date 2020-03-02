@@ -124,11 +124,11 @@
 </div>
 <div class="row" *ngIf="(userData!='' && showReturnIssueSection)">
   <div class="col-12 remove-col-padding-left">
-    <form [formGroup]="returnIssueItemsForm">
+    <form [formGroup]="itemSearchForm">
       <mat-card class="mat-card-108">
         <div class="row">
           <div class="col-9 margin-top-15">
-            <span class="font-size-20 font-bold">Return/Issue Items</span>
+            <span class="font-size-20 font-bold">Add Items</span>
           </div>
           <div class="col-3">
             <div class="search-container">
@@ -156,12 +156,7 @@
                   <th class="custom-th">Sr No.</th>
                   <th class="custom-th">Item Code</th>
                   <th class="custom-th">Item Name</th>
-                  <th class="custom-th">Nature</th>
-                  <th class="custom-th">Current Stock</th>
-                  <th class="custom-th">Location</th>
-                  <th class="custom-th">Stock</th>
-                  <th class="custom-th">Issued/ Return Quantity</th>
-                  <th class="custom-th">Due Date</th>
+                  <th class="custom-th">Item Price</th>
                   <th class="custom-th">Action</th>
                 </tr>
               </thead>

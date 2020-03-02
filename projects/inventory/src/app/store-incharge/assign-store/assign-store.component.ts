@@ -80,7 +80,7 @@ export class AssignStoreComponent implements OnInit {
     }
   }
   getEmpId(item: any) {
-    this.employeeId = item.emp_id;
+    this.employeeId = item.emp_login_id;
     this.assignStoreForm.patchValue({
       emp_id: item.emp_name
     });
@@ -95,6 +95,9 @@ export class AssignStoreComponent implements OnInit {
     if (this.assignStoreForm.valid && this.employeeId) {
       this.inventory.checkItemOrLocation({ emp_id: this.employeeId, item_location: this.currentLocationId }).subscribe((result: any) => {
         if (result) {
+          this.tableDataArray = [];
+          this.formGroupArray = [];
+          this.itemArray = [];
           this.commonService.showSuccessErrorMessage(result, 'error');
         } else {
           this.tableDataArray = [];
