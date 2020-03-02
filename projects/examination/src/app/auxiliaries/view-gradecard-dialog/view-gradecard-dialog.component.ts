@@ -390,7 +390,7 @@ export class ViewGradecardDialogComponent implements OnInit {
           } else if (element.gs_alias === 'gradecard_footer') {
             this.footer = element.gs_value;
           } else if (element.gs_alias === 'school_attendance_theme') {
-            if (element.gs_value == '1') {
+            if (element.gs_value == '' || element.gs_value == '0') {
               this.getTermWorkingAndHoliday();
             } else {
               this.getTermStudentAttendence2();

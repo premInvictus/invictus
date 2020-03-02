@@ -192,4 +192,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/getAdmissionStudentDataPerName', value);
 	}
+	getGlobalSettingGroup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingGroup', value);
+	}
 }
