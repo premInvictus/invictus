@@ -15,7 +15,8 @@ const routes: Routes = [
 			{ path: 'auxiliaries', loadChildren:  '../inventory-auxiliaries/auxiliaries.module#AuxiliariesModule' },
 			{ path: 'reports', loadChildren:  '../inventory-reports/reports.module#ReportsModule' },
 			{ path: 'configuration', loadChildren:  '../inventory-configuration/configuration.module#ConfigurationModule' },
-			{ path: 'circulation-management', loadChildren:  '../inventory-circulation-management/circulation-management.module#CirculationManagementModule' }
+			{ path: 'circulation-management', loadChildren:  '../inventory-circulation-management/circulation-management.module#CirculationManagementModule' },
+			{ path: 'store-incharge', loadChildren:  '../store-incharge/store-incharge.module#StoreInchargeModule' },
 		]
 	}
 ];

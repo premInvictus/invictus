@@ -9,6 +9,7 @@ import { of } from 'rxjs';
 })
 export class InventoryService {
   private processType;
+  private assignEmp;
   private tabIndex;
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
@@ -147,5 +148,35 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/bulkUpdate/uploadEmployeeExcel', value);
   }
-
+  insertStoreIncharge(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/insert-store-incharge', value);
+  }
+  checkItemOrLocation(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/checkItemOrLocation', value);
+  }
+  allStoreIncharge(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/all-store-incharge', value);
+  }
+  updateStoreIncharge(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/update-store-incharge', value);
+  }
+  setAssignEmp(value) {
+    this.assignEmp = value;
+  }
+  getAssignEmp() {
+    if (this.assignEmp) {
+      return this.assignEmp;
+    }
+  }
+  resetAssignEmp() {
+    this.assignEmp = null;
+  }
+  getStoreIncharge(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/store-incharge/get-store-incharge', value);
+  }
 }

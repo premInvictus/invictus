@@ -116,6 +116,7 @@
     "../projects/inventory/src/app/inventory-auxiliaries/auxiliaries.module.ts",
     "../projects/inventory/src/app/inventory-circulation-management/circulation-management.module.ts",
     "../projects/inventory/src/app/inventory-reports/reports.module.ts",
-    "../projects/inventory/src/app/inventory-configuration/configuration.module.ts"
+    "../projects/inventory/src/app/inventory-configuration/configuration.module.ts",
+    "../projects/inventory/src/app/store-incharge/store-incharge.module.ts"
   ]
 }
