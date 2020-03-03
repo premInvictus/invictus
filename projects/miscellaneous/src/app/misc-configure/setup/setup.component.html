@@ -267,8 +267,11 @@
                                               <ng-container [formArrayName]="control.gs_alias" >
                                                 <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
                                                   <div class="row">
-                                                    <div class="col-4 middle">
-                                                      {{item.value.name | titlecase}}
+                                                    <div class="col-4">
+                                                      <mat-form-field class="form-field" appearance="outline">
+                                                        <input type="text" matInput type="text"
+                                                          formControlName="name">
+                                                      </mat-form-field>
                                                     </div>
                                                     <div class="col-8">
                                                       <mat-form-field class="form-field" appearance="outline">
