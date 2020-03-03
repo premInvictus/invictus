@@ -599,8 +599,17 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						departmentwise_leave: temp_arr,
 						departmentwise_leave_status: '1'
 					};
-					console.log(this.setupDetails);
-					this.addEntry(this.setupDetails, 'insertDepartmentLeave', 'data');
+					this.commonService.checkDepartmentEntry({ 'dept_id': this.formGroupArray[value - 1].formGroup.value.department_id }).subscribe((result: any) => {
+						if (result) {
+							this.disabledApiButton = false;
+							this.getleaveDepartment();
+							this.dptFormGroupArray = [];
+							this.resetForm(this.configValue);
+							this.commonService.showSuccessErrorMessage('Department Leave already Exist .', 'error');
+						} else {
+							this.addEntry(this.setupDetails, 'insertDepartmentLeave', 'data');
+						}
+					});
 					break;
 			}
 		}
