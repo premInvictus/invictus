@@ -99,42 +99,69 @@ export class GenerateBillComponent implements OnInit {
   }
 
   setTotal(item, i) {
-    console.log(this.formGroupArray[i].formGroup.value);
     this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.no_of_item) * this.tableArray[i]['item_selling_price'];
     this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
   }
 
   searchItemData() {
-    let inputJson: any = {};
-    inputJson = {
-      emp_id: Number(this.currentUser.login_id),
-      item_code: Number(this.itemSearchForm.value.scanItemId)
-    }
-    console.log(this.itemSearchForm.value.scanItemId);
-    this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
-      if (result) {
-        this.itemArray.push(result[0].item_assign[0]);
-        console.log(this.itemArray);
-        for (let item of this.itemArray) {
-          this.tableArray.push({
-            item_code: item.item_code,
-            item_name: item.item_name,
-            item_selling_price: item.item_selling_price,
-            no_of_item: '',
-            total_price: '',
-          });
-          this.formGroupArray.push({
-            formGroup: this.fbuild.group({
+    const findex = this.itemArray.findIndex(f => Number(f.item_code) === Number(this.itemSearchForm.value.scanItemId));
+    if (findex !== -1) {
+      this.common.showSuccessErrorMessage('Item Already exist in the cart', 'error');
+    } else {
+      let inputJson: any = {};
+      inputJson = {
+        emp_id: Number(this.currentUser.login_id),
+        item_code: Number(this.itemSearchForm.value.scanItemId)
+      }
+      this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
+        if (result.length > 0) {
+          this.tableArray = [];
+          this.formGroupArray = [];
+          this.itemArray.push(result[0].item_assign[0]);
+          for (let item of this.itemArray) {
+            this.tableArray.push({
               item_code: item.item_code,
               item_name: item.item_name,
               item_selling_price: item.item_selling_price,
               no_of_item: '',
               total_price: '',
-            })
-          });
+            });
+            this.formGroupArray.push({
+              formGroup: this.fbuild.group({
+                item_code: item.item_code,
+                item_name: item.item_name,
+                item_selling_price: item.item_selling_price,
+                no_of_item: '',
+                total_price: '',
+              })
+            });
+          }
+        } else {
+          this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }
+      })
+    }
+  }
+  saveItem() {
+    console.log(this.formGroupArray);
+    var finalJson: any = {};
+    const itemAssign: any[] = [];
+    for (let item of this.formGroupArray) {
+      itemAssign.push(item.formGroup.value);
+    }
+    finalJson = {
+      buyer_id: this.userData.emp_id,
+      buyer_name: this.userData.au_full_name,
+      item_assign: itemAssign
+    }
+    console.log('finalJson', finalJson);
+  }
+  resetItem() {
+    this.itemArray = [];
+    this.tableArray = [];
+    this.formGroupArray = [];
+    this.itemSearchForm.reset();
+    this.itemSearchForm.controls['scanItemId'].setValue('');
 
-      }
-    })
   }
 }
