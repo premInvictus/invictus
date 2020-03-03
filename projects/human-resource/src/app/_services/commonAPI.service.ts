@@ -444,6 +444,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/career-enquiry/get-all-career-enquiry', value);
 	}
-
+	checkDepartmentEntry(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/department-leave/checkDepartmentEntry', value);
+	}
 
 }

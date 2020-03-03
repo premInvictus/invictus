@@ -18,6 +18,8 @@ export class GenerateBillComponent implements OnInit {
   currentUser: any;
   showReturnIssueSection = false;
   itemArray: any = [];
+  tableArray: any = [];
+  formGroupArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -42,6 +44,7 @@ export class GenerateBillComponent implements OnInit {
       issue_date: '',
       return_date: ''
     });
+    this.formGroupArray = [];
   }
   searchUser() {
     if (this.searchForm && this.searchForm.value.searchId) {
@@ -94,6 +97,13 @@ export class GenerateBillComponent implements OnInit {
     // this.ITEM_LOG_LIST_ELEMENT = [];
     // this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
   }
+
+  setTotal(item, i) {
+    console.log(this.formGroupArray[i].formGroup.value);
+    this.tableArray[i]['total_price'] = Number(this.formGroupArray[i].formGroup.value.no_of_item) * this.tableArray[i]['item_selling_price'];
+    this.formGroupArray[i].formGroup.value.total_price = this.tableArray[i]['total_price'];
+  }
+
   searchItemData() {
     let inputJson: any = {};
     inputJson = {
@@ -103,7 +113,27 @@ export class GenerateBillComponent implements OnInit {
     console.log(this.itemSearchForm.value.scanItemId);
     this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
       if (result) {
-        this.itemArray.push(result[0].item_assign);
+        this.itemArray.push(result[0].item_assign[0]);
+        console.log(this.itemArray);
+        for (let item of this.itemArray) {
+          this.tableArray.push({
+            item_code: item.item_code,
+            item_name: item.item_name,
+            item_selling_price: item.item_selling_price,
+            no_of_item: '',
+            total_price: '',
+          });
+          this.formGroupArray.push({
+            formGroup: this.fbuild.group({
+              item_code: item.item_code,
+              item_name: item.item_name,
+              item_selling_price: item.item_selling_price,
+              no_of_item: '',
+              total_price: '',
+            })
+          });
+        }
+
       }
     })
   }
