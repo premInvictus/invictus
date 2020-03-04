@@ -20,12 +20,12 @@
             <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch"
                 mat-button>
                 <img class="header-school-branch"
-                    src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span
+                    src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span style="color: #fff;"
                     class="header-icon-spacer">{{schoolInfo.school_name}}</span></button>
 
             <mat-menu #schoolbranch="matMenu">
-                <button mat-menu-item class="profile-submenu"><i
-                        class="fas fa-school"></i><span>{{schoolInfo?.school_name}}</span> </button>
+                <button style="color: #fff !important;" mat-menu-item class="profile-submenu"><i
+                        class="fas fa-school"></i>&nbsp; <span>{{schoolInfo?.school_name}}</span> </button>
             </mat-menu>
             <div [hidden]="!(currentUser.role_id === '2')" class="header-menu-divider"></div>
             <button style="color:#fff" [hidden]="!(currentUser.role_id === '2')"
@@ -173,10 +173,10 @@
             <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false"
                 [matMenuTriggerFor]="schoolbranch">
                 <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id != 1">
-                    <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo}}</button>
+                    <button style="color: #fff !important;" mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>&nbsp;{{schoolInfo}}</button>
                 </mat-menu>
                 <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id == 1">
-                    <button mat-menu-item class="profile-submenu"><i
+                    <button style="color: #fff !important;" mat-menu-item class="profile-submenu"><i
                             class="fas fa-school"></i>{{schoolInfo?.school_name}}</button>
                 </mat-menu>
                 <span class="mat-button-wrapper invictus">

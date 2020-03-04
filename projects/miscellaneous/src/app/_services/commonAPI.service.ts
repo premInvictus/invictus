@@ -245,5 +245,30 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/callRemarkslist', value);
 	}
+	getFileTypeBased(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/getFileTypeBased', value);
+	}
+	getFolderPerLevel(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/getFolderPerLevel', value);
+	}
+	insertFileType(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/insertFileType', value);
+	}
+	insertMultipleFiles(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/insertMultipleFiles', value);
+	}
+	uploadFilesToS3(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/uploadFilesToS3', value);
+	}
+	deleteFilesFromS3(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/file-management/deleteFilesFromS3', value);
+	}
+
 
 }

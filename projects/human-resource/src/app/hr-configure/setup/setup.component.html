@@ -226,7 +226,7 @@
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Department</mat-label>
                                                             <mat-select (selectionChange)="getDepartmentLeave()"
-                                                                placeholder="Department"
+                                                                placeholder="Department" required
                                                                 formControlName="department_id">
                                                                 <mat-option value="">Please select</mat-option>
                                                                 <mat-option *ngFor="let item of departmentArray"

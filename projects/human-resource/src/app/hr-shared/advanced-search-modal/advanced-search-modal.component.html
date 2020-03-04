@@ -111,8 +111,8 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Department </mat-label>
               <mat-select formControlName="emp_department_detail.dpt_id" multiple>
-                <mat-option *ngFor="let item of departmentArray" [value]="item.dept_id" placeholder="Department">
-                  {{item.dept_name}}</mat-option>
+                <mat-option *ngFor="let item of departmentArray" [value]="item.config_id" placeholder="Department">
+                  {{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

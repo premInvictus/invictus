@@ -1,1 +1,179 @@
-<div> School Records</div>
+<div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-top-title__container" style="padding:20px !important">
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-sm-6">
+                        <h1 class="remove-bottom-margin font-size-24">School Records</h1>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+    <div class="row margin-left-10">
+        <div class="col-12 remove-col-padding-left">
+            <mat-card>
+                <div class="file-manager-div">
+                    <form [formGroup]="searchForm">
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="position: relative;width: 100%;">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>&nbsp; &nbsp; &nbsp;Filter</mat-label>
+                                        <input matInput type="text" formControlName="search"
+                                            placeholder=" Type a prefix and press enter to search. Press ESC to clear"
+                                            (keydown.enter)="getRecordsBasedOnFilter($event.target.value)">
+                                        <i class="fas fa-search" style="position: absolute; left: 0;
+                                    top: 34%;"></i>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div style="display: inline-flex;">
+                                            <ng-container *ngFor="let item of breadcrumArr;let i = index">
+                                                <span style="cursor: pointer;" class="breadcrum-span"
+                                                    (click)="setParentId2(item.parent_id)">
+                                                    <i *ngIf="i === 0"
+                                                        class="fas fa-home home-ico"></i>&nbsp;{{item.name}}
+                                                    &nbsp; <i *ngIf="i !== breadcrumArr.length -1"
+                                                        class="fas fa-caret-right home-ico"></i></span>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="display:inline-flex">
+                                    <button [disabled]="uploadFlag" 
+                                    mat-raised-button class="upload-btn-file" (click)="openUploadModal()">
+                                        <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
+                                    </button>
+                                </div>
+                                <div style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file"
+                                        style="background: #267733 !important;" (click)="openFolderCreate()">
+                                        <i class="fas fa-folder upload-icon"></i> &nbsp; <b>Create Folder</b>
+                                    </button>
+                                </div>
+                                <div style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file" style="    background: transparent !important;
+                                    color: #000 !important;
+                                    border: 1px dashed !important;">
+                                        <i class="fas fa-download upload-icon"></i> &nbsp; <b>Download</b>
+                                    </button>
+                                </div>
+                                <div style="float: right;" [hidden]="!(fileArray.length > 0)">
+                                    <mat-paginator #paginator [pageSize]="bookpagesize"
+                                        [pageSizeOptions]="bookpagesizeoptions" showFirstLastButtons
+                                        (page)="pageEvent = fetchData($event)"></mat-paginator>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row" *ngIf="fileArray.length > 0">
+                        <div class="col-12">
+                            <div class="headerr-file-upload">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="text-align: center;">
+                                            &nbsp;<mat-checkbox></mat-checkbox>&nbsp; Name
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span style="text-align: center;">Last Modified Date</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span style="text-align: center;">Size</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span style="text-align: center;">Action</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row file-row" *ngFor="let item of fileArray">
+                                <div class="col-12">
+                                    <div class="file-div">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <span style="text-align: center;">
+                                                    <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
+                                                    <i *ngIf="item.element_type === 'folder'"
+                                                        class="fas fa-folder-open folder-paren"></i>
+                                                    <i *ngIf="item.element_type !== 'folder'"
+                                                        class="fas fa-file file-paren"></i>
+                                                    &nbsp;<span style="cursor: pointer;"
+                                                        (click)="setParentId(item.file_type_id, item.name, item)">{{item.name}}</span>
+                                                </span>
+                                            </div>
+                                            <div class="col-3">
+                                                <span style="text-align: center;">
+                                                    {{item.updatedDate.time }}
+                                                </span>
+                                            </div>
+                                            <div class="col-2">
+                                                <span style="text-align: center;">
+                                                    {{item.size ? (getTotalSize(item.size) | number) : '-'}}</span>
+                                                <span *ngIf="item.size"> KB</span>
+                                            </div>
+                                            <div class="col-1">
+                                                <span style="display:inline-flex" matTooltip="Download"
+                                                    (click)="downLoadFile(item)">
+                                                    <i class="fas fa-download" style="color: #267733;
+                                                    font-size: 16px;margin-right: 10px;"></i>
+                                                </span>
+                                                <span style="display:inline-flex" matTooltip="Delete"
+                                                    (click)="openDeleteModal(item)">
+                                                    <i class="fas fa-trash" style="color: #de310b;
+                                                    font-size: 16px;margin-right: 10px;"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="fileArray.length === 0">
+                        <div class="col-12">
+                            <div class="headerr-file-upload">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span style="text-align: center;">
+                                            Name
+                                        </span>
+                                    </div>
+                                    <div class="col-3">
+                                        <span style="text-align: center;">Last Modified Date</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span style="text-align: center;">Size</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span style="text-align: center;">Action</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div style="text-align: center;">
+                                            <span>No Records Found</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>
+<app-delete-modal #deleteModal (deleteOk)="deleteFiles($event)" (deleteCancel)="cancelDelete($event)"
+    [deleteMessage]="delMsg"></app-delete-modal>

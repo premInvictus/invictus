@@ -238,11 +238,11 @@ export class SalaryComputationComponent implements OnInit {
 			if (result && result.length > 0) {
 				var temp_arr = [];
 				for (let i = 0; i < this.shacolumns.length; i++) {
-					this.displayedSalaryComputeColumns.push(this.shacolumns[i]['header']);
+					this.displayedSalaryComputeColumns.push(this.shacolumns[i]['header'] + this.shacolumns[i]['data']['sc_id']);
 				}
 				this.displayedSalaryComputeColumns.push('emp_total_earnings');
 				for (let i = 0; i < this.shdcolumns.length; i++) {
-					this.displayedSalaryComputeColumns.push(this.shdcolumns[i]['header']);
+					this.displayedSalaryComputeColumns.push(this.shdcolumns[i]['header'] + this.shdcolumns[i]['data']['sc_id']);
 				}
 				this.displayedSalaryComputeColumns.push('emp_present_days', 'emp_advance', 'emp_salary_payable');
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
