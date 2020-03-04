@@ -321,10 +321,46 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-15"
-                    *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'">
+                <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
-                        <mat-label>Appplicable From</mat-label>
+                        <mat-label>Hostel Building</mat-label>
+                        <mat-select placeholder="Hostel Building" [disabled]="viewOnly"
+                            formControlName="hs_building" (selectionChange)="getRoom()" required>
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Hostel Room</mat-label>
+                        <mat-select placeholder="Hostel Room" [disabled]="viewOnly"
+                            formControlName="hs_room" (selectionChange)="getBed()" required>
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Hostel Bed</mat-label>
+                        <mat-select placeholder="Hostel Bed" [disabled]="viewOnly"
+                            formControlName="hs_bed" required (selectionChange)="isAllocatedToStudent()">
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15"
+                    *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id != '0'">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Applicable From</mat-label>
                         <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
                             placeholder="Applicable From" formControlName="accd_hostel_from"
                             [errorStateMatcher]="confirmValidParentMatcher" required />

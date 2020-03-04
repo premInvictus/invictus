@@ -533,4 +533,10 @@ export class FeeService {
 	updateStatusHostelMapping(value) {
 		return this.http.post(environment.apiFeeUrl + '/hostel/updateStatusHostelMapping', value);
 	}
+	getHostelConfigType(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/getHostelConfigType', value);
+	}
+	isAllocatedToStudent(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/isAllocatedToStudent', value);
+	}
 }
