@@ -1,7 +1,8 @@
 export interface Element {
     srno: any;
-    name: any;
-    type: any;
+    building: any;
+    room: any;
+    bed: any;
     status: any;
     action: any;
 }

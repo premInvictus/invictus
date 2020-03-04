@@ -18,12 +18,12 @@ export class HostelMappingComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	editFlag = false;
-	hostelconfigForm: FormGroup;
+	hostelmappingForm: FormGroup;
 	constructor(private fbuild: FormBuilder, private sisService: SisService,
 		private common: CommonAPIService,
 		private feeService: FeeService) { }
 	ELEMENT_DATA: Element[] = [];
-	displayedColumns: string[] = ['srno', 'name', 'type', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'building', 'room', 'bed', 'status', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
@@ -36,13 +36,13 @@ export class HostelMappingComponent implements OnInit {
 		this.getHostelMapping();
 	}
 	buildForm() {
-		this.hostelconfigForm = this.fbuild.group({
+		this.hostelmappingForm = this.fbuild.group({
 			hm_id: '',
 			hm_building: '',
 			hm_room: '',
-      hm_bed: '',
-      hm_group_id: '',
-      hm_status: ''
+			hm_bed: '',
+			hm_group_id: '',
+			hm_status: ''
 		});
 	}
 	ngAfterViewInit() {
@@ -51,8 +51,11 @@ export class HostelMappingComponent implements OnInit {
 	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 	deleteConfirm(value) {
-		value.hc_status = '5';
-		this.feeService.insertHostelConfig(value).subscribe((result: any) => {
+		const tvalue = value[0];
+		const statusJson: any = {};
+		statusJson.hm_group_id = tvalue.hm_group_id;
+		statusJson.hm_status = '5';
+		this.feeService.updateStatusHostelMapping(statusJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Deleted Succesfully', 'success');
 				this.getHostelMapping();
@@ -63,7 +66,7 @@ export class HostelMappingComponent implements OnInit {
   }
   getBuilding() {
     this.buildingArray = [];
-    this.feeService.getHostelMapping({hc_type: 'building'}).subscribe((result: any) => {
+    this.feeService.getHostelConfig({hc_type: 'building',hc_status: '1'}).subscribe((result: any) => {
 			if (result.status === 'ok') {
         this.buildingArray = result.data;
       }
@@ -71,7 +74,7 @@ export class HostelMappingComponent implements OnInit {
   }
   getRoom() {
     this.roomArray = [];
-    this.feeService.getHostelMapping({hc_type: 'room'}).subscribe((result: any) => {
+    this.feeService.getHostelConfig({hc_type: 'room',hc_status: '1'}).subscribe((result: any) => {
 			if (result.status === 'ok') {
         this.roomArray = result.data;
       }
@@ -79,7 +82,7 @@ export class HostelMappingComponent implements OnInit {
   }
   getBed() {
     this.bedArray = [];
-    this.feeService.getHostelMapping({hc_type: 'bec'}).subscribe((result: any) => {
+    this.feeService.getHostelConfig({hc_type: 'bed',hc_status: '1'}).subscribe((result: any) => {
 			if (result.status === 'ok') {
         this.bedArray = result.data;
       }
@@ -89,56 +92,73 @@ export class HostelMappingComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.feeService.getHostelMapping({}).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				let pos = 1;
-				for (const item of result.data) {
-					this.ELEMENT_DATA.push({
-						srno: pos,
-						name: item.hc_name,
-						type: item.hc_type,
-						status: item.hc_status === '1' ? true : false,
-						action: item
-					});
-					pos++;
+			if (result.status === 'ok') {				
+				const temp = result.data;
+				let group_result = temp.reduce(function (r, a) {
+				r[a.hm_group_id] = r[a.hm_group_id] || [];
+				r[a.hm_group_id].push(a);
+				return r;
+				}, Object.create(null));
+				console.log(group_result);
+				if(group_result && Object.keys(group_result).length > 0) {	
+					let pos = 0;		
+					for(let key in group_result) {
+						pos++;
+						const eachelement: any = {};
+						eachelement.hm_group_id = key;
+						const tempBed: any[] = [];
+						for(let item of group_result[key]) {
+							eachelement.srno = pos;
+							eachelement.building = item.building_name;
+							eachelement.room = item.room_name;
+							eachelement.status = item.hm_status;
+							tempBed.push(item.bed_name);
+						}
+						eachelement.bed = tempBed;
+						eachelement.action = group_result[key];
+						this.ELEMENT_DATA.push(eachelement);
+					}
 				}
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 				this.dataSource.paginator = this.paginator;
 				this.sort.sortChange.subscribe(() => this.paginator.pageSize = 0);
 				this.dataSource.sort = this.sort;
 			}
-			this.hostelconfigForm.reset();
 		});
   }
   
 	submit() {
-		if (!this.hostelconfigForm.valid) {
+		if (!this.hostelmappingForm.valid) {
 			this.btnDisable = false;
-			this.hostelconfigForm.markAsDirty();
+			this.hostelmappingForm.markAsDirty();
 		} else {
 			this.btnDisable = true;
-			this.hostelconfigForm.markAsPristine();
-			this.hostelconfigForm.updateValueAndValidity();
-			this.hostelconfigForm.value['hc_status'] = '1';
-			this.feeService.insertHostelConfig(this.hostelconfigForm.value).subscribe((result: any) => {
+			this.hostelmappingForm.markAsPristine();
+			this.hostelmappingForm.updateValueAndValidity();
+			this.hostelmappingForm.value['hm_status'] = '1';
+			this.feeService.insertHostelMapping(this.hostelmappingForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
 				if (result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fines and Penalties Added Succesfully', 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.getHostelMapping();
-					this.hostelconfigForm.reset();
+					this.hostelmappingForm.reset();
 				} else {
-					this.common.showSuccessErrorMessage(result.data, 'error');
-					this.hostelconfigForm.reset();
+					this.common.showSuccessErrorMessage(result.message, 'error');
+					this.hostelmappingForm.reset();
 				}
 			});
 		}
 	}
-	changeStatus($event, value: any) {
-    if(value.hc_status === '1'){
-      value.hc_status = '0';
-    } else {
-      value.hc_status = '1';
-    }
-		this.feeService.insertHostelConfig(value).subscribe((result: any) => {
+	changeStatus($event, value_arr: any) {
+		const value = value_arr[0];
+		const statusJson: any = {};
+		statusJson.hm_group_id = value.hm_group_id;
+		if(value.hm_status === '1'){
+			statusJson.hm_status = '0';
+		} else {
+			statusJson.hm_status = '1';
+		}
+		this.feeService.updateStatusHostelMapping(statusJson).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.common.showSuccessErrorMessage('Status Changed Succesfully', 'success');
 				this.getHostelMapping();
@@ -148,32 +168,39 @@ export class HostelMappingComponent implements OnInit {
 		});
 	}
 	patchValue(value: any) {
+		console.log(value);
 		this.editFlag = true;
-		this.hostelconfigForm.patchValue({
-			hc_id: value.hc_id,
-			hc_name: value.hc_name,
-			hc_type: value.hc_type,
-			hc_status: value.hc_status,
+		const tempbed: any[] = [];
+		value.forEach(element => {
+			tempbed.push(element.hm_bed)
 		});
+		this.hostelmappingForm.patchValue({
+			hm_building: value[0].hm_building,
+			hm_room: value[0].hm_room,
+			hm_bed: tempbed,
+			hm_group_id: value[0].hm_group_id,
+			hm_status: value[0].hm_status
+		});
+		console.log(this.hostelmappingForm.value);
 	}
 	update() {
-		if (!this.hostelconfigForm.valid) {
+		if (!this.hostelmappingForm.valid) {
 			this.btnDisable = false;
-			this.hostelconfigForm.markAsDirty();
+			this.hostelmappingForm.markAsDirty();
 		} else {
 			this.btnDisable = true;
-			this.hostelconfigForm.markAsPristine();
-			this.hostelconfigForm.updateValueAndValidity();
-			this.feeService.insertHostelConfig(this.hostelconfigForm.value).subscribe((result: any) => {
+			this.hostelmappingForm.markAsPristine();
+			this.hostelmappingForm.updateValueAndValidity();
+			this.feeService.insertHostelMapping(this.hostelmappingForm.value).subscribe((result: any) => {
         this.btnDisable = false;
         this.editFlag = false;
 				if (result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fines and Penalties Updated Succesfully', 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.getHostelMapping();
-					this.hostelconfigForm.reset();
+					this.hostelmappingForm.reset();
 				} else {
-					this.common.showSuccessErrorMessage(result.data, 'error');
-					this.hostelconfigForm.reset();
+					this.common.showSuccessErrorMessage(result.message, 'error');
+					this.hostelmappingForm.reset();
 				}
 			});
 		}

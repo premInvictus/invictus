@@ -90,7 +90,7 @@ export class HostelConfigComponent implements OnInit {
 			this.feeService.insertHostelConfig(this.hostelconfigForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
 				if (result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fines and Penalties Added Succesfully', 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.getHostelConfig();
 					this.hostelconfigForm.reset();
 				} else {
@@ -136,7 +136,7 @@ export class HostelConfigComponent implements OnInit {
         this.btnDisable = false;
         this.editFlag = false;
 				if (result.status === 'ok') {
-					this.common.showSuccessErrorMessage('Fines and Penalties Updated Succesfully', 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.getHostelConfig();
 					this.hostelconfigForm.reset();
 				} else {

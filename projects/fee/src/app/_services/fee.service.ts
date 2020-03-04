@@ -527,4 +527,10 @@ export class FeeService {
 	getHostelMapping(value) {
 		return this.http.post(environment.apiFeeUrl + '/hostel/getHostelMapping', value);
 	}
+	insertHostelMapping(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/insertHostelMapping', value);
+	}
+	updateStatusHostelMapping(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/updateStatusHostelMapping', value);
+	}
 }

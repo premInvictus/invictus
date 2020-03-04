@@ -13,7 +13,7 @@
            <mat-card-content>
               <div class="row">
                  <div class="col-2 remove-col-padding custom-col-27">
-                    <form [formGroup]="hostelconfigForm" novalidate>
+                    <form [formGroup]="hostelmappingForm" novalidate>
                        <div class="row">
                           <div class="col-12">
                              <mat-form-field class="form-field" appearance="outline">
@@ -44,9 +44,8 @@
                       <div class="col-12">
                          <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Hostel Bed</mat-label>
-                            <mat-select placeholder="Hostel Bec" [errorStateMatcher]="confirmValidParentMatcher"
-                               formControlName="hm_bed" required>
-                               <mat-option value="">Please Select</mat-option>
+                            <mat-select placeholder="Hostel Bed" [errorStateMatcher]="confirmValidParentMatcher"
+                               formControlName="hm_bed" multiple required>
                                <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
                                   {{item.hc_name}}</mat-option>
                             </mat-select>
@@ -60,7 +59,7 @@
                              <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
                                 (click)="update()" [disabled]="btnDisable">Update</button>
                              <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
-                                (click)="btnDisable=false;hostelconfigForm.reset()">Reset</button>
+                                (click)="btnDisable=false;hostelmappingForm.reset()">Reset</button>
                           </div>
                        </div>
                     </form>
@@ -82,13 +81,17 @@
                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
                                    <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
                                 </ng-container>
-                                <ng-container matColumnDef="name">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.name | titlecase}} </td>
+                                <ng-container matColumnDef="building">
+                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Building </th>
+                                   <td mat-cell *matCellDef="let item"> {{item.building | titlecase}} </td>
                                 </ng-container>
-                                <ng-container matColumnDef="type">
-                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Hostel Type </th>
-                                   <td mat-cell *matCellDef="let item"> {{item.type | titlecase}} </td>
+                                <ng-container matColumnDef="room">
+                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Room </th>
+                                 <td mat-cell *matCellDef="let item"> {{item.room | titlecase}} </td>
+                              </ng-container>
+                                <ng-container matColumnDef="bed">
+                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Bed </th>
+                                   <td mat-cell *matCellDef="let item"> {{item.bed}} </td>
                                 </ng-container>
                                 <ng-container matColumnDef="status">
                                    <th mat-header-cell *matHeaderCellDef> Status </th>
