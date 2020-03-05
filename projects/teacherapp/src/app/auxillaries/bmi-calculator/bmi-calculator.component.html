@@ -25,6 +25,13 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Term</mat-label>
+              <mat-select placeholder="Term" formControlName="bmi_term_id" (selectionChange)="getRollNoUser()" required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
           </div>
         </div>
       </form>
