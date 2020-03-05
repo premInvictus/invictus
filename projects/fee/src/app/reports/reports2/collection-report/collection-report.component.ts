@@ -631,6 +631,7 @@ export class CollectionReportComponent implements OnInit {
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
 								formatter: this.checkFeeFormatter,
+								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 							{
@@ -677,6 +678,7 @@ export class CollectionReportComponent implements OnInit {
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
+						this.aggregatearray.push(new Aggregators.Sum('additional_amt'));
 						this.aggregatearray.push(new Aggregators.Sum('total'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
 						this.totalRow = {};
@@ -693,7 +695,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
-							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));						
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -2878,6 +2880,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['fp_name'] = '';
 						obj3['receipt_no'] = '';
 						obj3['inv_opening_balance'] = groupItem.rows.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0);
+						obj3['additional_amt'] = groupItem.rows.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0);
 						obj3['invoice_fine_amount'] = groupItem.rows.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0);
 						Object.keys(this.feeHeadJSON).forEach((key5: any) => {
 							Object.keys(this.feeHeadJSON[key5]).forEach(key2 => {
