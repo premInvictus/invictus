@@ -19,6 +19,8 @@ export class BmiCalculatorComponent implements OnInit {
   formGroupArray: any[] = [];
   currentUser: any = {};
   bmiArray: any[] = [];
+  termsArray: any[] = [];
+  classterm: any[] = [];
   constructor(private fbuild: FormBuilder, private smartService: SmartService,
     private commonAPIService: CommonAPIService,
     private examService: ExamService) { }
@@ -32,6 +34,7 @@ export class BmiCalculatorComponent implements OnInit {
     this.paramform = this.fbuild.group({
       'bmi_class_id': '',
       'bmi_sec_id': '',
+      'bmi_term_id': ''
     });
   }
   getClass() {
@@ -44,12 +47,28 @@ export class BmiCalculatorComponent implements OnInit {
       }
     });
   }
+  getClassTerm() {
+    this.termsArray = [];
+    this.examService.getClassTerm({ class_id: this.paramform.value.bmi_class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.classterm = result.data;
+        result.data.ect_no_of_term.split(',').forEach(element => {
+          this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+        });
+      } else {
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+      }
+    });
+  }
   getRollNoUser() {
     this.tableDivFlag = false;
     this.formGroupArray = [];
-    if (this.paramform.value.bmi_class_id && this.paramform.value.bmi_sec_id) {
+    if (this.paramform.value.bmi_class_id && this.paramform.value.bmi_sec_id && this.paramform.value.bmi_term_id) {
       this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.bmi_class_id, au_sec_id: this.paramform.value.bmi_sec_id })
+      this.examService.getRollNoUser({
+        au_class_id: this.paramform.value.bmi_class_id, au_sec_id: this.paramform.value.bmi_sec_id, au_role_id: '4',
+        au_status: '1'
+      })
         .subscribe((result: any) => {
           if (result && result.status === 'ok') {
             this.studentArray = [];
@@ -68,6 +87,7 @@ export class BmiCalculatorComponent implements OnInit {
             this.examService.getBMI({
               bmi_class_id: this.paramform.value.bmi_class_id,
               bmi_sec_id: this.paramform.value.bmi_sec_id,
+              bmi_term_id: this.paramform.value.bmi_term_id,
             }).subscribe((res: any) => {
               if (res && res.status === 'ok') {
                 this.bmiArray = res.data;
@@ -108,6 +128,7 @@ export class BmiCalculatorComponent implements OnInit {
       dataArr.push({
         bmi_class_id: this.paramform.value.bmi_class_id,
         bmi_sec_id: this.paramform.value.bmi_sec_id,
+        bmi_term_id : this.paramform.value.bmi_term_id,
         bmi_login_id: item.au_login_id,
         bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind] ? this.formGroupArray[ind].formGroup.value['height' + ind] : '',
         bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind] ? this.formGroupArray[ind].formGroup.value['weight' + ind] : '',
