@@ -210,3 +210,14 @@
 
   </div>
 </div>
+<div class="row" *ngIf="userData==''">
+    <div class="col-12">
+      <mat-card>
+        <div class="text-center">
+          <app-no-data
+            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+            [noDataText]="" [subText]="'Please Select User'"></app-no-data>
+        </div>
+      </mat-card>
+    </div>
+  </div>
