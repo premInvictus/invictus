@@ -327,7 +327,7 @@
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Building</mat-label>
                         <mat-select placeholder="Hostel Building" [disabled]="viewOnly"
-                            formControlName="hs_building" (selectionChange)="getRoom()" required>
+                            formControlName="hs_building" (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()" required>
                             <mat-option value="">Please Select</mat-option>
                             <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
                                 {{item.hc_name}}
@@ -339,7 +339,7 @@
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Room</mat-label>
                         <mat-select placeholder="Hostel Room" [disabled]="viewOnly"
-                            formControlName="hs_room" (selectionChange)="getBed()" required>
+                            formControlName="hs_room" (selectionChange)="getBed();accountsForm.controls.hs_bed.reset()" required>
                             <mat-option value="">Please Select</mat-option>
                             <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
                                 {{item.hc_name}}
