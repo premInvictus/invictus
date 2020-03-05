@@ -148,7 +148,7 @@
             </div>
           </div>
         </div>
-        <div class="row margin-top-15 itemlog" [hidden]="!(itemArray.length > 0)">
+        <div class="row margin-top-15 itemlog" [hidden]="!(tableArray.length > 0)">
           <div class="col-12 remove-col-padding">
             <table class="table-100 custom-table">
               <thead>
@@ -180,7 +180,7 @@
                     </td>
                     <td width="10%" class="custom-td">{{item?.total_price}}</td>
                     <td width="10%" class="custom-td">
-                      <i class="fas fa-trash font-color-red" (click)="removeItem(i)"></i>
+                      <i class="fas fa-trash font-color-red" style="cursor: pointer;" (click)="removeItem(i)"></i>
                     </td>
                   </tr>
                 </ng-container>
@@ -189,16 +189,16 @@
           </div>
         </div>
         <br />
-        <div class="row text-center" *ngIf="itemArray.length > 0">
-          <div class="col-12">
+        <div class="row text-center" *ngIf="tableArray.length > 0">
+          <div class="col-12"> 
             <button mat-raised-button class="btn-success-green" (click)="saveItem()"
-              [disabled]="disabledApiButton">Submit</button>
+              [disabled]="disabledApiButton">Submit & Print</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetItem()">
               Reset
             </button>
           </div>
         </div>
-        <div class="text-center" *ngIf="itemArray.length == 0">
+        <div class="text-center" *ngIf="tableArray.length == 0">
           <app-no-data
             [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
             [noDataText]="" [subText]="'Please Search Items To Add In Cart'"></app-no-data>
