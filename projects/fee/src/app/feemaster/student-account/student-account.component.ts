@@ -29,6 +29,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
 	transport_history: any[] = [];
+	hostel_history: any[] = [];
 	lastRecordId;
 	loginId: any;
 	terminateStatus: any;
@@ -36,6 +37,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	existFlag = false;
 	hostelTerminateFlag = false;
 	showTransport = false;
+	showHostel = false;
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
 	@Input() feeLoginId: any;
@@ -100,6 +102,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.existFlag = false;
 			this.hostelTerminateFlag = false;
 			this.showTransport = false;
+			this.showHostel = false;
 		}
 	}
 	buildForm() {
@@ -187,6 +190,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 	getFeeAccount(au_login_id) {
 		this.showTransport = false;
+		this.showHostel = false;
 		this.accountDetails = {};
 		this.accountsForm.reset();
 		this.accountsForm.patchValue({
@@ -214,12 +218,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.conStatus = this.accountDetails.accd_fcg_status;
 				//	console.log(this.conStatus);
 				this.transport_history = result.data[0]['transport_history'];
+				this.hostel_history = result.data[0]['hostel_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
 				} else {
 					this.transportFlag = false;
 				}
-				if (this.accountDetails.accd_tr_id === '1' && this.accountDetails.accd_is_transport === 'Y') {
+				if (this.accountDetails.accd_transport_mode === '1' && this.accountDetails.accd_is_transport === 'Y') {
 					this.modeFlag = true;
 				} else {
 					this.modeFlag = false;

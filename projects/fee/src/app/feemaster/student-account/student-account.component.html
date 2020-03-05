@@ -304,7 +304,9 @@
         </div>
         <div *ngIf="hostelFlag" class="row remove-top-margin">
             <div class="col-12 remove-col-padding">
-                <span class="font-size-20 font-medium">Hostel Details</span>
+                <span class="font-size-20 font-medium">Hostel Details</span>&nbsp;
+                <a class="pointer font-bold font-skyblue font-underline" *ngIf="hostel_history"
+                (click)="showHostel = !showHostel">View Hostel History</a>
             </div>
         </div>
         <div *ngIf="hostelFlag" class="row">
@@ -386,6 +388,50 @@
             *ngIf="hostelFlag && accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'"
             [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
             formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
+        <div *ngIf="showHostel">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th text-nowrap" style="width:5%">Sr no.</th>
+                                <th class="custom-th" style="width: 5%">Date</th>
+                                <th class="custom-th">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr" *ngFor="let item of hostel_history; let i=index;">
+                                <td class="custom-td">
+                                    {{i+1}}
+                                </td>
+                                <td class="custom-td text-capitalize text-center">
+                                    {{item?.hsl_created_on | date: 'd-MMM-y'}}</td>
+
+                                <td *ngIf="item?.hsl_status === '5'" class="custom-td text-capitalize text-center">
+                                    Hostel Opted Out</td>
+
+                                <td *ngIf="item.hsl_status === '1' || item.hsl_status === '0'" class="custom-td text-capitalize text-left"
+                                    width="25%">
+                                    <span> Building : {{item?.building_name ? item?.building_name : '-' }}</span>,
+                                    <span> Room : {{item?.room_name ? item?.room_name : '-' }}</span>,
+                                    <span> Bed : {{item?.bed_name ? item?.bed_name : '-' }}</span>,
+                                    <span> Applicable From :
+                                        {{item?.hsl_from ? (item?.hsl_from | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Applicable To :
+                                        {{item?.hsl_to ? (item?.hsl_to | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Changed by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span>
+
+                                </td>
+
+                            </tr>
+                            <tr *ngIf="!hostel_history">
+                                <td colspan="7" class="text-center">No Record Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="text-center margin-top-35 ">
             <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button 
