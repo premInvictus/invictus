@@ -36,7 +36,7 @@
                             <form [formGroup]="settingForm">
                                 <ng-container *ngFor="let control of gsettingArr">
                                     <div class="row">
-                                      <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding" style="margin-top: 10px;">
+                                      <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding" style="margin-top: 20px;">
                                         <mat-label>{{control.gs_name | titlecase}}</mat-label>
                                       </div>
                                       <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
@@ -267,16 +267,44 @@
                                               <ng-container [formArrayName]="control.gs_alias" >
                                                 <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
                                                   <div class="row">
-                                                    <div class="col-4">
+                                                    <div class="col-3">
                                                       <mat-form-field class="form-field" appearance="outline">
-                                                        <input type="text" matInput type="text"
+                                                        <input type="text" matInput
                                                           formControlName="name">
                                                       </mat-form-field>
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-6">
                                                       <mat-form-field class="form-field" appearance="outline">
-                                                        <input type="text" matInput type="text"
+                                                        <input type="text" matInput
                                                           formControlName="email">
+                                                      </mat-form-field>
+                                                    </div>
+                                                  </div>
+                                                  <ng-container [formArrayName]="'permission'" >
+                                                    <ng-container *ngFor="let permission of item.get('permission').controls; let j = index;" [formGroupName]="j" >
+                                                      <div class="row">
+                                                        <div class="col-6">
+                                                          <mat-checkbox formControlName="status" [checked]="permission.value.status">
+                                                              {{permission.value.section_name}}
+                                                          </mat-checkbox>
+                                                        </div>
+                                                      </div>
+                                                    </ng-container>
+                                                  </ng-container>
+                                                </ng-container>
+                                              </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngIf="control.gs_alias == 'mis_report_setting_data'">
+                                              <ng-container [formArrayName]="control.gs_alias" >
+                                                <ng-container *ngFor="let item of settingForm.get(control.gs_alias).controls; let i = index;" [formGroupName]="i" >
+                                                  <div class="row">
+                                                    <div class="col-3" style="margin-top: 20px;">
+                                                      Subject
+                                                    </div>
+                                                    <div class="col-6">
+                                                      <mat-form-field class="form-field" appearance="outline">
+                                                        <input type="text" matInput placeholder="Subject"
+                                                          formControlName="subject">
                                                       </mat-form-field>
                                                     </div>
                                                   </div>

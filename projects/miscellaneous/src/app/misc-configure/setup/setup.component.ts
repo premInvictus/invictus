@@ -100,12 +100,26 @@ export class SetupComponent implements OnInit {
 				const temp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : [];
 				const jsontemp = [];
 				temp.forEach(element => {
+					const tempPermission: any[] = [];
+					if(element.permission.length > 0) {
+						element.permission.forEach(element1 => {
+							tempPermission.push(this.fbuild.group({
+								section_name: element1.section_name,
+								status: element1.status
+							}));
+						});
+					}
 					jsontemp.push(this.fbuild.group({
+						id: element.id,
 						name: element.name,
-						email: element.email
+						email: element.email,
+						permission: this.fbuild.array(tempPermission)
 					}))
 				});
 				return this.fbuild.array(jsontemp);
+			} else if(element.gs_alias === 'mis_report_setting_data') {
+				const jsontemp = element.gs_value && element.gs_value !== '' ? JSON.parse(element.gs_value) : '';
+				return this.fbuild.array([this.fbuild.group(jsontemp)]);
 			}
 		}
 		if(element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance') {
@@ -162,6 +176,9 @@ export class SetupComponent implements OnInit {
 		}
 		if (this.settingForm.value && this.settingForm.value.mis_report_admin) {
 			this.settingForm.value.mis_report_admin = JSON.stringify(this.settingForm.value.mis_report_admin);
+		}
+		if (this.settingForm.value && this.settingForm.value.mis_report_setting_data) {
+			this.settingForm.value.mis_report_setting_data = JSON.stringify(this.settingForm.value.mis_report_setting_data[0]);
 		}
 		this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
