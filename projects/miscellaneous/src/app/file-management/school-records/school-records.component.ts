@@ -55,7 +55,7 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 		if (this.filterValue) {
 			this.getRecordsBasedOnFilter(this.filterValue);
 		} else {
-		this.getRecordsBasedOnSchool();
+			this.getRecordsBasedOnSchool();
 		}
 		return event;
 	}
@@ -220,23 +220,35 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 						'updatedDate': ''
 					});
 				}
-				this.commonAPIService.insertMultipleFiles(json).subscribe((res: any) => {
-					if (res && res.status === 'ok') {
-						this.commonAPIService.showSuccessErrorMessage('Inserted Successfully', 'success');
-						if (this.filterValue) {
-							this.getRecordsBasedOnFilter(this.filterValue);
-						} else {
-							this.getRecordsBasedOnSchool();
-						}
-					}
-				});
 				for (const item of files) {
 					this.commonAPIService.uploadFilesToS3({
-						projectType: 'school',
-						path: path,
-						name: item.ed_name,
-						data: item.base64
+						'projectType': 'school',
+						'path': path,
+						'name': item.ed_name,
+						'data': item.base64,
+						'file_type_id': '',
+						'type': 'school',
+						'url': '',
+						'size': item.size,
+						'parent_id': this.parent_id,
+						'element_type': 'file',
+						'userDetails': {
+							'full_name': this.currentUser.full_name,
+							'login_id': this.currentUser.login_id,
+							'role_id': this.currentUser.role_id
+						},
+						'entryDate': '',
+						'updatedDate': '',
+						'content_type': item.content_type
+
 					}).subscribe((res: any) => {
+						if (res && res.status === 'ok') {
+							if (this.filterValue) {
+								this.getRecordsBasedOnFilter(this.filterValue);
+							} else {
+								this.getRecordsBasedOnSchool();
+							}
+						}
 					});
 				}
 			}
@@ -356,10 +368,26 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 	getTotalSize(size) {
 		return (size / 1024).toFixed(2);
 	}
-	downLoadFile(item) {
-		if (item.element_type === 'file') {
-			saveAs(item.url, item.name);
+	downLoadFile(value) {
+		if (value.element_type === 'file') {
+			saveAs(value.url, value.name);
 			this.commonAPIService.showSuccessErrorMessage('Downloaded SuccessFully', 'success');
+		} else {
+			let path: any = '';
+			for (const item of this.breadcrumArr) {
+				if (item.parent_id !== '') {
+					path = path + item.name + '/';
+				}
+			}
+			path = path.substring(0, path.length - 1);
+			this.commonAPIService.downLoadZipFromS3({
+				projectType: "school",
+				path: (this.parent_id === 0) ? value.name : (path + '/' + value.name)
+			}).subscribe((res: any) => {
+					if (res && res.status === 'ok') {
+						saveAs(res.data, value.name + '.zip');
+					}
+				});
 		}
 	}
 }
