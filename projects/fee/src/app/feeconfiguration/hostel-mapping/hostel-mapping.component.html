@@ -1,0 +1,139 @@
+<div>
+  <div class="row">
+     <div class="col-12 ">
+        <mat-card class="card-content__container card-height-830 card-height-835">
+           <mat-card-title>
+
+              <div class="row">
+                 <div class="col-6">
+                    <h1>Hostel Mapping</h1>
+                 </div>
+              </div>
+           </mat-card-title>
+           <mat-card-content>
+              <div class="row">
+                 <div class="col-2 remove-col-padding custom-col-27">
+                    <form [formGroup]="hostelmappingForm" novalidate>
+                       <div class="row">
+                          <div class="col-12">
+                             <mat-form-field class="form-field" appearance="outline">
+                                <mat-label>Hostel Building</mat-label>
+                                <mat-select placeholder="Hostel Building" [errorStateMatcher]="confirmValidParentMatcher"
+                                   formControlName="hm_building" required>
+                                   <mat-option value="">Please Select</mat-option>
+                                   <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
+                                      {{item.hc_name}}</mat-option>
+                                </mat-select>
+                             </mat-form-field>
+                          </div>
+                       </div>
+                       <div class="row">
+                        <div class="col-12">
+                           <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Hostel Room</mat-label>
+                              <mat-select placeholder="Hostel Room" [errorStateMatcher]="confirmValidParentMatcher"
+                                 formControlName="hm_room" required>
+                                 <mat-option value="">Please Select</mat-option>
+                                 <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
+                                    {{item.hc_name}}</mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
+                     </div>
+                     <div class="row">
+                      <div class="col-12">
+                         <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Hostel Bed</mat-label>
+                            <mat-select placeholder="Hostel Bed" [errorStateMatcher]="confirmValidParentMatcher"
+                               formControlName="hm_bed" multiple required>
+                               <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
+                                  {{item.hc_name}}</mat-option>
+                            </mat-select>
+                         </mat-form-field>
+                      </div>
+                   </div>
+                       <div class="text-center margin-top-25">
+                          <div class="inline-flex">
+                             <button *ngIf="!editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                                (click)="submit()" [disabled]="btnDisable">Submit</button>
+                             <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
+                                (click)="update()" [disabled]="btnDisable">Update</button>
+                             <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
+                                (click)="btnDisable=false;hostelmappingForm.reset()">Reset</button>
+                          </div>
+                       </div>
+                    </form>
+                 </div>
+                 <div class="col-1 fee-custom-col-8">
+                    <div class="vertical-line-divider"></div>
+                 </div>
+                 <div class="col-9 fee-custom-col-64">
+                    <div class="row">
+                       <div class="col-12 remove-col-padding">
+                          <div>
+                             <mat-form-field [hidden]="!(ELEMENT_DATA.length > 0)">
+                                <input class="margin-left-10" matInput (keyup)="applyFilter($event.target.value)"
+                                   placeholder="Filter">
+                                <mat-icon matPrefix>filter_list</mat-icon>
+                             </mat-form-field>
+                             <table class="table-100 text-center " mat-table [dataSource]="dataSource" matSort>
+                                <ng-container matColumnDef="srno">
+                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Sr No. </th>
+                                   <td mat-cell *matCellDef="let item"> {{item.srno}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="building">
+                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Building </th>
+                                   <td mat-cell *matCellDef="let item"> {{item.building | titlecase}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="room">
+                                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Room </th>
+                                 <td mat-cell *matCellDef="let item"> {{item.room | titlecase}} </td>
+                              </ng-container>
+                                <ng-container matColumnDef="bed">
+                                   <th mat-header-cell *matHeaderCellDef mat-sort-header> Bed </th>
+                                   <td mat-cell *matCellDef="let item"> {{item.bed}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="status">
+                                   <th mat-header-cell *matHeaderCellDef> Status </th>
+                                   <td mat-cell *matCellDef="let item">
+                                      <mat-slide-toggle [checked]="item.status"
+                                         (change)="changeStatus($event, item.action)"></mat-slide-toggle>
+                                   </td>
+                                </ng-container>
+                                <ng-container matColumnDef="action">
+                                   <th mat-header-cell *matHeaderCellDef> Action </th>
+                                   <td mat-cell *matCellDef="let item">
+                                      <ul class="inline-flex margin-top-10">
+                                         <li><i class="material-icons icon-edit" (click)="patchValue(item.action)">
+                                            create
+                                         </i></li> 
+                                         <li><i class="material-icons icon-danger icon-spacer"
+                                            (click)="openDeleteDialog(item.action)">
+                                            delete
+                                         </i></li>
+                                      </ul>
+                                   </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns; "></tr>
+                             </table>
+                             <table class="table-100 text-center" style="margin-top:5px;">
+                                <tr *ngIf="ELEMENT_DATA.length == 0">
+                                   <td colspan="12">No Record Found</td>
+                                </tr>
+                             </table>
+                             <mat-paginator [hidden]="!(ELEMENT_DATA.length > 0)" #paginator
+                                [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]">
+                             </mat-paginator>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </mat-card-content>
+        </mat-card>
+     </div>
+  </div>
+</div>
+<app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
+</app-delete-modal>

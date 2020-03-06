@@ -515,4 +515,28 @@ export class FeeService {
 	getClassWiseMonthWiseSeperation(value) {
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperation', value);
 	}
+	insertHostelConfig(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/insertHostelConfig', value);
+	}
+	updateStatusHostelConfig(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/updateStatusHostelConfig', value);
+	}
+	getHostelConfig(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/getHostelConfig', value);
+	}
+	getHostelMapping(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/getHostelMapping', value);
+	}
+	insertHostelMapping(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/insertHostelMapping', value);
+	}
+	updateStatusHostelMapping(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/updateStatusHostelMapping', value);
+	}
+	getHostelConfigType(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/getHostelConfigType', value);
+	}
+	isAllocatedToStudent(value) {
+		return this.http.post(environment.apiFeeUrl + '/hostel/isAllocatedToStudent', value);
+	}
 }
