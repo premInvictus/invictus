@@ -473,7 +473,7 @@ export class TeacherRecordsComponent implements OnInit {
 			}
 			path = path.substring(0, path.length - 1);
 			this.commonAPIService.downLoadZipFromS3({
-				projectType: "school",
+				projectType: "employee",
 				path: (this.parent_id === 0) ? value.name : (path + '/' + value.name)
 			}).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
