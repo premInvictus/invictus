@@ -67,6 +67,7 @@ export class LoginComponent implements OnInit {
 		// reset login status
 		// this.authenticationService.logout();
 		// get return url from route parameters or default to '/'
+		this.messagingService.requestPermission();
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
 		this.buildForm();
 		this.checkLoginStatus();
@@ -128,12 +129,11 @@ export class LoginComponent implements OnInit {
 			event.stopPropagation();
 			return false;
 		}
-		this.messagingService.requestPermission();
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
-		console.log(this.messagingService.device_details);
-		this.authenticationService.login(this.model.username, this.model.password, this.messagingService.device_details)
+		this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web')
 			.subscribe(
 				(result: any) => {
 					if (result.status === 'ok' && result.data) {
