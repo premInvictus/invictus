@@ -348,7 +348,7 @@ export class ExamsetupComponent implements OnInit {
 									if (result1 && result1.status === 'ok') {
 										// if (result1.data.studentData.length > 0) {
 										// 	for (const eachstudent of result1.data.studentData) {
-										// 		const url = 'http://api.msg91.com/api/sendhttp.php?authkey='
+										// 		const url = 'https://api.msg91.com/api/sendhttp.php?authkey='
 										// 			+ result1.data.authkey + '&mobiles=' + eachstudent.au_mobile +
 										// 			'&message=' + result1.data.message + '&sender=' + result1.data.sender + '&route=' + result1.data.route;
 										// 		const xhr = new XMLHttpRequest();

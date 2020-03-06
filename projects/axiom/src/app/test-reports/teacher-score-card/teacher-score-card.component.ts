@@ -174,7 +174,7 @@ export class TeacherScoreCardComponent implements OnInit {
 		popupWin.document.open();
 		popupWin.document.write('<html><link rel="stylesheet" type="text/css" media="print"' +
 		'href="../../../styles.css"><style>button { display:none; }' +
-		'iframe{background-image:url("http://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");background-size:100% 100%}' +
+		'iframe{background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");background-size:100% 100%}' +
 		' .my_passage{font-size:14px !important} .option_width_essay{width: 30% !important} .option_width{width:20% !important;} ' +
 		'.ques_name{width:60rem !important;} .question-paper-table th {vertical-align:top !important;} .question-paper-table-essay' +
 		'th {vertical-align:top !important;}' +

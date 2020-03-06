@@ -481,7 +481,7 @@ export class QuestionPaperListComponent implements OnInit {
 		@media print{
 		button { display:none; }  
 		iframe{
-			background-image:url("http://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
+			background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
 			background-size:100% 100%
 		} 
 		.ques-paper-logo{width:45px;height:45px;} 

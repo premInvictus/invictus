@@ -265,7 +265,7 @@ export class TeacherCopyComponent implements OnInit {
 		<style>
 		@media print{
 		button { display:none; } 
-		iframe{background-image:url("http://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
+		iframe{background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
 		background-size:100% 100%} 
 		.my_passage{font-size:14px !important} 
 

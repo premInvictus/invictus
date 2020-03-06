@@ -1,7 +1,7 @@
 /**
  * @license
- * PramukhIME CKEditor Plugin v 4.0.3 - http://www.vishalon.net/pramukhime/ckeditor-plugin
- * Copyright (c) 2005-2018 Vishal Monpara (http://www.vishalon.net)
+ * PramukhIME CKEditor Plugin v 4.0.3 - https://www.vishalon.net/pramukhime/ckeditor-plugin
+ * Copyright (c) 2005-2018 Vishal Monpara (https://www.vishalon.net)
  * 
  * License:
  * Please read license.html file for detailed license terms.

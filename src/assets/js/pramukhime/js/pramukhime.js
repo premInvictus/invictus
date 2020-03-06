@@ -1,7 +1,7 @@
 /**
 * @license
-* PramukhIME Javascript Library v4.0.0 -  http://www.vishalon.net/pramukhime/javascript-library
-* Copyright (c) 2005-2018 Vishal Monpara (http://www.vishalon.net)
+* PramukhIME Javascript Library v4.0.0 -  https://www.vishalon.net/pramukhime/javascript-library
+* Copyright (c) 2005-2018 Vishal Monpara (https://www.vishalon.net)
 * 
 * License:
 * Please read license.html file for detailed license terms.
