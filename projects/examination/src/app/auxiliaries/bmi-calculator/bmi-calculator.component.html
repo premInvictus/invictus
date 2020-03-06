@@ -9,8 +9,8 @@
           <div class="col-8 remove-col-padding-right text-right">
             <mat-form-field appearance="outline" class="form-field-150">
               <mat-label>Class</mat-label>
-              <mat-select placeholder="Class" formControlName="bmi_class_id" (selectionChange)="getSectionsByClass();"
-                required>
+              <mat-select placeholder="Class" formControlName="bmi_class_id"
+                (selectionChange)="getSectionsByClass();getClassTerm()" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
                 </mat-option>
@@ -18,11 +18,17 @@
             </mat-form-field>
             <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
               <mat-label>Section</mat-label>
-              <mat-select placeholder="Section" formControlName="bmi_sec_id" (selectionChange)="getRollNoUser()"
-                required>
+              <mat-select placeholder="Section" formControlName="bmi_sec_id" required>
                 <mat-option value="">Please select</mat-option>
                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                 </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Term</mat-label>
+              <mat-select placeholder="Term" formControlName="bmi_term_id" (selectionChange)="getRollNoUser()" required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -42,9 +48,12 @@
               <thead>
                 <tr class="custom-tr">
                   <!-- <th class="custom-th text-center" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">SNo.</th> -->
-                  <th class="custom-th text-center" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">Roll No. <i class="fas fa-sort"></i></th>
-                  <th class="custom-th text-center" sortColumn [sortKey]="'au_full_name'" [data]="studentArray">Student Name. <i class="fas fa-sort"></i></th>
-                  <th class="custom-th text-center" sortColumn [sortKey]="'au_admission_no'" [data]="studentArray">Admission No. <i class="fas fa-sort"></i></th>                  
+                  <th class="custom-th text-center" sortColumn [sortKey]="'r_rollno'" [data]="studentArray">Roll No. <i
+                      class="fas fa-sort"></i></th>
+                  <th class="custom-th text-center" sortColumn [sortKey]="'au_full_name'" [data]="studentArray">Student
+                    Name. <i class="fas fa-sort"></i></th>
+                  <th class="custom-th text-center" sortColumn [sortKey]="'au_admission_no'" [data]="studentArray">
+                    Admission No. <i class="fas fa-sort"></i></th>
                   <th class="custom-th text-center">Height (in cm)</th>
                   <th class="custom-th text-center">Weight (in kg)</th>
                 </tr>
@@ -52,17 +61,19 @@
               <tbody>
                 <tr class="custom-tr" *ngFor="let item of studentArray;let i = index">
                   <!-- <td class="custom-td text-center font-size-14">{{i + 1}}</td> -->
-                  <td class="custom-td text-center font-size-14">{{item.r_rollno}}</td>                 
+                  <td class="custom-td text-center font-size-14">{{item.r_rollno}}</td>
                   <td class="custom-td text-left font-size-14 mat-cell">{{item.au_full_name | titlecase}}</td>
                   <td class="custom-td text-center font-size-14">{{item.au_admission_no}}</td>
                   <td class="custom-td text-center font-size-14">
-                    <form [formGroup]="formGroupArray[i].formGroup"> 
-                        <input matInput type="number" [formControlName]="'height' + i" placeholder="Please Enter Height (in cm)">
+                    <form [formGroup]="formGroupArray[i].formGroup">
+                      <input matInput type="number" [formControlName]="'height' + i"
+                        placeholder="Please Enter Height (in cm)">
                     </form>
                   </td>
                   <td class="custom-td text-center font-size-14">
                     <form [formGroup]="formGroupArray[i].formGroup">
-                        <input matInput type="number" [formControlName]="'weight' + i" placeholder="Please Enter Weight (in kg)">
+                      <input matInput type="number" [formControlName]="'weight' + i"
+                        placeholder="Please Enter Weight (in kg)">
                     </form>
                   </td>
                 </tr>
@@ -74,8 +85,8 @@
         <br>
         <div class="col-12 text-center">
           <br>
-          <button mat-button class="btn-success-green btn-spacer" [disabled]="disableApiCall"  
-          (click)="saveBMI();$event.stopPropagation()">Submit</button>
+          <button mat-button class="btn-success-green btn-spacer" [disabled]="disableApiCall"
+            (click)="saveBMI();$event.stopPropagation()">Submit</button>
         </div>
       </div>
     </mat-card>

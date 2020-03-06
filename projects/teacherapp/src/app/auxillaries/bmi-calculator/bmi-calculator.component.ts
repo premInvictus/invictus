@@ -19,6 +19,8 @@ export class BmiCalculatorComponent implements OnInit {
   formGroupArray: any[] = [];
   currentUser: any = {};
   bmiArray: any[] = [];
+  termsArray: any[] = [];
+  classterm: any[] = [];
   ctclass_id;
   ctsection_id;
   constructor(private fbuild: FormBuilder, private smartService: SmartService,
@@ -35,18 +37,9 @@ export class BmiCalculatorComponent implements OnInit {
     this.paramform = this.fbuild.group({
       'bmi_class_id': '',
       'bmi_sec_id': '',
+      'bmi_term_id': '',
     });
   }
-  // getClass() {
-  //   this.classArray = [];
-  //   this.smartService.getClass({ class_status: '1' }).subscribe((result: any) => {
-  //     if (result && result.status === 'ok') {
-  //       this.classArray = result.data;
-  //     } else {
-  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-  //     }
-  //   });
-  // }
   getClass() {
     this.sectionArray = [];
     const classParam: any = {};
@@ -60,6 +53,19 @@ export class BmiCalculatorComponent implements OnInit {
           }
         }
       );
+  }
+  getClassTerm() {
+    this.termsArray = [];
+    this.examService.getClassTerm({ class_id: this.paramform.value.bmi_class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.classterm = result.data;
+        result.data.ect_no_of_term.split(',').forEach(element => {
+          this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+        });
+      } else {
+        // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+      }
+    });
   }
   ctForClass() {
     this.examService.ctForClass({ uc_login_id: this.currentUser.login_id })
@@ -86,12 +92,12 @@ export class BmiCalculatorComponent implements OnInit {
               'bmi_class_id': this.ctclass_id,
               'bmi_sec_id': this.ctsection_id
             });
-            this.getRollNoUser();
+            this.getClassTerm();
           } else {
             this.paramform.patchValue({
               'bmi_class_id': this.ctclass_id
             });
-            this.getRollNoUser();
+            this.getClassTerm();
             this.sectionArray = [];
           }
         }
@@ -100,9 +106,12 @@ export class BmiCalculatorComponent implements OnInit {
   getRollNoUser() {
     this.tableDivFlag = false;
     this.formGroupArray = [];
-    if (this.paramform.value.bmi_class_id && this.paramform.value.bmi_sec_id) {
+    if (this.paramform.value.bmi_class_id && this.paramform.value.bmi_sec_id && this.paramform.value.bmi_term_id) {
       this.studentArray = [];
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.bmi_class_id, au_sec_id: this.paramform.value.bmi_sec_id })
+      this.examService.getRollNoUser({
+        au_class_id: this.paramform.value.bmi_class_id, au_sec_id: this.paramform.value.bmi_sec_id, au_role_id: '4',
+        au_status: '1'
+      })
         .subscribe((result: any) => {
           if (result && result.status === 'ok') {
             this.studentArray = [];
@@ -121,6 +130,7 @@ export class BmiCalculatorComponent implements OnInit {
             this.examService.getBMI({
               bmi_class_id: this.paramform.value.bmi_class_id,
               bmi_sec_id: this.paramform.value.bmi_sec_id,
+              bmi_term_id: this.paramform.value.bmi_term_id,
             }).subscribe((res: any) => {
               if (res && res.status === 'ok') {
                 this.bmiArray = res.data;
@@ -144,16 +154,6 @@ export class BmiCalculatorComponent implements OnInit {
         });
     }
   }
-  // getSectionsByClass() {
-  //   this.sectionArray = [];
-  //   this.smartService.getSectionsByClass({ class_id: this.paramform.value.bmi_class_id }).subscribe((result: any) => {
-  //     if (result && result.status === 'ok') {
-  //       this.sectionArray = result.data;
-  //     } else {
-  //       this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
-  //     }
-  //   });
-  // }
   saveBMI() {
     let ind = 0;
     const dataArr: any[] = [];
@@ -161,6 +161,7 @@ export class BmiCalculatorComponent implements OnInit {
       dataArr.push({
         bmi_class_id: this.paramform.value.bmi_class_id,
         bmi_sec_id: this.paramform.value.bmi_sec_id,
+        bmi_term_id: this.paramform.value.bmi_term_id,
         bmi_login_id: item.au_login_id,
         bmi_height: this.formGroupArray[ind].formGroup.value['height' + ind],
         bmi_weight: this.formGroupArray[ind].formGroup.value['weight' + ind],
