@@ -22,9 +22,6 @@ export class UploadFileModalComponent implements OnInit {
 	ngOnInit() {
 	}
 	fileChangeEvent(fileInput) {
-		this.multipleFileArray = [];
-		this.sizeArray = [];
-		this.base64Images = [];
 		this.counter = 0;
 		this.currentFileChangeEvent = fileInput;
 		const files = fileInput.target.files;
@@ -37,34 +34,16 @@ export class UploadFileModalComponent implements OnInit {
 		const reader = new FileReader();
 		reader.onloadend = (e) => {
 			this.currentImage = reader.result;
-			console.log(files);
-			const fileJson = {
-				fileName: files.name,
-				imagebase64: this.currentImage,
-				module: 'attachment'
-			};
-			this.multipleFileArray.push(fileJson);
 			this.sizeArray.push(files.size);
 			this.base64Images.push(this.currentImage);
 			this.counter++;
-			if (this.counter === this.currentFileChangeEvent.target.files.length) {
-				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
-					if (result) {
-						let index = 0;
-						for (const item of result.data) {
-
-							this.finalDocumentArray.push({
-								ed_name: item.file_name,
-								ed_link: item.file_url,
-								size: this.sizeArray[index],
-								base64: this.base64Images[index]
-							});
-							index++;
-						}
-						console.log(this.finalDocumentArray);
-					}
-				});
-			}
+			this.finalDocumentArray.push({
+				ed_name: files.name,
+				size: files.size,
+				base64: this.currentImage,
+				content_type: files.type
+			});
+			console.log(this.finalDocumentArray);
 		};
 		reader.readAsDataURL(files);
 	}

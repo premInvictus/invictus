@@ -28,6 +28,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   sflag = false;
   eflag = false;
   gflag = false;
+  term_id: any;
+  class_id: any;
+  sec_id: any;
   acedemicmarks = 0;
   GradeSet: any[] = [];
   GradeSetPoint: any[] = [];
@@ -65,11 +68,11 @@ export class ViewGradecardDialogComponent implements OnInit {
   };
   exambifurcateCount = 0;
   classtermdate: any;
-  dateofdeclaration:any;
+  dateofdeclaration: any;
   userachivement: any;
-  isuserachivement : string;
-  gradingSystem:string = '';
-  resultRemarksArr:any[] = [];
+  isuserachivement: string;
+  gradingSystem: string = '';
+  resultRemarksArr: any[] = [];
   printData: any = {};
   printDataFlag = false;
   all_term_subject_total_mark = 0;
@@ -89,6 +92,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     this.printGradecard();
     this.dateofdeclaration = new Date();
     console.log(this.data);
+    this.class_id = this.data.param.eme_class_id;
+    this.sec_id = this.data.param.eme_sec_id;
+    this.term_id = this.data.param.eme_term_id;
     if (this.data.param.eme_exam_id) {
       this.obtainedGradeAvgHighest.obtained = false;
     }
@@ -116,13 +122,13 @@ export class ViewGradecardDialogComponent implements OnInit {
       this.obtainedGradeAvgHighest.grade = false;
       this.obtainedGradeAvgHighest.avg = false;
       this.obtainedGradeAvgHighest.highest = false;
-      
+
     }
     if (this.data.param.eme_term_id === 'comulative') {
       this.obtainedGradeAvgHighest.obtained = true;
       this.obtainedGradeAvgHighest.grade = false;
       this.obtainedGradeAvgHighest.avg = false;
-      this.obtainedGradeAvgHighest.highest = false;      
+      this.obtainedGradeAvgHighest.highest = false;
     }
     this.currentSession = JSON.parse(localStorage.getItem('session'));
     this.termArray.push(this.getTermid());
@@ -137,19 +143,19 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark(); 
     this.getClassTermDate();
-    
+
 
   }
   getTermid() {
-    if(this.data.param.eme_term_id == 'comulative') {
+    if (this.data.param.eme_term_id == 'comulative') {
       return this.data.last_term_id;
-    } else if(this.data.param.eme_term_id == 'percumulative') {
+    } else if (this.data.param.eme_term_id == 'percumulative') {
       return '1';
     } else {
       return this.data.param.eme_term_id;
     }
   }
-  printGradecard(item=null) {
+  printGradecard(item = null) {
     const param: any = {};
     param.login_id = [this.data.au_login_id];
     param.class_id = this.data.param.eme_class_id;
@@ -160,9 +166,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.view = '1';
     console.log("printGradecard ok");
     this.examService.printGradecard(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      if (result && result.status === 'ok') {
         this.printData = result.data;
-        console.log("printGradecard",this.printData);
+        console.log("printGradecard", this.printData);
         this.printData.so_printData.forEach(element => {
           this.all_term_subject_total_mark += element.term_subject_total_mark['A'];
           this.all_term_student_total_mark += element.term_student_total_mark['A'];
@@ -180,9 +186,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.etd_class_id = this.data.param.eme_class_id;
     param.etd_status = '1';
     this.examService.getClassTermDate(param).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      if (result && result.status === 'ok') {
         this.classtermdate = result.data[0];
-        if(this.classtermdate.etd_declaration_date) {
+        if (this.classtermdate.etd_declaration_date) {
           this.dateofdeclaration = new Date(this.classtermdate.etd_declaration_date);
         }
       }
@@ -191,10 +197,10 @@ export class ViewGradecardDialogComponent implements OnInit {
   getTermStudentAttendence2() {
     const param: any = {};
     param.au_login_id = this.data.au_login_id;
-    if(this.data.param.eme_term_id == 'comulative') {
+    if (this.data.param.eme_term_id == 'comulative') {
       const termsarr: any[] = [];
       for (let index = 1; index <= this.getTermid(); index++) {
-        termsarr.push(index);        
+        termsarr.push(index);
       }
       param.term_id = termsarr;
     } else {
@@ -209,11 +215,11 @@ export class ViewGradecardDialogComponent implements OnInit {
     if (this.data.param.eme_subexam_id) {
       param.subexam_id = this.data.param.eme_subexam_id;
     }
-    
+
     this.examService.getTermStudentAttendence2(param).subscribe((result1: any) => {
       //console.log(result1);
       if (result1 && result1.status === 'ok') {
-        if(this.data.param.eme_term_id != 'comulative') {
+        if (this.data.param.eme_term_id != 'comulative') {
           const termAttendence = result1.data[0];
           this.totalpresentday = Number(termAttendence['mta_present_days']);
           this.totalworkingdays = Number(termAttendence['mta_overall_attendance']);
@@ -266,11 +272,11 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.ere_term_id = this.getTermid();
     param.ere_remarks_type = this.data.ect_exam_type;
     if (sub_id) {
-      if(!this.obtainedGradeAvgHighest.remark) {
+      if (!this.obtainedGradeAvgHighest.remark) {
         param.ere_remarks_type = '2';
       } else {
         param.ere_sub_id = sub_id;
-      }      
+      }
     }
     if (this.data.param.eme_exam_id) {
       param.ere_exam_id = this.data.param.eme_exam_id;
@@ -292,19 +298,19 @@ export class ViewGradecardDialogComponent implements OnInit {
     const param: any = {};
     param.ere_class_id = this.data.class_id;
     param.ere_sec_id = this.data.sec_id;
-    param.ere_term_id = this.getTermid();    
-    param.ere_remarks_type = '3';        
+    param.ere_term_id = this.getTermid();
+    param.ere_remarks_type = '3';
     if (this.studentDetails) {
       param.erem_login_id = this.studentDetails.au_login_id;
     }
-    
+
     if (this.data.param.eme_exam_id) {
       param.ere_exam_id = this.data.param.eme_exam_id;
     }
     if (this.data.param.eme_subexam_id) {
       param.ere_sub_exam_id = this.data.param.eme_subexam_id;
     }
-    
+
     console.log('param--', param);
     this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -316,7 +322,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   remarkOfSub(sub_id = null) {
     let remarkstr = '';
-    console.log('remarksArr',this.remarksArr);
+    console.log('remarksArr', this.remarksArr);
     if (sub_id) {
       if (this.remarksArr.length > 0) {
         const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
@@ -358,7 +364,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   getGlobalSetting() {
     let param: any = {};
     param.gs_alias = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
-  'gradecard_health_status','gradecard_date','school_achievement'];
+      'gradecard_health_status', 'gradecard_date', 'school_achievement'];
     this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.settings = result.data;
@@ -370,11 +376,11 @@ export class ViewGradecardDialogComponent implements OnInit {
           } else if (element.gs_alias === 'gradecard_health_status') {
             const temp_arr = element.gs_value.split(',');
             this.showHealthStatus = false;
-            if(temp_arr.length > 0) {
+            if (temp_arr.length > 0) {
               temp_arr.forEach(element => {
-              if(Number(element) === Number(this.data.class_id)) {
-                this.showHealthStatus = true;
-              }
+                if (Number(element) === Number(this.data.class_id)) {
+                  this.showHealthStatus = true;
+                }
               });
             }
           } else if (element.gs_alias === 'gradecard_date') {
@@ -395,7 +401,7 @@ export class ViewGradecardDialogComponent implements OnInit {
             } else {
               this.getTermStudentAttendence2();
             }
-          } else if(element.gs_alias === 'school_achievement') {
+          } else if (element.gs_alias === 'school_achievement') {
             if (element.gs_value == '1') {
               this.isuserachivement = element.gs_value;
               this.getUserAchievement();
@@ -412,7 +418,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     param.au_login_id = this.data.au_login_id;
     this.examService.getUserAchievement(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.userachivement = result.data[0];        
+        this.userachivement = result.data[0];
       }
     })
   }
@@ -441,19 +447,19 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (result && result.status === 'ok') {
         const tempGrade = result.data;
         console.log('tempGrade--', tempGrade)
-        
+
         tempGrade.forEach(element => {
           if (element.egs_point_type === '2') {
             this.gradingSystem = element.egs_name;
-            this.GradeSet.push(element);            
+            this.GradeSet.push(element);
           } else if (element.egs_point_type === '1') {
             this.gradingSystem = element.egs_name;
             this.GradeSetPoint.push(element)
           }
         });
 
-        console.log('this.GradeSet 2--',this.GradeSet);
-        console.log('this.GradeSet 1--',this.GradeSetPoint);
+        console.log('this.GradeSet 2--', this.GradeSet);
+        console.log('this.GradeSet 1--', this.GradeSetPoint);
       }
     })
   }
@@ -661,7 +667,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     return '';
 
   }
-  getPassTotalPercentage(term,sub_category='A') {
+  getPassTotalPercentage(term, sub_category = 'A') {
     let temp: any[] = [];
     //console.log('this.gradePerTermOnScholastic', this.gradePerTermOnScholastic);
     this.gradePerTermOnScholastic.forEach(element => {
@@ -692,7 +698,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     return this.getTwoDecimalValue(total / totalmainsubject);
 
   }
-  getTotalMainSubject(sub_category='A') {
+  getTotalMainSubject(sub_category = 'A') {
     let totalmainsubject = 0;
     console.log('in getTotalMainSubject subjectArray', this.subjectArray)
     this.subjectArray.forEach(e => {
@@ -740,7 +746,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     let gradeValue = '';
     for (let index = 0; index < this.GradeSet.length; index++) {
       const element = this.GradeSet[index];
-      if (gradePercentage >= parseInt(element.egs_range_start,10) && parseInt(grade) <= parseInt(element.egs_range_end,10)) {
+      if (gradePercentage >= parseInt(element.egs_range_start, 10) && parseInt(grade) <= parseInt(element.egs_range_end, 10)) {
         gradeValue = element.egs_grade_name;
         break;
       }
@@ -815,17 +821,17 @@ export class ViewGradecardDialogComponent implements OnInit {
     }
   }
   calculateGradePoint(sub_id, term) {
-    
+
     let gradeMarks = 0;
     this.cexamArray.forEach(element => {
       gradeMarks = gradeMarks + this.getCalculatedMarks(sub_id, element.exam_id, term);
     });
     const grade = Math.round(gradeMarks / this.cexamArray.length);
     const pointValue = this.GradeSetPoint.find(e => Number(e.egs_grade_value) === grade);
-    console.log('cexamArray--', this.cexamArray,sub_id, term);
-    console.log('gradeMarks--',gradeMarks);
+    console.log('cexamArray--', this.cexamArray, sub_id, term);
+    console.log('gradeMarks--', gradeMarks);
     console.log('this.GradeSetPoint-', this.GradeSetPoint);
-    console.log('gradeMarks,grade,pointValue',gradeMarks, grade+'-'+pointValue);
+    console.log('gradeMarks,grade,pointValue', gradeMarks, grade + '-' + pointValue);
     if (pointValue) {
       return pointValue.egs_grade_name;
     }
@@ -910,14 +916,14 @@ export class ViewGradecardDialogComponent implements OnInit {
       }
     });
   }
-  getSubjectTypeAndCategoryStatus(type,category,arr) {
-    if(arr.length > 0) {
+  getSubjectTypeAndCategoryStatus(type, category, arr) {
+    if (arr.length > 0) {
       for (let index = 0; index < arr.length; index++) {
         const element = arr[index];
-        if(element.sub_type == type && element.eac_category == category) {
+        if (element.sub_type == type && element.eac_category == category) {
           return true;
         }
-        
+
       }
     }
     return false;
@@ -973,18 +979,23 @@ export class ViewGradecardDialogComponent implements OnInit {
     })
   }
   getAllStudents() {
-    this.sisService.getAllStudents({ login_id: this.data.au_login_id }).subscribe((result: any) => {
+    this.sisService.getAllStudents({
+      login_id: this.data.au_login_id,
+      class_id: this.class_id,
+      sec_id: this.sec_id,
+      term_id: this.term_id,
+    }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.studentDetails = result.data[0];
-        if(this.studentDetails.au_profileimage) {
+        if (this.studentDetails.au_profileimage) {
           this.defaultsrc = "https://apisis.invictusdigisoft.com/createonfly.php?src=" + this.studentDetails.au_profileimage + "&h=55&w=44";
         }
         //this.defaultsrc = this.studentDetails.au_profileimage;
 
-        if(this.studentDetails.height && this.studentDetails.weight) {
-          var heightInMeter = (Number(this.studentDetails.height)/100);
+        if (this.studentDetails.height && this.studentDetails.weight) {
+          var heightInMeter = (Number(this.studentDetails.height) / 100);
           var weightInKg = (Number(this.studentDetails.weight));
-          this.studentDetails['bmi'] = (weightInKg/(heightInMeter*heightInMeter)).toFixed(2);
+          this.studentDetails['bmi'] = (weightInKg / (heightInMeter * heightInMeter)).toFixed(2);
         }
 
         if (this.studentDetails.active_parent === 'M') {
@@ -1001,20 +1012,20 @@ export class ViewGradecardDialogComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close();
   }
-  getFinalAssessment(sub_category){
+  getFinalAssessment(sub_category) {
     let final_assessment = 0;
     this.printData.so_printData.forEach(element => {
       final_assessment += element.term_total_mark[sub_category]
     });
     return final_assessment;
   }
-  finalAssessmentOfSubject(sub_id,so_printData){
+  finalAssessmentOfSubject(sub_id, so_printData) {
     let final_assessment = 0;
     so_printData.forEach(element => {
       element.sub_mark.forEach(psubject => {
-        if(psubject.sub_id == sub_id) {
+        if (psubject.sub_id == sub_id) {
           final_assessment += psubject.sub_grade_mark
-        }        
+        }
       });
     });
     return final_assessment;
