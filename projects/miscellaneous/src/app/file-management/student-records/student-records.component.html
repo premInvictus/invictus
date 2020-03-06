@@ -50,8 +50,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <div style="display:inline-flex">
-                                    <button [disabled]="uploadFlag" 
-                                    mat-raised-button class="upload-btn-file" (click)="openUploadModal()">
+                                    <button [disabled]="uploadFlag" mat-raised-button class="upload-btn-file"
+                                        (click)="openUploadModal()">
                                         <i class="fas fa-upload upload-icon"></i> &nbsp; <b>Upload</b>
                                     </button>
                                 </div>
@@ -61,11 +61,12 @@
                                         <i class="fas fa-folder upload-icon"></i> &nbsp; <b>Create Folder</b>
                                     </button>
                                 </div>
-                                <div style="display:inline-flex">
-                                    <button mat-raised-button class="upload-btn-file" style="    background: transparent !important;
+                                <div *ngIf="documents.length > 0" style="display:inline-flex">
+                                    <button mat-raised-button class="upload-btn-file" (click)="openDeleteModal({})"
+                                        style="background: transparent !important;
                                     color: #000 !important;
                                     border: 1px dashed !important;">
-                                        <i class="fas fa-download upload-icon"></i> &nbsp; <b>Download</b>
+                                        <i class="fas fa-trash upload-icon"></i> &nbsp; <b>Delete</b>
                                     </button>
                                 </div>
                                 <div style="float: right;" [hidden]="!(fileArray.length > 0)">
@@ -82,7 +83,10 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <span style="text-align: center;">
-                                            &nbsp;<mat-checkbox></mat-checkbox>&nbsp; Name
+                                            &nbsp;<mat-checkbox *ngIf="fileArray.length > 0"
+                                                [checked]="documents.length === fileArray.length"
+                                                [indeterminate]="checkInter()" (change)="checkAllDocuments($event)">
+                                            </mat-checkbox>&nbsp; Name
                                         </span>
                                     </div>
                                     <div class="col-3">
@@ -102,7 +106,9 @@
                                         <div class="row">
                                             <div class="col-6">
                                                 <span style="text-align: center;">
-                                                    <mat-checkbox [value]="item.file_type_id"></mat-checkbox> &nbsp;
+                                                    <mat-checkbox [value]="item.file_type_id"
+                                                    [checked]="checkSubChecked(item.file_type_id)"
+                                                        (change)="checkMultipleFiles(item)"></mat-checkbox> &nbsp;
                                                     <i *ngIf="item.element_type === 'folder'"
                                                         class="fas fa-folder-open folder-paren"></i>
                                                     <i *ngIf="item.element_type !== 'folder'"
@@ -118,8 +124,8 @@
                                             </div>
                                             <div class="col-2">
                                                 <span style="text-align: center;">
-                                                    {{item.size ? (getTotalSize(item.size) | number) : '-'}}</span>
-                                                <span *ngIf="item.size"> KB</span>
+                                                    {{item.size ? (getTotalSize(item.size)) : '-'}}</span>
+                                                <!-- <span *ngIf="item.size"> KB</span> -->
                                             </div>
                                             <div class="col-1">
                                                 <span style="display:inline-flex" matTooltip="Download"
@@ -127,8 +133,8 @@
                                                     <i class="fas fa-download" style="color: #267733;
                                                     font-size: 16px;margin-right: 10px;"></i>
                                                 </span>
-                                                <span style="display:inline-flex" matTooltip="Delete"
-                                                    (click)="openDeleteModal(item)">
+                                                <span *ngIf="documents.length === 0" style="display:inline-flex"
+                                                    matTooltip="Delete" (click)="openDeleteModal(item)">
                                                     <i class="fas fa-trash" style="color: #de310b;
                                                     font-size: 16px;margin-right: 10px;"></i>
                                                 </span>

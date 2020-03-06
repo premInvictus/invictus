@@ -22,6 +22,8 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 	
 	
 	fileArray: any[] = [];
+	max_id: any = 0;
+	documents: any[] = [];
 	totalRecords: number;
 	filterFlag = false;
 	filterValue = '';
@@ -56,7 +58,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 		if (this.filterValue) {
 			this.getRecordsBasedOnFilter(this.filterValue);
 		} else {
-		this.getRecordsBasedOnSchool();
+			this.getRecordsBasedOnSchool();
 		}
 		return event;
 	}
@@ -78,6 +80,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 
 	getRecordsBasedOnSchool() {
 		this.fileArray = [];
+		this.documents = [];
 		this.uploadFlag = true;
 		this.datasource = new MatTableDataSource<any>(this.fileArray);
 		this.commonAPIService.getFolderPerLevel({
@@ -91,6 +94,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 				this.uploadFlag = false;
 				this.fileArray = [];
 				this.totalRecords = Number(res.data.totalRecords);
+				this.max_id = res.data.max_id;
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				this.fileArray = res.data.records;
 				this.datasource = new MatTableDataSource<any>(this.fileArray);
@@ -104,6 +108,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 	getRecordsBasedOnFilter(val) {
 		if (val) {
 			this.uploadFlag = true;
+			this.documents = [];
 			this.fileArray = [];
 			this.filterFlag = true;
 			this.filterValue = val;
@@ -121,6 +126,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 					this.totalRecords = Number(res.data.totalRecords);
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					this.fileArray = res.data.records;
+					this.max_id = res.data.max_id;
 					console.log(this.fileArray);
 					this.datasource = new MatTableDataSource<any>(this.fileArray);
 					this.datasource.paginator.length = this.paginator.length = this.totalRecords;
@@ -190,6 +196,7 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 			if (res.files && res.files.length > 0) {
 				const files: any[] = res.files;
 				const json: any[] = [];
+				const json2: any[] = [];
 				let path: any = '';
 				let ind = 0;
 				for (const item of this.breadcrumArr) {
@@ -205,11 +212,15 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 				path = path.substring(0, path.length - 1);
 				for (const item of files) {
 					json.push({
-						'file_type_id': '',
-						'type': 'student',
-						'url': item.ed_link,
-						'size': item.size,
+						'projectType': 'student',
+						'path': path,
 						'name': item.ed_name,
+						'data': item.base64,
+						'content_type': item.content_type,
+						'file_type_id': this.max_id,
+						'type': 'student',
+						'url': '',
+						'size': item.size,
 						'parent_id': this.parent_id,
 						'element_type': 'file',
 						'userDetails': {
@@ -220,10 +231,10 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 						'entryDate': '',
 						'updatedDate': ''
 					});
+					this.max_id = this.max_id + 1;
 				}
-				this.commonAPIService.insertMultipleFiles(json).subscribe((res: any) => {
+				this.commonAPIService.uploadFilesToS3(json).subscribe((res: any) => {
 					if (res && res.status === 'ok') {
-						this.commonAPIService.showSuccessErrorMessage('Inserted Successfully', 'success');
 						if (this.filterValue) {
 							this.getRecordsBasedOnFilter(this.filterValue);
 						} else {
@@ -231,20 +242,54 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 						}
 					}
 				});
-				for (const item of files) {
-					this.commonAPIService.uploadFilesToS3({
-						projectType: 'student',
-						path: path,
-						name: item.ed_name,
-						data: item.base64
-					}).subscribe((res: any) => {
-					});
-				}
 			}
 		});
 	}
+	checkAllDocuments($event) {
+		if ($event.checked) {
+			this.documents = [];
+			for (const item of this.fileArray) {
+				this.documents.push({
+					id: item.file_type_id,
+					details: item
+				});
+			}
+		} else {
+			this.documents = [];
+		}
+	}
+	checkSubChecked(id) {
+		if (this.documents.length > 0) {
+			const findex = this.documents.findIndex(f => Number(f.id) === Number(id));
+			if (findex !== -1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	checkInter() {
+		if (this.documents.length > 0) {
+			if (this.documents.length < this.fileArray.length) {
+				return true;
+			}
+		} else {
+			return false;
+		}
+	}
+	checkMultipleFiles(item) {
+		const findex = this.documents.findIndex(f => Number(f.id) === Number(item.file_type_id));
+		if (findex === -1) {
+			this.documents.push({
+				id: item.file_type_id,
+				details: item
+			})
+		} else {
+			this.documents.splice(findex, 1);
+		}
+	}
 	deleteFiles($event) {
-		if ($event) {
+		if ($event && this.documents.length === 0) {
 			const files: any = $event;
 			let filesJson = {};
 			if (files.element_type === 'folder') {
@@ -289,6 +334,59 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 					}
 				}
 			});
+		} else if ($event && this.documents.length > 0) {
+			let docInd = 0;
+			let docs: any[] = [];
+			docs = this.documents;
+			for (const value of docs) {
+				const files: any = $event;
+				let filesJson = {};
+				if (value.details.element_type === 'folder') {
+					filesJson = {
+						projectType: 'student',
+						path: value.details.name,
+						type: 'student',
+						element_type: value.details.element_type,
+						file_type_id: value.details.file_type_id,
+						parent_id: value.details.parent_id
+					};
+				} else {
+					let path: any = '';
+					let ind = 0;
+					for (const item of this.breadcrumArr) {
+						if (item.parent_id === '') {
+							item.name = '';
+						}
+						path = path + item.name + '/';
+						if (ind === 0) {
+							item.name = 'Home';
+						}
+						ind++;
+					}
+					path = path.substring(0, path.length - 1);
+					filesJson = {
+						projectType: 'student',
+						type: 'student',
+						path: path,
+						name: value.details.name,
+						element_type: value.details.element_type,
+						file_type_id: value.details.file_type_id,
+						parent_id: value.details.parent_id
+					};
+				}
+
+				this.commonAPIService.deleteFilesFromS3(filesJson).subscribe((res: any) => {
+					if (res && res.status === 'ok') {
+						if (this.filterValue) {
+							this.getRecordsBasedOnFilter(this.filterValue);
+						} else {
+							this.getRecordsBasedOnSchool();
+						}
+					}
+				});
+				docInd++;
+			}
+
 		}
 	}
 	previewImage(imgUrl, index) {
@@ -354,13 +452,35 @@ export class StudentRecordsComponent implements OnInit, AfterViewInit {
 			}
 		}
 	}
-	getTotalSize(size) {
-		return (size / 1024).toFixed(2);
+	getTotalSize(bytes, decimals = 2) {
+		if (bytes === 0) return '0 Bytes';
+		const k = 1024;
+		const dm = decimals < 0 ? 0 : decimals;
+		const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 	}
-	downLoadFile(item) {
-		if (item.element_type === 'file') {
-			saveAs(item.url, item.name);
+
+	downLoadFile(value) {
+		if (value.element_type === 'file') {
+			saveAs(value.url, value.name);
 			this.commonAPIService.showSuccessErrorMessage('Downloaded SuccessFully', 'success');
+		} else {
+			let path: any = '';
+			for (const item of this.breadcrumArr) {
+				if (item.parent_id !== '') {
+					path = path + item.name + '/';
+				}
+			}
+			path = path.substring(0, path.length - 1);
+			this.commonAPIService.downLoadZipFromS3({
+				projectType: "school",
+				path: (this.parent_id === 0) ? value.name : (path + '/' + value.name)
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					saveAs(res.data, value.name + '.zip');
+				}
+			});
 		}
 	}
 }
