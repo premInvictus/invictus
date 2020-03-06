@@ -6,6 +6,7 @@ import { AssignStoreComponent } from './assign-store/assign-store.component';
 import { InventorySharedModule } from '../inventory-shared/inventory-shared.module';
 import { StoreAssignListComponent } from './store-assign-list/store-assign-list.component';
 import { GenerateBillComponent } from './generate-bill/generate-bill.component';
+import { StoreCommonComponent } from './store-common/store-common.component';
 
 
 @NgModule({
@@ -14,6 +15,6 @@ import { GenerateBillComponent } from './generate-bill/generate-bill.component';
     StoreInchargeRoutingModule,
     InventorySharedModule
   ],
-  declarations: [AssignStoreComponent, StoreAssignListComponent, GenerateBillComponent]
+  declarations: [AssignStoreComponent, StoreAssignListComponent, GenerateBillComponent, StoreCommonComponent]
 })
 export class StoreInchargeModule { }

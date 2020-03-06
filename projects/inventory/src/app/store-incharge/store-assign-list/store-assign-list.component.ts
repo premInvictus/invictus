@@ -36,5 +36,6 @@ export class StoreAssignListComponent implements OnInit {
     //console.log(item);
     this.inventory.setAssignEmp(item);
     this.router.navigate(['../assign-store'], { relativeTo: this.route });
+    this.inventory.setTabIndex({ 'currentTab': 0 });
   }
 }

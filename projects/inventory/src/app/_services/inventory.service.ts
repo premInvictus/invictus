@@ -118,6 +118,9 @@ export class InventoryService {
       return this.tabIndex;
     }
   }
+  resetTabIndex() {
+    this.tabIndex = null;
+  }
   updateItemQuantity(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/updateItemQuantity', value);
@@ -190,6 +193,10 @@ export class InventoryService {
   updateStoreItem(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/updateStoreItem', value);
+  }
+  getParentLocationOnly(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/location/getParentLocationOnly', value);
   }
 
 

@@ -19,10 +19,12 @@ export class GenerateBillComponent implements OnInit {
   itemLogData: any = [];
   currentUser: any;
   showReturnIssueSection = false;
+  previewTableFlag = false;
   itemArray: any = [];
   tableArray: any = [];
   schoolInfo: any;
   formGroupArray: any[] = [];
+  tableReciptArray: any[] = [];
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -74,6 +76,7 @@ export class GenerateBillComponent implements OnInit {
             this.userData = [];
             this.itemData = [];
             this.itemLogData = [];
+            this.common.showSuccessErrorMessage('Student not found', 'error');
           }
         });
       } else if (au_role_id === '3') {
@@ -94,6 +97,7 @@ export class GenerateBillComponent implements OnInit {
             this.userData = [];
             this.itemData = [];
             this.itemLogData = [];
+            this.common.showSuccessErrorMessage('Employee not found', 'error');
           }
         });
       }
@@ -162,6 +166,71 @@ export class GenerateBillComponent implements OnInit {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }
       })
+    }
+  }
+  previewSaveItem() {
+    this.tableReciptArray = [];
+    let grandTotal = 0;
+    var filterJson: any = {};
+    var finalJson: any = {};
+    const itemAssign: any[] = [];
+    let updateFlag = false;
+    let index = 0;
+    for (let item of this.formGroupArray) {
+      if (this.formGroupArray[index].formGroup.valid) {
+        if (item.formGroup.value.item_location !== '') {
+          itemAssign.push(item.formGroup.value);
+          updateFlag = true;
+        } else {
+          updateFlag = false;
+          break;
+        }
+      } else {
+        updateFlag = false;
+        break;
+      }
+      index++;
+    }
+    if (updateFlag && itemAssign.length > 0) {
+      this.previewTableFlag = true;
+      for (let item of itemAssign) {
+        grandTotal = Number(grandTotal) + Number(item.total_price);
+      }
+      finalJson = {
+        buyer_details: this.userData,
+        bill_details: itemAssign,
+        bill_total: grandTotal
+      }
+      console.log(finalJson);
+      let billArray: any = {};
+      //  billArray['bill_id'] = result.bill_id;
+      //  billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
+      this.tableReciptArray['bill_total'] = grandTotal;
+      this.tableReciptArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(grandTotal));
+      this.tableReciptArray['bill_created_by'] = this.currentUser.full_name;
+      this.tableReciptArray['bill_details'] = itemAssign;
+      this.tableReciptArray['school_name'] = this.schoolInfo.school_name;
+      this.tableReciptArray['school_logo'] = this.schoolInfo.school_logo;
+      this.tableReciptArray['school_address'] = this.schoolInfo.school_address;
+      this.tableReciptArray['school_phone'] = this.schoolInfo.school_phone;
+      this.tableReciptArray['school_city'] = this.schoolInfo.school_city;
+      this.tableReciptArray['school_state'] = this.schoolInfo.school_state;
+      this.tableReciptArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
+      this.tableReciptArray['school_website'] = this.schoolInfo.school_website;
+      this.tableReciptArray['name'] = this.userData.au_full_name;
+      this.tableReciptArray['mobile'] = this.userData.au_mobile;
+      if (this.userData.au_role_id === 3) {
+        this.tableReciptArray['adm_no'] = this.userData.emp_id;
+        this.tableReciptArray['class_name'] = '';
+        this.tableReciptArray['role_id'] = 'Employee Id';
+      } else {
+        this.tableReciptArray['adm_no'] = this.userData.em_admission_no;
+        this.tableReciptArray['class_name'] = this.userData.sec_name ? this.userData.class_name + '-' + this.userData.sec_name : '';
+        this.tableReciptArray['role_id'] = 'Admission No.';
+      }
+      console.log(this.tableReciptArray, 'tableReciptArray');
+    } else {
+      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
   saveItem() {
