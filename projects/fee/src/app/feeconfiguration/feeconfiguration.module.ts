@@ -14,6 +14,8 @@ import { TransportSlabsComponent } from './transport-slabs/transport-slabs.compo
 import { StopagesComponent } from './stopages/stopages.component';
 import { RoutesComponent } from './routes/routes.component';
 import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal/invoice-details-modal.component';
+import { HostelConfigComponent } from './hostel-config/hostel-config.component';
+import { HostelMappingComponent } from './hostel-mapping/hostel-mapping.component';
 
 @NgModule({
 	imports: [
@@ -24,6 +26,6 @@ import { InvoiceDetailsModalComponent } from '../feemaster/invoice-details-modal
 	entryComponents: [InvoiceDetailsModalComponent],
 	declarations: [
 		FeeHeadsComponent, FeeGroupComponent, FeeStructureComponent, ConcessionCategoryComponent, ConcessionGroupComponent,
-		FinesAndPenalitiesComponent, SystemInfoComponent, TransportSlabsComponent, StopagesComponent, RoutesComponent]
+		FinesAndPenalitiesComponent, SystemInfoComponent, TransportSlabsComponent, StopagesComponent, RoutesComponent, HostelConfigComponent, HostelMappingComponent]
 })
 export class FeeconfigurationModule { }

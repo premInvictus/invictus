@@ -169,57 +169,81 @@ export class GenerateBillComponent implements OnInit {
     var filterJson: any = {};
     var finalJson: any = {};
     const itemAssign: any[] = [];
+    let updateFlag = false;
+    let index = 0;
     for (let item of this.formGroupArray) {
-      itemAssign.push(item.formGroup.value);
-    }
-    for (let item of itemAssign) {
-      grandTotal = Number(grandTotal) + Number(item.total_price);
-    }
-    finalJson = {
-      buyer_details: this.userData,
-      bill_details: itemAssign,
-      bill_total: grandTotal
-    }
-    filterJson = {
-      emp_id: Number(this.currentUser.login_id),
-      item_details: itemAssign,
-    }
-
-    this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
-      if (result) {
-        let billArray: any = {};
-        billArray['bill_id'] = result.bill_id;
-        billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
-        billArray['bill_total'] = result.bill_total;
-        billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
-        billArray['bill_created_by'] = this.currentUser.full_name;
-        billArray['bill_details'] = result.bill_details;
-        billArray['school_name'] = this.schoolInfo.school_name;
-        billArray['school_logo'] = this.schoolInfo.school_logo;
-        billArray['school_address'] = this.schoolInfo.school_address;
-        billArray['name'] = result.buyer_details.au_full_name;
-        billArray['mobile'] = result.buyer_details.au_mobile;
-        if (result.buyer_details.au_role_id === 3) {
-          billArray['adm_no'] = result.buyer_details.emp_id;
-          billArray['class_name'] = '';
+      if (this.formGroupArray[index].formGroup.valid) {
+        if (item.formGroup.value.item_location !== '') {
+          itemAssign.push(item.formGroup.value);
+          updateFlag = true;
         } else {
-          billArray['adm_no'] = result.buyer_details.em_admission_no;
-          billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
+          updateFlag = false;
+          break;
         }
-        this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
-          if (result && result.status == 'ok') {
-            const length = result.data.fileUrl.split('/').length;
-            saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
-            this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
-              if (result) {
-                this.common.showSuccessErrorMessage(result.message, 'success');
-              }
-            });
-          }
-        })
-        this.resetItem();
+      } else {
+        updateFlag = false;
+        break;
       }
-    });
+      index++;
+    }
+    if (updateFlag && itemAssign.length > 0) {
+      for (let item of itemAssign) {
+        grandTotal = Number(grandTotal) + Number(item.total_price);
+      }
+      finalJson = {
+        buyer_details: this.userData,
+        bill_details: itemAssign,
+        bill_total: grandTotal
+      }
+      filterJson = {
+        emp_id: Number(this.currentUser.login_id),
+        item_details: itemAssign,
+      }
+      this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
+        if (result) {
+          let billArray: any = {};
+          billArray['bill_id'] = result.bill_id;
+          billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
+          billArray['bill_total'] = result.bill_total;
+          billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
+          billArray['bill_created_by'] = this.currentUser.full_name;
+          billArray['bill_details'] = result.bill_details;
+          billArray['school_name'] = this.schoolInfo.school_name;
+          billArray['school_logo'] = this.schoolInfo.school_logo;
+          billArray['school_address'] = this.schoolInfo.school_address;
+          billArray['school_phone'] = this.schoolInfo.school_phone;
+          billArray['school_city'] = this.schoolInfo.school_city;
+          billArray['school_state'] = this.schoolInfo.school_state;
+          billArray['school_afflication_no'] = this.schoolInfo.school_afflication_no;
+          billArray['school_website'] = this.schoolInfo.school_website;
+          billArray['name'] = result.buyer_details.au_full_name;
+          billArray['mobile'] = result.buyer_details.au_mobile;
+          if (result.buyer_details.au_role_id === 3) {
+            billArray['adm_no'] = result.buyer_details.emp_id;
+            billArray['class_name'] = '';
+            billArray['role_id'] = 'Employee Id';
+          } else {
+            billArray['adm_no'] = result.buyer_details.em_admission_no;
+            billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
+            billArray['role_id'] = 'Admission No.';
+          }
+          this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
+            if (result && result.status == 'ok') {
+              const length = result.data.fileUrl.split('/').length;
+              saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+              this.inventory.updateStoreItem(filterJson).subscribe((result: any) => {
+                if (result) {
+                  this.common.showSuccessErrorMessage(result.message, 'success');
+                }
+              });
+            }
+          })
+          this.resetItem();
+        }
+      });
+    } else {
+      this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
   }
   resetItem() {
     this.itemArray = [];
@@ -228,5 +252,10 @@ export class GenerateBillComponent implements OnInit {
     this.itemSearchForm.reset();
     this.itemSearchForm.controls['scanItemId'].setValue('');
 
+  }
+  removeItem(i) {
+    this.itemArray.splice(i, 1);
+    this.tableArray.splice(i, 1);
+    this.formGroupArray.splice(i, 1);
   }
 }

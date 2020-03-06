@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UploadFileModalComponent } from './upload-file-modal.component';
+import { HostelMappingComponent } from './hostel-mapping.component';
 
-describe('UploadFileModalComponent', () => {
-  let component: UploadFileModalComponent;
-  let fixture: ComponentFixture<UploadFileModalComponent>;
+describe('HostelMappingComponent', () => {
+  let component: HostelMappingComponent;
+  let fixture: ComponentFixture<HostelMappingComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploadFileModalComponent ]
+      declarations: [ HostelMappingComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(UploadFileModalComponent);
+    fixture = TestBed.createComponent(HostelMappingComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

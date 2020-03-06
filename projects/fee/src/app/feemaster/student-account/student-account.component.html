@@ -304,7 +304,9 @@
         </div>
         <div *ngIf="hostelFlag" class="row remove-top-margin">
             <div class="col-12 remove-col-padding">
-                <span class="font-size-20 font-medium">Hostel Details</span>
+                <span class="font-size-20 font-medium">Hostel Details</span>&nbsp;
+                <a class="pointer font-bold font-skyblue font-underline" *ngIf="hostel_history"
+                (click)="showHostel = !showHostel">View Hostel History</a>
             </div>
         </div>
         <div *ngIf="hostelFlag" class="row">
@@ -321,10 +323,46 @@
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="inline-flex margin-left-15"
-                    *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'">
+                <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
-                        <mat-label>Appplicable From</mat-label>
+                        <mat-label>Hostel Building</mat-label>
+                        <mat-select placeholder="Hostel Building" [disabled]="viewOnly"
+                            formControlName="hs_building" (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()" required>
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Hostel Room</mat-label>
+                        <mat-select placeholder="Hostel Room" [disabled]="viewOnly"
+                            formControlName="hs_room" (selectionChange)="getBed();accountsForm.controls.hs_bed.reset()" required>
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Hostel Bed</mat-label>
+                        <mat-select placeholder="Hostel Bed" [disabled]="viewOnly"
+                            formControlName="hs_bed" required (selectionChange)="isAllocatedToStudent()">
+                            <mat-option value="">Please Select</mat-option>
+                            <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
+                                {{item.hc_name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="inline-flex margin-left-15"
+                    *ngIf="accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id != '0'">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                        <mat-label>Applicable From</mat-label>
                         <input matInput [matDatepicker]="picker3" [max]="maxDate" [readonly]="viewOnly"
                             placeholder="Applicable From" formControlName="accd_hostel_from"
                             [errorStateMatcher]="confirmValidParentMatcher" required />
@@ -350,6 +388,50 @@
             *ngIf="hostelFlag && accountsForm.value.accd_hostel_fs_id && accountsForm.value.accd_hostel_fs_id !== '0'"
             [disabled]="viewOnly" class="font-size-16" (change)="hostel($event)"
             formControlName="accd_is_hostel_terminate">{{hostelStatus}}</mat-checkbox>
+        <div *ngIf="showHostel">
+            <div class="row">
+                <div class="col-12">
+                    <table class="table table-borderd table-stripped custom-table">
+                        <thead class="table-skill__head text-center">
+                            <tr class="custom-tr">
+                                <th class="custom-th text-nowrap" style="width:5%">Sr no.</th>
+                                <th class="custom-th" style="width: 5%">Date</th>
+                                <th class="custom-th">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="custom-tr" *ngFor="let item of hostel_history; let i=index;">
+                                <td class="custom-td">
+                                    {{i+1}}
+                                </td>
+                                <td class="custom-td text-capitalize text-center">
+                                    {{item?.hsl_created_on | date: 'd-MMM-y'}}</td>
+
+                                <td *ngIf="item?.hsl_status === '5'" class="custom-td text-capitalize text-center">
+                                    Hostel Opted Out</td>
+
+                                <td *ngIf="item.hsl_status === '1' || item.hsl_status === '0'" class="custom-td text-capitalize text-left"
+                                    width="25%">
+                                    <span> Building : {{item?.building_name ? item?.building_name : '-' }}</span>,
+                                    <span> Room : {{item?.room_name ? item?.room_name : '-' }}</span>,
+                                    <span> Bed : {{item?.bed_name ? item?.bed_name : '-' }}</span>,
+                                    <span> Applicable From :
+                                        {{item?.hsl_from ? (item?.hsl_from | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Applicable To :
+                                        {{item?.hsl_to ? (item?.hsl_to | date: 'd-MMM-y') : '-' }}</span>,
+                                    <span> Changed by : {{item?.au_full_name ? item?.au_full_name  : '-' }}</span>
+
+                                </td>
+
+                            </tr>
+                            <tr *ngIf="!hostel_history">
+                                <td colspan="7" class="text-center">No Record Found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="text-center margin-top-35 ">
             <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button 

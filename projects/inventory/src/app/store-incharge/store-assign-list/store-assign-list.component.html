@@ -11,10 +11,10 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="assignListArray.length > 0">
+<div class="row">
   <div class="col-12">
     <mat-card>
-      <div class="text-center center-mr" style="padding-left:20%;padding-right: 20%;">
+      <div class="text-center center-mr" style="padding-left:20%;padding-right: 20%;"  *ngIf="assignListArray.length > 0">
         <table class="custom-table">
           <thead>
             <tr class="custom-tr">
@@ -38,6 +38,22 @@
           </tbody>
         </table>
         <br>
+      </div>
+      <div class="table-center" *ngIf="assignListArray.length === 0">
+        <table class="table-100">
+          <tbody>
+            <tr class="text-center">
+              <td colspan="12">
+                <img
+                  src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                <br><br><br>
+                <br><span class="font-size-20 font-light font-color-brown">
+                  No Data
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </mat-card>
   </div>

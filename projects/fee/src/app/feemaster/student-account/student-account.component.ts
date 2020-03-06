@@ -29,6 +29,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	slabArray: any[] = [];
 	transPortModes: any[] = [];
 	transport_history: any[] = [];
+	hostel_history: any[] = [];
 	lastRecordId;
 	loginId: any;
 	terminateStatus: any;
@@ -36,6 +37,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	existFlag = false;
 	hostelTerminateFlag = false;
 	showTransport = false;
+	showHostel = false;
 	@ViewChild('editModal') editModal;
 	@Input() viewOnly = true;
 	@Input() feeLoginId: any;
@@ -55,6 +57,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	counter: any = 0;
 	documentPath: any;
 	additionalFeeComponentArray: any[] = [];
+	buildingArray: any[] = [];
+	roomArray: any[] = [];
+	bedArray: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -70,6 +75,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 		this.terminateStatus = 'Terminate Transport Facility';
 		this.hostelStatus = 'Terminate Hostel Facility';
 		this.buildForm();
+		this.getBuilding();
 		this.getReason();
 		this.getFeeOtherCategory();
 		this.getConGroup();
@@ -96,6 +102,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			this.existFlag = false;
 			this.hostelTerminateFlag = false;
 			this.showTransport = false;
+			this.showHostel = false;
 		}
 	}
 	buildForm() {
@@ -127,10 +134,51 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_created_by: '',
 			accd_created_date: '',
 			accd_is_hostel_terminate: '',
-			accd_status: 1
+			accd_status: 1,
+			hs_building: '',
+			hs_room: '',
+			hs_bed: ''
 		});
 	}
-
+	isAllocatedToStudent() {
+		this.feeService.isAllocatedToStudent({
+			hs_building: this.accountsForm.value.hs_building,
+			hs_room: this.accountsForm.value.hs_room,
+			hs_bed: this.accountsForm.value.hs_bed,
+		}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+			} else {
+				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+				this.accountsForm.patchValue({
+					hs_bed: ''
+				});
+			} 
+		});
+	}
+	getBuilding() {
+		this.buildingArray = [];
+		this.feeService.getHostelConfigType({hc_type: 'building',hc_status: '1'}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.buildingArray = result.data;
+		  }
+		});
+	}
+	getRoom() {
+		this.roomArray = [];
+		this.feeService.getHostelConfigType({hc_type: 'room',hc_status: '1',hm_building: this.accountsForm.value.hs_building}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.roomArray = result.data;
+		  }
+		});
+	}
+	getBed() {
+		this.bedArray = [];
+		this.feeService.getHostelConfigType({hc_type: 'bed',hc_status: '1',hm_building: this.accountsForm.value.hs_building,hm_room: this.accountsForm.value.hs_room}).subscribe((result: any) => {
+				if (result.status === 'ok') {
+			this.bedArray = result.data;
+		  }
+		});
+	}
 	additionalFeeComponent(class_id) {
 		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : '' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -142,6 +190,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 	getFeeAccount(au_login_id) {
 		this.showTransport = false;
+		this.showHostel = false;
 		this.accountDetails = {};
 		this.accountsForm.reset();
 		this.accountsForm.patchValue({
@@ -169,12 +218,13 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.conStatus = this.accountDetails.accd_fcg_status;
 				//	console.log(this.conStatus);
 				this.transport_history = result.data[0]['transport_history'];
+				this.hostel_history = result.data[0]['hostel_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
 				} else {
 					this.transportFlag = false;
 				}
-				if (this.accountDetails.accd_tr_id === '1' && this.accountDetails.accd_is_transport === 'Y') {
+				if (this.accountDetails.accd_transport_mode === '1' && this.accountDetails.accd_is_transport === 'Y') {
 					this.modeFlag = true;
 				} else {
 					this.modeFlag = false;
@@ -195,6 +245,15 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				}
 				if (this.accountDetails.accd_is_hostel === 'Y') {
 					this.hostelFlag = true;
+					if(this.accountDetails.hostel_details) {
+						this.accountsForm.patchValue({
+							hs_building: this.accountDetails.hostel_details.hs_building,
+							hs_room: this.accountDetails.hostel_details.hs_room,
+							hs_bed: this.accountDetails.hostel_details.hs_bed,
+						});
+						this.getRoom();
+						this.getBed();
+					}
 				} else {
 					this.hostelFlag = false;
 				}
@@ -457,7 +516,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_from: datePipe.transform(this.accountsForm.value.accd_hostel_from, 'yyyy-MM-dd'),
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
-				accd_status: '1'
+				accd_status: '1',
+				hs_building: this.accountsForm.value.hs_building,
+				hs_room: this.accountsForm.value.hs_room,
+				hs_bed: this.accountsForm.value.hs_bed
 			};
 			this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -514,7 +576,10 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 
 		if (this.hostelFlag) {
 			if (this.accountsForm.value.accd_hostel_fs_id && this.accountsForm.value.accd_hostel_fs_id !== '0' &&
-				this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0') {
+				this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0' &&
+				this.accountsForm.value.hs_building && 
+				this.accountsForm.value.hs_room && 
+				this.accountsForm.value.hs_bed) {
 				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to) {
 					validateFlag = false;
 				}
@@ -559,6 +624,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				accd_hostel_to: datePipe.transform(this.accountsForm.value.accd_hostel_to, 'yyyy-MM-dd'),
 				accd_status: this.accountsForm.value.accd_status,
 				accd_afc_id: JSON.stringify(this.accountsForm.value.accd_afc_id),
+				hs_building: this.accountsForm.value.hs_building,
+				hs_room: this.accountsForm.value.hs_room,
+				hs_bed: this.accountsForm.value.hs_bed
 			};
 			if (this.isExist('350')) {
 				this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonAPIService, SisService, AxiomService, InventoryService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-assign-store',
   templateUrl: './assign-store.component.html',
@@ -29,6 +30,8 @@ export class AssignStoreComponent implements OnInit {
     public sisService: SisService,
     public inventory: InventoryService,
     public dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
@@ -41,10 +44,10 @@ export class AssignStoreComponent implements OnInit {
           exist_location_id: this.assignEmpArray.location_id.location_hierarchy,
           exist_emp_id: this.assignEmpArray.emp_name
         });
+        this.currentLocationId = Number(this.assignEmpArray.item_location);
         this.editAssignData(this.assignEmpArray);
         this.inventory.resetAssignEmp();
       }
-
     }
   }
   buildForm() {
@@ -107,9 +110,7 @@ export class AssignStoreComponent implements OnInit {
             "filters": [
               {
                 "filter_type": "item_location",
-                "filter_value": this.currentLocationId
-
-                ,
+                "filter_value": this.currentLocationId,
                 "type": "autopopulate"
               }
             ],
@@ -184,6 +185,7 @@ export class AssignStoreComponent implements OnInit {
       if (result) {
         this.commonService.showSuccessErrorMessage('Price updated Successfully', 'success');
         this.finalCancel();
+        this.router.navigate(['../store-assign-list'], { relativeTo: this.route });
       } else {
         this.commonService.showSuccessErrorMessage(result, 'error');
       }
@@ -200,21 +202,51 @@ export class AssignStoreComponent implements OnInit {
     this.showDefaultData = false;
   }
   editAssignData(itemArray) {
-    for (let item of itemArray.item_assign) {
-      this.tableDataArray.push({
-        item_code: item.item_code,
-        item_name: item.item_name,
-        item_quantity: item.item_quantity,
-        item_selling_price: item.item_selling_price
-      });
-      this.formGroupArray.push({
-        formGroup: this.fbuild.group({
-          item_code: item.item_code,
-          item_name: item.item_name,
-          item_quantity: item.item_quantity,
-          item_selling_price: item.item_selling_price
-        })
-      });
+    console.log(itemArray);
+    this.tableDataArray = [];
+    this.formGroupArray = [];
+    this.itemArray = [];
+    var filterJson = {
+      "filters": [
+        {
+          "filter_type": "item_location",
+          "filter_value": this.currentLocationId,
+          "type": "autopopulate"
+        }
+      ],
+      "page_index": 0,
+      "page_size": 100
+    };
+    this.inventory.filterItemsFromMaster(filterJson).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.itemArray = result.data;
+        for (let item of this.itemArray) {
+          this.tableDataArray.push({
+            item_code: item.item_code,
+            item_name: item.item_name,
+            item_quantity: item.item_location ? item.item_location[0].item_qty : '0',
+            item_selling_price: this.getSellingPrice(item.item_code)
+          });
+          this.formGroupArray.push({
+            formGroup: this.fbuild.group({
+              item_code: item.item_code,
+              item_name: item.item_name,
+              item_quantity: item.item_location[0].item_qty,
+              item_selling_price: this.getSellingPrice(item.item_code)
+            })
+          });
+        }
+      } else {
+        this.commonService.showSuccessErrorMessage('No item added this location', 'error');
+      }
+    });
+  }
+  getSellingPrice(item_code) {
+    const findex = this.assignEmpArray.item_assign.findIndex(f => Number(f.item_code) === Number(item_code));
+    if (findex !== -1) {
+      return this.assignEmpArray.item_assign[findex].item_selling_price
+    } else {
+      return '';
     }
   }
 }

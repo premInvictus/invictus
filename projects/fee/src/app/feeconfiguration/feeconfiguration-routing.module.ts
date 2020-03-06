@@ -10,6 +10,8 @@ import { SystemInfoComponent } from './system-info/system-info.component';
 import { TransportSlabsComponent } from './transport-slabs/transport-slabs.component';
 import { StopagesComponent } from './stopages/stopages.component';
 import { RoutesComponent } from './routes/routes.component';
+import { HostelConfigComponent } from './hostel-config/hostel-config.component';
+import { HostelMappingComponent } from './hostel-mapping/hostel-mapping.component';
 
 const routes: Routes = [
 	{ path: 'fee-heads', component: FeeHeadsComponent},
@@ -21,7 +23,9 @@ const routes: Routes = [
 	{ path: 'system-info', component: SystemInfoComponent},
 	{ path: 'transport-slabs', component: TransportSlabsComponent},
 	{ path: 'stopages', component: StopagesComponent},
-	{ path: 'route', component: RoutesComponent}
+	{ path: 'route', component: RoutesComponent},
+	{ path: 'hostel-config', component: HostelConfigComponent},
+	{ path: 'hostel-mapping', component: HostelMappingComponent}
 
 ];
 
