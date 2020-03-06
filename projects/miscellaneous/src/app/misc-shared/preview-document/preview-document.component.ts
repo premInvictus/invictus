@@ -30,6 +30,8 @@ export class PreviewDocumentComponent implements OnInit {
 			console.log(fileExt);
 			if (url && (fileExt.match(/pdf/) || fileExt.match(/PDF/)
 				|| fileExt.match(/jpg/) || fileExt.match(/JPG/)
+				|| fileExt.match(/png/) || fileExt.match(/PNG/)
+				|| fileExt.match(/gif/) || fileExt.match(/GIF/)
 				|| fileExt.match(/jpeg/) || fileExt.match(/JPEG/)
 				|| fileExt.match(/gif/) || fileExt.match(/GIF/)
 				|| fileExt.match(/xlsx/) || fileExt.match(/XLSX/)
