@@ -36,9 +36,13 @@
    padding:8px;
    text-align: center;
 }
+.pad-overall-name{
+    padding:8px;
+    text-align: left;
+}
 .pad-overall-2 {
     padding:3px;
-    text-align: center;
+    text-align: left !important;
  }
 .border-table-th {
     color: #000 ! important;
@@ -53,4 +57,7 @@
 
 .pad-5 {
     padding-top: 5px;
+}
+.image_class{
+    width:80px !important;
 }

@@ -21,26 +21,15 @@ export class StoreCommonComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.inventory.getTabIndex()) {
-      this.tabIndex = this.inventory.getTabIndex();
-      this.tabSelectedIndex = this.tabIndex.currentTab;
-      console.log(this.tabSelectedIndex, 'this.tabSelectedIndex');
-      this.inventory.resetTabIndex();
-    }
+    this.inventory.receipt.subscribe((result: any) => {
+      if (result) {
+        this.tabIndex = result.currentTab;
+        this.setTabValue(this.tabIndex)
+      }
+    })
   }
   setTabValue(value) {
     this.tabSelectedIndex = value;
     this.inventory.setTabIndex({ 'currentTab': this.tabSelectedIndex });
   }
-
-  // redirectToPage(index) {
-  //   if (index === 'PO') {
-  //     this.inventory.setrequisitionArray(this.setBlankArray);
-  //     this.router.navigate(['../create-purchase-order'], { relativeTo: this.route });
-  //   } else if (index === 'GR') {
-  //     this.inventory.setrequisitionArray(this.setBlankArray);
-  //     this.router.navigate(['../generate-receipt'], { relativeTo: this.route });
-  //   }
-  // }
-
 }

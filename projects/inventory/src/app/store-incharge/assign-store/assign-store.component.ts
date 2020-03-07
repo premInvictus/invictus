@@ -212,9 +212,7 @@ export class AssignStoreComponent implements OnInit {
       if (result) {
         this.commonService.showSuccessErrorMessage('Price updated Successfully', 'success');
         this.finalCancel();
-        //  this.router.navigate(['../assign-store'], { relativeTo: this.route });
-        this.inventory.setTabIndex({ 'currentTab': 1 });
-        //this.router.navigate(['../store-assign-list'], { relativeTo: this.route });
+        this.inventory.receipt.next({ 'currentTab': 1 });
       } else {
         this.commonService.showSuccessErrorMessage(result, 'error');
       }
@@ -232,7 +230,6 @@ export class AssignStoreComponent implements OnInit {
     this.showDefaultData = false;
   }
   editAssignData(itemArray) {
-    console.log(itemArray);
     this.tableDataArray = [];
     this.formGroupArray = [];
     this.itemArray = [];

@@ -4,8 +4,9 @@ import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { InventoryService, SisService } from '../../_services/index';
 import { saveAs } from 'file-saver';
-import { NumberToWordPipe } from '../../_pipes/index';
+import { NumberToWordPipe, IndianCurrency } from 'src/app/_pipes/index';
 import { TitleCasePipe } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-generate-bill',
   templateUrl: './generate-bill.component.html',
@@ -25,6 +26,7 @@ export class GenerateBillComponent implements OnInit {
   schoolInfo: any;
   formGroupArray: any[] = [];
   tableReciptArray: any[] = [];
+  tableHeader: any;
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -32,6 +34,7 @@ export class GenerateBillComponent implements OnInit {
     public dialog: MatDialog,
     public inventory: InventoryService,
     public sisService: SisService,
+    public sanatizer: DomSanitizer
   ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
@@ -39,6 +42,7 @@ export class GenerateBillComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.getSchool();
+    this.getGlobalSettingReplace();
   }
   buildForm() {
     this.searchForm = this.fbuild.group({
@@ -192,6 +196,27 @@ export class GenerateBillComponent implements OnInit {
       index++;
     }
     if (updateFlag && itemAssign.length > 0) {
+      var sc_school_logo = /si_school_logo/gi;
+      var si_school_name = /si_school_name/gi;
+      var si_school_address = /si_school_address/gi;
+      var si_school_city = /si_school_city/gi;
+      var si_school_state = /si_school_state/gi;
+      var si_school_afflication_no = /si_school_afflication_no/gi;
+      var si_school_phone_no = /si_school_phone_no/gi;
+      var si_school_website = /si_school_website/gi;
+      var invoice_no = /invoice_no/gi;
+      var invoice_date = /invoice_date/gi;
+      this.tableHeader = this.tableHeader.replace(sc_school_logo, this.schoolInfo.school_logo);
+      this.tableHeader = this.tableHeader.replace(si_school_name, this.schoolInfo.school_name);
+      this.tableHeader = this.tableHeader.replace(si_school_address, this.schoolInfo.school_address);
+      this.tableHeader = this.tableHeader.replace(si_school_phone_no, this.schoolInfo.school_phone);
+      this.tableHeader = this.tableHeader.replace(si_school_city, this.schoolInfo.school_city);
+      this.tableHeader = this.tableHeader.replace(si_school_state, this.schoolInfo.school_state);
+      this.tableHeader = this.tableHeader.replace(si_school_afflication_no, this.schoolInfo.school_afflication_no);
+      this.tableHeader = this.tableHeader.replace(si_school_website, this.schoolInfo.school_website);
+      // this.tableHeader = this.tableHeader.replace(invoice_no, this.schoolInfo.school_phone);
+      // this.tableHeader = this.tableHeader.replace(invoice_date, this.schoolInfo.school_phone);
+
       this.previewTableFlag = true;
       for (let item of itemAssign) {
         grandTotal = Number(grandTotal) + Number(item.total_price);
@@ -201,11 +226,11 @@ export class GenerateBillComponent implements OnInit {
         bill_details: itemAssign,
         bill_total: grandTotal
       }
-      console.log(finalJson);
+      //console.log(finalJson);
       let billArray: any = {};
       //  billArray['bill_id'] = result.bill_id;
       //  billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
-      this.tableReciptArray['bill_total'] = grandTotal;
+      this.tableReciptArray['bill_total'] = new IndianCurrency().transform(grandTotal);
       this.tableReciptArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(grandTotal));
       this.tableReciptArray['bill_created_by'] = this.currentUser.full_name;
       this.tableReciptArray['bill_details'] = itemAssign;
@@ -273,7 +298,7 @@ export class GenerateBillComponent implements OnInit {
           let billArray: any = {};
           billArray['bill_id'] = result.bill_id;
           billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
-          billArray['bill_total'] = result.bill_total;
+          billArray['bill_total'] = new IndianCurrency().transform(result.bill_total);
           billArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(result.bill_total));
           billArray['bill_created_by'] = this.currentUser.full_name;
           billArray['bill_details'] = result.bill_details;
@@ -307,7 +332,8 @@ export class GenerateBillComponent implements OnInit {
               });
             }
           })
-          this.resetItem();
+         this.resetItem();
+          this.previewTableFlag = false;
         }
       });
     } else {
@@ -322,9 +348,25 @@ export class GenerateBillComponent implements OnInit {
     this.itemSearchForm.controls['scanItemId'].setValue('');
 
   }
+  resetPrint() {
+    this.previewTableFlag = false;
+  }
   removeItem(i) {
     this.itemArray.splice(i, 1);
     this.tableArray.splice(i, 1);
     this.formGroupArray.splice(i, 1);
+  }
+  getGlobalSettingReplace() {
+    let finalJson = {
+      "gs_alias": [
+        "store_receipt_header"
+      ]
+    };
+    this.inventory.getGlobalSettingReplace(finalJson).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.tableHeader = result.data[0].gs_value;
+        console.log(this.tableHeader);
+      }
+    });
   }
 }
