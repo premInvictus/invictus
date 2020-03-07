@@ -21,8 +21,10 @@ export class MessagingService {
 	}
 	requestPermission() {
 		if (localStorage.getItem("web-token")) {
+			if (localStorage.getItem("web-token")) {
 			this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 			this.angularFireMessaging.deleteToken(this.webDeviceToken['web-token']);
+			}
 
 		}
 		this.angularFireMessaging.requestToken.pipe(mergeMapTo(this.angularFireMessaging.tokenChanges)).subscribe(
