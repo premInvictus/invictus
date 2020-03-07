@@ -35,6 +35,6 @@ export class StoreAssignListComponent implements OnInit {
   viewData(item) {
     //console.log(item);
     this.inventory.setAssignEmp(item);
-    this.router.navigate(['../assign-store'], { relativeTo: this.route });
+    this.inventory.receipt.next({ 'currentTab': 0 });
   }
 }

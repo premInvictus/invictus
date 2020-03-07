@@ -1,132 +1,118 @@
-<div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-12 ">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Assign Store</span>
-          </div>
-        </div>
+<ng-container *ngIf="showDefaultData">
+  <form [formGroup]="existForm" novalidate>
+    <div class="row">
+      <div class="col-2">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Location</mat-label>
+          <input type="text" matInput placeholder="Location" formControlName="exist_location_id" readonly>
+        </mat-form-field>
       </div>
-    </mat-card>
-  </div>
-</div>
-<div class="row">
-  <div class="col-12">
-    <mat-card class="mat-card-108">
-      <ng-container *ngIf="showDefaultData">
-        <form [formGroup]="existForm" novalidate>
-          <div class="row">
-            <div class="col-2">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Location</mat-label>
-                <input type="text" matInput placeholder="Location" formControlName="exist_location_id" readonly>
-              </mat-form-field>
-            </div>
-            <div class="col-2">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Employee</mat-label>
-                <input type="text" matInput placeholder="Employee" formControlName="exist_emp_id" readonly>
-              </mat-form-field>
-            </div>
-            <div class="col-8">
-            </div>
-          </div>
-        </form>
-      </ng-container>
-      <ng-container *ngIf="!showDefaultData">
-        <form [formGroup]="assignStoreForm" novalidate>
-          <div class="row">
-            <div class="col-2">
-              <app-location-search-and-add (renderData)="getFilterLocation($event)">
-              </app-location-search-and-add>
-            </div>
-            <div class="col-2">
-              <mat-form-field class="form-field" appearance="outline">
-                <mat-label>Employee</mat-label>
-                <input type="text" matInput placeholder="Employee" formControlName="emp_id" required
-                  [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
-                  (keyup)="searchStudentByName($event)">
-                <mat-autocomplete #autoGroup="matAutocomplete">
-                  <mat-option (onSelectionChange)="getEmpId(item)" (keyup.enter)="getEmpId(item)"
-                    (click)="getEmpId(item)" *ngFor="let item of employeeArray" [value]="item.emp_id">
-                    {{item.emp_name}}</mat-option>
-                </mat-autocomplete>
-                <mat-error>
-                  This field is required
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <div class="col-1" style="padding:12px">
-              <button mat-raised-button class="btn-success-green" (click)="getItemList()">Submit</button>
-            </div>
-            <div class="col-7">
-            </div>
-          </div>
-        </form>
-        <div class="table-center" *ngIf="formGroupArray.length === 0">
-          <table class="table-100">
-            <tbody> 
-              <tr class="text-center">
-                <td colspan="12">
-                  <img
-                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                  <br><br><br>
-                  <br><span class="font-size-20 font-light font-color-brown">
-                    No Data
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </ng-container>
-    </mat-card>
-  </div>
-</div>
-
-<div class="row" *ngIf="formGroupArray.length > 0">
-  <div class="col-12">
-    <mat-card>
-      <div class="text-center center-mr">
-        <table class="custom-table">
-          <thead>
-            <tr class="custom-tr">
-              <th rowspan="2" class="custom-th text-center" width="10%">Item Code</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">Item Name</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">Item Quantity</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">Item Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of tableDataArray; let i = index">
-              <td class="custom-td text-center font-size-14">{{item.item_code}}</td>
-              <td class="custom-td text-left font-size-14"><span
-                  class="margin-left-15">{{item.item_name | titlecase}}</span> </td>
-              <td class="custom-td text-center font-size-14">{{item.item_quantity}}
-              </td>
-              <ng-container *ngIf="formGroupArray.length > 0">
-                <td class="custom-td text-left font-size-14 " style="padding:10px;">
-                  <form [formGroup]="formGroupArray[i].formGroup">
-                    <input matInput type="text" class="remark-text" placeholder="Enter Price"
-                      [value]="item.item_selling_price" formControlName="item_selling_price">
-                  </form>
-                </td>
-              </ng-container>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <div class="row margin-top-20" *ngIf="formGroupArray.length>0">
-          <div class="col-12 text-center">
-            <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="!showDefaultData"
-              (click)="finalSubmit();">Submit</button>
-            <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData"
-              (click)="finalUpdate();">Update</button>
-            <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
-          </div>
-        </div>
+      <div class="col-2">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Employee</mat-label>
+          <input type="text" matInput placeholder="Employee" formControlName="exist_emp_id" readonly>
+        </mat-form-field>
       </div>
-    </mat-card>
+      <div class="col-8">
+      </div>
+    </div>
+  </form>
+</ng-container>
+<ng-container *ngIf="!showDefaultData">
+  <form [formGroup]="assignStoreForm" novalidate>
+    <div class="row">
+      <div class="col-2">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Location</mat-label>
+          <input type="text" matInput placeholder="Enter Location" formControlName="location_id" required
+            [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup2"
+            (keyup)="searchLocationByName($event)">
+          <mat-autocomplete #autoGroup2="matAutocomplete">
+            <mat-option (onSelectionChange)="getLocationId(item)" (keyup.enter)="getLocationId(item)"
+              (click)="getLocationId(item)" *ngFor="let item of locationArray" [value]="item?.location_id">
+              {{item?.location_name}}</mat-option>
+          </mat-autocomplete>
+          <mat-error>
+            This field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-2">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Employee</mat-label>
+          <input type="text" matInput placeholder="Employee" formControlName="emp_id" required
+            [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+            (keyup)="searchStudentByName($event)">
+          <mat-autocomplete #autoGroup="matAutocomplete">
+            <mat-option (onSelectionChange)="getEmpId(item)" (keyup.enter)="getEmpId(item)" (click)="getEmpId(item)"
+              *ngFor="let item of employeeArray" [value]="item.emp_id">
+              {{item.emp_name}}</mat-option>
+          </mat-autocomplete>
+          <mat-error>
+            This field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-1" style="padding:12px">
+        <button mat-raised-button class="btn-success-green" (click)="getItemList()">Submit</button>
+      </div>
+      <div class="col-7">
+      </div>
+    </div>
+  </form>
+  <div class="table-center" *ngIf="formGroupArray.length === 0">
+    <table class="table-100">
+      <tbody>
+        <tr class="text-center">
+          <td colspan="12">
+            <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+            <br><br><br>
+            <br><span class="font-size-20 font-light font-color-brown">
+              No Data
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-container>
+<div class="text-center center-mr itemlog" *ngIf="formGroupArray.length > 0">
+  <br><br>
+  <table class="custom-table">
+    <thead>
+      <tr class="custom-tr">
+        <th rowspan="2" class="custom-th text-center" width="10%">Item Code</th>
+        <th rowspan="2" class="custom-th text-center" width="60%">Item Name</th>
+        <th rowspan="2" class="custom-th text-center" width="15%">Item Quantity</th>
+        <th rowspan="2" class="custom-th text-center" width="15%">Item Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of tableDataArray; let i = index">
+        <td class="custom-td text-center font-size-14">{{item.item_code}}</td>
+        <td class="custom-td text-left font-size-14"><span
+            class="margin-left-15 text-left">{{item.item_name | titlecase}}</span> </td>
+        <td class="custom-td text-center font-size-14">{{item.item_quantity}}
+        </td>
+        <ng-container *ngIf="formGroupArray.length > 0">
+          <td class="custom-td text-center font-size-14 " style="padding:10px;">
+            <form [formGroup]="formGroupArray[i].formGroup">
+              <input matInput type="text" class="remark-text" placeholder="Enter Price"
+                [value]="item.item_selling_price" formControlName="item_selling_price">
+            </form>
+          </td>
+        </ng-container>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+  <div class="row margin-top-20" *ngIf="formGroupArray.length>0">
+    <div class="col-12 text-center">
+      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="!showDefaultData"
+        (click)="finalSubmit();">Submit</button>
+      <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall" *ngIf="showDefaultData"
+        (click)="finalUpdate();">Update</button>
+      <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
+    </div>
   </div>
 </div>

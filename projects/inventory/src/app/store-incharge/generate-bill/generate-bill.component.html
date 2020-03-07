@@ -50,7 +50,6 @@
             [src]="userData?.au_profileimage" height="80px" width="80px"
             onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=80&w=80'" />
         </div>
-
         <div class="col-2 remove-col-padding-left margin-top-15">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
@@ -122,8 +121,8 @@
     </mat-card>
   </div>
 </div>
-<div class="row" *ngIf="(userData!='' && showReturnIssueSection)">
-  <div class="col-12 remove-col-padding-left">
+<div class="row" *ngIf="(userData!='' && showReturnIssueSection && !previewTableFlag )">
+  <div class="col-12 ">
     <form [formGroup]="itemSearchForm">
       <mat-card class="mat-card-108">
         <div class="row">
@@ -155,7 +154,7 @@
                 <tr class="custom-tr text-center">
                   <th class="custom-th">Sr No.</th>
                   <th class="custom-th">Item Code</th>
-                  <th class="custom-th">Item Name</th>
+                  <th class="custom-th ">Item Name</th>
                   <th class="custom-th">Item Price</th>
                   <th class="custom-th">Item Quantity</th>
                   <th class="custom-th">Total</th>
@@ -167,15 +166,15 @@
                   <tr class="custom-tr book-list">
                     <td width="5%" class="custom-td"><span>{{i+1}}</span></td>
                     <td width="10%" class="custom-td"><span>{{item?.item_code}}</span></td>
-                    <td width="25%" class="custom-td"><span>{{item?.item_name}}</span></td>
+                    <td width="25%" class="custom-td text-left"><span>{{item?.item_name | titlecase}}</span></td>
                     <td width="15%" class="custom-td"><span>{{item?.item_selling_price}}</span></td>
                     <td width="20%" class="custom-td">
                       <form [formGroup]="formGroupArray[i].formGroup">
-                        <mat-form-field class="form-field" appearance="outline">
-                          <mat-label>Item Quantity</mat-label>
-                          <input matInput type="number" formControlName="item_quantity" required
-                            (change)="setTotal(item, i)" />
-                        </mat-form-field>
+                        <!-- <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Item Quantity</mat-label> -->
+                        <input matInput type="number" formControlName="item_quantity" required
+                          placeholder="Please Enter Item Quantity" (change)="setTotal(item, i)" />
+                        <!-- </mat-form-field> -->
                       </form>
                     </td>
                     <td width="10%" class="custom-td">{{item?.total_price}}</td>
@@ -190,9 +189,9 @@
         </div>
         <br />
         <div class="row text-center" *ngIf="tableArray.length > 0">
-          <div class="col-12"> 
-            <button mat-raised-button class="btn-success-green" (click)="saveItem()"
-              [disabled]="disabledApiButton">Submit & Print</button>
+          <div class="col-12">
+            <button mat-raised-button class="btn-success-green" (click)="previewSaveItem()"
+              [disabled]="disabledApiButton">Submit</button>
             <button mat-raised-button class="btn-reset btn-spacer" (click)="resetItem()">
               Reset
             </button>
@@ -204,20 +203,165 @@
             [noDataText]="" [subText]="'Please Search Items To Add In Cart'"></app-no-data>
         </div>
       </mat-card>
-
-
     </form>
-
   </div>
 </div>
 <div class="row" *ngIf="userData==''">
-    <div class="col-12">
-      <mat-card>
-        <div class="text-center">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-            [noDataText]="" [subText]="'Please Select User'"></app-no-data>
-        </div>
-      </mat-card>
-    </div>
+  <div class="col-12">
+    <mat-card>
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'Please Select User'"></app-no-data>
+      </div>
+    </mat-card>
   </div>
+</div>
+<div class="row" *ngIf="previewTableFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+
+        <div class="col-3">
+        </div>
+        <div class="col-6">
+          <table border="0" cellspacing="0" cellpadding="0" class="table-receipt" style="width:100%;">
+
+            <thead>
+              <tr>
+                <!-- <label [innerHTML]="sanatizer.bypassSecurityTrustHtml(tableHeader)">
+
+                </label> -->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="text-center pad-5" colspan="8">
+                  <h4>
+                    <a style="text-decoration: underline;">
+                      Invoice
+                    </a>
+                  </h4>
+                </td>
+              </tr>
+              <tr>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                  <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
+                </td>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                  <span>Class</span><span> : {{tableReciptArray.class}}</span>
+                </td>
+                <td class="text-left pad-overall-2" style="width: 40%;">
+                </td>
+              </tr>
+              <tr>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                  <span>Name </span> <span> : {{tableReciptArray.name}} </span>
+                </td>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                  <span>Mobile No.</span><span> : {{tableReciptArray.mobile}}</span>
+                </td>
+                <td class="text-left pad-overall-2" style="width: 40%;">
+                </td>
+              </tr>
+              <tr>
+                <td colspan="8" style="padding: 0px;">
+                  <table style="width:100%; margin-top: 5%; ">
+                    <thead>
+                      <tr style="border-bottom:0.5px solid #000;">
+                        <th style="width:10% " class=" pad-overall border-table-th">Sr No.</th>
+                        <th style="width:50% " class=" pad-overall-name border-table-th">Item Name
+                        </th>
+                        <th class=" pad-overall border-table-th">Item Price</th>
+                        <th class=" pad-overall border-table-th">Item Quantity</th>
+                        <th class=" pad-overall border-table-th">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <!-- <% for(var index=0; index < items.bill_details.length; index++) { %> -->
+                      <tr *ngFor="let item of tableReciptArray.bill_details;let i = index">
+                        <td class=" text-center pad-overall border-table">
+                          <span>
+                            {{i + 1}}
+                          </span>
+                        </td>
+                        <td class="text-left pad-overall ">
+                          <span>
+                            {{item.item_name | titlecase}}
+                          </span>
+                        </td>
+                        <td class=" text-center pad-overall border-table">
+                          <span>
+                            {{item.item_selling_price}}
+                          </span>
+                        </td>
+                        <td class="text-center pad-overall border-table">
+                          <span>
+                            {{item.item_quantity}}
+                          </span>
+                        </td>
+                        <td class="text-center pad-overall border-table">
+                          <span>
+                            {{item.total_price }}
+                          </span>
+                        </td>
+                      </tr>
+                      <tr style="border-top:0.5px solid #000;">
+                        <td class="text-left pad-overall border-table">
+                        </td>
+                        <td class="text-left pad-overall border-table">
+                          Grand Total
+                        </td>
+                        <td class="text-center pad-overall border-table">
+                          <span>
+
+                          </span>
+                        </td>
+                        <td class="text-left pad-overall border-table">
+
+                        </td>
+                        <td class="text-center pad-overall border-table" style="width: 50%;">
+                          <span>{{tableReciptArray.bill_total}}
+                          </span>
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr style="margin-top: 10%;">
+                <td class="text-left pad-overall-2" style="width: 30%;font-size: 11px;">
+                  Amount Payable : {{tableReciptArray.bill_total_words}}
+                </td>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                </td>
+                <td class="text-left pad-overall-2" style="width: 40%;">
+                </td>
+              </tr>
+              <tr style="margin-top: 5%;">
+                <td class="text-left pad-overall-2" style="width: 30%; font-size: 12px;">
+                  Receipt Generate By : {{tableReciptArray.bill_created_by}}
+                </td>
+                <td class="text-left pad-overall-2" style="width: 30%;">
+                </td>
+                <td class="text-left pad-overall-2" style="width: 40%;">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-3">
+          <br><br>
+        </div>
+        <div class="col-12 text-center " style="margin-top:2%">
+          <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton">Submit
+            & Print</button>
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="resetPrint()">
+            Back
+          </button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

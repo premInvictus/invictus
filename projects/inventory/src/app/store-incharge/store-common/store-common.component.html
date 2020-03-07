@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6 ">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Store Incharge</span>
+          </div>
+        </div>
+        <div class="col-6 ">
+          <mat-tab-group [selectedIndex]="tabSelectedIndex" class="mat-tab-customize-class-2"
+            (selectedIndexChange)="setTabValue($event)">
+            <mat-tab label="Assign Store">
+            </mat-tab>
+            <mat-tab label="Store Assign List">
+            </mat-tab>
+          </mat-tab-group>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card style="padding-top: 1px;">
+      <div class="col-12 ">
+        <ng-container *ngIf="tabSelectedIndex === 0">
+          <app-assign-store></app-assign-store>
+        </ng-container>
+        <ng-container *ngIf="tabSelectedIndex === 1">
+          <app-store-assign-list></app-store-assign-list>
+        </ng-container>
+      </div>
+    </mat-card>
+  </div>
+</div>

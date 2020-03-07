@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { environment } from '../../../../../src/environments/environment';
 import { of } from 'rxjs';
+import { ReceiptDetailsModalComponent } from 'projects/fee/src/app/sharedmodule/receipt-details-modal/receipt-details-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,7 @@ export class InventoryService {
   private processType;
   private assignEmp;
   private tabIndex;
+  receipt = new Subject();
   constructor(private http: HttpClient, private service: CommonAPIService) { }
   getItemRecordMaster(value) {
     this.service.startLoading();
@@ -118,6 +121,9 @@ export class InventoryService {
       return this.tabIndex;
     }
   }
+  resetTabIndex() {
+    this.tabIndex = null;
+  }
   updateItemQuantity(value) {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/requistion-master/updateItemQuantity', value);
@@ -191,6 +197,12 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/updateStoreItem', value);
   }
-
-
+  getParentLocationOnly(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/location/getParentLocationOnly', value);
+  }
+  getGlobalSettingReplace(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
+  }
 }

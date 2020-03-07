@@ -1,60 +1,41 @@
-<div class="row">
-  <div class="col-12 ">
-    <mat-card class="remove-card-padding">
-      <div class="row">
-        <div class="col-12 ">
-          <div class="top-card-title">
-            <span class="font-size-24 font-medium">Store Assign List</span>
-          </div>
-        </div>
-      </div>
-    </mat-card>
-  </div>
+<div class="text-center center-mr" style="padding-left:20%;padding-right: 20%;" *ngIf="assignListArray.length > 0">
+  <br> <br>
+  <table class="custom-table">
+    <thead>
+      <tr class="custom-tr">
+        <th rowspan="2" class="custom-th text-center" width="7%">Sr No.</th>
+        <th rowspan="2" class="custom-th text-center" width="43%">Employee Name</th>
+        <th rowspan="2" class="custom-th text-center" width="40%">Store Location</th>
+        <th rowspan="2" class="custom-th text-center" width="10%">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of assignListArray; let i = index">
+        <td class="custom-td text-center font-size-14">{{i + 1}}</td>
+        <td class="custom-td text-left font-size-14"><span class="margin-left-15">{{item.emp_name | titlecase}}</span>
+        </td>
+        <td class="custom-td text-center font-size-14">
+          {{item.location_id ? item.location_id.location_hierarchy:'-'}}
+        </td>
+        <td class="custom-td text-center font-size-14"><i (click)="viewData(item)" class="fas fa-eye"></i>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
 </div>
-<div class="row">
-  <div class="col-12">
-    <mat-card>
-      <div class="text-center center-mr" style="padding-left:20%;padding-right: 20%;"  *ngIf="assignListArray.length > 0">
-        <table class="custom-table">
-          <thead>
-            <tr class="custom-tr">
-              <th rowspan="2" class="custom-th text-center" width="7%">Sr No.</th>
-              <th rowspan="2" class="custom-th text-center" width="43%">Employee Name</th>
-              <th rowspan="2" class="custom-th text-center" width="40%">Store Location</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of assignListArray; let i = index">
-              <td class="custom-td text-center font-size-14">{{i + 1}}</td>
-              <td class="custom-td text-left font-size-14"><span
-                  class="margin-left-15">{{item.emp_name | titlecase}}</span> </td>
-              <td class="custom-td text-center font-size-14">
-                {{item.location_id ? item.location_id.location_hierarchy:'-'}}
-              </td>
-              <td class="custom-td text-center font-size-14"><i (click)="viewData(item)" class="fas fa-eye"></i>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-      </div>
-      <div class="table-center" *ngIf="assignListArray.length === 0">
-        <table class="table-100">
-          <tbody>
-            <tr class="text-center">
-              <td colspan="12">
-                <img
-                  src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
-                <br><br><br>
-                <br><span class="font-size-20 font-light font-color-brown">
-                  No Data
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </mat-card>
-  </div>
+<div class="table-center" *ngIf="assignListArray.length === 0">
+  <table class="table-100">
+    <tbody>
+      <tr class="text-center">
+        <td colspan="12">
+          <img src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+          <br><br><br>
+          <br><span class="font-size-20 font-light font-color-brown">
+            No Data
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

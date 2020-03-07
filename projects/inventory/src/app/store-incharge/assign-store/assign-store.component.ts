@@ -18,8 +18,10 @@ export class AssignStoreComponent implements OnInit {
   itemArray: any[] = [];
   formGroupArray: any[] = [];
   employeeArray: any[] = [];
+  locationArray: any[] = [];
   disableApiCall = false;
   employeeId: any;
+  locationId: any;
   assignEmpArray: any = {};
   tableDataArray: any[] = [];
   showDefaultData = false;
@@ -44,7 +46,7 @@ export class AssignStoreComponent implements OnInit {
           exist_location_id: this.assignEmpArray.location_id.location_hierarchy,
           exist_emp_id: this.assignEmpArray.emp_name
         });
-        this.currentLocationId = Number(this.assignEmpArray.item_location);
+        this.locationId = Number(this.assignEmpArray.item_location);
         this.editAssignData(this.assignEmpArray);
         this.inventory.resetAssignEmp();
       }
@@ -53,6 +55,7 @@ export class AssignStoreComponent implements OnInit {
   buildForm() {
     this.assignStoreForm = this.fbuild.group({
       emp_id: '',
+      location_id: ''
     });
     this.existForm = this.fbuild.group({
       exist_location_id: '',
@@ -82,6 +85,30 @@ export class AssignStoreComponent implements OnInit {
       }
     }
   }
+  searchLocationByName($event) {
+    if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+      if ($event.target.value !== '' && $event.target.value.length >= 3) {
+        const inputJson = {
+          "filter": $event.target.value,
+        };
+        this.locationArray = [];
+        this.inventory.getParentLocationOnly(inputJson).subscribe((result: any) => {
+          if (result) {
+            this.locationArray = result;
+          }
+        });
+      }
+    }
+  }
+
+  getLocationId(item: any) {
+    this.locationId = item.location_id;
+    this.assignStoreForm.patchValue({
+      location_id: item.location_name
+    });
+  }
+
+
   getEmpId(item: any) {
     this.employeeId = item.emp_login_id;
     this.assignStoreForm.patchValue({
@@ -96,7 +123,7 @@ export class AssignStoreComponent implements OnInit {
   }
   getItemList() {
     if (this.assignStoreForm.valid && this.employeeId) {
-      this.inventory.checkItemOrLocation({ emp_id: this.employeeId, item_location: this.currentLocationId }).subscribe((result: any) => {
+      this.inventory.checkItemOrLocation({ emp_id: this.employeeId, item_location: this.locationId }).subscribe((result: any) => {
         if (result) {
           this.tableDataArray = [];
           this.formGroupArray = [];
@@ -110,7 +137,7 @@ export class AssignStoreComponent implements OnInit {
             "filters": [
               {
                 "filter_type": "item_location",
-                "filter_value": this.currentLocationId,
+                "filter_value": this.locationId,
                 "type": "autopopulate"
               }
             ],
@@ -158,7 +185,7 @@ export class AssignStoreComponent implements OnInit {
     finalJson = {
       emp_id: this.employeeId,
       emp_name: this.assignStoreForm.value.emp_id,
-      item_location: Number(this.currentLocationId),
+      item_location: Number(this.locationId),
       item_assign: itemAssign
     }
     this.inventory.insertStoreIncharge(finalJson).subscribe((result: any) => {
@@ -185,7 +212,7 @@ export class AssignStoreComponent implements OnInit {
       if (result) {
         this.commonService.showSuccessErrorMessage('Price updated Successfully', 'success');
         this.finalCancel();
-        this.router.navigate(['../store-assign-list'], { relativeTo: this.route });
+        this.inventory.receipt.next({ 'currentTab': 1 });
       } else {
         this.commonService.showSuccessErrorMessage(result, 'error');
       }
@@ -197,12 +224,12 @@ export class AssignStoreComponent implements OnInit {
     this.tableDataArray = [];
     this.itemArray = [];
     this.assignStoreForm.patchValue({
-      'emp_id': ''
+      'emp_id': '',
+      'location_id': ''
     });
     this.showDefaultData = false;
   }
   editAssignData(itemArray) {
-    console.log(itemArray);
     this.tableDataArray = [];
     this.formGroupArray = [];
     this.itemArray = [];
@@ -210,7 +237,7 @@ export class AssignStoreComponent implements OnInit {
       "filters": [
         {
           "filter_type": "item_location",
-          "filter_value": this.currentLocationId,
+          "filter_value": this.locationId,
           "type": "autopopulate"
         }
       ],
