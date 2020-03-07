@@ -23,17 +23,14 @@ export class StoreAssignListComponent implements OnInit {
   ngOnInit() {
     this.allStoreIncharge();
   }
-
   allStoreIncharge() {
     this.inventory.allStoreIncharge({}).subscribe((result: any) => {
       if (result) {
         this.assignListArray = result;
-        console.log(result);
       }
     });
   }
   viewData(item) {
-    //console.log(item);
     this.inventory.setAssignEmp(item);
     this.inventory.receipt.next({ 'currentTab': 0 });
   }

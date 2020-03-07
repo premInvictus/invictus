@@ -93,7 +93,7 @@ export class GenerateBillComponent implements OnInit {
               au_full_name: result.emp_name,
               au_mobile: result.emp_personal_detail && result.emp_personal_detail.contact_detail ? result.emp_personal_detail.contact_detail.primary_mobile_no : ''
             }
-            console.log('resultJson--', resultJson);
+            //console.log('resultJson--', resultJson);
             this.userData = resultJson;
             this.itemData = [];
             this.itemLogData = [];
@@ -218,18 +218,18 @@ export class GenerateBillComponent implements OnInit {
       // this.tableHeader = this.tableHeader.replace(invoice_date, this.schoolInfo.school_phone);
 
       this.previewTableFlag = true;
+      let i = 0;
       for (let item of itemAssign) {
         grandTotal = Number(grandTotal) + Number(item.total_price);
+        itemAssign[i].item_name = new TitleCasePipe().transform(item.item_name);
+        // itemAssign[i].total_price = new IndianCurrency().transform(item.total_price);
+        i++;
       }
       finalJson = {
         buyer_details: this.userData,
         bill_details: itemAssign,
         bill_total: grandTotal
       }
-      //console.log(finalJson);
-      let billArray: any = {};
-      //  billArray['bill_id'] = result.bill_id;
-      //  billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
       this.tableReciptArray['bill_total'] = new IndianCurrency().transform(grandTotal);
       this.tableReciptArray['bill_total_words'] = new TitleCasePipe().transform(new NumberToWordPipe().transform(grandTotal));
       this.tableReciptArray['bill_created_by'] = this.currentUser.full_name;
@@ -253,7 +253,7 @@ export class GenerateBillComponent implements OnInit {
         this.tableReciptArray['class_name'] = this.userData.sec_name ? this.userData.class_name + '-' + this.userData.sec_name : '';
         this.tableReciptArray['role_id'] = 'Admission No.';
       }
-      console.log(this.tableReciptArray, 'tableReciptArray');
+      // console.log(this.tableReciptArray, 'tableReciptArray');
     } else {
       this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
@@ -295,6 +295,12 @@ export class GenerateBillComponent implements OnInit {
       }
       this.inventory.insertStoreBill(finalJson).subscribe((result: any) => {
         if (result) {
+          let i = 0;
+          for (let item of result.bill_details) {
+            result.bill_details[i].item_name = new TitleCasePipe().transform(item.item_name);
+            result.bill_details[i].total_price = new IndianCurrency().transform(item.total_price);
+            i++;
+          }
           let billArray: any = {};
           billArray['bill_id'] = result.bill_id;
           billArray['bill_date'] = this.common.dateConvertion(result.created_date, 'dd-MMM-y');
@@ -332,7 +338,7 @@ export class GenerateBillComponent implements OnInit {
               });
             }
           })
-         this.resetItem();
+          this.resetItem();
           this.previewTableFlag = false;
         }
       });
@@ -365,7 +371,7 @@ export class GenerateBillComponent implements OnInit {
     this.inventory.getGlobalSettingReplace(finalJson).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.tableHeader = result.data[0].gs_value;
-        console.log(this.tableHeader);
+        //console.log(this.tableHeader);
       }
     });
   }
