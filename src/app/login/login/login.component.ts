@@ -132,7 +132,9 @@ export class LoginComponent implements OnInit {
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
+		if (localStorage.getItem("web-token")) {
 		this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+		}
 		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web')
 			.subscribe(
 				(result: any) => {
