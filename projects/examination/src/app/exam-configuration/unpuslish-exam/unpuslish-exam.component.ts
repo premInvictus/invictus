@@ -8,13 +8,15 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
   styleUrls: ['./unpuslish-exam.component.css']
 })
 export class UnpuslishExamComponent implements OnInit {
-
+  @ViewChild('deleteModal')deleteModal;
   paramform: FormGroup
   classArray: any[] = [];
+  reviewValue = '';
   subjectArray: any[] = [];
   subSubjectArray: any[] = [];
   sectionArray: any[] = [];
   termsArray: any[] = [];
+  delMessage: any = '';
   examArray: any[] = [];
   subexamArray: any[] = [];
   ngOnInit() {
@@ -169,18 +171,34 @@ export class UnpuslishExamComponent implements OnInit {
       }
     }
   }
-  updateStatusMarksInput(){
-    if(this.paramform.valid) {
+  updateStatusMarksInput(val){
+    if (this.paramform.valid) {
+      this.reviewValue = val;
+      if (Number(this.reviewValue) === 0) {
+        this.delMessage = 'Unpublish';
+      } else  if (Number(this.reviewValue) === 4) { 
+        this.delMessage = 'Publish';
+      }
+    this.deleteModal.openModal({item: val});
+    } else {
+      this.commonAPIService.showSuccessErrorMessage('Please fill required fields','error'); 
+    }
+  }
+  confirmDelete($event) {
+    if ($event) {
+      if(this.paramform.valid) {
       this.paramform.patchValue({
-        eme_review_status: '0'
+        eme_review_status: this.reviewValue
       });
       this.examService.updateStatusMarksInput(this.paramform.value).subscribe((result: any) => {
         if(result && result.status === 'ok') {
           this.commonAPIService.showSuccessErrorMessage(result.message,'success');
+          this.paramform.reset();
         } else {
           this.commonAPIService.showSuccessErrorMessage(result.message,'error');
         }
       })
+    }
     }
   }
 
