@@ -16,6 +16,7 @@ import { PercentageCumulativeExamComponent } from './percentage-cumulative-setup
 import { PercentageCumulativeSubjectComponent } from './percentage-cumulative-setup/percentage-cumulative-subject/percentage-cumulative-subject.component';
 import { PercentageCumulativeExamModalComponent } from './percentage-cumulative-setup/percentage-cumulative-exam-modal/percentage-cumulative-exam-modal.component';
 import { PercentageCumulativeSubjectModalComponent } from './percentage-cumulative-setup/percentage-cumulative-subject-modal/percentage-cumulative-subject-modal.component';
+import { UnpuslishExamComponent } from './unpuslish-exam/unpuslish-exam.component';
 
 
 @NgModule({
@@ -26,7 +27,7 @@ import { PercentageCumulativeSubjectModalComponent } from './percentage-cumulati
 		ExamSharedModule,
 		ColorPickerModule
 	],
-	declarations: [SetupComponent, ExamComponent, SubExamComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent, ExamAliasTermwiseComponent, PercentageCumulativeSetupComponent, PercentageCumulativeExamComponent, PercentageCumulativeSubjectComponent, PercentageCumulativeExamModalComponent, PercentageCumulativeSubjectModalComponent],
+	declarations: [SetupComponent, ExamComponent, SubExamComponent, UploadMarksComponent, SubjectSubexamMappingComponent, SubjectSubexamModalComponent, ExamAliasTermwiseComponent, PercentageCumulativeSetupComponent, PercentageCumulativeExamComponent, PercentageCumulativeSubjectComponent, PercentageCumulativeExamModalComponent, PercentageCumulativeSubjectModalComponent, UnpuslishExamComponent],
 	entryComponents: [SubjectSubexamModalComponent,PercentageCumulativeExamModalComponent,PercentageCumulativeSubjectModalComponent]
 })
 export class ExamConfigurationModule { }
