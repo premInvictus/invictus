@@ -391,6 +391,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/report/getSubmissionTeacherwise', value);
 	}
+	updateStatusMarksInput(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/updateStatusMarksInput', value);
+	}
 
 }
 

@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-12">
+      <mat-card>
+          <form [formGroup]="paramform">
+              <div class="row ">
+                  <div class="col-4 remove-col-padding-left margin-top-15">
+                      <span class="font-size-24 ">Unpublish Exam</span>
+                  </div>
+                  <div class="col-8 remove-col-padding-right text-right">
+                      <mat-form-field appearance="outline" class="form-field-150">
+                          <mat-label>Class</mat-label>
+                          <mat-select placeholder="Class" formControlName="eme_class_id"
+                              (selectionChange)="getSectionsByClass();getClassTerm();getSubjectsByClass();" required>
+                              <mat-option value="">Please select</mat-option>
+                              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Section</mat-label>
+                        <mat-select placeholder="Section" formControlName="eme_sec_id" required multiple>
+                            <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                            </mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Term</mat-label>
+                        <mat-select placeholder="Term" formControlName="eme_term_id"
+                            (selectionChange)="getExamDetails()" required>
+                            <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
+                        </mat-select>
+                      </mat-form-field>
+                      
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                          <mat-label>Exam</mat-label>
+                          <mat-select placeholder="Exam" formControlName="eme_exam_id" multiple>
+                              <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
+                              </mat-option>
+                          </mat-select>
+                      </mat-form-field>
+                      <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+                        <mat-label>Subject</mat-label>
+                        <mat-select placeholder="Subject" formControlName="eme_sub_id">
+                            <mat-option value="">Please select</mat-option>
+                            <mat-optgroup label="Scholastic">
+                                <ng-container *ngFor="let item of subjectArray">
+                                    <mat-optgroup
+                                        *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length != 0"
+                                        [label]="item.sub_name" class="option-group-parent-type">
+                                        <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                            class="option-group-parent">
+                                            {{item1.sub_name}}</mat-option>
+                                    </mat-optgroup>
+                                    <mat-option
+                                        *ngIf="(item.sub_type == '1' || item.sub_type == '3') && item.childSub.length == 0"
+                                        [value]="item.sub_id" class="option-group-child">
+                                        {{item.sub_name}}</mat-option>
+                                </ng-container>
+                            </mat-optgroup>
+                            <mat-optgroup label="Co-Scholastic">
+                                <ng-container *ngFor="let item of subjectArray">
+                                    <mat-optgroup
+                                        *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length != 0"
+                                        [label]="item.sub_name" class="option-group-parent-type">
+                                        <mat-option *ngFor="let item1 of item.childSub" [value]="item1.sub_id"
+                                            class="option-group-parent">
+                                            {{item1.sub_name}}</mat-option>
+                                    </mat-optgroup>
+                                    <mat-option
+                                        *ngIf="(item.sub_type == '2' || item.sub_type == '4') && item.childSub.length == 0"
+                                        [value]="item.sub_id" class="option-group-child">
+                                        {{item.sub_name}}</mat-option>
+                                </ng-container>
+                            </mat-optgroup>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-button class="btn-success-green" style="margin-left: 20px;"
+                            (click)="updateStatusMarksInput()" >Unpublish</button>
+                  </div>
+              </div>
+          </form>
+      </mat-card>
+  </div>
+</div>

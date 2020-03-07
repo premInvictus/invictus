@@ -7,6 +7,7 @@ import { UploadMarksComponent } from './upload-marks/upload-marks.component';
 import { SubjectSubexamMappingComponent } from './subject-subexam-mapping/subject-subexam-mapping.component';
 import { ExamAliasTermwiseComponent } from './exam-alias-termwise/exam-alias-termwise.component';
 import { PercentageCumulativeSetupComponent } from './percentage-cumulative-setup/percentage-cumulative-setup.component';
+import { UnpuslishExamComponent } from './unpuslish-exam/unpuslish-exam.component';
 
 
 
@@ -31,6 +32,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'percentage-cumulative-setup', component: PercentageCumulativeSetupComponent
+	},
+	{
+		path: 'unpublish-exam', component: UnpuslishExamComponent
 	}
 ];
 
