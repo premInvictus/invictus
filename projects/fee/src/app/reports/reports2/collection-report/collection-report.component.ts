@@ -1927,8 +1927,8 @@ export class CollectionReportComponent implements OnInit {
 					'studentName': '',
 					'report_type': value.report_type,
 					'feeHeadId': value.fee_value,
-					//'from_date': value.from_date,
-					//'to_date': value.to_date,
+					'from_date': value.from_date,
+					'to_date': value.to_date,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'collection',
@@ -2033,6 +2033,25 @@ export class CollectionReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'ses_name',
+										name: 'Session',
+										field: 'ses_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'ses_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
 										id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
 										sortable: true,
 										filterable: true,
@@ -2097,7 +2116,7 @@ export class CollectionReportComponent implements OnInit {
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
 							}
-							if (repoArray[Number(keys)]['fee_head_data'].length > 0) {
+							if (repoArray[Number(keys)]['fee_head_data'] && repoArray[Number(keys)]['fee_head_data'].length > 0) {
 								let k = 0;
 								let tot = 0;
 								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
@@ -2131,6 +2150,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
 													repoArray[Number(keys)]['stu_sec_name'];
@@ -3030,6 +3050,8 @@ export class CollectionReportComponent implements OnInit {
 		}
 		else if (this.reportType === 'summary') {
 			reportType = new TitleCasePipe().transform('summaryfee_') + this.sessionName;
+		}else if (this.reportType === 'cumulativeheadwise') {
+			reportType = new TitleCasePipe().transform('cumulativeheadwise_') + this.sessionName;
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
@@ -3046,6 +3068,9 @@ export class CollectionReportComponent implements OnInit {
 		}
 		else if (this.reportType === 'summary') {
 			reportType2 = new TitleCasePipe().transform('collection summary report: ') + this.sessionName;
+		}
+		else if (this.reportType === 'cumulativeheadwise') {
+			reportType2 = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
 		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
@@ -3331,6 +3356,8 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
 		} else if (this.reportType === 'mfr') {
 			reportType = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		} else if (this.reportType === 'cumulativeheadwise') {
+			reportType = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
 		}
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
