@@ -359,7 +359,7 @@ export class GradecardPrintingComponent implements OnInit {
     this.studentArray = [];
     this.selection.clear();    
     if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id && this.paramform.value.eme_term_id) {
-      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id}).subscribe((result: any) => {
+      this.examService.getRollNoUser({ au_class_id: this.paramform.value.eme_class_id, au_sec_id: this.paramform.value.eme_sec_id,au_process_type:['4','5']}).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.studentArray = result.data;
           const param: any = {};
