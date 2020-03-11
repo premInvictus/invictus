@@ -470,7 +470,7 @@ export class MarksEntryComponent implements OnInit {
     });
   }
   checkEditable(es_id, eme_review_status) {
-    console.log('this.responseMarksArray', this.responseMarksArray.length);
+    //console.log('this.responseMarksArray', this.responseMarksArray.length);
     if (this.editFlag) {
       return true;
     } else {
@@ -489,6 +489,24 @@ export class MarksEntryComponent implements OnInit {
         return true;
       }
     }
+  }
+
+  checkEditableForStudent(stu) {
+    //console.log('stu---->',stu);
+    if(stu.is_editable === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
   }
 
   isAnyoneEditable(eme_review_status) {
