@@ -13,11 +13,12 @@ export class ReceiptModalComponent implements OnInit {
   vendor_name: any;
   vendor_contact: any;
   vendor_category: any;
-  vendor_email: any; 
+  vendor_email: any;
   receipt_no: any;
   recipt_date: any;
   created_by: any;
   ELEMENT_DATA: any[] = [];
+  locations: any[] = [];
   dialogRef: MatDialogRef<ReceiptModalComponent>;
   @ViewChild('receiptModal') receiptModal;
   displayedColumns: string[] = ['position', 'item_code', 'item_name', 'item_quantity', 'item_price', 'item_location'];
@@ -27,6 +28,7 @@ export class ReceiptModalComponent implements OnInit {
   }
   openModal(data) {
     this.ELEMENT_DATA = [];
+    this.locations = [];
     this.inputData = data;
     this.inputData.pm_type = 'GR';
     this.inventory.getOrderMaster(this.inputData).subscribe((result: any) => {
@@ -39,6 +41,7 @@ export class ReceiptModalComponent implements OnInit {
         this.receipt_no = result[0].pm_id ? result[0].pm_id : '-';
         this.recipt_date = result[0].pm_created.created_date ? result[0].pm_created.created_date : '-';
         this.created_by = result[0].pm_created.created_by_name ? result[0].pm_created.created_by_name : '-';
+        this.locations = result[0].locs && result[0].locs.length > 0 ? result[0].locs : []
         for (const item of result[0].pm_item_details) {
           this.ELEMENT_DATA.push({
             "position": ind + 1,
@@ -60,7 +63,16 @@ export class ReceiptModalComponent implements OnInit {
         });
       }
     });
-
+  }
+  getLocationName(loc_id) {
+    if (this.locations.length > 0) {
+    const index = this.locations.findIndex(f => Number(f.location_id) === Number(loc_id));
+    if (index !== -1) {
+      return this.locations[index].location_name;
+    }
+    } else {
+      return '-';
+    }
   }
   closeDialog() {
     this.dialogRef.close();

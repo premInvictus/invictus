@@ -42,6 +42,7 @@ export class GenerateBillComponent implements OnInit {
   ngOnInit() {
     this.buildForm();
     this.getSchool();
+    this.formGroupArray = [];
     this.getGlobalSettingReplace();
   }
   buildForm() {
@@ -145,7 +146,6 @@ export class GenerateBillComponent implements OnInit {
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
           this.tableArray = [];
-          this.formGroupArray = [];
           this.itemArray.push(result[0].item_assign[0]);
           for (let item of this.itemArray) {
             this.tableArray.push({
@@ -156,20 +156,32 @@ export class GenerateBillComponent implements OnInit {
               item_quantity: '',
               total_price: '',
             });
-            this.formGroupArray.push({
-              formGroup: this.fbuild.group({
-                item_code: item.item_code,
-                item_name: item.item_name,
-                item_selling_price: item.item_selling_price,
-                item_quantity: '',
-                total_price: '',
-              })
-            });
+            const findex = this.formGroupArray.findIndex(f => Number(f.item_code) === Number(item.item_code));
+            if (findex === -1) {
+              this.formGroupArray.push({
+                formGroup: this.fbuild.group({
+                  item_code: item.item_code,
+                  item_name: item.item_name,
+                  item_selling_price: item.item_selling_price,
+                  item_quantity: '',
+                  total_price: '',
+                })
+              });
+            }
           }
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }
       })
+    }
+  }
+  getTotalPrice(index) {
+    if (this.formGroupArray[index].formGroup.value.item_selling_price &&
+      this.formGroupArray[index].formGroup.value.item_quantity) {
+      return Number(this.formGroupArray[index].formGroup.value.item_selling_price
+      ) * Number(this.formGroupArray[index].formGroup.value.item_quantity)
+    } else {
+      return '-';
     }
   }
   previewSaveItem() {
