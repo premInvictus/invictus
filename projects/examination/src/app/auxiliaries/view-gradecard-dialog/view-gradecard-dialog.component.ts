@@ -373,6 +373,10 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.principalSignature = element.gs_value;
           } else if (element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
+            this.header = this.header.replace('@','data:image/png;base64,');
+            // var regex = /<img.*?src="(.*?)"/;
+            // var src = regex.exec(this.header)[1];
+            // console.log(src);
           } else if (element.gs_alias === 'gradecard_health_status') {
             const temp_arr = element.gs_value.split(',');
             this.showHealthStatus = false;
