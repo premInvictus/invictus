@@ -144,6 +144,12 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
       return this.natureArray[findex]['name'];
     }
   }
+  getConsumable(id) {
+    const findex = this.natureArray.findIndex(f => Number(f.config_id) === Number(id));
+    if (findex !== -1) {
+      return this.natureArray[findex]['is_consumable'];
+    }
+  }
   getCategoryName(id) {
     const findex = this.categoryArray.findIndex(f => Number(f.config_id) === Number(id));
     if (findex !== -1) {
@@ -154,6 +160,8 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
     const findex = this.unitsArray.findIndex(f => Number(f.config_id) === Number(id));
     if (findex !== -1) {
       return this.unitsArray[findex]['name'];
+    } else {
+      return '';
     }
   }
   resetForm() {
@@ -172,7 +180,8 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
         inputJSON['item_name'] = this.itemCodeForm.value.item_name;
         inputJSON['item_nature'] = {
           name: this.getNatureName(this.itemCodeForm.value.item_nature),
-          id: this.itemCodeForm.value.item_nature
+          id: this.itemCodeForm.value.item_nature,
+          is_consumable: this.getConsumable(this.itemCodeForm.value.item_nature),
         };
         inputJSON['item_category'] = {
           name: this.getCategoryName(this.itemCodeForm.value.item_category),
@@ -213,11 +222,13 @@ export class ItemCodeGenerationComponent implements OnInit, AfterViewInit {
         });
       } else {
         let inputJSON = {};
+        console.log(this.getConsumable(this.itemCodeForm.value.item_nature));
         inputJSON['item_code'] = this.itemCodeForm.value.item_code;
         inputJSON['item_name'] = this.itemCodeForm.value.item_name;
         inputJSON['item_nature'] = {
           name: this.getNatureName(this.itemCodeForm.value.item_nature),
-          id: this.itemCodeForm.value.item_nature
+          id: this.itemCodeForm.value.item_nature,
+          is_consumable: this.getConsumable(this.itemCodeForm.value.item_nature),
         };
         inputJSON['item_category'] = {
           name: this.getCategoryName(this.itemCodeForm.value.item_category),

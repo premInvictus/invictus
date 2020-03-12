@@ -4,10 +4,12 @@
 
 .book-list td.reserv_issued {
     background-color: rgb(252, 191, 188) !important;
+    height: 35px !important;
 }
 
 .book-list td.reserv_green {
     background-color:#cfe39b !important;
+    height: 35px !important;
 }
 
 .booklog td.text-left {
