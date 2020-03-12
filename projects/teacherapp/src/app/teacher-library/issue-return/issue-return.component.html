@@ -7,33 +7,21 @@
           <div class="col-7 margin-top-15">
             <span class="font-size-24">Books Issue Return Process</span>
           </div>
-
-          <!-- <div class="col-2">
-            <mat-form-field class="form-field" appearance="outline">
-              <mat-label>Choose User Type</mat-label>
-              <mat-select formControlName="user_role_id" required (selectionChange)="resetAll()">
-                <mat-option value="4">Student</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div> -->
           <div class="col-3">
-
-            <div class="search-container">
-
-              <div class="row remove-top-margin">
-
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput [placeholder]="'Search Student By Admission No'" formControlName="searchId"
-                      autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
-                    Search
-                  </button>
-                </div>
-
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>
+                    Search Student By Admission No
+                  </mat-label>
+                  <input matInput [placeholder]="'Search Student By Admission No'" formControlName="searchId"
+                    autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                  Search
+                </button>
               </div>
             </div>
           </div>
@@ -181,19 +169,20 @@
             <span class="font-size-20 font-bold">Return/Issue Book</span>
           </div>
           <div class="col-8">
-            <div class="search-container">
-              <div class="row remove-top-margin">
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Scan Any Book" formControlName="scanBookId" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search-big margin-left-10 margin-top-8"
-                    (click)="searchReservoirData()">
-                    Add To List
-                  </button>
-                </div>
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>
+                    Scan Any Book
+                  </mat-label>
+                  <input matInput placeholder="Scan Any Book" formControlName="scanBookId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  style="width: auto !important;" (click)="searchReservoirData()">
+                  Add To List
+                </button>
               </div>
             </div>
           </div>
