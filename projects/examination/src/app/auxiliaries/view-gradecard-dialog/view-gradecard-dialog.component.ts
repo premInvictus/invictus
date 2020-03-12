@@ -64,7 +64,9 @@ export class ViewGradecardDialogComponent implements OnInit {
     avg: false,
     highest: false,
     remark: false,
-    subjectwise_bifurcation: false
+    subjectwise_bifurcation: false,
+    scholastic_b_grade: false,
+    scholastic_b_gradeset:''
   };
   exambifurcateCount = 0;
   classtermdate: any;
@@ -116,6 +118,11 @@ export class ViewGradecardDialogComponent implements OnInit {
       if (obj.subjectwise_bifurcation && obj.subjectwise_bifurcation == true) {
         this.obtainedGradeAvgHighest.subjectwise_bifurcation = true;
       }
+      if (obj.scholastic_b_grade && obj.scholastic_b_grade == true) {
+        this.obtainedGradeAvgHighest.scholastic_b_grade = true;
+        this.obtainedGradeAvgHighest.scholastic_b_gradeset = obj.scholastic_b_gradeset
+        
+      }
     }
     if (this.data.param.eme_subexam_id.length > 0) {
       this.obtainedGradeAvgHighest.obtained = false;
@@ -143,6 +150,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     //this.getExamDetails();
     //this.getGradeCardMark(); 
     this.getClassTermDate();
+    console.log('this.obtainedGradeAvgHighest----',this.obtainedGradeAvgHighest);
 
 
   }
@@ -314,7 +322,7 @@ export class ViewGradecardDialogComponent implements OnInit {
     console.log('param--', param);
     this.examService.getRemarksEntryStudent(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        console.log(result.data);
+        //console.log(result.data);
         this.resultRemarksArr = result.data;
         this.resultdivflag = true;
       }
@@ -322,7 +330,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   remarkOfSub(sub_id = null) {
     let remarkstr = '';
-    console.log('remarksArr', this.remarksArr);
+    //console.log('remarksArr', this.remarksArr);
     if (sub_id) {
       if (this.remarksArr.length > 0) {
         const temp = this.remarksArr.find(e => e.ere_sub_id === sub_id);
@@ -1032,6 +1040,6 @@ export class ViewGradecardDialogComponent implements OnInit {
         }
       });
     });
-    return final_assessment;
+    return final_assessment.toFixed(2);
   }
 }
