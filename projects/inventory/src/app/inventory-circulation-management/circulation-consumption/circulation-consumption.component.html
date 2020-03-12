@@ -3,11 +3,9 @@
     <mat-card>
       <form [formGroup]="searchForm">
         <div class="row">
-
           <div class="col-7 margin-top-15">
             <span class="font-size-24">Items Issue Return Process</span>
           </div>
-
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Choose User Type</mat-label>
@@ -19,24 +17,21 @@
             </mat-form-field>
           </div>
           <div class="col-3">
-
-            <div class="search-container">
-
-              <div class="row remove-top-margin">
-
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput
-                      [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
-                      formControlName="searchId" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
-                    Search
-                  </button>
-                </div>
-
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>
+                    {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'}}
+                  </mat-label>
+                  <input matInput
+                    [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
+                    formControlName="searchId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                  Search
+                </button>
               </div>
             </div>
           </div>
@@ -57,7 +52,6 @@
             [src]="userData?.au_profileimage" height="80px" width="80px"
             onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=80&w=80'" />
         </div>
-
         <div class="col-2 remove-col-padding-left margin-top-15">
           <span class="font-size-16 font-bold text-capitalize">{{userData?.au_full_name}}</span>
           <br />
@@ -119,10 +113,9 @@
             <div class="col-6 remove-col-padding-right">
               <span class="font-size-16 font-bold opacity-7">
                 {{itemsReadTillDate}}
-
                 <!-- <a href="javascript:void(0)"
-                  (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
-                    class="fas fa-shopping-cart"></i></a> -->
+                          (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
+                            class="fas fa-shopping-cart"></i></a> -->
               </span>
             </div>
           </div>
@@ -133,24 +126,20 @@
             <div class="col-12 remove-col-padding-right">
               <span class="font-size-16 font-bold">
                 <!-- <a href="javascript:void(0)"
-                  (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
-                    class="fas fa-shopping-cart"></i></a> -->
-
+                          (click)="showReturnIssueSection=!showReturnIssueSection" title="Issue / Return Items"> <i
+                            class="fas fa-shopping-cart"></i></a> -->
                 <button class="btn-spacer btn-lib-search margin-left-10 margin-top-15" mat-button
                   style="width:200px !important;" (click)="showReturnIssueSection=!showReturnIssueSection">
                   Issue / Return Item
                 </button>
-
               </span>
             </div>
           </div>
         </div>
-
       </div>
     </mat-card>
   </div>
 </div>
-
 <div class="row" *ngIf="(userData!='' && showReturnIssueSection)">
   <div class="col-12 remove-col-padding-left">
     <form [formGroup]="returnIssueItemsForm">
@@ -160,19 +149,18 @@
             <span class="font-size-20 font-bold">Return/Issue Items</span>
           </div>
           <div class="col-3">
-            <div class="search-container">
-              <div class="row remove-top-margin">
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search-big margin-left-10 margin-top-8"
-                    (click)="searchItemData()">
-                    Add To List
-                  </button>
-                </div>
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Scan Item Code</mat-label>
+                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  style="width: auto !important" (click)="searchItemData()">
+                  Add To List
+                </button>
               </div>
             </div>
           </div>
@@ -199,7 +187,8 @@
                   <tr class="custom-tr book-list">
                     <td width="5%" class="custom-td"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{i+1}}</span></td>
+                      <span>{{i+1}}</span>
+                    </td>
                     <td width="5%" class="custom-td"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span class="font-skyblue cursor-pointer"
@@ -207,11 +196,11 @@
                     </td>
                     <td width="25%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{item?.item_name | titlecase | truncatetext: 45}}</span>
+                      <span style="margin-left: 2%;">{{item?.item_name | titlecase | truncatetext: 45}}</span>
                     </td>
                     <td width="15%" class="custom-td text-left"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-                      <span>{{item?.item_nature?.name | titlecase | truncatetext: 45}}</span>
+                      <span style="margin-left: 2%;">{{item?.item_nature?.name | titlecase | truncatetext: 45}}</span>
                     </td>
                     <td width="10%" class="custom-td text-center"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
@@ -221,21 +210,16 @@
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
                       <span *ngIf="!(item?.item_status === 'issued') && formGroupArray?.length > 0">
                         <form [formGroup]="formGroupArray[i]">
-                          <mat-form-field class="form-field" appearance="outline">
-                            <mat-label>Location</mat-label>
-                            <mat-select formControlName="item_location">
-                              <mat-option *ngFor="let item of formGroupArray[i]?.value?.location_data"
-                                [value]="item.location_id" (onSelectionChange)="setLocationId(item, i)">
-                                <small>{{item?.location_hierarchy | capitalize}}</small>
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
+                          <mat-select formControlName="item_location" placeholder="Location">
+                            <mat-option *ngFor="let item of formGroupArray[i]?.value?.location_data"
+                              [value]="item.location_id" (onSelectionChange)="setLocationId(item, i)">
+                              <small>{{item?.location_hierarchy | capitalize}}</small>
+                            </mat-option>
+                          </mat-select>
                         </form>
                       </span>
-
                       <span
                         *ngIf="(item?.item_status === 'issued')">{{getLocationName(item?.item_location?.location_id) | titlecase}}</span>
-
                     </td>
                     <td width="5%" class="custom-td text-center"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
@@ -250,23 +234,16 @@
                       <div>
                         <span *ngIf="formGroupArray?.length > 0 && (item?.item_status === 'issued')">
                           <form [formGroup]="formGroupArray[i]">
-                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Return Quantity</mat-label>
-                              <input matInput type="number" placeholder="Issued Quantity"
-                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)"
-                                value="{{item?.issued_quantity}}" />
-                            </mat-form-field>
+                            <input matInput type="number" placeholder=">Return Quantity"
+                              formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)"
+                              value="{{item?.issued_quantity}}" />
                           </form>
                         </span>
                         <span *ngIf="formGroupArray?.length > 0 && !(item?.item_status === 'issued')">
                           <form [formGroup]="formGroupArray[i]">
-                            <mat-form-field class="form-field" appearance="outline">
-                              <mat-label>Issued Quantity</mat-label>
-                              <input matInput type="number" placeholder="Issued Quantity"
-                                formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)" />
-                            </mat-form-field>
+                            <input matInput type="number" placeholder="Issued Quantity"
+                              formControlName="issued_quantity" required (change)="setIssuedQuantity(item, i)" />
                           </form>
-
                         </span>
                         <!-- <span *ngIf="(item?.item_status === 'issued')"> {{item?.item_units?.name}}</span> -->
                       </div>
@@ -280,17 +257,14 @@
                         <input matInput [matDatepicker]="picker" formControlName="due_date" [min]="minDate"
                           (dateChange)="setDueDate(i, returnIssueItemsForm.value.due_date)" [value]="item?.fdue_date">
                         <mat-datepicker #picker></mat-datepicker>
-
                         <div class="inline-flex" style="margin-top:2px;" [hidden]="(item?.item_status == 'active')">
                           <i class="fa fa-calendar" *ngIf="!(item?.item_status == 'active')" aria-hidden="true"
                             (click)="picker.open();"></i>
                         </div>
-
                       </div>
                     </td>
                     <td width="5%" class="custom-td"
                       [ngClass]="item?.item_status === 'issued' ? 'reserv_issued' : 'reserv_green'">
-
                       <span *ngIf="item?.item_status === 'issued'"><i class="fas fa-plus font-color-blue"
                           (click)="addItem(item,i)"></i> | </span>
                       <i class="fas fa-trash font-color-red" (click)="removeItem(i)"></i>
@@ -317,10 +291,7 @@
             [noDataText]="" [subText]="'Please Search Items To Issue / Return'"></app-no-data>
         </div>
       </mat-card>
-
-
     </form>
-
   </div>
 </div>
 <div class="row" *ngIf="userData!='' && issueItemData?.length > 0">
@@ -355,7 +326,8 @@
                       (click)="openItemDetailsModal(item?.item_code)">{{item?.item_code}}</span>
                   </td>
                   <td class="custom-td text-left" width="30%">
-                    <span>{{item?.item_name | titlecase | truncatetext: 55}}</span></td>
+                    <span>{{item?.item_name | titlecase | truncatetext: 55}}</span>
+                  </td>
                   <td class="custom-td text-left" width="10%">{{item?.item_nature?.name | titlecase | truncatetext: 20}}
                   </td>
                   <td class="custom-td text-left" width="25%">
@@ -367,7 +339,6 @@
                   <td class="custom-td" width="8%">{{item?.due_date | date: 'd-MMM-y' }}</td>
                 </tr>
               </ng-container>
-
             </tbody>
           </table>
         </div>
@@ -381,13 +352,10 @@
   </div>
 </div>
 <div class="row" *ngIf="userData!='' && ITEM_LOG_LIST_ELEMENT.length > 0">
-
   <div class="col-12 ">
     <mat-card>
       <span class="font-size-20 font-bold">Items Logs</span>
-
       <div class="row">
-
         <div class="col-12" [hidden]="!(ITEM_LOG_LIST_ELEMENT.length > 0)">
           <div class="row ">
             <div class="col-9 remove-col-padding-left">
@@ -410,7 +378,6 @@
                 </div>
               </div>
             </div>
-
           </div>
           <table mat-table [dataSource]="itemLoglistdataSource" matSort class="table-100 text-center" id="item_log">
             <ng-container matColumnDef="srno">
@@ -435,7 +402,6 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="22%">Item Name</th>
               <td mat-cell *matCellDef="let element" class="text-left">
                 {{element?.item_name | titlecase | truncatetext: 25}}
-
               </td>
             </ng-container>
             <ng-container matColumnDef="item_nature">
@@ -476,15 +442,13 @@
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="13%"> Returned On </th>
               <td mat-cell *matCellDef="let element" class="text-center"> <span
                   *ngIf="element.returned_on">{{(element?.returned_on | date: 'd-MMM-y')}} </span>
-                <span *ngIf="!(element.returned_on)"> - </span> </td>
+                <span *ngIf="!(element.returned_on)"> - </span>
+              </td>
             </ng-container>
-
-
             <tr mat-header-row *matHeaderRowDef="displayedItemLogListColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedItemLogListColumns;">
             </tr>
           </table>
-
           <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[100,300,500]" showFirstLastButtons>
           </mat-paginator>
         </div>

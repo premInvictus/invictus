@@ -85,7 +85,17 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		this.configDataSource.paginator = this.paginator;
 	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
-
+	setConsumableNon($event) {
+		if ($event.checked) {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				is_consumable: 'true'
+			});
+		} else {
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				is_consumable: ''
+			});
+		}
+	}
 	buildForm() {
 		this.formGroupArray = [{
 			formGroup: this.fbuild.group({
@@ -94,7 +104,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				calculation_type: '',
 				value: '',
 				status: '',
-				type: ''
+				type: '',
+				is_consumable: ''
 			})
 		},
 		{
@@ -237,6 +248,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				status: value.status,
 				calculation_type: value.type.calculation_type ? value.type.calculation_type.cy_name : '',
 				value: value.type.calculation_type ? value.type.calculation_type.cy_value : '',
+				is_consumable: value.is_consumable ? value.is_consumable : ''
 			});
 		}
 	}
@@ -310,6 +322,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						},
 						name: this.formGroupArray[value - 1].formGroup.value.name,
 						status: '1',
+						is_consumable : this.formGroupArray[value - 1].formGroup.value.is_consumable ? this.formGroupArray[value - 1].formGroup.value.is_consumable :
+						'' 
 					};
 					this.addEntry(this.setupDetails, 'insertMaster', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
@@ -384,7 +398,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						},
 						name: this.formGroupArray[value - 1].formGroup.value.name,
 						status: '1',
-						config_id: this.formGroupArray[value - 1].formGroup.value.id
+						config_id: this.formGroupArray[value - 1].formGroup.value.id,
+						is_consumable : this.formGroupArray[value - 1].formGroup.value.is_consumable ? this.formGroupArray[value - 1].formGroup.value.is_consumable :
+						'' 
 					};
 					this.updateEntry(this.setupDetails, 'updateMaster', this.formGroupArray[value - 1].formGroup.value.type);
 					this.setupUpdateFlag = false;
