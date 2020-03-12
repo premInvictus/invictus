@@ -502,6 +502,27 @@
                             </mat-slide-toggle>
                           </div>
                           <div class="col-6">
+                            <mat-label>Scholastic B Grade</mat-label>
+                          </div>
+                          <div class="col-6" formGroupName="ect_grade_avg_highest">
+                            <mat-slide-toggle class="inline-form-radio-spacing"
+                              formControlName="scholastic_b_grade" aria-hidden="true">
+                            </mat-slide-toggle>
+                          </div>
+                          <div class="col-6" *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.scholastic_b_grade">
+                            <mat-label>Scholastic B Gradeset</mat-label>
+                          </div>
+                          <div class="col-6" formGroupName="ect_grade_avg_highest" *ngIf="formGroupArray[configValue-1].formGroup.controls.ect_grade_avg_highest.value.scholastic_b_grade">
+                            <mat-form-field class="form-field" appearance="outline">
+                              <mat-label>Scholastic B GradeSet</mat-label>
+                              <mat-select formControlName="scholastic_b_gradeset" placeholder="Scholastic B GradeSet">
+                                <mat-option *ngFor="let item of gradesetDropdownArray" [value]="item.egs_number">
+                                  {{item.egs_name}}
+                                </mat-option>
+                              </mat-select>
+                            </mat-form-field>
+                          </div>
+                          <div class="col-6">
                             <mat-label>Grouped Cumulative</mat-label>
                           </div>
                           <div class="col-6" formGroupName="ect_grade_avg_highest">

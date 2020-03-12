@@ -176,6 +176,8 @@ export class SetupComponent implements OnInit {
 						highest: '',
 						remark: '',
 						subjectwise_bifurcation: '',
+						scholastic_b_grade:'',
+						scholastic_b_gradeset:'',
 						grouped_cumulative: '',
 						grouped_cumulative_best_score: ''
 					})
@@ -426,9 +428,14 @@ export class SetupComponent implements OnInit {
 			ect_grade_avg_highest_str += 'Subjectwise Remark - No, '
 		}
 		if (value.subjectwise_bifurcation) {
-			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes'
+			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - Yes, '
 		} else {
-			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - No'
+			ect_grade_avg_highest_str += 'Subjectwise Bifurcation - No, '
+		}
+		if (value.scholastic_b_grade) {
+			ect_grade_avg_highest_str += 'Scholastic B Grade - Yes, '
+		} else {
+			ect_grade_avg_highest_str += 'Scholastic B Grade - No, '
 		}
 		if (value.grouped_cumulative) {
 			ect_grade_avg_highest_str += 'Grouped Cumulative - Yes'
