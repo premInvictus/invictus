@@ -1893,7 +1893,8 @@ export class CollectionReportComponent implements OnInit {
 						this.totalRow = {};
 						const obj3: any = {};
 						obj3['id'] = 'footer';
-						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');;
+						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
+						
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
