@@ -178,11 +178,11 @@
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
                     <button *ngIf="isAnyoneEditable('3')" mat-button class="btn-success-green" (click)="saveForm()"
                         [disabled]="disabledApiButton">Save</button>
-                    <button *ngIf="isAnyoneEditable('3')" mat-button class="btn-success-green btn-spacer"
+                    <button *ngIf="isAnyoneEditable('3') && isAnyoneEditabelStu()" mat-button class="btn-success-green btn-spacer"
                         style="width: 150px !important" (click)="saveForm('4','1')" [disabled]="disabledApiButton">Save
                         & Submit</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        *ngIf="isAnyoneEditable('4') && isExistUserAccessMenu('623')" (click)="saveForm('4','1')"
+                        *ngIf="isAnyoneEditable('4') && isExistUserAccessMenu('623') && isAnyoneEditabelStu()" (click)="saveForm('4','1')"
                         [disabled]="disabledApiButton">Final Publish</button>
                 </div>
             </div>

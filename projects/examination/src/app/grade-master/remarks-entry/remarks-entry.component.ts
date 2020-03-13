@@ -646,5 +646,22 @@ export class RemarksEntryComponent implements OnInit {
 	changeSortIcon() {
 		this.sortUp = !this.sortUp;
 	}
+	checkEditableForStudent(stu) {
+		//console.log('stu---->',stu);
+		if(stu.is_editable === '1') {
+		  return true;
+		} else {
+		  return false;
+		}
+	}
+	isAnyoneEditabelStu() {
+		let anyoneeditable = false;
+		this.studentArray.forEach(element => {
+		  if(element.is_editable === '1') {
+			anyoneeditable = true;
+		  }
+		});
+		return anyoneeditable;
+	  }
 }
 
