@@ -118,7 +118,8 @@ export class ExamAchievementComponent implements OnInit {
                 roll_no:item.r_rollno,
                 au_admission_no: item.au_admission_no,
                 au_full_name: new CapitalizePipe().transform(item.au_full_name),
-                au_achievement: item.a_achievement
+                au_achievement: item.a_achievement,
+                is_editable: item.is_editable
               });
               counter++;
               this.formgroupArray.push({
@@ -130,7 +131,7 @@ export class ExamAchievementComponent implements OnInit {
                   a_admission_no: item.au_admission_no,
                   a_achievement: item.a_achievement,
                   a_ses_id: this.session.ses_id,
-                  a_created_by: this.currentUser.login_id
+                  a_created_by: this.currentUser.login_id,
                 })
               });
             }
@@ -154,19 +155,30 @@ export class ExamAchievementComponent implements OnInit {
     checkParam.au_term_id = this.paramform.value.a_term_id;
     checkParam.au_ses_id = this.session.ses_id;
     this.disableApiCall = true;
-    this.examService.checkAchievement(checkParam).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        this.examService.insertAchievement(this.finalArray).subscribe((result_i: any) => {
-          if (result_i && result_i.status === 'ok') {
-            this.fetchDetails();
-            // this.finalCancel();
-            this.commonAPIService.showSuccessErrorMessage('Achievement Inserted Successfully', 'success');
-            this.disableApiCall = false;
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Insert failed', 'error');
-            this.disableApiCall = false;
-          }
-        });
+    // this.examService.checkAchievement(checkParam).subscribe((result: any) => {
+    //   if (result && result.status === 'ok') {
+    //     this.examService.insertAchievement(this.finalArray).subscribe((result_i: any) => {
+    //       if (result_i && result_i.status === 'ok') {
+    //         this.fetchDetails();
+    //         // this.finalCancel();
+    //         this.commonAPIService.showSuccessErrorMessage('Achievement Inserted Successfully', 'success');
+    //         this.disableApiCall = false;
+    //       } else {
+    //         this.commonAPIService.showSuccessErrorMessage('Insert failed', 'error');
+    //         this.disableApiCall = false;
+    //       }
+    //     });
+    //   }
+    // });
+    this.examService.insertAchievement({param: checkParam, finalArray: this.finalArray}).subscribe((result_i: any) => {
+      if (result_i && result_i.status === 'ok') {
+        this.fetchDetails();
+        // this.finalCancel();
+        this.commonAPIService.showSuccessErrorMessage('Achievement Inserted Successfully', 'success');
+        this.disableApiCall = false;
+      } else {
+        this.commonAPIService.showSuccessErrorMessage('Insert failed', 'error');
+        this.disableApiCall = false;
       }
     });
 
@@ -184,7 +196,24 @@ export class ExamAchievementComponent implements OnInit {
       'a_sec_id': '',
       'a_term_id':''
 		});
-	}
+  }
+  checkEditableForStudent(stu) {
+    //console.log('stu---->',stu);
+    if(stu.is_editable === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
+  }
 
 }
 export interface Element {
@@ -193,4 +222,5 @@ export interface Element {
   au_admission_no: any;
   au_full_name: any;
   au_achievement: any;
+  is_editable: any;
 }

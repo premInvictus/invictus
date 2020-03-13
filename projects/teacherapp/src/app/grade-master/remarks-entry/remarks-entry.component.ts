@@ -453,6 +453,7 @@ export class RemarksEntryComponent implements OnInit {
 				}
 			});
 		} else {
+			this.disableApiCall = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
 		}
 
