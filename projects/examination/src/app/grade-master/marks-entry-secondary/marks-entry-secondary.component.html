@@ -183,7 +183,7 @@
                         [disabled]="disabledApiButton">Save &
                         Submit</button>
                     <button mat-button class="btn-success-green btn-spacer" style="width: 150px !important"
-                        *ngIf="isAnyoneEditableFinal('3') && isExistUserAccessMenu('622')"
+                        *ngIf="isAnyoneEditableFinal('3') && isExistUserAccessMenu('622') && isAnyoneEditabelStu()"
                         (click)="saveForm('4','1');$event.stopPropagation()" [disabled]="disabledApiButton">Final
                         Publish</button>
                 </div>

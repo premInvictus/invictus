@@ -86,7 +86,7 @@
                 <!-- <input matInput placeholder="Enter Result Entry" (change)="onTextChange($event)" type="text"
                   value="{{element.result_entry}}" required formControlName="result_entry"> -->
                 <mat-select placeholder="Please Select Result Entry" formControlName="result_entry_option" required
-                  (selectionChange)="setResultEntry(element)">
+                  (selectionChange)="setResultEntry(element)" [disabled]="!checkEditableForStudent(element)">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of resultEntryOptionsArray" value="{{item?.value}}">{{item?.value}}
                   </mat-option>
@@ -100,7 +100,7 @@
               <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
                 <input matInput placeholder="Enter Result Entry" (change)="onTextChange($event)" type="text"
                   value="{{formgroupArray[element.sr_no - 1].formGroup.value?.result_entry}}" required
-                  formControlName="result_entry">
+                  formControlName="result_entry" [readonly]="!checkEditableForStudent(element)">
               </form>
             </td>
           </ng-container>
@@ -110,9 +110,9 @@
         <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
           <div class="col-12 text-center">
             <button mat-raised-button class="btn-success-green" (click)="finalSubmit();$event.stopPropagation()"
-              *ngIf="!termDataFlag" [disabled]="disabledApiButton">Submit</button>
+              *ngIf="(!termDataFlag) && isAnyoneEditabelStu()" [disabled]="disabledApiButton">Submit</button>
             <button mat-raised-button class="btn-success-green" (click)="finalUpdate();$event.stopPropagation()"
-              *ngIf="termDataFlag" [disabled]="disabledApiButton">Update</button>
+              *ngIf="termDataFlag && isAnyoneEditabelStu()" [disabled]="disabledApiButton">Update</button>
             <button mat-raised-button class="btn-reset margin-left-10"
               (click)="finalCancel();$event.stopPropagation()">cancel</button>
           </div>
