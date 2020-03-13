@@ -16,20 +16,22 @@
             </mat-form-field>
           </div>
           <div class="col-3">
-            <div class="search-container">
-              <div class="row remove-top-margin">
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput
-                      [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
-                      formControlName="searchId" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
-                    Search
-                  </button>
-                </div>
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>
+                    {{searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login
+                    Id'}}
+                  </mat-label>
+                  <input matInput
+                    [placeholder]="searchForm.value.user_role_id == '4' ? 'Search Student By Admission No' : 'Search Employee By Login Id'"
+                    formControlName="searchId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10" (click)="searchUser()">
+                  Search
+                </button>
               </div>
             </div>
           </div>
@@ -130,19 +132,18 @@
             <span class="font-size-20 font-bold">Add Items</span>
           </div>
           <div class="col-3">
-            <div class="search-container">
-              <div class="row remove-top-margin">
-                <div class="col-8">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
-                  </mat-form-field>
-                </div>
-                <div class="col-4 margin-top-10  text-right">
-                  <button mat-button class="btn-spacer btn-lib-search-big margin-left-10 margin-top-8"
-                    (click)="searchItemData()">
-                    Add To List
-                  </button>
-                </div>
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Scan Item Code</mat-label>
+                  <input matInput placeholder="Scan Item Code" formControlName="scanItemId" autocomplete="off" />
+                </mat-form-field>
+              </div>
+              <div class="col-4 margin-top-10  text-right">
+                <button mat-button class="btn-spacer btn-lib-search margin-left-10 margin-top-8"
+                  (click)="searchItemData()" style="width: auto !important;">
+                  Add To List
+                </button>
               </div>
             </div>
           </div>

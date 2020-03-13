@@ -26,8 +26,8 @@ export class CirculationConsumptionComponent implements OnInit {
 	returnIssueItemsForm: FormGroup;
 	userData: any = '';
 	itemData: any = [];
-	itemLogData: any = [];
-	issueItemData: any = [];
+	itemLogData: any[] = [];
+	issueItemData: any[] = [];
 	userHaveItemsData = false;
 	itemsReadTillDate = 0;
 	sessionArray: any = [];
@@ -195,12 +195,12 @@ export class CirculationConsumptionComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId),emp_login_id: { $ne: '' } }).subscribe((result: any) => {
+				this.erpCommonService.getEmployeeDetail({ 'emp_id': Number(this.searchForm.value.searchId), emp_login_id: { $ne: '' } }).subscribe((result: any) => {
 					if (result) {
 						//this.userData = result.data ? result.data[0] : '';
 						var resultJson = {
-							emp_id : result.emp_id,	
-							au_login_id: result.emp_login_id,							
+							emp_id: result.emp_id,
+							au_login_id: result.emp_login_id,
 							au_role_id: 3,
 							au_full_name: result.emp_name,
 							au_mobile: result.emp_personal_detail && result.emp_personal_detail.contact_detail ? result.emp_personal_detail.contact_detail.primary_mobile_no : ''
@@ -217,8 +217,8 @@ export class CirculationConsumptionComponent implements OnInit {
 						this.getUserIssueReturnLogData();
 					}
 				});
-			} 
-			
+			}
+
 			// else if (au_role_id === '2') {
 			// 	this.erpCommonService.getUser({
 			// 		'login_id': this.searchForm.value.searchId,
@@ -295,14 +295,14 @@ export class CirculationConsumptionComponent implements OnInit {
 		} else {
 			this.itemData[i]['issued_quantity'] = this.formGroupArray[i].value.issued_quantity;
 		}
-		
+
 	}
 
 	addItem(item, i) {
 		this.itemData[i]['item_status'] = 'active';
 		var currentLocationStock = 0;
 		this.formGroupArray[i].patchValue({
-			location_id:'',
+			location_id: '',
 		});
 		for (var j = 0; j < this.itemData[i]['item_location_data'].length; j++) {
 			if (Number(this.itemData[i]['item_location_data'][j]['location_id'])) {
@@ -314,106 +314,118 @@ export class CirculationConsumptionComponent implements OnInit {
 	}
 
 	searchItemData() {
-		const date = new Date();
-		if (this.searchForm.value.user_role_id === '4') {
-			if (this.settingData['item_return_days_student']) {
-				date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_student'], 10));
-			} else {
-				date.setDate(date.getDate() + 7);
-			}
-
-		} else if (this.searchForm.value.user_role_id === '3') {
-			if (this.settingData['item_return_days_teacher']) {
-				date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_teacher'], 10));
-			} else {
-				date.setDate(date.getDate() + 7);
-			}
-
-		} else if (this.searchForm.value.user_role_id === '2') {
-			if (this.settingData['item_return_days_staff']) {
-				date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_staff'], 10));
-			} else {
-				date.setDate(date.getDate() + 7);
-			}
-
-		}
-
-		const inputJson = {
-			"filters":
-				[{ "filter_type": "item_code", "filter_value": Number(this.returnIssueItemsForm.value.scanItemId), "type": "text" }],
-			"generalFilters": { "item_nature.id": "", "item_category.id": "" }, "page_index": 0, "page_size": 10
-		};
-
-		this.erpCommonService.searchItemByStatus(inputJson).subscribe((result: any) => {
-			if (result) {
-				if (result && result.data && result.data[0]) {
-					delete result.data[0]['_id'];
-					result.data[0]['due_date'] = date;
-
-					var current_stock = 0;
-					if (result.data[0].item_location) {
-						for (var j = 0; j < result.data[0].item_location.length; j++) {
-							current_stock = current_stock + Number(result.data[0].item_location[j]['item_qty']);
-						}
+		if (this.returnIssueItemsForm && this.returnIssueItemsForm.value.scanItemId) {
+			const itemAlreadyAddedStatus = this.checkItemAlreadyAdded(this.returnIssueItemsForm.value.scanItemId);
+			if (!itemAlreadyAddedStatus) {
+				const date = new Date();
+				if (this.searchForm.value.user_role_id === '4') {
+					if (this.settingData['item_return_days_student']) {
+						date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_student'], 10));
+					} else {
+						date.setDate(date.getDate() + 7);
 					}
 
-					const issueItemStatus = this.checkForIssueItem(this.returnIssueItemsForm.value.scanItemId);
-					var inputJson = {
-						due_date : issueItemStatus.status && this.issueItemData[issueItemStatus.index]? this.issueItemData[issueItemStatus.index]['due_date'] :  this.common.dateConvertion(date, 'yyyy-MM-dd'),
-						fdue_date: issueItemStatus.status && this.issueItemData[issueItemStatus.index]? this.issueItemData[issueItemStatus.index]['due_date'] :  this.common.dateConvertion(date, 'yyyy-MM-dd'),
-						item_category: result.data[0].item_category ? result.data[0].item_category : { id: '', name: '' },
-						item_code: result.data[0].item_code ? result.data[0].item_code : 0,
-						item_desc: result.data[0].item_desc ? result.data[0].item_desc : '',
-						item_location: issueItemStatus.status && this.issueItemData[issueItemStatus.index]? this.issueItemData[issueItemStatus.index]['item_location'] : result.data[0].item_location,
-						item_location_data: result.data[0].item_location ? result.data[0].item_location : [],
-						item_name: result.data[0].item_name ? result.data[0].item_name : '',
-						item_nature: result.data[0].item_nature ? result.data[0].item_nature : { id: '', name: '' },
-						item_reorder_level: result.data[0].item_reorder_level ? result.data[0].item_reorder_level : 0,
-						item_session: result.data[0].item_session ? result.data[0].item_session : '',
-						item_status: (issueItemStatus.status) ? 'issued' : 'active',
-						item_units: result.data[0].item_units ? result.data[0].item_units : { id: '', name: '' },
-						current_stock: current_stock ? current_stock : 0,
-						current_location_stock: current_stock ? current_stock : 0,
-						issued_quantity : issueItemStatus.status && this.issueItemData[issueItemStatus.index]? this.issueItemData[issueItemStatus.index]['issued_quantity'] : 0,
-						issued_on : issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['issued_on'] : ''
-					};
-					this.itemData.push(inputJson);
-					var itemCode = result.data[0].item_code;
+				} else if (this.searchForm.value.user_role_id === '3') {
+					if (this.settingData['item_return_days_teacher']) {
+						date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_teacher'], 10));
+					} else {
+						date.setDate(date.getDate() + 7);
+					}
+				} else if (this.searchForm.value.user_role_id === '2') {
+					if (this.settingData['item_return_days_staff']) {
+						date.setDate(date.getDate() + parseInt(this.settingData['item_return_days_staff'], 10));
+					} else {
+						date.setDate(date.getDate() + 7);
+					}
 
-					this.erpCommonService.getFilterLocation({ item_code: Number(this.returnIssueItemsForm.value.scanItemId) }).subscribe((results: any) => {
-						var locationData = [];
-						if (results) {
-							for (var i = 0; i < results.length; i++) {
-								locationData.push(results[i].location_data);
+				}
+				const inputJson = {
+					"filters":
+						[{ "filter_type": "item_code", "filter_value": Number(this.returnIssueItemsForm.value.scanItemId), "type": "text" }],
+					"generalFilters": { "item_nature.id": "", "item_category.id": "" }, "page_index": 0, "page_size": 10,
+					"filter_except": "store"
+				};
 
-								this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: locationData }));
+				this.erpCommonService.searchItemByStatus(inputJson).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						if (result && result.data && result.data[0]) {
+							delete result.data[0]['_id'];
+							result.data[0]['due_date'] = date;
 
-								if (issueItemStatus.status) {
-									this.formGroupArray[this.formGroupArray.length -1]['issued_quantity'] = this.issueItemData[issueItemStatus.index]['issued_quantity'];
+							var current_stock = 0;
+							if (result.data[0].item_location) {
+								for (var j = 0; j < result.data[0].item_location.length; j++) {
+									current_stock = current_stock + Number(result.data[0].item_location[j]['item_qty']);
 								}
 							}
-						} else {
-							this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: [] }));
-						}
-					});
-				}
-			}
-		});
 
+							const issueItemStatus = this.checkForIssueItem(this.returnIssueItemsForm.value.scanItemId);
+							console.log(issueItemStatus);
+							var inputJson = {
+								due_date: issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['due_date'] : this.common.dateConvertion(date, 'yyyy-MM-dd'),
+								fdue_date: issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['due_date'] : this.common.dateConvertion(date, 'yyyy-MM-dd'),
+								item_category: result.data[0].item_category ? result.data[0].item_category : { id: '', name: '' },
+								item_code: result.data[0].item_code ? result.data[0].item_code : 0,
+								item_desc: result.data[0].item_desc ? result.data[0].item_desc : '',
+								item_location: issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['item_location'] : result.data[0].item_location,
+								item_location_data: result.data[0].item_location ? result.data[0].item_location : [],
+								item_name: result.data[0].item_name ? result.data[0].item_name : '',
+								item_nature: result.data[0].item_nature ? result.data[0].item_nature : { id: '', name: '' },
+								item_reorder_level: result.data[0].item_reorder_level ? result.data[0].item_reorder_level : 0,
+								item_session: result.data[0].item_session ? result.data[0].item_session : '',
+								item_status: (issueItemStatus.status) ? 'issued' : 'active',
+								item_units: result.data[0].item_units ? result.data[0].item_units : { id: '', name: '' },
+								current_stock: current_stock ? current_stock : 0,
+								current_location_stock: current_stock ? current_stock : 0,
+								issued_quantity: issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['issued_quantity'] : 0,
+								issued_on: issueItemStatus.status && this.issueItemData[issueItemStatus.index] ? this.issueItemData[issueItemStatus.index]['issued_on'] : ''
+							};
+							this.itemData.push(inputJson);
+							var itemCode = result.data[0].item_code;
+
+							this.erpCommonService.getFilterLocation({ item_code: Number(this.returnIssueItemsForm.value.scanItemId) }).subscribe((results: any) => {
+								var locationData = [];
+								if (results) {
+									for (var i = 0; i < results.length; i++) {
+										locationData.push(results[i].location_data);
+										this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: locationData }));
+
+										if (issueItemStatus.status) {
+											(this.formGroupArray[this.formGroupArray.length - 1]).patchValue({
+												issued_quantity: this.issueItemData[Number(issueItemStatus.index)]['issued_quantity']
+											});
+										}
+									}
+								} else {
+									this.formGroupArray.push(this.fbuild.group({ item_code: result.data[0]['item_code'], item_location: '', issued_quantity: '', location_data: [] }));
+								}
+							});
+						}
+					} else {
+						this.common.showSuccessErrorMessage('Item not available', 'error');
+					}
+				});
+			} else {
+				this.common.showSuccessErrorMessage('Item Already Added, Please Choose Another One', 'error');
+			}
+		} else {
+			this.common.showSuccessErrorMessage('Please Scan a item to Add', 'error');
+		}
 	}
 
 	getItemLocationStock(item, location_id) {
 		var currentLocationStock = 0;
-		for(let i=0; i<item.item_location_data.length;i++) {
-			if(Number(item.item_location_data[i]['location_id']) === Number(location_id)) {
+		for (let i = 0; i < item.item_location_data.length; i++) {
+			if (Number(item.item_location_data[i]['location_id']) === Number(location_id)) {
 				currentLocationStock = item.item_location_data[i]['item_qty'];
-			}	
+			}
 		}
 		return currentLocationStock;
 	}
 
 	removeItem(index) {
 		this.itemData.splice(index, 1);
+		this.formGroupArray.splice(index, 1);
 	}
 
 	setItemId(item_id) {
@@ -472,14 +484,25 @@ export class CirculationConsumptionComponent implements OnInit {
 							this.itemsReadTillDate++;
 						}
 
-						if (item && item.issued_quantity > 0) {
-							this.issueItemData.push(item);
-							this.finIssueItem.push(item);
+						const findex = this.issueItemData.findIndex(f => Number(f.item_code) === item.item_code);
+						if (findex === -1) {
+							if (item && item.item_status === 'issued' && item.issued_quantity > 0) {
+								this.issueItemData.push(item);
+								this.finIssueItem.push(item);
+							}
+						} else {
+							this.issueItemData.splice(findex, 1);
+							this.finIssueItem.splice(findex, 1);
+							if (item && item.item_status === 'issued' && item.issued_quantity > 0) {
+								this.issueItemData.push(item);
+								this.finIssueItem.push(item);
+							}
 						}
 						this.ITEM_LOG_LIST_ELEMENT.push(element);
 						pos++;
 					}
 				}
+
 				this.itemLoglistdataSource = new MatTableDataSource<ItemLogListElement>(this.ITEM_LOG_LIST_ELEMENT);
 				this.itemLoglistdataSource.paginator = this.paginator;
 				if (this.sort) {
@@ -498,6 +521,20 @@ export class CirculationConsumptionComponent implements OnInit {
 			}
 		});
 	}
+	checkAlreayReturned(item_code) {
+		let flag = false;
+		for (const item of this.itemLogData) {
+			if (item && item.user_inv_logs && item.user_inv_logs.length > 0) {
+				for (const titem of item.user_inv_logs) {
+					if (Number(titem.item_code) === Number(item_code) && Number(titem.issued_quantity) === 0) {
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+		return flag;
+	}
 
 	saveIssueReturn() {
 		this.disabledApiButton = true;
@@ -505,27 +542,27 @@ export class CirculationConsumptionComponent implements OnInit {
 		const itemData = JSON.parse(JSON.stringify(this.itemData));
 		for (let i = 0; i < itemData.length; i++) {
 			var inputJson = {};
-			console.log('this.formGroupArray[i]--', this.formGroupArray[i]);
-			if (itemData[i]['item_status'] === 'issued') {
-				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd')) {
+			if (itemData[i]['item_status'] === 'issued' && !(itemData[i]['item_nature']['is_consumable'])) {
+				if (this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd') !== this.common.dateConvertion(itemData[i]['fdue_date'], 'yyyy-MM-dd')) {
 					inputJson['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
 					inputJson['fdue_date'] = itemData[i]['due_date'];
 					inputJson['reissue_status'] = 1;
 					inputJson['item_code'] = itemData[i]['item_code'];
-					inputJson['issued_quantity'] = Number(itemData[i]['issued_quantity']) - Number(this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0);
+					inputJson['is_consumable'] = "false",
+						inputJson['issued_quantity'] = Number(itemData[i]['issued_quantity']) - Number(this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0);
 					inputJson['returned_quantity'] = this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0;
 					inputJson['item_units'] = itemData[i]['item_units'];
 					inputJson['item_location'] = { location_id: itemData[i]['item_location'], item_qty: itemData[i]['issued_quantity'] };
 				} else {
-					// if (itemData[i]['item_nature']['id'] === 41) {
 					inputJson['item_status'] = (Number(itemData[i]['issued_quantity']) - Number(this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0) != 0) ? 'issued' : 'active';
 					inputJson['issued_on'] = this.common.dateConvertion(itemData[i]['issued_on'], 'yyyy-MM-dd');
 					inputJson['returned_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
 					inputJson['item_code'] = itemData[i]['item_code'];
 					inputJson['due_date'] = this.common.dateConvertion(itemData[i]['due_date'], 'yyyy-MM-dd');
 					inputJson['issued_quantity'] = 0;
-					inputJson['returned_quantity'] = this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0;
+					inputJson['is_consumable'] = "false",
+						inputJson['returned_quantity'] = this.formGroupArray[i].value.issued_quantity ? this.formGroupArray[i].value.issued_quantity : 0;
 					inputJson['item_location'] = { location_id: itemData[i]['item_location']['location_id'], item_qty: itemData[i]['item_location']['item_qty'] };
 					inputJson['item_units'] = itemData[i]['item_units'];
 					for (let j = 0; j < this.finIssueItem.length; j++) {
@@ -533,11 +570,9 @@ export class CirculationConsumptionComponent implements OnInit {
 							this.finIssueItem.splice(j, 1);
 						}
 					}
-					// } else {
-					// 	this.common.showSuccessErrorMessage('Consumeable Items cant Return', 'info');
-					// }
 				}
 				updateditemData.push(inputJson);
+				console.log(inputJson);
 			} else if (itemData[i]['item_status'] === 'active') {
 				if (itemData[i]['due_date']) {
 					inputJson['item_code'] = itemData[i]['item_code'];
@@ -551,6 +586,10 @@ export class CirculationConsumptionComponent implements OnInit {
 					this.finIssueItem.push(itemData[i]);
 					updateditemData.push(inputJson);
 				}
+			}
+			else {
+				this.common.showSuccessErrorMessage('Consumeable items cannot be returned', 'info');
+				this.disabledApiButton = false;
 			}
 		}
 		var limitFlag = this.checkForIssueItemLimit();
@@ -567,7 +606,7 @@ export class CirculationConsumptionComponent implements OnInit {
 				user_class_id: this.userData && this.userData.class_id ? this.userData.class_id : '',
 				user_sec_id: this.userData && this.userData.sec_id ? this.userData.sec_id : ''
 			};
-			if (!this.userHaveItemsData) {
+			if (!this.userHaveItemsData && inputJson.user_inv_logs && inputJson.user_inv_logs.length > 0) {
 				this.erpCommonService.insertUserItemData(inputJson).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					if (result) {
@@ -579,7 +618,7 @@ export class CirculationConsumptionComponent implements OnInit {
 					}
 					this.common.showSuccessErrorMessage('Item Inserted Successfully', 'ok');
 				});
-			} else {
+			} else if (this.userHaveItemsData && inputJson.user_inv_logs && inputJson.user_inv_logs.length > 0) {
 				this.erpCommonService.updateUserItemData(inputJson).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					if (result) {

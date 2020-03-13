@@ -54,6 +54,11 @@
                                                                 required>
                                                             <mat-error>Please Enter Name</mat-error>
                                                         </mat-form-field>
+                                                        <mat-checkbox (change)=setConsumableNon($event)
+                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '8'"
+                                                            formControlName="is_consumable">
+                                                            Is it consumable?
+                                                        </mat-checkbox>
                                                         <mat-form-field class="form-field" appearance="outline"
                                                             *ngIf="formGroupArray[configValue-1].formGroup.value.type === '6'">
                                                             <mat-label>Calculation Type</mat-label>
