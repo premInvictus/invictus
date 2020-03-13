@@ -539,4 +539,8 @@ export class FeeService {
 	isAllocatedToStudent(value) {
 		return this.http.post(environment.apiFeeUrl + '/hostel/isAllocatedToStudent', value);
 	}
+	geOutStandingHeadWiseCollection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/geOutStandingHeadWiseCollection', value);
+	}
 }
