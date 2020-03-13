@@ -792,18 +792,34 @@ export class FeeLedgerComponent implements OnInit {
 
 	manipulateAction(row) {
 		this.selection.toggle(row);
-		console.log(this.selection.selected);
-		const tempactionFlag: any = {
-			deleteinvoice: true,
-			deletereceipt: true,
-			edit: true,
-			recalculate: true,
-			consolidate: true,
-			attach: true,
-			detach: true,
-			unconsolidate: true,
-			receiptmodification: true
-		};
+		console.log(this.selection.selected, row);
+		let tempactionFlag: any
+		if (row && row.flgr_payment_mode === "partial") {
+			tempactionFlag = {
+				deleteinvoice: false,
+				deletereceipt: false,
+				edit: false,
+				recalculate: false,
+				consolidate: false,
+				attach: true,
+				detach: true,
+				unconsolidate: false,
+				receiptmodification: false
+			};
+		} else {
+			tempactionFlag = {
+				deleteinvoice: true,
+				deletereceipt: true,
+				edit: true,
+				recalculate: true,
+				consolidate: true,
+				attach: true,
+				detach: true,
+				unconsolidate: true,
+				receiptmodification: true
+			};
+		}
+		
 		if (this.selection.selected.length > 0) {
 			this.selection.selected.forEach(item => {
 				tempactionFlag.deleteinvoice = tempactionFlag.deleteinvoice && item.eachActionFlag.deleteinvoice && this.selection.selected.length > 0;
