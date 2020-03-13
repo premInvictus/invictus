@@ -1331,6 +1331,7 @@ export class SetupComponent implements OnInit {
 		this.examService[serviceName](data).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.resetForm(this.configValue);
+				this.gradeDataFrmArr = [];
 				this.disableApiCall = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Added Succesfully', 'success');
@@ -1348,7 +1349,9 @@ export class SetupComponent implements OnInit {
 				this.setupUpdateFlag = false;
 				next(this);
 				this.commonService.showSuccessErrorMessage('Updated Succesfully', 'success');
-				this.getMarksEntryDateOptions();
+				if(Number(this.configValue) === 9) {
+					this.getMarksEntryDateOptions();
+				}
 			} else {
 				this.commonService.showSuccessErrorMessage(result.message, 'error');
 			}
