@@ -614,6 +614,7 @@ export class RemarksEntryComponent implements OnInit {
 				}
 			});
 		} else {
+			this.disabledApiButton = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
 		}
 
@@ -662,6 +663,6 @@ export class RemarksEntryComponent implements OnInit {
 		  }
 		});
 		return anyoneeditable;
-	  }
+	}
 }
 
