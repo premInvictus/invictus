@@ -265,7 +265,8 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         present_days: item.present_days ? item.present_days : '',
-        overall_attendance: item.overall_attendance ? item.overall_attendance : ''
+        overall_attendance: item.overall_attendance ? item.overall_attendance : '',
+        is_editable: item.is_editable
       });
       counter++;
       this.formgroupArray.push({
@@ -339,6 +340,23 @@ export class MarkAttendanceThemeTwoComponent implements OnInit {
       'syl_board_id': 1
     });
   }
+  checkEditableForStudent(stu) {
+    //console.log('stu---->',stu);
+    if(stu.is_editable === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
+  }
 
 }
 
@@ -349,4 +367,5 @@ export interface Element {
   au_full_name: any;
   present_days: any;
   overall_attendance: any;
+  is_editable: any;
 }
