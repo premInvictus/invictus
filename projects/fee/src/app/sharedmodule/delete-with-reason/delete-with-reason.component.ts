@@ -36,7 +36,7 @@ export class DeleteWithReasonComponent implements OnInit {
 
 
 	openModal(data) {	
-		this.getReason(11);		
+		this.getReason(13);		
 		this.inputData = data;
 		this.reasonForm.patchValue({
 			'inv_id': data
