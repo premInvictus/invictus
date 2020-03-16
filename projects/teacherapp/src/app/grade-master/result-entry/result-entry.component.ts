@@ -281,6 +281,7 @@ export class ResultEntryComponent implements OnInit {
     for (const item of this.studentArray) {
       this.ELEMENT_DATA.push({
         sr_no: counter,
+        is_editable: item.is_editable,
         au_admission_no: item.au_admission_no,
         au_full_name: new CapitalizePipe().transform(item.au_full_name),
         roll_no: item.r_rollno,
@@ -436,11 +437,29 @@ export class ResultEntryComponent implements OnInit {
       'syl_board_id': 1
     });
   }
+  checkEditableForStudent(stu) {
+    //console.log('stu---->',stu);
+    if(stu.is_editable === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
+  }
 
 }
 
 export interface Element {
   sr_no: any;
+  is_editable: any,
   au_admission_no: any;
   roll_no: any;
   au_full_name: any;

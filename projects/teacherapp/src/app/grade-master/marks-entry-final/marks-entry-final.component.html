@@ -132,7 +132,7 @@
                         <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
                         <td class="custom-td text-center font-size-14"
                             *ngFor="let item of paramform.value.eme_subexam_id">
-                            <ng-template [ngIf]="checkEditable(item, '3')" [ngIfElse]="elseContaint">
+                            <ng-template [ngIf]="checkEditable(item, '3') && checkEditableForStudent(stu)" [ngIfElse]="elseContaint">
                                 <ng-container *ngIf="exam_grade_type == '2'">
                                     <input matInput [value]="getInputMarks(item, stu.au_login_id)"
                                         placeholder="Please enter marks"
@@ -167,10 +167,10 @@
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
                     <button *ngIf="isAnyoneEditable('3')" mat-button class="btn-success-green"
                         [disabled]="disableApiCall" (click)="saveForm()">Save</button>
-                    <button *ngIf="isAnyoneEditable('3')" mat-button class="btn-success-green btn-spacer"
+                    <button *ngIf="isAnyoneEditable('3') && isAnyoneEditabelStu()" mat-button class="btn-success-green btn-spacer"
                         style="width: 150px !important" [disabled]="disableApiCall" (click)="saveForm('4','1')">Save &
                         Submit</button>
-                    <button *ngIf="isAnyoneEditableFinal('4') && isExistUserAccessMenu('627')" mat-button
+                    <button *ngIf="isAnyoneEditableFinal('4') && isExistUserAccessMenu('627') && isAnyoneEditabelStu()" mat-button
                         class="btn-success-green btn-spacer" style="width: 150px !important" [disabled]="disableApiCall"
                         (click)="saveForm('4','1')">Final Publish</button>
                 </div>

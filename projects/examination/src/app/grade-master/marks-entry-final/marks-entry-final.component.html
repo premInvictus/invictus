@@ -143,7 +143,7 @@
                         <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
                         <td class="custom-td text-center font-size-14"
                             *ngFor="let item of paramform.value.eme_subexam_id">
-                            <ng-template [ngIf]="checkEditable(item, '3')" [ngIfElse]="elseContaint">
+                            <ng-template [ngIf]="checkEditable(item, '3') && checkEditableForStudent(stu)" [ngIfElse]="elseContaint">
                                 <ng-container *ngIf="exam_grade_type == '2'">
                                     <input matInput [value]="getInputMarks(item, stu.au_login_id)"
                                         placeholder="Please enter marks"
