@@ -132,7 +132,7 @@
                         <td class="custom-td text-center font-size-14">{{stu.au_admission_no}}</td>
                         <td class="custom-td text-center font-size-14"
                             *ngFor="let item of paramform.value.eme_subexam_id">
-                            <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
+                            <ng-template [ngIf]="checkEditable(item, '0') && checkEditableForStudent(stu)" [ngIfElse]="elseContaint">
                                 <ng-container *ngIf="exam_grade_type == '2'">
                                     <input matInput [value]="getInputMarks(item, stu.au_login_id)"
                                         placeholder="Please enter marks"
@@ -167,11 +167,11 @@
                 <div class="col-12 text-center" *ngIf="marksInputArray.length > 0">
                     <button *ngIf="isAnyoneEditable('0')  && checkIfNotExpired()" mat-button class="btn-success-green"
                         [disabled]="disableApiCall" (click)="saveForm()">Save</button>
-                    <button *ngIf="isAnyoneEditable('0') && checkIfNotExpired()" mat-button class="btn-success-green btn-spacer"
+                    <button *ngIf="isAnyoneEditable('0') && checkIfNotExpired() && isAnyoneEditabelStu()" mat-button class="btn-success-green btn-spacer"
                         style="width: 150px !important" [disabled]="disableApiCall" (click)="saveForm('1','1')">Save &
                         Submit</button>
                     <button *ngIf="(isAnyoneEditableFinal('1') || isAnyoneEditableFinal('2')
-                    || isAnyoneEditableFinal('3')) && isExistUserAccessMenu('624')" mat-button
+                    || isAnyoneEditableFinal('3')) && isExistUserAccessMenu('624') && isAnyoneEditabelStu()" mat-button
                         class="btn-success-green btn-spacer" style="width: 150px !important" [disabled]="disableApiCall"
                         (click)="saveForm('4','1')">Final Publish</button>
                 </div>
