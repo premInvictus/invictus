@@ -169,8 +169,6 @@ export class GenerateBillComponent implements OnInit {
               });
             }
           }
-          console.log(this.formGroupArray, 'this.formGroupArray');
-          console.log(this.tableArray, 'this.tableArray');
         } else {
           this.common.showSuccessErrorMessage('Item is not available at store', 'error');
         }

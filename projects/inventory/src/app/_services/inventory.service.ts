@@ -205,4 +205,8 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
   }
+  allStoreBill(value) {
+    this.service.stopLoading();
+    return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
+  }
 }

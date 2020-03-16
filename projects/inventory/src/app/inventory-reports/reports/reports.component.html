@@ -66,6 +66,8 @@
                 </app-store-ledger>
                 <app-repair-damaged-report (displyRep)="displyRep($event)" *ngIf="reportType === '5'">
                 </app-repair-damaged-report>
+                <app-store-assign-report (displyRep)="displyRep($event)" *ngIf="reportType === '6'">
+                </app-store-assign-report>
               </div>
             </div>
           </mat-expansion-panel>

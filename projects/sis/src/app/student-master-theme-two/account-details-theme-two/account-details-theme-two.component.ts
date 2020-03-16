@@ -91,6 +91,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		}
 		this.additionalFeeComponent();
 		this.renderData();
+		console.log(this.feeDet, 'dfghfgh');
 	}
 	buildForm() {
 		this.accountsForm = this.fbuild.group({
@@ -139,31 +140,31 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				this.accountsForm.patchValue({
 					hs_bed: ''
 				});
-			} 
+			}
 		});
 	}
 	getBuilding() {
 		this.buildingArray = [];
-		this.feeService.getHostelConfigType({hc_type: 'building',hc_status: '1'}).subscribe((result: any) => {
-				if (result.status === 'ok') {
-			this.buildingArray = result.data;
-		  }
+		this.feeService.getHostelConfigType({ hc_type: 'building', hc_status: '1' }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.buildingArray = result.data;
+			}
 		});
 	}
 	getRoom() {
 		this.roomArray = [];
-		this.feeService.getHostelConfigType({hc_type: 'room',hc_status: '1',hm_building: this.accountsForm.value.hs_building}).subscribe((result: any) => {
-				if (result.status === 'ok') {
-			this.roomArray = result.data;
-		  }
+		this.feeService.getHostelConfigType({ hc_type: 'room', hc_status: '1', hm_building: this.accountsForm.value.hs_building }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.roomArray = result.data;
+			}
 		});
 	}
 	getBed() {
 		this.bedArray = [];
-		this.feeService.getHostelConfigType({hc_type: 'bed',hc_status: '1',hm_building: this.accountsForm.value.hs_building,hm_room: this.accountsForm.value.hs_room}).subscribe((result: any) => {
-				if (result.status === 'ok') {
-			this.bedArray = result.data;
-		  }
+		this.feeService.getHostelConfigType({ hc_type: 'bed', hc_status: '1', hm_building: this.accountsForm.value.hs_building, hm_room: this.accountsForm.value.hs_room }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.bedArray = result.data;
+			}
 		});
 	}
 	additionalFeeComponent() {
@@ -176,11 +177,12 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 
 
 	renderData() {
+		console.log(this.feeDet, 'renderData');
 		this.conStatus = '';
 		this.concessionArray = [];
 		this.stoppageArray = [];
 		this.slabArray = [];
-		this.accountsForm.reset();
+		//this.accountsForm.reset();
 		this.transportFlag = false;
 		this.hostelFlag = false;
 		this.modeFlag = false;
@@ -220,7 +222,7 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 			if (this.feeDet.accd_is_hostel === 'Y') {
 				this.hostelFlag = true;
-				if(this.feeDet.hostel_details) {
+				if (this.feeDet.hostel_details) {
 					this.accountsForm.patchValue({
 						hs_building: this.feeDet.hostel_details.hs_building,
 						hs_room: this.feeDet.hostel_details.hs_room,
@@ -505,8 +507,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if (this.hostelFlag) {
 			if (this.accountsForm.value.accd_hostel_fs_id && this.accountsForm.value.accd_hostel_fs_id !== '0' &&
 				this.accountsForm.value.accd_hostel_from && this.accountsForm.value.accd_hostel_from !== '0' &&
-				this.accountsForm.value.hs_building && 
-				this.accountsForm.value.hs_room && 
+				this.accountsForm.value.hs_building &&
+				this.accountsForm.value.hs_room &&
 				this.accountsForm.value.hs_bed) {
 				if (this.accountsForm.value.accd_is_hostel_terminate === 'Y' && !this.accountsForm.value.accd_hostel_to) {
 					this.validateFlag = false;
@@ -594,12 +596,21 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				hs_room: this.accountsForm.value.hs_room,
 				hs_bed: this.accountsForm.value.hs_bed
 			};
-			this.feeService.updateFeeAccount(accountJSON).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					this.additionalFeeComponent();
-					this.renderData();
-				}
-			});
+			if (this.accountsForm.value.accd_id) {
+				this.sisService.updateFeeAccount(accountJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.additionalFeeComponent();
+						this.renderData();
+					}
+				});
+			} else {
+				this.feeService.insertFeeAccount(accountJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.additionalFeeComponent();
+						this.renderData();
+					}
+				});
+			}
 		}
 	}
 	isExist(mod_id) {

@@ -56,6 +56,15 @@ export class ReportsComponent implements OnInit {
       report_main_image_class: '',
       report_middle_class: 'inline-flex',
       report_check_icon_class: ''
+    },
+    {
+      report_id: '6',
+      report_name: 'Store Assign Report',
+      report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
+      main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
+      report_main_image_class: '',
+      report_middle_class: 'inline-flex',
+      report_check_icon_class: ''
     }
   ];
   reportType: string;
@@ -151,6 +160,9 @@ export class ReportsComponent implements OnInit {
     }
     if (actionT === '5') {
       return this.CommonAPIService.isExistUserAccessMenu('597');
+    }
+    if (actionT === '6') {
+      return this.CommonAPIService.isExistUserAccessMenu('648');
     }
   }
 }
