@@ -791,7 +791,8 @@
                                         <table class="custom-table table-100" style="margin-bottom: 15px">
                                             <thead>
                                                 <ng-template [ngIf]="data.ect_exam_type == 2">
-                                                    <th width="80%" class="custom-th text-left">
+                                                <tr class="custom-tr">
+                                                    <th [attr.colspan]="2" width="80%" class="custom-th text-left">
                                                         &nbsp;Co-Scholastic Area {{sub_category}}
                                                         <span *ngIf="GradeSetPoint.length > 0"
                                                             class="coscholastic-grade">
@@ -806,6 +807,7 @@
                                                         </span>
                                                     </th>
                                                     <th width="20%" class="custom-th text-center">Grade</th>
+                                                </tr>
                                                 </ng-template>
                                                 <ng-template [ngIf]="!(data.ect_exam_type == 2)">
                                                     <tr class="custom-tr">
@@ -832,15 +834,41 @@
                                                 <ng-template [ngIf]="data.ect_exam_type == 2">
                                                     <ng-container *ngFor="let psubject of eachterm.sub_mark">
                                                         <ng-container *ngIf="psubject.sub_category == sub_category">
-                                                            <ng-container *ngIf="psubject.sub_parent_id == 0">
-                                                                <tr>
-                                                                    <td class="custom-td text-left padding-left-8px">
+                                                            <ng-template [ngIf]="psubject.childSub.length == 0"
+                                                                [ngIfElse]="childdiv2">
+                                                                <tr class="custom-tr">
+                                                                    <td class="custom-td text-left padding-left-8px"
+                                                                        [attr.colspan]="2">
                                                                         {{psubject.sub_name | titlecase}}</td>
                                                                     <td class="custom-td">
                                                                         {{psubject.sub_grade_value}}
                                                                     </td>
                                                                 </tr>
-                                                            </ng-container>
+                                                            </ng-template>
+                                                            <ng-template #childdiv2>
+                                                                <tr class="custom-tr">
+                                                                    <td class="custom-td text-left padding-left-8px"
+                                                                        [attr.rowspan]="psubject.childSub_count">
+                                                                        {{psubject.sub_name}}</td>
+                                                                    <td class="custom-td text-left padding-left-8px">
+                                                                        {{psubject.childSub[0].sub_name}}</td>
+                                                                    <td class="custom-td">
+                                                                        {{psubject.childSub[0].sub_grade_value}}
+                                                                    </td>
+                                                                </tr>
+                                                                <ng-container
+                                                                    *ngFor="let child of psubject.childSub; let i=index">
+                                                                    <tr class="custom-tr" *ngIf="i != 0">
+                                                                        <td
+                                                                            class="custom-td text-left padding-left-8px">
+                                                                            {{child.sub_name}}
+                                                                        </td>
+                                                                        <td class="custom-td">
+                                                                            {{child.sub_grade_value}}
+                                                                        </td>
+                                                                    </tr>
+                                                                </ng-container>
+                                                            </ng-template>
                                                         </ng-container>
                                                     </ng-container>
                                                 </ng-template>
@@ -1270,7 +1298,7 @@
                                 <thead>
                                     <ng-template [ngIf]="data.ect_exam_type == 2">
                                         <tr>
-                                            <th width="60%" class="custom-th text-left">
+                                            <th [attr.colspan]="2" width="60%" class="custom-th text-left">
                                                 &nbsp;Co-Scholastic Area {{sub_category}}
                                                 <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
                                                     (
@@ -1292,9 +1320,9 @@
                                     <ng-template [ngIf]="data.ect_exam_type == 2">
                                         <ng-container *ngFor="let tempSubject of printData.co_subjectArr">
                                             <ng-container *ngIf="tempSubject.eac_category == sub_category">
-                                                <ng-container *ngIf="tempSubject.sub_parent_id == 0">
+                                                <ng-container *ngIf="tempSubject.childSub.length == 0">
                                                     <tr>
-                                                        <td class="custom-td text-left padding-left-8px">
+                                                        <td [attr.colspan]="2" class="custom-td text-left padding-left-8px">
                                                             {{tempSubject.sub_name | titlecase}}</td>
                                                         <ng-container *ngFor="let eachterm of printData.co_printData">
                                                             <ng-container *ngFor="let psubject of eachterm.sub_mark">
@@ -1307,6 +1335,48 @@
                                                             </ng-container>
                                                         </ng-container>
                                                     </tr>
+                                                </ng-container>
+                                                <ng-container *ngIf="tempSubject.childSub.length > 0">
+                                                    <tr class="custom-tr">
+                                                        <td class="custom-td text-left padding-left-8px"
+                                                            [attr.rowspan]="tempSubject.childSub.length">
+                                                            {{tempSubject.sub_name}}</td>
+                                                        <td class="custom-td text-left padding-left-8px">
+                                                            {{tempSubject.childSub[0].sub_name}}</td>
+                                                        <ng-container *ngFor="let eachterm of printData.co_printData">
+                                                            <ng-container *ngFor="let psubject of eachterm.sub_mark">
+                                                                <ng-container
+                                                                    *ngIf="tempSubject.sub_id == psubject.sub_id">
+                                                                    <td class="custom-td">
+                                                                        {{psubject.childSub[0].sub_grade_value}}
+                                                                    </td>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </tr>
+                                                    <ng-container
+                                                        *ngFor="let tempsubsubject of tempSubject.childSub; let i=index">
+                                                        <tr class="custom-tr" *ngIf="i != 0">
+                                                            <td
+                                                                class="custom-td text-left padding-left-8px">
+                                                                {{tempsubsubject.sub_name}}
+                                                            </td>
+                                                            <ng-container *ngFor="let eachterm of printData.co_printData">
+                                                                <ng-container *ngFor="let psubject of eachterm.sub_mark">
+                                                                    <ng-container
+                                                                        *ngIf="tempSubject.sub_id == psubject.sub_id">
+                                                                        <ng-container *ngFor="let cvalue of psubject.childSub">
+                                                                            <ng-container *ngIf="cvalue.sub_id == tempsubsubject.sub_id">
+                                                                                <td class="custom-td">
+                                                                                    {{cvalue.sub_grade_value}}
+                                                                                </td>
+                                                                            </ng-container>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </tr>
+                                                    </ng-container>
                                                 </ng-container>
                                             </ng-container>
                                         </ng-container>
