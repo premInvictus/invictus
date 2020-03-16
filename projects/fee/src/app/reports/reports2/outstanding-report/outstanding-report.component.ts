@@ -375,7 +375,7 @@ export class OutstandingReportComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true
 				};
-				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -650,7 +650,7 @@ export class OutstandingReportComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true
 				};
-				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -1101,7 +1101,7 @@ export class OutstandingReportComponent implements OnInit {
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					}];
-				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -1340,7 +1340,7 @@ export class OutstandingReportComponent implements OnInit {
 							collapsed: false,
 						},
 					}];
-				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -1546,7 +1546,7 @@ export class OutstandingReportComponent implements OnInit {
 							collapsed: false,
 						},
 					}];
-				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -1627,7 +1627,7 @@ export class OutstandingReportComponent implements OnInit {
 				if (!(this.reportFilterForm.value.month_id)) {
 					this.common.showSuccessErrorMessage('Please Choose a Month', 'error');
 				} else {
-					this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+					this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 						if (result && result.status === 'ok') {
 							this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 							repoArray = result.data.reportData;

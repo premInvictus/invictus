@@ -10,7 +10,7 @@ import {
 	FileType
 } from 'angular-slickgrid';
 import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver'; 
+import { saveAs } from 'file-saver';
 import * as Excel from 'exceljs/dist/exceljs';
 import { TranslateService } from '@ngx-translate/core';
 import { FeeService, CommonAPIService, SisService } from '../../../_services';
@@ -377,6 +377,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				formatter: this.checkDateFormatter,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
+				type: FieldType.dateIso,
 				grouping: {
 					getter: 'inv_invoice_date',
 					formatter: (g) => {
@@ -443,8 +444,10 @@ export class FeeLedgerReportComponent implements OnInit {
 				field: 'inv_due_date', sortable: true, width: 4,
 				filterable: true,
 				formatter: this.checkDateFormatter,
-				filterSearchType: FieldType.dateIso,
+				filterSearchType: FieldType.dateUsShort,
 				filter: { model: Filters.compoundDate },
+				type: FieldType.dateIso,
+				exportWithFormatter: true,
 				grouping: {
 					getter: 'inv_due_date',
 					formatter: (g) => {
@@ -518,6 +521,7 @@ export class FeeLedgerReportComponent implements OnInit {
 				cssClass: 'amount-report-fee',
 				filterSearchType: FieldType.number,
 				filter: { model: Filters.compoundInputNumber },
+				type: FieldType.dateIso,
 				sortable: true,
 				filterable: true,
 				width: 1,
@@ -611,63 +615,126 @@ export class FeeLedgerReportComponent implements OnInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				let index = 0;
 				let k = 0;
+				let balance = 0;
 				for (const item of repoArray) {
 					let j = 0;
+					var dupInvoiceArr = [];
+					
 					if (item.stu_ledger_arr && item.stu_ledger_arr.length > 0) {
 						for (const stu_arr of item.stu_ledger_arr) {
 							const obj: any = {};
-							obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j + k +
-								stu_arr['rpt_receipt_date'] + stu_arr['inv_due_date'];
-							obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_name'];
-							obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
-							if (repoArray[Number(index)]['sec_id'] !== '0') {
-								obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' + repoArray[Number(index)]['sec_name'];
+							var duplicateInvoiceCheck:any = this.checkDuplicateArr(stu_arr['flgr_invoice_receipt_no'], item.stu_ledger_arr);
+							if (dupInvoiceArr.indexOf(stu_arr['flgr_invoice_receipt_no']) < 0) {
+								balance = stu_arr['flgr_balance'] ;
+								dupInvoiceArr.push(stu_arr['flgr_invoice_receipt_no']);
+								obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j + k +
+									stu_arr['rpt_receipt_date'] + stu_arr['inv_due_date'];
+								obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_name'];
+								obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+								if (repoArray[Number(index)]['sec_id'] !== '0') {
+									obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' + repoArray[Number(index)]['sec_name'];
+								} else {
+									obj['class_name'] = repoArray[Number(index)]['class_name'];
+								}
+								obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
+								obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'] && stu_arr['flgr_invoice_receipt_no'] !== '0'
+									? stu_arr['flgr_invoice_receipt_no'] : '';
+								obj['flgr_created_date'] = stu_arr['flgr_created_date'];
+								obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
+								obj['inv_due_date'] = stu_arr['inv_due_date'];
+								obj['flgr_adj_amount'] = stu_arr['flgr_adj_amount'] ? Number(stu_arr['flgr_adj_amount']) : 0;
+								obj['inv_fine_amount'] = stu_arr['inv_fine_amount'] ? Number(stu_arr['inv_fine_amount']) : 0;
+								obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
+								obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
+								obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
+								obj['remarks'] = stu_arr['remarks'];
+								if (repoArray[Number(index)]['sec_id'] !== '0') {
+									obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+										',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+										(repoArray[Number(index)]['class_name'] + '-' +
+											repoArray[Number(index)]['sec_name']);
+								} else {
+									obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+										',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+										repoArray[Number(index)]['class_name'];
+								}
+								obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
+									stu_arr['flgr_particulars'] : '-';
+								obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
+									stu_arr['flgr_inv_id'] : '-';
+								obj['flgr_amount'] = stu_arr['flgr_amount'] ? Number(stu_arr['flgr_amount']) : 0;
+								obj['flgr_concession'] = stu_arr['flgr_concession'] ?
+									Number(stu_arr['flgr_concession']) : 0;
+								obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
+									Number(stu_arr['flgr_receipt']) : 0;
+								obj['receipt_id'] = stu_arr['rpt_id'];
+								obj['flgr_balance'] = duplicateInvoiceCheck ? 0 : (stu_arr['flgr_balance'] ?
+									Number(stu_arr['flgr_balance']) : 0);
+								this.dataset.push(obj);
+								j++;
 							} else {
-								obj['class_name'] = repoArray[Number(index)]['class_name'];
+									obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j + k +
+										stu_arr['rpt_receipt_date'] + stu_arr['inv_due_date'];
+									obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_name'];
+									obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+									if (repoArray[Number(index)]['sec_id'] !== '0') {
+										obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' + repoArray[Number(index)]['sec_name'];
+									} else {
+										obj['class_name'] = repoArray[Number(index)]['class_name'];
+									}
+									obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
+									obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'] && stu_arr['flgr_invoice_receipt_no'] !== '0'
+										? stu_arr['flgr_invoice_receipt_no'] : '';
+									obj['flgr_created_date'] = stu_arr['flgr_created_date'];
+									obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
+									obj['inv_due_date'] = stu_arr['inv_due_date'];
+									obj['flgr_adj_amount'] = 0;
+									obj['inv_fine_amount'] = 0;
+									obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
+									obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
+									obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
+									obj['remarks'] = stu_arr['remarks'];
+									if (repoArray[Number(index)]['sec_id'] !== '0') {
+										obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+											',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+											(repoArray[Number(index)]['class_name'] + '-' +
+												repoArray[Number(index)]['sec_name']);
+									} else {
+										obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
+											',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
+											repoArray[Number(index)]['class_name'];
+									}
+									obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
+										stu_arr['flgr_particulars'] : '-';
+									obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
+										stu_arr['flgr_inv_id'] : '-';
+									obj['flgr_amount'] = 0;
+									obj['flgr_concession'] = 0;
+									obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
+										Number(stu_arr['flgr_receipt']) : 0;
+									obj['receipt_id'] = stu_arr['rpt_id'];
+									
+
+									if (duplicateInvoiceCheck.length > 0 && stu_arr['flgr_inv_id'] > 0) {
+										balance = balance - (stu_arr['flgr_receipt'] ?
+										Number(stu_arr['flgr_receipt']) : 0);
+
+										obj['flgr_balance'] = balance;
+										this.dataset[this.dataset.length - 1]['flgr_balance'] = 0;
+									} else {
+										obj['flgr_balance'] = (stu_arr['flgr_balance'] ? Number(stu_arr['flgr_balance']) : 0);
+									}
+									
+									
+
+									this.dataset.push(obj);
+									j++;
 							}
-							obj['inv_invoice_date'] = stu_arr['inv_invoice_date'];
-							obj['flgr_invoice_receipt_no'] = stu_arr['flgr_invoice_receipt_no'] && stu_arr['flgr_invoice_receipt_no'] !== '0'
-								? stu_arr['flgr_invoice_receipt_no'] : '';
-							obj['flgr_created_date'] = stu_arr['flgr_created_date'];
-							obj['flgr_fp_months'] = stu_arr['flgr_fp_months'];
-							obj['inv_due_date'] = stu_arr['inv_due_date'];
-							obj['flgr_adj_amount'] = stu_arr['flgr_adj_amount'] ? Number(stu_arr['flgr_adj_amount']) : 0;
-							obj['inv_fine_amount'] = stu_arr['inv_fine_amount'] ? Number(stu_arr['inv_fine_amount']) : 0;
-							obj['rpt_receipt_date'] = stu_arr['rpt_receipt_date'];
-							obj['rpt_receipt_no'] = stu_arr['rpt_receipt_no'];
-							obj['pay_name'] = stu_arr['tb_name'] !== '' ? stu_arr['tb_name'] : stu_arr['pay_name'];
-							obj['remarks'] = stu_arr['remarks'];
-							if (repoArray[Number(index)]['sec_id'] !== '0') {
-								obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
-									',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
-									(repoArray[Number(index)]['class_name'] + '-' +
-										repoArray[Number(index)]['sec_name']);
-							} else {
-								obj['stu_class_name'] = repoArray[Number(index)]['au_admission_name'] +
-									',' + new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']) + ', ' +
-									repoArray[Number(index)]['class_name'];
-							}
-							obj['flgr_particulars'] = stu_arr['flgr_particulars'] ?
-								stu_arr['flgr_particulars'] : '-';
-							obj['flgr_inv_id'] = stu_arr['flgr_inv_id'] ?
-								stu_arr['flgr_inv_id'] : '-';
-							obj['flgr_amount'] = stu_arr['flgr_amount'] ?
-								Number(stu_arr['flgr_amount']) : 0;
-							obj['flgr_concession'] = stu_arr['flgr_concession'] ?
-								Number(stu_arr['flgr_concession']) : 0;
-							obj['flgr_receipt'] = stu_arr['flgr_receipt'] ?
-								Number(stu_arr['flgr_receipt']) : 0;
-							obj['receipt_id'] = stu_arr['rpt_id'];
-							obj['flgr_balance'] = stu_arr['flgr_balance'] ?
-								Number(stu_arr['flgr_balance']) : 0;
-							this.dataset.push(obj);
-							j++;
 						}
 					}
 					index++;
 					k++;
 				}
-				console.log('this.dataset',this.dataset)
 				this.totalRow = {};
 				const obj3: any = {};
 				obj3['id'] = 'footer';
@@ -718,6 +785,18 @@ export class FeeLedgerReportComponent implements OnInit {
 			}
 		});
 	}
+
+	checkDuplicateArr(invoiceNo, larr) {
+		var duplicateFlag = false;
+		var dCount = [];
+		for (var i = 0; i < larr.length; i++) {
+			if (larr[i]['flgr_invoice_receipt_no'] === invoiceNo) {
+				dCount.push(invoiceNo);
+			}
+		}
+		return dCount.length > 1 ? dCount : false;
+	}
+
 	clearGroupsAndSelects() {
 		this.selectedGroupingFields.forEach((g, i) => this.selectedGroupingFields[i] = '');
 		this.clearGrouping();

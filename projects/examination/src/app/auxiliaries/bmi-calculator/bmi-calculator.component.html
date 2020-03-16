@@ -67,13 +67,13 @@
                   <td class="custom-td text-center font-size-14">
                     <form [formGroup]="formGroupArray[i].formGroup">
                       <input matInput type="number" [formControlName]="'height' + i"
-                        placeholder="Please Enter Height (in cm)">
+                        placeholder="Please Enter Height (in cm)" [readonly]="!checkEditableForStudent(item)">
                     </form>
                   </td>
                   <td class="custom-td text-center font-size-14">
                     <form [formGroup]="formGroupArray[i].formGroup">
                       <input matInput type="number" [formControlName]="'weight' + i"
-                        placeholder="Please Enter Weight (in kg)">
+                        placeholder="Please Enter Weight (in kg)" [readonly]="!checkEditableForStudent(item)">
                     </form>
                   </td>
                 </tr>
@@ -85,7 +85,7 @@
         <br>
         <div class="col-12 text-center">
           <br>
-          <button mat-button class="btn-success-green btn-spacer" [disabled]="disableApiCall"
+          <button mat-button class="btn-success-green btn-spacer" [disabled]="disableApiCall" *ngIf="isAnyoneEditabelStu()"
             (click)="saveBMI();$event.stopPropagation()">Submit</button>
         </div>
       </div>
