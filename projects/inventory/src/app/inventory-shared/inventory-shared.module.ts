@@ -44,6 +44,7 @@ import { NgxBarcodeModule } from 'ngx-barcode';
 import { InventoryDetailsComponent } from './inventory-details/inventory-details.component';
 import { MessageModalComponent } from '../store-master/message-modal/message-modal.component';
 import { ReceiptModalComponent } from './receipt-modal/receipt-modal.component';
+import { BillDetailsModalComponent } from './bill-details-modal/bill-details-modal.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -123,7 +124,8 @@ export const MY_FORMATS = {
 		AddLocationDialog,
 		InventoryDetailsComponent,
 		MessageModalComponent,
-		ReceiptModalComponent
+		ReceiptModalComponent,
+		BillDetailsModalComponent
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -138,7 +140,8 @@ export const MY_FORMATS = {
 		LocationSearchAndAddComponent,
 		AddLocationDialog,
 		MessageModalComponent,
-		ReceiptModalComponent
+		ReceiptModalComponent,
+		BillDetailsModalComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -188,7 +191,8 @@ export const MY_FORMATS = {
 		AddLocationDialog,
 		InventoryDetailsComponent,
 		MessageModalComponent,
-		ReceiptModalComponent
+		ReceiptModalComponent,
+		BillDetailsModalComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
