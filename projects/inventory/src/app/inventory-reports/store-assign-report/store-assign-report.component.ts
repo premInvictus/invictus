@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CommonAPIService, InventoryService } from '../../_services';
-import { DatePipe, TitleCasePipe } from '@angular/common';
-import { CapitalizePipe } from '../../_pipes';
+import { DatePipe, DecimalPipe, TitleCasePipe } from '@angular/common';
+import { CapitalizePipe, IndianCurrency } from 'src/app/_pipes';
 import { ErpCommonService } from 'src/app/_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { saveAs } from 'file-saver';
@@ -26,8 +26,9 @@ import {
   styleUrls: ['./store-assign-report.component.css']
 })
 export class StoreAssignReportComponent implements OnInit {
-  @ViewChild('receiptModal') receiptModal;
+  @ViewChild('billDetailsModal') billDetailsModal;
   @Input() userName: any = '';
+  assignListArray: any[] = [];
   notFormatedCellArray: any[] = [];
   pdfrowdata: any[] = [];
   levelHeading: any[] = [];
@@ -124,9 +125,17 @@ export class StoreAssignReportComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getReport();
+    this.allStoreIncharge();
     this.getSchool();
     this.getSession();
+    this.buildForm();
+  }
+  buildForm() {
+    this.reportFilterForm = this.fbuild.group({
+      'report_type': '',
+      'from_date': '',
+      'to_date': '',
+    });
   }
   getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -146,250 +155,281 @@ export class StoreAssignReportComponent implements OnInit {
           }
         });
   }
-  getReport() {
-    this.dataArr = [];
-    this.totalRow = {};
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.tableFlag = false;
-    this.nodataFlag = false;
-    this.gridOptions = {
-      enableDraggableGrouping: true,
-      createPreHeaderPanel: true,
-      showPreHeaderPanel: true,
-      enableHeaderMenu: true,
-      preHeaderPanelHeight: 40,
-      enableFiltering: true,
-      enableSorting: true,
-      enableColumnReorder: true,
-      createFooterRow: true,
-      showFooterRow: true,
-      footerRowHeight: 35,
-      enableExcelCopyBuffer: true,
-      fullWidthRows: true,
-      enableAutoTooltip: true,
-      enableCellNavigation: true,
-      headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',
-        iconSortAscCommand: 'fas fa-sort-up',
-        iconSortDescCommand: 'fas fa-sort-down',
-        title: 'Sort'
-      },
-      exportOptions: {
-        sanitizeDataExport: true,
-        exportWithFormatter: true
-      },
-      gridMenu: {
-        customItems: [{
-          title: 'pdf',
-          titleKey: 'Export as PDF',
-          command: 'exportAsPDF',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'excel',
-          titleKey: 'Export Excel',
-          command: 'exportAsExcel',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'expand',
-          titleKey: 'Expand Groups',
-          command: 'expandGroup',
-          iconCssClass: 'fas fa-expand-arrows-alt'
-        },
-        {
-          title: 'collapse',
-          titleKey: 'Collapse Groups',
-          command: 'collapseGroup',
-          iconCssClass: 'fas fa-compress'
-        },
-        {
-          title: 'cleargroup',
-          titleKey: 'Clear Groups',
-          command: 'cleargroup',
-          iconCssClass: 'fas fa-eraser'
-        }
-        ],
-        onCommand: (e, args) => {
-          if (args.command === 'toggle-preheader') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsPDF') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportAsPDF(this.dataset);
-          }
-          if (args.command === 'expandGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.expandAllGroups();
-          }
-          if (args.command === 'collapseGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.collapseAllGroups();
-          }
-          if (args.command === 'cleargroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsExcel') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportToExcel(this.dataset);
-          }
-          if (args.command === 'export-csv') {
-            // this.exportToFile('csv');
-          }
-        },
-        onColumnsChanged: (e, args) => {
-          this.updateTotalRow(this.angularGrid.slickGrid);
-        },
-      },
-      draggableGrouping: {
-        dropPlaceHolderText: 'Drop a column header here to group by the column',
-        // groupIconCssClass: 'fa fa-outdent',
-        deleteIconCssClass: 'fa fa-times',
-        onGroupChanged: (e, args) => {
-          this.groupColumns = [];
-          this.groupColumns = args.groupColumns;
-          this.onGroupChanged(args && args.groupColumns);
-          setTimeout(() => {
-            this.updateTotalRow(this.angularGrid.slickGrid);
-          }, 100);
-        },
-        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
-    };
-    let repoArray = [];
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.columnDefinitions = [
-      {
-        id: 'srno',
-        name: 'SNo.',
-        field: 'srno',
-        sortable: true,
-        width: 15,
-
-      },
-      {
-        id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        formatter: this.receiptFormatter
-      }
-      ,
-      {
-        id: 'receipt_date', name: 'Receipt Date', field: 'receipt_date', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40,
-        grouping: {
-          getter: 'receipt_date',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-      }
-      ,
-      {
-        id: 'created_by', name: 'Created By', field: 'created_by', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-      ,
-      {
-        id: 'vendor_id', name: 'Vendo ID', field: 'vendor_id', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 25,
-        grouping: {
-          getter: 'vendor_id',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-      }
-      ,
-      {
-        id: 'vendor_name', name: 'Vendor Name', field: 'vendor_name', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        grouping: {
-          getter: 'vendor_name',
-          formatter: (g) => {
-            return `${g.value}  <span style="color:green">(${g.count})</span>`;
-          },
-          aggregators: this.aggregatearray,
-          aggregateCollapsed: true,
-          collapsed: false
-        },
-      }
-      ,
-      {
-        id: 'vendor_category', name: 'Vendor Category', field: 'vendor_category', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-      }
-      ,
-      {
-        id: 'contact', name: 'Vendor Contact', field: 'contact', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string,
-        width: 40
-      }
-      ,
-      {
-        id: 'email', name: 'Vendor Email', field: 'email', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string
-      }
-    ];
-    this.inventory.getOrderMaster({ 'pm_type': "GR" }).subscribe((result: any) => {
+  allStoreIncharge() {
+    this.inventory.allStoreIncharge({}).subscribe((result: any) => {
       if (result) {
-        repoArray = result;
-        let ind = 0;
-        for (let item of repoArray) {
-          let obj: any = {};
-          obj['id'] = item.pm_id + 1;
-          obj['srno'] = ind + 1;
-          obj['receipt_no'] = item.pm_id;
-          obj['receipt_date'] = item.pm_created ? this.CommonService.dateConvertion(item.pm_created.created_date, 'dd-MMM-y') : '-';
-          obj['created_by'] = item.pm_created ? new CapitalizePipe().transform(item.pm_created.created_by_name) : '-';
-          obj['vendor_id'] = item.pm_vendor ? item.pm_vendor.ven_id : '-';
-          obj['vendor_name'] = item.pm_vendor ? new CapitalizePipe().transform(item.pm_vendor.ven_name) : '-';
-          obj['vendor_category'] = item.pm_vendor ? item.pm_vendor.ven_category : '-';
-          obj['contact'] = item.pm_vendor ? item.pm_vendor.ven_contact : '-';
-          obj['email'] = item.pm_vendor ? item.pm_vendor.ven_email : '-';
-          this.dataset.push(obj);
-          ind++;
-        }
-        if (this.dataset.length <= 5) {
-          this.gridHeight = 350;
-        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-          this.gridHeight = 450;
-        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-          this.gridHeight = 550;
-        } else if (this.dataset.length > 20) {
-          this.gridHeight = 750;
-        }
-        this.tableFlag = true;
-        this.nodataFlag = false;
-      } else {
-        this.nodataFlag = true;
-        this.tableFlag = true;
+        this.assignListArray = result;
       }
     });
+  }
+  resetValues() {
+    this.reportFilterForm.patchValue({
+      'report_type': '',
+      'from_date': '',
+      'to_date': '',
+    });
+    this.dataset = [];
+    this.tableFlag = false;
+  }
+  changeReportType() {
+    if (this.reportFilterForm.valid) {
+      this.dataArr = [];
+      this.totalRow = {};
+      this.columnDefinitions = [];
+      this.dataset = [];
+      this.tableFlag = false;
+      this.nodataFlag = false;
+      this.gridOptions = {
+        enableDraggableGrouping: true,
+        createPreHeaderPanel: true,
+        showPreHeaderPanel: true,
+        enableHeaderMenu: true,
+        preHeaderPanelHeight: 40,
+        enableFiltering: true,
+        enableSorting: true,
+        enableColumnReorder: true,
+        createFooterRow: true,
+        showFooterRow: true,
+        footerRowHeight: 35,
+        enableExcelCopyBuffer: true,
+        fullWidthRows: true,
+        enableAutoTooltip: true,
+        enableCellNavigation: true,
+        headerMenu: {
+          iconColumnHideCommand: 'fas fa-times',
+          iconSortAscCommand: 'fas fa-sort-up',
+          iconSortDescCommand: 'fas fa-sort-down',
+          title: 'Sort'
+        },
+        exportOptions: {
+          sanitizeDataExport: true,
+          exportWithFormatter: true
+        },
+        gridMenu: {
+          customItems: [{
+            title: 'pdf',
+            titleKey: 'Export as PDF',
+            command: 'exportAsPDF',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'excel',
+            titleKey: 'Export Excel',
+            command: 'exportAsExcel',
+            iconCssClass: 'fas fa-download'
+          },
+          {
+            title: 'expand',
+            titleKey: 'Expand Groups',
+            command: 'expandGroup',
+            iconCssClass: 'fas fa-expand-arrows-alt'
+          },
+          {
+            title: 'collapse',
+            titleKey: 'Collapse Groups',
+            command: 'collapseGroup',
+            iconCssClass: 'fas fa-compress'
+          },
+          {
+            title: 'cleargroup',
+            titleKey: 'Clear Groups',
+            command: 'cleargroup',
+            iconCssClass: 'fas fa-eraser'
+          }
+          ],
+          onCommand: (e, args) => {
+            if (args.command === 'toggle-preheader') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.clearGrouping();
+            }
+            if (args.command === 'exportAsPDF') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
 
+              this.exportAsPDF(this.dataset);
+            }
+            if (args.command === 'expandGroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.expandAllGroups();
+            }
+            if (args.command === 'collapseGroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.collapseAllGroups();
+            }
+            if (args.command === 'cleargroup') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+              this.clearGrouping();
+            }
+            if (args.command === 'exportAsExcel') {
+              // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+
+              this.exportToExcel(this.dataset);
+            }
+            if (args.command === 'export-csv') {
+              // this.exportToFile('csv');
+            }
+          },
+          onColumnsChanged: (e, args) => {
+            this.updateTotalRow(this.angularGrid.slickGrid);
+          },
+        },
+        draggableGrouping: {
+          dropPlaceHolderText: 'Drop a column header here to group by the column',
+          // groupIconCssClass: 'fa fa-outdent',
+          deleteIconCssClass: 'fa fa-times',
+          onGroupChanged: (e, args) => {
+            this.groupColumns = [];
+            this.groupColumns = args.groupColumns;
+            this.onGroupChanged(args && args.groupColumns);
+            setTimeout(() => {
+              this.updateTotalRow(this.angularGrid.slickGrid);
+            }, 100);
+          },
+          onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+        }
+      };
+      let repoArray = [];
+      this.columnDefinitions = [];
+      this.dataset = [];
+      this.columnDefinitions = [
+        {
+          id: 'srno',
+          name: 'SNo.',
+          field: 'srno',
+          sortable: true,
+          width: 15,
+
+        },
+        {
+          id: 'receipt_date', name: 'Receipt Date', field: 'receipt_date', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 40,
+          grouping: {
+            getter: 'receipt_date',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        }, {
+          id: 'receipt_no', name: 'Receipt No.', field: 'receipt_no', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+          formatter: this.receiptFormatter
+        }
+        ,
+        {
+          id: 'emp_id', name: 'Emp/Student ID', field: 'emp_id', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 25,
+          grouping: {
+            getter: 'emp_id',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false
+          },
+        }
+        ,
+        {
+          id: 'name', name: 'Name', field: 'name', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          grouping: {
+            getter: 'name',
+            formatter: (g) => {
+              return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            },
+            aggregators: this.aggregatearray,
+            aggregateCollapsed: true,
+            collapsed: false,
+          },
+        }
+        ,
+        {
+          id: 'contact', name: 'Contact No.', field: 'contact', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+        }
+        ,
+        {
+          id: 'bill_total', name: 'Amount', field: 'bill_total', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string,
+          width: 40,
+          groupTotalsFormatter: this.sumTotalsFormatter,
+          formatter: this.checkTotalFormatter,
+        }
+      ];
+      let inputJson: any = {};
+      inputJson = {
+        "created_by": this.reportFilterForm.value.report_type.toString(),
+        "from_date": new DatePipe('en-in').transform(this.reportFilterForm.value.from_date, 'MMMM dd yyyy, h:mm:ss'),
+        "to_date": new DatePipe('en-in').transform(this.reportFilterForm.value.to_date, 'MMMM dd yyyy, h:mm:ss')
+      }
+      this.inventory.allStoreBill(inputJson).subscribe((result: any) => {
+        if (result) {
+          repoArray = result;
+          let ind = 0;
+          for (let item of repoArray) {
+            let obj: any = {};
+            obj['id'] = ind;
+            obj['srno'] = ind + 1;
+            obj['receipt_no'] = item.bill_id;
+            obj['receipt_date'] = item.created_date ? this.CommonService.dateConvertion(item.created_date, 'dd-MMM-y') : '-';
+            if (item.buyer_details.au_role_id === 3) {
+              obj['emp_id'] = 'Emp - ' + item.buyer_details.emp_id;
+              obj['name'] = item.buyer_details.au_full_name;
+              obj['contact'] = item.buyer_details.au_mobile;
+            }
+            if (item.buyer_details.au_role_id === 4) {
+              obj['emp_id'] = 'Stu - ' + item.buyer_details.au_login_id;
+              obj['name'] = item.buyer_details.au_username;
+              obj['contact'] = item.buyer_details.au_mobile;
+            }
+            obj['bill_total'] = item.bill_total;
+            obj['au_role_id'] = item.buyer_details.au_role_id;
+            obj['bill_details'] = item.bill_details;
+            this.dataset.push(obj);
+            ind++;
+          }
+          this.totalRow = {};
+          const obj3: any = {};
+          obj3['id'] = 'footer';
+          obj3['srno'] = '';
+          obj3['receipt_no'] = 'Grand Total';
+          obj3['receipt_date'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
+          obj3['contact'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(this.dataset.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
+          this.totalRow = obj3;
+          this.aggregatearray.push(new Aggregators.Sum('bill_total'));
+          if (this.dataset.length <= 5) {
+            this.gridHeight = 350;
+          } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+            this.gridHeight = 450;
+          } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+            this.gridHeight = 550;
+          } else if (this.dataset.length > 20) {
+            this.gridHeight = 750;
+          }
+          this.tableFlag = true;
+          this.nodataFlag = false;
+        } else {
+          this.nodataFlag = true;
+          this.tableFlag = true;
+        }
+      });
+    } else {
+      this.CommonService.showSuccessErrorMessage('Please fill all required fields', 'error');
+    }
 
   }
   clearGroupsAndSelects() {
@@ -426,17 +466,17 @@ export class StoreAssignReportComponent implements OnInit {
     this.angularGrid = angularGrid;
     this.gridObj = angularGrid.slickGrid; // grid object
     this.dataviewObj = angularGrid.dataView;
-    //this.updateTotalRow(angularGrid.slickGrid);
+    this.updateTotalRow(angularGrid.slickGrid);
   }
   updateTotalRow(grid: any) {
-    // if (this.totalRow) {
-    //   let columnIdx = grid.getColumns().length;
-    //   while (columnIdx--) {
-    //     const columnId = grid.getColumns()[columnIdx].id;
-    //     const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-    //     columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
-    //   }
-    // }
+    if (this.totalRow) {
+      let columnIdx = grid.getColumns().length;
+      while (columnIdx--) {
+        const columnId = grid.getColumns()[columnIdx].id;
+        const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
+        columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+      }
+    }
   }
   receiptFormatter(row, cell, value, columnDef, dataContext) {
     return '<a style="text-decoration:underline !important;cursor:pointer">' + value + '</a>';
@@ -445,13 +485,19 @@ export class StoreAssignReportComponent implements OnInit {
     if (args.cell === args.grid.getColumnIndex('receipt_no')) {
       const item: any = args.grid.getDataItem(args.row);
       if (item['receipt_no']) {
-        this.actionList(Number(item['receipt_no']), false);
+        this.actionList(item, false);
       }
     }
   }
-  actionList(pm_id, action) {
-    this.submitParam.pm_id = pm_id;
-    this.receiptModal.openModal(this.submitParam);
+  actionList(item, action) {
+    this.billDetailsModal.openModal(item);
+  }
+  sumTotalsFormatter(totals, columnDef) {
+    const val = totals.sum && totals.sum[columnDef.field];
+    if (val != null) {
+      return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+    }
+    return '';
   }
   exportAsPDF(json: any[]) {
     const headerData: any[] = [];
@@ -463,7 +509,7 @@ export class StoreAssignReportComponent implements OnInit {
     this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
     let reportType: any = '';
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('Procurement Report: ') + this.sessionName;
+    reportType = new TitleCasePipe().transform('Store Assign Report: ') + this.sessionName;
     const doc = new jsPDF('p', 'mm', 'a0');
     doc.autoTable({
       // tslint:disable-next-line:max-line-length
@@ -566,12 +612,12 @@ export class StoreAssignReportComponent implements OnInit {
           doc.setFillColor('#c8d6e5');
         }
         // grand total
-        // if (data.row.index === rows.length - 1) {
-        //   doc.setFontStyle('bold');
-        //   doc.setFontSize('18');
-        //   doc.setTextColor('#ffffff');
-        //   doc.setFillColor(67, 160, 71);
-        // }
+        if (data.row.index === rows.length - 1) {
+          doc.setFontStyle('bold');
+          doc.setFontSize('18');
+          doc.setTextColor('#ffffff');
+          doc.setFillColor(67, 160, 71);
+        }
       },
       headStyles: {
         fontStyle: 'bold',
@@ -690,14 +736,12 @@ export class StoreAssignReportComponent implements OnInit {
 
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -731,14 +775,12 @@ export class StoreAssignReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           for (const col of this.exportColumnDefinitions) {
             Object.keys(obj3).forEach((key: any) => {
               if (col.id === key) {
@@ -782,9 +824,9 @@ export class StoreAssignReportComponent implements OnInit {
       columValue.push(item.name);
     }
     this.sessionName = this.getSessionName(this.session.ses_id);
-    reportType = new TitleCasePipe().transform('procurement_report') + this.sessionName;
+    reportType = new TitleCasePipe().transform('store_assign_report') + this.sessionName;
     let reportType2: any = '';
-    reportType2 = new TitleCasePipe().transform('procurement report: ') + this.sessionName;
+    reportType2 = new TitleCasePipe().transform('store assign report: ') + this.sessionName;
     const fileName = reportType + '.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -1004,14 +1046,12 @@ export class StoreAssignReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           // style row having total
@@ -1071,14 +1111,12 @@ export class StoreAssignReportComponent implements OnInit {
           const obj3: any = {};
           obj3['id'] = 'footer';
           obj3['srno'] = '';
-          obj3['receipt_no'] = '';
+          obj3['receipt_no'] = this.getLevelFooter(groupItem.level, groupItem);
           obj3['receipt_date'] = '';
-          obj3['created_by'] = '';
-          obj3['vendor_id'] = '';
-          obj3['vendor_name'] = '';
-          obj3['vendor_category'] = '';
+          obj3['emp_id'] = '';
+          obj3['name'] = '';
           obj3['contact'] = '';
-          obj3['email'] = '';
+          obj3['bill_total'] = new IndianCurrency().transform(groupItem.rows.map(t => t['bill_total']).reduce((acc, val) => Number(acc) + Number(val), 0));
           worksheet.addRow(obj3);
           this.notFormatedCellArray.push(worksheet._rows.length);
           if (groupItem.level === 0) {
@@ -1137,6 +1175,13 @@ export class StoreAssignReportComponent implements OnInit {
       return Number(data);
     } else {
       return data;
+    }
+  }
+  checkTotalFormatter(row, cell, value, columnDef, dataContext) {
+    if (value === 0) {
+      return 0;
+    } else {
+      return new IndianCurrency().transform(value);
     }
   }
 }
