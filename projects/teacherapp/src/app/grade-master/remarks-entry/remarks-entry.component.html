@@ -160,7 +160,7 @@
                                 <ng-container *ngFor="let item of paramform.value.ere_sub_exam_id;let i=index">
                                     <td class="custom-td text-center font-size-14 ">
                                         <form [formGroup]="formGroupArray[s].formGroup[i]">
-                                            <ng-template [ngIf]="checkEditable(item, '0')" [ngIfElse]="elseContaint">
+                                            <ng-template [ngIf]="checkEditable(item, '0') && checkEditableForStudent(stu)" [ngIfElse]="elseContaint">
                                                 <div class="row">
                                                     <div class="col-4">
                                                         <!-- <mat-form-field class="form-field" appearance="outline">
@@ -196,7 +196,7 @@
                             <ng-container *ngIf="formGroupArray2.length > 0">
                                 <td class="custom-td text-center font-size-14 ">
                                     <form [formGroup]="formGroupArray2[s].formGroup[0]">
-                                        <ng-template [ngIf]="checkExternalEdit('0')" [ngIfElse]="elseContaint">
+                                        <ng-template [ngIf]="checkExternalEdit('0') && checkEditableForStudent(stu)" [ngIfElse]="elseContaint">
                                             <div class="row">
                                                 <div class="col-4">
                                                     <!-- <mat-form-field class="form-field" appearance="outline">
@@ -232,14 +232,14 @@
                 <br>
                 <div class="row margin-top-25">
                     <div class="col-12 text-center" *ngIf="isAnyoneEditable('0') && submitFlag">
-                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0"
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray.length > 0 && isAnyoneEditabelStu()"
                             [disabled]="disableApiCall" (click)="saveForm()">Save</button>
-                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0"
+                        <button mat-button class="btn-success-green" *ngIf="formGroupArray2.length > 0 && isAnyoneEditabelStu()"
                             [disabled]="disableApiCall" (click)="saveForm2()">Save</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 "
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray.length > 0 && isAnyoneEditabelStu()"
                             [disabled]="disableApiCall" (click)="saveForm('1') ">Save &
                             Submit</button>
-                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0"
+                        <button mat-button class="btn-success-green btn-spacer" *ngIf="formGroupArray2.length > 0 && isAnyoneEditabelStu()"
                             [disabled]="disableApiCall" (click)="saveForm2('1') ">Save &
                             Submit</button>
                     </div>

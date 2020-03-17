@@ -477,6 +477,23 @@ export class MarksEntrySecondaryComponent implements OnInit {
   isExistUserAccessMenu(mod_id) {
     return this.commonAPIService.isExistUserAccessMenu(mod_id);
   }
+  checkEditableForStudent(stu) {
+		//console.log('stu---->',stu);
+		if(stu.is_editable === '1') {
+		  return true;
+		} else {
+		  return false;
+		}
+	}
+	isAnyoneEditabelStu() {
+		let anyoneeditable = false;
+		this.studentArray.forEach(element => {
+		  if(element.is_editable === '1') {
+			anyoneeditable = true;
+		  }
+		});
+		return anyoneeditable;
+	}
 
 }
 
