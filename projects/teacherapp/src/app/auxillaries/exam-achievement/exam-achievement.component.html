@@ -62,7 +62,7 @@
             <th mat-header-cell *matHeaderCellDef style="width:35%"> Achievement</th>
             <td mat-cell *matCellDef="let element">
               <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">               
-                  <input matInput placeholder="Enter Achievement" (change)="onTextChange($event)" type="text"
+                  <input matInput placeholder="Enter Achievement" (change)="onTextChange($event)" type="text" [readonly]="!checkEditableForStudent(element)"
                     value="{{element.au_achievement}}" required formControlName="a_achievement">
               </form>
             </td>
@@ -87,7 +87,7 @@
         </table>
         <div class="row margin-top-20" *ngIf="defaultFlag && submitFlag">
           <div class="col-12 text-center">
-            <button mat-raised-button class="btn-success-green"  [disabled]="disableApiCall" 
+            <button mat-raised-button class="btn-success-green"  [disabled]="disableApiCall" *ngIf="isAnyoneEditabelStu()"
             (click)="finalSubmit()">Submit</button>
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
           </div>

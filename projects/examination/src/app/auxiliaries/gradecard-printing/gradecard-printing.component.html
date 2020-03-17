@@ -74,6 +74,12 @@
                 (click)="openLockModal({}, '1')">Lock</button>
               <button mat-button class="btn-success-blue btn-spacer text-capitalize"
                 (click)="printGradecard()">Print</button>
+              <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+              (click)="openPrintSetupDialog()">Print Setting</button>
+            </div>
+            <div class="col-6 text-right" *ngIf="selection.selected.length == 0">
+              <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+              (click)="openPrintSetupDialog()">Print Setting</button>
             </div>
           </div>
           <div class="row remove-top-margin">
