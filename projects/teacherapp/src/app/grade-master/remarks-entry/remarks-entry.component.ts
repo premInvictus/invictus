@@ -453,6 +453,7 @@ export class RemarksEntryComponent implements OnInit {
 				}
 			});
 		} else {
+			this.disableApiCall = false;
 			this.commonAPIService.showSuccessErrorMessage('Please fill all req fields', 'error');
 		}
 
@@ -609,6 +610,23 @@ export class RemarksEntryComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
 		});
+	}
+	checkEditableForStudent(stu) {
+		//console.log('stu---->',stu);
+		if(stu.is_editable === '1') {
+		  return true;
+		} else {
+		  return false;
+		}
+	}
+	isAnyoneEditabelStu() {
+		let anyoneeditable = false;
+		this.studentArray.forEach(element => {
+		  if(element.is_editable === '1') {
+			anyoneeditable = true;
+		  }
+		});
+		return anyoneeditable;
 	}
 }
 

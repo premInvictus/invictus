@@ -1,0 +1,126 @@
+<ng-template #billDetailsModal>
+  <table border="0" cellspacing="0" cellpadding="0" class="table-receipt" style="width:100%;">
+    <thead>
+      <tr>
+        <!-- <label [innerHTML]="sanatizer.bypassSecurityTrustHtml(tableHeader)">
+
+              </label> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="text-center pad-5" colspan="8">
+          <h4>
+            <a style="text-decoration: underline;">
+              Invoice
+            </a>
+          </h4>
+        </td>
+      </tr>
+      <tr>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+          <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
+        </td>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+          <span>Class</span><span> : {{tableReciptArray.class}}</span>
+        </td>
+        <td class="text-left pad-overall-2" style="width: 40%;">
+        </td>
+      </tr>
+      <tr>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+          <span>Name </span> <span> : {{tableReciptArray.name}} </span>
+        </td>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+          <span>Mobile No.</span><span> : {{tableReciptArray.mobile}}</span>
+        </td>
+        <td class="text-left pad-overall-2" style="width: 40%;">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="8" style="padding: 0px;">
+          <table style="width:100%; margin-top: 5%; ">
+            <thead>
+              <tr style="border-bottom:0.5px solid #000;">
+                <th style="width:10% " class=" pad-overall border-table-th">Sr No.</th>
+                <th style="width:50% " class=" pad-overall-name border-table-th">Item Name
+                </th>
+                <th class=" pad-overall border-table-th">Item Price</th>
+                <th class=" pad-overall border-table-th">Item Quantity</th>
+                <th class=" pad-overall border-table-th">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <% for(var index=0; index < items.bill_details.length; index++) { %> -->
+              <tr *ngFor="let item of tableReciptArray.bill_details;let i = index">
+                <td class=" text-center pad-overall border-table">
+                  <span>
+                    {{i + 1}}
+                  </span>
+                </td>
+                <td class="text-left pad-overall ">
+                  <span>
+                    {{item.item_name | titlecase}}
+                  </span>
+                </td>
+                <td class=" text-center pad-overall border-table">
+                  <span>
+                    {{item.item_selling_price}}
+                  </span>
+                </td>
+                <td class="text-center pad-overall border-table">
+                  <span>
+                    {{item.item_quantity}}
+                  </span>
+                </td>
+                <td class="text-center pad-overall border-table">
+                  <span>
+                    {{item.total_price }}
+                  </span>
+                </td>
+              </tr>
+              <tr style="border-top:0.5px solid #000;">
+                <td class="text-left pad-overall border-table">
+                </td>
+                <td class="text-left pad-overall border-table">
+                  Grand Total
+                </td>
+                <td class="text-center pad-overall border-table">
+                  <span>
+
+                  </span>
+                </td>
+                <td class="text-left pad-overall border-table">
+
+                </td>
+                <td class="text-center pad-overall border-table">
+                  <span>{{tableReciptArray.bill_total}}
+                  </span>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr style="margin-top: 10%;">
+        <td class="text-left pad-overall-2" style="width: 30%;font-size: 11px;">
+          Amount Payable : {{tableReciptArray.bill_total_words}}
+        </td>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+        </td>
+        <td class="text-left pad-overall-2" style="width: 40%;">
+        </td>
+      </tr>
+      <tr style="margin-top: 5%;">
+        <td class="text-left pad-overall-2" style="width: 30%; font-size: 12px;">
+          <!-- Receipt Generate By : {{tableReciptArray.bill_created_by}} -->
+        </td>
+        <td class="text-left pad-overall-2" style="width: 30%;">
+        </td>
+        <td class="text-left pad-overall-2" style="width: 40%;">
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>

@@ -156,7 +156,7 @@ export class GenerateBillComponent implements OnInit {
               item_quantity: '',
               total_price: '',
             });
-            const findex = this.formGroupArray.findIndex(f => Number(f.item_code) === Number(item.item_code));
+            const findex = this.formGroupArray.findIndex(f => Number(f.formGroup.value.item_code) === Number(item.item_code));
             if (findex === -1) {
               this.formGroupArray.push({
                 formGroup: this.fbuild.group({
@@ -174,6 +174,7 @@ export class GenerateBillComponent implements OnInit {
         }
       })
     }
+
   }
   getTotalPrice(index) {
     if (this.formGroupArray[index].formGroup.value.item_selling_price &&

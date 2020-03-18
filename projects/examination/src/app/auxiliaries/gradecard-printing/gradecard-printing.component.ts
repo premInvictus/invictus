@@ -6,6 +6,7 @@ import { Element } from './gradecard-printing.model';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatTableDataSource} from '@angular/material/table';
 import { ViewGradecardDialogComponent } from '../view-gradecard-dialog/view-gradecard-dialog.component';
+import { GradecardPagesetupComponent } from '../gradecard-pagesetup/gradecard-pagesetup.component';
 import { TitleCasePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 
@@ -62,6 +63,17 @@ export class GradecardPrintingComponent implements OnInit {
       console.log('The dialog was closed');
     });
   }  
+  openPrintSetupDialog(item): void {
+    const dialogRef = this.dialog.open(GradecardPagesetupComponent, {
+      width: '30%',
+      height: '50%',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
   openLockModal(data = null,multiple) {
     data.text = 'Lock'
     data.multiple = multiple;

@@ -15,6 +15,7 @@ import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mar
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
+import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pagesetup.component';
 
 @NgModule({
 	imports: [
@@ -24,9 +25,9 @@ import { ExamAchievementComponent } from './exam-achievement/exam-achievement.co
 		AngularSlickgridModule.forRoot()
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent, BmiCalculatorComponent, CommonAttendanceComponent, ExamAchievementComponent],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent, BmiCalculatorComponent, CommonAttendanceComponent, ExamAchievementComponent, GradecardPagesetupComponent],
 	entryComponents: [
-		CbseMarksUploadDialog, ViewGradecardDialogComponent
+		CbseMarksUploadDialog, ViewGradecardDialogComponent, GradecardPagesetupComponent
 	],
 	providers: [{
 		provide: MAT_DIALOG_DATA,
