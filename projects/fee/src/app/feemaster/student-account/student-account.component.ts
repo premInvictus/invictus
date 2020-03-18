@@ -216,7 +216,7 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.existFlag = true;
 				this.accountDetails = result.data[0];
 				this.conStatus = this.accountDetails.accd_fcg_status;
-				//	console.log(this.conStatus);
+				console.log(this.conStatus);
 				this.transport_history = result.data[0]['transport_history'];
 				this.hostel_history = result.data[0]['hostel_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
@@ -587,8 +587,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				validateFlag = false;
 			}
 		}
-		console.log(this.accountsForm.value.accd_fcg_id, 'this.accountsForm.value.accd_fcg_id----------');
-		console.log(this.conStatus, 'this.conStatus----------');
 		if (this.accountsForm.value.accd_fcg_id && this.accountsForm.value.accd_fcg_id !== '0' && this.conStatus !== 'approved') {
 			console.log('shsashsh');
 			if (!this.accountsForm.value.accd_remark_id.trim()) {

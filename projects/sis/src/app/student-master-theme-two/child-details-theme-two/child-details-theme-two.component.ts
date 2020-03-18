@@ -518,7 +518,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	filterCityStateCountry($event) {
 		// keyCode
 		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
-			if ($event.target.value !== '' && $event.target.value.length >= 3 && !(this.viewOnly)) {
+			if ($event.target.value !== '' && $event.target.value.length >= 1 && !(this.viewOnly)) {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {
