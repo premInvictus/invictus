@@ -41,8 +41,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 						{mon_id:10,mon_value:10},
 						{mon_id:11,mon_value:11},
 						{mon_id:12,mon_value:12}
-
-					 ]
+					 ];
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	btnDisable = false;
@@ -86,14 +85,17 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 		} else {
 			diffLength = value;
 		}
-
+		var loopLength = (value) ? value : this.editMonthWiseData.length;
 		if (this.editMonthWiseData && this.editMonthWiseData.length > 0) { 
-			for (let i=0; i<this.editMonthWiseData.length;i++) {
-				temp_arr.push(this.fbuild.group({
-					fin_month_fin_amt : this.editMonthWiseData[i]['month_data']['fine_amt'],
-					fin_month_days: this.editMonthWiseData[i]['month_data']['fine_days']
-	
-				}));
+			for (let i=0; i<loopLength;i++) {
+				if (this.editMonthWiseData[i]) {
+					temp_arr.push(this.fbuild.group({
+						fin_month_fin_amt : this.editMonthWiseData[i]['month_data']['fine_amt'],
+						fin_month_days: this.editMonthWiseData[i]['month_data']['fine_days']
+		
+					}));
+				}
+				
 			}
 		} 
 		for (let i=0; i<diffLength;i++) {
@@ -103,8 +105,9 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 
 			}));
 		}
+		//console.log('temp_arr--', temp_arr);
 		this.monthWiseForm = this.fbuild.array(temp_arr);
-		console.log('chooseMonthLength--',this.chooseMonthLength, value, this.monthWiseForm );
+		//console.log('chooseMonthLength--',this.chooseMonthLength, value, this.monthWiseForm );
 	}
 	getClass() {
 		this.sisService.getClass({}).subscribe((result: any) => {
@@ -192,11 +195,15 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			this.finepenaltiesForm.value['fin_is_hostel_fee'] = this.fin_is_hostel_fee;
 			if (this.monthWiseForm && this.monthWiseForm.value) {				
 				for (var i=0; i<this.monthWiseForm.value.length; i++) {
-					var monthJson =  {
-						"month_id" : i+1,
-						"month_data" : {"fine_amt" : this.monthWiseForm.value[i].fin_month_fin_amt , "fine_days" : this.monthWiseForm.value[i].fin_month_days}
-					};
-					monthWiseData.push(monthJson);
+					if (this.monthWiseForm.value[i].fin_month_fin_amt && this.monthWiseForm.value[i].fin_month_days) {
+						var monthJson =  {
+							"month_id" : i+1,
+							"month_data" : {"fine_amt" : this.monthWiseForm.value[i].fin_month_fin_amt , "fine_days" : this.monthWiseForm.value[i].fin_month_days}
+						};
+						monthWiseData.push(monthJson);
+					}
+					
+					
 				}
 			}
 			this.finepenaltiesForm.value['fin_month_wise_data'] = JSON.stringify(monthWiseData);
@@ -286,11 +293,14 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			this.finepenaltiesForm.value['fin_is_hostel_fee'] = this.fin_is_hostel_fee;
 			if (this.monthWiseForm && this.monthWiseForm.value) {				
 				for (var i=0; i<this.monthWiseForm.value.length; i++) {
-					var monthJson =  {
-						"month_id" : i+1,
-						"month_data" : {"fine_amt" : this.monthWiseForm.value[i].fin_month_fin_amt , "fine_days" : this.monthWiseForm.value[i].fin_month_days}
-					};
-					monthWiseData.push(monthJson);
+					if (this.monthWiseForm.value[i].fin_month_fin_amt && this.monthWiseForm.value[i].fin_month_days) {
+						var monthJson =  {
+							"month_id" : i+1,
+							"month_data" : {"fine_amt" : this.monthWiseForm.value[i].fin_month_fin_amt , "fine_days" : this.monthWiseForm.value[i].fin_month_days}
+						};
+						monthWiseData.push(monthJson);
+					}
+					
 				}
 			}
 
@@ -335,6 +345,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 			fin_upper_limit: '',
 			fin_no_of_month_selected:''
 		})
+		this.editMonthWiseData = [];
 	}
 }
 
