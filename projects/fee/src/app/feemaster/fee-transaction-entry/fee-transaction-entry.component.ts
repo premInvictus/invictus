@@ -41,6 +41,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	type: any = '';
 	feeRenderId: any = '';
 	btnDisable = false;
+	currentInvoiceId = '';
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -111,6 +112,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'saveAndPrint': ''
 			});
 			this.selectedMode = '1';
+			this.currentInvoiceId  = invDet2.inv_id;
 			this.getInvoices(invDet2.inv_id);
 		}
 	}
@@ -157,11 +159,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 	}
 	getInvoices(inv_number) {
+		const datePipe = new DatePipe('en-in');
 		this.INVOICE_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 		this.invoiceArray = [];
 		const invoiceJSON: any = {
-			inv_id: inv_number
+			inv_id: inv_number,
+			ftr_transaction_date : datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
 		};
 		this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -265,6 +269,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				this.studentInfo = result.data[0];
 				this.selectedMode = '1';
 				if (this.studentInfo.last_invoice_number) {
+					this.currentInvoiceId = this.studentInfo.last_invoice_number;
 					this.getInvoices(this.studentInfo.last_invoice_number);
 				} else {
 					this.invoiceArray = [];
@@ -274,6 +279,14 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
+	}
+
+	recaluclateInvoice(event) {
+		console.log('in', event);
+		
+		
+			// 'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
+		this.getInvoices(this.currentInvoiceId);
 	}
 	getEntryModes() {
 		this.feeService.getEntryMode({}).subscribe((result: any) => {

@@ -341,7 +341,8 @@
                               <mat-label>City</mat-label>
                               <input type="text" matInput placeholder="City" formControlName="ea_city" required
                                  [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
-                                 [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)">
+                                 [matAutocomplete]="autoGroup" (keyup)="filterCityStateCountry($event)"
+                                 autocomplete="off">
                               <mat-autocomplete #autoGroup="matAutocomplete">
                                  <mat-option (click)="getCityPerId(item, i)" *ngFor="let item of cityCountryArray"
                                     [value]="item.cit_id">{{item.cit_name}} -

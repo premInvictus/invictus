@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { DatePipe,TitleCasePipe } from '@angular/common';
 import { SisService, FeeService, CommonAPIService } from '../../../_services';
 
 @Component({
