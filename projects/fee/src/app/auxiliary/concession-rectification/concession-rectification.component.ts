@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { FeeService, CommonAPIService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import { DatePipe,TitleCasePipe } from '@angular/common';
 import { ConcessionList } from './concession-list.model';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
@@ -40,7 +40,7 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		this.dataSource = new MatTableDataSource<ConcessionList>(this.ELEMENT_DATA);
 		const param: any = {};
 		param.pro_id = '3';
-		param.accd_fcg_status = 'pending';
+		param.accd_fcg_status = 'approved';
 		param.accd_process_type = '4';
 		this.feeService.getConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -76,6 +76,11 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 	}
 
 	openConcessionRemarkModal(data) {
+		data['status'] = 'approved';
+		this.concessionremarkmodal.openModal(data);
+	}
+	openConcessionRemarkRejectModal(data) {
+		data['status'] = 'reject';
 		this.concessionremarkmodal.openModal(data);
 	}
 
@@ -90,7 +95,9 @@ export class ConcessionRectificationComponent implements OnInit, AfterViewInit {
 		if (event.callee_data.accd_id) {
 			param.accd_id = event.callee_data.accd_id;
 		}
-		param.accd_fcg_status = 'approved';
+		if (event.callee_data.status) {
+			param.accd_fcg_status = event.callee_data.status;
+		}
 		this.feeService.updateConcessionRectification(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');

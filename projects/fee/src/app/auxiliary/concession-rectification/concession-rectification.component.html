@@ -63,7 +63,11 @@
                     matTooltip="Preview"></i>&nbsp;
                   <i class="fas fa-thumbs-up font-color-green cursor-pointer inline-form-radio-spacing"
                     matTooltip="Approve" (click)="openConcessionRemarkModal(item.action)"
-                    *ngIf="item.action.accd_fcg_status === 'pending'"></i>
+                    *ngIf="item.action.accd_fcg_status === 'pending'"></i>&nbsp;
+                  <i class="fas fa-times font-color-red cursor-pointer inline-form-radio-spacing" matTooltip="Rejected"
+                    (click)="openConcessionRemarkRejectModal(item.action)"
+                    *ngIf="item.action.accd_fcg_status === 'pending'"></i> &nbsp;
+                  <span class=" blink " *ngIf="item.action.accd_fcg_status === 'reject'">Rejected</span>
                 </td>
               </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
