@@ -63,11 +63,20 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getIdCardSettings() {
-		this.commonApiService.getIdCardPrintSettings({
-			user_type: 'employee'
+		this.sisService.getGlobalSetting({
+			"gs_group": "identity cards",
+			"not_json": true
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.idCardSettings = result.data[0];
+				const results: any[] = JSON.parse(result.data[0].gs_value);
+				if (results.length > 0) {
+					const findex = results.findIndex(f => f.type === 'employee');
+					if (findex !== -1) {
+						this.idCardSettings = results[findex].details;
+					} else {
+						this.idCardSettings = {};
+					}
+				}
 			}
 		});
 	}

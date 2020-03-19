@@ -1059,4 +1059,12 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.delete(environment.apiSisUrl + '/siSetup/studentTags/'+value.tag_id,value);
 	}
+	getGlobalSettingGroup(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingGroup', value);
+	}
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
 }
