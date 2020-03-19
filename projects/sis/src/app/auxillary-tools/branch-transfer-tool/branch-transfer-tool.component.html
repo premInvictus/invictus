@@ -5,22 +5,16 @@
         <div class="col-12 remove-col-padding-left remove-col-padding-right">
           <div class="container-box__white card-height-830">
             <div class="row">
-              <!-- <div class="col-3 custom-col-10 text-center">
-                  <div class="line-divider"></div>
-                </div> -->
               <div class="col-12 text-center">
                 <h4 class="text-uppercase ">
                   <!-- <b>Strength of {{sessionPromote}}: {{currentSessionStudentCount}}</b> -->
                   <b>Branch Transfer</b>
                 </h4>
               </div>
-              <!-- <div class="col-3 custom-col-10 text-center">
-                  <div class="line-divider"></div>
-                </div> -->
             </div>
             <form [formGroup]="promoteForm">
               <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Enrollment Type</mat-label>
                     <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
@@ -34,7 +28,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Current Class</mat-label>
                     <mat-select placeholder="Current Class" #promoClass_id formControlName="class_id"
@@ -49,7 +43,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
                     <mat-select placeholder="Section" formControlName="sec_id">
@@ -59,7 +53,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Sorted By</mat-label>
                     <mat-select placeholder="Sorted by" formControlName="order_by">
@@ -69,9 +63,7 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>To Branch</mat-label>
                     <mat-select placeholder="To Branch" formControlName="br_id"
@@ -83,7 +75,36 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>To Branch</mat-label>
+                    <mat-select placeholder="To Branch" formControlName="br_id"
+                      (selectionChange)="getBranchClassAndSession($event)" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of branchArray" [value]="item.br_prefix">{{item.br_name}},
+                        {{item.br_address}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-2">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>New Enrollment Type</mat-label>
+                    <mat-select placeholder="New Enrollment type" formControlName="new_enrollment_type"
+                      [errorStateMatcher]="confirmValidParentMatcher" required>
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of newEnrollMentTypeArray" [value]="item.au_process_type">
+                        {{item.au_process_name}}</mat-option>
+                    </mat-select>
+                    <mat-error>
+                      Please select new enrollment type
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>New Class</mat-label>
                     <mat-select placeholder="New Class" required formControlName="new_class_id"
@@ -97,7 +118,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-3 ">
+                <div class="col-2 ">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>To Session</mat-label>
                     <mat-select placeholder="To Session" formControlName="to_ses_id" required>
@@ -107,11 +128,12 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                   <button mat-raised-button class="btn-success margin-top-12" *ngIf="promoteForm.valid"
-                  [disabled]="disableApiCall"
-                    (click)="getPromotionList()">Generate</button>
+                    [disabled]="disableApiCall" (click)="getPromotionList()">Generate</button>
                 </div>
+                <div class="col-2"></div>
+                <div class="col-2"></div>
               </div>
             </form>
             <div class="row">
@@ -207,16 +229,13 @@
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row class="row-normal" *matRowDef="let row; columns: displayedColumns"></tr>
                       </table>
-
-
-
-
                     </div>
                   </div>
                   <br />
                   <br />
                   <div class="text-center" *ngIf="toBePromotedList.length > 0">
-                    <button [disabled]="disableApiCall" mat-raised-button class="btn-success" (click)="openDeleteModal()">Transfer</button>
+                    <button [disabled]="disableApiCall" mat-raised-button class="btn-success"
+                      (click)="openDeleteModal()">Transfer</button>
                   </div>
                   <br />
                   <br />

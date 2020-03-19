@@ -286,7 +286,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 		}];
 	}
 	filterCityStateCountry($event) {
-		if ($event.target.value !== '' && $event.target.value.length >= 3) {
+		if ($event.target.value !== '' && $event.target.value.length >= 1) {
 			this.cityCountryArray = [];
 			this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 				if (result.status === 'ok') {

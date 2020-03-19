@@ -179,6 +179,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 		});
 	}
 	submit() {
+		console.log('in',this.finepenaltiesForm);
 		let monthWiseData = [];
 		if (!this.finepenaltiesForm.valid) {
 			this.btnDisable = false;
@@ -199,6 +200,7 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 				}
 			}
 			this.finepenaltiesForm.value['fin_month_wise_data'] = JSON.stringify(monthWiseData);
+			console.log(this.finepenaltiesForm);
 			this.feeService.insertFineandPenalties(this.finepenaltiesForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
 				if (result.status === 'ok') {
@@ -322,8 +324,16 @@ export class FinesAndPenalitiesComponent implements OnInit, AfterViewInit {
 	}
 	checkFineType(fine_id) {
 		this.chooseMonthLength = 0;
-		this.finepenaltiesForm.patchValue({
-			fin_no_of_month_selected : ''
+		this.finepenaltiesForm.patchValue({		
+			fin_amt: 0,
+			fin_desc: '',
+			fin_max_month: '',
+			fin_class_id: '',
+			fin_sec_id: '',
+			fin_event_id: '',
+			fin_status: '1',
+			fin_upper_limit: '',
+			fin_no_of_month_selected:''
 		})
 	}
 }

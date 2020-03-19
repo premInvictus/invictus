@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, ErrorStateMatcher } from '@angular/material';
-import { CommonAPIService, SisService,SmartService } from '../../_services/index';
+import { CommonAPIService, SisService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { Element } from './branch-tool.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -23,6 +23,12 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	},
 	{
 		au_process_type: '5', au_process_name: 'Alumini'
+	}];
+	newEnrollMentTypeArray: any[] = [{
+		au_process_type: '3', au_process_name: 'Provisional Admission'
+	},
+	{
+		au_process_type: '4', au_process_name: 'Admission'
 	}];
 	classArray: any[] = [];
 	tclassArray: any[] = [];
@@ -72,6 +78,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 			new_class_id: '',
 			ses_id: '',
 			sec_id: '',
+			new_enrollment_type: '',
 			enrollment_type: '',
 			order_by: '',
 			br_id: '',
@@ -94,7 +101,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	getBranchClassAndSession(event) {
 		this.sessionArray = [];
 		this.tclassArray = [];
-		this.sisService.getBranchClassAndSession({br_id: event.value}).subscribe((result: any) => {
+		this.sisService.getBranchClassAndSession({ br_id: event.value }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				if (result.data.classes) {
 					this.tclassArray = result.data.classes;
@@ -238,7 +245,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					enrollment_no: enrollment_no,
 					class_id: this.promoteForm.value.class_id,
 					transfered_class_id: this.promoteForm.value.new_class_id,
-					enrollment_type: this.promoteForm.value.enrollment_type,
+					enrollment_type: this.promoteForm.value.new_enrollment_type,
 					transfered_enrollment_type: '4',
 					br_id: this.promoteForm.value.br_id,
 					to_ses_id: this.promoteForm.value.to_ses_id
@@ -296,7 +303,7 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 					enrollment_no: enrollment_no,
 					class_id: this.promoteForm.value.class_id,
 					transfered_class_id: this.promoteForm.value.new_class_id,
-					enrollment_type: this.promoteForm.value.enrollment_type,
+					enrollment_type: this.promoteForm.value.new_enrollment_type,
 					transfered_enrollment_type: '4',
 					br_id: this.promoteForm.value.br_id,
 					to_ses_id: this.promoteForm.value.to_ses_id

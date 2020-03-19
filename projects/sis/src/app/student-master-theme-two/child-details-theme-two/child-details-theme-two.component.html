@@ -47,8 +47,8 @@
                         <div class="col-6" style="padding-right:0">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Student Tags</mat-label>
-                            <mat-select placeholder="Tags" formControlName="upd_tag_id" 
-                              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                            <mat-select placeholder="Tags" formControlName="upd_tag_id" [disabled]="viewOnly"
+                              [errorStateMatcher]="confirmValidParentMatcher">
                               <mat-option>Please Select</mat-option>
                               <mat-option *ngFor="let item of studentTags" [value]="item.tag_id">
                                 {{item.tag_name | titlecase}}
@@ -192,7 +192,7 @@
                     <input type="text" matInput placeholder="City" formControlName="ea_city" required
                       [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher"
                       [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
-                    <mat-autocomplete #autoGroup="matAutocomplete">
+                    <mat-autocomplete #autoGroup="matAutocomplete" autocomplete="off">
                       <mat-option (onSelectionChange)="getCityPerId(item)" (click)="getCityPerId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
                         {{item.sta_name}} - {{item.cou_name}}</mat-option>
@@ -286,9 +286,8 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>City</mat-label>
                     <input type="text" matInput placeholder="City" formControlName="ea_city" [readonly]="viewOnly || (editOnly && !showAddressFlag)
-                    || (addOnly && !showAddressFlag)"
-                      [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup" autocomplete="off"
-                      (keyup)="filterCityStateCountry($event)">
+                    || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher"
+                      [matAutocomplete]="autoGroup" autocomplete="off" (keyup)="filterCityStateCountry($event)">
                     <mat-autocomplete #autoGroup="matAutocomplete">
                       <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
@@ -335,8 +334,7 @@
                     <mat-label>Pin Code</mat-label>
                     <input formControlName="ea_pincode" minlength="6" maxlength="7" mask="000 000" matInput
                       placeholder="Zip/Pin Code" [readonly]="viewOnly || (editOnly && !showAddressFlag)
-                      || (addOnly && !showAddressFlag)"
-                      [errorStateMatcher]="confirmValidParentMatcher" />
+                      || (addOnly && !showAddressFlag)" [errorStateMatcher]="confirmValidParentMatcher" />
                     <mat-error>
                       This field is required
                     </mat-error>

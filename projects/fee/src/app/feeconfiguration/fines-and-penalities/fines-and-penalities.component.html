@@ -164,7 +164,7 @@
                               <button *ngIf="editFlag" mat-raised-button class="btn-primary btn-custom btn-success"
                                  (click)="update()" [disabled]="btnDisable">Update</button>
                               <button mat-raised-button class="btn-primary btn-danger btn-custom btn-spacer"
-                                 (click)="btnDisable=false;finepenaltiesForm.reset()">Reset</button>
+                                 (click)="btnDisable=false;finepenaltiesForm.reset();editFlag=false">Reset</button>
                            </div>
                         </div>
                      </form>
