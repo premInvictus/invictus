@@ -1,3 +1,45 @@
-<div class="row">
- Notification
+<div class="row" style="padding: 0% 20%;">
+    <div class="col-12">
+        <div class="notfication">
+            <div class="row">
+                <div class="col-12">
+                    <span>Notifcations</span>
+                </div>
+            </div>
+            <div class="row" *ngFor="let item of notficationMsg">
+                <div class="col-12">
+                    <mat-card style="cursor:pointer">
+                        <div class="row">
+                            <div class="col-2 calender-class" (click)="$event.preventDefault();redirectModule(item)">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span style="margin-left:15px">{{item.msg_date | date:'MMM-d' }}</span>
+                            </div>
+                            <div class="col-9" (click)="$event.preventDefault();redirectModule(item)">
+                                <div class="row" style="margin-top: 0px;">
+                                    <div class="col-12">{{item.msg_subject}}</div>
+                                </div>
+                                <div class="row desc_class">
+                                    <div class="col-12">{{item.msg_description}}</div>
+                                </div>
+                                <!-- <div class="row">
+                    <div class="col-12">
+                      <div style="position: relative;">
+                        <span style="position: absolute;right: 0;">{{item.msg_date | date:'MMM-d' }}</span></div>
+                    </div>
+                  </div> -->
+                            </div>
+                            <div class="col-1 trash-class" (click)="$event.preventDefault();deleteNofiy(item);">
+                                <i class="fas fa-trash"></i>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+            </div>
+            <div class="row" *ngIf="notficationMsg.length === 0">
+                <div class="col-12">
+                    <mat-card style="text-align: center;"> No Notifictaion Yet !!</mat-card>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

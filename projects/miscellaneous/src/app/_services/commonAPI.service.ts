@@ -273,5 +273,8 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/file-management/downLoadZipFromS3', value);
 	}
+	getPushNotification(value) {
+		return this.http.post(environment.apiHRUrl + '/communication/getPushNotification', value);
+	}
 
 }

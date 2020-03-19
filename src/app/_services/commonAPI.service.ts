@@ -34,6 +34,7 @@ export class CommonAPIService {
 	familyNumber: any;
 	selectedChildData: any;
 	counterTimer: any = 0;
+	notif: any = 0;
 	searchDashboardData: any;
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
@@ -257,7 +258,7 @@ export class CommonAPIService {
 	getFamilyData() {
 		return this.familyData;
 	}
-	
+
 
 	setFamilyInformation(value) {
 		this.familyNumber = value;
@@ -308,5 +309,14 @@ export class CommonAPIService {
 	}
 	getCounter() {
 		return this.counterTimer;
+	}
+	setNotif(count) {
+		this.notif = count;
+	}
+	getNotif() {
+		return this.notif;
+	}
+	resetNotif() {
+		this.notif = 0;
 	}
 }
