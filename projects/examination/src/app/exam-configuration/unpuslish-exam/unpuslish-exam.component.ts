@@ -16,9 +16,13 @@ export class UnpuslishExamComponent implements OnInit {
   subSubjectArray: any[] = [];
   sectionArray: any[] = [];
   termsArray: any[] = [];
-  delMessage: any = '';
+  delMessage: string = '';
   examArray: any[] = [];
   subexamArray: any[] = [];
+  remarksTypeArray: any[] = [
+		{ rt_id: 1, rt_name: 'Internal Type' },
+		{ rt_id: 2, rt_name: 'External Type' }
+	];
   ngOnInit() {
     this.buildForm();
     this.getClass();
@@ -83,6 +87,8 @@ export class UnpuslishExamComponent implements OnInit {
 
   buildForm() {
     this.paramform = this.fbuild.group({
+      change_type:'',
+      ere_remarks_type:'',
       eme_class_id: '',
       eme_sec_id: '',
       eme_sub_id: '',
@@ -176,7 +182,20 @@ export class UnpuslishExamComponent implements OnInit {
       this.reviewValue = val;
       if (Number(this.reviewValue) === 0) {
         this.delMessage = 'Unpublish';
-      } else  if (Number(this.reviewValue) === 4) { 
+      } else if (Number(this.reviewValue) === 4) { 
+        this.delMessage = 'Publish';
+      }
+    this.deleteModal.openModal({item: val});
+    } else {
+      this.commonAPIService.showSuccessErrorMessage('Please fill required fields','error'); 
+    }
+  }
+  updateStatusRemark(val){
+    if (this.paramform.valid) {
+      this.reviewValue = val;
+      if (Number(this.reviewValue) === 0) {
+        this.delMessage = 'Unpublish';
+      } else if (Number(this.reviewValue) === 1) { 
         this.delMessage = 'Publish';
       }
     this.deleteModal.openModal({item: val});
@@ -190,14 +209,27 @@ export class UnpuslishExamComponent implements OnInit {
       this.paramform.patchValue({
         eme_review_status: this.reviewValue
       });
-      this.examService.updateStatusMarksInput(this.paramform.value).subscribe((result: any) => {
-        if(result && result.status === 'ok') {
-          this.commonAPIService.showSuccessErrorMessage(result.message,'success');
-          this.paramform.reset();
-        } else {
-          this.commonAPIService.showSuccessErrorMessage(result.message,'error');
-        }
-      })
+      if(this.paramform.value.change_type === '1') {
+        console.log('calling marks');
+        this.examService.updateStatusMarksInput(this.paramform.value).subscribe((result: any) => {
+          if(result && result.status === 'ok') {
+            this.commonAPIService.showSuccessErrorMessage(result.message,'success');
+            this.paramform.reset();
+          } else {
+            this.commonAPIService.showSuccessErrorMessage(result.message,'error');
+          }
+        })
+      } else {
+        console.log('calling remarks');
+        this.examService.updateStatusRemark(this.paramform.value).subscribe((result: any) => {
+          if(result && result.status === 'ok') {
+            this.commonAPIService.showSuccessErrorMessage(result.message,'success');
+            this.paramform.reset();
+          } else {
+            this.commonAPIService.showSuccessErrorMessage(result.message,'error');
+          }
+        })
+      }      
     }
     }
   }
