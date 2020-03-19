@@ -395,6 +395,10 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/marksEntry/updateStatusMarksInput', value);
 	}
+	updateStatusRemark(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/updateStatusRemark', value);
+	}
 
 }
 

@@ -33,7 +33,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   sec_id: any;
   acedemicmarks = 0;
   GradeSet: any[] = [];
+  GradeSet_b: any[] = [];
   GradeSetPoint: any[] = [];
+  GradeSetPoint_b: any[] = [];
   termArray: any[] = [];
   schoolDetails: any;
   gradePerTermOnScholastic: any[] = [];
@@ -461,17 +463,23 @@ export class ViewGradecardDialogComponent implements OnInit {
         console.log('tempGrade--', tempGrade)
 
         tempGrade.forEach(element => {
-          if (element.egs_point_type === '2') {
+          if (element.ect_gradeset_id === element.egs_number) {
             this.gradingSystem = element.egs_name;
             this.GradeSet.push(element);
-          } else if (element.egs_point_type === '1') {
-            this.gradingSystem = element.egs_name;
+          } else if (element.ect_co_gradeset_id === element.egs_number) {
+            //this.gradingSystem = element.egs_name;
             this.GradeSetPoint.push(element)
+          } else if (element.ect_gradeset_id_b === element.egs_number) {
+            this.GradeSet_b.push(element);
+          } else if (element.ect_co_gradeset_id_b === element.egs_number) {
+            this.GradeSetPoint_b.push(element)
           }
         });
 
-        console.log('this.GradeSet 2--', this.GradeSet);
-        console.log('this.GradeSet 1--', this.GradeSetPoint);
+        // console.log('this.GradeSet a--', this.GradeSet);
+        // console.log('this.coGradeSet a--', this.GradeSetPoint);
+        // console.log('this.GradeSet b--', this.GradeSet_b);
+        // console.log('this.coGradeSet b--', this.GradeSetPoint_b);
       }
     })
   }
