@@ -50,7 +50,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Other Board</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="other_board" matInput placeholder="Other Board" [readonly]="viewOnly">            
+                formControlName="other_board" matInput placeholder="Other Board" [readonly]="viewOnly">
             </mat-form-field>
           </div>
 
@@ -200,7 +200,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Last salary drawn</mat-label>
               <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
-                formControlName="last_salary" required matInput placeholder="Last salary drawn" [readonly]="viewOnly">
+                formControlName="last_salary" matInput placeholder="Last salary drawn" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
               </mat-error>
@@ -209,7 +209,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Start Date</mat-label>
-              <input matInput [matDatepicker]="picker" required placeholder="Start Date" formControlName="start_date"
+              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date"
                 (dateChange)="setMinTo($event)" [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -221,8 +221,8 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>End Date</mat-label>
-              <input matInput [matDatepicker]="picker2" required placeholder="End Date" [min]="toMin"
-                formControlName="end_date" [readonly]="viewOnly">
+              <input matInput [matDatepicker]="picker2" placeholder="End Date" [min]="toMin" formControlName="end_date"
+                [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
               <mat-error>

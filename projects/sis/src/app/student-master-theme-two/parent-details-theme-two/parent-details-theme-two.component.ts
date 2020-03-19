@@ -269,7 +269,7 @@ export class ParentDetailsThemeTwoComponent implements OnInit, OnChanges {
 				ea_email: '',
 				ea_mobile: ''
 			}),
-			ea_res_address: this.fbuild.group({
+			ea_res_address: this.fbuild.group({ 
 				ea_id: '',
 				ea_login_id: '',
 				ea_address_for: 'G',
