@@ -382,11 +382,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	deleteToken() {
 		this.angularFireMessaging.getToken
-		  .pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
-		  .subscribe(
-			(token) => { console.log('Deleted!'); },
-		  );
-	  }
+			.pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
+			.subscribe(
+				(token) => { console.log('Deleted!'); },
+			);
+	}
 	logout() {
 		if (this._cookieService.get('userData')) {
 			this.userData = JSON.parse(this._cookieService.get('userData'));
@@ -500,6 +500,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 						this.router.navigate(['../auxillaries/classwise-table'], { relativeTo: this.route });
 					}
 				}
+				if (this.currentUser.role_id === '2') {
+					this.commonAPIService.setNotif(1);
+					this.goToProject('misc', '1', '11');
+				}
 			}
 		});
 	}
@@ -527,6 +531,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		if (this.currentUser.role_id === '4') {
 			this.router.navigate(['student/notification']);
 		}
+		if (this.currentUser.role_id === '2') {
+			this.commonAPIService.setNotif(1);
+			this.goToProject('misc', '1', '11');
+			// this.router.navigate(['communication/notification']);
+		}
+
 
 	}
 }
