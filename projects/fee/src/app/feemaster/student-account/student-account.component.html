@@ -16,7 +16,7 @@
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of feeOtherCategory" [value]="item.fo_id">{{item.fo_name}}
                             </mat-option>
-                        </mat-select> 
+                        </mat-select>
                     </mat-form-field>
                 </div>
                 <div class="inline-flex margin-left-15">
@@ -33,10 +33,11 @@
                 <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field">
                         <mat-label>Additional Fee Component</mat-label>
-                        <mat-select placeholder="Additional Fee Component" [disabled]="viewOnly" multiple 
+                        <mat-select placeholder="Additional Fee Component" [disabled]="viewOnly" multiple
                             formControlName="accd_afc_id">
                             <!-- <mat-option>Please Select</mat-option> -->
-                            <mat-option *ngFor="let item of additionalFeeComponentArray" [value]="item.fh_id">{{item.fh_name}}
+                            <mat-option *ngFor="let item of additionalFeeComponentArray" [value]="item.fh_id">
+                                {{item.fh_name}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
@@ -55,7 +56,7 @@
                         <mat-label>Concession Group</mat-label>
                         <mat-select placeholder="Concession Group" [disabled]="viewOnly" formControlName="accd_fcg_id"
                             [errorStateMatcher]="confirmValidParentMatcher"
-                             (selectionChange)="setDescription($event);changeValue($event)">
+                            (selectionChange)="setDescription($event);changeValue($event)">
                             <mat-option>Please Select</mat-option>
                             <mat-option *ngFor="let item of conGroupArray" [value]="item.fcg_id">{{item.fcg_name}}
                             </mat-option>
@@ -72,32 +73,35 @@
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div> --> 
+                </div> -->
                 <div class="inline-flex margin-left-15" *ngIf="conDesc && conStatus === 'pending'">
                     <mat-form-field appearance="outline" class="form-field-320">
                         <mat-label>Remarks</mat-label>
-                        <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly" required>
+                        <input matInput placeholder="Remarks" formControlName="accd_remark_id" [readonly]="viewOnly"
+                            required>
                     </mat-form-field>
                 </div>
                 <div class="inline-flex margin-left-50" *ngIf="conDesc && conStatus === 'pending'">
-                    <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top"
-                    multiple="true" (change)="fileChangeEvent($event,docreq_id)" id="docreq_id"
-                    style="display: none !important">
-                
-                  <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
-                    <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>&nbsp; &nbsp;<label
-                        class="sis-btn-document-label cursor-pointer" for="docreq_id">Choose
-                        File</label></a>
+                    <input [disabled]="viewOnly" type="file" class="form-control form-control-sm mv_top" multiple="true"
+                        (change)="fileChangeEvent($event,docreq_id)" id="docreq_id" style="display: none !important">
+
+                    <a class=" text-center cursor-pointer" *ngIf="!viewOnly">
+                        <mat-icon class="margin-top-10  cloud-icon cursor-pointer btn-top-icon">cloud_upload</mat-icon>
+                        &nbsp; &nbsp;<label class="sis-btn-document-label cursor-pointer" for="docreq_id">Choose
+                            File</label>
+                    </a>
                 </div>
             </div>
-                <div class="col-12 remove-col-padding">
-                    <div class="inline-flex margin-left-15 pad-bot-10" *ngIf="conDesc">
-                        Description: {{conDesc}} <span *ngIf="conStatus === 'approved'" class="approved">{{conStatus | capitalize}}</span>
-                        <span *ngIf="conStatus === 'pending'" class="pending">{{conStatus | capitalize}}</span>
-                    </div>
+            <div class="col-12 remove-col-padding">
+                <div class="inline-flex margin-left-15 pad-bot-10" *ngIf="conDesc">
+                    Description: {{conDesc}} <span *ngIf="conStatus === 'approved'"
+                        class="approved">{{conStatus | capitalize}}</span>
+                    <span *ngIf="conStatus === 'pending'" class="pending">{{conStatus | capitalize}}</span>
+                    <span *ngIf="conStatus === 'reject'" class="pending">Rejected</span>
                 </div>
-               
-            
+            </div>
+
+
             <div class="col-12 remove-col-padding">
                 <div class="inline-flex">
                     <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
@@ -306,7 +310,7 @@
             <div class="col-12 remove-col-padding">
                 <span class="font-size-20 font-medium">Hostel Details</span>&nbsp;
                 <a class="pointer font-bold font-skyblue font-underline" *ngIf="hostel_history"
-                (click)="showHostel = !showHostel">View Hostel History</a>
+                    (click)="showHostel = !showHostel">View Hostel History</a>
             </div>
         </div>
         <div *ngIf="hostelFlag" class="row">
@@ -326,8 +330,8 @@
                 <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Building</mat-label>
-                        <mat-select placeholder="Hostel Building" [disabled]="viewOnly"
-                            formControlName="hs_building" (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()" required>
+                        <mat-select placeholder="Hostel Building" [disabled]="viewOnly" formControlName="hs_building"
+                            (selectionChange)="getRoom();accountsForm.controls.hs_room.reset()" required>
                             <mat-option value="">Please Select</mat-option>
                             <mat-option *ngFor="let item of buildingArray" [value]="item.hc_id">
                                 {{item.hc_name}}
@@ -338,8 +342,8 @@
                 <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Room</mat-label>
-                        <mat-select placeholder="Hostel Room" [disabled]="viewOnly"
-                            formControlName="hs_room" (selectionChange)="getBed();accountsForm.controls.hs_bed.reset()" required>
+                        <mat-select placeholder="Hostel Room" [disabled]="viewOnly" formControlName="hs_room"
+                            (selectionChange)="getBed();accountsForm.controls.hs_bed.reset()" required>
                             <mat-option value="">Please Select</mat-option>
                             <mat-option *ngFor="let item of roomArray" [value]="item.hc_id">
                                 {{item.hc_name}}
@@ -350,8 +354,8 @@
                 <div class="inline-flex margin-left-15">
                     <mat-form-field appearance="outline" class="form-field-220">
                         <mat-label>Hostel Bed</mat-label>
-                        <mat-select placeholder="Hostel Bed" [disabled]="viewOnly"
-                            formControlName="hs_bed" required (selectionChange)="isAllocatedToStudent()">
+                        <mat-select placeholder="Hostel Bed" [disabled]="viewOnly" formControlName="hs_bed" required
+                            (selectionChange)="isAllocatedToStudent()">
                             <mat-option value="">Please Select</mat-option>
                             <mat-option *ngFor="let item of bedArray" [value]="item.hc_id">
                                 {{item.hc_name}}
@@ -410,8 +414,8 @@
                                 <td *ngIf="item?.hsl_status === '5'" class="custom-td text-capitalize text-center">
                                     Hostel Opted Out</td>
 
-                                <td *ngIf="item.hsl_status === '1' || item.hsl_status === '0'" class="custom-td text-capitalize text-left"
-                                    width="25%">
+                                <td *ngIf="item.hsl_status === '1' || item.hsl_status === '0'"
+                                    class="custom-td text-capitalize text-left" width="25%">
                                     <span> Building : {{item?.building_name ? item?.building_name : '-' }}</span>,
                                     <span> Room : {{item?.room_name ? item?.room_name : '-' }}</span>,
                                     <span> Bed : {{item?.bed_name ? item?.bed_name : '-' }}</span>,
@@ -434,7 +438,7 @@
         </div>
         <br>
         <div class="text-center margin-top-35 ">
-            <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button 
+            <button *ngIf="!viewOnly && !existFlag && isExist('351')" mat-raised-button
                 class="btn-primary btn-success margin-bottom-115" (click)="submit()">Submit</button>
             <button *ngIf="!viewOnly && existFlag &&  isExist('352')" mat-raised-button
                 class="btn-primary btn-success margin-bottom-115" (click)="update()">Update</button> &nbsp;
