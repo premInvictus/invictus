@@ -4,6 +4,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
+import { ColorPickerModule } from 'ngx-color-picker';
 import {
 	MatTooltipModule, MatMenuModule, MatCheckboxModule,
 	MatSidenavModule, MatSlideToggleModule,
@@ -59,7 +60,7 @@ export const MY_FORMATS = {
 };
 @NgModule({
 	imports: [
-		CommonModule,
+		ColorPickerModule,
 		CommonModule,
 		FormsModule,
 		ReactiveFormsModule,
@@ -142,6 +143,7 @@ export const MY_FORMATS = {
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
+		ColorPickerModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
 		MatButtonModule,

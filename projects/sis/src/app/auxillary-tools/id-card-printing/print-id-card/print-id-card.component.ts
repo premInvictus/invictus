@@ -181,11 +181,20 @@ export class PrintIdCardComponent implements OnInit {
 		}
 	}
 	getIdCardSettings() {
-		this.sisService.getIdCardPrintSettings({
-			user_type : 'student'
+		this.sisService.getGlobalSetting({
+			"gs_group": "identity cards",
+			"not_json": true
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.idCardConfig = result.data[0];
+				const results: any[] = JSON.parse(result.data[0].gs_value);
+				if (results.length > 0) {
+					const findex = results.findIndex(f => f.type === 'student');
+					if (findex !== -1) {
+						this.idCardConfig = results[findex].details;
+					} else {
+						this.idCardConfig = {};
+					}
+				}
 			}
 		});
 	}
