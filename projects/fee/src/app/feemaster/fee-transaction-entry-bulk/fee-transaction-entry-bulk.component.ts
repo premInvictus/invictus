@@ -187,6 +187,12 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	}
 	insertInvoice($event) {
 		this.feeTransactionForm.value.inv_invoice_no = $event.srcElement.value;
+		if (this.invoiceArray.length ===0) {
+			this.invoiceAmtBulkForm.value = [];
+			this.invoiceAmtBulkForm.controls = [];
+			this.tempInvoiceAmtBulkArr = [];
+		}
+		
 		if ($event.code !== 'NumpadEnter' || $event.code !== 'Enter') {
 			const index = this.invoiceArray.indexOf($event.srcElement.value);
 			if (index === -1) {
@@ -204,11 +210,14 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 						inv_invoice_amt: Number(data.fee_amount)+Number(data.late_fine_amt)+Number(data.inv_prev_balance),
 						late_fine_amt : data.late_fine_amt,
 						//inv_invoice_amt: Number(data.fee_amount),
-						color : color
+						color : color,
+						au_full_name : data.au_full_name,
+						class_name : data.sec_name ? data.class_name+' - '+data.sec_name : data.class_name
 					}));
 					this.invoiceAmtBulkForm = this.fbuild.array(
 						this.tempInvoiceAmtBulkArr
 					);
+					console.log('this.invoiceAmtBulkForm--', this.invoiceAmtBulkForm);
 				})
 				this.feeTransactionForm.patchValue({
 					inv_invoice_no: ''
@@ -227,7 +236,9 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				});
 			} else {
 				this.invoiceArray.splice(index, 1);
+				this.invoiceAmtBulkForm.controls.splice(index, 1);
 				this.invoiceAmtBulkForm.value.splice(index, 1);
+				this.tempInvoiceAmtBulkArr.splice(index,1);
 			}
 		}
 	}
@@ -250,13 +261,21 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		});
 	}
 
-	deleteInvoice(inv_invoice_no) {
-		const index = this.invoiceArray.indexOf(inv_invoice_no);
+	deleteInvoice(index,inv_invoice_no) {
+		console.log('inv_invoice_no--', inv_invoice_no);
+		console.log('this.invoiceAmtBulkForm--', this.invoiceAmtBulkForm, this.invoiceArray);
+		//const index = this.invoiceArray.indexOf(inv_invoice_no);
+		console.log('index--', index);
 		if (index !== -1) {
 			this.invoiceArray.splice(index, 1);
+			this.invoiceAmtBulkForm.controls.splice(index, 1);
 			this.invoiceAmtBulkForm.value.splice(index, 1);
+			this.tempInvoiceAmtBulkArr.splice(index,1);
 		}
-		console.log('this.invoiceAmtBulkForm--', this.invoiceAmtBulkForm);
+		console.log('inv_invoice_no--', inv_invoice_no);
+		console.log('this.invoiceAmtBulkForm--', this.invoiceAmtBulkForm, this.invoiceArray);
+		//this.invoiceAmtBulkForm.updateValueAndValidity();
+		
 	}
 	submit() {
 		console.log('this.invoiceAmtBulkForm--', this.invoiceAmtBulkForm);
