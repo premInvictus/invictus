@@ -291,7 +291,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	getInvoiceBifurcation(data: any) {
 		this.invoiceBifurcationArray = [];
 		if (this.data.invoiceNo) {
-			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true }).subscribe((result: any) => {
+			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true, isEdit : this.modificationFlag }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
 						this.invoiceDetails = result.data[0];

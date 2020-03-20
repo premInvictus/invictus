@@ -35,7 +35,7 @@
                   <div [ngClass]="!(notSetteledInvoicesMessage) ? 'col-12 col-lg-12 col-sm-12' : 'col-12 col-lg-12 col-sm-6'">
                     <form [formGroup]="feeTransactionForm">
                       <div class="row" style="margin-top: 0px !important">
-                        <div class="col-5 remove-col-padding">
+                        <div class="col-6 remove-col-padding">
                           <div class=" card-height-760 card-height-880">
                             <div class="row">
                               <div class="col-12 remove-col-padding-left">
@@ -142,7 +142,7 @@
                           </div>
                         </div>
                         <div *ngIf="notSetteledInvoicesMessage || invoiceArray.length > 0" class="col-1 fee-custom-col-8"><div class="vertical-line-divider"></div></div>
-                        <div class="col-6 remove-col-padding">
+                        <div class="col-5 remove-col-padding">
                           <div class="row ">
                             <div class="col-12 col-lg-12 col-sm-12" style="padding-left:0">
                               <table *ngIf="invoiceArray.length > 0" class="invoice-bulk-table table-100 text-center mat-table">

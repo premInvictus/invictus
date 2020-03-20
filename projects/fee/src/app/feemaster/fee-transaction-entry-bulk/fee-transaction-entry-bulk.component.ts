@@ -313,7 +313,7 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 	saveAndPrint() {
 		this.checkBulkStatus = true;
 		this.loaderText = '';
-		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0) {
+		if (this.feeTransactionForm.valid && this.invoiceArray.length > 0 && this.invoiceAmtBulkForm.valid) {
 			this.btnDisable = true;
 			const datePipe = new DatePipe('en-in');
 			this.feeTransactionForm.patchValue({
@@ -321,7 +321,8 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 				'ftr_transaction_date': datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd'),
 				'saveAndPrint': true
 			});
-			this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			//this.feeTransactionForm.value.inv_invoice_no = this.invoiceArray;
+			this.feeTransactionForm.value.inv_invoice_no = this.feeTransactionForm.value.isBulk ? this.invoiceAmtBulkForm.value :this.invoiceArray;
 			this.feeTransactionForm.value.isBulk = true;
 			let i = 0;
 			const x = setInterval(() => {
@@ -426,11 +427,13 @@ export class FeeTransactionEntryBulkComponent implements OnInit, AfterViewInit, 
 		});
 	}
 	getInvoices(inv_number) {
+		const datePipe = new DatePipe('en-in');
 		this.INVOICE_ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 		this.invoiceArray = [];
 		const invoiceJSON: any = {
-			inv_invoice_no: inv_number
+			inv_invoice_no: inv_number,
+			ftr_transaction_date : datePipe.transform(this.feeTransactionForm.value.ftr_transaction_date, 'yyyy-MM-dd')
 		};
 		if (inv_number) {
 			document.getElementById('inv_num').blur();
