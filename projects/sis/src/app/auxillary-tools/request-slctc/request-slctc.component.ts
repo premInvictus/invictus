@@ -92,7 +92,7 @@ export class RequestSlctcComponent implements OnInit {
 	}
 	getStudentDetails(admno) {
 		if (admno) {
-			this.sisService.getMasterStudentDetail({ admission_no: admno, enrollment_type: '4' }).subscribe((result: any) => {
+			this.sisService.getMasterStudentDetail({ admission_no: admno, enrollment_type: '4',pmap_status: '1' }).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.login_id = result.data[0].au_login_id;
 					this.studentdetials = result.data[0];
@@ -197,6 +197,16 @@ export class RequestSlctcComponent implements OnInit {
 			return true;
 		} else {
 			return false;
+		}
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
 		}
 	}
 
