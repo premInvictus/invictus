@@ -14,6 +14,8 @@ export class SetupComponent implements OnInit {
 	currentGsetup: string;
 	formFlag = false;
 	settingForm: FormGroup;
+	formatSettings: any = {};
+	printForm: FormGroup;
 	idCardSettings: any[] = [];
 	idcardForm2: FormGroup;
 	gsettingGroupArr: any[] = [];
@@ -48,6 +50,8 @@ export class SetupComponent implements OnInit {
 	showImage = false;
 	hideIfBlankFlag = false;
 	templateImage: any;
+	headerFooterFlag = true;
+	receiptHeaderFooterFlag = true;
 	showTempImage = false;
 	authSignFlag = false;
 	schoolLogo: any = '';
@@ -93,12 +97,27 @@ export class SetupComponent implements OnInit {
 	showSchoolImage2 = false;
 	showWaterImage2 = false;
 	waterMarkImage2: any = '';
+	ckeConfig: any = {};
 	constructor(private fbuild: FormBuilder,
 		private commonService: CommonAPIService,
 		private sisService: SisService,
 		private erpCommonService: ErpCommonService) { }
 
 	ngOnInit() {
+		this.ckeConfig = {
+			allowedContent: true,
+			pasteFromWordRemoveFontStyles: false,
+			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+			disallowedContent: 'm:omathpara',
+			height: '300',
+			width: '100%',
+			scayt_multiLanguageMod: true,
+			toolbar: [
+				// tslint:disable-next-line:max-line-length
+				['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Table', 'Templates']
+			],
+			removeDialogTabs: 'image:advanced;image:Link'
+		};
 		for (let i = 0; i < 100; i++) {
 			this.pageArray.push(i + 1);
 		}
@@ -110,6 +129,29 @@ export class SetupComponent implements OnInit {
 		this.getGlobalSettingGroup();
 		this.getClass();
 		this.getDepartment();
+	}
+	enableHeaderFooter($event) {
+		if (Number($event.value) === 2) {
+			this.headerFooterFlag = true;
+		} else {
+			this.headerFooterFlag = true;
+		}
+	}
+
+	enableReceiptHeaderFooter($event) {
+		if (Number($event.value) === 2) {
+			this.headerFooterFlag = true;
+		} else {
+			this.receiptHeaderFooterFlag = true;
+		}
+	}
+	numberOnly(event): boolean {
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+			return false;
+		}
+		return true;
+
 	}
 	getDepartment() {
 		this.sisService.getDepartment({}).subscribe((result: any) => {
@@ -384,6 +426,37 @@ export class SetupComponent implements OnInit {
 							}
 						}
 					}
+					if (value === 'fees formats') {
+						if (Object.keys(this.settingForm.value.invoice_receipt_format).length > 0) {
+							const formatS = JSON.parse(this.settingForm.value.invoice_receipt_format);
+							this.formatSettings = JSON.parse(this.settingForm.value.invoice_receipt_format);
+							if (Number(formatS.spt_print_format) === 2) {
+								this.headerFooterFlag = true;
+							} else {
+								this.headerFooterFlag = true;
+							}
+							if (Number(formatS.spt_print_format_receipt) === 2) {
+								this.receiptHeaderFooterFlag = true;
+							} else {
+								this.receiptHeaderFooterFlag = true;
+							}
+							this.printForm.patchValue({
+								'spt_id': formatS.spt_id,
+								'spt_print_format': formatS.spt_print_format,
+								'spt_invoice_format': formatS.spt_invoice_format,
+								'spt_receipt_format': formatS.spt_receipt_format,
+								'spt_header_template': formatS.spt_header_template,
+								'spt_footer_template': formatS.spt_footer_template,
+								'spt_print_format_receipt': formatS.spt_print_format_receipt,
+								'spt_receipt_header_template': formatS.spt_receipt_header_template,
+								'spt_receipt_footer_template': formatS.spt_receipt_footer_template,
+								'spt_invoice_text_color': formatS.spt_invoice_text_color,
+								'spt_receipt_text_color': formatS.spt_receipt_text_color
+							});
+						} else {
+							this.formatSettings = {};
+						}
+					}
 					console.log(this.settingForm);
 				}
 				this.formFlag = true;
@@ -465,6 +538,19 @@ export class SetupComponent implements OnInit {
 			ps_school_logo: '',
 			ps_template_image: '',
 			ps_watermark_image: ''
+		});
+		this.printForm = this.fbuild.group({
+			'spt_id': '',
+			'spt_print_format': '',
+			'spt_invoice_format': '',
+			'spt_receipt_format': '',
+			'spt_header_template': '',
+			'spt_footer_template': '',
+			'spt_print_format_receipt': '',
+			'spt_receipt_header_template': '',
+			'spt_receipt_footer_template': '',
+			'spt_invoice_text_color': '',
+			'spt_receipt_text_color': ''
 		});
 	}
 	updateGlobalSetting() {
@@ -702,6 +788,11 @@ export class SetupComponent implements OnInit {
 				this.settingForm.value.idcard_printsetup = JSON.stringify(this.idCardSettings);
 			}
 		}
+		if (this.settingForm.value && this.settingForm.value.invoice_receipt_format) {
+			this.formatSettings = this.printForm.value;
+			this.settingForm.value.invoice_receipt_format = JSON.stringify(this.formatSettings);
+		}
+		console.log(this.settingForm.value);
 		this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.disabledApiButton = false;
