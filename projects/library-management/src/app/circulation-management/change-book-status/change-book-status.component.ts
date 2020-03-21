@@ -3,6 +3,7 @@ import { SisService, SmartService } from '../../_services';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BarecodeScannerLivestreamComponent } from 'ngx-barcode-scanner';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-change-book-status',
@@ -15,6 +16,7 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 	@ViewChild('searchModal') searchModal;
 	bookData: any[] = [];
 	gridView = true;
+	issuedFlag = false;
 	barcodeValue;
 	disableApiCall = false;
 	enteredVal: any = false;
@@ -168,10 +170,10 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			'filters': [{ 'filter_type': 'reserv_id', 'filter_value': Number(this.barcodeValue), 'type': 'number' }],
 			'search_from': 'master',
 			'generalFilters': {
-				"reserv_status": [
-					"available",
-					"flagged"
-				],
+				"reserv_status": this.issuedFlag ? [
+					"issued"
+				] : ["available",
+						"flagged",],
 			},
 			'search_type': 'cbs'
 		};
@@ -203,10 +205,10 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 			let inputJson = {
 				'filters': [{ 'filter_type': 'reserv_id', 'filter_value': this.searchForm.value.search, 'type': 'text' }],
 				'generalFilters': {
-					"reserv_status": [
-						"available",
-						"flagged"
-					],
+					"reserv_status": this.issuedFlag ? [
+						"issued"
+					] : ["available",
+							"flagged",],
 				},
 				search_from: 'master'
 			};
@@ -250,6 +252,43 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 					}
 				}
 			});
+		}
+	}
+	issueOnly($event) {
+		if ($event.checked) {
+			this.issuedFlag = true;
+			this.bookData = [];
+			this.statusArray = [
+				{
+					type_id: 'available',
+					type_name: 'Available'
+				}
+			];
+		} else {
+			this.issuedFlag = false;
+			this.bookData = [];
+			this.statusArray = [
+				{
+					type_id: 'available',
+					type_name: 'Available'
+				},
+				{
+					type_id: 'read-only',
+					type_name: 'Read Only'
+				},
+				{
+					type_id: 'damaged',
+					type_name: 'Damaged'
+				},
+				{
+					type_id: 'under-maintain',
+					type_name: 'Under Maintanance'
+				},
+				{
+					type_id: 'marked-return',
+					type_name: 'Marked for return'
+				}
+			];
 		}
 	}
 	intitiateSearch() {
@@ -319,12 +358,20 @@ export class ChangeBookStatusComponent implements OnInit, AfterViewInit {
 		if (valid) {
 			this.disableApiCall = true;
 			const bookId: any[] = [];
+			const bookStatus: any[] = [];
 			for (const item of this.bookData) {
 				bookId.push(Number(item.reserv_id));
+				bookStatus.push(item.reserv_status);
 			}
 			this.common.changeReservoirStatus({
 				bookDetails: bookId,
-				changedDetails: this.changeStatusForm.value
+				changedDetails: this.changeStatusForm.value,
+				bookStatus: bookStatus,
+				returnDate: new DatePipe('en-in').transform(new Date(), 'yyyy-MM-dd'),
+				retunedBy: {
+					name: this.currentUser.full_name,
+					login_id: this.currentUser.login_id
+				}
 			}).subscribe((res: any) => {
 				if (res && res.status === 'ok') {
 					this.notif.showSuccessErrorMessage(res.message, 'success');
