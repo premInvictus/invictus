@@ -76,6 +76,8 @@ export class SchoolRecordsComponent implements OnInit, AfterViewInit {
 			'search': ''
 		});
 	}
+	cancelDelete($event) {
+	}
 
 	getRecordsBasedOnSchool() {
 		this.fileArray = [];
