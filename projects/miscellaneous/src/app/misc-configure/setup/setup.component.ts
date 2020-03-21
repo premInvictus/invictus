@@ -451,7 +451,17 @@ export class SetupComponent implements OnInit {
 								'spt_receipt_header_template': formatS.spt_receipt_header_template,
 								'spt_receipt_footer_template': formatS.spt_receipt_footer_template,
 								'spt_invoice_text_color': formatS.spt_invoice_text_color,
-								'spt_receipt_text_color': formatS.spt_receipt_text_color
+								'spt_receipt_text_color': formatS.spt_receipt_text_color,
+								'invoice_header_height':formatS.invoice_header_height,
+								'invoice_header_content_height':formatS.invoice_header_content_height,
+								'invoice_content_height':formatS.invoice_content_height,
+								'invoice_footer_height':formatS.invoice_footer_height,
+								'receipt_header_height':formatS.receipt_header_height,
+								'receipt_header_content_height':formatS.receipt_header_content_height,
+								'receipt_format_one_content_height' : formatS.receipt_format_one_content_height,
+								'receipt_format_two_content_height' : formatS.receipt_format_two_content_height,
+								'receipt_format_three_content_height' : formatS.receipt_format_three_content_height,
+								'receipt_footer_height' : formatS.receipt_footer_height
 							});
 						} else {
 							this.formatSettings = {};
@@ -550,7 +560,19 @@ export class SetupComponent implements OnInit {
 			'spt_receipt_header_template': '',
 			'spt_receipt_footer_template': '',
 			'spt_invoice_text_color': '',
-			'spt_receipt_text_color': ''
+			'spt_receipt_text_color': '',
+			'invoice_header_height':'',
+			'invoice_header_content_height':'',
+			'invoice_content_height':'',
+			'invoice_footer_height':'',
+			'receipt_header_height':'',
+			'receipt_header_content_height':'',
+			'receipt_format_one_content_height' : '',
+			'receipt_format_two_content_height' : '',
+			'receipt_format_three_content_height' : '',
+			'receipt_footer_height' : ''
+
+
 		});
 	}
 	updateGlobalSetting() {
