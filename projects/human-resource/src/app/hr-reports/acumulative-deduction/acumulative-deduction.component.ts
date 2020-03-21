@@ -139,7 +139,8 @@ export class AcumulativeDeductionComponent implements OnInit {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.session = JSON.parse(localStorage.getItem('session'));
   }
-
+  searchOk($event) {
+  }
   ngOnInit() {
     this.buildForm();
     this.getSchool();
