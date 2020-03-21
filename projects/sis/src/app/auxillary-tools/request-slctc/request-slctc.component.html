@@ -138,10 +138,11 @@
       <br>
       <div class="row ">
           <div class="col-1 margin-bottom-15" *ngFor="let image of requestDoc;let i = index">
-              <img *ngIf= "checkThumbnail(image.file_url)" class="btn-doc-upload-preview" [src]="image.file_url" (click)="previewImage(requestDoc, i)">
-              <img *ngIf= "!checkThumbnail(image.file_url)" class="btn-doc-upload-preview"
+              <img class="btn-doc-upload-preview" [src]="getuploadurl(image.file_url)" (click)="previewImage(requestDoc, i)">
+              <!-- <img *ngIf= "!checkThumbnail(image.file_url)" class="btn-doc-upload-preview"
               src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
-              (click)="previewImage(requestDoc, i)"><br>
+              (click)="previewImage(requestDoc, i)"> -->
+              <br>
             <button mat-button class="upload-document-delete-btn" (click)="deleteRequestDoc(image)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>       
           </div>
         </div>
