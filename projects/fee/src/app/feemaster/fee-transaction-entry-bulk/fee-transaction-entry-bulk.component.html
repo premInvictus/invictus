@@ -35,7 +35,7 @@
                   <div [ngClass]="!(notSetteledInvoicesMessage) ? 'col-12 col-lg-12 col-sm-12' : 'col-12 col-lg-12 col-sm-6'">
                     <form [formGroup]="feeTransactionForm">
                       <div class="row" style="margin-top: 0px !important">
-                        <div class="col-5 remove-col-padding">
+                        <div class="col-6 remove-col-padding">
                           <div class=" card-height-760 card-height-880">
                             <div class="row">
                               <div class="col-12 remove-col-padding-left">
@@ -142,14 +142,16 @@
                           </div>
                         </div>
                         <div *ngIf="notSetteledInvoicesMessage || invoiceArray.length > 0" class="col-1 fee-custom-col-8"><div class="vertical-line-divider"></div></div>
-                        <div class="col-6 remove-col-padding">
+                        <div class="col-5 remove-col-padding">
                           <div class="row ">
                             <div class="col-12 col-lg-12 col-sm-12" style="padding-left:0">
                               <table *ngIf="invoiceArray.length > 0" class="invoice-bulk-table table-100 text-center mat-table">
                                 <thead>
                                 <tr class="mat-header-row">
-                                  <th width="30%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Invoice No.</span></th>
-                                  <th width="60%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Amount</span></th>
+                                  <th width="15%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Invoice No.</span></th>
+                                  <th width="20%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Student Name</span></th>
+                                  <th width="10%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Class</span></th>
+                                  <th width="45%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Amount</span></th>
                                   <th width="10%" class="mat-header-cell mat-table-sticky"><span class="invoice-bulk-table-label">Action</span></th>
                                 </tr>
                               </thead>
@@ -160,20 +162,26 @@
                                 <form [formGroup]="invoiceAmtBulkForm.controls[i]">
                                   <div class="row invoicefrmrow"
                                     [ngStyle]="{'background-color':invoiceAmtBulkForm.value[i].color}">
-                                    <div style="width:30.1%;padding-top:10px;" class="text-center">
+                                    <div style="width:15.1%;padding-top:10px;" class="text-center">
                                       <span class="custom-entry-btn-text"><a (click)="openDialog(item,false)">
                                           {{item}}</a></span>
                                     </div>
-                                    <div style="width:60.1%" class="text-center">
+                                    <div style="width:20.1%;padding-top:10px;" class="text-center">
+                                      <span>{{invoiceAmtBulkForm?.value[i]?.au_full_name}}</span>
+                                    </div>
+                                    <div style="width:10.1%;padding-top:10px;" class="text-center">
+                                      <span>{{invoiceAmtBulkForm?.value[i]?.class_name}}</span>
+                                    </div>
+                                    <div style="width:44.7%" class="text-center">
                                       <mat-form-field [floatLabel]="'never'"> 
                                         <input matInput placeholder="Enter Invoice Amount" type="number"
-                                          formControlName="inv_invoice_amt"
+                                          formControlName="inv_invoice_amt" 
                                           [errorStateMatcher]="confirmValidParentMatcher" required>
                                       </mat-form-field>
                                     </div>
                                     <div style="width:9.8%; cursor:pointer" class="text-center">
                                       <i class="fas fa-times-circle custom-entry-btn-icon"
-                                        (click)="deleteInvoice(item)"></i>
+                                        (click)="deleteInvoice(i,item)"></i>
                                     </div>
                                   </div>
                                 </form>
