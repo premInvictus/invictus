@@ -120,12 +120,18 @@ export class RepairDamagedReportComponent implements OnInit {
     this.buildForm();
     this.getSchool();
     this.getSession();
-    this.reportTypeArray.push({
-      report_type: 'repair', report_name: 'Repair Report'
-    },
-      {
-        report_type: 'damaged', report_name: 'Damaged Report'
-      });
+    // this.reportTypeArray.push({
+    //   report_type: 'repair', report_name: 'Repair Report'
+    // },
+    //   {
+    //     report_type: 'damaged', report_name: 'Damaged Report'
+    //   });
+      if(this.CommonService.isExistUserAccessMenu('682')) {
+        this.reportTypeArray.push({report_type: 'repair', report_name: 'Repair Report'});
+      }
+      if(this.CommonService.isExistUserAccessMenu('683')) {
+        this.reportTypeArray.push({report_type: 'damaged', report_name: 'Damaged Report'});
+      }
 
   }
   buildForm() {
