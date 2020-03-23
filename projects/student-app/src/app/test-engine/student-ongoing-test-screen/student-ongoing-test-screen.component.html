@@ -519,7 +519,7 @@
                                                    <div class="row">
                                                       <div
                                                          class="col-lg-6 single-int-col-lg-6 col-apple-70-per remove-col-modal-padding">
-                                                         <mat-card>
+                                                         <mat-card class="single-card">
                                                             <table
                                                                style="border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
                                                                <tr class="text-center double-int-tr">
@@ -565,6 +565,7 @@
                                                             </table>
                                                          </mat-card>
                                                       </div>
+                                                      <br>
                                                       <div class="col-lg-1"></div>
                                                       <div class="col-lg-2 single-int-col-lg-2">
                                                          <mat-card class="sing-int-card">
@@ -599,7 +600,7 @@
                                                    <div class="row">
                                                       <div
                                                          class="col-lg-6 single-int-col-lg-6 col-apple-70-per remove-col-modal-padding">
-                                                         <mat-card>
+                                                         <mat-card class="double-card">
                                                             <table
                                                                style="padding-right: 3px !important;border: 1px solid #9c3;border-collapse:collapse !important;width:100% !important">
                                                                <tr class="text-center double-int-tr">
@@ -665,6 +666,7 @@
                                                             </table>
                                                          </mat-card>
                                                       </div>
+                                                      <br>
                                                       <div class="col-lg-1"></div>
                                                       <div class="col-lg-2 single-int-col-lg-2">
                                                          <mat-card class="sing-int-card">
@@ -729,32 +731,6 @@
                                  </div>
                               </div>
                               <br>
-                           </div>
-                           <div class="small-screen mobile">
-                              <div class="row">
-                                 <div class="col-12 text-center mb-2">
-                                    <button mat-raised-button class="mob-btn-adv-one" (click)="saveAndNext()">Save &
-                                       Next</button>
-                                    <button mat-raised-button class="mob-btn-adv-two mob-btn-spacer"
-                                       (click)="clearResponse()">Clear
-                                       Response</button>
-                                 </div>
-                                 <div class="col-6 text-right" style="padding-right: 5px;">
-                                    <div class="bookmark-btn" style="display: inline-block;">
-                                       <label class="bookmark-label" for="reviewans">{{bookMarkTitle}}</label>
-                                       <mat-checkbox class="bookmark-checkbox" (change)="getBookMark($event)"
-                                          id="reviewans" [checked]="bookMarkFlag">
-                                       </mat-checkbox>
-                                    </div>
-                                 </div>
-                                 <div class="col-6 text-left" style="padding-left: 5px;">
-                                    <button mat-raised-button class="mob-btn-adv-six m-0" (click)="testSummary()">Test
-                                       Summary</button>
-                                 </div>
-                                 <button (click)="openQuesDialog()" class="questions-modal-button">
-                                    <i class="fas fa-info questions-modal-icon"></i>
-                                 </button>
-                              </div>
                            </div>
                         </div>
                         <div class="col-lg-3">
@@ -858,6 +834,31 @@
                         </div>
                      </div>
                   </div>
+               </div>
+            </div>
+            <div class="small-screen mobile">
+               <div class="row">
+                  <div class="col-12 text-center mb-2">
+                     <button mat-raised-button class="mob-btn-adv-one" (click)="saveAndNext()">Save &
+                        Next</button>
+                     <button mat-raised-button class="mob-btn-adv-two mob-btn-spacer" (click)="clearResponse()">Clear
+                        Response</button>
+                  </div>
+                  <div class="col-6 text-right" style="padding-right: 5px;">
+                     <div class="bookmark-btn" style="display: inline-block;">
+                        <label class="bookmark-label" for="reviewans">{{bookMarkTitle}}</label>
+                        <mat-checkbox class="bookmark-checkbox" (change)="getBookMark($event)" id="reviewans"
+                           [checked]="bookMarkFlag">
+                        </mat-checkbox>
+                     </div>
+                  </div>
+                  <div class="col-6 text-left" style="padding-left: 5px;">
+                     <button mat-raised-button class="mob-btn-adv-six m-0" (click)="testSummary()">Test
+                        Summary</button>
+                  </div>
+                  <button (click)="openQuesDialog()" class="questions-modal-button">
+                     <i class="fas fa-info questions-modal-icon"></i>
+                  </button>
                </div>
             </div>
          </div>

@@ -137,3 +137,27 @@ mat-card.score-card-info-card-main-box.mat-card {
   position: relative !important;
   top: 11px !important;
 }   
+@media screen and (max-width: 720px)
+{
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+  .test-question-box {
+    height: auto!important;
+    overflow-y: auto !important;
+}
+.question-test-box {
+  overflow-x: auto !important;
+  padding-bottom: 15% !important;
+}
+mat-card.single-card.mat-card {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+mat-card.double-card.mat-card {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 15px;
+}
+}
