@@ -883,7 +883,7 @@
                      <div class="col-lg-12">
                         <div class="question-test-button">
                            <div class="row test-summary-ques-no-row-6">
-                              <div class="col-lg-12 " *ngIf="subjectArrayOfQP.length == 2">
+                              <div class="col-lg-12 margin-bot " *ngIf="subjectArrayOfQP.length == 2">
                                  <div class="row">
                                     <div class="col-lg-6" *ngFor="let sub of subjectArrayOfQP">
                                        <mat-card class="mydiv">
@@ -915,7 +915,7 @@
                               <!--More than 2 Subject-->
                               <div class="col-lg-12" *ngIf="subjectArrayOfQP.length > 2">
                                  <div class="row">
-                                    <div class="col-lg-4" *ngFor="let sub of subjectArrayOfQP">
+                                    <div class="col-lg-4 margin-bot" *ngFor="let sub of subjectArrayOfQP">
                                        <mat-card class="mydiv">
                                           <h6 class="text-center">
                                              {{sub.subName}}
@@ -945,7 +945,7 @@
                               <!--One Subject-->
                               <div class="col-lg-12" *ngIf="subjectArrayOfQP.length == 1">
                                  <div class="row">
-                                    <div class="col-lg-12" *ngFor="let sub of subjectArrayOfQP">
+                                    <div class="col-lg-12 margin-bot" *ngFor="let sub of subjectArrayOfQP">
                                        <mat-card class="mydiv">
                                           <h6 class="text-center">
                                              {{sub.subName}}
