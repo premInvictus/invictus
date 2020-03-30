@@ -92,7 +92,7 @@ export class StudentStrengthComponent implements OnInit, AfterViewInit {
 	levelSubtotalFooter: any[] = [];
 
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService,
+		public notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 

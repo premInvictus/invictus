@@ -4,8 +4,8 @@
             <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Report Type</mat-label>
                 <mat-select placeholder="Report Type" formControlName="reviewReport" (selectionChange)="resetDataset()">
-                    <mat-option value="0" selected>Summarised Report</mat-option>
-                    <mat-option value="1">Detailed Report</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('673')" value="0" selected>Summarised Report</mat-option>
+                    <mat-option *ngIf="notif.isExistUserAccessMenu('674')" value="1">Detailed Report</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

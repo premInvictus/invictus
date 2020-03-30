@@ -208,14 +208,21 @@ export class DocumentReportComponent implements OnInit, AfterViewInit {
 		this.reportFilterForm = this.fbuild.group({
 			report_type: ''
 		});
-		this.reportTypeArray.push(
-			{
-				report_type: 'status', report_name: 'Status Report'
-			},
-			{
-				report_type: 'negative', report_name: 'Negative Report'
-			}
-		);
+		// this.reportTypeArray.push(
+		// 	{
+		// 		report_type: 'status', report_name: 'Status Report'
+		// 	},
+		// 	{
+		// 		report_type: 'negative', report_name: 'Negative Report'
+		// 	}
+		// );
+		if(this.notif.isExistUserAccessMenu('675')) {
+			this.reportTypeArray.push({report_type: 'status', report_name: 'Status Report'});
+		}
+		if(this.notif.isExistUserAccessMenu('676')) {
+			this.reportTypeArray.push({report_type: 'negative', report_name: 'Negative Report'});
+		}
+
 	}
 	changeReportType($event) {
 		this.dataset = [];

@@ -34,11 +34,7 @@ export class MarksRegisterComponent implements OnInit {
   absentData = { "egs_grade_name": "AB", "egs_grade_value": "AB", "egs_range_start": "0", "egs_range_end": "0" };
   tableWidth = '100%';
   ect_grade_avg_highest: any = {grade: false}
-  reportTypeArray: any[] = [
-    {id: 'marksinput', name: 'Marks Input'},
-    {id: 'weightagescore', name: 'Weighted Score'},
-    {id: 'consolidatedregister', name: 'Consolidated Register'}
-  ];
+  reportTypeArray: any[] = [];
   subTypeArray: any[] = [];
   subTypeArray_temp: any[] = [];
   ect_exam_type = '0';
@@ -46,6 +42,15 @@ export class MarksRegisterComponent implements OnInit {
     this.buildForm();
     this.getClass();
     this.getExamActivityCategory();
+    if(this.commonAPIService.isExistUserAccessMenu('677')) {
+			this.reportTypeArray.push({id: 'marksinput', name: 'Marks Input'});
+    }
+    if(this.commonAPIService.isExistUserAccessMenu('678')) {
+			this.reportTypeArray.push({id: 'weightagescore', name: 'Weighted Score'});
+    }
+    if(this.commonAPIService.isExistUserAccessMenu('679')) {
+			this.reportTypeArray.push({id: 'consolidatedregister', name: 'Consolidated Register'});
+		}
   }
 
   constructor(

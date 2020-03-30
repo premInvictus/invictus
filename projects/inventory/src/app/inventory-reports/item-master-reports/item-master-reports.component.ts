@@ -125,12 +125,18 @@ export class ItemMasterReportsComponent implements OnInit {
     this.buildForm();
     this.getSchool();
     this.getSession();
-    this.reportTypeArray.push({
-      report_type: 'department', report_name: 'Department-wise Report'
-    },
-      {
-        report_type: 'location', report_name: 'Location-wise Report'
-      });
+    // this.reportTypeArray.push({
+    //   report_type: 'department', report_name: 'Department-wise Report'
+    // },
+    //   {
+    //     report_type: 'location', report_name: 'Location-wise Report'
+    //   });
+      if(this.CommonService.isExistUserAccessMenu('680')) {
+        this.reportTypeArray.push({report_type: 'department', report_name: 'Department-wise Report'});
+      }
+      if(this.CommonService.isExistUserAccessMenu('681')) {
+        this.reportTypeArray.push({report_type: 'location', report_name: 'Location-wise Report'});
+      }
 
   }
   getSession() {

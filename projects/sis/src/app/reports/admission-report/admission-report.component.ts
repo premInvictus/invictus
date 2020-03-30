@@ -95,7 +95,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 		26: 'Z'
 	};
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService,
+		public notif: CommonAPIService, private sisService: SisService,
 		private router: Router,
 		private route: ActivatedRoute) { }
 
