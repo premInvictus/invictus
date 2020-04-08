@@ -54,7 +54,7 @@ export class AssignmentComponent implements OnInit {
 	}
 	buildForm() {
 		this.paramForm = this.fb.group({
-			from: new Date(),
+			from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
 			to: new Date()
 		});
 	}
