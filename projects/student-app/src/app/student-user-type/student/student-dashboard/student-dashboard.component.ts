@@ -346,10 +346,12 @@ export class StudentDashboardComponent implements OnInit {
 		param.from = this.commonAPIService.dateConvertion(this.todaysDate);
 		param.to = this.commonAPIService.dateConvertion(this.todaysDate);
 		param.withDate = true;
-		param.as_status = [1];
+		param.as_status = ['1'];
 		this.erpCommonService.getAssignment({
-			class_id: this.userDetail.au_class_id, sec_id: this.userDetail.au_sec_id,
-			sub_id: this.sub_id
+			class_id: this.userDetail.au_class_id, 
+			sec_id: this.userDetail.au_sec_id,
+			sub_id: this.sub_id,
+			as_status: [1]
 		}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.assignmentArray = result.data;

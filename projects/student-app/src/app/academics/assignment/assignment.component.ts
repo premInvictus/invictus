@@ -100,6 +100,7 @@ export class AssignmentComponent implements OnInit {
 		const param: any = {};
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
+		param.as_status = ['1'];
 		param.withDate = '1';
 		if (this.testView === 'today') {
 			param.from = this.commonAPIService.dateConvertion(this.todaysDate);
