@@ -8369,8 +8369,13 @@ a.link {
         max-width: 100% !important;
         flex: 0 0 100% !important;
     }
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
     body {
-        overflow: auto !important;
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        // height: calc(100% - 1em) !important;
     }
     .mob-remove-card-shadow {
         box-shadow: none !important;
@@ -8663,6 +8668,16 @@ a.link {
     .time-remaining {
         width: 75px;
         height: 20px;
+    }
+    .mat-drawer-content {
+        height: 118vh !important;
+    }
+    mat-sidenav-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    html {
+        scroll-behavior: smooth;
     }
 }
 
