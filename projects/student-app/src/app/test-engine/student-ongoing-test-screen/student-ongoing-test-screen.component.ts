@@ -1397,7 +1397,8 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 							localStorage.removeItem('currentExamSub');
 							localStorage.removeItem('currentExam');
 							this.sendTestEndConfirmation();
-							this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
+							close();
+							//this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
 						}
 					}
 				);
