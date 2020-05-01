@@ -36,6 +36,9 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	},
 	{
 		au_process_type: '5', au_process_name: 'Alumini'
+	},
+	{
+		au_process_type: '6', au_process_name: 'Dropout'
 	}];
 	enrollMentToArray: any[] = [];
 	viewFlag = false;
@@ -112,10 +115,14 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '5') {
 				inputJson['alumini_no'] = this.changeEnrolmentStatusForm.value.au_login_id;
 				inputJson['pmap_status'] = '1';
+			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '6') {
+				inputJson['admission_no'] = this.changeEnrolmentStatusForm.value.au_login_id;
+				inputJson['pmap_status'] = '1';
 			}
 			if (inputJson) {
 				this.sisService.getMasterStudentDetail(inputJson).subscribe((result: any) => {
 					if (result && result.data && result.data[0]['au_login_id']) {
+						console.log('getMasterStudentDetail');
 						this.viewFlag = true;
 						let enrollment_no = '';
 						if (result.data[0]['au_process_type'] === '1') {
@@ -129,7 +136,18 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 						} else if (result.data[0]['au_process_type'] === '5') {
 							enrollment_no = result.data[0]['em_alumini_no'];
 						}
+						// if (result.data[0]['au_process_type'] === '3' || result.data[0]['au_process_type'] === '4'){
+						// 	if (result.data[0]['au_enrollment_status'] === 'left') {
 
+						// 		const indext = this.enrollMentToArray.findIndex(e => e.au_process_name == 'Dropout');
+						// 		this.enrollMentToArray.splice(indext,1);
+						// 		this.enrollMentToArray.push({au_process_type: '7', au_process_name: 'Re-admission'});
+						// 	} else {
+						// 		const indext = this.enrollMentToArray.findIndex(e => e.au_process_name == 'Re-admission');
+						// 		this.enrollMentToArray.splice(indext,1);
+						// 		this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Dropout'});
+						// 	}
+						// }
 						this.changeEnrolmentStatusForm.patchValue({
 							login_id: result.data[0]['au_login_id'],
 							au_login_id: enrollment_no,
@@ -188,7 +206,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '2') {
 				this.enrolmentPlaceholder = 'Regisrtation';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '2' &&
-					this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '5') {
+					this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '5'
+					&& this.enrollMentTypeArray[i]['au_process_type'] !== '6') {
 					temp_arr.push(this.enrollMentTypeArray[i]);
 				}
 				this.showCancel = true;
@@ -215,7 +234,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '5') {
 				this.enrolmentPlaceholder = 'Alumini';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '2'
-					&& this.enrollMentTypeArray[i]['au_process_type'] !== '5') {
+					&& this.enrollMentTypeArray[i]['au_process_type'] !== '5'
+					&& this.enrollMentTypeArray[i]['au_process_type'] !== '6') {
 					temp_arr.push(this.enrollMentTypeArray[i]);
 				}
 				this.showCancel = false;
@@ -227,8 +247,12 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 		}
 		this.enrollMentToArray = temp_arr;
-		if (this.changeEnrolmentStatusForm.value.enrolment_type === '3' || this.changeEnrolmentStatusForm.value.enrolment_type === '4') {
-			this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Dropout'});
+		// if (this.changeEnrolmentStatusForm.value.enrolment_type === '3' || this.changeEnrolmentStatusForm.value.enrolment_type === '4') {
+		// 	this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Dropout'});
+		// }
+		if (this.changeEnrolmentStatusForm.value.enrolment_type === '6') {
+			this.enrollMentToArray = [];
+			this.enrollMentToArray.push({au_process_type: '7', au_process_name: 'Re-admission'});
 		}
 
 	}
