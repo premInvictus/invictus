@@ -205,6 +205,7 @@ export class QelementService {
 		// no api
 	}
 	generateExcelFileSection(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.class_id) {
 			param.class_id = value.class_id;
@@ -212,6 +213,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/sectionGenerateExcel', param);
 	}
 	generateExcelFileSubject(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.class_id) {
 			param.class_id = value.class_id;
@@ -219,6 +221,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/subjectGenerateExcel', param);
 	}
 	generateExcelFileClass(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.board_id) {
 			param.board_id = value.board_id;
@@ -226,6 +229,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/classGenerateExcel', param);
 	}
 	generateExcelFileTopic(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.board_id) {
 			param.board_id = value.board_id;
@@ -239,6 +243,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/topicGenerateExcel', param);
 	}
 	generateExcelFileSubtopic(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.board_id) {
 			param.board_id = value.board_id;
@@ -255,6 +260,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/subtopicGenerateExcel', param);
 	}
 	userGenerateExcel(value) {
+		this.loaderService.startLoading();
 		const param: any = {};
 		if (value.role_id) {
 			param.role_id = value.role_id;
@@ -262,6 +268,7 @@ export class QelementService {
 		return this._http.post(environment.apiAxiomUrl + '/bulkupload/userGenerateExcel', param);
 	}
 	public uploadExcelFileSection(uploadedFile) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -273,6 +280,7 @@ export class QelementService {
 
 	}
 	public uploadExcelFileSubject(uploadedFile) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -284,6 +292,7 @@ export class QelementService {
 
 	}
 	public uploadExcelFileClass(uploadedFile) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -295,6 +304,7 @@ export class QelementService {
 
 	}
 	public uploadExcelFileTopic(uploadedFile) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -306,6 +316,7 @@ export class QelementService {
 
 	}
 	public uploadExcelFileSubtopic(uploadedFile) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -316,6 +327,7 @@ export class QelementService {
 		}
 	}
 	public userUpload(uploadedFile, role_id) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];
@@ -328,6 +340,7 @@ export class QelementService {
 
 	}
 	public teacherMappingUpload(uploadedFile, role_id) {
+		this.loaderService.startLoading();
 		const fileList: FileList = uploadedFile;
 		if (fileList.length > 0) {
 			const file: File = fileList[0];

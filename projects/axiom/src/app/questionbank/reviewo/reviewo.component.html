@@ -26,7 +26,7 @@
                   </div>
                   <div class="col-lg-2">
                      <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Subject</mat-label>
+                        <mat-label>Class</mat-label>
                         <mat-select formControlName="class_id" (selectionChange)="getSubjectsByClass()"
                            placeholder="Select Class">
                            <mat-option *ngFor="let item of classArray" [value]="item.class_id">

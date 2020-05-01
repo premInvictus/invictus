@@ -77,8 +77,8 @@
             <th mat-header-cell *matHeaderCellDef style="width:20%"> Overall Attendance </th>
             <td mat-cell *matCellDef="let element">
               <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-                <input matInput placeholder="Enter Overall Attendance" (change)="onTextChange($event)" type="text"
-                  value="{{element.overall_attendance}}" required formControlName="overall_attendance">
+                <input matInput placeholder="Enter Overall Attendance" type="text"
+                  value="{{element.overall_attendance}}" required formControlName="overall_attendance" [readonly]="!checkEditableForStudent(element)">
               </form>
             </td>
           </ng-container>
@@ -87,8 +87,8 @@
             <th mat-header-cell *matHeaderCellDef style="width:20%"> Present Days </th>
             <td mat-cell *matCellDef="let element">
               <form [formGroup]="formgroupArray[element.sr_no - 1].formGroup">
-                <input type="number" matInput placeholder="Enter Present Days" (change)="onTextChange($event)"
-                  type="text" value="{{element.present_days}}" required formControlName="present_days">
+                <input type="number" matInput placeholder="Enter Present Days"
+                  type="text" value="{{element.present_days}}" required formControlName="present_days" [readonly]="!checkEditableForStudent(element)">
               </form>
             </td>
           </ng-container>
@@ -101,9 +101,9 @@
         <div class="row margin-top-20" *ngIf="ELEMENT_DATA.length>0">
           <div class="col-12 text-center">
             <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall"
-              (click)="finalSubmit();$event.stopPropagation()" *ngIf="!termDataFlag">Submit</button>
+              (click)="finalSubmit();$event.stopPropagation()" *ngIf="(!termDataFlag) && isAnyoneEditabelStu()">Submit</button>
             <button mat-raised-button class="btn-success-green" (click)="finalUpdate();$event.stopPropagation()"
-              *ngIf="termDataFlag">Update</button>
+              *ngIf="termDataFlag && isAnyoneEditabelStu()">Update</button>
             <button mat-raised-button class="btn-reset margin-left-10" (click)="finalCancel()">cancel</button>
           </div>
         </div>

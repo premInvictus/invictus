@@ -1,0 +1,110 @@
+<!-- <div class="row">
+  <div class="col-12">
+    <mat-card>
+        <div class="row">
+          <div class="col-6 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Gradecard Print Setup</span>
+          </div>
+        </div>
+    </mat-card>
+  </div>
+</div> -->
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+          <div class="modal-title-box">
+              <span class="font-size-20 font-white font-regular">Print Setting</span><span
+                  class="float-right margin-top-5">
+                  <a (click)="closeDialog()">  <i class="far fa-times-circle font-white cursor-pointer font-size-24"></i></a></span>
+          </div>
+      </div>
+  </div>   
+</div>
+
+<div class="row margin-top-30">
+  <div class="col-12">
+      <form [formGroup]="paramform">
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Class</mat-label>
+            <mat-select placeholder="Class" formControlName="class_id"
+              (selectionChange)="setPrintSetup()" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Size</mat-label>
+            <mat-select placeholder="Page Size" formControlName="page_size" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageSize" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Orientation</mat-label>
+            <mat-select placeholder="Page Orientation" formControlName="page_orientation" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageOreintation" [value]="item.id">{{item.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Font Size</mat-label>
+            <mat-select placeholder="Font Size" formControlName="font_size" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of fontSize" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Margin Left</mat-label>
+            <mat-select placeholder="Font Size" formControlName="page_margin_left" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageMargin" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Margin Top</mat-label>
+            <mat-select placeholder="Font Size" formControlName="page_margin_top" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageMargin" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Margin Right</mat-label>
+            <mat-select placeholder="Font Size" formControlName="page_margin_right" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageMargin" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field appearance="outline" class="form-field-150">
+            <mat-label>Page Margin Bottom</mat-label>
+            <mat-select placeholder="Font Size" formControlName="page_margin_bottom" required>
+              <mat-option value="">Please select</mat-option>
+              <mat-option *ngFor="let item of pageMargin" [value]="item">{{item}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="row text-center">
+        <div class="col-12">
+          <button mat-raised-button class="btn-primary-100" style="margin-top: 10px; width: 100px !important;margin-left: 15px;" (click)="submit()">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

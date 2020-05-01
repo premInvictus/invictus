@@ -80,7 +80,7 @@ export class ComparativeLongListComponent implements OnInit {
 				(result: any) => {
 					if (result && result.status === 'ok') {
             result.data.forEach(element => {
-              if(element.eac_type === '1') {
+              if(element.eac_type === '1' && element.eac_category == 'A') {
                 this.subTypeArray.push(element);
               }
             });

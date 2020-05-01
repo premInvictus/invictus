@@ -166,7 +166,9 @@ export class SetupComponent implements OnInit {
 					ect_class_id: '',
 					ect_term_id: '',
 					ect_gradeset_id: '',
+					ect_gradeset_id_b: '',
 					ect_co_gradeset_id: '',
+					ect_co_gradeset_id_b: '',
 					ect_exam_type: '',
 					ect_status: '',
 					ect_created_by: '',
@@ -487,7 +489,9 @@ export class SetupComponent implements OnInit {
 							name: class_arr,
 							term_name: that.getTermName(item.ect_term_id),
 							grade_name: that.getGradeName(item.ect_gradeset_id),
+							grade_name_b: that.getGradeName(item.ect_gradeset_id_b),
 							co_grade_name: that.getGradeName(item.ect_co_gradeset_id),
+							co_grade_name_b: that.getGradeName(item.ect_co_gradeset_id_b),
 							exam_type: that.getExamTypeName(item.ect_exam_type),
 							ect_grade_avg_highest: item.ect_grade_avg_highest ? that.get_ect_grade_avg_highest(JSON.parse(item.ect_grade_avg_highest)) : '',
 							action: item
@@ -884,7 +888,9 @@ export class SetupComponent implements OnInit {
 				ect_class_id: value.ect_class_id,
 				ect_term_id: value.ect_term_id,
 				ect_gradeset_id: value.ect_gradeset_id,
+				ect_gradeset_id_b: value.ect_gradeset_id_b,
 				ect_co_gradeset_id: value.ect_co_gradeset_id,
+				ect_co_gradeset_id_b: value.ect_co_gradeset_id_b,
 				ect_exam_type: value.ect_exam_type,
 				ect_grade_avg_highest: value.ect_grade_avg_highest ? JSON.parse(value.ect_grade_avg_highest) : ''
 			});
@@ -945,7 +951,7 @@ export class SetupComponent implements OnInit {
 			this.getActiveClass(this);
 			this.getTermList(this);
 			this.getDropdownGradeSet(this);
-			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'co_grade_name', 'ect_grade_avg_highest', 'exam_type', 'action', 'modify'];
+			this.displayedColumns = ['position', 'name', 'term_name', 'grade_name', 'grade_name_b', 'co_grade_name', 'co_grade_name_b', 'ect_grade_avg_highest', 'exam_type', 'action', 'modify'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 8) { // for exam class term garde	
 			this.getClassTermDate(this);

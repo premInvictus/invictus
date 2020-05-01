@@ -170,13 +170,15 @@ export class FailureListComponent implements OnInit {
   displayData() {
     if (this.paramform.value.eme_exam_id.length > 0) {
       this.responseMarksArray = {};
-      this.tableDivFlag = true;
       this.examService.getFailureList(this.paramform.value).subscribe((result: any) => {
         if (result && result.status === 'ok') {
           this.responseMarksArray = result.data;
-          console.log(this.responseMarksArray);
-          this.thead_data = this.responseMarksArray['failureDetails']['se_id'][0]['subject'][0]['section'];
-          console.log(this.thead_data);
+          console.log('responseMarksArray ---',this.responseMarksArray);
+          if(Object.keys(this.responseMarksArray['failureDetails']).length > 0){
+            this.thead_data = this.responseMarksArray['failureDetails']['se_id'][0]['subject'][0]['section'];
+            console.log('thead_data ---',this.thead_data);
+            this.tableDivFlag = true;
+          }
         }
       })
     } else {

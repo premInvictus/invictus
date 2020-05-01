@@ -106,7 +106,7 @@
                               class="form-field">
                               <mat-label>Select Date</mat-label>
                               <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                                 formControlName="ftr_transaction_date">
+                                 formControlName="ftr_transaction_date" (dateChange)="recaluclateInvoice($event)">
                               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                               <mat-datepicker #picker></mat-datepicker>
                            </mat-form-field>

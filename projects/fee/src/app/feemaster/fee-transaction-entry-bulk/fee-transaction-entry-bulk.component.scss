@@ -23,6 +23,60 @@ table.custom-table th {
 table.custom-table td {
     border:  2px solid #ff0000 !important
 }
+.custom-entry-btn-text {
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.invoicefrm {
+    overflow: auto;
+}
+
+.invoicefrmrow {
+    // background: #ecf3f9;
+    // padding: 5px;    
+    margin-top: 0px !important;
+    height: 44px;
+}
+
+
+.invoicefrmrow input.mat-input-element {
+    margin-top: -.0625em;
+}
+
+.invoicefrmrow div {
+    border-bottom: 1px solid #89A8C9 !important;
+    border-left: 1px solid #89Abc9;
+    height: 44px;
+    vertical-align: middle;
+}
+
+.invoicefrmrow div:last-child {
+    border-right: 1px solid #89Abc9;
+}
+
+.invoicefrmrow ::ng-deep .mat-form-field-underline {
+    display: none;
+    height:0 !important
+}
+
+.invoicefrmrow ::ng-deep .mat-form-field-infix {
+    margin-top: -5px;
+
+}
+
+.invoicefrmrow ::ng-deep .mat-form-field-placeholder{
+    color:#ccc !important;
+}
+
+.custom-entry-btn-icon {
+    margin-right:20px !important;
+}
+
+// .invoice-bulk-table-label {
+//     font-size:18px;
+// }
+
 .text {
     z-index: 2000;
     position: absolute;

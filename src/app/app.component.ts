@@ -28,8 +28,8 @@ export class AppComponent implements OnInit {
 	title = 'Invictus DigiSoft';
 	userData: any;
 	dialogRef: MatDialogRef<TimeoutModalComponent>;
-	public _counter: number = 0;
-	public _status: string = "Initialized.";
+	public _counter = 0;
+	public _status = 'Initialized.';
 	currenturl = '';
 	public options = {
 		position: ['bottom', 'right'],
@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
 	schoolInfo: any;
 	x: NodeJS.Timer;
 	message: any;
+	currentUser: any = {};
 	constructor(private router: Router, private loaderService: CommonAPIService,
 		private angularFireMessaging: AngularFireMessaging,
 		private messagingService: MessagingService,
@@ -62,7 +63,8 @@ export class AppComponent implements OnInit {
 				case event instanceof NavigationEnd:
 				case event instanceof NavigationCancel:
 				case event instanceof NavigationError: {
-					this.loaderService.counterTimer = 60;
+					this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+					this.loaderService.counterTimer = 4;
 					this.idle.resetTimer();
 					this.idle.startWatching();
 					this.showLoadingFlag = false;
@@ -76,16 +78,16 @@ export class AppComponent implements OnInit {
 	}
 	deleteToken() {
 		this.angularFireMessaging.getToken
-		  .pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
-		  .subscribe(
-			(token) => { console.log('Deleted!'); },
-		  );
-	  }
+			.pipe(mergeMap(token => this.angularFireMessaging.deleteToken(token)))
+			.subscribe(
+				(token) => { console.log('Deleted!'); },
+			);
+	}
 	ngOnInit() {
-	this.messagingService.receiveMessage();
-	this.message = this.messagingService.currentMessage;
-	console.log(this.message);
-		document.addEventListener("mousemove", (e) => {
+		this.messagingService.receiveMessage();
+		this.message = this.messagingService.currentMessage;
+		console.log(this.message);
+		document.addEventListener('mousemove', (e) => {
 			this.idle.resetTimer();
 		});
 		this.getCurrentUrl();
@@ -120,7 +122,7 @@ export class AppComponent implements OnInit {
 	}
 
 	startWindowOpen() {
-		this.loaderService.counterTimer = 60;
+		this.loaderService.counterTimer = 4;
 		this.x = setInterval(() => {
 			this.loaderService.setCounter(this.loaderService.counterTimer);
 			this.loaderService.counterTimer--;
@@ -137,18 +139,21 @@ export class AppComponent implements OnInit {
 	sessionTimeout() {
 		this.idle.stopWatching();
 		this.idle.startWatching();
-		this.loaderService.counterTimer = 60;
+		this.loaderService.counterTimer = 4;
 		this.idle.onTimerStart().subscribe((count: any) => {
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
+			const routeUrl: String = routeData._routerState.url;
 			const pageUrl = (routeData._routerState.url).substring(1, routeData._routerState.url.length);
 			if (JSON.parse(localStorage.getItem('project'))) {
 				this.proUrl = JSON.parse(localStorage.getItem('project')).pro_url;
 			}
-			if (!(pageUrl === 'login') && Number(count) === Number(valJson['timeout'])) {
+			if (!(pageUrl === 'login') && !(routeUrl.includes('axiom'))
+				&& Number(this.currentUser.role_id) !== 4
+				&& Number(count) === Number(valJson['timeout'])) {
 				this.dialogRef = this.diaog.open(TimeoutModalComponent, {
 					disableClose: true,
-					'height': '265px',
+					'height': '180px',
 					'width': '400px',
 					position: {
 						'top': '20%'
@@ -161,7 +166,7 @@ export class AppComponent implements OnInit {
 					if (res && res.extend) {
 						clearInterval(this.x);
 						this.idle.resetTimer();
-						this.loaderService.counterTimer = 60;
+						this.loaderService.counterTimer = 4;
 						this.idle.startWatching();
 						this.changeRef.markForCheck();
 						this.getSchool();
@@ -170,7 +175,7 @@ export class AppComponent implements OnInit {
 						this.idle.stopTimer();
 						this.diaog.closeAll();
 						this.logout();
-						this.loaderService.counterTimer = 60;
+						this.loaderService.counterTimer = 4;
 						this.idle.stopWatching();
 					}
 				});

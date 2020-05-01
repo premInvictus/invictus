@@ -138,14 +138,18 @@ export class FeestrucReportComponent implements OnInit {
 		this.getSession();
 		this.buildForm();
 		this.getClassData();
-		this.reportTypeArray.push({
-			report_type: 'feestructure',
-			report_name: 'Fee Structure Report'
-		},
-			{
-				report_type: 'feestructurealloted',
-				report_name: 'Fee Structure Allotee Report'
-			});
+		// this.reportTypeArray.push({
+		// 	report_type: 'feestructure',report_name: 'Fee Structure Report'
+		// },
+		// 	{
+		// 		report_type: 'feestructurealloted',report_name: 'Fee Structure Allotee Report'
+		// 	});
+			if(this.common.isExistUserAccessMenu('665')) {
+				this.reportTypeArray.push({report_type: 'feestructure',report_name: 'Fee Structure Report'});
+			}
+			if(this.common.isExistUserAccessMenu('666')) {
+				this.reportTypeArray.push({report_type: 'feestructurealloted',report_name: 'Fee Structure Allotee Report'});
+			}
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;

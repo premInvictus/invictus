@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Outpu
 import { DomSanitizer } from '@angular/platform-browser';
 declare var $: any;
 declare var ImageViewer: any;
-
+import { saveAs } from 'file-saver';
 /**
  * @author Breno Prata - 22/12/2017
  */
@@ -21,7 +21,7 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 		BASE_64_PDF = 'data:application/pdf;base64, ';
 		ROTACAO_PADRAO_GRAUS = 90;
 		TOTAL_ROTACAO_GRAUS_VERTICAL = this.ROTACAO_PADRAO_GRAUS * 3;
-		pdfUrl;
+		pdfUrl: any;
 		@Input() idContainer;
 		@Input() images: any[];
 		@Input() rotate = true;
@@ -98,6 +98,10 @@ export class ImageViewerComponent implements OnChanges, OnInit, AfterViewInit {
 				this.primaryColorChange(changes);
 				this.buttonsColorChange(changes);
 				this.defaultDownloadNameChange(changes);
+		}
+		downloadAttach(url) {
+			const length = url.split('/').length;
+			saveAs(url, url.split('/')[length - 1]);
 		}
 
 		zoomIn() {

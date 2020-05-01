@@ -39,7 +39,7 @@
                            <td style="text-align:right"><b>Mobile no</b></td>
                            <td>:</td>
                            <td>
-                              {{studentDetails.emp_personal_detail.contact_detail ? studentDetails.emp_personal_detail.contact_detail.primary_mobile_no : '-'}}
+                              {{studentDetails.emp_personal_detail && studentDetails.emp_personal_detail.contact_detail ? studentDetails.emp_personal_detail.contact_detail.primary_mobile_no : '-'}}
                            </td>
                         </tr>
                         <tr [ngStyle]="{'font-weight':allContentBold}"

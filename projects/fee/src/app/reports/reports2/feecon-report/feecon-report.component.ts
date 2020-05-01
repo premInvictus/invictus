@@ -140,15 +140,24 @@ export class FeeconReportComponent implements OnInit {
 		this.getSession();
 		this.buildForm();
 		this.getClassData();
-		this.reportTypeArray.push({
-			report_type: 'concession', report_name: 'Concession Report'
-		},
-		{
-			report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'
-		},
-		{
-			report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'
-		});
+		// this.reportTypeArray.push({
+		// 	report_type: 'concession', report_name: 'Concession Report'
+		// },
+		// {
+		// 	report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'
+		// },
+		// {
+		// 	report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'
+		// });
+		if(this.common.isExistUserAccessMenu('662')) {
+			this.reportTypeArray.push({report_type: 'concession', report_name: 'Concession Report'});
+		}
+		if(this.common.isExistUserAccessMenu('663')) {
+			this.reportTypeArray.push({report_type: 'concessionAlloted', report_name: 'Concession Allotee Report'});
+		}
+		if(this.common.isExistUserAccessMenu('664')) {
+			this.reportTypeArray.push({report_type: 'concessionAllotedSummary', report_name: 'Concession Allotee Summary Report'});
+		}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {

@@ -8364,13 +8364,61 @@ a.link {
     }
 }
 
+@media screen and (max-width: 1024px) and (min-width: 1024px) {
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+    body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        // height: calc(100% - 1em) !important;
+    }
+    html {
+        scroll-behavior: smooth;
+    }
+    .add-question-content {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: 118vh;
+    }
+}
+
+@media screen and (max-width: 768px) and (min-width: 768px) {
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+    .small-screen.mobile {
+        position: absolute !important;
+        bottom: -75% !important;
+    }    
+    body {
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        height: 118vh;
+        // height: calc(100% - 1em) !important;
+    }
+    html {
+        scroll-behavior: smooth;
+    }
+    .add-question-content {
+        overflow-x: hidden;
+        overflow-y: scroll;
+        height: 118vh;
+    }
+}
+
 @media screen and (max-width: 550px) and (min-width: 300px) {
     .mob-col-100 {
         max-width: 100% !important;
         flex: 0 0 100% !important;
     }
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
     body {
-        overflow: auto !important;
+        overflow-x: hidden !important;
+        overflow-y: scroll !important;
+        // height: calc(100% - 1em) !important;
     }
     .mob-remove-card-shadow {
         box-shadow: none !important;
@@ -8663,6 +8711,16 @@ a.link {
     .time-remaining {
         width: 75px;
         height: 20px;
+    }
+    .mat-drawer-content {
+        height: 118vh !important;
+    }
+    mat-sidenav-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    html {
+        scroll-behavior: smooth;
     }
 }
 

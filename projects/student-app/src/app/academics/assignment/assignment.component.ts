@@ -53,9 +53,12 @@ export class AssignmentComponent implements OnInit {
 			});
 	}
 	buildForm() {
+		const today = new Date();
+		const yesterday = new Date(today);
+		yesterday.setDate(today.getDate() - 1);
 		this.paramForm = this.fb.group({
-			from: new Date(),
-			to: new Date()
+			from: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+			to: yesterday
 		});
 	}
 	switchView(testView) {
@@ -111,7 +114,9 @@ export class AssignmentComponent implements OnInit {
 		// param.sub_id = this.sub_id;
 		this.erpCommonService.getAssignment(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				const tempcw = result.data;
+				let tempcw: any[] = [];
+				this.assignmentArray = [];
+				tempcw = result.data;
 				const dateSet = new Set();
 				if (tempcw.length > 0) {
 					tempcw.forEach(element => {

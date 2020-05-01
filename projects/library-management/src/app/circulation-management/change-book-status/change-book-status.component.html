@@ -5,25 +5,28 @@
         <div class="col-7 margin-top-15">
           <span class="font-size-24">Change Book Status</span>
         </div>
-        <div class="col-5">
-          <div class="search-container">
-            <form [formGroup]="searchForm">
-              <div class="row remove-top-margin">
-                <div class="col-6">
-                  <mat-form-field class="lib-form form-field">
-                    <input matInput placeholder="Search Any Book By ID" id="search_book" type="text"
-                      formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()"
-                      autocomplete="off" />
-                  </mat-form-field>
-                  <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
-                </div>
-                <div class="col-6 margin-top-10  text-right">
-                  <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog($event)">Advanced Search
-                    <i class="fas fa-chevron-down"></i></span>
-                </div>
+        <div class="col-2 margin-top-20">
+          <mat-slide-toggle class="inline-form-radio-spacing" (change)="issueOnly($event)" aria-hidden="true">
+          </mat-slide-toggle> <span style="font-size:14px">Search Only Issued Books</span>
+        </div>
+        <div class="col-3">
+          <form [formGroup]="searchForm">
+            <div class="row remove-top-margin">
+              <div class="col-8">
+                <mat-form-field class="form-field" appearance="outline">
+                  <mat-label>Search Any Book By ID</mat-label>
+                  <input matInput placeholder="Search Any Book By ID" id="search_book" type="text"
+                    formControlName="search" (keydown.enter)="searchBook($event);$event.stopPropagation()"
+                    autocomplete="off" />
+                </mat-form-field>
+                <barcode-scanner-livestream (valueChanges)="onValueChanges($event)"></barcode-scanner-livestream>
               </div>
-            </form>
-          </div>
+              <div class="col-4 margin-top-20">
+                <span class="font-size-12 margin-top-15 font-skyblue" (click)="openSearchDialog($event)">Advanced Search
+                  <i class="fas fa-chevron-down"></i></span>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </mat-card>
@@ -70,7 +73,8 @@
                     <div class="font-size-12 margin-top-15 font-medium">
                       <b>BOOK ID</b>: {{item.reserv_id}}
                     </div>
-                    <span class="font-size-16 font-medium"><b>{{item.title ? (item.title | truncatetext : 25) : ''}}</b></span><br />
+                    <span
+                      class="font-size-16 font-medium"><b>{{item.title ? (item.title | truncatetext : 25) : ''}}</b></span><br />
                     <span class="font-size-14 font-medium">{{item.authors}}</span>
                     <div class="font-size-14  font-medium">
                       <b>Location</b>: {{item.location}}
@@ -212,9 +216,8 @@
             <br />
             <div class="row text-center" *ngIf="changeStatusForm?.value?.filters">
               <div class="col-12">
-                <button mat-raised-button class="btn-success-green" 
-                [disabled]="disableApiCall"
-                (click)="changeReservoirStatus()">
+                <button mat-raised-button class="btn-success-green" [disabled]="disableApiCall"
+                  (click)="changeReservoirStatus()">
                   Submit
                 </button>
                 <button mat-raised-button class="btn-reset btn-spacer">

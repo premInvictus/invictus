@@ -1,23 +1,296 @@
-<!-- <div class="main-dashboard">
-	<div class="row row-remove-top-margin">
-		<div class="col-lg-12 remove-col-modal-padding">
-			<div class="dash-second-white-box">
-				<div class="row row-remove-top-margin">
-					<div class="col-lg-8 fin-tab-col-7">
-						<span class="dash-breadcrumb">
-							<i class="fas fa-home"></i>&nbsp;&nbsp; Students /
-							<span class="dash-breadcrumb-title">Dashboard</span>
+<div id="large-screen">
+	<div class="row">
+		<div class="col-12">
+			<mat-card>
+				<div class="row">
+					<div class="col-6 margin-top-10">
+						<h1 class="remove-bottom-margin font-size-24">Dashboard</h1>
+					</div>
+					<div class="col-6 text-right">
+						<span class="font-size-20 font-bold font-skyblue">{{currentHour()}},</span> <span
+							class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
+						<br>
+						<span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}
+							<!-- 13<sup>th</sup> April 2018 --></span>
+					</div>
+				</div>
+			</mat-card>
+		</div>
+	</div>
+
+	<div class="row margin-top-10">
+		<div class="col-12">
+			<mat-card>
+				<div class="row">
+					<div class="col-11">
+						<span class="font-size-20 font-bold">Time Table</span>
+					</div>
+					<div class="col-1 ">
+						<select class="select-css float-right" [(ngModel)]="week_day"
+							(change)="getClassSectionWiseTimeTable()">
+							<option *ngFor="let item of weekArr; let i = index" [value]="i+1">{{item}}</option>
+						</select>
+					</div>
+				</div>
+				<hr class="border-bottom-grey">
+				<div class="row margin-top-15" *ngIf="timeTableFlag">
+					<div class="col-12">
+						<ng-container *ngFor="let item of dayArray; let i=index">
+							<div class="info-box info-box-margin" [ngStyle]="{'background-color':item.sub_color}">
+								<div class="wave-container">
+									<svg viewBox="0 0 500 160" preserveAspectRatio="none"
+										style="height: 100%; width: 100%;">
+										<path
+											d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
+											style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
+									</svg>
+								</div>
+								<div class="box-content-container">
+									<span class="font-size-30">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
+									<div class="margin-top-35">
+										<span class="font-size-16">{{className}} - {{secName}}</span><br>
+										<span class="font-size-16">{{item.subject_name}}</span>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+				<div class="row margin-top-15" *ngIf="!timeTableFlag">No Timetable</div>
+			</mat-card>
+		</div>
+	</div>
+
+	<div class="row margin-top-10">
+		<div class="col-4 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-10">
+							<span class="font-size-20 font-bold">Assignments</span>
+						</div>
+						<div class="col-2">
+							<select class="select-css" [(ngModel)]="sub_id" (change)="getAssignment()">
+								<option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
+								</option>
+							</select>
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<ng-container *ngIf="assignmentArray.length > 0">
+						<div class="row">
+							<div class="col-10">
+								<span
+									class="font-size-20 font-medium font-skyblue">{{currentAssignment?.sub_name}}</span>
+							</div>
+							<div class="col-2">
+								<button *ngIf="currentAssignment && currentAssignment.as_attachment.length > 0"
+									mat-button class="float-btn-blue font-size-14 font-white"
+									(click)="previewDocuments(currentAssignment?.as_attachment)">
+									+{{currentAssignment?.as_attachment.length}}
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<span class="font-size-16 font-medium">{{currentAssignment?.topic_name}}</span>
+								<div class="font-size-15 margin-top-10"
+									[innerHTML]="currentAssignment?.as_assignment_desc"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-8 remove-right-padding">
+								<span class="font-size-15">Assigned On :</span><span class="font-medium font-size-15">
+									{{currentAssignment?.as_entry_date| date:'d-MMM-y'}}</span>
+							</div>
+
+							<div class="col-4 remove-col-modal-padding text-center">
+								<span><button mat-button class="side" [disabled]="assignmentPre"
+										(click)="assignmentNavigate(currentAssignmentIndex-1)">
+										<i class="fas fa-chevron-left cursor-pointer"></i>
+									</button>
+									<button mat-button class="side" [disabled]="assignmentNext"
+										(click)="assignmentNavigate(currentAssignmentIndex+1)">
+										<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+									</button></span>
+							</div>
+
+						</div>
+					</ng-container>
+					<ng-container *ngIf="assignmentArray.length == 0">
+						<div class="text-center">
+							<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+								height="150px">
+							<br>
+							<span class="font-size-20 font-bold font-color-brown">
+								No Record Found
+							</span>
+						</div>
+					</ng-container>
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<div class="col-4 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-10">
+							<span class="font-size-20 font-bold">Photo Gallery</span>
+						</div>
+						<div class="col-2 ">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer">View All</span>
+							</div>
+
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<div class="row">
+						<div class="col-1 remove-col-modal-padding">
+							<div class="arrow-navigator">
+								<i class="fas fa-chevron-left cursor-pointer"></i>
+							</div>
+						</div>
+						<div class="col-10">
+							<div class="text-center">
+								<div class="image-thumb-box inline-flex">
+
+								</div>
+								<div class="image-thumb-box inline-flex margin-left-15">
+
+								</div>
+								<div class="image-thumb-box inline-flex margin-left-15">
+
+								</div>
+							</div>
+						</div>
+
+						<div class="col-1 remove-col-modal-padding">
+							<div class="arrow-navigator">
+								<i class="fas fa-chevron-right cursor-pointer"></i>
+							</div>
+
+						</div>
+					</div>
+
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<div class="col-4">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-5">
+							<span class="font-size-20 font-bold cursor-pointer" (click)="switchView('past')"
+								[ngClass]="{'disablePage':testView == 'upcoming'}">
+								Upcoming Tests
+							</span>
+
+
+						</div>
+						<div class="col-2">
+							<span class="vertical-line-divider"></span>
+						</div>
+						<div class="col-5">
+							<span class="font-size-20 font-bold cursor-pointer" (click)="switchView('upcoming')"
+								[ngClass]="{'disablePage':testView == 'past'}">
+								Past Tests
+							</span>
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content *ngIf="currentExam">
+					<div class="row">
+						<div class="col-10">
+							<span class="font-size-20 font-medium font-skyblue">{{currentExam?.qp_name}}</span>
+						</div>
+						<div class="col-2">
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-10">
+							<span class="font-size-16 font-medium">{{currentExam?.sub_name}},
+								{{currentExam?.class_name}} - {{currentExam?.sec_name}}</span>
+							<p class="font-size-15 margin-top-10">{{currentExam?.ti_instruction}} </p>
+						</div>
+						<div class="col-2 text-center" *ngIf="testView == 'past'">
+							<a (click)="startTest(currentExam)" class="left-dash-card-play-btn">
+								<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top"
+									matTooltip="Start Test" aria-hidden="true"></i>
+							</a>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<span class="font-size-15">Time :</span><span class="font-medium font-size-15">
+								{{currentExam?.es_start_date+' '+currentExam?.es_start_time | date:'hh:mm a'}} -
+								{{currentExam?.es_end_date+' '+currentExam?.es_end_time | date:'hh:mm a'}}</span><br>
+
+						</div>
+					</div>
+					<div class="row row-remove-top-margin">
+						<div class="col-8 remove-right-padding">
+
+							<span class="font-size-15">Date Of Test :</span><span class="font-medium font-size-15">
+								{{currentExam?.es_start_date | date:'d-MMM-y'}}</span>
+						</div>
+						<div class="col-4 remove-col-modal-padding text-center">
+							<span><button mat-button class="side" [disabled]="examPre"
+									(click)="examNavigate(currentExamIndex-1)">
+									<i class="fas fa-chevron-left cursor-pointer"></i>
+								</button>
+								<button mat-button class="side" [disabled]="examNext"
+									(click)="examNavigate(currentExamIndex+1)">
+									<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+								</button>
+							</span>
+						</div>
+					</div>
+
+				</mat-card-content>
+				<ng-container *ngIf="!currentExam">
+					<div class="text-center">
+						<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+							height="150px">
+						<br>
+						<span class="font-size-20 font-bold font-color-brown">
+							No Record Found
 						</span>
 					</div>
-					<div class="col-lg-4 fin-tab-col-3">
-						<div class="float-right">
-							<span class="dash-breadcrumb-support">
-								<img class="dash-breadcrumb-image" src="/assets/images/support.svg">&nbsp;
-								<span>Support</span>
+				</ng-container>
+			</mat-card>
+		</div>
+	</div>
+</div>
+<div id="small-screen">
+	<div class="row">
+		<div class="col-12">
+			<div class="fixed-dexription">
+				<div class="row">
+					<div class="col-12">
+						<div class="text-left">
+							<span class="header-desc">
+								Dashboard
 							</span>
-							<span>
-								<span class="dash-date">Today : </span>
-								<span class="dash-date-value">{{today | date}}</span>
+						</div>
+						<div class="text-right">
+							<span class="header-desc-date">
+								{{todaysDate | date:'d MMM y'}}
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12">
+						<div class="text-left">
+							<span class="header-des">
+								<b>{{currentHour()}},</b> {{currentUser.full_name | titlecase}}
 							</span>
 						</div>
 					</div>
@@ -26,535 +299,236 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-12 ">
-			<div class="row">
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
-						<div class="row">
-							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
-								<span class="dash-info-card-title-value">{{highestMarks}}%</span>
-								<br>
-								<span class="dash-tab-view-info-card-sub-title">Highest Marks Scored</span>
-							</div>
-							<div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
-								<div class="text-right">
-									<img class="dash-info-card-image" src="/assets/images/folder.svg">
-								</div>
-							</div>
+		<div class="col-12">
+			<div class="content-div">
+				<div class="row">
+					<div class="col-12">
+						<div class="text-left">
+							<span class="header-sec">Timetable</span>
 						</div>
-					</mat-card>
-					<br>
-				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
-						<div class="row">
-							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
-								<span class="dash-info-card-title-value">{{totalTest}}</span>
-								<br>
-								<span class="dash-tab-view-info-card-sub-title">Total Exams Given</span>
-							</div>
-							<div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
-								<div class="text-right">
-									<img class="dash-info-card-image" src="/assets/images/copy-writing.svg">
-								</div>
-							</div>
+						<div class="select-div">
+							<select class="select-css" [(ngModel)]="week_day" (change)="getClassSectionWiseTimeTable()">
+								<option *ngFor="let item of weekArr; let i = index" [value]="i+1">{{item}}</option>
+							</select>
 						</div>
-					</mat-card>
-					<br>
-				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
-						<div class="row">
-							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
-								<span class="dash-info-card-title-value">{{currentRank}}</span>
-								<br>
-								<span class="dash-tab-view-info-card-sub-title">Latest Rank</span>
-							</div>
-							<div class="col-lg-4 fin-tab-col-3  mob-top-card-image">
-								<div class="text-right">
-									<img class="dash-info-card-image" src="/assets/images/creative.svg">
-								</div>
-							</div>
-						</div>
-					</mat-card>
-					<br>
-				</div>
-				<div class="col-lg-3 fin-tab-col-25">
-					<mat-card class="score-card-info-card-main-box">
-						<div class="row">
-							<div class="col-lg-8 fin-tab-col-7 tab-remove-col-padding mob-top-card-info-title">
-								<span class="dash-info-card-title-value">{{latestMarks}}%</span>
-								<br>
-								<span class="dash-tab-view-info-card-sub-title">Lastest Exam Score</span>
-							</div>
-							<div class="col-lg-4 fin-tab-col-3 mob-top-card-image">
-								<div class="text-right">
-									<img class="dash-info-card-image" src="/assets/images/marketing.svg">
-								</div>
-							</div>
-						</div>
-					</mat-card>
-					<br>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="row row-remove-top-margin">
-		<div class="col-lg-12">
-			<div class="row row-remove-top-margin">
-				<div class="col-lg-3 fin-tab-col-3">
-					<mat-card class="dash-card-info-card-main-box dash-second-row-card-height">
-						<div class="row tab-stud-dash-info-card">
-							<div class="col-lg-3 col-xl-3 col-md-3 col-sm-6 col-6">
-								<img class="student-id-info-image" [src]="hosturl+image">
-							</div>
-							<div class="col-lg-9 col-xl-9 col-md-9 col-sm-6 col-6">
-								<span class="stud-id-first-name">{{usernane}}</span>
-								<br>
-								<span class="stud-id-last-name">{{lastName}}</span>
-								<br>
-								<span class="stud-id-adm-no">Admission No : {{admissionNumber}}</span>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-12 remove-col-modal-padding">
-								<div class="id-content-area">
-									<div class="row">
-										<div class="col-12 mb-1">
-											<i class="fas fa-chalkboard-teacher hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Class :</span> {{className}} - {{secName}}
-										</div>
-										<div class="col-12 mb-1">
-											<i class="far fa-calendar-alt hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">D.O.B :</span> {{dob}}
-										</div>
-										<div class="col-12 mb-1">
-											<i class="fas fa-tint hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Blood Group :</span> NA
-										</div>
-										<div class="col-12 mb-1">
-											<i class="fas fa-male hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Father's Name :</span> NA
-										</div>
-										<div class="col-12 mb-1">
-											<i class="fas fa-map-marker-alt hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Address :</span> {{address}}
-										</div>
-										<div class="col-12 mb-1">
-											<i class="fas fa-mobile-alt hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Phone no. :</span> {{phoneNumber}}
-										</div>
-										<div class="col-12 mb-1">
-											<i class="far fa-envelope-open hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">Email Id. :</span> {{emailId}}
-										</div>
-										<div class="col-12 mb-1">
-											<i class="fas fa-school hide-icon-stud-info">&nbsp;&nbsp;</i>
-											<span class="stud-id-info-title">School Name. :</span> NA
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</mat-card>
-					<br>
-				</div>
-				<div class="col-lg-6 fin-tab-col-7">
-					<mat-card
-						class="dash-card-info-card-main-box dash-second-row-card-height second-card-graph-section">
-						<mat-tab-group>
-							<mat-tab label="Overall Performance">
-								<div class="row">
-									<div *ngIf="overAllFlag" class="col-lg-12 dash-test-conducted-report">
-										<app-common-dynamic-chart [options]="overAllOptions">
-										</app-common-dynamic-chart>
-									</div>
-								</div>
-							</mat-tab>
-						</mat-tab-group>
-					</mat-card>
-					<br>
-				</div>
-				<div class="col-lg-3 fin-tab-col-3 fin-tab-tp-margin-25">
-					<mat-card class="dash-card-info-card-main-box dash-second-row-card-height top-result-card">
-						<mat-tab-group class="school-dash-right-tab">
-							<mat-tab>
-								<ng-template mat-tab-label>
-									<div class="tab-show-on-click">
-										<span>Upcoming Tests</span>
-									</div>
-								</ng-template>
-								<div class="dash-teacher-side-profile">
-									<div class="dash-teacher-side-profile-inner">
-										<div *ngIf="comingExamArray.length > 0"
-											class="row row-remove-top-margin dash-subject-row">
-											<div class="col-lg-12 remove-col-modal-padding"
-												*ngFor="let come of comingExamArray">
-												<div class="dash-profile-details-content">
-													<div class="row row-remove-top-margin class-result-section">
-														<div class="col-lg-5">
-															<div class="dash-profile-details">
-																<span
-																	class="dash-profile-teacher-name">{{come.tp_name| titlecase}}</span>
-																<br>
-																<span
-																	class="dash-profile-teacher-designation">{{come.sub_name}}</span>
-																<br>
-																<span *ngIf="come.es_exam_type !== '2'"
-																	class="dash-profile-teacher-designation">Class
-																	Type</span>
-																<span *ngIf="come.es_exam_type === '2'"
-																	class="dash-profile-teacher-designation">Home
-																	Type</span>
-															</div>
-														</div>
-														<div class="col-lg-5">
-															<div class="dash-follow-chip">
-																<span
-																	class="dash-profile-teacher-designation">&nbsp;{{come.es_start_date |  date:'dd-MM-yyyy'}}</span>
-																<br>
-																<span
-																	class="dash-profile-teacher-designation">&nbsp;{{come.es_start_time}}</span>
-																<br> &nbsp;
-																<!-- <a *ngIf="come.es_exam_type !== '2'" (click)="startTest(come)">
-														<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Start Test" aria-hidden="true"></i>
-														</a> -->
-<!-- </div>
-														</div>
-														<div class="col-2 remove-left-padding">
-															<div class="left-dash-card-play-btn"> <a
-																	(click)="startTest(come)">
-																	<i class="fas fa-play start-button-icon"
-																		data-toggle="tooltip" data-placement="top"
-																		matTooltip="Start Test" aria-hidden="true"></i>
-																</a></div>
-														</div>
-													</div>
-												</div>
-												<hr>
-											</div>
-										</div>
-										<div *ngIf="comingExamArray.length == 0"
-											class="row row-remove-top-margin dash-subject-row">
-											<div class="col-lg-12 remove-col-modal-padding">
-												<div class="text-center">
-													No Records
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</mat-tab>
-							<mat-tab>
-								<ng-template mat-tab-label>
-									<div class="tab-show-on-click">
-										<span>Past Tests</span>
-									</div>
-								</ng-template>
-								<div *ngIf="pastExamArray.length > 0" class="dash-teacher-side-profile">
-									<div class="dash-teacher-side-profile-inner">
-										<div class="row">
-											<div class="col-lg-12 remove-col-modal-padding"
-												*ngFor="let past of pastExamArray;let i=index">
-												<div class="dash-profile-details-content">
-													<div class="row">
-														<div class="col-lg-5">
-															<div class="dash-profile-details">
-																<span
-																	class="dash-profile-teacher-name">{{past.tp_name| titlecase}}</span>
-																<br>
-																<span
-																	class="dash-profile-teacher-designation">{{past.sub_name}}</span>
-																<br>
-																<span *ngIf="past.es_exam_type !== '2'"
-																	class="dash-profile-teacher-designation">Class
-																	Type</span>
-																<span *ngIf="past.es_exam_type === '2'"
-																	class="dash-profile-teacher-designation">Home
-																	Type</span>
-															</div>
-														</div>
-														<div class="col-lg-4">
-															<div class="dash-follow-chip">
-																<span
-																	class="dash-profile-teacher-designation">&nbsp;{{past.es_start_date |  date:'dd-MM-yyyy'}}</span>
-																<br>
-																<span
-																	class="dash-profile-teacher-designation">&nbsp;{{past.es_start_time}}</span>
-															</div>
-														</div>
-													</div>
-												</div>
-												<hr>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div *ngIf="pastExamArray.length == 0"
-									class="row row-remove-top-margin dash-subject-row">
-									<div class="col-lg-12 remove-col-modal-padding">
-										<div class="text-center">
-											No Records
-										</div>
-									</div>
-								</div>
-							</mat-tab>
-						</mat-tab-group>
-					</mat-card>
-					<br>
-				</div>
-			</div>
-		</div>
-	</div>
-	<br>
-</div> -->
-
-<div class="row">
-    <div class="col-12">
-        <mat-card>
-            <div class="row">
-                <div class="col-6 margin-top-10">
-                    <h1 class="remove-bottom-margin font-size-24">Dashboard</h1>
-                </div>
-                <div class="col-6 text-right">
-                    <span class="font-size-20 font-bold font-skyblue">{{currentHour()}},</span> <span class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
-                    <br>
-                    <span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}<!-- 13<sup>th</sup> April 2018 --></span>
-                </div>
-            </div>
-        </mat-card>
-    </div>
-</div>
-
-<div class="row margin-top-10">
-    <div class="col-12">
-        <mat-card>
-            <div class="row">
-                <div class="col-11">
-                    <span class="font-size-20 font-bold">Time Table</span>
-                </div>
-                <div class="col-1 ">
-                    <select class="select-css float-right" [(ngModel)]="week_day" (change)="getClassSectionWiseTimeTable()">
-						<option *ngFor="let item of weekArr; let i = index" [value]="i+1">{{item}}</option>
-					</select>
-                </div>
-            </div>
-            <hr class="border-bottom-grey">
-            <div class="row margin-top-15" *ngIf="timeTableFlag">
-                <div class="col-12">
-                    <ng-container *ngFor="let item of dayArray; let i=index">
-                        <div class="info-box info-box-margin" [ngStyle]="{'background-color':item.sub_color}">
-                            <div class="wave-container">
-                                <svg viewBox="0 0 500 160" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-									<path
-										d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
-										style="stroke: none; fill: #fff; opacity:0.1; bottom: 0"></path>
-								</svg>
-                            </div>
-                            <div class="box-content-container">
-                                <span class="font-size-30">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
-                                <div class="margin-top-35">
-                                    <span class="font-size-16">{{className}} - {{secName}}</span><br>
-                                    <span class="font-size-16">{{item.subject_name}}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-            </div>
-            <div class="row margin-top-15" *ngIf="!timeTableFlag">No Timetable</div>
-        </mat-card>
-    </div>
-</div>
-
-<div class="row margin-top-10">
-    <div class="col-4 remove-right-padding">
-        <mat-card class="height-296 height-263">
-            <mat-card-title>
-                <div class="row row-remove-top-margin">
-                    <div class="col-10">
-                        <span class="font-size-20 font-bold">Assignments</span>
-                    </div>
-                    <div class="col-2">
-                        <select class="select-css" [(ngModel)]="sub_id" (change)="getAssignment()">
-							<option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}</option>
-						</select>
-                    </div>
-                </div>
-            </mat-card-title>
-            <hr class="border-bottom-grey">
-            <mat-card-content>
-                <ng-container *ngIf="assignmentArray.length > 0">
-                    <div class="row">
-                        <div class="col-10">
-                            <span class="font-size-20 font-medium font-skyblue">{{currentAssignment?.sub_name}}</span>
-                        </div>
-                        <div class="col-2">
-                            <button mat-button class="float-btn-blue font-size-14 font-white" (click)="previewDocuments(currentAssignment?.as_attachment)">
-							+{{currentAssignment?.as_attachment.length}}
-						</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <span class="font-size-16 font-medium">{{currentAssignment?.topic_name}}</span>
-                            <div class="font-size-15 margin-top-10" [innerHTML]="currentAssignment?.as_assignment_desc"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-8 remove-right-padding">
-                            <span class="font-size-15">Assigned On :</span><span class="font-medium font-size-15">
-							{{currentAssignment?.as_entry_date| date:'d-MMM-y'}}</span>
-                        </div>
-
-                        <div class="col-4 remove-col-modal-padding text-center">
-                            <span><button mat-button class="side" [disabled]="assignmentPre" (click)="assignmentNavigate(currentAssignmentIndex-1)">
-									<i class="fas fa-chevron-left cursor-pointer"></i>
-							</button>
-							<button mat-button class="side" [disabled]="assignmentNext" (click)="assignmentNavigate(currentAssignmentIndex+1)">
-									<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
-							</button></span>
-                        </div>
-
-                    </div>
-                </ng-container>
-                <ng-container *ngIf="assignmentArray.length == 0">
-                    <div class="text-center">
-                        <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" height="150px">
-                        <br>
-                        <span class="font-size-20 font-bold font-color-brown">
-						No Record Found
-						</span>
-                    </div>
-                </ng-container>
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <div class="col-4 remove-right-padding">
-        <mat-card class="height-296 height-263">
-            <mat-card-title>
-                <div class="row row-remove-top-margin">
-                    <div class="col-10">
-                        <span class="font-size-20 font-bold">Photo Gallery</span>
-                    </div>
-                    <div class="col-2 ">
-                        <div class="float-right">
-                            <span class="font-size-12 font-skyblue font-bold cursor-pointer">View All</span>
-                        </div>
-
-                    </div>
-                </div>
-            </mat-card-title>
-            <hr class="border-bottom-grey">
-            <mat-card-content>
-                <div class="row">
-                    <div class="col-1 remove-col-modal-padding">
-                        <div class="arrow-navigator">
-                            <i class="fas fa-chevron-left cursor-pointer"></i>
-                        </div>
-                    </div>
-                    <div class="col-10">
-                        <div class="text-center">
-                            <div class="image-thumb-box inline-flex">
-
-                            </div>
-                            <div class="image-thumb-box inline-flex margin-left-15">
-
-                            </div>
-                            <div class="image-thumb-box inline-flex margin-left-15">
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-1 remove-col-modal-padding">
-                        <div class="arrow-navigator">
-                            <i class="fas fa-chevron-right cursor-pointer"></i>
-                        </div>
-
-                    </div>
-                </div>
-
-            </mat-card-content>
-        </mat-card>
-    </div>
-    <div class="col-4">
-        <mat-card class="height-296 height-263">
-            <mat-card-title>
-                <div class="row row-remove-top-margin">
-                    <div class="col-5">
-                        <span class="font-size-20 font-bold cursor-pointer" (click)="switchView('past')" [ngClass]="{'disablePage':testView == 'upcoming'}">
-							Upcoming Tests
-						</span>
-
-
-                    </div>
-                    <div class="col-2">
-                        <span class="vertical-line-divider"></span>
-                    </div>
-                    <div class="col-5">
-                        <span class="font-size-20 font-bold cursor-pointer" (click)="switchView('upcoming')" [ngClass]="{'disablePage':testView == 'past'}">
-							Past Tests
-						</span>
-                    </div>
-                </div>
-            </mat-card-title>
-            <hr class="border-bottom-grey">
-            <mat-card-content *ngIf="currentExam">
-                <div class="row">
-                    <div class="col-10">
-                        <span class="font-size-20 font-medium font-skyblue">{{currentExam?.qp_name}}</span>
-                    </div>
-                    <div class="col-2">
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10">
-                        <span class="font-size-16 font-medium">{{currentExam?.sub_name}}, {{currentExam?.class_name}} - {{currentExam?.sec_name}}</span>
-                        <p class="font-size-15 margin-top-10">{{currentExam?.ti_instruction}} </p>
 					</div>
-					<div class="col-2 text-center" *ngIf="testView == 'past'">
-                        <a (click)="startTest(currentExam)" class="left-dash-card-play-btn">
-							<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top" matTooltip="Start Test" aria-hidden="true"></i>
-							</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <span class="font-size-15">Time :</span><span class="font-medium font-size-15">
-							{{currentExam?.es_start_date+' '+currentExam?.es_start_time | date:'hh:mm a'}} - 
-						{{currentExam?.es_end_date+' '+currentExam?.es_end_time | date:'hh:mm a'}}</span><br>
+				</div>
+				<ng-container *ngIf="timeTableFlag">
+					<div class="row remove-margin-top">
+						<div class="col-12">
+							<div class="timetable-card">
+								<div class="timetable-div-content-parent">
+									<div class="timetable-div-content-child">
+										<div class="timetable-inline">
+											<ng-container *ngFor="let item of dayArray; let i=index">
+												<div class="tt-box" [ngStyle]="{'background-color':item.sub_color}">
+													<div class="tt-container">
+														<svg viewBox="0 0 500 160" preserveAspectRatio="none"
+															style="height: 100%; width: 100%;">
+															<path
+																d="M-51.06,1.48 C149.99,150.00 349.20,-49.98 634.02,81.41 L500.00,150.00 L0.00,150.00 Z"
+																style="stroke: none; fill: #fff; opacity:0.1; bottom: 0">
+															</path>
+														</svg>
+														<div class="timebox-content-container">
+															<span
+																class="font-size-20">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
+															<div class="margin-top-35">
+																<span class="font-size-14">{{className}} -
+																	{{secName}}</span><br>
+																<span class="font-size-14">{{item.subject_name}}</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</ng-container>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="!timeTableFlag || noData">
+					<div class="content2-div">
+						<div class="timetable-card">
+							<div class="text-center">
+								<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+									class="new-image" height="150px">
+								<br>
+								<span class="font-size-14">
+									No Record Found
+								</span>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<br>
+				<div class="row">
+					<div class="col-12">
+						<div class="text-left">
+							<span class="header-sec">Assignments</span>
+						</div>
+						<div class="select-div">
+							<select class="select-css" [(ngModel)]="sub_id" (change)="getAssignment()">
+								<option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
+								</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<ng-container *ngIf="assignmentArray.length > 0">
+					<div class="content3-div">
+						<div class="timetable-card2">
+							<br>
+							<div class="row">
+								<div class="col-12" style="position: relative;">
+									<span class="subname">{{currentAssignment?.sub_name}}</span>
+									<button *ngIf="currentAssignment && currentAssignment.as_attachment.length > 0"
+										mat-button class="blue-button-assign font-size-14 font-white"
+										(click)="previewDocuments(currentAssignment?.as_attachment)">
+										<span class="assign-span-len">
+											+{{currentAssignment?.as_attachment.length}}
+										</span>
+									</button>
+								</div>
+							</div>
+							<div class="row remove-margin-top">
+								<div class="col-12">
+									<span class="font-size-14 topic-name"><b>Topic:
+										</b> {{currentAssignment?.topic_name}}</span>
+									<div class="font-size-14 margin-top-10"
+										[innerHTML]="currentAssignment?.as_assignment_desc"></div>
+								</div>
+							</div>
+							<div class="row remove-margin-top">
+								<div class="col-12">
+									<span class="font-size-14"><b>Assigned On :</b></span><span
+										class="font-medium font-size-15">
+										{{currentAssignment?.as_entry_date| date:'d-MMM-y'}}</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="nav-div text-right">
+										<span><button mat-button class="side" [disabled]="assignmentPre"
+												(click)="assignmentNavigate(currentAssignmentIndex-1)">
+												<i class="fas fa-chevron-left cursor-pointer"></i>
+											</button>
+											<button mat-button class="side" [disabled]="assignmentNext"
+												(click)="assignmentNavigate(currentAssignmentIndex+1)">
+												<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+											</button></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="assignmentArray.length  == 0">
+					<div class="content3-div">
+						<div class="timetable-card">
+							<div class="text-center">
+								<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+									class="new-image" height="150px">
+								<br>
+								<span class="font-size-14">
+									No Record Found
+								</span>
+							</div>
+						</div>
+					</div>
+				</ng-container>
+				<br>
+				<div class="row">
+					<div class="col-12">
+						<div class="text-left">
+							<span class="header-sec">Tests</span>
+						</div>
+					</div>
+				</div>
+				<br>
+				<div class="content3-div">
+					<div [class]="currentExam ? 'timetable-card2' : 'timetable-card4'">
+						<div class="row">
+							<div class="col-5 text-center">
+								<span class="font-size-16 font-bold cursor-pointer" (click)="switchView('past')"
+									[ngClass]="{'disablePage':testView == 'upcoming'}">
+									Upcoming Tests
+								</span>
+							</div>
+							<div class="col-2">
+								<span class="vertical-line-divider"></span>
+							</div>
+							<div class="col-5 text-center">
+								<span class="font-size-16 font-bold cursor-pointer" (click)="switchView('upcoming')"
+									[ngClass]="{'disablePage':testView == 'past'}">
+									Past Tests
+								</span>
+							</div>
+						</div>
+						<ng-container *ngIf="currentExam">
+							<br>
+							<div class="row">
+								<div class="col-12" style="position: relative;">
+									<span class="subname">Test Question</span>
+									<a *ngIf="testView == 'past'" (click)="startTest(currentExam)"
+										class="left-dash-card-play-btn">
+										<i class="fas fa-play start-button-icon"></i>
+									</a>
+								</div>
+							</div>
+							<div class="row remove-margin-top">
+								<div class="col-12">
+									<span class="font-size-14 topic-name">{{currentExam?.sub_name}},
+										{{currentExam?.class_name}} - {{currentExam?.sec_name}}</span>
+									<p class="font-size-14 topic-name">{{currentExam?.ti_instruction}} </p>
+								</div>
+							</div>
+							<div class="row remove-margin-top">
+								<div class="col-12">
+									<span class="font-size-14"><b>Time :</b></span><span class="font-size-14">
+										{{currentExam?.es_start_date+' '+currentExam?.es_start_time | date:'hh:mm'}} -
+										{{currentExam?.es_end_date+' '+currentExam?.es_end_time | date:'hh:mm'}}</span><br>
 
-                    </div>
-                </div>
-                <div class="row row-remove-top-margin">
-                    <div class="col-8 remove-right-padding">
+								</div>
+							</div>
+							<div class="row row-remove-top-margin">
+								<div class="col-12">
 
-                        <span class="font-size-15">Date Of Test :</span><span class="font-medium font-size-15">
-								{{currentExam?.es_start_date | date:'d-MMM-y'}}</span>
-                    </div>
-                    <div class="col-4 remove-col-modal-padding text-center">
-                        <span><button mat-button class="side" [disabled]="examPre" (click)="examNavigate(currentExamIndex-1)">
-									<i class="fas fa-chevron-left cursor-pointer"></i>
-							</button>
-							<button mat-button class="side" [disabled]="examNext" (click)="examNavigate(currentExamIndex+1)">
-									<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
-							</button>
-						</span>
-                    </div>
-                </div>
-
-            </mat-card-content>
-            <ng-container *ngIf="!currentExam">
-                <div class="text-center">
-                    <img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'" height="150px">
-                    <br>
-                    <span class="font-size-20 font-bold font-color-brown">
-						No Record Found
-						</span>
-                </div>
-            </ng-container>
-        </mat-card>
-    </div>
+									<span class="font-size-14"><b>Date Of Test :</b></span><span class="font-size-14">
+										{{currentExam?.es_start_date | date:'d-MMM-y'}}</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<div class="nav-div text-right">
+										<span><button mat-button class="side" [disabled]="examPre"
+												(click)="examNavigate(currentExamIndex-1)">
+												<i class="fas fa-chevron-left cursor-pointer"></i>
+											</button>
+											<button mat-button class="side" [disabled]="examNext"
+												(click)="examNavigate(currentExamIndex+1)">
+												<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</ng-container>
+						<ng-container *ngIf="!currentExam">
+							<div class="text-center">
+								<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+									class="new-image" height="150px">
+								<br>
+								<span class="font-size-14">
+									No Record Found
+								</span>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

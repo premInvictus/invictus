@@ -17,5 +17,15 @@ export const environment = {
 	testInternetErrorCode : 'T104',
 	testSuspiciousErrorCode : 'T105',
 	testExtendCode: 'T106',
-	testEndCode: 'T107'
+	testEndCode: 'T107',
+	firebase: {
+		apiKey: 'AIzaSyAg88lKw0PB73i3wI_fnyNbk_sdWU2VTQU',
+		authDomain: 'test-notification-17c3a.firebaseapp.com',
+		databaseURL: 'https://test-notification-17c3a.firebaseio.com',
+		projectId: 'test-notification-17c3a',
+		storageBucket: 'test-notification-17c3a.appspot.com',
+		messagingSenderId: '7217963122',
+		appId: '1:7217963122:web:a8b0e7b9743e355a92e2eb',
+		measurementId: 'G-6DBS3LE9LF'
+	}
 };

@@ -15,6 +15,10 @@ export class SisService {
 			]
 		});
 	}
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
 	/* updated in smart with getClassData
 	getClass(value) {
 		const param: any = {};

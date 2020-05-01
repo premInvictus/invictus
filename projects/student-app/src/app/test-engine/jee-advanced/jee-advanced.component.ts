@@ -1657,7 +1657,8 @@ export class JeeAdvancedComponent implements OnInit {
 						localStorage.removeItem('qStatus');
 						localStorage.removeItem('qAnswer');
 						this.sendTestEndConfirmation();
-						this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
+						//this.router.navigate(['../../test-confirmation', this.es_id], { relativeTo: this.route });
+						close();
 					}
 				}
 			);

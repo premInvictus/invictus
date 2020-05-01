@@ -670,6 +670,14 @@
                                                         <ng-template [ngIf]="data.ect_exam_type == 2">
                                                             <th width="80%" class="custom-th text-left">
                                                                 &nbsp;Scholastic Area {{sub_category}}
+                                                                <span *ngIf="GradeSet_b.length > 0" class="coscholastic-grade">
+                                                                    (
+                                                                    <span *ngFor="let item of GradeSet_b" style="padding: 5px 0">
+                                                                        {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                            - {{item?.egs_grade_text}}</span>
+                                                                    </span>
+                                                                    )
+                                                                </span>
                                                             </th>
                                                             <th width="20%" class="custom-th text-center">Grade</th>
                                                         </ng-template>
@@ -794,17 +802,26 @@
                                                 <tr class="custom-tr">
                                                     <th [attr.colspan]="2" width="80%" class="custom-th text-left">
                                                         &nbsp;Co-Scholastic Area {{sub_category}}
-                                                        <span *ngIf="GradeSetPoint.length > 0"
-                                                            class="coscholastic-grade">
-                                                            (
-                                                            <span *ngFor="let item of GradeSetPoint"
-                                                                style="padding: 5px 0">
-                                                                {{item?.egs_grade_name}} <span
-                                                                    *ngIf="item?.egs_grade_text">
-                                                                    - {{item?.egs_grade_text}}</span>
+                                                        <ng-container *ngIf="sub_category == 'A'">
+                                                            <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
+                                                                (
+                                                                <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
+                                                                    {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                        - {{item?.egs_grade_text}}</span>
+                                                                </span>
+                                                                )
                                                             </span>
-                                                            )
-                                                        </span>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="sub_category == 'B'">
+                                                            <span *ngIf="GradeSetPoint_b.length > 0" class="coscholastic-grade">
+                                                                (
+                                                                <span *ngFor="let item of GradeSetPoint_b" style="padding: 5px 0">
+                                                                    {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                        - {{item?.egs_grade_text}}</span>
+                                                                </span>
+                                                                )
+                                                            </span>
+                                                        </ng-container>
                                                     </th>
                                                     <th width="20%" class="custom-th text-center">Grade</th>
                                                 </tr>
@@ -1241,6 +1258,14 @@
                                                     <tr>
                                                         <th width="60%" class="custom-th text-left">
                                                             &nbsp;Scholastic Area {{sub_category}}
+                                                            <span *ngIf="GradeSet_b.length > 0" class="coscholastic-grade">
+                                                                (
+                                                                <span *ngFor="let item of GradeSet_b" style="padding: 5px 0">
+                                                                    {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                        - {{item?.egs_grade_text}}</span>
+                                                                </span>
+                                                                )
+                                                            </span>
                                                         </th>
                                                         <ng-container *ngFor="let eachterm of printData.so_printData">
                                                             <th width="20%" class="custom-th text-center">{{eachterm.term_name}}
@@ -1300,14 +1325,26 @@
                                         <tr>
                                             <th [attr.colspan]="2" width="60%" class="custom-th text-left">
                                                 &nbsp;Co-Scholastic Area {{sub_category}}
-                                                <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
-                                                    (
-                                                    <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
-                                                        {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
-                                                            - {{item?.egs_grade_text}}</span>
+                                                <ng-container *ngIf="sub_category == 'A'">
+                                                    <span *ngIf="GradeSetPoint.length > 0" class="coscholastic-grade">
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint" style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                - {{item?.egs_grade_text}}</span>
+                                                        </span>
+                                                        )
                                                     </span>
-                                                    )
-                                                </span>
+                                                </ng-container>
+                                                <ng-container *ngIf="sub_category == 'B'">
+                                                    <span *ngIf="GradeSetPoint_b.length > 0" class="coscholastic-grade">
+                                                        (
+                                                        <span *ngFor="let item of GradeSetPoint_b" style="padding: 5px 0">
+                                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">
+                                                                - {{item?.egs_grade_text}}</span>
+                                                        </span>
+                                                        )
+                                                    </span>
+                                                </ng-container>
                                             </th>
                                             <ng-container *ngFor="let eachterm of printData.co_printData">
                                                 <th width="20%" class="custom-th text-center">{{eachterm.term_name}}

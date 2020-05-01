@@ -142,27 +142,27 @@ export class CollectionReportComponent implements OnInit {
 		this.getSession();
 		this.buildForm();
 		this.getClassData();
-		this.reportTypeArray.push({
-			report_type: 'headwise', report_name: 'Head Wise'
-		},
-			{
-				report_type: 'classwise', report_name: 'Class Wise'
-			},
-			{
-				report_type: 'modewise', report_name: 'Mode Wise'
-			},
-			{
-				report_type: 'routewise', report_name: 'Route Wise'
-			},
-			{
-				report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'
-			},
-			{
-				report_type: 'summary', report_name: 'Collection Summary'
-			},
-			{
-				report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise'
-			});
+			if(this.common.isExistUserAccessMenu('649')) {
+				this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
+			}
+			if(this.common.isExistUserAccessMenu('650')) {
+				this.reportTypeArray.push({report_type: 'classwise', report_name: 'Class Wise'});
+			}
+			if(this.common.isExistUserAccessMenu('651')) {
+				this.reportTypeArray.push({report_type: 'modewise', report_name: 'Mode Wise'});
+			}
+			if(this.common.isExistUserAccessMenu('652')) {
+				this.reportTypeArray.push({report_type: 'routewise', report_name: 'Route Wise'});
+			}
+			if(this.common.isExistUserAccessMenu('653')) {
+				this.reportTypeArray.push({report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'});
+			}
+			if(this.common.isExistUserAccessMenu('654')) {
+				this.reportTypeArray.push({report_type: 'summary', report_name: 'Collection Summary'});
+			}
+			if(this.common.isExistUserAccessMenu('655')) {
+				this.reportTypeArray.push({report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise'});
+			}
 		this.reportType = 'headwise';
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());

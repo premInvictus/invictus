@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, MatDialog, MatDialogRef } from '@angular/material';
-import { CommonAPIService, SisService,SmartService } from '../../_services/index';
+import { CommonAPIService, SisService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BulkElement } from './idcardbulkprint.model';
@@ -258,11 +258,20 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getIdCardSettings() {
-		this.sisService.getIdCardPrintSettings({
-			user_type: 'student'
+		this.sisService.getGlobalSetting({
+			"gs_group": "identity cards",
+			"not_json": true
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				this.idCardSettings = result.data[0];
+				const results: any[] = JSON.parse(result.data[0].gs_value);
+				if (results.length > 0) {
+					const findex = results.findIndex(f => f.type === 'student');
+					if (findex !== -1) {
+						this.idCardSettings = results[findex].details;
+					} else {
+						this.idCardSettings = {};
+					}
+				}
 			}
 		});
 	}

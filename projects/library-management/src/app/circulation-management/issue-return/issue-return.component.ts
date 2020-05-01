@@ -534,10 +534,13 @@ export class IssueReturnComponent implements OnInit {
 			this.btnDisabled = true;
 			if (this.searchForm.value.user_role_id === '4') {
 				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_student']+' Book Cannot be Issued to Student', 'error');
+				this.btnDisabled = false;
 			} else if (this.searchForm.value.user_role_id === '3') {
 				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_teacher']+' Book Cannot be Issued to Teacher', 'error');				
+				this.btnDisabled = false;
 			} else if (this.searchForm.value.user_role_id === '2') {
 				this.common.showSuccessErrorMessage('More than '+this.settingData['book_issued_limit_staff']+' Book Cannot be Issued to Staff', 'error');				
+				this.btnDisabled = false;
 			}
 			
 		}

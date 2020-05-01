@@ -269,5 +269,15 @@ export class ApproveSlctcComponent implements OnInit {
 			return false;
 		}
 	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
+		}
+	}
 
 }
