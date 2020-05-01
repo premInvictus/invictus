@@ -121,7 +121,11 @@ ngx-gauge .reading-block {
 }
 
 }
-
+@media screen and (min-width: 768px) and (max-width: 768px) {
+    .add-question-content {
+        margin-bottom: 70px !important;
+    }
+}
 @media screen and (max-width: 720px) {
     ::-webkit-scrollbar {
         display: none !important;
