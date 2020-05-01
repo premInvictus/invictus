@@ -2344,9 +2344,11 @@ export class JeeMainsComponent implements OnInit {
 							localStorage.removeItem('currentExamSub');
 							localStorage.removeItem('currentExam');
 							this.sendTestEndConfirmation();
-							this.router.navigate(['../../test-confirmation', this.es_id], {
-								relativeTo: this.route
-							});
+							// this.router.navigate(['../../test-confirmation', this.es_id], {
+							// 	relativeTo: this.route
+							// });
+							close();
+
 						}
 					});
 			} else {
