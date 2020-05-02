@@ -154,7 +154,6 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 							au_full_name: result.data[0]['au_full_name'],
 							class: result.data[0]['class_name'],
 							section: result.data[0]['sec_name'],
-							enrolment_type: result.data[0]['au_process_type'],
 							doa: result.data[0]['upd_doj'],
 						});
 						this.change_status = '';
