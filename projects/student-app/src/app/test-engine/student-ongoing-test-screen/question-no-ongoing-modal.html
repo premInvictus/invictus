@@ -12,7 +12,7 @@
                 <div class="row row-margin-button">
                   <ng-container *ngFor="let item of questionsArray;let i=index">
                     <div *ngIf="item.qus_sub_id == sub.subId"
-                      class="col-lg-2 row-button-margin mob-ques-button">
+                      class="col-xl-2 col-2 col-lg-4 row-button-margin mob-ques-button">
                       <mat-card
                         [ngStyle]="{'color':getQusColor(item.answerStatus),'border-color':getQusColor(item.answerStatus)} "
                         class="test-ques-button" (click)="loadCurrentQ(i)">
