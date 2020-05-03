@@ -698,6 +698,42 @@ export class SetupComponent implements OnInit {
 
         });
     }
+    checkIfSelectedSMS(i, j ,value) {
+        if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    checkIfSelectedEmail(i, j ,value) {
+        if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    enableDisableSMS (i, j ,value, $event) {
+        if ($event.checked) {
+            this.processForms[i][value][j].formGroup.patchValue({
+                enabled : "true"
+            });
+        } else {
+            this.processForms[i][value][j].formGroup.patchValue({
+                enabled : "false"
+            });
+        }
+    }
+    enableDisableEmail (i, j ,value, $event) {
+        if ($event.checked) {
+            this.processForms[i][value][j].formGroup.patchValue({
+                enabled : "true"
+            });
+        } else {
+            this.processForms[i][value][j].formGroup.patchValue({
+                enabled : "false"
+            });
+        }
+    }
     getNameOfStep(index) {
         if (index === 0) {
             return 'Enquiry';
@@ -950,6 +986,30 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.invoice_receipt_format) {
             this.formatSettings = this.printForm.value;
             this.settingForm.value.invoice_receipt_format = JSON.stringify(this.formatSettings);
+        }
+        if (this.settingForm.value && this.settingForm.value.enquiry_registration_email_sms) {
+            const finalDataArr: any[] = [
+                {enquiry : []},
+                {registration : []},
+                {provisional : []},
+                {admission : []}
+            ];
+            for (const item of this.processForms) {
+                Object.keys(item).forEach((key: any) => {
+                    for (const titem of finalDataArr) {
+                        Object.keys(titem).forEach((key2: any) => {
+                            if (key2 === key) {
+                                const innerData: any[] = [];
+                                for (const inner of item[key]) {
+                                    innerData.push(inner.formGroup.value);
+                                }
+                                titem[key] = innerData;
+                            }
+                        });
+                    }
+                });
+            }
+            this.settingForm.value.enquiry_registration_email_sms = JSON.stringify(finalDataArr);
         }
         console.log(this.settingForm.value);
         this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {

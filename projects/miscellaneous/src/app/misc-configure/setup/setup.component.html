@@ -2276,8 +2276,9 @@
                                                         </div>
                                                         <div
                                                           class="col-2">
-                                                          <mat-checkbox
-                                                            formControlName="enabled">
+                                                          <mat-checkbox [checked]="checkIfSelectedSMS(i,j,'enquiry')"
+                                                          (change)="enableDisableSMS(i,j,'enquiry', $event)"
+                                                           >
                                                             Enable
                                                             SMS
                                                           </mat-checkbox>
@@ -2317,8 +2318,10 @@
                                                           </div>
                                                           <div
                                                             class="col-2">
-                                                            <mat-checkbox
-                                                              formControlName="enabled">
+                                                            <mat-checkbox 
+                                                            [checked]="checkIfSelectedEmail(i,j,'enquiry')"
+                                                            (change)="enableDisableEmail(i,j,'enquiry', $event)"
+                                                              >
                                                               Enable
                                                               Email
                                                             </mat-checkbox>
@@ -2364,7 +2367,9 @@
                                                       <div
                                                         class="col-2">
                                                         <mat-checkbox
-                                                          formControlName="enabled">
+                                                        [checked]="checkIfSelectedSMS(i,j,'registration')"
+                                                        (change)="enableDisableSMS(i,j,'registration', $event)"
+                                                         >
                                                           Enable
                                                           SMS
                                                         </mat-checkbox>
@@ -2404,8 +2409,10 @@
                                                         </div>
                                                         <div
                                                           class="col-2">
-                                                          <mat-checkbox
-                                                            formControlName="enabled">
+                                                          <mat-checkbox 
+                                                          [checked]="checkIfSelectedEmail(i,j,'registration')"
+                                                          (change)="enableDisableEmail(i,j,'registration', $event)"
+                                                            >
                                                             Enable
                                                             Email
                                                           </mat-checkbox>
@@ -2451,7 +2458,9 @@
                                                     <div
                                                       class="col-2">
                                                       <mat-checkbox
-                                                        formControlName="enabled">
+                                                      [checked]="checkIfSelectedSMS(i,j,'provisional')"
+                                                      (change)="enableDisableSMS(i,j,'provisional', $event)"
+                                                        >
                                                         Enable
                                                         SMS
                                                       </mat-checkbox>
@@ -2492,7 +2501,9 @@
                                                       <div
                                                         class="col-2">
                                                         <mat-checkbox
-                                                          formControlName="enabled">
+                                                        [checked]="checkIfSelectedEmail(i,j,'provisional')"
+                                                        (change)="enableDisableEmail(i,j,'provisional', $event)"
+                                                        >
                                                           Enable
                                                           Email
                                                         </mat-checkbox>
@@ -2538,7 +2549,9 @@
                                                   <div
                                                     class="col-2">
                                                     <mat-checkbox
-                                                      formControlName="enabled">
+                                                    [checked]="checkIfSelectedSMS(i,j,'admission')"
+                                                    (change)="enableDisableSMS(i,j,'admission', $event)"
+                                                     >
                                                       Enable
                                                       SMS
                                                     </mat-checkbox>
@@ -2579,7 +2592,9 @@
                                                     <div
                                                       class="col-2">
                                                       <mat-checkbox
-                                                        formControlName="enabled">
+                                                      [checked]="checkIfSelectedEmail(i,j,'admission')"
+                                                      (change)="enableDisableEmail(i,j,'admission', $event)"
+                                                        >
                                                         Enable
                                                         Email
                                                       </mat-checkbox>
