@@ -230,6 +230,61 @@
                                                 style="color:#0078c2"></i></a>
                                     </div>
                                 </div>
+                                <div class="row salary-card">
+
+                                    <ng-container *ngFor="let item of empPaymentModeDetail; let i=index;">
+                                        <form [formGroup]="empPaymentModeDetail[i]">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Pay Mode</mat-label>
+                                                <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
+                                                    [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of payMode" [value]="item.config_id">
+                                                        {{item.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error>
+                                                    This field is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline"
+                                                >
+                                                <mat-label>Calculation Type</mat-label>
+                                                <mat-select
+                                                    placeholder="Calcualtion Type"
+                                                    [disabled]="viewOnly"
+                                                    formControlName="calculation_type">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of calculationTypeArray"
+                                                        [value]="item.id">
+                                                        {{item.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline"
+                                                >
+                                                <mat-label>Value</mat-label>
+                                                <input matInput placeholder="Enter Value"
+                                                    class="text-capitalize" type="number"
+                                                    formControlName="value"
+                                                    [readonly]="viewOnly"
+                                                    [errorStateMatcher]="confirmValidParentMatcher"
+                                                    >
+                                                <mat-error>Please Enter Value</mat-error>
+                                            </mat-form-field>
+                                        </form>
+                                        <div style="float:right; margin-left:88% !important;">
+                                            <a *ngIf="empPaymentModeDetail.length > 1 && !viewOnly" style="float:right"
+                                                href="javascript:void(0)" (click)="removePaymentMode(i)"><i
+                                                    class="fas fa-minus-circle" style="color:#e11022"></i></a>&nbsp;
+                                        </div>
+                                    </ng-container>
+                                    <div style="float:right; margin-left:82%;margin-top:-21px">
+                                        <a *ngIf="!viewOnly" href="javascript:void(0)" style="float:right"
+                                            (click)="addPaymentMode()"><i class="fas fa-plus-circle"
+                                                style="color:#0078c2"></i></a>
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="col-4 col-pad-5">

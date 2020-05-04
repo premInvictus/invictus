@@ -66,6 +66,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	empBankDetail: any[] = [];
+	empPaymentModeDetail: any[] = [];
+	calculationTypeArray = [
+		{ id: "1", name: 'Text' },
+		{ id: "2", name: '%' },
+	];
 	disabledApiButton = false;
 	constructor(
 		public commonAPIService: CommonAPIService,
@@ -177,6 +182,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.empBankDetail = [];
+		this.empPaymentModeDetail = [];
 		this.buildForm();
 		this.getDepartment();
 		this.getDesignation();
@@ -205,6 +211,20 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	removeEmpBank(index) {
 		if (this.empBankDetail.length > 1) {
 			this.empBankDetail.splice(index, 1);
+		}
+
+	}
+	addPaymentMode() {
+		this.empPaymentModeDetail.push(this.fbuild.group({
+			pay_mode: '',
+			calculation_type: '',
+			value: ''
+		}));
+	}
+
+	removePaymentMode(index) {
+		if (this.empPaymentModeDetail.length > 1) {
+			this.empPaymentModeDetail.splice(index, 1);
 		}
 
 	}
@@ -394,6 +414,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				ifsc_code: ''
 			}));
 		}
+		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.empPaymentModeDetail && this.employeedetails.emp_salary_detail.empPaymentModeDetail.length > 0) {
+			this.empPaymentModeDetail = [];
+			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
+				this.empPaymentModeDetail.push(this.fbuild.group({
+					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'],
+					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
+					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
+				}));
+			}
+		} else {
+			this.addPaymentMode();
+		}
+
 
 		this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
@@ -451,9 +484,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			};
 			bankDetail.push(inputJson);
 		}
-		if (this.salaryDetails.valid) {
+		var tempempPaymentModeDetail = [];
+		for (var i = 0; i < this.empPaymentModeDetail.length; i++) {
+			tempempPaymentModeDetail.push(this.empPaymentModeDetail[i].value);
+		}
+		//this.salaryDetails.valid
+		if (true) {
 			this.disabledApiButton = true;
 			this.employeedetails['emp_salary_detail'] = {
+				empPaymentModeDetail: tempempPaymentModeDetail,
 				account_docment_detail: {
 					pan_no: this.salaryDetails.value.pan,
 					aadhar_no: this.salaryDetails.value.aadhar,
@@ -569,9 +608,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			};
 			bankDetail.push(inputJson);
 		}
-		if (this.salaryDetails.valid) {
+		var tempempPaymentModeDetail = [];
+		for (var i = 0; i < this.empPaymentModeDetail.length; i++) {
+			tempempPaymentModeDetail.push(this.empPaymentModeDetail[i].value);
+		}
+		//this.salaryDetails.valid
+		if (true) {
 			this.disabledApiButton = true;
 			this.employeedetails['emp_salary_detail'] = {
+				empPaymentModeDetail: tempempPaymentModeDetail,
 				account_docment_detail: {
 					pan_no: this.salaryDetails.value.pan,
 					aadhar_no: this.salaryDetails.value.aadhar,
@@ -655,7 +700,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				}
 			}
 
-			// console.log('this.employeedetails', this.employeedetails);
+			console.log('this.employeedetails', this.employeedetails);
 
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
