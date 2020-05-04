@@ -355,8 +355,12 @@ export class SalaryComputationComponent implements OnInit {
 							var emp_month = item.emp_month_attendance_data.month_data[i].month_id;
 							var emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+								
+								var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+								var lwpDays =  emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+								var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 
-								emp_present_days = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+								emp_present_days = presentDays;
 
 							}
 						}

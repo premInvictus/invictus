@@ -168,8 +168,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 								emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+								var lwpDays =  emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+								var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
-										element.emp_total_attendance = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : '';
+										element.emp_total_attendance = presentDays;
 										element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
 											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
 										this.formGroupArray[j] = {
