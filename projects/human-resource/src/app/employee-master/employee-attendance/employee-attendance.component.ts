@@ -333,7 +333,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 	getLWP(element, index) {
 		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
 		//(parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10)
-		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+
+		var tPresent = element ? element.emp_present : 0;
+								var lwpDays =  element && element ? element.emp_lwp : 0;
+		var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
+										element.emp_lwp = element && element ? element.emp_lwp : '';
+										element.emp_total_attendance = presentDays;
+		// this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 		console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 	}
