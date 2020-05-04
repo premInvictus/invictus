@@ -168,8 +168,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 								emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
+										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+								var lwpDays =  emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+								var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
-										element.emp_total_attendance = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_total_attendance : '';
+										element.emp_total_attendance = presentDays;
 										element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
 											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
 										this.formGroupArray[j] = {
@@ -330,7 +333,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 	getLWP(element, index) {
 		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
 		//(parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10)
-		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+
+		var tPresent = element ? element.emp_present : 0;
+								var lwpDays =  element && element ? element.emp_lwp : 0;
+		var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
+										element.emp_lwp = element && element ? element.emp_lwp : '';
+										element.emp_total_attendance = presentDays;
+		// this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 		console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 	}
