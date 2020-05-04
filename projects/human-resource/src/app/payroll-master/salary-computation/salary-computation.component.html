@@ -234,7 +234,7 @@
                 <td mat-cell *matCellDef="let element" class="text-center"
                   [ngStyle]="{'background-color':element?.colorCode}">
                   <!-- <span class="text-center text-capitalize">{{element?.empShdcolumns[i]['value']}} </span> -->
-                  <form [formGroup]="formGroupArray[element.srno - 1]">
+                  <!-- <form [formGroup]="formGroupArray[element.srno - 1]">
                     <mat-form-field class="form-field lib-form">
                       <span *ngIf="element?.emp_modes_data?.mode_data[i]">
                         <input matInput
@@ -251,7 +251,8 @@
                       </span>
 
                     </mat-form-field>
-                  </form>
+                  </form> -->
+                  {{element?.emp_modes_data?.mode_data[i]['pm_value']}}
                 </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>

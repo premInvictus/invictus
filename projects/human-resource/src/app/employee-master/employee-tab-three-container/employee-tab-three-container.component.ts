@@ -489,7 +489,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			tempempPaymentModeDetail.push(this.empPaymentModeDetail[i].value);
 		}
 		//this.salaryDetails.valid
-		if (true) {
+		if (this.salaryDetails.valid) {
 			this.disabledApiButton = true;
 			this.employeedetails['emp_salary_detail'] = {
 				empPaymentModeDetail: tempempPaymentModeDetail,
