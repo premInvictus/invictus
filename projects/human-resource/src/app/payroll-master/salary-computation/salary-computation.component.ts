@@ -540,9 +540,11 @@ export class SalaryComputationComponent implements OnInit {
 					pos++;
 				}
 
-
+				console.log('this.SALARY_COMPUTE_ELEMENT',this.SALARY_COMPUTE_ELEMENT);
 				this.footerrow = {
-					emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.emp_salary_payable || 0),0)
+					emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.emp_salary_payable || 0),0),
+					emp_total_earnings: this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.emp_total_earnings || 0),0),
+					balance: this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.balance || 0),0)
 				}
 				this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 				this.salaryComputeDataSource.paginator = this.paginator;
@@ -553,6 +555,14 @@ export class SalaryComputationComponent implements OnInit {
 			}
 		});
 
+	}
+
+	salaryheadGT(index){
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.empShdcolumns[index]['value'] || 0),0);
+	}
+
+	deductionGT(index){
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a,b) => a + Number(b.empShdcolumns[index]['value'] || 0),0);
 	}
 
 	checkForFilter() {
