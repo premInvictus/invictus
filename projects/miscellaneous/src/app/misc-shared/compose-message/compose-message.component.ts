@@ -407,7 +407,17 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.sisService.getAllStudentsByClassSection(inputJson).subscribe((result: any) => {
 				if (result && result.data && result.data[0]['au_login_id']) {
 					for (var i = 0; i < result.data.length; i++) {
+						let deviceId: any = '';
+						if (result.data[i]['device_details']) {
+							const devices: any[] = JSON.parse(result.data[i]['device_details']);
+							for (const item of devices) {
+								if (item.type === 'android') {
+									deviceId = item.device_id
+								}
+							}
+						}
 						var inputJson = {
+							device_id: deviceId ? deviceId : '',
 							au_login_id: result.data[i]['au_login_id'],
 							au_full_name: result.data[i]['au_full_name'],
 							au_profileimage: result.data[i]['au_profileimage'],
@@ -605,6 +615,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					au_full_name: userDataArr['au_full_name'],
 					mobile: userDataArr['au_mobile'],
 					role_id: userDataArr['au_role_id'],
+					device_id: userDataArr['device_id']
 				};
 				this.tempSelectedUserArr.push(inputJson);
 			}
@@ -643,39 +654,90 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	sendMessage() {
 		var validationFlag = this.checkValidation();
+		const devices: any[] = [];
 		if (validationFlag) {
 			this.disabledApiButton = true;
-			var msgToArr = [];
-			for (var i = 0; i < this.selectedUserArr.length; i++) {
-				var userJson = {
-					"login_id": this.selectedUserArr[i]['login_id'],
-					"au_full_name": this.selectedUserArr[i]['au_full_name'],
-					"class_id": this.selectedUserArr[i]['class_id'],
-					"class_name": this.selectedUserArr[i]['class_name'],
-					"sec_id": this.selectedUserArr[i]['sec_id'],
-					"sec_name": this.selectedUserArr[i]['sec_name'],
-					"email": this.selectedUserArr[i]['email'],
-					"mobile": this.selectedUserArr[i]['mobile'],
-					"role_id": this.selectedUserArr[i]['role_id'],
-					"msg_status": { "status_id": "1", "status_name": "pending" },
-					"msg_sent_date_time": ""
+			let msgToArr = [];
+			let userJson: any = {}
+			let inputJson: any = {};
+			if (this.messageForm.value.messageType === 'E' || this.messageForm.value.messageType === 'S') {
+				for (var i = 0; i < this.selectedUserArr.length; i++) {
+					userJson = {
+						"login_id": this.selectedUserArr[i]['login_id'],
+						"au_full_name": this.selectedUserArr[i]['au_full_name'],
+						"class_id": this.selectedUserArr[i]['class_id'],
+						"class_name": this.selectedUserArr[i]['class_name'],
+						"sec_id": this.selectedUserArr[i]['sec_id'],
+						"sec_name": this.selectedUserArr[i]['sec_name'],
+						"email": this.selectedUserArr[i]['email'],
+						"mobile": this.selectedUserArr[i]['mobile'],
+						"role_id": this.selectedUserArr[i]['role_id'],
+						"msg_status": { "status_id": "1", "status_name": "pending" },
+						"msg_sent_date_time": ""
+					}
+					msgToArr.push(userJson);
 				}
-				msgToArr.push(userJson);
-			}
 
-			var inputJson = {
-				"msg_from": this.currentUser.login_id,
-				"msg_to": msgToArr,
-				"msg_type": this.messageForm.value.messageType,
-				"msg_template_id": this.messageForm.value.tpl_id,
-				"msg_receivers": this.currentReceivers,
-				"msg_subject": this.messageForm.value.messageSubject,
-				"msg_description": this.messageForm.value.messageBody,
-				"msg_attachment": this.attachmentArray,
-				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
-				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
-				"msg_thread": []
+				inputJson = {
+					"msg_from": this.currentUser.login_id,
+					"msg_to": msgToArr,
+					"msg_type": this.messageForm.value.messageType,
+					"msg_template_id": this.messageForm.value.tpl_id,
+					"msg_receivers": this.currentReceivers,
+					"msg_subject": this.messageForm.value.messageSubject,
+					"msg_description": this.messageForm.value.messageBody,
+					"msg_attachment": this.attachmentArray,
+					"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
+					"msg_thread": []
+				}
 			}
+			if (this.messageForm.value.messageType === 'notification') {
+				for (var i = 0; i < this.selectedUserArr.length; i++) {
+					if (this.selectedUserArr[i]['device_id']) {
+						devices.push(this.selectedUserArr[i]['device_id']);
+					}
+					userJson = {
+						"login_id": this.selectedUserArr[i]['login_id'],
+						"au_full_name": this.selectedUserArr[i]['au_full_name'],
+						"class_id": this.selectedUserArr[i]['class_id'],
+						"class_name": this.selectedUserArr[i]['class_name'],
+						"sec_id": this.selectedUserArr[i]['sec_id'],
+						"sec_name": this.selectedUserArr[i]['sec_name'],
+						"email": this.selectedUserArr[i]['email'],
+						"mobile": this.selectedUserArr[i]['mobile'],
+						"role_id": this.selectedUserArr[i]['role_id'],
+						"msg_status": [
+							{ "status_name": "sent" },
+							{ "status_name": "unread" }],
+						"msg_sent_date_time": ""
+					}
+					msgToArr.push(userJson);
+				}
+
+				inputJson = {
+					"msg_from": this.currentUser.login_id,
+					"msg_to": msgToArr,
+					"msg_type": this.messageForm.value.messageType,
+					"msg_template_id": this.messageForm.value.tpl_id,
+					"msg_receivers": this.currentReceivers,
+					"msg_subject": this.messageForm.value.messageSubject,
+					"msg_description": this.messageForm.value.messageBody,
+					"msg_attachment": this.attachmentArray,
+					"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
+					"msg_thread": [],
+					"user_type": "student",
+					"message_title": this.messageForm.value.messageSubject,
+					"message_content": this.messageForm.value.messageBody,
+					"message_type": {
+						"module": "assignment",
+						"type": "push",
+					},
+					"message_to": devices
+				}
+			}
+			console.log(inputJson);
 
 			if (this.editMode) {
 				inputJson['msg_id'] = this.formData['msg_id'];
