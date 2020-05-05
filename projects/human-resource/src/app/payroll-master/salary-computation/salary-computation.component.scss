@@ -6,8 +6,8 @@
 }
 
 .overflow {
-    overflow-x: scroll;
-    overflow-y: auto;
+    //overflow-x: scroll;
+    //overflow-y: auto;
     height: 700px;
 }
 
@@ -46,3 +46,19 @@
     font-size: 13px !important;
     margin-top: 10px;
 }
+.example-container {
+    height: 600px;
+    overflow: auto;
+  }
+  
+  table {
+    width: 100%;
+  }
+  tr.mat-footer-row {
+    font-weight: bold;
+  }
+  td.mat-footer-cell{
+    border-top: 1px solid #89A8C9 !important;
+    border-left: 1px solid #89A8C9 !important;
+    border-right: 1px solid #89A8C9 !important;
+  }
