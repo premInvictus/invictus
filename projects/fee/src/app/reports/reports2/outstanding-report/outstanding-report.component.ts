@@ -151,25 +151,43 @@ export class OutstandingReportComponent implements OnInit {
 
 		this.buildForm();
 		this.getClassData();
-		this.reportTypeArray.push({
-			report_type: 'headwise', report_name: 'Head Wise'
-		},
-			{
-				report_type: 'headwisedetail', report_name: 'Head Wise Detail'
-			},
-			{
-				report_type: 'routewise', report_name: 'Route Wise'
-			},
-			{
-				report_type: 'defaulter', report_name: 'Defaulter\'s List'
-			},
-			{
-				report_type: 'feedue', report_name: 'Fee dues'
-			},
-			{
-				report_type: 'aging', report_name: 'Aging'
-			}
-		);
+		// this.reportTypeArray.push({
+		// 	report_type: 'headwise', report_name: 'Head Wise'
+		// },
+		// 	{
+		// 		report_type: 'headwisedetail', report_name: 'Head Wise Detail'
+		// 	},
+		// 	{
+		// 		report_type: 'routewise', report_name: 'Route Wise'
+		// 	},
+		// 	{
+		// 		report_type: 'defaulter', report_name: 'Defaulter\'s List'
+		// 	},
+		// 	{
+		// 		report_type: 'feedue', report_name: 'Fee dues'
+		// 	},
+		// 	{
+		// 		report_type: 'aging', report_name: 'Aging'
+		// 	}
+		// );
+		if(this.common.isExistUserAccessMenu('656')) {
+			this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
+		}
+		if(this.common.isExistUserAccessMenu('657')) {
+			this.reportTypeArray.push({report_type: 'headwisedetail', report_name: 'Head Wise Detail'});
+		}
+		if(this.common.isExistUserAccessMenu('658')) {
+			this.reportTypeArray.push({report_type: 'routewise', report_name: 'Route Wise'});
+		}
+		if(this.common.isExistUserAccessMenu('659')) {
+			this.reportTypeArray.push({report_type: 'defaulter', report_name: 'Defaulter\'s List'});
+		}
+		if(this.common.isExistUserAccessMenu('660')) {
+			this.reportTypeArray.push({report_type: 'feedue', report_name: 'Fee dues'});
+		}
+		if(this.common.isExistUserAccessMenu('661')) {
+			this.reportTypeArray.push({report_type: 'aging', report_name: 'Aging'});
+		}
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
 			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);

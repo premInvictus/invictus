@@ -23,3 +23,181 @@ width:30px;
 margin: 0px 15px;
 color: #ffffff;
 }
+#large-screen {
+    display: block;
+}
+#small-screen {
+    display: none;
+}
+@media screen and (max-width: 720px) {
+    ::-webkit-scrollbar {
+        display: none !important;
+    }
+    #large-screen {
+        display: none;
+    }
+    #small-screen {
+        display: block;
+        overflow: scroll;
+        height: 118vh;
+        position: relative;
+    } 
+    mat-sidenav-content {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-bottom: 5px;
+        background-color: #ffffff;
+    }
+    .fixed-dexription {
+        width: 100%;
+        height: 75px;
+        background: white;
+        box-shadow: 0px 4px 5px #eae9e9;
+        position: absolute;
+        margin-left: -2%;
+        top: 0;
+    }
+    span.header-desc {
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-family: Roboto Bold,sans-serif;
+    }
+    span.header-desc-date {
+        font-size: 14px;
+        text-transform: uppercase;
+        font-family: Roboto Regular,sans-serif;
+        position: relative;
+    top: -23px;
+    }
+    span.header-des {
+        position: relative;
+        top: -24px;
+        font-family: Roboto Regular,sans-serif;
+        color: #0F73EE;
+    }
+    .content-div {
+        height: auto;
+        position: relative;
+        top: 70px;
+        margin-left: -2%;
+        margin-right: -2%;
+    }
+    .header-sec {
+        font-size: 16px;
+        text-transform: capitalize;
+        font-weight: bold;
+        font-family: Roboto Bold,sans-serif;
+    }
+    .timetable-card {
+        background: white;
+        height: 250px;
+        box-shadow: 0px 5px 10px #cacaca;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .timetable-card2 {
+        background: white;
+        height: auto;
+        box-shadow: 0px 5px 10px #cacaca;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .timetable-card4 {
+        background: white;
+        height: 280px;
+        box-shadow: 0px 5px 10px #cacaca;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+    .timetable-div-content-parent {
+        overflow: hidden !important;
+        position: relative;
+        height: 250px !important;
+    }
+    .timetable-div-content-child {
+        height: 100%;
+        width: 100%;
+        overflow-x: scroll;
+    }
+    .timetable-inline {
+        display: inline-flex;
+        overflow-y: hidden;
+        overflow-x: scroll;
+        margin-left: 4%;
+    }
+    .tt-box {
+        position: relative;
+        height: 180px;
+        margin-right: 3%;
+        margin-top: 34px;
+        border-radius: 20px;
+        width: 165px;
+        margin-left: 0%;
+    }
+    .tt-container {
+        position: absolute;
+        bottom: -4%;
+        height: 150px;
+    }
+    .timebox-content-container {
+        position: absolute;
+        top: -10px;
+        left: 12px;
+        color: #fff;
+    }
+    .font-size-20 {
+        font-size: 22px;
+    }
+    .font-size-14 {
+        font-size: 14px;
+    }
+    img.new-image {
+        margin-top: 28px;
+    }
+    .content2-div {
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+    .select-div {
+        position: relative;
+        top: -26px;
+        float: right;
+        width: 90px;
+    }
+    .content3-div {
+        margin-left: 3%;
+        margin-right: 3%;
+    }
+    button.blue-button-assign {
+        background: #0f4261;
+        border-radius: 30px;
+        width: 100px;
+        position: absolute;
+        right: -50px;
+    }
+    span.assign-span-len {
+        position: relative;
+        left: -26px;
+        top: -3px;
+    }
+    span.subname {
+        position: relative;
+        font-size: 16px;
+        font-weight: bold;
+        top: -15px;
+        color: #0F73EE;
+    }
+    .remove-margin-top {
+        margin-top: 0px !important;
+    }
+    a.left-dash-card-play-btn {
+        right: 15px;
+        z-index: 99;
+        position: absolute;
+    }
+    .start-button-icon {
+        color: #fff !important;
+    font-size: 13px;
+    }
+}

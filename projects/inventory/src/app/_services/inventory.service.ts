@@ -209,4 +209,12 @@ export class InventoryService {
     this.service.stopLoading();
     return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
   }
+  insertVendor(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/vendor/insert', value);
+  }
+  getVendor(value) {
+    this.service.startLoading();
+    return this.http.post(environment.apiInvUrl + '/vendor/getAll', value);
+  }
 }

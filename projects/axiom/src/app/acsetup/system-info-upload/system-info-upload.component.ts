@@ -246,9 +246,8 @@ export class SystemInfoUploadComponent implements OnInit {
 				(result: any) => {
 
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);
@@ -258,9 +257,8 @@ export class SystemInfoUploadComponent implements OnInit {
 				(result: any) => {
 
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);
@@ -270,9 +268,8 @@ export class SystemInfoUploadComponent implements OnInit {
 				(result: any) => {
 
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);
@@ -282,9 +279,8 @@ export class SystemInfoUploadComponent implements OnInit {
 				(result: any) => {
 
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);
@@ -293,9 +289,8 @@ export class SystemInfoUploadComponent implements OnInit {
 			this.qelementService.generateExcelFileSubtopic(this.bulkuploadform.value).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);
@@ -311,9 +306,8 @@ export class SystemInfoUploadComponent implements OnInit {
 			this.qelementService.userGenerateExcel({role_id: 4}).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
-						let url: string = result.data;
-						url = environment.apiAxiomUrl + url.substring(1);
-						window.location.href = url;
+						const length = result.data.split('/').length;
+						saveAs(result.data, result.data.split('/')[length - 1]);
 					}
 				}
 			);

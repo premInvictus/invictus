@@ -83,6 +83,7 @@ export class StudentDashboardComponent implements OnInit {
 	currentAssignmentIndex: number;
 	assignmentPre = true;
 	assignmentNext = true;
+	noData = false;
 
 	constructor(
 		private reportService: ReportService,
@@ -226,6 +227,7 @@ export class StudentDashboardComponent implements OnInit {
 	getClassSectionWiseTimeTable() {
 		this.dayArray = [];
 		this.timeTableFlag = false;
+		this.noData = false;
 		const param: any = {};
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
@@ -236,6 +238,9 @@ export class StudentDashboardComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				this.weekArr = [];
 				this.dayArray = result.data.data;
+				if (!(result.data.data)) {
+					this.noData = true;
+				}
 				this.week_day = Number(result.data.day_of_week);
 				console.log('dayArray', this.dayArray);
 				this.timeTableFlag = true;

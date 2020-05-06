@@ -159,14 +159,14 @@ export class ReservoirEditModalComponent implements OnInit {
           if (loc && loc.split('-')) {
             const arr: any[] = loc.split('-');
             console.log(arr);
-            row = Number(arr[1]);
+            row = arr[1];
             stack = arr[0];
           }
         } else {
           if (loc && loc.split('-')) {
             const arr: any[] = loc.split('-');
             console.log(arr);
-            row = Number(arr[1]);
+            row = arr[1];
             stack = arr[0];
           }
         }

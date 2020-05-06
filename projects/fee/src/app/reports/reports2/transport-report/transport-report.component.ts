@@ -144,19 +144,31 @@ export class TransportReportComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.getStoppages();
-		this.reportTypeArray.push(
-			{
-				report_type: 'transportAlloted', report_name: 'Transport Allotee'
-			},
-			{
-				report_type: 'routewisecoll', report_name: 'Route Wise Collection'
-			},
-			{
-				report_type: 'routewiseout', report_name: 'Route Wise Outstanding'
-			},
-			{
-				report_type: 'routeslabstopwise', report_name: 'Route Wise '
-			});
+		// this.reportTypeArray.push(
+		// 	{
+		// 		report_type: 'transportAlloted', report_name: 'Transport Allotee'
+		// 	},
+		// 	{
+		// 		report_type: 'routewisecoll', report_name: 'Route Wise Collection'
+		// 	},
+		// 	{
+		// 		report_type: 'routewiseout', report_name: 'Route Wise Outstanding'
+		// 	},
+		// 	{
+		// 		report_type: 'routeslabstopwise', report_name: 'Route Wise '
+		// 	});
+			if(this.common.isExistUserAccessMenu('667')) {
+				this.reportTypeArray.push({report_type: 'transportAlloted', report_name: 'Transport Allotee'});
+			}
+			if(this.common.isExistUserAccessMenu('668')) {
+				this.reportTypeArray.push({report_type: 'routewisecoll', report_name: 'Route Wise Collection'});
+			}
+			if(this.common.isExistUserAccessMenu('669')) {
+				this.reportTypeArray.push({report_type: 'routewiseout', report_name: 'Route Wise Outstanding'});
+			}
+			if(this.common.isExistUserAccessMenu('670')) {
+				this.reportTypeArray.push({report_type: 'routeslabstopwise', report_name: 'Route Wise '});
+			}
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {

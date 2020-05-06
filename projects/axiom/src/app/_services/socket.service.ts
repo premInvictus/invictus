@@ -3,11 +3,10 @@ import { Observable } from 'rxjs';
 import { Message } from '../_models/message';
 import { Event } from '../_models/event';
 import * as socketIo from 'socket.io-client';
-
-import { appConfig } from './../../app/app.config';
+import {environment} from 'src/environments/environment';
 import { Subject } from 'rxjs';
 
-const SERVER_URL = appConfig.socketUrl;
+const SERVER_URL = environment.socketUrl;
 
 @Injectable()
 export class SocketService {
