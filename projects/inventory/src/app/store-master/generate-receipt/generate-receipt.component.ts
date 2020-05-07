@@ -70,6 +70,7 @@ export class GenerateReceiptComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
+      console.log(this.requistionArray, 'this.requistionArray');
       this.getTablevalue();
     }
   }
@@ -164,12 +165,15 @@ export class GenerateReceiptComponent implements OnInit {
 
   addList() {
     if (this.createOrderForm.valid) {
-      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createOrderForm.value.item_code));
+      console.log(this.createOrderForm.value, 'this.createOrderForm');
+      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createOrderForm.value.item_code) 
+      && Number(f.item_location) === Number(this.currentLocationId)); 
       if (sindex !== -1) {
         this.openMessageModal();
       } else {
         this.itemCodeArray.push({
           item_code: this.createOrderForm.value.item_code,
+          item_location:this.currentLocationId
         });
         this.createOrderForm.value.item_status = 'pending';
         this.createOrderForm.value.item_location = this.currentLocationId;
@@ -361,35 +365,40 @@ export class GenerateReceiptComponent implements OnInit {
       }
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
         if (result_r) {
-          this.requistionArray[0].pm_status = 'approved';
-          this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
-            if (result) {
-              this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
-                if (result_p) {
-                  let finalArray: any = [];
-                  result_r.pm_status = 'approved';
-                  finalArray.push(result_r);
-                  this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
-                    if (result_q) {
-                      this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
-                      this.finalSubmitArray = [];
-                      this.finalRequistionArray = [];
-                      this.itemCodeArray = [];
-                    }
-                  });
-                }
-              });
-              if (this.requistionArray.length > 0) {
-                this.requistionArray = [];
-                this.router.navigate(['../procurement-master'], { relativeTo: this.route });
-                this.inventory.setTabIndex({ 'currentTab': 1 });
-              } else {
+          if (this.requistionArray.length > 0) {
+            this.requistionArray[0].pm_status = 'approved';
+            this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
+              if (result) {
+                this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+                  if (result_p) {
+                    let finalArray: any = [];
+                    result_r.pm_status = 'approved';
+                    finalArray.push(result_r);
+                    this.inventory.updateRequistionMaster(finalArray).subscribe((result_q: any) => {
+                      if (result_q) {
+                        this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
+                        this.finalSubmitArray = [];
+                        this.finalRequistionArray = [];
+                        this.itemCodeArray = [];
+                      }
+                    });
+                  }
+                });
+              }
+            });
+            this.requistionArray = [];
+            this.router.navigate(['../procurement-master'], { relativeTo: this.route });
+            this.inventory.setTabIndex({ 'currentTab': 1 });
+          } else {
+            this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
+              if (result_p) {
+                this.commonService.showSuccessErrorMessage('Receipt Generated Successfully', 'success');
                 this.requistionArray = [];
                 this.router.navigate(['../procurement-master'], { relativeTo: this.route });
                 this.inventory.setTabIndex({ 'currentTab': 2 });
               }
-            }
-          });
+            });
+          }
         } else {
           this.commonService.showSuccessErrorMessage('Error While Generating Receipt', 'error');
         }

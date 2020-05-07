@@ -761,6 +761,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					inputJson['delMessage'] = "This will consume " + consumeMessage + " SMS" + "<br/> Would you like to broadcast this message as shown";
 					this.deleteModal.openModal(inputJson);
 				} else {
+					console.log(this.messageForm.value);
 					this.commonAPIService.insertMessage(inputJson).subscribe((result: any) => {
 						if (result) {
 							this.disabledApiButton = false;

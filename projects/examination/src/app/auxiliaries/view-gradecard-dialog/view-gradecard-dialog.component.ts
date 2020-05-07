@@ -45,8 +45,10 @@ export class ViewGradecardDialogComponent implements OnInit {
   resultdivflag = false;
   settings: any[] = [];
   principalSignature: any;
+  hodSignature: any;
   teacherSignature: any;
   usePrincipalSignature: any
+  useHodSignature: any
   useTeacherSignature: any
   header: any;
   footer: any;
@@ -373,7 +375,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_alias = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+    param.gs_alias = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
       'gradecard_health_status', 'gradecard_date', 'school_achievement'];
     this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -381,7 +383,10 @@ export class ViewGradecardDialogComponent implements OnInit {
         this.settings.forEach(element => {
           if (element.gs_alias === 'gradecard_principal_signature') {
             this.principalSignature = element.gs_value;
-          } else if (element.gs_alias === 'gradecard_header') {
+          } else if (element.gs_alias === 'gradecard_hod_signature') {
+            this.hodSignature = element.gs_value;
+          }
+          else if (element.gs_alias === 'gradecard_header') {
             this.header = element.gs_value;
             this.header = this.header.replace('@','data:image/png;base64,');
             // var regex = /<img.*?src="(.*?)"/;
@@ -405,6 +410,8 @@ export class ViewGradecardDialogComponent implements OnInit {
             }
           } else if (element.gs_alias === 'gradecard_use_principal_signature') {
             this.usePrincipalSignature = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_use_hod_signature') {
+            this.useHodSignature = element.gs_value;
           } else if (element.gs_alias === 'gradecard_use_teacher_signature') {
             this.useTeacherSignature = element.gs_value;
           } else if (element.gs_alias === 'gradecard_footer') {

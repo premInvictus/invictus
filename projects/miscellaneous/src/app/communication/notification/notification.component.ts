@@ -27,6 +27,7 @@ export class NotificationComponent implements OnInit {
 		this.commonAPIService.getPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.notficationMsg = result.data;
+				console.log(this.notficationMsg);
 			} else {
 				this.notficationMsg = [];
 			}
@@ -41,43 +42,43 @@ export class NotificationComponent implements OnInit {
 			}];
 		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
 			if (result.status === 'ok') {
-				if (event.notification_type.module === 'syllabus') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'assignment') {
-					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'fees') {
-					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'classwork') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'leave') {
-					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'timetable') {
-					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
-				}
+				// if (event.notification_type.module === 'syllabus') {
+				// 	this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'assignment') {
+				// 	this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'fees') {
+				// 	this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'classwork') {
+				// 	this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'leave') {
+				// 	this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'timetable') {
+				// 	this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+				// }
 			} else {
-				if (event.notification_type.module === 'syllabus') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'assignment') {
-					this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'fees') {
-					this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'classwork') {
-					this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'leave') {
-					this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-				}
-				if (event.notification_type.module === 'timetable') {
-					this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
-				}
+				// if (event.notification_type.module === 'syllabus') {
+				// 	this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'assignment') {
+				// 	this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'fees') {
+				// 	this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'classwork') {
+				// 	this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'leave') {
+				// 	this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+				// }
+				// if (event.notification_type.module === 'timetable') {
+				// 	this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+				// }
 			}
 		});
 	}

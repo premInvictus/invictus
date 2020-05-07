@@ -1498,6 +1498,19 @@
                                     </thead>
                                 </table>
                             </th>
+                            <th style="text-align: left; vertical-align: bottom;" height="80">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th *ngIf="useHodSignature === '1' && hodSignature"> <img
+                                                    [src]="hodSignature" height="60px" width="160px"></th>
+                                        </tr>
+                                        <tr>
+                                            <th>Signature of HOD</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
                             <th style="text-align: right; vertical-align: bottom;" height="80">
                                 <table>
                                     <thead>
