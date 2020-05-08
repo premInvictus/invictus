@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class GenerateReceiptComponent implements OnInit {
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('messageModal') messageModal;
+  statusFlag = "approved";
   multipleFileArray: any[] = [];
   imageArray: any[] = [];
   finalDocumentArray: any[] = [];
@@ -70,7 +71,7 @@ export class GenerateReceiptComponent implements OnInit {
     this.buildForm();
     if (this.inventory.getrequisitionArray()) {
       this.requistionArray = this.inventory.getrequisitionArray();
-      console.log(this.requistionArray, 'this.requistionArray');
+     // console.log(this.requistionArray, 'this.requistionArray');
       this.getTablevalue();
     }
   }
@@ -119,18 +120,17 @@ export class GenerateReceiptComponent implements OnInit {
         this.viewOnly = false;
       }
       for (let dety of item.pm_item_details) {
-        // if (dety.item_status === 'approved') {
-        dety.item_status = 'pending';
-        const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
-        if (sindex !== -1) {
-          this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
-        } else {
-          this.itemCodeArray.push({
-            item_code: dety.item_code,
-          });
-          this.finalRequistionArray.push(dety);
+        if (dety.item_status === 'pending') {
+          const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
+          if (sindex !== -1) {
+            this.finalRequistionArray[sindex].item_quantity = Number(this.finalRequistionArray[sindex].item_quantity) + Number(dety.item_quantity);
+          } else {
+            this.itemCodeArray.push({
+              item_code: dety.item_code,
+            });
+            this.finalRequistionArray.push(dety);
+          }
         }
-        // }
       }
     }
     this.finalReceiptForm.patchValue({
@@ -165,15 +165,15 @@ export class GenerateReceiptComponent implements OnInit {
 
   addList() {
     if (this.createOrderForm.valid) {
-      console.log(this.createOrderForm.value, 'this.createOrderForm');
-      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createOrderForm.value.item_code) 
-      && Number(f.item_location) === Number(this.currentLocationId)); 
+     // console.log(this.createOrderForm.value, 'this.createOrderForm');
+      const sindex = this.itemCodeArray.findIndex(f => Number(f.item_code) === Number(this.createOrderForm.value.item_code)
+        && Number(f.item_location) === Number(this.currentLocationId));
       if (sindex !== -1) {
         this.openMessageModal();
       } else {
         this.itemCodeArray.push({
           item_code: this.createOrderForm.value.item_code,
-          item_location:this.currentLocationId
+          item_location: this.currentLocationId
         });
         this.createOrderForm.value.item_status = 'pending';
         this.createOrderForm.value.item_location = this.currentLocationId;
@@ -327,7 +327,13 @@ export class GenerateReceiptComponent implements OnInit {
         for (let dety of item.pm_item_details) {
           const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(dety.item_code));
           if (sindex !== -1) {
-            dety.item_status = 'approved';
+            if (Number(dety.item_quantity) === Number(this.finalRequistionArray[sindex].item_quantity)) {
+              dety.item_status = 'approved';
+            } else {
+              dety.item_quantity = Number(dety.item_quantity) - Number(this.finalRequistionArray[sindex].item_quantity);
+              dety.item_status = 'pending';
+              this.statusFlag = 'pending';
+            }
           }
         }
       };
@@ -366,7 +372,7 @@ export class GenerateReceiptComponent implements OnInit {
       this.commonService.insertRequistionMaster(this.finalSubmitArray).subscribe((result_r: any) => {
         if (result_r) {
           if (this.requistionArray.length > 0) {
-            this.requistionArray[0].pm_status = 'approved';
+            this.requistionArray[0].pm_status = this.statusFlag;
             this.inventory.updateRequistionMaster(this.requistionArray).subscribe((result: any) => {
               if (result) {
                 this.inventory.updateItemQuantity(this.finalSubmitArray).subscribe((result_p: any) => {
@@ -490,6 +496,17 @@ export class GenerateReceiptComponent implements OnInit {
         this.getTablevalue();
       } else {
         this.getTablevalue();
+      }
+    }
+  }
+  checkQuantity(item_code, item_quantity) {    
+    const sindex = this.finalRequistionArray.findIndex(f => Number(f.item_code) === Number(item_code));
+    if (sindex !== -1) {
+      if(Number(item_quantity) > Number(this.finalRequistionArray[sindex].item_quantity)){
+        this.commonService.showSuccessErrorMessage('You are not allowed to order more item quantity other than spicified one','error');
+        this.createOrderForm.patchValue({
+          item_quantity:this.finalRequistionArray[sindex].item_quantity,
+        });
       }
     }
   }

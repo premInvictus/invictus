@@ -69,13 +69,14 @@
                 <textarea rows="5" class="form-control" formControlName="item_desc" readonly></textarea>
               </div>
             </div>
-
             <div class="row">
               <div class="col-6 ">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Quantity</mat-label>
-                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity" autocomplete="off"
-                    [readonly]="viewOnly" required>
+                  <input matInput placeholder="Quantity" type="text" formControlName="item_quantity"
+                  (change)="checkQuantity(createOrderForm.value.item_code, $event.target.value)" 
+                   autocomplete="off"
+                     required>
                 </mat-form-field>
               </div>
               <div class="col-6 ">
@@ -225,7 +226,7 @@
                   <input type="text" matInput placeholder="Address" formControlName="ven_address" readonly>
                 </mat-form-field>
               </div>
-            </div>
+            </div> 
             <div class="row">
               <div class="col-4 ">
                 <mat-form-field class="form-field opacity-class" appearance="outline">
