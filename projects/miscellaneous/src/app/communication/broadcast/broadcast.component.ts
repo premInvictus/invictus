@@ -107,12 +107,36 @@ export class BroadcastComponent implements OnInit {
 			}
 		});
 	}
+	getPushNotification() {
+		this.scheduleMessageData = [];
+		this.USER_ELEMENT_DATA = [];
+		this.displayedColumns = [
+			'no',
+			'user_type',
+			'schedule_date',
+			'subject',
+			'send_by',
+			'status',
+			'action'
+		];
+		var inputJson = {};
+		inputJson['msg_type'] = 'notification';
+		inputJson['from_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.from_date, 'yyyy-MM-dd');
+		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
+		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				this.scheduleMessageData = result.data;
+				this.prepareDataSource();
+			}
+		});
+	}
 
 	prepareDataSource() {
 		this.scheduleMessageDataSource = new MatTableDataSource<Element>(this.USER_ELEMENT_DATA);
 		let counter = 1;
 		for (let i = 0; i < this.scheduleMessageData.length; i++) {
 			const tempObj = {};
+			tempObj['action'] = this.scheduleMessageData[i];
 			tempObj['msg_id'] = this.scheduleMessageData[i]['msg_id'];
 			tempObj['no'] = counter;
 			tempObj['subject'] = this.scheduleMessageData[i]['msg_subject'];
@@ -190,6 +214,7 @@ export class BroadcastComponent implements OnInit {
 	// console.log(element);
 	// }
 	messageStatus = (data) => {
+		console.log(data);
 		data.user_data.msg_description = data.body;
 		this.smsModal.openModal(data.user_data);
 	}
@@ -212,18 +237,22 @@ export class BroadcastComponent implements OnInit {
 	changeTab(event) {
 		this.currentTab = event.index;
 
-		if (this.currentTab) {
+		if (this.currentTab === 1) {
 			this.getEmailScheduleData();
-		} else {
+		} else if (this.currentTab === 0) {
 			this.getSMSScheduleData();
+		} else if (this.currentTab === 2) {
+			this.getPushNotification();
 		}
 	}
 
 	getMessage() {
-		if (this.currentTab) {
+		if (this.currentTab == 1) {
 			this.getEmailScheduleData();
-		} else {
+		}else if (this.currentTab == 0) {
 			this.getSMSScheduleData();
+		} else if (this.currentTab == 2) {
+			this.getPushNotification();
 		}
 	}
 
@@ -240,9 +269,13 @@ export class BroadcastComponent implements OnInit {
 		if (messageType === 'S') {
 			this.currentTab = 0;
 			this.getSMSScheduleData();
-		} else {
+		} else if (messageType === 'E') {
 			this.currentTab = 1;
 			this.getEmailScheduleData();
+		}
+		else {
+			this.currentTab = 2;
+			this.getPushNotification();
 		}
 
 	}
