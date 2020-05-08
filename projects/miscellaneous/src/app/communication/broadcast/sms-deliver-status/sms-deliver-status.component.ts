@@ -30,7 +30,7 @@ export class SmsDeliverStatusComponent implements OnInit {
         "au_full_name": item.au_full_name,
         "class_name": item.class_name + '-' + item.sec_name,
         "mobile": item.mobile,
-        "msg_status": (item.msg_status.status_name).toLowerCase()
+        "msg_status": Array.isArray(item.msg_status) ? item.msg_status[0].status_name : (item.msg_status.status_name).toLowerCase()
       });
       ind++;
     }
