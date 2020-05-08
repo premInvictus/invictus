@@ -331,7 +331,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	getLWP(element, index) {
-		this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
+		if (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted,10) > parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed,10)) {
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] ="0";
+			this.formGroupArray[index].formGroup.patchValue({
+				emp_leave_granted:0,
+				emp_leave_availed:0
+			});
+			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed','error');
+		} else       {
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
 		//(parseInt(this.formGroupArray[index].formGroup.value.emp_present, 10)
 
 		var tPresent = element ? element.emp_present : 0;
@@ -343,6 +351,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 		console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
+		}
+		
 	}
 
 	getMonthName(ev) {
