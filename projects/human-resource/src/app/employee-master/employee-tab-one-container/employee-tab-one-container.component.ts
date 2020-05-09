@@ -410,6 +410,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 							tds_deduction: ''
 						}
 					],
+					gratuity:'',
 					emp_net_salary: '',
 					emp_total_earning: ''
 				}
