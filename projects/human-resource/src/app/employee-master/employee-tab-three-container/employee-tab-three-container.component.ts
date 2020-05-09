@@ -128,6 +128,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_deduction: '',
 				tds_deduction: '',
 				net_salary: '',
+				gratuity:'',
 				total_earning: ''
 			});
 		}
@@ -175,6 +176,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_deduction: '',
 			tds_deduction: '',
 			net_salary: '',
+			gratuity:'',
 			total_earning: ''
 		});
 
@@ -461,6 +463,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_deduction: '',
 			tds_deduction: '',
 			net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
+			gratuity:this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
 		});
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) {
@@ -546,6 +549,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
+					gratuity:this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
 				}
@@ -666,6 +670,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
+					gratuity:this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
 				}
