@@ -4,6 +4,7 @@ import { NotificationModal } from './notification-page.model'
 import { MatDialogRef, MatDialog, } from '@angular/material/dialog';
 import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
+import { PreviewDocumentComponent } from 'projects/student-app/src/app/shared-module/preview-document/preview-document.component';
 
 @Component({
   selector: 'app-notification-page',
@@ -31,6 +32,24 @@ export class NotificationPageComponent implements OnInit {
       }
     });
   }
+  previewDocuments(attachmentArray) {
+		const attArr: any[] = [];
+		if (attachmentArray && attachmentArray.length > 0) {
+			attachmentArray.forEach(element => {
+				attArr.push({
+					file_url: element.imgUrl
+				});
+			});
+			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+				height: '80%',
+				width: '1000px',
+				data: {
+					index: '',
+					images: attArr
+				}
+			});
+		}
+	}
   redirectModule(event) {
     event.msg_to[0].msg_status = [
       {
