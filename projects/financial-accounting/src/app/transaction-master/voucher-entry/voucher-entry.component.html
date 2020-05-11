@@ -1,0 +1,160 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+
+      <div class="row">
+        <div class="col-5 remove-col-padding-left">
+          <span class="font-size-24">Vouchers</span>
+        </div>
+        <div class="col-7">
+          <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">Journel Voucher</button> -->
+          <mat-chip-list aria-label="Voucher Type">
+              <mat-chip class="pink" selected><span class="text-center">Journel Entry</span></mat-chip>
+              <mat-chip class="red"><span class="text-center">Contra</span></mat-chip>
+              <mat-chip class="light-blue"><span class="text-center">Payment</span></mat-chip>
+              <mat-chip class="dark-blue"><span class="text-center">Receipt</span></mat-chip>
+              <mat-chip class="orange"><span class="text-center">Credit/Debit Note</span></mat-chip>
+            </mat-chip-list>
+        </div>
+        <!-- <div class="col-2">
+          <button mat-raised-button class="btn-primary-100" (click)="displayData()">Contra</button>
+        </div>
+        <div class="col-2">
+          <button mat-raised-button class="btn-primary-100" (click)="displayData()">Payment</button>
+        </div>
+        <div class="col-2">
+          <button mat-raised-button class="btn-primary-100" (click)="displayData()">Receipt</button>
+        </div>
+        <div class="col-2">
+          <button mat-raised-button class="btn-primary-100" (click)="displayData()">Credit/Debit Note</button>
+        </div> -->
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+
+      <div class="voucher-date-number">
+          <div class="row">
+        <div class="col-6 text-left">
+          <mat-form-field appearance="outline">
+              <mat-label>Journel Number</mat-label>
+              <input matInput placeholder="Enter Journel Number">
+              
+            </mat-form-field>
+            <i class="fas fa-cog" style="font-size:24px; margin-left:-30px;color:darkblue"></i>
+        </div>
+        <div class="col-6 text-right">
+            <mat-form-field appearance="outline">
+                <mat-label>Choose a date</mat-label>
+                <input matInput [matDatepicker]="picker">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+          </div>
+          </div>
+      </div>
+      <div class="text-center center-mr">
+        <table class="custom-table">
+          <thead>
+            <tr class="custom-tr">
+              <th rowspan="2" class="custom-th text-center" width="10%">Sr. No.
+              </th>
+              <th rowspan="2" class="custom-th text-center" width="25%">Account </th>
+              <th rowspan="2" class="custom-th text-center" width="30%">Particulars </th>
+              <th rowspan="2" class="custom-th text-center" width="10%">
+                Debit</th>
+              <th rowspan="2" class="custom-th text-center" width="10%">
+                Credit</th>
+              <th rowspan="2" class="custom-th text-center" width="10%">
+                Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let vform of voucherFormGroupArray; let i = index">
+                
+            <tr [formGroup]="vform">
+                
+              <td class="custom-td text-center font-size-14">{{i+1}}</td>
+              <td class="custom-td text-left font-size-14" style="padding:10px;">
+                <mat-select formControlName="vc_account_type_id">
+                  <mat-option value="">Please Select Account</mat-option>
+                </mat-select>
+              </td>
+              <td class="custom-td text-left font-size-14" style="padding:10px;">
+                <input matInput type="text" class="remark-text" placeholder="Enter Particulars"
+                  formControlName="vc_particulars">
+              </td>
+              <td class="custom-td text-left font-size-14" style="padding:10px;">
+                  <input matInput type="text" class="remark-text" placeholder="Enter Debit"
+                    formControlName="vc_debit">
+                </td>
+                <td class="custom-td text-left font-size-14" style="padding:10px;">
+                    <input matInput type="text" class="remark-text" placeholder="Enter Credit"
+                      formControlName="vc_credit">
+                  </td>
+                  <td class="custom-td text-center font-size-14" style="padding:10px;">
+                     <a href="javascript:void(0)"><i class="fa fa-plus-circle gray-add"></i></a> | 
+                     <a href="javascript:void(0)"><i class="fa fa-trash red-trash"></i></a>
+                    </td>
+                    
+            </tr>
+            
+          </ng-container>
+          <tr>
+              <td colspan="2" class="custom-td text-left font-size-14">
+                  <div class="another-line-btn">
+                    <a href="javascript:void(0)" (click)="addVoucher()"><span>+ Add Another Line</span></a>
+                  </div>
+              </td>
+              <td class="custom-td text-left font-size-14">Total</td>
+              <td class="custom-td text-left font-size-14">0.00</td>
+              <td class="custom-td text-left font-size-14">0.00</td>
+              <td class="custom-td text-left font-size-14">&nbsp;</td>
+            </tr>
+          </tbody>
+        </table>
+        <br>
+        <div class="row margin-top-25">
+            <div class="col-4 text-left">
+                <mat-form-field appearance="outline" style="width:440px">
+                    <mat-label>Narrations</mat-label>
+                    <textarea matInput placeholder="Enter Narrations" cols="200" rows="6"></textarea>
+                  </mat-form-field>
+            </div>
+            <div class="col-8">
+                        <div class="notification-aatachment-btn-sis">
+                            <label for="attachment"><i
+                                    class="fas fa-cloud-upload-alt upload-icon-bulk color-blue" style="font-size:24px !important;"></i><br />Choose
+                                File</label>
+                            <input style="display: none;" id="attachment" type="file" multiple name="upload"
+                                (change)="fileChangeEvent($event)">
+                        </div>
+
+                        <ul class="preview-attachment-base">
+                            <li *ngFor="let item of attachmentArray" class="preview-attachment">
+                                <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                    (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                <img *ngIf="!checkThumbnail(item.imgName)"
+                                    src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                    (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                            </li>
+                        </ul>
+            </div>
+        </div>
+        <div class="row margin-top-25">
+          <div class="col-12 text-center">
+            <button mat-button class="btn-success-green" (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
+
+            <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
+              Publish</button>
+            <button mat-button class="btn-danger btn-spacer" (click)="$event.stopPropagation(); cancel(); ">Cancel</button>
+
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

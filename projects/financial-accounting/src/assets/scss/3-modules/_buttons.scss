@@ -1,0 +1,227 @@
+.btn-green {
+    background-color: #02ed10;
+    color: #ffffff;
+    padding: 0 50px !important;
+}
+
+.btn-outline-green {
+    border-color: #02ed10 !important;
+    color: #02ed10;
+}
+
+.btn-purple {
+    background-color: #ec398f;
+    color: #ffffff;
+    padding: 0 50px !important;
+}
+
+.btn-brown {
+    background-color: #3c2517;
+    color: #ffffff;
+    padding: 0 50px !important;
+}
+
+.btn-margin-top {
+    margin-top: 10px !important;
+}
+
+.btn-deeppurple {
+    background-color: #961d80;
+    color: #ffffff;
+    padding: 0 50px !important;
+}
+
+.btn-promote {
+    padding: 0px 2px !important;
+    line-height: 21px !important;
+}
+
+.document-btn__greencolor {
+    border-color: #02ed10 !important;
+    color: #02ed10 !important;
+}
+
+.document-btn__purplecolor {
+    border-color: #961d80 !important;
+    color: #961d80 !important;
+}
+
+.document-btn__redcolor {
+    border-color: #ec398f !important;
+    color: #ec398f !important;
+}
+
+.btn-spacer {
+    margin-left: 25px !important;
+}
+
+.btn-nav--size {
+    min-width: 15px !important;
+}
+
+.btn-navspacer {
+    margin-left: 8px !important;
+}
+
+.mat-radio-button.mat-accent .mat-radio-inner-circle {
+    background-color: #02ed10;
+}
+
+.mat-radio-button.mat-accent.mat-radio-checked .mat-radio-outer-circle {
+    border-color: #02ed10;
+}
+
+.mat-radio-outer-circle {
+    border-color: #ec398f;
+}
+
+.mat-checkbox-frame {
+    border-color: #ec398f;
+}
+
+// .mat-checkbox-checked.mat-accent .mat-checkbox-background {
+//     background-color: #02ed10;
+// }
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: #87ef8e;
+}
+
+.mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #02ed10;
+}
+
+.mat-mini-fab.mat-accent.btn-top-add {
+    background-color: #02ed10;
+    color: #ffffff;
+}
+
+.btn-danger {
+    background-color: #e11022;
+    color: #ffffff;
+}
+
+.btn-success {
+    background-color: #02ed10;
+    color: #ffffff;
+}
+
+.btn-neutral {
+    background-color: #0091EA;
+    color: #ffffff;
+}
+
+.btn-neutral-dull {
+    background-color: #009eff;
+    color: #ffffff;
+}
+
+.btn-setting {
+    background-color: #9E9E9E;
+    color: #ffffff;
+}
+
+.btn-document-label {
+    margin-bottom: 0px !important;
+}
+
+.upload-document-delete-btn {
+    position: absolute !important;
+    z-index: 2000 !important;
+    top: 0px !important;
+    border-radius: 50% !important;
+    left: 50px !important;
+    min-width: 32px !important;
+    line-height: 32px !important;
+}
+
+.btn-upload-icon {
+    font-size: 20px !important;
+    background-color: #e11022;
+    border-radius: 100%;
+    color: #ffffff;
+}
+
+mat-radio-button.mat-accent.mat-radio-checked .mat-radio-persistent-ripple,
+.mat-radio-button.mat-accent:active .mat-radio-persistent-ripple {
+    background-color: #02ed10 !important;
+}
+
+.btn-nav-height {
+    line-height: 40px !important;
+}
+
+.upload-suspension-delete-btn {
+    position: absolute !important;
+    z-index: 2000 !important;
+    border-radius: 50% !important;
+    left: 50px !important;
+    min-width: 32px !important;
+    line-height: 32px !important;
+}
+
+.edit-request-btn {
+    padding: 0 5px !important;
+}
+
+.edit-request-table-modal {
+    font-size: 14px;
+}
+
+td .mat-checkbox-edit-request-modal label {
+    margin-bottom: 0px !important;
+}
+
+.notification-aatachment-btn {
+    position: absolute;
+    z-index: 1000;
+    margin-top: -264px;
+    margin-left: 501px;
+}
+
+.notification-btn {
+    cursor: default;
+    display: inline-block;
+    float: left;
+    margin: 0 6px 5px 0;
+    border: 1px solid #a6a6a6;
+    border-bottom-color: #979797;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(255,255,255,.5), 0 0 2px rgba(255,255,255,.15) inset, 0 1px 0 rgba(255,255,255,.15) inset;
+    background: #e4e4e4;
+    background-image: linear-gradient(to bottom,#fff,#e4e4e4);
+}
+
+.notification-btn-label {
+    line-height: 26px;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    float: left;
+    cursor: default;
+    font-size: 12px;
+    color: #474747;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+    width: 120px;
+}
+
+.notification-btn-save-temp {
+    position: absolute;
+    margin-top: -289px;
+    margin-left: 615px;
+    font-size: 12px;
+}
+
+.notification-btn-save-temp .col-12 .mat-checkbox .mat-checkbox-layout .mat-checkbox-inner-container .mat-checkbox-frame {
+    color: #474747 !important;
+}
+
+.nav-btn-icon {
+    padding: 0px !important;
+    min-width: 35px !important;
+    margin-left: 3px !important;
+}
+
+
+
+

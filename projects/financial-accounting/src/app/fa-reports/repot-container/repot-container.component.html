@@ -1,0 +1,74 @@
+<div class="fee-container-box__grey">
+  <div class="row">
+    <div class="col-12 col-lg-12 col-md-12 col-sm-12 remove-col-padding">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="reportFlag" *ngIf="reportFlag">
+          <mat-expansion-panel-header class="report-panel-header">
+            <mat-panel-title>
+              <span class="text-uppercase font-size-16 font-white">Reports</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="report-card__container">
+            <div class="row margin-top-20">
+              <ng-container *ngFor="let item of feeReportArray;let i = index">
+                <div [class]="getClassPerIndex(i)" *ngIf="isExistUserAccessMenu(item.report_id)">
+                  <mat-card [class]="checkEnable(item.report_id)" (click)="executeReport(item.report_id)">
+                    <div class="report-card-container2">
+                      <div [class]="item.main_text_class">
+                        <img style="width:57px !important; height: 50px !important"
+                          [class]="item.report_main_image_class" [src]="item.report_image" />
+                        <div style="margin-left: -2px !important; margin-top: 15px !important">
+                          <span class="font-dark-blue font-size-14 font-medium">{{item.report_name}}</span>
+                        </div>
+                      </div>
+                      <div [class]="item.report_middle_class">
+                        <div><i [class]="item.report_check_icon_class"></i></div>
+                        <span *ngIf="item.report_check_icon_class !== ''" class="font-white font-size-14 font-medium">
+                          {{item.report_name}}</span>
+                      </div>
+                    </div>
+                  </mat-card>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <br />
+      <div class="margin-bottom-30">
+        <mat-accordion>
+          <mat-expansion-panel [expanded]="accountFlag" *ngIf="accountFlag">
+            <mat-expansion-panel-header class="report-panel-header">
+              <mat-panel-title>
+                <span class="text-uppercase font-size-16 font-white">{{reportHeader | uppercase}}</span>
+              </mat-panel-title>
+              <div class="change-report-button">
+                <button class="change-bt btn-spacer" mat-raised-button (click)="switchReport()">
+                  change report
+                </button>
+              </div>
+            </mat-expansion-panel-header>
+            <div class="row">
+              <div class="col-12">
+                <div class="text-center">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <app-reports (displyRep)="displyRep($event)" *ngIf="reportType === '1'">
+                </app-reports>
+                <app-attendance-reports (displyRep)="displyRep($event)" *ngIf="reportType === '2'">
+                </app-attendance-reports>
+                <app-acumulative-deduction (displyRep)="displyRep($event)" *ngIf="reportType === '3'">
+                </app-acumulative-deduction>
+                <app-enquiry-report (displyRep)="displyRep($event)" *ngIf="reportType === '4'">
+                  </app-enquiry-report>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
+</div>

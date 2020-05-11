@@ -1,0 +1,31 @@
+
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/auxillary-tools/promotion-tool/promotion-tool.component.ts[12, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/setup/global-form-fields/global-form-fields.component.ts[13, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/setup/systeminfo/systeminfo.component.ts[16, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/dynamic-content-theme-two/student-form-config-two.service.ts[2, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/dynamic-content-theme-two/student-form-config-two.service.ts[3, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/dynamic-content-theme-two/student-form-config-two.service.ts[4, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/dynamic-content/dynamic-content.component.ts[1, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/image-viewer/image-viewer.component.ts[53, 3]: In the class "ImageViewerComponent", the output property "onNext" should not be prefixed with on
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/image-viewer/image-viewer.component.ts[54, 3]: In the class "ImageViewerComponent", the output property "onPrevious" should not be prefixed with on
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/imagecrop/image-cropper/component/image-cropper.component.ts[13, 13]: The selector of the component "ImageCropperComponent" should have prefix "app" (https://angular.io/styleguide#style-02-07)
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/imagecrop/image-cropper/utils/exif.utils.ts[67, 17]: Forbidden bitwise operation
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[51, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[52, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[53, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[57, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[58, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[62, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/sharedmodule/sharedmodule.module.ts[63, 1]: Exceeds maximum line length of 140
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master-theme-two/education-details-theme-two/education-details-theme-two.component.ts[14, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master-theme-two/general-remarks-theme-two/general-remarks-theme-two.component.ts[15, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master-theme-two/management-remarks-theme-two/management-remarks-theme-two.component.ts[19, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master-theme-two/parent-details-theme-two/parent-details-theme-two.component.ts[20, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master/admission-concession/admission-concession.component.ts[16, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master/parent-details/parent-details.component.ts[17, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master/parent-general-remarks/parent-general-remarks.component.ts[20, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+ERROR: /opt/lampp/htdocs/StudentInformationSystem-devbranch/StudentInformationSystem/src/app/student-master/skills-awards/skills-awards.component.ts[16, 34]: variable 'ConfirmValidParentMatcher' used before declaration
+
+
+
+All files pass linting.
