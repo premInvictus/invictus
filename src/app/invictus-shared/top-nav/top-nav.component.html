@@ -94,8 +94,8 @@
                                                     </div>
                                                     <div class="row desc_class"
                                                         (click)="$event.preventDefault();redirectModule(item)">
-                                                        <div style="color: #fff; opacity: 0.6;" class="col-12">
-                                                            {{item.msg_description }}
+                                                        <div style="color: #fff; opacity: 0.6;" class="col-12"
+                                                        [innerHTML]="getTruncate(item.msg_description)">
                                                         </div>
                                                     </div>
                                                 </div>
