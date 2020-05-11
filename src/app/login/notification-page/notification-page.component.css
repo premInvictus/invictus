@@ -18,7 +18,28 @@
 #small-screen {
     display: none;
 }
+span.assign-span-len {
+    position: relative;
+    left: 38px;
+    font-size: 11px;
+}
+button.blue-button-assign.font-size-14.font-white {
+    background: #0f4261;
+    border-radius: 20px;
+    width: 120px;
+    top: 0px;
+    left: -81px;
+    position: absolute;
+}
 @media screen and (max-width: 720px) {
+    button.blue-button-assign.font-size-14.font-white {
+    background: #0f4261;
+    border-radius: 20px;
+    width: 120px;
+    top: -36px;
+    left: -104px;
+    position: absolute;
+    }
     ::-webkit-scrollbar {
         display: none !important;
     }

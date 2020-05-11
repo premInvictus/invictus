@@ -30,9 +30,14 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	currentFileChangeEvent: any;
 	currentFile: any;
 	fileCounter = 0;
+	multipleFileArray2: any[] = [];
+	currentFileChangeEvent2: any;
+	currentFile2: any;
+	fileCounter2 = 0;
 	showScheduleBox = false;
 	currentReceivers = '';
 	attachmentArray: any[] = [];
+	attachmentArray2: any[] = [];
 	showUserContextMenu = false;
 	classDataArr: any[] = [];
 	showUser = false;
@@ -54,6 +59,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	selectedUserCount = 0;
 	showSearchByUserFlag = false;
 	disabledApiButton = false;
+	module: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -99,10 +105,14 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			messageTitle: '',
 			messageTo: '',
 			messageSubject: '',
-			messageBody: ''
+			messageBody: '',
+			module : ''
 		});
 		console.log('in');
 		this.getTemplate();
+	}
+	getModules($event) {
+		this.module = $event.value;
 	}
 
 	setFormData(formData) {
@@ -467,6 +477,45 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.IterateFileLoop(files[i]);
 		}
 	}
+	fileChangeEvent2(fileInput) {
+		this.multipleFileArray2 = [];
+		this.fileCounter2 = 0;
+		this.currentFileChangeEvent2 = fileInput;
+		const files = fileInput.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop2(files[i]);
+		}
+	}
+	IterateFileLoop2(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentFile2 = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentFile2
+			};
+			this.multipleFileArray2.push(fileJson);
+			this.fileCounter2++;
+			if (this.fileCounter2 === this.currentFileChangeEvent2.target.files.length) {
+				this.sisService.uploadDocuments(this.multipleFileArray2).subscribe((result: any) => {
+					if (result) {
+						for (const item of result.data) {
+							const findex2 = this.attachmentArray2.findIndex(f => f.imgUrl === item.file_url);
+							if (findex2 === -1) {
+								this.attachmentArray2.push({
+									imgUrl: item.file_url,
+									imgName: item.file_name
+								});
+							} else {
+								this.attachmentArray2.splice(findex2, 1);
+							}
+						}
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
+	}
 
 	IterateFileLoop(files) {
 		const reader = new FileReader();
@@ -721,6 +770,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"msg_type": this.messageForm.value.messageType,
 					"msg_template_id": this.messageForm.value.tpl_id,
 					"msg_receivers": this.currentReceivers,
+					"notification_type": {
+						"type": "push",
+						"module": this.module ? this.module : "assignment"
+					},
 					"msg_subject": this.messageForm.value.messageSubject,
 					"msg_description": this.messageForm.value.messageBody,
 					"msg_attachment": this.attachmentArray,
@@ -731,10 +784,11 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"message_title": this.messageForm.value.messageSubject,
 					"message_content": this.messageForm.value.messageBody,
 					"message_type": {
-						"module": "assignment",
+						"module":this.module ? this.module : "assignment",
 						"type": "push",
 					},
-					"message_to": devices
+					"message_to": devices,
+					"message_image": this.attachmentArray2.length > 0 ? (this.attachmentArray2[0].imgUrl) : '',
 				}
 			}
 			console.log(inputJson);

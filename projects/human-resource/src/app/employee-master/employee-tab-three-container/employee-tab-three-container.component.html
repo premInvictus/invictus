@@ -149,9 +149,9 @@
                                     </mat-form-field>
 
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Supervisor</mat-label>
+                                        <mat-label>Reported to</mat-label>
                                         <mat-select formControlName="supervisor" required
-                                            placeholder="Select Supervisor"
+                                            placeholder="Select Reported to"
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
@@ -395,6 +395,14 @@
                                     </ng-container>
                                 </div>
                                 <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Gratuity</mat-label>
+                                        <input type="text" formControlName="gratuity" matInput [readonly]="viewOnly"
+                                            placeholder="Gratuity" >
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Net Salary</mat-label>
                                         <input type="text" formControlName="net_salary" matInput [value]="netSalary"

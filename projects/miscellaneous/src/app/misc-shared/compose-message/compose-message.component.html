@@ -13,7 +13,7 @@
 
                 </div>
             </mat-card>
-        </div> 
+        </div>
     </div>
     <div class="row">
         <div class="col-12">
@@ -47,6 +47,20 @@
                                 <mat-label> Title </mat-label>
                                 <input matInput placeholder="Title" type="input" formControlName="messageTitle"
                                     autocomplete="false" />
+                            </mat-form-field>
+                        </div>
+                        <div class="col-3" *ngIf="messageForm.value.messageType === 'notification'">
+                            <mat-form-field class="form-field" appearance="outline">
+                                <mat-label> Modules </mat-label>
+                                <mat-select placeholder="Modules" formControlName="module"
+                                    (selectionChange)="getModules($event)">
+                                    <mat-option value="assignment">Assignment</mat-option>
+                                    <mat-option value="fees">Fees</mat-option>
+                                    <mat-option value="classwork">Classwork</mat-option>
+                                    <mat-option value="syllabus">Syllabus</mat-option>
+                                    <mat-option value="leave">leave</mat-option>
+                                    <mat-option value="timetable">Timetable</mat-option>
+                                </mat-select>
                             </mat-form-field>
                         </div>
                     </div>
@@ -282,8 +296,52 @@
                                         <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
                                             (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
                                         <img *ngIf="!checkThumbnail(item.imgName)"
-                                            src="https://icons-for-free.com/free-icons/png/512/2109135.png"
+                                            src="https://cdn2.iconfinder.com/data/icons/social-media-8/512/note3.png"
                                             (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="row top-not-row" *ngIf="messageForm.value.messageType === 'notification'">
+                            <div class="col-12">
+                                <div class="notification-aatachment-btn-sis">
+                                    <label for="attachment"><i
+                                            class="fas fa-cloud-upload-alt upload-icon-bulk color-blue"></i><br />Upload
+                                        File</label>
+                                    <input style="display: none;" id="attachment" type="file" multiple name="upload"
+                                        (change)="fileChangeEvent($event)">
+                                </div>
+
+                                <ul class="preview-attachment-base">
+                                    <li *ngFor="let item of attachmentArray" class="preview-attachment">
+                                        <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                            (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                        <img *ngIf="!checkThumbnail(item.imgName)"
+                                            src="https://cdn2.iconfinder.com/data/icons/social-media-8/512/note3.png"
+                                            (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div class="row top-not-row2" *ngIf="messageForm.value.messageType === 'notification'">
+                            <div class="col-12">
+                                <div class="notification-aatachment-btn-sis">
+                                    <label for="attachment2"><i
+                                            class="fas fa-cloud-upload-alt upload-icon-bulk color-blue"></i><br />Upload
+                                        Push Image</label>
+                                    <input style="display: none;" id="attachment2" accept="image/*" type="file"
+                                        name="upload" (change)="fileChangeEvent2($event)">
+                                </div>
+
+                                <ul class="preview-attachment-base">
+                                    <li *ngFor="let item of attachmentArray2" class="preview-attachment">
+                                        <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                            (click)="previewImage(attachmentArray2, i)" height="145px" width="150px">
+                                        <img *ngIf="!checkThumbnail(item.imgName)"
+                                            src="https://cdn2.iconfinder.com/data/icons/social-media-8/512/note3.png"
+                                            (click)="previewImage(attachmentArray2, i)" height="145px" width="150px">
                                     </li>
                                 </ul>
 
