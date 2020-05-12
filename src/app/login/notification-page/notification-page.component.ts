@@ -33,79 +33,96 @@ export class NotificationPageComponent implements OnInit {
     });
   }
   previewDocuments(attachmentArray) {
-		const attArr: any[] = [];
-		if (attachmentArray && attachmentArray.length > 0) {
-			attachmentArray.forEach(element => {
-				attArr.push({
-					file_url: element.imgUrl
-				});
-			});
-			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
-				height: '80%',
-				width: '1000px',
-				data: {
-					index: '',
-					images: attArr
-				}
-			});
-		}
-	}
+    const attArr: any[] = [];
+    if (attachmentArray && attachmentArray.length > 0) {
+      attachmentArray.forEach(element => {
+        attArr.push({
+          file_url: element.imgUrl
+        });
+      });
+      const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+        height: '80%',
+        width: '1000px',
+        data: {
+          index: '',
+          images: attArr
+        }
+      });
+    }
+  }
   redirectModule(event) {
-    event.msg_to[0].msg_status = [
-      {
-        'status_name': 'send'
-      }, {
-        'status_name': 'read'
-      }];
+    const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
+    if (event.msg_type === 'notification') {
+      event.msg_to[findex].msg_status = [
+        {
+          'status_name': 'send'
+        }, {
+          'status_name': 'read'
+        }];
+
+    } else {
+      event.msg_to[findex].msg_status.status_name = 'read';
+    }
     this.commonAPIService.updateMessage(event).subscribe((result: any) => {
       if (result.status === 'ok') {
-        if (event.notification_type.module === 'syllabus') {
-          this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'assignment') {
-          this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'fees') {
-          this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'classwork') {
-          this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'leave') {
-          this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'timetable') {
-          this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+        this.getPushNotification();
+        if (event.msg_type === 'notification') {
+          if (event.notification_type.module === 'syllabus') {
+            this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'assignment') {
+            this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'fees') {
+            this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'classwork') {
+            this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'leave') {
+            this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'timetable') {
+            this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+          }
         }
       } else {
-        if (event.notification_type.module === 'syllabus') {
-          this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'assignment') {
-          this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'fees') {
-          this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'classwork') {
-          this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'leave') {
-          this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-        }
-        if (event.notification_type.module === 'timetable') {
-          this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+        if (event.msg_type === 'notification') {
+          if (event.notification_type.module === 'syllabus') {
+            this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'assignment') {
+            this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'fees') {
+            this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'classwork') {
+            this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'leave') {
+            this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+          }
+          if (event.notification_type.module === 'timetable') {
+            this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+          }
         }
       }
     });
   }
   deleteNofiy(event) {
-    event.msg_to[0].msg_status = [
-      {
-        'status_name': 'send'
-      }, {
-        'status_name': 'delete'
-      }];
+    const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
+    if (event.msg_type === 'notification') {
+      event.msg_to[findex].msg_status = [
+        {
+          'status_name': 'send'
+        }, {
+          'status_name': 'delete'
+        }];
+
+    } else {
+      event.msg_to[findex].msg_status.status_name = 'delete';
+    }
     this.commonAPIService.updateMessage(event).subscribe((result: any) => {
       if (result) {
         this.getPushNotification();
