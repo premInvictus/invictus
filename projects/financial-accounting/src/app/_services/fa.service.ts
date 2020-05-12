@@ -13,7 +13,7 @@ export class FaService {
 	}
 	updateVoucherEntry(value) {
 		this.service.startLoading();
-		return this.http.put(environment.apiFaUrl + '/voucher-entry/updateVoucherEntry', value);
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/updateVoucherEntry', value);
 	}
 	getVoucherEntry(value) {
 		this.service.startLoading();
@@ -23,4 +23,17 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/getAllChartsOfAccount', value);
 	}
+	getAllVoucherEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getAllVoucherEntry', value);
+	}
+	createChartOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/insertChartsOfAccount', value);
+	}
+	updateChartOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateChartsOfAccount', value);
+	}
+	
 }

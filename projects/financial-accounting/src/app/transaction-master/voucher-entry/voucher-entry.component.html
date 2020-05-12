@@ -9,11 +9,11 @@
         <div class="col-7">
           <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">Journel Voucher</button> -->
           <mat-chip-list aria-label="Voucher Type">
-              <mat-chip class="pink" (selectionChange)="setVcType('Journel Entry')" [selected]="currentVcType === 'Journel Entry'"><span class="text-center">Journel Entry</span></mat-chip>
-              <mat-chip class="red" (selectionChange)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
-              <mat-chip class="light-blue" (selectionChange)="setVcType('Payment')"  [selected]="currentVcType === 'Payment'"><span class="text-center">Payment</span></mat-chip>
-              <mat-chip class="dark-blue" (selectionChange)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
-              <mat-chip class="orange" (selectionChange)="setVcType('Credit-Debit Note')"  [selected]="currentVcType === 'Credit-Debit Note'"><span class="text-center">Credit/Debit Note</span></mat-chip>
+              <mat-chip class="pink" (click)="setVcType('Journel Entry')" [selected]="currentVcType === 'Journel Entry'"><span class="text-center">Journel Entry</span></mat-chip>
+              <mat-chip class="red" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
+              <mat-chip class="light-blue" (click)="setVcType('Payment')"  [selected]="currentVcType === 'Payment'"><span class="text-center">Payment</span></mat-chip>
+              <mat-chip class="dark-blue" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
+              <mat-chip class="orange" (click)="setVcType('Credit-Debit Note')"  [selected]="currentVcType === 'Credit-Debit Note'"><span class="text-center">Credit/Debit Note</span></mat-chip>
             </mat-chip-list>
         </div>
         <!-- <div class="col-2">
@@ -40,7 +40,7 @@
       <div class="voucher-date-number">
           <div class="row">
         <div class="col-6 text-left">
-          <span>{{currentVcType}}</span>
+          <span>{{currentVcType}}</span>&nbsp;
           <mat-form-field appearance="outline">
               <mat-label>Voucher Number</mat-label>
               <input matInput placeholder="Enter Voucher Number" formControlName="vc_number">
@@ -91,12 +91,12 @@
                   formControlName="vc_particulars">
               </td>
               <td class="custom-td text-left font-size-14" style="padding:10px;">
-                  <input matInput type="text" class="remark-text" placeholder="Enter Debit"
-                    formControlName="vc_debit" (keyPress)="calculateDebitTotal();">
+                  <input matInput type="number" class="remark-text" placeholder="Enter Debit"
+                    formControlName="vc_debit" (blur)="calculateDebitTotal();">
                 </td>
                 <td class="custom-td text-left font-size-14" style="padding:10px;">
-                    <input matInput type="text" class="remark-text" placeholder="Enter Credit"
-                      formControlName="vc_credit" (keyPress)="calculateCreditTotal();">
+                    <input matInput type="number" class="remark-text" placeholder="Enter Credit"
+                      formControlName="vc_credit" (blur)="calculateCreditTotal();">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
                      <a href="javascript:void(0)"><i class="fa fa-plus-circle gray-add"></i></a> | 
@@ -149,9 +149,14 @@
         </div>
         <div class="row margin-top-25">
           <div class="col-12 text-center">
-            <button mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
+            <button *ngIf="!editMode" mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
 
-            <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
+            <button *ngIf="!editMode" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
+              Publish</button>
+
+              <button *ngIf="editMode" mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); saveAsDraft();">Update as Draft</button>
+
+            <button *ngIf="editMode" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Update &
               Publish</button>
             <button mat-button class="btn-danger btn-spacer" (click)="$event.stopPropagation(); cancel(); ">Cancel</button>
 

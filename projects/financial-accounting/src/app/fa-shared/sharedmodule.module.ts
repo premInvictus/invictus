@@ -33,6 +33,7 @@ import { SafePipe } from '../_pipes/safe.pipe';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
+import { ChartOfAccountsCreateComponent } from './chart-of-accounts-create/chart-of-accounts-create.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -93,7 +94,8 @@ export const MY_FORMATS = {
 		CapitalizePipe, SafePipe, 
 		ImageViewerComponent, 
 		SearchViaNameComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		ChartOfAccountsCreateComponent
 
 	],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -132,13 +134,15 @@ export const MY_FORMATS = {
 		CapitalizePipe, SafePipe, ImageViewerComponent,
 		TruncatetextPipe,
 		MatChipsModule,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		ChartOfAccountsCreateComponent
 
 	],
 	entryComponents: [ DeleteModalComponent, ImagecropComponent, EditRequestModalComponent,
 		ImageViewerComponent,
 		SearchViaNameComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		ChartOfAccountsCreateComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
