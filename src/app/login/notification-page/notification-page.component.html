@@ -26,7 +26,7 @@
                     <div class="col-12">{{item.msg_subject}}</div>
                   </div>
                   <div class="row desc_class">
-                    <div class="col-12">{{item.msg_description}}</div>
+                    <div class="col-12" [innerHTML]="item.msg_description"></div>
                   </div>
                 </div>
                 <div class="col-1 trash-class" (click)="$event.preventDefault();deleteNofiy(item);">

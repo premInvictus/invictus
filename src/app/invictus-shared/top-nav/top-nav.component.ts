@@ -15,6 +15,7 @@ import { RouteStore } from 'projects/fee/src/app/feemaster/student-route-move-st
 import { TruncatetextPipe } from '../../_pipes/truncatetext.pipe'
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { mergeMap } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -63,7 +64,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	resultArray: any[] = [];
 
 	constructor(
-		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher,
+		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
 		private angularFireMessaging: AngularFireMessaging,
 		private sisService: SisService,
 		private router: Router,
@@ -445,9 +446,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					}
 					i++;
 				}
-				for (const item of this.notficationMsg) {
-					item.msg_description = new TruncatetextPipe().transform(item.msg_description, 80);
-				}
+				// for (const item of this.notficationMsg) {
+				// 	item.msg_description = new TruncatetextPipe().transform(item.msg_description, 80);
+				// }
 			} else {
 				this.resultArray = [];
 				this.notficationMsg = [];
@@ -455,77 +456,95 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 
 	}
+	getTruncate(text){
+		return new TruncatetextPipe().transform(text, 80);
+	}
 	markRead(item) {
 		item.msg_to[0].msg_status = [{
 			'status_name': 'send'
 		}, {
 			'status_name': 'read'
 		}]
-		console.log(item.msg_to[0].msg_status);
 	}
 	redirectModule(event) {
-		event.msg_to[0].msg_status = [
-			{
-				'status_name': 'send'
-			}, {
-				'status_name': 'read'
-			}];
+		const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
+		if (event.msg_type === 'notification') {
+			event.msg_to[findex].msg_status = [
+				{
+					'status_name': 'send'
+				}, {
+					'status_name': 'read'
+				}];
+
+		} else {
+			event.msg_to[findex].msg_status.status_name = 'read';
+		}
 		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
 			if (result) {
-				if (this.currentUser.role_id === '4') {
-					if (event.notification_type.module === 'syllabus') {
-						this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+				this.getPushNotification();
+				if (event.msg_type === 'notification') {
+					if (this.currentUser.role_id === '4') {
+						if (event.notification_type.module === 'syllabus') {
+							this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'assignment') {
+							this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'fees') {
+							this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'classwork') {
+							this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'leave') {
+							this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'timetable') {
+							this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
+						}
 					}
-					if (event.notification_type.module === 'assignment') {
-						this.router.navigate(['../academics/assignment'], { relativeTo: this.route });
+					if (this.currentUser.role_id === '3') {
+						if (event.notification_type.module === 'syllabus') {
+							this.router.navigate(['../syllabus/add'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'assignment') {
+							this.router.navigate(['../assignment/past-assignments'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'fees') {
+							this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'classwork') {
+							this.router.navigate(['../logentry/view-classwork'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'leave') {
+							this.router.navigate(['../academics/leave'], { relativeTo: this.route });
+						}
+						if (event.notification_type.module === 'timetable') {
+							this.router.navigate(['../auxillaries/classwise-table'], { relativeTo: this.route });
+						}
 					}
-					if (event.notification_type.module === 'fees') {
-						this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
+					if (this.currentUser.role_id === '2') {
+						this.commonAPIService.setNotif(1);
+						this.goToProject('misc', '1', '11');
 					}
-					if (event.notification_type.module === 'classwork') {
-						this.router.navigate(['../academics/view-classwork'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'leave') {
-						this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'timetable') {
-						this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
-					}
-				}
-				if (this.currentUser.role_id === '3') {
-					if (event.notification_type.module === 'syllabus') {
-						this.router.navigate(['../syllabus/add'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'assignment') {
-						this.router.navigate(['../assignment/past-assignments'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'fees') {
-						this.router.navigate(['../fees/student-fee-detail'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'classwork') {
-						this.router.navigate(['../logentry/view-classwork'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'leave') {
-						this.router.navigate(['../academics/leave'], { relativeTo: this.route });
-					}
-					if (event.notification_type.module === 'timetable') {
-						this.router.navigate(['../auxillaries/classwise-table'], { relativeTo: this.route });
-					}
-				}
-				if (this.currentUser.role_id === '2') {
-					this.commonAPIService.setNotif(1);
-					this.goToProject('misc', '1', '11');
+
 				}
 			}
 		});
 	}
 	deleteNofiy(event) {
-		event.msg_to[0].msg_status = [
-			{
-				'status_name': 'send'
-			}, {
-				'status_name': 'delete'
-			}];
+		const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
+		if (event.msg_type === 'notification') {
+			event.msg_to[findex].msg_status = [
+				{
+					'status_name': 'send'
+				}, {
+					'status_name': 'delete'
+				}];
+
+		} else {
+			event.msg_to[findex].msg_status.status_name = 'delete';
+		}
 		this.commonAPIService.updateMessage(event).subscribe((result: any) => {
 			if (result) {
 				this.getPushNotification();
