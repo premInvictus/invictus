@@ -50,6 +50,25 @@ export class NotificationPageComponent implements OnInit {
       });
     }
   }
+  msgRead(event){
+    const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
+    if (event.msg_type === 'notification') {
+      event.msg_to[findex].msg_status = [
+        {
+          'status_name': 'send'
+        }, {
+          'status_name': 'read'
+        }];
+
+    } else {
+      event.msg_to[findex].msg_status.status_name = 'read';
+    }
+    this.commonAPIService.updateMessage(event).subscribe((result: any) => {
+      if (result.status === 'ok') {
+        this.getPushNotification();
+      }
+    });
+  }
   redirectModule(event) {
     const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
     if (event.msg_type === 'notification') {
