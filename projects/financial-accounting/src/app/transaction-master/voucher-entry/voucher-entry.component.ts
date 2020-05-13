@@ -136,6 +136,7 @@ export class VoucherEntryComponent implements OnInit {
 	saveAsDraft() {
 		console.log('this.voucherForm', this.voucherForm);
 		console.log('this.voucherForm', this.voucherFormGroupArray);
+		if(this.voucherForm.valid) {
 		for (let i=0; i<this.voucherFormGroupArray.length;i++) {
 			let vFormJson = {};
 			vFormJson = {
@@ -162,6 +163,7 @@ export class VoucherEntryComponent implements OnInit {
 			this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
 				if(data) {
 					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+					this.cancel();
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 				}
@@ -170,18 +172,23 @@ export class VoucherEntryComponent implements OnInit {
 			this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
 				if(data) {
 					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+					this.cancel();
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 				}
 			});
 		}
 		
+	}else {
+		this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+	}
 	}
 
 	saveAndPublish() {
 		console.log('this.voucherForm', this.voucherForm);
 		console.log('this.voucherForm', this.voucherFormGroupArray);
 		console.log(this.totalCredit , this.totalDebit);
+		if(this.voucherForm.valid) {
 		if(this.totalDebit == this.totalCredit) {
 			for (let i=0; i<this.voucherFormGroupArray.length;i++) {
 				let vFormJson = {};
@@ -209,6 +216,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
 					if(data) {
 						this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+						this.cancel();
 					} else {
 						this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 					}
@@ -217,6 +225,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
 					if(data) {
 						this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+						this.cancel();
 					} else {
 						this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 					}
@@ -225,6 +234,8 @@ export class VoucherEntryComponent implements OnInit {
 			
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Total of Debit and Credit should be same for publish', 'error');
+		}}else {
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 		}
 		
 	}
@@ -271,6 +282,7 @@ export class VoucherEntryComponent implements OnInit {
 	}
 
 	previewImage(imgArray, index) {
+		console.log('imgArray--',imgArray, index);
 		this.dialogRef2 = this.dialog.open(PreviewDocumentComponent, {
 			data: {
 				images: imgArray,
@@ -295,7 +307,11 @@ export class VoucherEntryComponent implements OnInit {
 	cancel() {
 		this.editMode = false;
 		this.voucherForm.reset();
+		this.totalCredit =0;
+		this.totalDebit =0;
+		this.voucherFormGroupArray = [];
 		this.setVcType('Jornel Entry');
+		this.router.navigate(['../../transaction-master/voucher-entry'], { queryParams: {}, relativeTo: this.route });
 	}
 
 	calculateDebitTotal() {

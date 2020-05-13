@@ -4,7 +4,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './model';
 import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material/table';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { TitleCasePipe } from '@angular/common';
 import { SisService, CommonAPIService, FaService } from '../../_services/index';
 import { ChartOfAccountsCreateComponent } from '../../fa-shared/chart-of-accounts-create/chart-of-accounts-create.component';
@@ -21,6 +21,9 @@ export class ChartsofAccountComponent implements OnInit {
   dataSource = new MatTableDataSource<Element>();
   selection = new SelectionModel<Element>(true, []);
   accountsArray:any[] = [];
+  @ViewChild('deleteModal') deleteModal;
+  @ViewChild('paginator') paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
   constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -34,6 +37,29 @@ export class ChartsofAccountComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.tableDivFlag = true;
     this.getAccounts();
+  }
+
+  openDeleteDialog = (data) => this.deleteModal.openModal(data);
+
+  deleteConfirm(element) {
+    console.log('value--', element);
+    var inputJson = {
+      coa_id: element.coa_id,
+      coa_code: element.coa_code,
+      coa_acc_name: element.coa_acc_name,
+      coa_acc_group: {group_id: element.coa_acc_group},
+      coa_acc_type: { acc_type_id: element.coa_acc_type,"acc_type_name": "test"},
+      coa_particulars: element.coa_particulars,
+      coa_status:"delete"
+    };
+    this.faService.updateChartOfAccount(inputJson).subscribe((data:any)=>{
+      if (data) {
+        this.commonAPIService.showSuccessErrorMessage("Account Updated Successfully", "success");
+      } else {
+        this.commonAPIService.showSuccessErrorMessage("Error While Updating Account", "error");
+      }
+      this.getAccounts();
+    });
   }
 
   openCreateModal(value) {
@@ -97,6 +123,11 @@ export class ChartsofAccountComponent implements OnInit {
             
           }
           this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+          this.dataSource.paginator = this.paginator;
+          if (this.sort) {
+            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+            this.dataSource.sort = this.sort;
+          }
         
 			} else {
 				this.accountsArray = [];
@@ -146,4 +177,10 @@ export class ChartsofAccountComponent implements OnInit {
       this.getAccounts();
     });
   }
+
+  applyFilter(filterValue: string) {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.dataSource.filter = filterValue;
+	}
 }

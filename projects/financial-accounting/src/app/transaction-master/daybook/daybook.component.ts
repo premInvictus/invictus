@@ -4,10 +4,10 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './model';
 import {SelectionModel} from '@angular/cdk/collections';
-import {MatTableDataSource} from '@angular/material/table';
 import { TitleCasePipe } from '@angular/common';
 import { SisService, CommonAPIService, FaService } from '../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 
 @Component({
 	selector: 'app-daybook',
@@ -21,6 +21,9 @@ export class DaybookComponent implements OnInit {
 	displayedColumns: string[] = ['select', 'vc_number', 'vc_type','vc_date', 'vc_narrations', 'vc_debit', 'vc_credit', 'status', 'action'];
 	dataSource = new MatTableDataSource<Element>();
 	selection = new SelectionModel<Element>(true, []);
+	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('paginator') paginator: MatPaginator;
+	@ViewChild(MatSort) sort: MatSort;
 	vouchersArray:any[] = [];
 	constructor(
 		  private fbuild: FormBuilder,
@@ -37,6 +40,32 @@ export class DaybookComponent implements OnInit {
 	  this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	  this.tableDivFlag = true;
 	  this.getVouchers();
+	}
+
+	openDeleteDialog = (data) => this.deleteModal.openModal(data);
+
+	deleteConfirm(element) {
+	  console.log('value--', element);
+		var inputJson = {
+			vc_id : element.vc_id,
+			vc_type:element.vc_tpe,
+			vc_number:element.vc_number,
+			vc_date:element.vc_date,
+			vc_narrations:element.vc_narrations,
+			vc_attachments: element.vc_attachments,
+			vc_particulars_data: element.vc_particulars_data,
+			vc_state : 'delete'
+		};
+	
+		
+			this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
+				if(data) {
+					this.commonAPIService.showSuccessErrorMessage('Voucher entry Deleted Successfully', 'success');
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Deleting Voucher Entry', 'error');
+				}
+			});
+		
 	}
   
 	getVouchers() {
@@ -68,6 +97,13 @@ export class DaybookComponent implements OnInit {
 			  
 			}
 			this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+
+			
+				this.dataSource.paginator = this.paginator;
+				if (this.sort) {
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.dataSource.sort = this.sort;
+				}
 		  
 			  } else {
 				  this.vouchersArray = [];
@@ -121,5 +157,11 @@ export class DaybookComponent implements OnInit {
 
 	editVoucher(element) {
 		this.router.navigate(['../../transaction-master/voucher-entry'], {  queryParams: { voucher_id: element.vc_id }, relativeTo: this.route });
+	}
+
+	applyFilter(filterValue: string) {
+		filterValue = filterValue.trim(); // Remove whitespace
+		filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+		this.dataSource.filter = filterValue;
 	}
 }

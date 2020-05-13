@@ -42,17 +42,20 @@
                   <!-- Checkbox Column -->
                   <ng-container matColumnDef="select">
                     <th mat-header-cell *matHeaderCellDef width="10%">
-                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                      <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                         [checked]="selection.hasValue() && isAllSelected()"
                         [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
-                      </mat-checkbox>
+                      </mat-checkbox> -->
                       <!-- Select -->
+                      Sr.No.
                     </th>
-                    <td mat-cell *matCellDef="let row">
+                    <!-- <td mat-cell *matCellDef="let row">
                       <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
                       </mat-checkbox>
-                    </td>
+                    </td> -->
+                    
+                    <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
                   </ng-container>
   
                   <!-- Position Column -->
@@ -70,7 +73,7 @@
                   <!-- Name Column -->
                   <ng-container matColumnDef="vc_date">
                     <th mat-header-cell *matHeaderCellDef width="10%"> Voucher Date </th>
-                    <td mat-cell *matCellDef="let element" class="text-left"> {{element.vc_date}} </td>
+                    <td mat-cell *matCellDef="let element" class="text-left"> {{element.vc_date | date: 'yyyy-MMM-d'}} </td>
                   </ng-container>
   
                   <!-- Weight Column -->
@@ -99,12 +102,12 @@
                   <ng-container matColumnDef="action" width="10%">
                     <th mat-header-cell *matHeaderCellDef> Action </th>
                     <td mat-cell *matCellDef="let element">
-                            <span *ngIf="element.status !== 'publish'"><i class="fas fa-edit icon-blue" (click)="editVoucher(element.action)"></i>
+                            <span *ngIf="element.status !== 'publish'"><i class="fas fa-edit blue" (click)="editVoucher(element.action)"></i>
 
                                 <span class="margin-left-15 ver-line-divider"></span>
                             </span>
                         
-                      <i class="fas fa-trash icon-red" (click)="openDialog(element.action)"></i>
+                      <i class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
                     </td>
                   </ng-container>
   
@@ -112,6 +115,13 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                   </tr>
                 </table>
+                <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                  <tr *ngIf="vouchersArray.length == 0">
+                    <td colspan="8">No Record Found</td>
+                  </tr>
+                </table>
+                <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[5,10,25,100,500]" showFirstLastButtons>
+                  </mat-paginator>
               </div>
             </div>
           </div>
@@ -130,3 +140,5 @@
   </div>
   <app-delete-modal #deleteModal (deleteOk)="lockGradeCard($event)"></app-delete-modal>
   <app-delete-modal #deleteModalUnlock (deleteOk)="unlockGradeCard($event)"></app-delete-modal> -->
+  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
+  </app-delete-modal>

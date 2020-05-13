@@ -100,19 +100,19 @@
                     <th mat-header-cell *matHeaderCellDef> Action </th>
                     <td mat-cell *matCellDef="let element">
                       
-                        <span *ngIf="element.status !== 'lock'"><i class="fas fa-unlock icon-red" (click)="lockAccount(element.action)"></i>
+                        <span *ngIf="element.status !== 'lock'"><i class="fas fa-unlock " (click)="lockAccount(element.action)"></i>
                         </span>
 
-                        <span *ngIf="element.status === 'lock'"><i class="fas fa-lock icon-red"></i>
+                        <span *ngIf="element.status === 'lock'"><i class="fas fa-lock "></i>
                         </span>
 
                         <span class="margin-left-15 ver-line-divider"></span>
 
                      <span *ngIf="element.status !== 'lock'"> 
-                       <i class="fas fa-edit icon-red" (click)="editAccountModel(element.action)"></i>
+                       <i class="fas fa-edit blue" (click)="editAccountModel(element.action)"></i>
                       <span class="margin-left-15 ver-line-divider"></span>
                     </span>
-                      <i class="fas fa-trash icon-red" (click)="deleteAccount(element.action)"></i>
+                      <i class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
                     </td>
                   </ng-container>
   
@@ -120,6 +120,13 @@
                   <tr mat-row *matRowDef="let row; columns: displayedColumns;">
                   </tr>
                 </table>
+                <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                  <tr *ngIf="accountsArray.length == 0">
+                    <td colspan="8">No Record Found</td>
+                  </tr>
+                </table>
+                <mat-paginator #paginator [pageSize]="100" [pageSizeOptions]="[5,10,25,100,500]" showFirstLastButtons>
+                  </mat-paginator>
               </div>
             </div>
           </div>
@@ -138,3 +145,5 @@
   </div>
   <app-delete-modal #deleteModal (deleteOk)="lockGradeCard($event)"></app-delete-modal>
   <app-delete-modal #deleteModalUnlock (deleteOk)="unlockGradeCard($event)"></app-delete-modal> -->
+  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
+  </app-delete-modal>

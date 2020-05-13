@@ -35,5 +35,12 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateChartsOfAccount', value);
 	}
+
+	getAccountMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/account-master/getAllAccountMaster', value);
+	}
+
+	
 	
 }

@@ -29,7 +29,8 @@
               <mat-label>Group</mat-label>
               <mat-select formControlName="coa_acc_group">
                 <!-- <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option> -->
-                <mat-option value="1">Group1</mat-option>
+                <mat-option value="">Please Select Group</mat-option>
+                <mat-option *ngFor="let item of accountGroupArr" [value]="item.acc_id">{{item.acc_name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -38,7 +39,8 @@
               <mat-label>Account Type</mat-label>
               <mat-select formControlName="coa_acc_type">
                 <!-- <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option> -->
-                <mat-option value="1">Account Type 1</mat-option>
+                <mat-option value="">Please Select Acount Type</mat-option>
+                <mat-option *ngFor="let item of accountTypeArr" [value]="item.acc_id">{{item.acc_name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>

@@ -43,7 +43,7 @@
           <span>{{currentVcType}}</span>&nbsp;
           <mat-form-field appearance="outline">
               <mat-label>Voucher Number</mat-label>
-              <input matInput placeholder="Enter Voucher Number" formControlName="vc_number">
+              <input matInput placeholder="Enter Voucher Number" formControlName="vc_number" required>
               
             </mat-form-field>
             <i class="fas fa-cog" style="font-size:24px; margin-left:-30px;color:darkblue"></i>
@@ -51,7 +51,7 @@
         <div class="col-6 text-right">
             <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="vc_date">
+                <input matInput [matDatepicker]="picker" formControlName="vc_date" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -81,13 +81,13 @@
                 
               <td class="custom-td text-center font-size-14">{{i+1}}</td>
               <td class="custom-td text-left font-size-14" style="padding:10px;">
-                <mat-select formControlName="vc_account_type_id">
+                <mat-select formControlName="vc_account_type_id" required>
                   <mat-option value="">Please Select Account</mat-option>
                   <mat-option *ngFor="let aitem of accountsArray" value="{{aitem?.coa_id}}">{{aitem?.coa_acc_name}}</mat-option>
                 </mat-select>
               </td>
               <td class="custom-td text-left font-size-14" style="padding:10px;">
-                <input matInput type="text" class="remark-text" placeholder="Enter Particulars"
+                <input matInput type="text" class="remark-text" placeholder="Enter Particulars" required
                   formControlName="vc_particulars">
               </td>
               <td class="custom-td text-left font-size-14" style="padding:10px;">
@@ -124,7 +124,7 @@
             <div class="col-4 text-left">
                 <mat-form-field appearance="outline" style="width:440px">
                     <mat-label>Narrations</mat-label>
-                    <textarea matInput placeholder="Enter Narrations" formControlName="vc_narrations" cols="200" rows="6"></textarea>
+                    <textarea matInput placeholder="Enter Narrations" formControlName="vc_narrations" cols="200" rows="6" required></textarea>
                   </mat-form-field>
             </div>
             <div class="col-8">
@@ -137,7 +137,7 @@
                         </div>
 
                         <ul class="preview-attachment-base">
-                            <li *ngFor="let item of attachmentArray" class="preview-attachment">
+                            <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
                                 <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
                                     (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
                                 <img *ngIf="!checkThumbnail(item.imgName)"
