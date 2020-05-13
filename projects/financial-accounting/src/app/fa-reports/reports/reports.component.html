@@ -1,0 +1,34 @@
+<div class="report-card__container">
+  <div class="row">
+    <div class="col-2">
+      <mat-form-field class="form-field" appearance="outline">
+        <mat-label>Select Tab</mat-label>
+        <mat-select (selectionChange)="executeReport($event)">
+          <mat-option>Please Select</mat-option>
+          <mat-option *ngFor="let item of feeReportArray" [value]="item.report_id">
+            {{item.report_name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="col-10"></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <app-emp-details-report (displyRep)="displyRep($event)" [userName]="userName" *ngIf="reportType === '1'">
+    </app-emp-details-report>
+    <app-emp-salary-report (displyRep)="displyRep($event)" [userName]="userName" *ngIf="reportType === '2'">
+    </app-emp-salary-report>
+  </div>
+
+  <div *ngIf="reportFlag" class="col-12">
+    <div class="text-center">
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'Please select all required field'">
+      </app-no-data>
+    </div>
+    <br>
+  </div>
+</div>
