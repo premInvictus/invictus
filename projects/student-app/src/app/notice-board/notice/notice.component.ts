@@ -24,8 +24,7 @@ export class NoticeComponent implements OnInit {
   }
 
   onScroll() {
-    console.log('scrollperformed');
-    this.limit = this.limit + 3;
+    this.limit = this.limit + 10;
     this.getPushNotification();
   }
   getPushNotification() {
