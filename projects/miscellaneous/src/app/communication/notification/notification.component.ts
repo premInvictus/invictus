@@ -24,7 +24,7 @@ export class NotificationComponent implements OnInit {
 		this.getPushNotification();
 	}
 	getPushNotification() {
-		this.commonAPIService.getPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
+		this.commonAPIService.getPushNotification({ 'msg_to': this.currentUser.login_id,'limit':100 }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.notficationMsg = result.data;
 				console.log(this.notficationMsg);

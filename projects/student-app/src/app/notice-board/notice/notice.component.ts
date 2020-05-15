@@ -1,30 +1,35 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonAPIService } from '../../_services/index';
-import { NotificationModal } from './notification-page.model'
-import { MatDialogRef, MatDialog, } from '@angular/material/dialog';
-import { MatTableDataSource, MatPaginator, PageEvent } from '@angular/material';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { CommonAPIService } from 'src/app/_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PreviewDocumentComponent } from 'projects/student-app/src/app/shared-module/preview-document/preview-document.component';
+import { MatDialogRef, MatDialog, } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-notification-page',
-  templateUrl: './notification-page.component.html',
-  styleUrls: ['./notification-page.component.css']
+  selector: 'app-notice',
+  templateUrl: './notice.component.html',
+  styleUrls: ['./notice.component.css']
 })
-export class NotificationPageComponent implements OnInit {
-
+export class NoticeComponent implements OnInit {
   notficationMsg: any[] = [];
+  resultArray: any[] = [];
   currentUser: any;
-  constructor(private commonAPIService: CommonAPIService, private dialog: MatDialog, private router: Router,
-    private route: ActivatedRoute) {
+  constructor( private commonAPIService: CommonAPIService, private router: Router,
+    private route: ActivatedRoute, private dialog: MatDialog, ) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
   }
-
+  limit = 10;
   ngOnInit() {
     this.getPushNotification();
   }
+
+  onScroll() {
+    console.log('scrollperformed');
+    this.limit = this.limit + 3;
+    this.getPushNotification();
+  }
   getPushNotification() {
-    this.commonAPIService.getPushNotification({ 'msg_to': this.currentUser.login_id,'limit':100 }).subscribe((result: any) => {
+    this.commonAPIService.getPushNotification({ 'msg_to': this.currentUser.login_id, 'limit': this.limit }).subscribe((result: any) => {
       if (result.status === 'ok') {
         this.notficationMsg = result.data;
       } else {
@@ -50,7 +55,7 @@ export class NotificationPageComponent implements OnInit {
       });
     }
   }
-  msgRead(event){
+  msgRead(event) {
     const findex = event.msg_to.findIndex(f => Number(f.login_id) === Number(this.currentUser.login_id));
     if (event.msg_type === 'notification') {
       event.msg_to[findex].msg_status = [
@@ -151,4 +156,5 @@ export class NotificationPageComponent implements OnInit {
       }
     });
   }
-} 
+
+}
