@@ -256,7 +256,7 @@
                             </div>
                         </div> -->
 
-                        <div class="row" *ngIf="messageForm.value.messageType==='E'">
+                        <div class="row" *ngIf="messageForm.value.messageType !=='S'">
                             <div class="col-12" style="min-height: 400px;">
                                 <ckeditor [config]="ckeConfig" formControlName="messageBody"
                                     (change)="onBodyChange($event)"></ckeditor>
@@ -270,12 +270,12 @@
                             </div>
                         </div>
 
-                        <div class="row" *ngIf="messageForm.value.messageType==='notification'">
+                        <!-- <div class="row" *ngIf="messageForm.value.messageType==='notification'">
                             <div class="col-12" style="min-height: 400px;">
                                 <textarea class="message-textarea" formControlName="messageBody"
                                     (change)="onBodyChange($event)"></textarea>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="row character-count-section" *ngIf="messageForm.value.messageType==='S'">
                             1 SMS has maximum 160 character <span class="round-orange-button">
                                 {{ msgMultipleCount | number}} SMS </span>

@@ -53,6 +53,7 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
@@ -92,7 +93,8 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
-		ImageViewerModule
+		ImageViewerModule,
+		InfiniteScrollModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -162,7 +164,8 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
-		CKEditorModule
+		CKEditorModule,
+		InfiniteScrollModule
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
