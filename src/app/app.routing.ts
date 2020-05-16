@@ -13,6 +13,7 @@ import { HrSharedAppModule } from 'projects/human-resource/src/app/app.module';
 import { LibrarySharedAppModule } from 'projects/library-management/src/app/app.module';
 import { MiscellaneousSharedAppModule } from 'projects/miscellaneous/src/app/app.module';
 import { InventorySharedAppModule } from 'projects/inventory/src/app/app.module';
+import { FinancialAccountingSharedAppModule } from 'projects/financial-accounting/src/app/app.module';
 const appRoutes: Routes = [
 		{path: 'login', loadChildren: 'src/app/login/login.module#LoginModule'},
 		{path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
 		{path: 'hr', canActivate: [AuthGuard], loadChildren: 'projects/human-resource/src/app/app.module#HrSharedAppModule'},
 		{path: 'misc', canActivate: [AuthGuard], loadChildren: 'projects/miscellaneous/src/app/app.module#MiscellaneousSharedAppModule'},
 		{path: 'inventory', canActivate: [AuthGuard], loadChildren: 'projects/inventory/src/app/app.module#InventorySharedAppModule'},
+		{path: 'finanacial-accounting', canActivate: [AuthGuard], loadChildren: 'projects/financial-accounting/src/app/app.module#FinancialAccountingSharedAppModule'},
 		{ path: '**', redirectTo: 'login'},
 ];
 
@@ -44,7 +46,8 @@ const appRoutes: Routes = [
 			HrSharedAppModule.forRoot(),
 			LibrarySharedAppModule.forRoot(),
 			MiscellaneousSharedAppModule.forRoot(),
-			InventorySharedAppModule.forRoot()
+			InventorySharedAppModule.forRoot(),
+			FinancialAccountingSharedAppModule.forRoot()
 		],
 	})
 	export class AppRoutingModule { }

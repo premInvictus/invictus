@@ -1,0 +1,210 @@
+.document-table tbody tr td.document-table--title {
+    padding-top: 20px;
+}
+
+.document-table tr {
+    border: 3px solid #ffffff;
+}
+
+.table-skill__body {
+    background-color: #ffffff;
+}
+
+.table-margin {
+    margin: 15px;
+}
+
+td.remove-tb-padding {
+    padding: 0px !important; 
+}
+
+.table-100 {
+    width: 100%;
+}
+
+// table.custom-table {  
+//     color: #333;
+//     font-family: Helvetica, Arial, sans-serif;
+//     width: 100%; 
+//     border-collapse: 
+//     collapse; border-spacing: 0; 
+// }
+
+// td.custom-td, th.custom-th {  
+//     border: 1px solid transparent; 
+//     height: 30px; 
+//     transition: all 0.3s;  
+// }
+
+// th.custom-th {  
+//     background: #DFDFDF;  
+//     font-weight: bold;
+// }
+
+// td.custom-td {  
+//     background: #FAFAFA;
+//     text-align: center;
+// }
+
+/* Cells in even rows (2,4,6...) are one color */        
+tr.custom-tr:nth-child(even) td.custom-td { background: #F1F1F1; }   
+
+/* Cells in odd rows (1,3,5...) are another (excludes header cells)  */        
+tr.custom-tr:nth-child(odd) td.custom-td { background: #FEFEFE; }  
+
+tr.custom-tr td.custom-td:hover { background: #f1f1f1; color: #000; }  
+/* Hover cell effect! */
+
+.mat-row:nth-child(even){
+    background-color:#F1F1F1;
+    }
+
+.mat-row:nth-child(odd){
+    background-color:#FEFEFE;
+    }
+
+.mat-header-row {
+    background: #DFDFDF !important;
+}
+
+.mat-header-cell {
+    color: rgba(0,0,0,.54);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+mat-cell{
+    display:flex !important;
+    justify-content:center!important;
+    
+  }
+  
+  mat-header-cell {
+    display:flex;
+    justify-content:center;
+  }
+
+  th.mat-header-cell {
+    text-align: center !important;
+}
+
+td.mat-cell {
+    text-align: center !important;
+}
+
+.mat-cell {
+    text-align: center;
+}
+
+  .click-icon {
+      cursor: pointer !important;
+  }
+
+  .process-adm-ul {
+      list-style: none;
+      margin-bottom: 0rem;
+  }
+
+  .process_adm_reg{
+      max-width: 8% !important;
+      flex: 0 0 8% !important;
+  }
+
+  .process_adm_name{
+    max-width: 12% !important;
+    flex: 0 0 12% !important;
+}
+
+.process_adm_class {
+    max-width: 10% !important;
+    flex: 0 0 10% !important;
+}
+
+.process_adm_contact {
+    max-width: 5% !important;
+    flex: 0 0 5% !important;
+}
+
+.process_adm_date {
+    max-width: 20% !important;
+    flex: 0 0 20% !important;
+}
+
+.process_adm_score {
+    max-width: 25% !important;
+    flex: 0 0 25% !important;
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+
+.er_sn_no {
+    max-width: 8% !important;
+    flex: 0 0 8% !important;
+}
+
+.er_sn_no_pad {
+    padding-left: 24px;
+}
+
+.er_sn_no_rem_pad {
+    padding-left: 0px !important;
+}
+
+
+.table thead th {
+    border: 1px solid #bbbbbb;
+}
+
+.table tbody td {
+    border: 1px solid #bbbbbb;
+}
+
+.table.custom-table th {
+    border-top: 1px solid #bbbbbb !important;
+}
+
+.table-remark-width {
+    width: 25%;
+}
+
+.mat-header-cell {
+    border-bottom: 1px solid #bbbbbb;
+    border-left: 1px solid #bbbbbb;
+}
+
+.mat-header-row {
+    
+    border-top: 1px solid #bbbbbb;
+    border-right: 1px solid #bbbbbb;
+}
+
+.mat-row {
+    
+    border-bottom: 1px solid #bbbbbb;
+    border-left: 1px solid #bbbbbb;
+    border-right: 1px solid #bbbbbb;
+}
+
+.mat-cell {
+    
+    border-right: 1px solid #bbbbbb;
+}
+
+.process_adm_date {
+    text-align: left;
+}
+
+.process-adm-ul {
+    text-align: left;
+}
+
+.management-remarks-table {
+    height: 550px;
+    overflow-y: auto;
+}
+
+.table-third-tab-custom {
+    padding-top: 215px !important;
+    font-size: 24px !important;
+}

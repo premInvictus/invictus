@@ -160,6 +160,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			} else if (url === 'inventory') {
 				this.defaultProject = 'Inventory';
 				this.projectId = '12';
+			} else if (url === 'financial-accounting') {
+				this.defaultProject = 'Financial Accounting';
+				this.projectId = '13';
 			}
 		}
 		this.commonAPIService.messageSub.subscribe((res: any) => {
@@ -291,6 +294,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			this.proUrl = 'inventory';
 			localStorage.setItem('project', JSON.stringify({ pro_url: 'inventory' }));
 		}
+		if (Number(pro_id) === 13) {
+			this.proUrl = 'financial-accounting';
+			localStorage.setItem('project', JSON.stringify({ pro_url: 'financial-accounting' }));
+		}
 		const saveStateJSON = {
 			pro_url: this.proUrl,
 			ses_id: JSON.parse(localStorage.getItem('session')).ses_id
@@ -341,6 +348,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 					this.router.navigate(['/inventory']);
 					this.defaultProject = 'Inventory';
 					this.projectId = '12';
+				}
+				if (Number(pro_id) === 13) {
+					this.router.navigate(['/financial-accounting']);
+					this.defaultProject = 'Financial Accounting';
+					this.projectId = '13';
 				}
 			}
 		});

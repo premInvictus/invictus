@@ -1475,7 +1475,127 @@
           }
         }
       }
+    },
+    "financial-accounting": {
+      "root": "projects/financial-accounting/",
+      "sourceRoot": "projects/financial-accounting/src",
+      "projectType": "application",
+      "prefix": "app",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/financial-accounting",
+            "index": "projects/financial-accounting/src/index.html",
+            "main": "projects/financial-accounting/src/main.ts",
+            "polyfills": "projects/financial-accounting/src/polyfills.ts",
+            "tsConfig": "projects/financial-accounting/tsconfig.app.json",
+            "assets": [
+              "projects/financial-accounting/src/favicon.ico",
+              "projects/financial-accounting/src/assets"
+            ],
+            "styles": [
+              "projects/financial-accounting/src/styles.css"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/financial-accounting/src/environments/environment.ts",
+                  "with": "projects/financial-accounting/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "financial-accounting:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "financial-accounting:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "financial-accounting:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/financial-accounting/src/test.ts",
+            "polyfills": "projects/financial-accounting/src/polyfills.ts",
+            "tsConfig": "projects/financial-accounting/tsconfig.spec.json",
+            "karmaConfig": "projects/financial-accounting/karma.conf.js",
+            "styles": [
+              "projects/financial-accounting/src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "projects/financial-accounting/src/favicon.ico",
+              "projects/financial-accounting/src/assets"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/financial-accounting/tsconfig.app.json",
+              "projects/financial-accounting/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "financial-accounting-e2e": {
+      "root": "projects/financial-accounting-e2e/",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/financial-accounting-e2e/protractor.conf.js",
+            "devServerTarget": "financial-accounting:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "financial-accounting:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": "projects/financial-accounting-e2e/tsconfig.e2e.json",
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
+
   },
   "defaultProject": "invictus"
 }
