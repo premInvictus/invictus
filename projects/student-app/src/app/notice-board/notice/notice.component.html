@@ -1,0 +1,147 @@
+<!-- <div class="container">
+<div
+
+class="search-results"
+infiniteScroll
+[infiniteScrollDistance]="2"
+[infiniteScrollThrottle]="50"
+(scrolled)="onScroll()"
+>
+<div class="row pt-5">
+     
+  <div class="col-md-4 p-2" *ngFor="let post of allpost">
+ 
+    <div class="card shadow">
+      <div class="card-body">
+        <h5 class="card-title text-center ">{{post.name}} {{post.id}}</h5>
+        <p class="card-text">{{post.dis}}</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+      </div>
+    </div>
+
+    </div>
+  
+  </div>
+ 
+</div>
+</div> -->
+
+<div class="container" style="padding-top: 2%;">
+  <div class="search-results" infiniteScroll [scrollWindow]="false" [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="350" (scrolled)="onScroll()">
+    <div id="large-screen">
+      <div class="row">
+        <div class="col-12">
+          <div class="notfication">
+            <div class="row">
+              <div class="col-12">
+                <span>Notifcations</span>
+              </div>
+            </div>
+            <div class="row" *ngFor="let item of notficationMsg">
+              <div class="col-12">
+                <mat-card style="cursor:pointer;position: relative;overflow: hidden;">
+                  <button *ngIf="item.msg_attachment && item.msg_attachment.length > 0" mat-button
+                    class="blue-button-assign font-size-14 font-white" (click)="previewDocuments(item.msg_attachment)">
+                    <span class="assign-span-len">
+                      +{{item.msg_attachment.length}}
+                    </span>
+                  </button>
+                  <div class="row">
+                    <div class="col-2 calender-class" (click)="$event.preventDefault();msgRead(item)">
+                      <i class="fas fa-calendar-alt"></i>
+                      <span style="margin-left:15px">{{item.msg_date | date:'MMM-d' }}</span>
+                    </div>
+                    <div class="col-9">
+                      <div class="row" style="margin-top: 0px;">
+                        <div class="col-12">{{item.msg_subject}}</div>
+                      </div>
+                      <div class="row desc_class">
+                        <div class="col-12" [innerHTML]="item.msg_description"></div>
+                      </div>
+                    </div>
+                    <div class="col-1 trash-class" (click)="$event.preventDefault();deleteNofiy(item);">
+                      <i class="fas fa-trash"></i><br>
+                      <i *ngIf="item.msg_type === 'notification'" style="color:#007bff" class="fas fa-external-link-alt"
+                        (click)="$event.preventDefault();redirectModule(item)"></i>
+                      <!-- <span>Module Redirect</span> -->
+                    </div>
+                  </div>
+                </mat-card>
+              </div>
+            </div>
+            <div class="row" *ngIf="notficationMsg.length === 0">
+              <div class="col-12">
+                <mat-card style="text-align: center;"> No Notifictaion Yet !!</mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="small-screen">
+      <div class="row">
+        <div class="col-12">
+          <div class="fixed-dexription">
+            <div class="row">
+              <div class="col-12">
+                <div class="text-center">
+                  <span class="header-desc">
+                    Notification
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ng-container *ngIf="notficationMsg.length > 0">
+            <div class="content-div">
+              <mat-card class="notif-card" *ngFor="let item of notficationMsg"
+                (click)="$event.preventDefault();redirectModule(item)">
+                <div class="inner-content-div" style="position: relative;">
+                  <button *ngIf="item.msg_attachment && item.msg_attachment.length > 0" mat-button
+                    class="blue-button-assign font-size-14 font-white" (click)="previewDocuments(item.msg_attachment)">
+                    <span class="assign-span-len">
+                      +{{item.msg_attachment.length}}
+                    </span>
+                  </button>
+                  <i class="fas fa-trash" (click)="$event.preventDefault();deleteNofiy(item);"></i>                  
+                  <div class="row">
+                    <div class="col-12">
+                      <i class="fas fa-calendar-alt"></i>
+                      <span class="notif-span">{{item.msg_date | date:'MMM-d' }}</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-12 subj-naae">{{item.msg_subject}}</div>
+                  </div>
+                  <div class="row desc_class">
+                    <div class="col-12" [innerHTML]="item.msg_description"></div>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="notficationMsg.length == 0">
+            <div class="content-div">
+              <div class="timetable-card">
+                <div class="text-center">
+                  <img
+                    [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+                    class="new-image" height="150px">
+                  <br>
+                  <span class="font-size-14">
+                    No Record Found
+                  </span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

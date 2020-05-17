@@ -54,6 +54,7 @@ import { ComposeMessageComponent } from './compose-message/compose-message.compo
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
@@ -93,7 +94,8 @@ import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment
 		FormsModule,
 		ReactiveFormsModule,
 		InvictusSharedModule,
-		ImageViewerModule
+		ImageViewerModule,
+		InfiniteScrollModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -165,7 +167,8 @@ import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
-		CKEditorModule
+		CKEditorModule,
+		InfiniteScrollModule
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,

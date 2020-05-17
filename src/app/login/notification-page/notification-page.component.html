@@ -77,7 +77,7 @@
                 </span>
               </button>
               <i class="fas fa-trash" (click)="$event.preventDefault();deleteNofiy(item);"></i>
-              <i class="fas fa-external-link-alt"></i>
+            
               <div class="row">
                 <div class="col-12">
                   <i class="fas fa-calendar-alt"></i>
@@ -88,7 +88,7 @@
                 <div class="col-12 subj-naae">{{item.msg_subject}}</div>
               </div>
               <div class="row desc_class">
-                <div class="col-12">{{item.msg_description}}</div>
+                <div class="col-12" [innerHTML]="item.msg_description"></div>
               </div>
             </div>
           </mat-card>

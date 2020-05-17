@@ -37,6 +37,10 @@ const routes: Routes = [
 			{ path: 'user-credential', component: UserCredentialComponent },
 			{ path: 'communication', loadChildren: '../student-messages/student-messages.module#StudentMessagesModule' },
 			{ path: 'notification', component: NotificationPageComponent },
+			{
+				path: 'notice',
+				loadChildren: '../notice-board/notice-board.module#NoticeBoardModule'
+			},
 		]
 	},
 	{
