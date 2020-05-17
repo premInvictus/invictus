@@ -6,6 +6,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { StudentFeeDetailComponent } from './student-fee-detail/student-fee-detail.component';
 import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
+import { PaymentChooserComponent } from './payment-chooser/payment-chooser.component';
 
 @NgModule({
 	imports: [
@@ -15,6 +16,7 @@ import { FamilyInformationComponent } from './family-information/family-informat
 		ReactiveFormsModule,
 		FormsModule,
 	],
-	declarations: [StudentFeeDetailComponent, FamilywiseFeeRecieptComponent, FamilyInformationComponent]
+	entryComponents: [PaymentChooserComponent],
+	declarations: [StudentFeeDetailComponent, FamilywiseFeeRecieptComponent, FamilyInformationComponent, PaymentChooserComponent]
 })
 export class StudentFeeModule { }
