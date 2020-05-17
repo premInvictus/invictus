@@ -53,6 +53,7 @@ import { BookDetailsModalComponent } from './book-details-modal/book-details-mod
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
@@ -100,6 +101,7 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 		OngoingTestInstructionComponent,
 		PaymentOrderModalComponent,
 		MakePaymentComponent,
+		MakePaymentBasedonproviderComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
 		ZerodashPipe,
@@ -148,6 +150,7 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 		MathJaxDirective,
 		PaymentOrderModalComponent,
 		MakePaymentComponent,
+		MakePaymentBasedonproviderComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
 		ZerodashPipe,

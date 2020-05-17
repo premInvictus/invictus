@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild, ElementRef, Renderer2, HostListener } from '@angular/core';
-import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatPaginatorI18n } from '../../shared-module/customPaginatorClass';
 import { InvoiceElement } from './invoice-element.model';
 import { FeeLedgerElement } from './fee-ledger.model';
@@ -14,6 +14,7 @@ import { QelementService } from 'projects/axiom/src/app/questionbank/service/qel
 import { count } from 'rxjs/operators';
 import { interval } from 'rxjs';
 import { timer } from 'rxjs';
+import { PaymentChooserComponent } from '../payment-chooser/payment-chooser.component';
 
 @Component({
 	selector: 'app-student-fee-detail',
@@ -25,6 +26,8 @@ import { timer } from 'rxjs';
 })
 export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	invoiceArray: any;
+	@ViewChild('chooser') chooser;
+	dialogRef: MatDialogRef<PaymentChooserComponent>;
 	totalRecords: any;
 	recordArray: any[] = [];
 	lastRecordId: any;
@@ -39,7 +42,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	userDetail: any;
 	studentInvoiceData: any;
 	responseHtml = '';
-	paytmResult = '';
+	paytmResult: any = {};
 	postURL = '';
 
 	@ViewChild(MatPaginator) paginator: MatPaginator;
@@ -66,7 +69,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	payAPICall: any;
 	unsubscribePayAPIStatus: any;
 	paymentStatus = false;
-
+	settings: any[] = [];
+	counter = 0;
 	constructor(
 		public dialog: MatDialog,
 		private fb: FormBuilder,
@@ -79,7 +83,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	) { }
 
 	ngOnInit() {
-
+		this.getGlobalSetting();
 		this.invoiceArray = [];
 		this.INVOICE_ELEMENT = [];
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT);
@@ -98,6 +102,25 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
+	}
+	getGlobalSetting() {
+		this.erpCommonService.getGlobalSetting({ "gs_alias": "payment_banks" }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.settings = (result.data[0] && result.data[0]['gs_value']) ? JSON.parse(result.data[0] && result.data[0]['gs_value']) : [];
+				console.log(this.settings);
+				this.counter = 0;
+				if (this.settings && this.settings.length > 0) {
+					for (const item of this.settings) {
+						if (item.enabled === 'true') {
+							this.counter++;
+						}
+					}
+				} else {
+					this.counter = 0;
+				}
+
+			}
+		});
 	}
 
 
@@ -256,60 +279,113 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	}
 
 	orderPayment(element) {
-		this.commonAPIService.showSuccessErrorMessage('Sorry ! This service is not Available', 'error');
-		// this.outStandingAmt = element.feedue;
-		// this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';		
-		// this.makePayment(element);
+		// this.commonAPIService.showSuccessErrorMessage('Sorry ! This service is not Available', 'error');
+		this.outStandingAmt = element.feedue;
+		this.orderMessage = 'Are you confirm to make payment?  Your Pyament is : <b>' + this.outStandingAmt + '</b>';
+		this.makePayment(element);
 	}
 
+	// makePayment(element) {
+	// 	console.log('Do Payment');
+	// 	const inputJson = {
+	// 		// invoice_ids: this.studentInvoiceData['inv_ids'],
+	// 		inv_login_id: this.loginId,
+	// 		// inv_login_id: 1567,
+	// 		inv_process_type: this.processType,
+	// 		out_standing_amt: this.outStandingAmt
+	// 	};
+
+	// 	this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+	// 		localStorage.setItem('paymentData', '');
+	// 		if (result && result.status === 'ok') {
+	// 			console.log('result.data[0]', result.data[0]);
+	// 			this.paytmResult = result.data[0];
+	// 			// let ORDER_ID, MID;
+	// 			// for (let i = 0; i < this.paytmResult.length; i++) {
+	// 			// 	if (this.paytmResult[i]['name'] === 'ORDER_ID') {
+	// 			// 		ORDER_ID = this.paytmResult[i]['value'];
+	// 			// 	}
+	// 			// 	if (this.paytmResult[i]['name'] === 'MID') {
+	// 			// 		MID = this.paytmResult[i]['value'];
+	// 			// 	}
+	// 			// }
+
+	// 			// this.paymentOrderModel.closeDialog();
+	// 			localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+	// 			const hostName = window.location.href.split('/')[2];
+	// 			window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+
+	// 				localStorage.setItem('paymentWindowStatus', '1');
+
+
+	// 			// if (!this.paymentStatus) {
+	// 			// 	this.payAPICall = interval(10000).subscribe(x => {
+	// 			// 		if (ORDER_ID && MID) {
+	// 			// 			this.checkForPaymentStatus(ORDER_ID, MID);
+	// 			// 		}
+	// 			// 	});
+	// 			// }
+	// 		} else {
+	// 			this.paymentOrderModel.closeDialog();
+	// 		}
+
+	// 	});
+	// }
 	makePayment(element) {
 		console.log('Do Payment');
-		const inputJson = {
-			// invoice_ids: this.studentInvoiceData['inv_ids'],
-			inv_login_id: this.loginId,
-			// inv_login_id: 1567,
-			inv_process_type: this.processType,
-			out_standing_amt: this.outStandingAmt
-		};
-
-		this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
-			localStorage.setItem('paymentData', '');
-			if (result && result.status === 'ok') {
-				console.log('result.data[0]', result.data[0]);
-				this.paytmResult = result.data[0];
-				let ORDER_ID, MID;
-				for (let i = 0; i < this.paytmResult.length; i++) {
-					if (this.paytmResult[i]['name'] === 'ORDER_ID') {
-						ORDER_ID = this.paytmResult[i]['value'];
-					}
-					if (this.paytmResult[i]['name'] === 'MID') {
-						MID = this.paytmResult[i]['value'];
-					}
-				}
-
-				// this.paymentOrderModel.closeDialog();
-				localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
-				const hostName = window.location.href.split('/')[2];
-				const newwindow = window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
-				if (window.focus) {
-					newwindow.focus();
-					localStorage.setItem('paymentWindowStatus', '1');
-				}
-
-				if (!this.paymentStatus) {
-					this.payAPICall = interval(10000).subscribe(x => {
-						if (ORDER_ID && MID) {
-							this.checkForPaymentStatus(ORDER_ID, MID);
-						}
-					});
-				}
-			} else {
-				this.paymentOrderModel.closeDialog();
-			}
-
-		});
+		if (this.counter === 0) {
+			this.commonAPIService.showSuccessErrorMessage('No providers avilable', 'error');
+		} 
+		if (this.counter === 1) {
+			const bank: any = {
+				bank : this.settings[this.counter - 1]['bank_name']
+			};
+			this.exceutePayment(bank);
+		}
+		if (this.counter > 1) {
+		this.chooser.openModal();
+		}
 	}
+	exceutePayment($event) {
+		if ($event && $event.bank) {
+			const bank: any = $event.bank;
+			const inputJson = {
+				inv_login_id: this.loginId,
+				inv_process_type: this.processType,
+				out_standing_amt: this.outStandingAmt,
+				bank: bank
+			};
+			this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+				localStorage.setItem('paymentData', '');
+				if (result && result.status === 'ok') {
+					console.log('result.data[0]', result.data[0]);
+					this.paytmResult = result.data[0];
+					const ORDER_ID = this.paytmResult.orderId;
+					const MID = 'AECT_TEST'
+					localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+					const hostName = window.location.href.split('/')[2];
+					window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+					localStorage.setItem('paymentWindowStatus', '1');
 
+					if (!this.paymentStatus) {
+						// this.payAPICall = interval(10000).subscribe(x => {
+
+						// });
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
+					}
+
+
+				} else {
+					this.paymentOrderModel.closeDialog();
+				}
+
+			});
+		}
+	}
 	checkForPaymentStatus(ORDER_ID, MID) {
 		const paymentWindowStatus = localStorage.getItem('paymentWindowStatus');
 		if (paymentWindowStatus === '1') {
@@ -325,22 +401,22 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 			this.erpCommonService.checkForPaymentStatus(inputJson).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					const resultData = result.data;
+					console.log(resultData);
 					if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
 						this.paymentStatus = true;
-						this.payAPICall.unsubscribe();
+						clearInterval(this.payAPICall);
 						this.getStudentInvoiceDetail();
 					}
 				}
 			});
 		} else {
-			this.payAPICall.unsubscribe();
+			clearInterval(this.payAPICall);
 		}
 
 	}
-
 	ngOnDestroy() {
 		if (this.payAPICall) {
-			this.payAPICall.unsubscribe();
+			clearInterval(this.payAPICall);
 		}
 		this.getStudentInvoiceDetail();
 	}

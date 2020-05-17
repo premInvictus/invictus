@@ -62,3 +62,7 @@
 .div-form-editor {
   margin-bottom: 30px;
 }
+button.btn-neutral.btn-upl.mat-raised-button {
+  position: absolute;
+  top: 28px;
+}

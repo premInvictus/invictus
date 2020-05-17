@@ -6,6 +6,7 @@ import { AuthGuard } from '../_guards/auth.guard';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
 import { MakePaymentComponent } from './../student-fee/make-payment/make-payment.component';
 import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
+import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -45,7 +46,7 @@ const routes: Routes = [
 	},
 	{ 	path: 'make-payment',
 		canActivate: [AuthGuard],
-		component: MakePaymentComponent
+		component: MakePaymentBasedonproviderComponent
 	}
 ];
 
