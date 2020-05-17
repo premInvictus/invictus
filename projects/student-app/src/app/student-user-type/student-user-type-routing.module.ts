@@ -51,6 +51,10 @@ const routes: Routes = [
 	{ 	path: 'make-payment',
 		canActivate: [AuthGuard],
 		component: MakePaymentBasedonproviderComponent
+	},
+	{ 	path: 'make-paymentviapg',
+		canActivate: [AuthGuard],
+		component: MakePaymentComponent
 	}
 ];
 

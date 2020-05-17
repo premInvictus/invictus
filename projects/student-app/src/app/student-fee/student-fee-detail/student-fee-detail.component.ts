@@ -63,6 +63,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	ledgerDataSource = new MatTableDataSource<FeeLedgerElement>(this.FEE_LEDGER_ELEMENT);
 
 	pageIndex = 0;
+	currentIndex = 0;
 	invoicepagesize = 10;
 	invoicepagesizeoptions = [10, 25, 50, 100];
 	outStandingAmt = 0;
@@ -109,11 +110,17 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				this.settings = (result.data[0] && result.data[0]['gs_value']) ? JSON.parse(result.data[0] && result.data[0]['gs_value']) : [];
 				console.log(this.settings);
 				this.counter = 0;
+				this.currentIndex = 0;
 				if (this.settings && this.settings.length > 0) {
+					let i =0;
 					for (const item of this.settings) {
 						if (item.enabled === 'true') {
 							this.counter++;
 						}
+						if (this.counter === 1) {
+							this.currentIndex = i;
+						}
+						i++;
 					}
 				} else {
 					this.counter = 0;
@@ -335,15 +342,16 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		console.log('Do Payment');
 		if (this.counter === 0) {
 			this.commonAPIService.showSuccessErrorMessage('No providers avilable', 'error');
-		} 
+		}
 		if (this.counter === 1) {
 			const bank: any = {
-				bank : this.settings[this.counter - 1]['bank_name']
+				bank: this.settings[this.currentIndex]['bank_alias']
 			};
+			console.log(bank);
 			this.exceutePayment(bank);
 		}
 		if (this.counter > 1) {
-		this.chooser.openModal();
+			this.chooser.openModal();
 		}
 	}
 	exceutePayment($event) {
@@ -355,35 +363,75 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				out_standing_amt: this.outStandingAmt,
 				bank: bank
 			};
-			this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
-				localStorage.setItem('paymentData', '');
-				if (result && result.status === 'ok') {
-					console.log('result.data[0]', result.data[0]);
-					this.paytmResult = result.data[0];
-					const ORDER_ID = this.paytmResult.orderId;
-					const MID = 'AECT_TEST'
-					localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
-					const hostName = window.location.href.split('/')[2];
-					window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
-					localStorage.setItem('paymentWindowStatus', '1');
+			if (bank === 'axis') {
+				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+					localStorage.setItem('paymentData', '');
+					if (result && result.status === 'ok') {
+						console.log('result.data[0]', result.data[0]);
+						this.paytmResult = result.data[0];
+						const ORDER_ID = this.paytmResult.orderId;
+						const MID = 'AECT_TEST'
+						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+						const hostName = window.location.href.split('/')[2];
+						window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+						localStorage.setItem('paymentWindowStatus', '1');
 
-					if (!this.paymentStatus) {
-						// this.payAPICall = interval(10000).subscribe(x => {
+						if (!this.paymentStatus) {
+							// this.payAPICall = interval(10000).subscribe(x => {
 
-						// });
-						this.payAPICall = setInterval(() => {
-							if (ORDER_ID && MID) {
-								this.checkForPaymentStatus(ORDER_ID, MID);
-							}
-						}, 10000);
+							// });
+							this.payAPICall = setInterval(() => {
+								if (ORDER_ID && MID) {
+									this.checkForPaymentStatus(ORDER_ID, MID);
+								}
+							}, 10000);
+						}
+
+
+					} else {
+						this.paymentOrderModel.closeDialog();
 					}
 
+				});
+			}
+			if (bank === 'paytm') {
+				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+					localStorage.setItem('paymentData', '');
+					if (result && result.status === 'ok') {
+						this.paytmResult = result.data[0];
+						let ORDER_ID, MID;
+						for (let i = 0; i < this.paytmResult.length; i++) {
+							if (this.paytmResult[i]['name'] === 'ORDER_ID') {
+								ORDER_ID = this.paytmResult[i]['value'];
+							}
+							if (this.paytmResult[i]['name'] === 'MID') {
+								MID = this.paytmResult[i]['value'];
+							}
+						}
+						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+						const hostName = window.location.href.split('/')[2];
+						window.open('http://' + hostName + '/student/make-paymentviapg', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+						localStorage.setItem('paymentWindowStatus', '1');
 
-				} else {
-					this.paymentOrderModel.closeDialog();
-				}
+						if (!this.paymentStatus) {
+							// this.payAPICall = interval(10000).subscribe(x => {
 
-			});
+							// });
+							this.payAPICall = setInterval(() => {
+								if (ORDER_ID && MID) {
+									this.checkForPaymentStatus(ORDER_ID, MID);
+								}
+							}, 10000);
+						}
+
+
+					} else {
+						this.paymentOrderModel.closeDialog();
+					}
+
+				});
+			}
+
 		}
 	}
 	checkForPaymentStatus(ORDER_ID, MID) {
