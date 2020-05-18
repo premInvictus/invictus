@@ -1,0 +1,71 @@
+.form-field {
+    width: 100%;
+}
+
+.form-field-80 {
+    width: 80%;
+}
+
+.student-detail-col-1 {
+    max-width: 10%;
+    flex: 0 0 10%;
+}
+
+.student-detail-col-3 {
+    max-width: 30%;
+    flex: 0 0 30%;
+}
+
+.form-feild-top-margin {
+    margin-top: 8px !important;
+}
+
+// .mat-form-field-label {
+//     font-weight: 600 !important;
+// }
+
+.mat-form-field.mat-focused .mat-form-field-label {
+    color: #000;
+}
+
+.mat-form-field.mat-focused .mat-form-field-ripple {
+    background-color: #02ed10;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-outline-thick {
+    color: #02ed10;
+}
+
+.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: #02ed10;
+}
+
+.mat-form-field-label  {
+    font-size: 16px !important;
+   }
+
+   .mat-form-field-appearance-legacy .mat-form-field-label {
+    color: #000000;
+}
+
+.mat-select-value {
+    color: rgba(0,0,0,.87);
+    font-size: 16px;
+}
+
+   .mat-input-element {
+       font-size: 16px !important; 
+   }
+
+   .mat-select-disabled .mat-select-value {
+    color: rgb(0, 0, 0);
+}
+
+.remark-input-form .mat-form-field-wrapper .mat-form-field-flex .mat-form-field-infix {
+    width: 0px;
+    text-align: center;
+}
+
+
+
+

@@ -22,6 +22,7 @@
     "../projects/student-app/src/app/reports/reports.module.ts",
     "../projects/student-app/src/app/test-engine/test-engine.module.ts",
     "../projects/student-app/src/app/student-user-type/student-user-type.module.ts",
+    "../projects/student-app/src/app/notice-board/notice-board.module.ts",
     "../projects/axiom/src/app/questionbank/questionbank.module.ts",
     "../projects/axiom/src/app/acsetup/acsetup.module.ts",
     "../projects/axiom/src/app/class-performance-reports/class-performance-reports.module.ts",
@@ -117,6 +118,13 @@
     "../projects/inventory/src/app/inventory-circulation-management/circulation-management.module.ts",
     "../projects/inventory/src/app/inventory-reports/reports.module.ts",
     "../projects/inventory/src/app/inventory-configuration/configuration.module.ts",
-    "../projects/inventory/src/app/store-incharge/store-incharge.module.ts"
+    "../projects/inventory/src/app/store-incharge/store-incharge.module.ts",
+    "../projects/financial-accounting/src/app/fausertype/usertype.module.ts",
+    "../projects/financial-accounting/src/app/fa-auxiliaries/auxiliaries.module.ts",
+    "../projects/financial-accounting/src/app/fa-configure/fa-configure.module.ts",
+    "../projects/financial-accounting/src/app/fa-reports/reports.module.ts",
+    "../projects/financial-accounting/src/app/financial-statements/finanacial-statements.module.ts",
+    "../projects/financial-accounting/src/app/transaction-master/transaction-master.module.ts"
+
   ]
 }

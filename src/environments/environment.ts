@@ -8,6 +8,7 @@ export const environment = {
 	apiReservUrl: 'http://localhost/invictus/reservoir-backend/index.php',
 	apiHRUrl: 'http://localhost:3000',
 	apiInvUrl: 'http://localhost:3010',
+	apiFaUrl: 'http://localhost:3000',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
 	testInitiateCode: 'T100',

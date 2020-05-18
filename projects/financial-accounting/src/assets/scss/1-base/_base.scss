@@ -1,0 +1,30 @@
+
+body {
+    zoom: 80%;
+    width: 100%;
+}
+
+h4 {
+    font-size: 1.25rem !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+a:hover {
+    text-decoration: none !important;
+}
+
+.mat-drawer-content {
+    overflow-x:  hidden !important;
+    overflow-y: auto !important;
+}
+
+.mat-sidenav-content {
+    background-color: #f1f1f1;
+}
+
+.cdk-overlay-pane {
+    transform: none !important; 
+}

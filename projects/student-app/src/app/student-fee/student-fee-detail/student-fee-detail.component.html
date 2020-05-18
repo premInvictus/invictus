@@ -194,5 +194,5 @@
 
 <div #paytmResponse></div>
 
-
+<app-payment-chooser #chooser (confirm)="exceutePayment($event)"></app-payment-chooser>
 <!-- <app-payment-order-modal #paymentOrderModel [orderMessage]="orderMessage" (orderOk)="makePayment($event)"></app-payment-order-modal> -->

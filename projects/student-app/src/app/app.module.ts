@@ -43,12 +43,12 @@ const providers = [
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpClientModule
+		HttpClientModule,
 	],
 	providers: [providers],
 	bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
 @NgModule({})
 export class StudentAppSharedModule {
 	static forRoot(): ModuleWithProviders {

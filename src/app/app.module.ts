@@ -28,6 +28,7 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 
+
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -50,7 +51,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 		AngularFireDatabaseModule,
 		AngularFireAuthModule,
 		AngularFireMessagingModule,
-		AngularFireModule.initializeApp(environment.firebase),
+		AngularFireModule.initializeApp(environment.firebase)
 	],
 	providers: [
 		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService, TranslateService,

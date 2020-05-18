@@ -1,0 +1,14 @@
+<div class="text-center">
+  <p style="padding:14px; font-size:18px; font-weight:bold;">Do you confirm to make payment?
+    <br /> Amount payable : &#8377; {{outStandingAmt | number: '2.'}} </p>
+  <div>
+
+    <input type="submit"
+      style="background:#A4De02; margin-top:10px; padding:10px 25px; color:#fff; text-decoration:none; border-radius:5px;  border:none; cursor:pointer;"
+      value="Yes" (click)="goToLocation()" />
+
+    <input type="button"
+      style="margin-left:15px; background:rgb(222, 2, 39); margin-top:10px; padding:10px 25px; color:#fff; text-decoration:none; border-radius:5px;  border:none; cursor:pointer;"
+      value="Cancel" (click)="cancelPay()" />
+  </div>
+</div>

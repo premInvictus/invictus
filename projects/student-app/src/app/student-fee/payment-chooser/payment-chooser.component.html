@@ -1,0 +1,42 @@
+<ng-template #provider>
+<div class="modal-custom-cotainer overflow-hidden" style="position:relative;height:40vh">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Choose Providers</span><span
+          class="float-right margin-top-5"><i class="far fa-times-circle font-white cursor-pointer font-size-24"
+            (click)="closeDialog()"></i></span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <ng-container *ngIf="formGroupArray.length >0">
+        <div class="text-left">
+          <span style="font-family:Roboto Bold,sans-serif;
+          font-size: 18px;font-weight: bold;">Please Select Bank</span>
+        </div>
+        <br>
+        <ng-container *ngFor="let set of settings; let i = index">
+          <div class="row">
+            <div class="col-12">
+              <mat-radio-group (change)="chooseBank(set, i)" [(ngModel)]="chosenBank">
+                <mat-radio-button [value]="set.bank_alias">
+                 <span>
+                   <img [src]="set.bank_logo" class="logo-bnk">
+                 </span>
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+  <div class="text-center btn-div">
+    <button mat-button class="btn-success btn-spacer" style="margin-right: 5px;"
+      (click)="closeDialog2()">Confirm</button>
+    <button mat-button class="btn-danger" (click)="resetForm()">Cancel</button>
+  </div>
+</div>
+</ng-template>

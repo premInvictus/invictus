@@ -1,0 +1,14 @@
+.font-blue{
+    color:#17546c;
+}
+.information-bar {
+    border: 1px solid #06536b !important;
+}
+.btn-div {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+}
+img.logo-bnk {
+    width: 60px;
+}
