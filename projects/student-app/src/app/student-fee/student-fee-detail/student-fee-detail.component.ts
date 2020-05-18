@@ -71,6 +71,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	unsubscribePayAPIStatus: any;
 	paymentStatus = false;
 	settings: any[] = [];
+	settingArr7: any[] = [];
 	counter = 0;
 	constructor(
 		public dialog: MatDialog,
@@ -105,6 +106,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		this.dataSource.sort = this.sort;
 	}
 	getGlobalSetting() {
+		this.settingArr7 = [];
 		this.erpCommonService.getGlobalSetting({ "gs_alias": "payment_banks" }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.settings = (result.data[0] && result.data[0]['gs_value']) ? JSON.parse(result.data[0] && result.data[0]['gs_value']) : [];
@@ -115,6 +117,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 					let i =0;
 					for (const item of this.settings) {
 						if (item.enabled === 'true') {
+							this.settingArr7.push(item.bank_alias);
 							this.counter++;
 						}
 						if (this.counter === 1) {
@@ -345,7 +348,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		}
 		if (this.counter === 1) {
 			const bank: any = {
-				bank: this.settings[this.currentIndex]['bank_alias']
+				bank: this.settingArr7[0]
 			};
 			console.log(bank);
 			this.exceutePayment(bank);
