@@ -9,74 +9,76 @@
         </div>
         <br>
         <form [formGroup]="reissueform" novalidate>
-        <div class="row">
-          <div class="col-6">
-            <div class="row">
-              <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Admission No.</mat-label>
-                  <input matInput placeholder="Admission No." formControlName="tc_admission_no" readonly>
-                </mat-form-field>
+                    <mat-label>Admission No.</mat-label>
+                    <input matInput placeholder="Admission No." formControlName="tc_admission_no" readonly>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
+              <div class="row">
+                <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Student Name</mat-label>
-                  <input matInput placeholder="Student Name" formControlName="au_full_name" readonly>
-                </mat-form-field>
+                    <mat-label>Student Name</mat-label>
+                    <input matInput placeholder="Student Name" formControlName="au_full_name" readonly>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-6">
+              <div class="row">
+                <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Class</mat-label>
-                  <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()" disabled>
+                    <mat-label>Class</mat-label>
+                    <mat-select formControlName="class_id" placeholder="Class" (ngModelChange)="getSectionsByClass()"
+                      disabled>
                       <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                      <mat-option *ngFor="let item of classArray" [value]="item.class_id">
                         {{item.class_name}}
-                    </mat-option>
-                </mat-select>
-                </mat-form-field>
-              </div>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
 
-              <div class="col-6">
+                <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Section</mat-label>
-                  <mat-select placeholder="Section" formControlName="sec_id" disabled>
+                    <mat-label>Section</mat-label>
+                    <mat-select placeholder="Section" formControlName="sec_id" disabled>
                       <mat-option value="">Please Select</mat-option>
-                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                      <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
                         {{item.sec_name}}
-                    </mat-option>
-                </mat-select>
-                </mat-form-field>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-6">
-            <div class="row">
-              <div class="col-12">
+            <div class="col-6">
+              <div class="row">
+                <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Certificate</mat-label>
-                  <input matInput placeholder="Certificate No." formControlName="tc_id" readonly>
-                </mat-form-field>
+                    <mat-label>Certificate</mat-label>
+                    <input matInput placeholder="Certificate No." formControlName="tc_id" readonly>
+                  </mat-form-field>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-12">
+              <div class="row">
+                <div class="col-12">
                   <mat-form-field class="form-field" appearance="outline">
-                      <mat-label>Certificate Date</mat-label>
-                  <input matInput [matDatepicker]="picker1" placeholder="Certificate Date" formControlName="tc_approval_date" readonly>
-                  <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                  <mat-datepicker #picker1 disabled></mat-datepicker>
-                </mat-form-field>
+                    <mat-label>Certificate Date</mat-label>
+                    <input matInput [matDatepicker]="picker1" placeholder="Certificate Date"
+                      formControlName="tc_approval_date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1 disabled></mat-datepicker>
+                  </mat-form-field>
+                </div>
               </div>
+
             </div>
-            
           </div>
-        </div>
-      </form>
+        </form>
         <br>
         <div class="row">
           <div class="col-12">
@@ -89,24 +91,29 @@
           </div>
         </div>
         <br>
-        <div class="row">  
+        <div class="row">
           <div class="col-12">
             <label>Upload Documents</label>
-            <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="upload_doc" style="display: none !important">          
-            <button mat-stroked-button class="btn-spacer btn-neutral"><label for="upload_doc">Upload file <i class="fas fa-cloud-upload-alt"></i></label></button>
+            <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="upload_doc"
+              style="display: none !important">
+            <button mat-stroked-button class="btn-spacer btn-neutral"><label for="upload_doc">Upload file <i
+                  class="fas fa-cloud-upload-alt"></i></label></button>
           </div>
         </div>
         <br>
         <br>
-        <div class="row ">
-            <div class="col-1 margin-bottom-15" *ngFor="let image of requestDoc; let i= index">
-                <img *ngIf= "checkThumbnail(image.file_url)" class="btn-doc-upload-preview thumbnail-img" [src]="image.file_url" (click)="previewImage(requestDoc, i)">
-                <img *ngIf= "!checkThumbnail(image.file_url)" class="btn-doc-upload-preview thumbnail-img"
-                src="https://icons-for-free.com/free-icons/png/512/2109135.png" 
-                (click)="previewImage(requestDoc, i)"><br>
-              <button mat-button class="upload-document-delete-btn" (click)="deleteRequestDoc(image)"><mat-icon class="btn-upload-icon">delete</mat-icon></button>       
-            </div>
+        <div class="row" *ngIf="requestDoc.length > 0">
+          <div class="col-1 margin-bottom-15" *ngFor="let image of requestDoc; let i= index">
+            <img *ngIf="image.file_url && checkThumbnail(image.file_url)" class="btn-doc-upload-preview thumbnail-img"
+              [src]="image.file_url" (click)="previewImage(requestDoc, i)">
+            <img *ngIf="image.file_url && !checkThumbnail(image.file_url)" class="btn-doc-upload-preview thumbnail-img"
+              src="https://cdn.iconscout.com/icon/free/png-256/google-docs-461798.png"
+              (click)="previewImage(requestDoc, i)"><br>
+            <button *ngIf="image.file_url" mat-button class="upload-document-delete-btn" (click)="deleteRequestDoc(image)">
+              <mat-icon class="btn-upload-icon">delete</mat-icon>
+            </button>
           </div>
+        </div>
         <br>
         <div class="row" *ngIf="isExistUserAccessMenu('268')">
           <div class="col-12">
@@ -115,7 +122,7 @@
         </div>
         <div class="row" *ngIf="isExistUserAccessMenu('268')">
           <div class="col-2">
-            <mat-checkbox (change)="addDept('1')" >Application For Issue</mat-checkbox>
+            <mat-checkbox (change)="addDept('1')">Application For Issue</mat-checkbox>
           </div>
           <div class="col-2">
             <mat-checkbox (change)="addDept('2')">Copy of the FIR</mat-checkbox>
@@ -127,7 +134,7 @@
         <br>
         <div class="row" *ngIf="isExistUserAccessMenu('268')">
           <div class="col-12">
-            <button mat-raised-button class="btn-setting" (click)="verifyDoc()" >Verify & Approve</button>
+            <button mat-raised-button class="btn-setting" (click)="verifyDoc()">Verify & Approve</button>
           </div>
         </div>
         <br>
@@ -135,7 +142,7 @@
           <div class="col-12">
             <button mat-raised-button class="btn-success" (click)="saveForm()">Submit</button>
             <!-- <button mat-raised-button class="btn-danger btn-spacer" (click)="resetForm()">Reset</button> -->
-            <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()" >Back</button>
+            <button mat-raised-button class="btn-danger btn-spacer" (click)="backUrl()">Back</button>
           </div>
         </div>
       </div>
