@@ -384,7 +384,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						const hostName = window.location.href.split('/')[2];
 						var left = (screen.width / 2) - (800 / 2);
 						var top = (screen.height / 2) - (800 / 2);
-						window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+						window.open(location.protocol +'//' + hostName + '/student/make-payment', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
 						top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
 
@@ -424,7 +424,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						const hostName = window.location.href.split('/')[2];
 						var left = (screen.width / 2) - (800 / 2);
 						var top = (screen.height / 2) - (800 / 2);
-						window.open('http://' + hostName + '/student/make-paymentviapg', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+						window.open(location.protocol + '//' + hostName + '/student/make-paymentviapg', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
 						top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
 						// this.payAPICall = interval(10000).subscribe(x => {
