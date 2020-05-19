@@ -114,7 +114,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				this.counter = 0;
 				this.currentIndex = 0;
 				if (this.settings && this.settings.length > 0) {
-					let i =0;
+					let i = 0;
 					for (const item of this.settings) {
 						if (item.enabled === 'true') {
 							this.settingArr7.push(item.bank_alias);
@@ -357,6 +357,12 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 			this.chooser.openModal();
 		}
 	}
+	getMID(value) {
+		const index = this.settings.findIndex(f => f.bank_alias === value);
+		if (index !== -1) {
+			return this.settings[index]['merchant'];
+		}
+	}
 	exceutePayment($event) {
 		if ($event && $event.bank) {
 			const bank: any = $event.bank;
@@ -373,22 +379,25 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						console.log('result.data[0]', result.data[0]);
 						this.paytmResult = result.data[0];
 						const ORDER_ID = this.paytmResult.orderId;
-						const MID = 'AECT_TEST'
+						const MID = this.getMID(bank);
 						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 						const hostName = window.location.href.split('/')[2];
-						window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+						var left = (screen.width / 2) - (800 / 2);
+						var top = (screen.height / 2) - (800 / 2);
+						window.open('http://' + hostName + '/student/make-payment', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+						top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
 
-						if (!this.paymentStatus) {
-							// this.payAPICall = interval(10000).subscribe(x => {
 
-							// });
-							this.payAPICall = setInterval(() => {
-								if (ORDER_ID && MID) {
-									this.checkForPaymentStatus(ORDER_ID, MID);
-								}
-							}, 10000);
-						}
+						// this.payAPICall = interval(10000).subscribe(x => {
+
+						// });
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
+
 
 
 					} else {
@@ -413,20 +422,19 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						}
 						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 						const hostName = window.location.href.split('/')[2];
-						window.open('http://' + hostName + '/student/make-paymentviapg', 'Payment', 'height=500,width=500,dialog=yes,resizable=no');
+						var left = (screen.width / 2) - (800 / 2);
+						var top = (screen.height / 2) - (800 / 2);
+						window.open('http://' + hostName + '/student/make-paymentviapg', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+						top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
+						// this.payAPICall = interval(10000).subscribe(x => {
 
-						if (!this.paymentStatus) {
-							// this.payAPICall = interval(10000).subscribe(x => {
-
-							// });
-							this.payAPICall = setInterval(() => {
-								if (ORDER_ID && MID) {
-									this.checkForPaymentStatus(ORDER_ID, MID);
-								}
-							}, 10000);
-						}
-
+						// });
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
 
 					} else {
 						this.paymentOrderModel.closeDialog();
@@ -438,32 +446,26 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 		}
 	}
 	checkForPaymentStatus(ORDER_ID, MID) {
-		const paymentWindowStatus = localStorage.getItem('paymentWindowStatus');
-		if (paymentWindowStatus === '1') {
-			const inputJson = {
-				// invoice_ids: this.studentInvoiceData['inv_ids'],	
-				inv_login_id: this.loginId,
-				// inv_login_id: 1567,
-				inv_process_type: this.processType,
-				orderId: ORDER_ID,
-				mid: MID
-			};
+		const inputJson = {
+			// invoice_ids: this.studentInvoiceData['inv_ids'],	
+			inv_login_id: this.loginId,
+			// inv_login_id: 1567,
+			inv_process_type: this.processType,
+			orderId: ORDER_ID,
+			mid: MID
+		};
 
-			this.erpCommonService.checkForPaymentStatus(inputJson).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
-					const resultData = result.data;
-					console.log(resultData);
-					if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
-						this.paymentStatus = true;
-						clearInterval(this.payAPICall);
-						this.getStudentInvoiceDetail();
-					}
+		this.erpCommonService.checkForPaymentStatus(inputJson).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const resultData = result.data;
+				console.log(resultData);
+				if (resultData && resultData[0]['trans_status'] === 'TXN_SUCCESS' || resultData && resultData[0]['trans_status'] === 'TXN_FAILURE') {
+					this.paymentStatus = true;
+					clearInterval(this.payAPICall);
+					this.getStudentInvoiceDetail();
 				}
-			});
-		} else {
-			clearInterval(this.payAPICall);
-		}
-
+			}
+		});
 	}
 	ngOnDestroy() {
 		if (this.payAPICall) {
