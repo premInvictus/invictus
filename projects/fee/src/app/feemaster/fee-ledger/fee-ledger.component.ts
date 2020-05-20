@@ -13,7 +13,7 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
-import { e } from '@angular/core/src/render3';
+
 
 @Component({
 	selector: 'app-fee-ledger',
