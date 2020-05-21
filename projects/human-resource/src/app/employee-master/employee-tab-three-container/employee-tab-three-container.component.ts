@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, OnChanges, Input } from '@angular/core';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { ErpCommonService } from 'src/app/_services';
 import { saveAs } from 'file-saver';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { FeeService } from 'projects/fee/src/app/_services';
@@ -23,6 +24,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	login_id;
 	parentId;
 	generalRemarkData: any[] = [];
+	sessionArray: any[] = [];
+	sessionName: any;
 	admissionRemarkData: any;
 	managementRemarkData: any;
 	settingsArray: any[] = [];
@@ -46,6 +49,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	totalEarning: any = 0;
 	deduction: any = 0;
 	earning: any = 0;
+	session_id: any;
+	year:any;
+	currentYear:any;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Payment' },
@@ -76,8 +82,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		public commonAPIService: CommonAPIService,
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
-		private sisService: SisService
-	) { }
+		private sisService: SisService,
+		private erpCommonService: ErpCommonService
+	) {
+		this.session_id = JSON.parse(localStorage.getItem('session'));
+	}
 	ngOnInit() {
 		this.commonAPIService.reRenderForm.subscribe((data: any) => {
 			if (data) {
@@ -128,8 +137,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_deduction: '',
 				tds_deduction: '',
 				net_salary: '',
-				gratuity:'',
-				total_earning: ''
+				gratuity: '',
+				total_earning: '',
+				advance: '',
+				deposite_month_amount: '',
+				starting_month: '',
+
 			});
 		}
 		if (data.editMode) {
@@ -176,8 +189,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_deduction: '',
 			tds_deduction: '',
 			net_salary: '',
-			gratuity:'',
-			total_earning: ''
+			gratuity: '',
+			total_earning: '',
+			advance: '',
+			deposite_month_amount: '',
+			starting_month: '',
 		});
 
 
@@ -196,12 +212,30 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getCategoryTwo();
 		this.getCategoryThree();
 		this.getAllEpmployeeList();
+		this.getSession();
 		if (this.employeedetails) {
 			this.getSalartDetails();
 			this.onChangeData();
 		}
 	}
 
+	getSession() {
+		this.erpCommonService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						if (this.session_id) {
+							this.sessionName = this.sessionArray[this.session_id.ses_id];
+							this.year = this.sessionName.split('-');
+							this.currentYear = this.year[0];
+						}
+
+					}
+				});
+	}
 	addEmpBank() {
 		this.empBankDetail.push(this.fbuild.group({
 			bank_name: '',
@@ -462,8 +496,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			pf_deduction: '',
 			esi_deduction: '',
 			tds_deduction: '',
+			advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
+			deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
+			starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.starting_month : '',
 			net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
-			gratuity:this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
+			gratuity: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
 		});
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) {
@@ -549,7 +586,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
-					gratuity:this.salaryDetails.value.gratuity,
+					advance_details: {
+						session_id: this.session_id.ses_id,
+						currentYear:this.currentYear,
+						advance: this.salaryDetails.value.advance,
+						remaining_advance: this.salaryDetails.value.advance,
+						deposite_month_amount_amount: this.salaryDetails.value.deposite_month_amount,
+						starting_month: this.salaryDetails.value.starting_month,
+					},
+					gratuity: this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
 				}
@@ -670,7 +715,15 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
-					gratuity:this.salaryDetails.value.gratuity,
+					advance_details: {
+						session_id: this.session_id.ses_id,
+						currentYear :this.currentYear,
+						advance: this.salaryDetails.value.advance,
+						remaining_advance: this.salaryDetails.value.advance,
+						deposite_month_amount: this.salaryDetails.value.deposite_month_amount,
+						starting_month: this.salaryDetails.value.starting_month,
+					},
+					gratuity: this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
 				}
