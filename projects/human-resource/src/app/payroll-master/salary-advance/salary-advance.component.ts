@@ -10,16 +10,16 @@ import { ErpCommonService } from 'src/app/_services';
 export class SalaryAdvanceComponent implements OnInit {
   employeeArray: any[] = [];
   schoolInfo: any[] = [];
-  sessionArray:any[]=[];
-  session_id:any;
-  year:any;
-  currentYear:any;
-  sessionName:any;
+  sessionArray: any[] = [];
+  session_id: any;
+  year: any;
+  currentYear: any;
+  sessionName: any;
   constructor(
     public commonAPIService: CommonAPIService,
     private erpCommonService: ErpCommonService
-  ) { 
-		this.session_id = JSON.parse(localStorage.getItem('session'));
+  ) {
+    this.session_id = JSON.parse(localStorage.getItem('session'));
   }
 
   ngOnInit() {
@@ -65,16 +65,20 @@ export class SalaryAdvanceComponent implements OnInit {
           }
         });
   }
-  getSalaryAdvance(emp_id,month,year){
-    const findex = this.employeeArray.findIndex(f=>Number(f.emp_id) === Number(emp_id));
-    if(findex !== -1){
-     // return findex;
-      const rindex = this.employeeArray[findex].emp_salary_detail.emp_salary_structure.advance_month_wise.findIndex(r=>Number(r.month_id) === Number(month) && Number(r.currentYear) === Number(year));
-      if(rindex !== -1){
-        return this.employeeArray[findex].emp_salary_detail.emp_salary_structure.advance_month_wise[rindex].deposite_amount;
-      } else{
+  getSalaryAdvance(emp_id, month, year) {
+    const findex = this.employeeArray.findIndex(f => Number(f.emp_id) === Number(emp_id));
+    if (findex !== -1) {
+      if (this.employeeArray[findex].emp_salary_detail.emp_salary_structure.advance_month_wise) {
+        const rindex = this.employeeArray[findex].emp_salary_detail.emp_salary_structure.advance_month_wise.findIndex(r => Number(r.month_id) === Number(month) && Number(r.currentYear) === Number(year));
+        if (rindex !== -1) {
+          return this.employeeArray[findex].emp_salary_detail.emp_salary_structure.advance_month_wise[rindex].deposite_amount;
+        } else {
+          return 0;
+        }
+      } else {
         return 0;
       }
+
     }
 
   }

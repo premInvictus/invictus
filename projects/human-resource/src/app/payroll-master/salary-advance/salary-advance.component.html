@@ -40,7 +40,6 @@
 
             </thead>
             <tbody class="text-center">
-
               <tr class="custom-tr " *ngFor="let det of employeeArray;let i = index">
                 <td class="custom-td">
                   {{det.emp_name}}
@@ -84,13 +83,13 @@
               </tr>
             </tbody>
             <tbody class="no-border">
-              <tr class="text-center" *ngIf="finaldivflag">
+              <tr class="text-center" *ngIf="employeeArray.length === 0">
                 <td colspan="9">
                   <img
                     src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
                   <br><br><br>
                   <br><span class="font-size-20 font-light font-color-brown">
-                    Please select Class and Subject
+                    No Data !!
                   </span>
                 </td>
               </tr>
