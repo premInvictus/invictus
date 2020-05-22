@@ -14,6 +14,22 @@
     background-color: rgb(100, 100, 100);
     color: #fff;
 }
+.functional-button-five {
+    z-index: 11111;
+    position: fixed;
+    top: 375px !important;
+    right: 20px;
+}
+
+.functional-button-five button {
+    background-color: rgb(28, 122, 180);
+    color: #fff;
+}
+
+.functional-button-five button:hover {
+    background-color:  rgb(28, 122, 180);
+    color: #fff;
+}
 .blink{
     background-color: #e11022;
     text-align: center;
