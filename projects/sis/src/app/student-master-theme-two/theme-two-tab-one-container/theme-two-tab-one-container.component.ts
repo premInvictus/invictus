@@ -77,6 +77,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 	}
 
 	ngOnInit() {
+		localStorage.removeItem('tab_one_data');
 		this.settingsArray = this.context.configSetting;
 		const processType = this.processTypeService.getProcesstype();
 		if (processType === '1') {
@@ -195,6 +196,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 					if (this.medicalDetails) {
 						this.medicalDetails.patchMedicaldetails(this.studentdetails.medicalDetails);
 					}
+					localStorage.setItem('tab_one_data', JSON.stringify(this.studentdetails));
 					// this.enablecategoryothers();
 				} else if (result.status === 'error') {
 					this.resetForm();
