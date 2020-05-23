@@ -3,8 +3,10 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SisService, CommonAPIService, ProcesstypeService, SmartService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { saveAs } from 'file-saver';
 import { MatDialog } from '@angular/material';
 import { SearchViaNameComponent } from '../../sharedmodule/search-via-name/search-via-name.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
 	selector: 'app-student-details-theme-two',
@@ -67,12 +69,50 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 		console.log('yes');
 		this.getStudentDetailsByAdmno(data);
 	}
-
+	generalRemarkData: any[] = [];
+	managementRemarkData: any[] = [];
+	admissionRemarkData: any[] = [];
+	studentDet: any[] = [];
+	parentDet: any[] = [];
+	sibDet: any[] = [];
+	pdfArray: any[] = [];
+	previousSchoolDet: any[] = [];
+	payMents: any[] = [];
+	transportDet: any[] = [];
+	customQArr: any[] = [];
+	skillDetails: any[] = [];
+	classArray2: any[] = [];
+	sessionArray: any[] = [];
+	nationalityArray: any[] = [];
+	religionsArray: any[] = [];
+	motherTongueArray: any[] = [];
+	genderArray: any[] = [];
+	categoryArray: any[] = [];
+	countryArray: any[] = [];
+	stateArray: any[] = [];
+	qualificationArray: any[] = [];
+	annualIncomeArray: any[] = [];
+	occupationTypeArray: any[] = [];
+	activityArray: any[] = [];
+	activityClubArray: any[] = [];
+	levelOfIntrestArray: any[] = [];
+	eventLevelArray: any[] = [];
+	authorityArray: any[] = [];
+	busRouteArray: any[] = [];
+	busStopArray: any[] = [];
+	paymentmodes: any[] = [];
+	schoolInfo: any = {};
+	reasonArray: any[] = [];
+	session: any = {};
+	pdfUrl: any;
+	registrationNo: any;
+	cityName: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
 		private SmartService: SmartService,
 		private route: ActivatedRoute,
+		public dom: DomSanitizer,
 		private router: Router,
 		private commonAPIService: CommonAPIService,
 		public processtypeService: ProcesstypeService,
@@ -81,8 +121,31 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 	}
 	ngOnInit() {
 		// this.getConfigureSetting();
+		this.session = JSON.parse(localStorage.getItem('session'));
 		this.settingsArray = this.configSetting;
 		this.buildForm();
+		this.getSchool();
+		this.getClass2();
+		this.getConfigureSetting();
+		this.getSession();
+		this.getNationality();
+		this.getReligionDetails();
+		this.getMotherTongue();
+		this.getCountry();
+		this.getState();
+		this.getGender();
+		this.getCategory();
+		this.getQualifications();
+		this.getAnnualIncome();
+		this.getOccupationType();
+		this.getActivity();
+		this.getActivityClub();
+		this.getLevelOfInterest();
+		this.getEventLevel();
+		this.getAuthority();
+		this.getBusRoute();
+		this.getBusStop();
+		this.getReason();
 		this.getClass();
 		this.getHouses();
 		this.getBloodGroup();
@@ -140,6 +203,246 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 			this.classPlaceHolder = 'Class Applied For';
 		} else {
 			this.classPlaceHolder = 'Class';
+		}
+	}
+	getConfigureSetting() {
+		this.settingsArray = [];
+		this.sisService.getConfigureSetting({
+			cos_process_type: this.processtypeService.getProcesstype()
+		}).subscribe((res: any) => {
+			if (res.status === 'ok') {
+				this.savedSettingsArray = res.data;
+				for (const item of this.savedSettingsArray) {
+					this.settingsArray.push({
+						cos_tb_id: item.cos_tb_id,
+						cos_ff_id: item.cos_ff_id,
+						cos_status: item.cos_status
+					});
+				}
+			}
+		});
+	}
+	getSession() {
+		this.sisService.getSession().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.sessionArray[item.ses_id] = item.ses_name;
+					}
+				}
+			}
+		);
+	}
+	getNationality() {
+		this.sisService.getNationality().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.nationalityArray[item.nat_id] = item.nat_name;
+					}
+				}
+			}
+		);
+	}
+	getReligionDetails() {
+		this.sisService.getReligionDetails({}).subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.religionsArray[item.rel_id] = item.rel_name;
+					}
+				}
+			}
+		);
+	}
+	getMotherTongue() {
+		this.sisService.getMotherTongue({}).subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.motherTongueArray[item.mt_id] = item.mt_name;
+					}
+				}
+			}
+		);
+	}
+	getGender() {
+		this.sisService.getGender().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.genderArray[item.gen_alias] = item.gen_name;
+					}
+				}
+			}
+		);
+	}
+	getCategory() {
+		this.sisService.getCategory().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.categoryArray[item.cat_id] = item.cat_name;
+					}
+				}
+			}
+		);
+	}
+
+	getCountry() {
+		this.sisService.getCountry().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.countryArray[item.cou_id] = item.cou_name;
+					}
+				}
+			}
+		);
+	}
+	getState() {
+		this.sisService.getState().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.stateArray[item.sta_id] = item.sta_name;
+					}
+				}
+			}
+		);
+	}
+
+	getQualifications() {
+		this.sisService.getQualifications().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.qualificationArray[item.qlf_id] = item.qlf_name;
+				}
+			}
+		});
+	}
+	getAnnualIncome() {
+		this.sisService.getAnnualIncome().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.annualIncomeArray[item.ai_id] = item.ai_from_to;
+				}
+			}
+		});
+	}
+	getOccupationType() {
+		this.sisService.getOccupationType().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.occupationTypeArray[item.ocpt_id] = item.ocpt_name;
+				}
+			}
+		});
+	}
+	getActivity() {
+		this.sisService.getActivity().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.activityArray[item.act_id] = item.act_name;
+				}
+			}
+		});
+	}
+	getActivityClub() {
+		this.sisService.getActivityClub().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.activityClubArray[item.acl_id] = item.acl_name;
+				}
+			}
+		});
+	}
+
+	getLevelOfInterest() {
+		this.sisService.getLevelOfInterest().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.levelOfIntrestArray[item.loi_id] = item.loi_name;
+				}
+			}
+		});
+	}
+	getEventLevel() {
+		this.sisService.getEventLevel().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.eventLevelArray[item.el_id] = item.el_name;
+				}
+			}
+		});
+	}
+	getAuthority() {
+		this.sisService.getAuthority().subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.authorityArray[item.aut_id] = item.aut_name;
+				}
+			}
+		});
+	}
+	getBusRoute() {
+		this.busRouteArray = [];
+		this.sisService.getRoutes({}).subscribe(
+			(result: any) => {
+				if (result) {
+					this.busRouteArray = result.data;
+				}
+			}
+		);
+	}
+
+	getBusStop() {
+		this.busStopArray = [];
+		this.sisService.getStoppages({}).subscribe(
+			(result: any) => {
+				if (result) {
+					this.busStopArray = result.data;
+				}
+			}
+		);
+	}
+	getReason() {
+		this.sisService.getReason({ reason_type: '4' }).subscribe((result: any) => {
+			if (result) {
+				for (const item of result.data) {
+					this.reasonArray[item.reason_id] = item.reason_title;
+				}
+			}
+		});
+	}
+	getSchool() {
+		this.sisService.getSchool().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.schoolInfo = result.data[0];
+				}
+			}
+		);
+	}
+	getClass2() {
+		this.sisService.getClass({}).subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					for (const item of result.data) {
+						this.classArray2[item.class_id] = item.class_name;
+					}
+				}
+			}
+		);
+	}
+	checkIfFieldExist2(value) {
+		const findex = this.savedSettingsArray.findIndex(f => f.ff_field_name === value);
+		if (findex !== -1 && this.savedSettingsArray[findex]['cos_status'] === 'Y') {
+			return true;
+		} else if (findex !== -1 && this.savedSettingsArray[findex]['cos_status'] === 'N') {
+			return false;
+		} else {
+			return false;
 		}
 	}
 	ngOnChanges() {
@@ -433,7 +736,7 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 				this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 				if (this.studentdetailsform) {
 					this.studentdetailsform.reset();
-				}				
+				}
 				this.commonAPIService.reRenderForm.next(
 					{ reRenderForm: true, addMode: false, editMode: false, deleteMode: false, viewMode: true });
 			}
@@ -656,5 +959,99 @@ export class StudentDetailsThemeTwoComponent implements OnInit, OnChanges, OnDes
 				this.bloodGroupArray = result.data;
 			}
 		});
+	}
+	printForm() {
+		if (localStorage.getItem('tab_one_data')) {
+			const firstTabDetails = JSON.parse(localStorage.getItem('tab_one_data'));
+			this.studentDet.push({
+				au_ses_id: this.session.ses_id,
+				au_class_id: this.studentdetailsform.value.au_class_id,
+				au_full_name: this.studentdetailsform.value.au_full_name
+			});
+			this.studentDet.push(firstTabDetails.personalDetails[0]);
+			this.parentDet = firstTabDetails.parentDetails;
+			this.registrationNo = this.studentdetailsform.value.au_enrollment_id;
+			this.getCityNameByCityId(firstTabDetails.personalDetails[0].addressDetails[0].ea_city);
+			this.pdfArray.push(1);
+
+		}
+	}
+	checkProcessType() {
+		if (Number(this.processtypeService.getProcesstype()) === 1) {
+			return 'Enquiry';
+		}
+		if (Number(this.processtypeService.getProcesstype()) === 2) {
+			return 'Registration';
+		}
+		if (Number(this.processtypeService.getProcesstype()) === 3) {
+			return 'Provisional Admission';
+		}
+		if (Number(this.processtypeService.getProcesstype()) === 4) {
+			return 'Admission';
+		}
+	}
+	getRemarkData(login_id) {
+		this.generalRemarkData = [];
+		this.managementRemarkData = [];
+		this.admissionRemarkData = [];
+		if (login_id) {
+			this.sisService.getStudentRemarkDataThemeTwo({ au_login_id: login_id }).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					const remarkData = result.data;
+					this.generalRemarkData = remarkData[0]['remarksGeneral'];
+					this.managementRemarkData = remarkData[0]['remarksManagement'];
+					this.admissionRemarkData = remarkData[0]['remarkAdmission'];
+				}
+			});
+		}
+	}
+	getCityNameByCityId(city_id) {
+		this.sisService.getCityNameByCityId({ city_id: city_id }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				if (result.data) {
+					this.cityName = result.data[0].cit_name;
+					this.getTabsData();
+				}
+			} else {
+				this.cityName = '-';
+				this.getTabsData();
+			}
+		});
+	}
+	getTabsData() {
+		this.sisService.getAdditionalDetails({ au_login_id: this.studentdetailsform.value.au_login_id }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.previousSchoolDet = result.data[0].educationDetails;
+				this.skillDetails = result.data[0].awardsDetails;
+				this.sisService.getFeeAccount({ accd_login_id: this.studentdetailsform.value.au_login_id }).subscribe((res: any) => {
+					if (res && res.status === 'ok') {
+						this.transportDet.push(res.data[0]);
+						this.downPdf();
+						
+					} else {
+						this.downPdf();
+					}
+				});
+			} else {
+				this.downPdf();
+			}
+		});
+	}
+	downPdf() {
+		const studentJson: any = {};
+			setTimeout(() => {
+				const pdfHTML = document.getElementById('report_table').innerHTML;
+
+				studentJson['html'] = pdfHTML;
+				studentJson['id'] = this.studentdetailsform.value.au_enrollment_id;
+				this.sisService.downPdf(studentJson).subscribe((res: any) => {
+					if (res && res.status === 'ok') {
+						this.pdfUrl = res.downloadData;
+						const length = this.pdfUrl.split('/').length;
+						saveAs(this.pdfUrl, this.pdfUrl.split('/')[length - 1]);
+					}
+				});
+
+			}, 1000);
 	}
 }

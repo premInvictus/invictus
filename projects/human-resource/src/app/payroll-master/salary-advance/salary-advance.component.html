@@ -1,0 +1,102 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <div class="row">
+        <div class="col-6">
+          <div class="top-card-title">
+            <span class="font-size-24 font-medium">Advance Salary</span>
+          </div>
+        </div>
+        <div class="col-6 text-right">
+
+        </div>
+      </div>
+
+    </mat-card>
+  </div>
+</div>
+<div class="row row-margin">
+  <div class="col-12 remove-col-padding text-right">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-borderd table-stripped custom-table" id="report_table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th" rowspan="2">Employee Name</th>
+                <th class="custom-th" rowspan="2">Jan</th>
+                <th class="custom-th" rowspan="2">Feb</th>
+                <th class="custom-th" rowspan="2">Mar</th>
+                <th class="custom-th" rowspan="2">Apr</th>
+                <th class="custom-th" rowspan="2">May</th>
+                <th class="custom-th" rowspan="2">Jun</th>
+                <th class="custom-th" rowspan="2">Jul</th>
+                <th class="custom-th" rowspan="2">Aug</th>
+                <th class="custom-th" rowspan="2">Sep</th>
+                <th class="custom-th" rowspan="2">Oct</th>
+                <th class="custom-th" rowspan="2">Nov</th>
+                <th class="custom-th" rowspan="2">Dec</th>
+              </tr>
+
+            </thead>
+            <tbody class="text-center">
+              <tr class="custom-tr " *ngFor="let det of employeeArray;let i = index">
+                <td class="custom-td">
+                  {{det.emp_name}}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,1,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,2,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,3,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,4,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,5,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,6,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,7,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,8,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,9,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,10,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,11,currentYear) }}
+                </td>
+                <td class="custom-td">
+                  {{ getSalaryAdvance(det.emp_id,12,currentYear) }}
+                </td>
+              </tr>
+            </tbody>
+            <tbody class="no-border">
+              <tr class="text-center" *ngIf="employeeArray.length === 0">
+                <td colspan="9">
+                  <img
+                    src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+                  <br><br><br>
+                  <br><span class="font-size-20 font-light font-color-brown">
+                    No Data !!
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

@@ -13,6 +13,7 @@ import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { CreateInvoiceModalComponent } from '../../sharedmodule/create-invoice-modal/create-invoice-modal.component';
+import { e } from '@angular/core/src/render3';
 
 @Component({
 	selector: 'app-fee-ledger',
@@ -335,13 +336,20 @@ export class FeeLedgerComponent implements OnInit {
 
 	getPartialInvoiceLastBalance(dupInvoiceArr, invoice_no) {
 		var tempArr = [];
+		var pgStatus =0;
+		
 		for (let i=0; i<this.recordArray.length;i++) {
 			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
 				tempArr.push(this.recordArray[i]['flgr_balance']);
+				//console.log('this.recordArray[i]', this.recordArray[i]);
+				if(this.recordArray[i]['ftr_pay_id'] === "6") {
+					pgStatus = 1;
+				} 
 			}
+			
 		}
 		// console.log('tempArr--',tempArr.reverse());
-		return tempArr.reverse()[0];
+		return pgStatus ?  tempArr[0] : tempArr.reverse()[0];
 	}
 
 	getRowSpan(col, index) {
