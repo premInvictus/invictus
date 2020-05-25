@@ -431,7 +431,7 @@ export class SalaryComputationComponent implements OnInit {
 						};
 					} else {
 						let advance_salary = 0;
-						if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details.advance) {
+						if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details &&item.emp_salary_detail.emp_salary_structure.advance_details.advance) {
 							if (Number(this.session_id.ses_id) === Number(item.emp_salary_detail.emp_salary_structure.advance_details.session_id)) {
 								if (Number(this.searchForm.value.month_id) >= Number(item.emp_salary_detail.emp_salary_structure.advance_details.starting_month)) {
 									let remaining_advance = item.emp_salary_detail.emp_salary_structure.advance_details.advance;
@@ -887,7 +887,7 @@ export class SalaryComputationComponent implements OnInit {
 				}
 				this.commonAPIService.getFilterData(event).subscribe((result: any) => {
 
-					let element: any = {};
+					let element: any = {}; 
 					let recordArray = [];
 					this.employeeData = result;
 					this.SALARY_COMPUTE_ELEMENT = [];

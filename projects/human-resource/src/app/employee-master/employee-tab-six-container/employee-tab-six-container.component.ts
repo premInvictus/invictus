@@ -7,6 +7,9 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 // import { MedicalInformationEmployeeComponent } from '../medical-information-theme-two/medical-information-theme-two.component';
 import { DatePipe } from '@angular/common';
 import { FormControl } from '@angular/forms';
+// var JSZip = require('jszip');
+// var fs = require('fs');
+// var cheerio = require('cheerio');
 
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 @Component({
@@ -227,6 +230,7 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 		this.counter = 0;
 		this.currentFileChangeEvent = fileInput;
 		const files = fileInput.target.files;
+		//this.getread(files);
 		for (let i = 0; i < files.length; i++) {
 			this.IterateFileLoop(files[i], doc_req_id);
 		}
@@ -495,5 +499,20 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			return this.designationArray[findIndex].name;
 		}
 	}
+	// getread(DIRECTORY) {
+	// 	fs.readdir(DIRECTORY, function (err, files) {
+	// 		files.filter(function (file) { return file.substr(-5).toLowerCase() == ".docx"; }).forEach(function (file) {
+	// 			fs.readFile(DIRECTORY + file, function (err, content) {
+	// 				var zip = new JSZip();
+	// 				zip.load(content);
+	// 				var xml = zip.file('word/document.xml').asText();
+	// 				var $xml = cheerio.load(xml, { xmlMode: true })
+	// 				var breaks = $xml('w\\:br[w\\:type="page"]');
+	// 				console.log([file, breaks.length])
+	// 			});
+	// 		})
+	// 	});
+	// }
+
 
 }
