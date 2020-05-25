@@ -9,6 +9,7 @@ import { ErpCommonService } from 'src/app/_services';
 })
 export class SalaryAdvanceComponent implements OnInit {
   employeeArray: any[] = [];
+  tblEmployeeArray: any[] = [];
   schoolInfo: any[] = [];
   sessionArray: any[] = [];
   session_id: any;
@@ -31,7 +32,23 @@ export class SalaryAdvanceComponent implements OnInit {
     this.commonAPIService.getAllEmployee({ 'emp_status': 'live' }).subscribe((result: any) => {
       if (result && result.length > 0) {
         this.employeeArray = result;
-        console.log(this.employeeArray);
+        for (let item of this.employeeArray) {
+          let total_advance_deposite = 0;
+          if (item.emp_salary_detail.emp_salary_structure.advance_details && item.emp_salary_detail.emp_salary_structure.advance_details.advance) {
+            if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
+              for (const dety of item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
+                total_advance_deposite = total_advance_deposite + Number(dety.deposite_amount);
+              }
+            }
+            this.tblEmployeeArray.push({
+              emp_id:item.emp_id,
+              emp_name: item.emp_name,
+              advance: item.emp_salary_detail.emp_salary_structure.advance_details.advance,
+              remaining_advance: Number(item.emp_salary_detail.emp_salary_structure.advance_details.advance) - Number(total_advance_deposite)
+            });
+          }
+        }
+        console.log(this.tblEmployeeArray, 'tblEmployeeArray');
 
 
       }
@@ -65,6 +82,7 @@ export class SalaryAdvanceComponent implements OnInit {
           }
         });
   }
+
   getSalaryAdvance(emp_id, month, year) {
     const findex = this.employeeArray.findIndex(f => Number(f.emp_id) === Number(emp_id));
     if (findex !== -1) {
