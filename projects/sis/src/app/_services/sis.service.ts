@@ -132,6 +132,18 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/remarks/insertManagementRemarks', value);
 	}
+	getCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/getCustomRemarks', value);
+	}
+	insertCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/insertCustomRemarks', value);
+	}
+	updateCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/updateCustomRemarks', value);
+	}
 	insertEducationDetails(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/educationDetails/insertEducationDetails', value);
