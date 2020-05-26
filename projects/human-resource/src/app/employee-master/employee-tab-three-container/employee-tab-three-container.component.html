@@ -300,7 +300,7 @@
                                                                 This field is required
                                                             </mat-error>
                                                         </mat-form-field>
-                                                    </ng-container>
+                                                    </ng-container> 
                                                 </form>
                                             </ng-container>
                                             <!-- </ng-container>
@@ -341,6 +341,22 @@
                                     </ng-container>
                                 </div>
                                 <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>TD</mat-label>
+                                        <input type="text" formControlName="td" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
+                                            placeholder="TD">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>TDS</mat-label>
+                                        <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
+                                            placeholder="TDS">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Gratuity</mat-label>
                                         <input type="text" formControlName="gratuity" matInput [readonly]="viewOnly"
