@@ -120,6 +120,27 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 			this.students = [];
 		}
 	}
+	selectAll($event) {
+		if ($event.checked) {
+			this.selectedMembers = [];
+			this.selectedMembersEnrolls = [];
+			for (const item of this.students) {
+				this.selectedMembers.push(item.au_login_id);
+				this.selectedMembersEnrolls.push(item.au_admission_no);
+			}
+		} else {
+			this.selectedMembers = [];
+			this.selectedMembersEnrolls = [];
+		}
+	}
+	checkIfExist(no) {
+		const findex = this.selectedMembers.indexOf(no);
+		if (findex !== -1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	resetBulk() {
 		this.changeEnrolmentStatusForm2.reset();
 		this.selectedMembers = [];
