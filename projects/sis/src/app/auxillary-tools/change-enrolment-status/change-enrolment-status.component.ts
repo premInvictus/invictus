@@ -16,9 +16,11 @@ import { saveAs } from 'file-saver';
 export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	changeEnrolmentStatusForm: FormGroup;
+	changeEnrolmentStatusForm2: FormGroup;
 	changeEnrollmentNumberData: any[] = [];
 	reasonDataArray: any[] = [];
 	events: string[] = [];
+	students: any[] = [];
 	disableApiCall = false;
 	showCancelDate = false;
 	enrolmentPlaceholder = 'Enrolment';
@@ -46,6 +48,9 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	showLeft = false;
 	showActive = false;
 	change_status = '';
+	currIndex: any;
+	selectedMembers: any[] = [];
+	selectedMembersEnrolls: any[] = [];
 	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
 		private notif: CommonAPIService, private sisService: SisService,
 		private processType: ProcesstypeService,
@@ -60,6 +65,19 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	buildForm() {
 		this.changeEnrolmentStatusForm = this.fbuild.group({
+			login_id: '',
+			au_login_id: '',
+			au_full_name: '',
+			class: '',
+			section: '',
+			enrolment_type: '',
+			doa: '',
+			enrolment_to: '',
+			reason_id: '',
+			remarks: '',
+			cancel_date: ''
+		});
+		this.changeEnrolmentStatusForm2 = this.fbuild.group({
 			login_id: '',
 			au_login_id: '',
 			au_full_name: '',
@@ -90,6 +108,38 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 
 	}
 
+	changeTab($event) {
+
+		this.currIndex = $event.index
+		if (this.currIndex === 0) {
+			this.changeEnrolmentStatusForm.reset();
+		} else {
+			this.changeEnrolmentStatusForm2.reset();
+			this.selectedMembers = [];
+			this.selectedMembersEnrolls = [];
+			this.students = [];
+		}
+	}
+	resetBulk() {
+		this.changeEnrolmentStatusForm2.reset();
+		this.selectedMembers = [];
+		this.selectedMembersEnrolls = [];
+		this.students = [];
+	}
+	chooseSelectedMembers(no, no2) {
+		const findex = this.selectedMembers.indexOf(no);
+		const findex2 = this.selectedMembersEnrolls.indexOf(no2);
+		if (findex === -1) {
+			this.selectedMembers.push(no);
+		} else {
+			this.selectedMembers.splice(findex, 1);
+		}
+		if (findex2 === -1) {
+			this.selectedMembersEnrolls.push(no2);
+		} else {
+			this.selectedMembersEnrolls.splice(findex2, 1);
+		}
+	}
 
 	getStudentData(event) {
 		if (event) {
@@ -191,10 +241,27 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 	}
 
 	prepareEnrolmentToArray(event) {
+		if (this.currIndex === 1) {
+			this.sisService.getStudentsDataPerProcessType({
+				process_type_from: event.value
+			}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+					this.students = res.data;
+				} else {
+					this.selectedMembers = [];
+					this.selectedMembersEnrolls = [];
+					this.students = [];
+				}
+			});
+		}
 		const temp_arr = [];
 		this.enrollMentToArray = [];
 		for (let i = 0; i < this.enrollMentTypeArray.length; i++) {
-			if (this.changeEnrolmentStatusForm.value.enrolment_type === '1') {
+			if (this.changeEnrolmentStatusForm.value.enrolment_type === '1'
+				|| this.changeEnrolmentStatusForm2.value.enrolment_type === '1') {
 				this.enrolmentPlaceholder = 'Enquiry';
 				if (this.enrollMentTypeArray[i]['au_process_type'] === '2') {
 					temp_arr.push(this.enrollMentTypeArray[i]);
@@ -202,7 +269,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				this.showCancel = true;
 				this.showLeft = false;
 				this.showActive = false;
-			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '2') {
+			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '2' ||
+				this.changeEnrolmentStatusForm2.value.enrolment_type === '2') {
 				this.enrolmentPlaceholder = 'Regisrtation';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '2' &&
 					this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '5'
@@ -212,7 +280,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				this.showCancel = true;
 				this.showLeft = false;
 				this.showActive = false;
-			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '3') {
+			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '3'
+				|| this.changeEnrolmentStatusForm2.value.enrolment_type === '3') {
 				this.enrolmentPlaceholder = 'Provisional Admission';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '2'
 					&& this.enrollMentTypeArray[i]['au_process_type'] !== '3') {
@@ -221,7 +290,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				this.showCancel = false;
 				this.showLeft = true;
 				this.showActive = false;
-			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '4') {
+			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '4'
+				|| this.changeEnrolmentStatusForm2.value.enrolment_type === '4') {
 				this.enrolmentPlaceholder = 'Admission';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '2'
 					&& this.enrollMentTypeArray[i]['au_process_type'] !== '4') {
@@ -230,7 +300,8 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 				this.showCancel = false;
 				this.showLeft = true;
 				this.showActive = false;
-			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '5') {
+			} else if (this.changeEnrolmentStatusForm.value.enrolment_type === '5'
+				|| this.changeEnrolmentStatusForm2.value.enrolment_type === '5') {
 				this.enrolmentPlaceholder = 'Alumini';
 				if (this.enrollMentTypeArray[i]['au_process_type'] !== '1' && this.enrollMentTypeArray[i]['au_process_type'] !== '2'
 					&& this.enrollMentTypeArray[i]['au_process_type'] !== '5'
@@ -249,9 +320,10 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		// if (this.changeEnrolmentStatusForm.value.enrolment_type === '3' || this.changeEnrolmentStatusForm.value.enrolment_type === '4') {
 		// 	this.enrollMentToArray.push({au_process_type: '6', au_process_name: 'Dropout'});
 		// }
-		if (this.changeEnrolmentStatusForm.value.enrolment_type === '6') {
+		if (this.changeEnrolmentStatusForm.value.enrolment_type === '6'
+			|| this.changeEnrolmentStatusForm2.value.enrolment_type === '6') {
 			this.enrollMentToArray = [];
-			this.enrollMentToArray.push({au_process_type: '7', au_process_name: 'Re-admission'});
+			this.enrollMentToArray.push({ au_process_type: '7', au_process_name: 'Re-admission' });
 		}
 
 	}
@@ -291,7 +363,31 @@ export class ChangeEnrolmentStatusComponent implements OnInit {
 		};
 		localStorage.setItem('change_enrolment_status_last_state', JSON.stringify(last_state_json));
 	}
-
+	saveEnrolmentStatusBulk() {
+		if (this.selectedMembers.length > 0 && this.changeEnrolmentStatusForm2.valid) {
+			this.disableApiCall = true;
+			const inputJson = {
+				login_id: this.selectedMembers,
+				enrollment_no: this.selectedMembersEnrolls,
+				process_type_from: this.changeEnrolmentStatusForm2.value.enrolment_type,
+				process_type_to: this.changeEnrolmentStatusForm2.value.enrolment_to,
+				enrollment_reason: this.changeEnrolmentStatusForm2.value.reason_id,
+				enrollment_remark: this.changeEnrolmentStatusForm2.value.remarks,
+				enrollment_status: this.change_status,
+				cancel_date: this.changeEnrolmentStatusForm2.value.cancel_date ? this.changeEnrolmentStatusForm2.value.cancel_date : '',
+			};
+			this.sisService.changeEnrollBulk(inputJson).subscribe((res: any) => {
+				if (res && res.status == 'ok') {
+					this.selectedMembersEnrolls = [];
+					this.selectedMembers = [];
+					this.students = [];
+					this.disableApiCall = false;
+					this.notif.showSuccessErrorMessage("Status changed successfully", 'success');
+					this.changeEnrolmentStatusForm2.reset();
+				}
+			});
+		}
+	}
 	saveEnrolmentStatus() {
 		if (this.changeEnrolmentStatusForm.valid) {
 			this.disableApiCall = true;

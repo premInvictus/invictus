@@ -1,228 +1,407 @@
 <div>
-    <form [formGroup]="changeEnrolmentStatusForm" autocomplete="off">
-        <div class="row">
-            <div class="col-12 ">
-                <!-- <div class="row">
-                    <div class="col-4 text-center">
-                        <div class="line-divider"></div>
-                    </div>
-                    <div class="col-4 text-center">
-                        <h6 class="text-uppercase text-center"><b>Change Enrollment Status</b></h6>
-                    </div>
-                    <div class="col-4 text-center">
-                        <div class="line-divider"></div>
+    <div class="row">
+        <div class="col-12">
+            <mat-card class="card-top-title__container">
+                <div class="row">
+                    <div class="col-12 col-lg-6 col-sm-6">
+                        <h1 class="remove-bottom-margin font-size-24">Change Enrollment Status</h1>
                     </div>
                 </div>
-                <br> -->
-                <div class="row remove-top-margin">
-                    <div class="col-12 remove-col-padding">
-                        <div class="container-box__white">
-                            <div class="row">
-                                <!-- <div class="col-4 text-center">
-                                            <div class="line-divider"></div>
-                                        </div> -->
-                                <div class="col-12 text-center">
-                                    <h4 class="text-uppercase text-center"><b>Change Enrollment Status</b></h4>
-                                </div>
-                                <!-- <div class="col-4 text-center">
-                                            <div class="line-divider"></div>
-                                        </div> -->
+            </mat-card>
+        </div>
+    </div>
+    <div class="row margin-left-10">
+        <div class="col-12 remove-col-padding-left">
+            <mat-card>
+                <mat-tab-group (selectedTabChange)="changeTab($event)" class="padding-8">
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <div>
+                                <span>Individual</span>
                             </div>
-                            <div class="row">
-                                <div class="col-6 remove-col-padding-left">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Enrollment Type</mat-label>
-                                                <mat-select placeholder="Enrolment Type"
-                                                    formControlName="enrolment_type"
-                                                    (selectionChange)="prepareEnrolmentToArray($event)" required>
-                                                    <mat-option value="">Please Select</mat-option>
-                                                    <mat-option *ngFor="let item of enrollMentTypeArray"
-                                                        value="{{item?.au_process_type}}">{{item?.au_process_name}}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
+                        </ng-template>
+                        <div>
+                            <form [formGroup]="changeEnrolmentStatusForm" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-12 ">
+                                        <!-- <div class="row">
+                                            <div class="col-4 text-center">
+                                                <div class="line-divider"></div>
+                                            </div>
+                                            <div class="col-4 text-center">
+                                                <h6 class="text-uppercase text-center"><b>Change Enrollment Status</b></h6>
+                                            </div>
+                                            <div class="col-4 text-center">
+                                                <div class="line-divider"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="row">
-                                                <div class="col-9" style="display: none;">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>Login ID</mat-label>
-                                                        <input matInput placeholder="Login Id"
-                                                            formControlName="login_id">
-                                                    </mat-form-field>
-                                                </div>
-                                                <div class="col-9 remove-col-padding-left">
-                                                    <mat-form-field class="form-field" appearance="outline">
-                                                        <mat-label>{{enrolmentPlaceholder}} No</mat-label>
-                                                        <input matInput placeholder="{{enrolmentPlaceholder}} No."
-                                                            formControlName="au_login_id"
-                                                            (blur)="getStudentData($event)"
-                                                            (keydown.enter)="getStudentData($event)">
-                                                    </mat-form-field>
-                                                </div>
-                                                <div class="col-3 margin-top-10">
+                                        <br> -->
+                                        <div class="row remove-top-margin">
+                                            <div class="col-12 remove-col-padding">
+                                                <div class="container-box__white">
 
-                                                    <button [disabled]="!viewFlag" mat-raised-button class="btn-success"
-                                                        target="_blank" (click)="viewStudentProfile()">View
-                                                        Profile</button>
+                                                    <div class="row">
+                                                        <div class="col-6 remove-col-padding-left">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <mat-form-field class="form-field"
+                                                                        appearance="outline">
+                                                                        <mat-label>Enrollment Type</mat-label>
+                                                                        <mat-select placeholder="Enrolment Type"
+                                                                            formControlName="enrolment_type"
+                                                                            (selectionChange)="prepareEnrolmentToArray($event)"
+                                                                            required>
+                                                                            <mat-option value="">Please Select
+                                                                            </mat-option>
+                                                                            <mat-option
+                                                                                *ngFor="let item of enrollMentTypeArray"
+                                                                                value="{{item?.au_process_type}}">
+                                                                                {{item?.au_process_name}}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="row">
+                                                                        <div class="col-9" style="display: none;">
+                                                                            <mat-form-field class="form-field"
+                                                                                appearance="outline">
+                                                                                <mat-label>Login ID</mat-label>
+                                                                                <input matInput placeholder="Login Id"
+                                                                                    formControlName="login_id">
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-9 remove-col-padding-left">
+                                                                            <mat-form-field class="form-field"
+                                                                                appearance="outline">
+                                                                                <mat-label>{{enrolmentPlaceholder}} No
+                                                                                </mat-label>
+                                                                                <input matInput
+                                                                                    placeholder="{{enrolmentPlaceholder}} No."
+                                                                                    formControlName="au_login_id"
+                                                                                    (blur)="getStudentData($event)"
+                                                                                    (keydown.enter)="getStudentData($event)">
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-3 margin-top-10">
 
+                                                                            <button [disabled]="!viewFlag"
+                                                                                mat-raised-button class="btn-success"
+                                                                                target="_blank"
+                                                                                (click)="viewStudentProfile()">View
+                                                                                Profile</button>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <mat-form-field class="form-field"
+                                                                        appearance="outline">
+                                                                        <mat-label>Student Name</mat-label>
+                                                                        <input class="text-capitalize" matInput
+                                                                            placeholder="Student Name"
+                                                                            formControlName="au_full_name" readonly>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                        <div class="col-6 remove-col-padding-right">
+                                                            <div class="row"
+                                                                *ngIf="changeEnrolmentStatusForm.value.enrolment_type != 1 && changeEnrolmentStatusForm.value.enrolment_type != 2">
+                                                                <div class="col-12">
+                                                                    <mat-form-field class="form-field"
+                                                                        appearance="outline">
+                                                                        <mat-label>Section</mat-label>
+                                                                        <input matInput placeholder="Section"
+                                                                            formControlName="section" readonly>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <mat-form-field class="form-field"
+                                                                        appearance="outline">
+                                                                        <mat-label>Class</mat-label>
+                                                                        <input matInput placeholder="Class"
+                                                                            formControlName="class" readonly>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <mat-form-field class="form-field"
+                                                                        appearance="outline">
+                                                                        <mat-label>Date of Enrollment</mat-label>
+                                                                        <input matInput [matDatepicker]="picker"
+                                                                            placeholder="Date of {{enrolmentPlaceholder}}"
+                                                                            formControlName="doa"
+                                                                            (dateInput)="enrolStatusToEvent('input', $event)"
+                                                                            readonly>
+                                                                        <mat-datepicker-toggle matSuffix [for]="picker">
+                                                                        </mat-datepicker-toggle>
+                                                                        <mat-datepicker #picker></mat-datepicker>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <!-- <br>
+                                                            <div class="row">
+                                                                <div class="col-12 text-center">
+                                                                    <a [disabled]="!viewFlag" mat-raised-button class="btn-success" target="_blank"
+                                                                        (click)="viewStudentProfile()">View Profile</a>
+                                                                </div>
+                                                            </div>
+                                                            <br> -->
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Student Name</mat-label>
-                                                <input class="text-capitalize" matInput placeholder="Student Name"
-                                                    formControlName="au_full_name" readonly>
-                                            </mat-form-field>
+                                        <div class="margin-bottom-10"></div>
+                                        <div class="row">
+                                            <div class="col-12 remove-col-padding">
+                                                <div class="container-box__white card-height-470-lp">
+                                                    <div class="row">
+                                                        <!-- <div class="col-4 text-center">
+                                                            <div class="line-divider"></div>
+                                                        </div> -->
+                                                        <div class="col-12 text-center">
+                                                            <h4 class="text-uppercase text-center"><b>Change
+                                                                    {{enrolmentPlaceholder}} Status
+                                                                    To</b></h4>
+                                                        </div>
+                                                        <!-- <div class="col-4 text-center">
+                                                            <div class="line-divider"></div>
+                                                        </div> -->
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Enrollment To</mat-label>
+                                                                <mat-select placeholder="{{enrolmentPlaceholder}} To"
+                                                                    formControlName="enrolment_to"
+                                                                    (selectionChange)="setProcess($event)" required>
+                                                                    <mat-option value="">Please Select</mat-option>
+                                                                    <mat-option *ngFor="let item of enrollMentToArray"
+                                                                        value="{{item?.au_process_type}}">
+                                                                        {{item?.au_process_name}}</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Reason For Change</mat-label>
+                                                                <mat-select placeholder="Reason for change"
+                                                                    formControlName="reason_id" required>
+                                                                    <mat-option value="">Please Select</mat-option>
+                                                                    <mat-option value="Select"
+                                                                        *ngFor="let item of reasonDataArray"
+                                                                        value="{{item?.reason_id}}">
+                                                                        {{item?.reason_title}}</mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Remarks</mat-label>
+                                                                <input matInput placeholder="Remarks"
+                                                                    formControlName="remarks" required>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 margin-top-10" style="display: none;">
+                                                            <mat-checkbox value="cancel" *ngIf="showCancel"
+                                                                (change)="checkForCancelDate($event, 'cancel')">
+                                                                Cancel </mat-checkbox>
+                                                            <mat-checkbox value="left" class="inline-form-radio-spacing"
+                                                                *ngIf="showLeft"
+                                                                (change)="checkForCancelDate($event, 'left')"> Left
+                                                            </mat-checkbox>
+                                                            <mat-checkbox value="active"
+                                                                class="inline-form-radio-spacing" *ngIf="showActive"
+                                                                (change)="checkForCancelDate($event,'active')"> Active
+                                                            </mat-checkbox>
+                                                        </div>
+                                                        <div class="col-6" *ngIf="showCancelDate"
+                                                            style="display: none;">
+                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Process Date</mat-label>
+                                                                <input matInput [matDatepicker]="picker4"
+                                                                    placeholder="Process Date"
+                                                                    formControlName="cancel_date"
+                                                                    (dateInput)="enrolCancelToEvent('input', $event)">
+                                                                <mat-datepicker-toggle matSuffix [for]="picker4">
+                                                                </mat-datepicker-toggle>
+                                                                <mat-datepicker #picker4></mat-datepicker>
+                                                            </mat-form-field>
+                                                        </div>
+                                                        <!-- <div class="col-6" *ngIf="">
+                                                        <mat-form-field class="form-field">
+                                                            <input matInput [matDatepicker]="picker4" placeholder="Cancel Date">
+                                                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                                                            <mat-datepicker #picker4></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div> -->
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                    <div class="text-center">
+                                                        <button mat-raised-button class="btn-success"
+                                                            [disabled]="disableApiCall"
+                                                            (click)="saveEnrolmentStatus()">Save</button>
+                                                        <button class="btn-danger btn-spacer" mat-raised-button
+                                                            (click)="reset()">Reset</button>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-
-
                                 </div>
-                                <div class="col-6 remove-col-padding-right">
-                                    <div class="row"
-                                        *ngIf="changeEnrolmentStatusForm.value.enrolment_type != 1 && changeEnrolmentStatusForm.value.enrolment_type != 2">
-                                        <div class="col-12">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Section</mat-label>
-                                                <input matInput placeholder="Section" formControlName="section"
-                                                    readonly>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Class</mat-label>
-                                                <input matInput placeholder="Class" formControlName="class" readonly>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Date of Enrollment</mat-label>
-                                                <input matInput [matDatepicker]="picker"
-                                                    placeholder="Date of {{enrolmentPlaceholder}}" formControlName="doa"
-                                                    (dateInput)="enrolStatusToEvent('input', $event)" readonly>
-                                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                                <mat-datepicker #picker></mat-datepicker>
-                                            </mat-form-field>
-                                        </div>
-                                    </div>
-                                    <!-- <br>
-                                    <div class="row">
-                                        <div class="col-12 text-center">
-                                            <a [disabled]="!viewFlag" mat-raised-button class="btn-success" target="_blank"
-                                                (click)="viewStudentProfile()">View Profile</a>
-                                        </div>
-                                    </div>
-                                    <br> -->
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                    </div>
-                </div>
-                <div class="margin-bottom-10"></div>
-                <div class="row">
-                    <div class="col-12 remove-col-padding">
-                        <div class="container-box__white card-height-470-lp">
-                            <div class="row">
-                                <!-- <div class="col-4 text-center">
-                                    <div class="line-divider"></div>
-                                </div> -->
-                                <div class="col-12 text-center">
-                                    <h4 class="text-uppercase text-center"><b>Change {{enrolmentPlaceholder}} Status
-                                            To</b></h4>
-                                </div>
-                                <!-- <div class="col-4 text-center">
-                                    <div class="line-divider"></div>
-                                </div> -->
+                    </mat-tab>
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <div>
+                                <span>Bulk</span>
                             </div>
-                            <br>
-                            <div class="row">
-                                <div class="col-6">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Enrollment To</mat-label>
-                                        <mat-select placeholder="{{enrolmentPlaceholder}} To"
-                                            formControlName="enrolment_to" (selectionChange)="setProcess($event)"
-                                            required>
-                                            <mat-option value="">Please Select</mat-option>
-                                            <mat-option *ngFor="let item of enrollMentToArray"
-                                                value="{{item?.au_process_type}}">{{item?.au_process_name}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                        </ng-template>
+                        <div>
+                            <form [formGroup]="changeEnrolmentStatusForm2" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-12 ">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Enrollment Type</mat-label>
+                                                    <mat-select placeholder="Enrolment Type"
+                                                        formControlName="enrolment_type"
+                                                        (selectionChange)="prepareEnrolmentToArray($event)" required>
+                                                        <mat-option value="">Please Select
+                                                        </mat-option>
+                                                        <mat-option *ngFor="let item of enrollMentTypeArray"
+                                                            value="{{item?.au_process_type}}">
+                                                            {{item?.au_process_name}}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                                <div class="row" *ngIf="students.length > 0">
+                                                    <div class="col-12">
+                                                        <h4><b>Students</b></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row" *ngIf="students.length == 0 && 
+                                                changeEnrolmentStatusForm2.value.enrolment_type">
+                                                    <div class="col-12">
+                                                        <h4><b>No Records Found</b></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="over-div" *ngIf="students.length > 0">
+                                                    <div class="row">
+                                                        <div class="col-4" *ngFor="let it of students">
+                                                            <mat-checkbox [value]="it.au_login_id"
+                                                                (change)="chooseSelectedMembers(it.au_login_id, 
+                                                                it.au_admission_no)">
+                                                            </mat-checkbox>
+                                                            {{it.au_full_name}} <b>({{it.au_admission_no}}) </b>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-6" *ngIf="selectedMembers.length > 0">
+                                                <div class="row cus-r">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enrollment To</mat-label>
+                                                            <mat-select placeholder="{{enrolmentPlaceholder}} To"
+                                                                formControlName="enrolment_to"
+                                                                (selectionChange)="setProcess($event)" required>
+                                                                <mat-option value="">Please Select</mat-option>
+                                                                <mat-option *ngFor="let item of enrollMentToArray"
+                                                                    value="{{item?.au_process_type}}">
+                                                                    {{item?.au_process_name}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Reason For Change</mat-label>
+                                                            <mat-select placeholder="Reason for change"
+                                                                formControlName="reason_id" required>
+                                                                <mat-option value="">Please Select</mat-option>
+                                                                <mat-option value="Select"
+                                                                    *ngFor="let item of reasonDataArray"
+                                                                    value="{{item?.reason_id}}">
+                                                                    {{item?.reason_title}}</mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Remarks</mat-label>
+                                                            <input matInput placeholder="Remarks"
+                                                                formControlName="remarks" required>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-6 margin-top-10" style="display: none;">
+                                                        <mat-checkbox value="cancel" *ngIf="showCancel"
+                                                            (change)="checkForCancelDate($event, 'cancel')">
+                                                            Cancel </mat-checkbox>
+                                                        <mat-checkbox value="left" class="inline-form-radio-spacing"
+                                                            *ngIf="showLeft"
+                                                            (change)="checkForCancelDate($event, 'left')"> Left
+                                                        </mat-checkbox>
+                                                        <mat-checkbox value="active" class="inline-form-radio-spacing"
+                                                            *ngIf="showActive"
+                                                            (change)="checkForCancelDate($event,'active')"> Active
+                                                        </mat-checkbox>
+                                                    </div>
+                                                    <div class="col-6" *ngIf="showCancelDate" style="display: none;">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Process Date</mat-label>
+                                                            <input matInput [matDatepicker]="picker4"
+                                                                placeholder="Process Date" formControlName="cancel_date"
+                                                                (dateInput)="enrolCancelToEvent('input', $event)">
+                                                            <mat-datepicker-toggle matSuffix [for]="picker4">
+                                                            </mat-datepicker-toggle>
+                                                            <mat-datepicker #picker4></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <br>
+                                                <br>
+                                                <div class="text-center">
+                                                    <button mat-raised-button class="btn-success"
+                                                        [disabled]="disableApiCall"
+                                                        (click)="saveEnrolmentStatusBulk()">Save</button>
+                                                    <button class="btn-danger btn-spacer" mat-raised-button
+                                                        (click)="resetBulk()">Reset</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-6">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Reason For Change</mat-label>
-                                        <mat-select placeholder="Reason for change" formControlName="reason_id"
-                                            required>
-                                            <mat-option value="">Please Select</mat-option>
-                                            <mat-option value="Select" *ngFor="let item of reasonDataArray"
-                                                value="{{item?.reason_id}}">{{item?.reason_title}}</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Remarks</mat-label>
-                                        <input matInput placeholder="Remarks" formControlName="remarks" required>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 margin-top-10" style="display: none;">
-                                    <mat-checkbox value="cancel" *ngIf="showCancel"
-                                        (change)="checkForCancelDate($event, 'cancel')">
-                                        Cancel </mat-checkbox>
-                                    <mat-checkbox value="left" class="inline-form-radio-spacing" *ngIf="showLeft"
-                                        (change)="checkForCancelDate($event, 'left')"> Left </mat-checkbox>
-                                    <mat-checkbox value="active" class="inline-form-radio-spacing" *ngIf="showActive"
-                                        (change)="checkForCancelDate($event,'active')"> Active </mat-checkbox>
-                                </div>
-                                <div class="col-6" *ngIf="showCancelDate" style="display: none;">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Process Date</mat-label>
-                                        <input matInput [matDatepicker]="picker4" placeholder="Process Date"
-                                            formControlName="cancel_date"
-                                            (dateInput)="enrolCancelToEvent('input', $event)">
-                                        <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker4></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
-                                <!-- <div class="col-6" *ngIf="">
-                                <mat-form-field class="form-field">
-                                    <input matInput [matDatepicker]="picker4" placeholder="Cancel Date">
-                                    <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
-                                    <mat-datepicker #picker4></mat-datepicker>
-                                </mat-form-field>
-                            </div> -->
-                            </div>
-                            <br>
-                            <br>
-                            <div class="text-center">
-                                <button mat-raised-button class="btn-success"
-                                [disabled]="disableApiCall"
-                                    (click)="saveEnrolmentStatus()">Save</button>
-                                <button class="btn-danger btn-spacer" mat-raised-button (click)="reset()">Reset</button>
-                            </div>
-                            <br>
-                            <br>
+                            </form>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-card>
         </div>
-    </form>
+    </div>
 </div>

@@ -663,7 +663,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/changeEnrollmentStatus', value);
 	}
-
+	getStudentsDataPerProcessType(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/getStudentsDataPerProcessType', value);
+	}
+	changeEnrollBulk(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/changeEnrollBulk', value);
+	}
 	maxEnrollmentNo(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/maxEnrollmentNo', value);
