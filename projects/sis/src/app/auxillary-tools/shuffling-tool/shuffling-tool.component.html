@@ -14,7 +14,21 @@
 
                         <form [formGroup]="shufflesortform" novalidate>
                             <div class="row">
-                                <div class="col-4">
+                                <div class="col-3">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Enrollment Type</mat-label>
+                                        <mat-select placeholder="Enrollment type" formControlName="enrollment_type"
+                                          [errorStateMatcher]="confirmValidParentMatcher" required>
+                                          <mat-option value="">Please Select</mat-option>
+                                          <mat-option *ngFor="let item of enrollMentTypeArray" [value]="item.au_process_type">
+                                            {{item.au_process_name}}</mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                          Please select enrollment type
+                                        </mat-error>
+                                      </mat-form-field>
+                                </div>
+                                <div class="col-3">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Current Class</mat-label>
                                         <mat-select formControlName="class_id" placeholder="Current Class" (ngModelChange)="getSectionsByClass()" required>
@@ -25,7 +39,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Sort Based On</mat-label>
                                         <mat-select formControlName="order_by" placeholder="Sort Based On" required>
@@ -34,7 +48,7 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-3">
                                     <button mat-raised-button class="btn-success btn-margin-top" 
                                     [disabled]="disableApiCall"
                                     (click)="getMasterStudentDetail()">Generate</button>
@@ -65,7 +79,7 @@
                                         </ng-container>
                                         <!-- Admission Column -->
                                         <ng-container matColumnDef="no">
-                                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </th>
+                                            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{shufflesortform.value.enrollment_type === '3' ? 'Prov Admno.' : 'Admno'}} </th>
                                             <td mat-cell *matCellDef="let element"> {{element.no}} </td>
                                         </ng-container>
 
@@ -158,7 +172,7 @@
 
                                                 <!-- Admission Column -->
                                                 <ng-container matColumnDef="no">
-                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Adm. No. </th>
+                                                    <th mat-header-cell *matHeaderCellDef mat-sort-header> {{shufflesortform.value.enrollment_type === '3' ? 'Prov Admno.' : 'Admno'}} </th>
                                                     <td mat-cell *matCellDef="let element"> {{element.no}} </td>
                                                 </ng-container>
 
