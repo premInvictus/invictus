@@ -896,7 +896,7 @@ export class CollectionReportComponent implements OnInit {
 						width: 15,
 						sortable: true,
 						filterable: true,
-						
+
 					},
 					{
 						id: 'transaction_id',
@@ -945,17 +945,17 @@ export class CollectionReportComponent implements OnInit {
 							obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 								Number(repoArray[Number(index)]['rpt_amount']) : 0;
 							obj['payment_mode'] = repoArray[Number(index)]['pay_name'] ?
-								Number(repoArray[Number(index)]['pay_name']) : 0;
+								new CapitalizePipe().transform(repoArray[Number(index)]['pay_name']) : '-';
 							obj['bank_name'] = repoArray[Number(index)]['tb_name'] ?
-								Number(repoArray[Number(index)]['tb_name']) : 0;
-							if(repoArray[Number(index)]['ftr_transaction_id']){
+								new CapitalizePipe().transform(repoArray[Number(index)]['tb_name']) : '-';
+							if (repoArray[Number(index)]['ftr_transaction_id']) {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] ?
-								Number(repoArray[Number(index)]['ftr_transaction_id']) : 0;
-							} else{
+									Number(repoArray[Number(index)]['ftr_transaction_id']) : 0;
+							} else {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_cheque_no'] ?
-								Number(repoArray[Number(index)]['ftr_cheque_no']) : 0;
+									Number(repoArray[Number(index)]['ftr_cheque_no']) : 0;
 							}
-							
+
 							this.dataset.push(obj);
 							index++;
 						}
