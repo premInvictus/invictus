@@ -19,6 +19,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	addOnly = false;
 	viewOnly = true;
 	editOnly = false;
+	datalist: any[] = [];
 	disabledApiCall = false;
 	educationDetails: any[] = [];
 	educationDetailsNew: any[] = [];
@@ -74,7 +75,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 			if (data) {
 				this.login_id = data.au_login_id;
 				this.editableStatus = data.editable_status;
-			}			
+			}
 			if (this.currentTab === 1) {
 				this.getAdditionalDetails(data.au_login_id);
 				this.getFeeAccount(data.au_login_id);
@@ -257,7 +258,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				const datepipe = new DatePipe('en-US');
 				let i = 0;
 				for (const item of this.edu.previousEducations) {
-					if (item.eaw_id === '') {
+					if (item.eed_id === '') {
 						const sibReqArray: any[] = [];
 						const fieldArray: any[] = [];
 						const oldFieldValue: any[] = [];
@@ -265,9 +266,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 						Object.keys(this.edu.previousEducations[i]).forEach(key => {
 							if (key !== 'eed_id' && key !== 'eed_login_id'
 								&& key !== 'eed_status') {
-								fieldArray.push(key);
-								oldFieldValue.push('');
-								newFieldValue.push(this.edu.previousEducations[i][key]);
+								if (this.edu.previousEducations[i][key]) {
+									if (key === 'eed_joining_from' || key === 'eed_joining_to') {
+										this.edu.previousEducations[i][key] = this.dateConversion(this.edu.previousEducations[i][key], 'yyyy-MM-dd');
+									}
+									fieldArray.push(key);
+									oldFieldValue.push('');
+									newFieldValue.push(this.edu.previousEducations[i][key]);
+								}
 							}
 						});
 						sibReqArray.push({
@@ -277,7 +283,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 							rff_new_field_value: newFieldValue,
 							rff_old_field_value: oldFieldValue,
 						});
-						this.finalSibReqArray.push({ item: sibReqArray });
+						if (sibReqArray.length > 0) {
+							this.finalSibReqArray.push({ item: sibReqArray });
+						}
 					} else {
 						const sibReqArray: any[] = [];
 						Object.keys(this.edu.previousEducations[i]).forEach((key: any) => {
@@ -289,8 +297,8 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 								}
 								if (this.edu.previousEducations[i][key] !== this.educationDetailsNew[i][key]) {
 									sibReqArray.push({
-										rff_where_id: 'eaw_id',
-										rff_where_value: this.edu.previousEducations[i]['eaw_id'],
+										rff_where_id: 'eed_id',
+										rff_where_value: this.edu.previousEducations[i]['eed_id'],
 										rff_field_name: key,
 										rff_new_field_value: this.edu.previousEducations[i][key],
 										rff_old_field_value: this.educationDetailsNew[i][key],
@@ -298,7 +306,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 								}
 							}
 						});
-						this.finalSibReqArray.push({ item: sibReqArray });
+						if (sibReqArray.length > 0) {
+							this.finalSibReqArray.push({ item: sibReqArray });
+						}
 					}
 					i++;
 				}
@@ -311,13 +321,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				if (this.finalSibReqArray.length > 0 && this.finalArray.length > 0) {
 					param.req_login_id = this.login_id;
 					param.req_process_type = this.context.processType;
-					param.req_tab_id = '5';
+					param.req_tab_id = '6';
 					param.req_priority = '';
 					param.req_remarks = '';
 					param.req_reason = '';
 					param.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
 					param.req_param = [];
 					this.params.push(param);
+					this.datalist.push(this.finalArray);
 				} else {
 					param = {};
 				}
@@ -344,7 +355,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 							rff_new_field_value: newFieldValue,
 							rff_old_field_value: oldFieldValue,
 						});
-						this.finalSibReqArray2.push({ item: sibReqArray });
+						if (sibReqArray.length > 0) {
+							this.finalSibReqArray2.push({ item: sibReqArray });
+						}
 					} else {
 						const sibReqArray: any[] = [];
 						Object.keys(this.skill.finalAwardArray[n]).forEach((key: any) => {
@@ -361,7 +374,9 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 								}
 							}
 						});
-						this.finalSibReqArray2.push({ item: sibReqArray });
+						if (sibReqArray.length > 0) {
+							this.finalSibReqArray2.push({ item: sibReqArray });
+						}
 					}
 					n++;
 				}
@@ -373,13 +388,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				if (this.finalSibReqArray2.length > 0) {
 					param2.req_login_id = this.login_id;
 					param2.req_process_type = this.context.processType;
-					param2.req_tab_id = '6';
+					param2.req_tab_id = '7';
 					param2.req_priority = '';
 					param2.req_remarks = '';
 					param2.req_reason = '';
 					param2.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
 					param2.req_param = [];
 					this.params.push(param2);
+					this.datalist.push(this.finalArray);
 				} else {
 					param2 = {};
 				}
@@ -418,13 +434,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 						}
 					}
 				});
+
 				this.finalSibReqArray3.push({ item: sibReqArray3 });
 				for (const sib of this.finalSibReqArray3) {
 					for (const titem of sib.item) {
 						this.finalArray.push(titem);
 					}
 				}
-				if (this.finalSibReqArray3.length > 0) {
+				if (this.finalSibReqArray3.length > 0 && sibReqArray3.length > 0) {
 					param3.req_login_id = this.login_id;
 					param3.req_process_type = this.context.processType;
 					param3.req_tab_id = '4';
@@ -434,11 +451,13 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 					param3.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
 					param3.req_param = [];
 					this.params.push(param3);
+					this.datalist.push(this.finalArray);
 				} else {
 					param3 = {};
 				}
 			}
 		});
+		this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 	}
 	dateConversion(value, format) {
 		const datePipe = new DatePipe('en-in');

@@ -116,10 +116,10 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		if (this.context.studentdetails.studentdetailsform.valid &&
 			this.childDetails.baseform.valid &&
 			this.childDetails.paddressform.valid && this.parentDetails.finalFormParentStatus === true) {
-				this.disabledApiCall = true;
+			this.disabledApiCall = true;
 			if (this.childDetails.raddressform.value.ea_same_residential_address === false ||
 				(this.childDetails.raddressform.value.ea_same_residential_address === true && this.childDetails.raddressform.valid)) {
-					this.disabledApiCall = true;
+				this.disabledApiCall = true;
 				this.taboneform = this.context.studentdetails.studentdetailsform.value;
 				this.childDetails.baseform.value.upd_doj =
 					this.commonAPIService.dateConvertion(this.childDetails.baseform.value.upd_doj, 'yyyy-MM-dd');
@@ -432,17 +432,19 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 		const params: any[] = [];
 		const datalist: any[] = [];
 		if (this.context.studentdetails.studentdetailsform.dirty) {
-			Object.keys(this.context.studentdetails.studentdetailsform.controls).forEach((keys) => {
+			Object.keys(this.context.studentdetails.studentdetailsform.controls).forEach((keys: any) => {
 				const formControl = <FormControl>this.context.studentdetails.studentdetailsform.controls[keys];
 				if (formControl.dirty && formControl.touched) {
-					this.checkChangedFieldsArray.push(
-						{
-							rff_where_id: 'au_login_id',
-							rff_where_value: this.context.studentdetails.studentdetailsform.value.au_login_id,
-							rff_field_name: keys,
-							rff_new_field_value: formControl.value,
-							rff_old_field_value: this.studentdetails[keys]
-						});
+					if (keys !== 'au_enrollment_id' || keys !== 'au_login_id') {
+						this.checkChangedFieldsArray.push(
+							{
+								rff_where_id: 'au_login_id',
+								rff_where_value: this.context.studentdetails.studentdetailsform.value.au_login_id,
+								rff_field_name: keys,
+								rff_new_field_value: formControl.value,
+								rff_old_field_value: this.studentdetails[keys]
+							});
+					}
 				}
 			});
 			if (this.checkChangedFieldsArray.length > 0) {
@@ -596,7 +598,13 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 							key !== 'esd_status') {
 							fieldArray.push(key);
 							oldFieldValue.push('');
-							newFieldValue.push(this.childDetails.siblingArray[i][key]);
+							if (key === 'esd_school_name') {
+								let str: any = this.childDetails.siblingArray[i][key];
+								str = str.replace(/'/g, '');
+								newFieldValue.push(str);
+							} else {
+								newFieldValue.push(this.childDetails.siblingArray[i][key]);
+							}
 						}
 					}
 					this.checkChangedFieldsArray.push({
@@ -612,7 +620,7 @@ export class ThemeTwoTabOneContainerComponent extends DynamicComponent implement
 			if (this.checkChangedFieldsArray.length > 0) {
 				param.req_login_id = this.context.studentdetails.studentdetailsform.value.au_login_id;
 				param.req_process_type = this.context.processType;
-				param.req_tab_id = '';
+				param.req_tab_id = '3';
 				param.req_priority = '';
 				param.req_remarks = '';
 				param.req_reason = '';
