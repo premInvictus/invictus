@@ -4,7 +4,7 @@ import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
 import { SisService, CommonAPIService,SmartService } from '../../_services/index';
 import { DynamicReport } from './dynamic-report.model';
 import { MatTableDataSource, MatDatepickerInputEvent } from '@angular/material';
-
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-dynamic-report',
 	templateUrl: './dynamic-report.component.html',
@@ -506,7 +506,8 @@ export class DynamicReportComponent implements OnInit {
 			this.sisService.generateReport(this.generateReportForm.value).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.disableApiCall = false;
-					window.open(result.data, 'Report');
+					const length = result.data.split('/').length;
+					saveAs(result.data, result.data.split('/')[length - 1]);
 					this.dropdownArray = [];
 				} else {
 					this.disableApiCall = false;
