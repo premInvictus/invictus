@@ -1,14 +1,26 @@
 <!--Style 1-->
-<div class="row">
-    <div class="col-lg-12">
-        <div style="float: right">
-            <button mat-icon-button class="close-button" (click)="closeDialog()">
-                <img src="/assets/images/clear-button.svg"></button>
+<div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+        <div class="col-12 remove-col-padding">
+            <div class="modal-title-box">
+                
+                <span class="font-size-20 font-white font-regular">Id Card</span>
+                <span class="float-right margin-top-5"><i (click)="closeDialog()"
+                        class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+            </div>
         </div>
-        <h4 class="text-center text-uppercase">{{studentDetails.au_full_name}}</h4>
-        <div style="position: relative;left: -120px">
-            <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardConfig"></app-idcard-style2>
-        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<div style="position: relative; width: 100%;">
+   
+    <div style="position: absolute;
+    left: 4%;
+    top: 40px;">
+        <app-idcard-style2 [studentDetails]="studentDetails" [idCardConfig]="idCardConfig"></app-idcard-style2>
     </div>
 </div>
 <!--End-->

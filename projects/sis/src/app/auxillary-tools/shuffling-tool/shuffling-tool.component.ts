@@ -19,6 +19,13 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	allselected = false;
 	STUDENT_ELEMENT_DATA: Student[];
 	STUDENT_ELEMENT_DATA_ONE: any;
+	enrollMentTypeArray: any[] = [
+		{
+			au_process_type: '3', au_process_name: 'Provisional Admission'
+		},
+		{
+			au_process_type: '4', au_process_name: 'Admission'
+		}];
 	SHUFFLE_ELEMENT_DATA: Student[];
 	SHUFFLE_ELEMENT_DATA_ONE: any;
 	sorttableflag = false;
@@ -70,7 +77,8 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	buildForm() {
 		this.shufflesortform = this.fbuild.group({
 			class_id: '',
-			order_by: ''
+			order_by: '',
+			enrollment_type: ''
 		});
 		this.shufflebasedform = this.fbuild.group({
 			based_on: ''
@@ -120,7 +128,6 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 			this.disableApiCall = true;
 			this.resetTableAndSelection();
 			this.shufflesortform.value.pmap_status = '1';
-			this.shufflesortform.value.enrollment_type = '4';
 			this.sisService.getMasterStudentDetail(this.shufflesortform.value).subscribe((result: any) => {
 				if (result.status === 'ok') {
 					this.sorttableflag = true;

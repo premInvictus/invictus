@@ -397,7 +397,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 				enrollment_type: this.individualPrintForm.value.enrollment_type
 			},
 			'height': '50vh',
-			'width': '50vh'
+			'width': '60vh'
 		});
 	}
 	printIdCard(adm_id) {

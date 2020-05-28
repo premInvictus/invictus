@@ -209,7 +209,24 @@ export class ExternalEnquirySetupComponent implements OnInit {
 		});
 	}
 	getConfigureSetting() {
+		this.disabledArray = [
+			{ tab_id: 12, value: false },
+			{ tab_id: 13, value: false },
+			{ tab_id: 14, value: false },
+			{ tab_id: 15, value: false },
+			{ tab_id: 16, value: true },
+			{ tab_id: 17, value: false }
+		];
+		this.expandedArray = [
+			{ tab_id: 12, value: false },
+			{ tab_id: 13, value: false },
+			{ tab_id: 14, value: false },
+			{ tab_id: 15, value: false },
+			{ tab_id: 16, value: false },
+			{ tab_id: 17, value: false }
+		];
 		this.settingsArray = [];
+		this.savedSettingsArray = [];
 		this.sisService.getConfigureSetting({
 			cos_process_type: '6'
 		}).subscribe((result: any) => {
@@ -222,19 +239,24 @@ export class ExternalEnquirySetupComponent implements OnInit {
 						cos_status: item.cos_status
 					});
 				}
-				const findex = this.settingsArray.findIndex(f => f.cos_tb_id === '16' &&
-					f.cos_ff_id === '0');
-				if (findex !== -1) {
-					this.disabledArray[4].value = true;
-					this.expandedArray[4].value = false;
-					this.checkTabStatus = false;
-				} else {
-					this.disabledArray[4].value = false;
-					this.expandedArray[4].value = false;
-					this.checkTabStatus = true;
-				}
 			}
 		});
+	}
+	checkIfEnabledDisabled(tab_id, index) {
+
+		if (this.settingsArray.length > 0) {
+			const findex = this.settingsArray.findIndex(f => f.cos_tb_id === tab_id &&
+				f.cos_ff_id === '0');
+			if (findex !== -1) {
+				this.disabledArray[index].value = true;
+				this.expandedArray[index].value = false;
+				return false;
+			} else {
+				this.disabledArray[index].value = false;
+				this.expandedArray[index].value = false;
+				return true;
+			}
+		}
 	}
 	getDocumentsAll(that) {
 		that.configArray = [];
