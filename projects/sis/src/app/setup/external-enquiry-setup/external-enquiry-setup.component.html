@@ -27,9 +27,10 @@
                          <span class="bookmark-subtopic">{{tab.tb_name}}</span>
                       </div>
                    </mat-panel-title>
-                   <mat-panel-description *ngIf="tab.tb_id == '16'">
+                   <mat-panel-description *ngIf="tab.tb_id == '16'
+                   || tab.tb_id == '15' || tab.tb_id == '14'">
                       <mat-slide-toggle (change)="toggleTab($event, tab.tb_id, i)"
-                      [checked]="checkTabStatus"></mat-slide-toggle>
+                      [checked]="checkIfEnabledDisabled(tab.tb_id, i)"></mat-slide-toggle>
                    </mat-panel-description>
                 </mat-expansion-panel-header>
                 <div class="row">
