@@ -257,7 +257,7 @@ export class SalaryComputationComponent implements OnInit {
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
-				this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity');
+				this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'td','tds','gratuity');
 				let pos = 1;
 				let recordArray = result;
 
@@ -425,6 +425,8 @@ export class SalaryComputationComponent implements OnInit {
 							},
 							emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
 							emp_status: item.emp_status ? item.emp_status : 'live',
+							td: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['td'],
+							tds: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['tds'],
 							gratuity: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['gratuity'],
 							balance: Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
 							isEditable: editableStatus
@@ -513,6 +515,8 @@ export class SalaryComputationComponent implements OnInit {
 								mode_data: []
 							},
 							emp_total: 0,
+							td: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.td : 0,
+							tds: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.tds : 0,
 							gratuity: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.gratuity : 0,
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							isEditable: editableStatus,
@@ -907,7 +911,7 @@ export class SalaryComputationComponent implements OnInit {
 						for (let i = 0; i < this.paymentModeArray.length; i++) {
 							this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 						}
-						this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity');
+						this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status','td','tds', 'gratuity');
 						let pos = 1;
 						let recordArray = result.data;
 
@@ -1081,6 +1085,8 @@ export class SalaryComputationComponent implements OnInit {
 									},
 									emp_total: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'],
 									gratuity: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['gratuity'],
+									td: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['td'],
+									tds: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['tds'],
 									emp_status: item.emp_status ? item.emp_status : 'live',
 									balance: Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']),
 									isEditable: editableStatus
@@ -1120,6 +1126,8 @@ export class SalaryComputationComponent implements OnInit {
 										mode_data: []
 									},
 									emp_total: 0,
+									td: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.td : 0,
+									tds: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.tds : 0,
 									gratuity: item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.gratuity : 0,
 									emp_status: item.emp_status ? item.emp_status : 'live',
 									isEditable: editableStatus,
@@ -1325,6 +1333,14 @@ export class SalaryComputationComponent implements OnInit {
 		columns.push({
 			key: 'balance',
 			width: this.checkWidth('balance', 'Balance')
+		});
+		columns.push({
+			key: 'td',
+			width: this.checkWidth('td', 'td')
+		});
+		columns.push({
+			key: 'tds',
+			width: this.checkWidth('tds', 'tds')
 		});
 		columns.push({
 			key: 'gratuity',
@@ -1676,6 +1692,8 @@ export interface SalaryComputeElement {
 	// emp_pay_mode: any;
 	emp_total: any;
 	emp_status: any;
+	td: any;
+	tds: any;
 	gratuity: any;
 	empShacolumns: any;
 	empShdcolumns: any;

@@ -50,8 +50,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	deduction: any = 0;
 	earning: any = 0;
 	session_id: any;
-	year:any;
-	currentYear:any;
+	year: any;
+	currentYear: any;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
 		{ id: 1, name: 'Cash Payment' },
@@ -137,6 +137,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_deduction: '',
 				tds_deduction: '',
 				net_salary: '',
+				td: '',
+				tds: '',
 				gratuity: '',
 				total_earning: '',
 				advance: '',
@@ -189,6 +191,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_deduction: '',
 			tds_deduction: '',
 			net_salary: '',
+			td: '',
+			tds: '',
 			gratuity: '',
 			total_earning: '',
 			advance: '',
@@ -500,6 +504,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
 			starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.starting_month : '',
 			net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
+			td: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.td : '',
+			tds: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.tds : '',
 			gratuity: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
 		});
@@ -588,12 +594,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					],
 					advance_details: {
 						session_id: this.session_id.ses_id,
-						currentYear:this.currentYear,
+						currentYear: this.currentYear,
 						advance: this.salaryDetails.value.advance,
 						remaining_advance: this.salaryDetails.value.advance,
 						deposite_month_amount_amount: this.salaryDetails.value.deposite_month_amount,
 						starting_month: this.salaryDetails.value.starting_month,
 					},
+					td: this.salaryDetails.value.td,
+					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
@@ -717,12 +725,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					],
 					advance_details: {
 						session_id: this.session_id.ses_id,
-						currentYear :this.currentYear,
+						currentYear: this.currentYear,
 						advance: this.salaryDetails.value.advance,
 						remaining_advance: this.salaryDetails.value.advance,
 						deposite_month_amount: this.salaryDetails.value.deposite_month_amount,
 						starting_month: this.salaryDetails.value.starting_month,
 					},
+					td: this.salaryDetails.value.td,
+					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,
 					emp_net_salary: this.netSalary,
 					emp_total_earning: this.totalEarning
@@ -833,6 +843,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					}
 				);
 				i++;
+			}
+			if(this.salaryDetails.value.td){
+				this.netSalary = Number(this.netSalary) + Number(this.salaryDetails.value.td);
+				this.earning = Number(this.earning) + Number(this.salaryDetails.value.td);
+			}
+			if(this.salaryDetails.value.tds){
+				this.netSalary = Number(this.netSalary) - Number(this.salaryDetails.value.tds);
 			}
 			this.netSalary = this.netSalary.toFixed(2);
 			this.totalEarning = (Number(this.salaryDetails.value.basic_pay) + Number(this.earning)).toFixed(2);
