@@ -1,94 +1,89 @@
 <ng-template #editModal>
-  <div class="modal-main-box">
-     <div class="modal-delete-content-box">
-        <div>
-           <div class="row">
-              <div class="col-lg-12">
-                 <div class="close-button-content">
-                    <button mat-icon-button class="close-button" (click)="closeDialog()">
-                    <img src="/assets/images/clear-button.svg"></button>
-                 </div>
-              </div>
-           </div>
-           <div class="row">
-              <div class="col-lg-12">
-                 <div>
-                    <h4 class="text-center text-uppercase"><b>Edit Request</b></h4>
-                 </div>
-              </div>
-           </div>
+  <div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Edit Request</span><span
+            class="float-right margin-top-5"><i (click)="closeDialog()"
+              class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
         </div>
-        <div class="text-center">
-           <span>
-            <label [innerHTML]="displayMessage"></label>
-           </span>
-           <br>
-           <div class="row">
-             <div class="col-lg-12">
-               <div class="create-template-table normal-table-responsive">
-              <table class="table table-borderd table-stripped custom-table">
-                <thead class="table-skill__head text-center">
-                  <tr class="custom-tr">
-                    <th class="custom-th">Field Name</th>
-                    <th class="custom-th">Old Value</th>
-                    <th class="custom-th">New Value</th>
-                  </tr>
-                  </thead>
-                  <tbody class="table-skill__body text-center">
-                  <ng-container *ngFor="let itemArray of formfieldValueArray">
-                  <tr class="custom-tr" *ngFor="let item of itemArray">
-                    <td class="custom-td text-capiatalize" *ngIf="isArray(item.rff_field_name)">
-                      <p *ngFor="let field of item.rff_field_name">{{getFieldName(field)}}</p>
-                    </td>
-                    <td class="custom-td" *ngIf="isArray(item.rff_old_field_value)">
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <div class="text-center">
+    <span>
+      <label [innerHTML]="displayMessage"></label>
+    </span>
+    <br>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="create-template-table normal-table-responsive">
+          <table class="table table-borderd table-stripped custom-table">
+            <thead class="table-skill__head text-center">
+              <tr class="custom-tr">
+                <th class="custom-th">Field Name</th>
+                <th class="custom-th">Old Value</th>
+                <th class="custom-th">New Value</th>
+              </tr>
+            </thead>
+            <tbody class="table-skill__body text-center">
+              <ng-container *ngFor="let itemArray of formfieldValueArray">
+                <tr class="custom-tr" *ngFor="let item of itemArray">
+                  <td class="custom-td text-capiatalize" *ngIf="isArray(item.rff_field_name)">
+                    <p *ngFor="let field of item.rff_field_name">{{getFieldName(field)}}</p>
+                  </td>
+                  <td class="custom-td" *ngIf="isArray(item.rff_old_field_value)">
                     <p *ngFor="let field of item.rff_old_field_value">-</p>
-                    </td>
-                    <td class="custom-td" *ngIf="isArray(item.rff_new_field_value)">
-                        <p *ngFor="let field of item.rff_new_field_value">{{field}}</p>
-                    </td>
-                    <td class="custom-td" *ngIf="!isArray(item.rff_field_name)">{{getFieldName(item.rff_field_name)}}</td>
-                    <td class="custom-td" *ngIf="!isArray(item.rff_old_field_value)">{{item.rff_old_field_value}}</td>
-                    <td class="custom-td" *ngIf="!isArray(item.rff_new_field_value)">{{item.rff_new_field_value}}</td>
-                  </tr>
-                </ng-container>
-                  </tbody>
-              </table>
-              </div>
-             </div>
-            </div>
-           
-           <form [formGroup]="editForm">
-            <div class="row">
-            <div class="col-lg-12">
-              <mat-form-field class="form-field">
-                <mat-select placeholder="Choose priority" formControlName="req_priority" required>
-                  <mat-option *ngFor="let item of priorityArray" [value]="item.req_priority">{{item.req_priority_name}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-            </div>
-            </div>
-            <div class="row">
-              <div class="col-lg-12">
-                <mat-form-field class="form-field">
-                  <mat-select placeholder="Choose reasons" formControlName="req_reason" required>
-                    <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_title}}</mat-option>
-                  </mat-select>
-                </mat-form-field>
-              </div>
-              </div>
-              <div class="row">
-                <div class="col-lg-12">
-                  <mat-form-field class="form-field">
-                   <textarea rows="6" matInput placeholder="Enter change remarks" formControlName="req_remarks" required></textarea>
-                  </mat-form-field>
-                </div>
-                </div>
-              </form>
-              <div class="margin-top-10">
-           <button mat-raised-button class="btn-success" (click)="confirm()">Procced</button>&nbsp;
-           <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
-          </div>
+                  </td>
+                  <td class="custom-td" *ngIf="isArray(item.rff_new_field_value)">
+                    <p *ngFor="let field of item.rff_new_field_value">{{field}}</p>
+                  </td>
+                  <td class="custom-td" *ngIf="!isArray(item.rff_field_name)">{{getFieldName(item.rff_field_name)}}</td>
+                  <td class="custom-td" *ngIf="!isArray(item.rff_old_field_value)">{{item.rff_old_field_value}}</td>
+                  <td class="custom-td" *ngIf="!isArray(item.rff_new_field_value)">{{item.rff_new_field_value}}</td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
-     </div>
+      </div>
+    </div>
+
+    <form [formGroup]="editForm">
+      <div class="row">
+        <div class="col-lg-12">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Choose priority" formControlName="req_priority" required>
+              <mat-option *ngFor="let item of priorityArray" [value]="item.req_priority">{{item.req_priority_name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <mat-form-field class="form-field">
+            <mat-select placeholder="Choose reasons" formControlName="req_reason" required>
+              <mat-option *ngFor="let item of reasonsArray" [value]="item.reason_id">{{item.reason_title}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <mat-form-field class="form-field">
+            <textarea rows="6" matInput placeholder="Enter change remarks" formControlName="req_remarks"
+              required></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="margin-top-10">
+      <button mat-raised-button class="btn-success" (click)="confirm()">Procced</button>&nbsp;
+      <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
+    </div>
   </div>
 </ng-template>
