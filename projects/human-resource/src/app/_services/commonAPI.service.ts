@@ -334,6 +334,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-structure/update', value);
 	}
+	getBanks(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
+	}
 	getAdminReturn(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/admin-return/getAdminReturn', value);

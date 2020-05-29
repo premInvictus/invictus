@@ -344,7 +344,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 	makePayment(element) {
 		console.log('Do Payment');
 		if (this.counter === 0) {
-			this.commonAPIService.showSuccessErrorMessage('No providers avilable', 'error');
+			this.commonAPIService.showSuccessErrorMessage('No providers available', 'error');
 		}
 		if (this.counter === 1) {
 			const bank: any = {
@@ -372,6 +372,23 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 				out_standing_amt: this.outStandingAmt,
 				bank: bank
 			};
+			if (bank === 'icici') {
+				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+					localStorage.setItem('paymentData', '');
+					if (result && result.status === 'ok') {
+						console.log('result.data[0]', result.data[0]);
+						this.paytmResult['url'] = result.data[0];
+						this.paytmResult['amount'] = this.outStandingAmt;
+						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+						const hostName = window.location.href.split('/')[2];
+						var left = (screen.width / 2) - (800 / 2);
+						var top = (screen.height / 2) - (800 / 2);
+						window.open(location.protocol + '//' + hostName + '/student/make-paymentviaeazypay', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+							top + ',' + 'left=' + left);
+						localStorage.setItem('paymentWindowStatus', '1');
+					}
+				});
+			}
 			if (bank === 'axis') {
 				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
 					localStorage.setItem('paymentData', '');
@@ -384,8 +401,8 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						const hostName = window.location.href.split('/')[2];
 						var left = (screen.width / 2) - (800 / 2);
 						var top = (screen.height / 2) - (800 / 2);
-						window.open(location.protocol +'//' + hostName + '/student/make-payment', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
-						top + ',' + 'left=' + left);
+						window.open(location.protocol + '//' + hostName + '/student/make-payment', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+							top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
 
 
@@ -425,7 +442,7 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						var left = (screen.width / 2) - (800 / 2);
 						var top = (screen.height / 2) - (800 / 2);
 						window.open(location.protocol + '//' + hostName + '/student/make-paymentviapg', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
-						top + ',' + 'left=' + left);
+							top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
 						// this.payAPICall = interval(10000).subscribe(x => {
 

@@ -150,28 +150,32 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	getPaymentModes() {
-		this.commonAPIService.getMaster({ type_id: "6" }).subscribe((res: any) => {
-			if (res) {
-				////console.log('getmaster', res);
-				for (let i = 0; i < res.length; i++) {
-					var calculation_type = 'text';
-					var calculation_value = 0;
-					if (res && res[i] && res[i]['type'] && res[i]['type']['calculation_type'] && res[i]['type']['calculation_type']['cy_name'] === '%') {
-						calculation_value = res[i]['type']['calculation_type']['cy_value'];
-						calculation_type = res[i]['type']['calculation_type']['cy_name'];
-					}
+		this.commonAPIService.getBanks({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
 
-					var inputJson = {
-						'pm_id': res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ', '_') : '',
-						'pm_name': res[i]['name'],
+				this.paymentModeArray.push(
+					{
+						'pm_id': 'Cash' ? 'Cash'.trim().toLowerCase().replace(' ', '_') : '',
+						'pm_name': 'Cash',
 						'pm_value': 0,
-						'calculation_type': calculation_type,
-						'calculation_value': calculation_value,
-						'config_id': res[i].config_id
+						'calculation_type': '',
+						'calculation_value': '',
+						'config_id': '0'
+
 					}
+				);
+				for (const item of res.data) {
+					this.paymentModeArray.push(
+						{
+							'pm_id': item.bank_name ? item.bank_name.trim().toLowerCase().replace(' ', '_') : '',
+							'pm_name': item.bank_name,
+							'pm_value': 0,
+							'calculation_type': '',
+							'calculation_value': '',
+							'config_id': item.bnk_id
 
-
-					this.paymentModeArray.push(inputJson);
+						}
+					);
 				}
 
 			}
@@ -229,7 +233,20 @@ export class SalaryComputationComponent implements OnInit {
 			}
 		});
 	}
+	getCalculationType(value, id) {
+		if (value.emp_salary_detail && value.emp_salary_detail.empPaymentModeDetail
+			&& value.emp_salary_detail.empPaymentModeDetail.length > 0) {
+				console.log('yes')
+			const arr: any[] = value.emp_salary_detail.empPaymentModeDetail;
+			const index = arr.findIndex(f => Number(f.pay_mode) === Number(id));
+			if (index !== -1) {
+				return arr[index].calculation_type;
+			}
 
+		} else {
+			return '';
+		}
+	}
 	getAllEmployee() {
 		let element: any = {};
 		let recordArray = [];
@@ -249,11 +266,11 @@ export class SalaryComputationComponent implements OnInit {
 				for (let i = 0; i < this.shacolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shacolumns[i]['header'] + this.shacolumns[i]['data']['sc_id']);
 				}
-				this.displayedSalaryComputeColumns.push('td','emp_total_earnings', 'emp_arrear');
+				this.displayedSalaryComputeColumns.push('td', 'emp_total_earnings', 'emp_arrear');
 				for (let i = 0; i < this.shdcolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shdcolumns[i]['header'] + this.shdcolumns[i]['data']['sc_id']);
 				}
-				this.displayedSalaryComputeColumns.push('tds','emp_present_days',  'emp_advance', 'emp_salary_payable');
+				this.displayedSalaryComputeColumns.push('tds', 'emp_present_days', 'emp_advance', 'emp_salary_payable');
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
@@ -263,6 +280,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 				for (const item of recordArray) {
+					console.log(item);
 					element = {};
 					var editableStatus = false;
 					let emp_present_days = 0;
@@ -539,17 +557,18 @@ export class SalaryComputationComponent implements OnInit {
 								empPaymentModeDetail = item.emp_salary_detail.empPaymentModeDetail;
 							}
 							for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
-
+								console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
 								let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
 								if (curpaymetmode) {
-									if (curpaymetmode['calculation_type'] === '2') { // % type
+									if (Number(this.getCalculationType(item, this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 										var inputJson = {
 											'pm_id': this.paymentModeArray[pi]['pm_id'],
 											'pm_name': this.paymentModeArray[pi]['pm_name'],
 											'pm_value': (((Math.round(((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days) + Number(total_deductions))) * Number(curpaymetmode['value'])) / 100),
-											'calculation_type': curpaymetmode['calculation_type'],
+											'calculation_type':this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
 											'calculation_value': curpaymetmode['value']
 										};
+										console.log(inputJson);
 										element.emp_modes_data.mode_data.push(inputJson);
 										if (element.emp_modes_data.mode_data[pi]) {
 											deduction = deduction + Number(element.emp_modes_data.mode_data[pi]['pm_value']);
@@ -569,10 +588,10 @@ export class SalaryComputationComponent implements OnInit {
 											'pm_id': this.paymentModeArray[pi]['pm_id'],
 											'pm_name': this.paymentModeArray[pi]['pm_name'],
 											'pm_value': Number(curpaymetmode['value']),
-											'calculation_type': curpaymetmode['calculation_type'],
+											'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
 											'calculation_value': curpaymetmode['value']
 										};
-
+										console.log(inputJson);
 										formJson[this.paymentModeArray[pi]['pm_id']] = 0;
 										element.emp_modes_data.mode_data.push(inputJson);
 
@@ -818,6 +837,7 @@ export class SalaryComputationComponent implements OnInit {
 			if (this.SALARY_COMPUTE_ELEMENT[i]['colorCode']) {
 				this.commonAPIService.showSuccessErrorMessage('Please Correct Higlighted Employee Salary Total Amount, Should not be gretaer than Salary Payble', 'error');
 				validationStatus = true;
+				this.disabledApiButton = false;
 			}
 		}
 		if (!validationStatus) {
@@ -1210,12 +1230,12 @@ export class SalaryComputationComponent implements OnInit {
 										//////console.log('curpaymetmode and config_id',curpaymetmode,this.paymentModeArray[pi]['config_id']);
 
 										if (curpaymetmode) {
-											if (curpaymetmode['calculation_type'] === '2') { // % type
+											if (Number(this.getCalculationType(item, this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 												var inputJson = {
 													'pm_id': this.paymentModeArray[pi]['pm_id'],
 													'pm_name': this.paymentModeArray[pi]['pm_name'],
 													'pm_value': (((Math.round(((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days) + Number(total_deductions))) * Number(curpaymetmode['value'])) / 100),
-													'calculation_type': curpaymetmode['calculation_type'],
+													'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
 													'calculation_value': curpaymetmode['value']
 												};
 												element.emp_modes_data.mode_data.push(inputJson);
@@ -1237,7 +1257,7 @@ export class SalaryComputationComponent implements OnInit {
 													'pm_id': this.paymentModeArray[pi]['pm_id'],
 													'pm_name': this.paymentModeArray[pi]['pm_name'],
 													'pm_value': Number(curpaymetmode['value']),
-													'calculation_type': curpaymetmode['calculation_type'],
+													'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
 													'calculation_value': curpaymetmode['value']
 												};
 

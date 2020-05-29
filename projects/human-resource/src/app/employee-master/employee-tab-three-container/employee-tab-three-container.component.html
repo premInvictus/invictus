@@ -390,11 +390,11 @@
                                             <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Pay Mode</mat-label>
                                                 <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
-                                                    [disabled]="viewOnly"
+                                                    [disabled]="viewOnly" [value]="empPaymentModeDetail[i].value.pay_mode"
                                                     [errorStateMatcher]="confirmValidParentMatcher">
                                                     <mat-option value="">Please select</mat-option>
-                                                    <mat-option *ngFor="let item of payMode" [value]="item.config_id">
-                                                        {{item.name}}
+                                                    <mat-option *ngFor="let item of payMode" [value]="item.bnk_id">
+                                                        {{item.bank_name}}
                                                     </mat-option>
                                                 </mat-select>
                                                 <mat-error>
