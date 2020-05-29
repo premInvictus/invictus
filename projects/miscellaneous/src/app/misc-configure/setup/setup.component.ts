@@ -13,6 +13,7 @@ export class SetupComponent implements OnInit {
 
     currentGsetup: string;
     formFlag = false;
+    paymemtgways: any[] = [];
     settingForm: FormGroup;
     formatSettings: any = {};
     printForm: FormGroup;
@@ -99,6 +100,7 @@ export class SetupComponent implements OnInit {
     waterMarkImage2: any = '';
     ckeConfig: any = {};
     processForms: any[] = [];
+    paymentFormArray: any[] = [];
     processTypes: any[] = [];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
@@ -131,6 +133,7 @@ export class SetupComponent implements OnInit {
         this.getGlobalSettingGroup();
         this.getClass();
         this.getDepartment();
+        this.getPayGways();
     }
     enableHeaderFooter($event) {
         if (Number($event.value) === 2) {
@@ -154,6 +157,47 @@ export class SetupComponent implements OnInit {
         }
         return true;
 
+    }
+    checkIfpgEnabled(index) {
+        if (this.paymentFormArray.length > 0) {
+            if (this.paymentFormArray[index].formGroup.value.enabled === "true") {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    enableDisablePg($event, index) {
+        if ($event.checked) {
+            this.paymentFormArray[index].formGroup.patchValue({
+                'enabled': "true"
+            });
+        } else {
+            this.paymentFormArray[index].formGroup.patchValue({
+                'enabled': "false"
+            });
+        }
+    }
+    getPayGways() {
+        this.sisService.getPaymentGateways({}).subscribe((res: any) => {
+            if (res && res.status === 'ok') {
+                this.paymemtgways = [];
+                this.paymentFormArray = [];
+                this.paymemtgways = res.data;
+                for (const item of this.paymemtgways) {
+                    this.paymentFormArray.push({
+                        formGroup: this.fbuild.group({
+                            enabled: 'false',
+                            merchant: '',
+                            api_key: ''
+                        }),
+                        bank_logo: item.bank_logo,
+                        bank_name : item.bank_name,
+                        bank_alias: item.bank_alias,
+                    });
+                }
+            }
+        });
     }
     getDepartment() {
         this.sisService.getDepartment({}).subscribe((result: any) => {
@@ -590,6 +634,24 @@ export class SetupComponent implements OnInit {
                             this.formatSettings = {};
                         }
                     }
+                    if (value === 'payment checkout configuration') {
+                        let paymentArr: any[] = [];
+                        paymentArr = JSON.parse(this.settingForm.value.payment_banks);
+                        if (paymentArr && paymentArr.length > 0) {
+                            for (const item of this.paymentFormArray) {
+                                for (const titem of paymentArr) {
+                                    if (item.bank_alias.toLowerCase() === titem.bank_alias.toLowerCase()) {
+                                        item.formGroup.patchValue({
+                                            enabled: titem.enabled,
+                                            merchant: titem.merchant,
+                                            api_key: titem.api_key
+                                        });
+                                    }
+                                }
+                            }
+                            console.log(this.paymentFormArray);
+                        }
+                    }
                     console.log(this.settingForm);
                 }
                 this.formFlag = true;
@@ -698,39 +760,39 @@ export class SetupComponent implements OnInit {
 
         });
     }
-    checkIfSelectedSMS(i, j ,value) {
+    checkIfSelectedSMS(i, j, value) {
         if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
             return true;
         } else {
             return false;
         }
     }
-    checkIfSelectedEmail(i, j ,value) {
+    checkIfSelectedEmail(i, j, value) {
         if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
             return true;
         } else {
             return false;
         }
     }
-    enableDisableSMS (i, j ,value, $event) {
+    enableDisableSMS(i, j, value, $event) {
         if ($event.checked) {
             this.processForms[i][value][j].formGroup.patchValue({
-                enabled : "true"
+                enabled: "true"
             });
         } else {
             this.processForms[i][value][j].formGroup.patchValue({
-                enabled : "false"
+                enabled: "false"
             });
         }
     }
-    enableDisableEmail (i, j ,value, $event) {
+    enableDisableEmail(i, j, value, $event) {
         if ($event.checked) {
             this.processForms[i][value][j].formGroup.patchValue({
-                enabled : "true"
+                enabled: "true"
             });
         } else {
             this.processForms[i][value][j].formGroup.patchValue({
-                enabled : "false"
+                enabled: "false"
             });
         }
     }
@@ -989,10 +1051,10 @@ export class SetupComponent implements OnInit {
         }
         if (this.settingForm.value && this.settingForm.value.enquiry_registration_email_sms) {
             const finalDataArr: any[] = [
-                {enquiry : []},
-                {registration : []},
-                {provisional : []},
-                {admission : []}
+                { enquiry: [] },
+                { registration: [] },
+                { provisional: [] },
+                { admission: [] }
             ];
             for (const item of this.processForms) {
                 Object.keys(item).forEach((key: any) => {
@@ -1010,6 +1072,23 @@ export class SetupComponent implements OnInit {
                 });
             }
             this.settingForm.value.enquiry_registration_email_sms = JSON.stringify(finalDataArr);
+        }
+        if (this.settingForm.value && this.settingForm.value.payment_banks) {
+            if (this.paymentFormArray.length > 0) {
+                const finalPayArr: any[] = [];
+                for (const item of this.paymentFormArray) {
+                    finalPayArr.push({
+                        bank_name: item.bank_name,
+                        bank_alias: item.bank_alias,
+                        bank_logo: item.bank_logo,
+                        enabled : item.formGroup.value.enabled,
+                        merchant: item.formGroup.value.merchant,
+                        api_key : item.formGroup.value.api_key
+                    });
+                }
+               
+                this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
+            }
         }
         console.log(this.settingForm.value);
         this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {

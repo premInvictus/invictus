@@ -14,6 +14,10 @@
   .white-box {
     background-color: #ffffff;
   }
+  img.image-bnk-logo {
+    width: 70%;
+    object-fit: cover;
+}
   .white-box-content {
     padding: 20px;
     margin-bottom: 40px;
