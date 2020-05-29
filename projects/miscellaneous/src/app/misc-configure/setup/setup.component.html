@@ -41,7 +41,8 @@
                               <ng-container *ngFor="let control of gsettingArr">
                                 <div class="row" *ngIf="control.gs_alias !== 'idcard_printsetup' &&
                                   control.gs_alias !== 'invoice_receipt_format'
-                                  && control.gs_alias !== 'enquiry_registration_email_sms'">
+                                  && control.gs_alias !== 'enquiry_registration_email_sms'
+                                  && control.gs_alias !== 'payment_banks'">
                                   <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                     style="margin-top: 20px;">
                                     <mat-label>{{control.gs_name | titlecase}}
@@ -2614,6 +2615,60 @@
                               </ng-container>
                             </div>
                           </div>
+                          <div class="row"
+                            *ngIf="control.gs_alias === 'payment_banks'">
+                            <div class="col-12">
+                              <ng-container
+                                *ngIf="control.gs_alias === 'payment_banks'">
+                                <div class="row">
+                                  <div class="col-12">
+                                    <div class="text-center">
+                                      <span style="font-weight: bold;
+                                        font-size: 16px;
+                                        text-transform: uppercase;">Payment Gateway Configuration</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row" *ngIf="paymentFormArray.length > 0">
+                                  <div class="col-12">
+                                    <ng-container *ngFor="let item of paymentFormArray; let i = index">
+                                      <form [formGroup]="item.formGroup">
+                                      <div class="row">
+                                        <div class="col-2">
+                                          <img [src]="item.bank_logo" class="image-bnk-logo">
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-label>Merchant Id</mat-label>
+                                          <mat-form-field class="form-field"
+                                          placeholder="Merchant Id"
+                                        appearance="outline">
+                                        <input matInput type="text"
+                                          
+                                          formControlName="merchant">
+                                      </mat-form-field>
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-label>Encryption/API key</mat-label>
+                                          <mat-form-field class="form-field"
+                                          placeholder="Encryption/API key"
+                                        appearance="outline">
+                                        <input matInput type="text"
+                                          
+                                          formControlName="api_key">
+                                      </mat-form-field>
+                                        </div>
+                                        <div class="col-2"><br>
+                                          <mat-checkbox (change)="enableDisablePg($event, i)"
+                                          [checked]="checkIfpgEnabled(i)">Enable</mat-checkbox>
+                                        </div>
+                                      </div>
+                                      </form>
+                                    </ng-container>
+                                  </div>
+                                </div>
+                                </ng-container>
+                                </div>
+                                </div>
                           </ng-container>
                           </form>
                           <br>
