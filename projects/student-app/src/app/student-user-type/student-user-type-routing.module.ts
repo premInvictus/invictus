@@ -7,6 +7,7 @@ import { ProjectComponent } from 'src/app/invictus-shared/project/project.compon
 import { MakePaymentComponent } from './../student-fee/make-payment/make-payment.component';
 import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
+import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -55,6 +56,10 @@ const routes: Routes = [
 	{ 	path: 'make-paymentviapg',
 		canActivate: [AuthGuard],
 		component: MakePaymentComponent
+	},
+	{ 	path: 'make-paymentviaeazypay',
+		canActivate: [AuthGuard],
+		component: MakePaymentViaEazypayComponent
 	}
 ];
 

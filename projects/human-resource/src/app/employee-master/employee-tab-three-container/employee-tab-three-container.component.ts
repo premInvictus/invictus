@@ -300,9 +300,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPayMode() {
-		this.commonAPIService.getMaster({ type_id: '6' }).subscribe((result: any) => {
-			if (result) {
-				this.payMode = result;
+		this.payMode = [{
+			bnk_id: '0',
+			bank_name: 'Cash'
+		}];
+		this.commonAPIService.getBanks({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				for (const item of result.data) {
+					this.payMode.push({
+						bnk_id: item.bnk_id,
+						bank_name: item.bank_name
+					});
+				}
 			} else {
 				this.payMode = [];
 			}
@@ -310,9 +319,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPayModeName(id) {
-		const findex = this.payMode.findIndex(e => Number(e.config_id) === Number(id));
+		const findex = this.payMode.findIndex(e => Number(e.bnk_id) === Number(id));
 		if (findex !== -1) {
-			return this.payMode[findex].name;
+			return this.payMode[findex].bank_name;
 		}
 	}
 	getCategoryOne() {
@@ -458,7 +467,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.empPaymentModeDetail = [];
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
 				this.empPaymentModeDetail.push(this.fbuild.group({
-					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'],
+					pay_mode: (this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString(),
 					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
 					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
 				}));
@@ -492,7 +501,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			// bank_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '',
 			// ifsc_code: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail[0] ? this.employeedetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_ifsc : '',
 			sal_str: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id, 10) : '',
-			pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.config_id, 10) : '',
+			pay_mode: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode ? parseInt(this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_id, 10) : '',
 			basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
 			da: '',
 			hra: '',
@@ -636,6 +645,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				}
 			}
+			console.log(this.employeedetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.disabledApiButton = false;
@@ -844,11 +854,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				);
 				i++;
 			}
-			if(this.salaryDetails.value.td){
+			if (this.salaryDetails.value.td) {
 				this.netSalary = Number(this.netSalary) + Number(this.salaryDetails.value.td);
 				this.earning = Number(this.earning) + Number(this.salaryDetails.value.td);
 			}
-			if(this.salaryDetails.value.tds){
+			if (this.salaryDetails.value.tds) {
 				this.netSalary = Number(this.netSalary) - Number(this.salaryDetails.value.tds);
 			}
 			this.netSalary = this.netSalary.toFixed(2);
