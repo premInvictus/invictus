@@ -249,11 +249,11 @@ export class SalaryComputationComponent implements OnInit {
 				for (let i = 0; i < this.shacolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shacolumns[i]['header'] + this.shacolumns[i]['data']['sc_id']);
 				}
-				this.displayedSalaryComputeColumns.push('td','emp_total_earnings', 'emp_arrear');
+				this.displayedSalaryComputeColumns.push('td', 'emp_total_earnings', 'emp_arrear');
 				for (let i = 0; i < this.shdcolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shdcolumns[i]['header'] + this.shdcolumns[i]['data']['sc_id']);
 				}
-				this.displayedSalaryComputeColumns.push('tds','emp_present_days',  'emp_advance', 'emp_salary_payable');
+				this.displayedSalaryComputeColumns.push('tds', 'emp_present_days', 'emp_advance', 'emp_salary_payable');
 				for (let i = 0; i < this.paymentModeArray.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
@@ -740,14 +740,16 @@ export class SalaryComputationComponent implements OnInit {
 		for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
 			if (Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
 				//this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable']) + Number(value)
-				var salary_payable = 0;
-				var total_earnings = Number(element.emp_total_earnings);
+				var total_earnings = 0;
+				total_earnings = Number(element.emp_total_earnings);
+				console.log(total_earnings, 'total_earnings');
 				var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 				let tdValue = this.formGroupArray[i].value.td || 0;
 				let tdsValue = this.formGroupArray[i].value.tds || 0;
 				let arrearValue = this.formGroupArray[i].value.arrear || 0;
 				let advanceValue = this.formGroupArray[i].value.advance || 0;
 				this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+				this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'] = Number(total_earnings) + Number(tdValue);
 				//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
 				this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
 				for (var j = 0; j < this.paymentModeArray.length; j++) {
