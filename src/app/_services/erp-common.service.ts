@@ -5,6 +5,15 @@ import { observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 @Injectable()
 export class ErpCommonService {
+	getQualifications() {
+		throw new Error("Method not implemented.");
+	}
+	getAnnualIncome() {
+		throw new Error("Method not implemented.");
+	}
+	getOccupationType() {
+		throw new Error("Method not implemented.");
+	}
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getStudentInvoice(value) {
@@ -13,6 +22,85 @@ export class ErpCommonService {
 	}
 	updateRFIDMapping(value) {
 		return this.http.post(environment.apiReservUrl + '/rfidmapping/updateRFIDMapping', value);
+	}
+	getStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getStudent', value);
+	}
+	getReason(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/setup/getReason', value);
+	}
+	getBloodGroup() {
+		return this.http.get(environment.apiSisUrl + '/bloodGroup/getBloodGroup');
+	}
+	getTransportRoute() {
+		return this.http.get(environment.apiSisUrl + '/transport/transportRoute');
+	}
+	getTransportStop() {
+		return this.http.get(environment.apiSisUrl + '/transport/transportStopPoint');
+	}
+	getMedications() {
+		return this.http.get(environment.apiSisUrl + '/medications/getMedications');
+	}
+	getActivity() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/activity');
+	}
+	getLevelOfInterest() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/levelOfInterest');
+	}
+	getQualifications2() {
+		return this.http.get(environment.apiSisUrl + '/qualifications/getQualifications');
+	}
+	getFeeAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/feeAccount/getFeeAccount', value);
+	}
+	getCityNameByCityId(value) {
+		return this.http.post(environment.apiSisUrl + '/slctc/getCityNameByCityId', value);
+	}
+	getAdditionalDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/getAdditionalDetails', value);
+	}
+	getAnnualIncome2() {
+		return this.http.get(environment.apiSisUrl + '/annualIncome/getAnnualIncome');
+	}
+	getOccupationType2() {
+		return this.http.get(environment.apiSisUrl + '/occupationType/getOccupationType');
+	}
+	getEventLevel() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/eventLevel');
+	}
+	getActivityClub() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/activityClub');
+	}
+	getAuthority() {
+		return this.http.get(environment.apiSisUrl + '/siSetup/authority');
+	}
+	getCountry() {
+		return this.http.get(environment.apiSisUrl + '/setup/getCountry');
+	}
+	getState() {
+		return this.http.get(environment.apiSisUrl + '/setup/getState');
+	}
+	getCategory() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/category');
+	}
+	getNationality() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/nationality');
+	}
+	getReligionDetails(value) {
+		return this.http.post(environment.apiSisUrl + '/religionDetails/getReligionDetails', value);
+	}
+	getMotherTongue(value) {
+		return this.http.post(environment.apiSisUrl + '/motherTongue/getMotherTongue', value);
+	}
+	getGender() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/gender');
 	}
 	insertReservoirData(value) {
 		this.service.startLoading();
@@ -506,7 +594,7 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
-	
+
 	getMasterStudentDetail(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/students/getAllStudents', value);

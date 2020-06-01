@@ -8,6 +8,7 @@ import { MakePaymentComponent } from './../student-fee/make-payment/make-payment
 import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
 import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
+import { ViewStudentProfileComponent } from '../shared-module/view-student-profile/view-student-profile.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -38,6 +39,7 @@ const routes: Routes = [
 			{ path: 'user-credential', component: UserCredentialComponent },
 			{ path: 'communication', loadChildren: '../student-messages/student-messages.module#StudentMessagesModule' },
 			{ path: 'notification', component: NotificationPageComponent },
+			{ path: 'view-profile-student', component: ViewStudentProfileComponent },
 			{
 				path: 'notice',
 				loadChildren: '../notice-board/notice-board.module#NoticeBoardModule'
@@ -49,15 +51,18 @@ const routes: Routes = [
 		canActivate: [AuthGuard],
 		loadChildren: '../test-engine/test-engine.module#TestEngineModule'
 	},
-	{ 	path: 'make-payment',
+	{
+		path: 'make-payment',
 		canActivate: [AuthGuard],
 		component: MakePaymentBasedonproviderComponent
 	},
-	{ 	path: 'make-paymentviapg',
+	{
+		path: 'make-paymentviapg',
 		canActivate: [AuthGuard],
 		component: MakePaymentComponent
 	},
-	{ 	path: 'make-paymentviaeazypay',
+	{
+		path: 'make-paymentviaeazypay',
 		canActivate: [AuthGuard],
 		component: MakePaymentViaEazypayComponent
 	}
