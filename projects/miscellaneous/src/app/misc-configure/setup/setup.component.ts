@@ -22,6 +22,8 @@ export class SetupComponent implements OnInit {
     gsettingGroupArr: any[] = [];
     gsettingArr: any[] = [];
     configFlag = false;
+    checkedArray: any = [];
+    bankArr: any[] = [];
     notifConfigArray: any[] = [];
     configValue: any;
     disabledApiButton = false;
@@ -134,6 +136,7 @@ export class SetupComponent implements OnInit {
         this.getClass();
         this.getDepartment();
         this.getPayGways();
+        this.getBanks();
     }
     enableHeaderFooter($event) {
         if (Number($event.value) === 2) {
@@ -172,10 +175,12 @@ export class SetupComponent implements OnInit {
             this.paymentFormArray[index].formGroup.patchValue({
                 'enabled': "true"
             });
+            this.checkedArray[index] = "Enabled";
         } else {
             this.paymentFormArray[index].formGroup.patchValue({
                 'enabled': "false"
             });
+            this.checkedArray[index] = "Disabled";
         }
     }
     getPayGways() {
@@ -189,10 +194,11 @@ export class SetupComponent implements OnInit {
                         formGroup: this.fbuild.group({
                             enabled: 'false',
                             merchant: '',
-                            api_key: ''
+                            api_key: '',
+                            trans_bnk_id: '0'
                         }),
                         bank_logo: item.bank_logo,
-                        bank_name : item.bank_name,
+                        bank_name: item.bank_name,
                         bank_alias: item.bank_alias,
                     });
                 }
@@ -644,12 +650,20 @@ export class SetupComponent implements OnInit {
                                         item.formGroup.patchValue({
                                             enabled: titem.enabled,
                                             merchant: titem.merchant,
-                                            api_key: titem.api_key
+                                            api_key: titem.api_key,
+                                            trans_bnk_id: titem.trans_bnk_id
                                         });
+                                    }
+                                    if (titem.enabled === "true" &&
+                                        item.bank_alias.toLowerCase() === titem.bank_alias.toLowerCase()) {
+                                        this.checkedArray.push("Enabled");
+                                    } else if (titem.enabled !== "true" &&
+                                        item.bank_alias.toLowerCase() === titem.bank_alias.toLowerCase()) {
+                                        this.checkedArray.push("Disabled");
                                     }
                                 }
                             }
-                            console.log(this.paymentFormArray);
+                            console.log(this.checkedArray);
                         }
                     }
                     console.log(this.settingForm);
@@ -1081,12 +1095,13 @@ export class SetupComponent implements OnInit {
                         bank_name: item.bank_name,
                         bank_alias: item.bank_alias,
                         bank_logo: item.bank_logo,
-                        enabled : item.formGroup.value.enabled,
+                        enabled: item.formGroup.value.enabled,
                         merchant: item.formGroup.value.merchant,
-                        api_key : item.formGroup.value.api_key
+                        api_key: item.formGroup.value.api_key,
+                        trans_bnk_id: item.formGroup.value.trans_bnk_id
                     });
                 }
-               
+
                 this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
             }
         }
@@ -1099,6 +1114,14 @@ export class SetupComponent implements OnInit {
             } else {
                 this.disabledApiButton = false;
                 this.commonService.showSuccessErrorMessage(result.message, result.status);
+            }
+        });
+    }
+    getBanks() {
+        this.erpCommonService.getBanks({}).subscribe((res: any) => {
+            if (res && res.status === 'ok') {
+                this.bankArr = [];
+                this.bankArr = res.data;
             }
         });
     }
