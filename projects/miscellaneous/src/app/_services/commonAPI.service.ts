@@ -35,6 +35,7 @@ export class CommonAPIService {
 	stopLoading() {
 		this.loader.stopLoading();
 	}
+	
 
 	getCokkieData() {
 		if (this._cookieService && this._cookieService.get('userData')) {
