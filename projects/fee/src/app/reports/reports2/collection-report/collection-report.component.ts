@@ -904,10 +904,7 @@ export class CollectionReportComponent implements OnInit {
 						field: 'transaction_id',
 						width: 15,
 						sortable: true,
-						filterable: true,
-						filterSearchType: FieldType.number,
-						filter: { model: Filters.compoundInputNumber },
-						formatter: this.checkReceiptFormatter
+						filterable: true
 					},
 				];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
@@ -948,12 +945,13 @@ export class CollectionReportComponent implements OnInit {
 								new CapitalizePipe().transform(repoArray[Number(index)]['pay_name']) : '-';
 							obj['bank_name'] = repoArray[Number(index)]['tb_name'] ?
 								new CapitalizePipe().transform(repoArray[Number(index)]['tb_name']) : '-';
-							if (repoArray[Number(index)]['ftr_transaction_id']) {
-								obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] ?
-									Number(repoArray[Number(index)]['ftr_transaction_id']) : 0;
-							} else {
+							if (Number(repoArray[Number(index)]['ftr_pay_id']) === 3) {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_cheque_no'] ?
-									Number(repoArray[Number(index)]['ftr_cheque_no']) : 0;
+									(repoArray[Number(index)]['ftr_cheque_no']) : 0;
+							} else {
+							obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] ?
+								(repoArray[Number(index)]['ftr_transaction_id']) : 0;
+
 							}
 
 							this.dataset.push(obj);

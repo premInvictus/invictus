@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AxiomService, SmartService, SisService, CommonAPIService,FeeService } from '../../_services';
+import { AxiomService, SmartService, SisService, CommonAPIService, FeeService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
@@ -226,8 +226,8 @@ export class AttendanceReportsComponent implements OnInit {
     inputJson.datefrom = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-1';
     inputJson.dateto = new Date().getFullYear() + '-' + this.attendanceReport.value.month_id + '-' + no_of_days;
     this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
-        this.holidayArray = res.data;
+      if (res) {
+        this.holidayArray = res.data ? res.data : [];
         const dateArray: any[] = [];
         var date;
         var dateFormate;
@@ -850,7 +850,7 @@ export class AttendanceReportsComponent implements OnInit {
   getGroupColumns(columns) {
     let grName = '';
     for (const item of columns) {
-      for (const titem of this.columnDefinitions) { 
+      for (const titem of this.columnDefinitions) {
         if (item.getter === titem.id) {
           grName = grName + titem.name + ',';
           break;

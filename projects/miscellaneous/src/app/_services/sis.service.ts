@@ -16,6 +16,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/setup/getReason', value);
 	}
+	getPaymentGateways(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/getPaymentGateways', value);
+	}
 	uploadDocuments(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);

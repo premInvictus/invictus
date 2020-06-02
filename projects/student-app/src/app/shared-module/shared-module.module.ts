@@ -55,6 +55,8 @@ import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
+import { ViewStudentProfileComponent } from './view-student-profile/view-student-profile.component';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
@@ -103,6 +105,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 		OngoingTestInstructionComponent,
 		PaymentOrderModalComponent,
 		MakePaymentComponent,
+		MakePaymentViaEazypayComponent,
 		MakePaymentBasedonproviderComponent,
 		CapitalizePipe, DateformatPipe, SafePipe,
 		NumberToWordPipe,
@@ -118,6 +121,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
+		ViewStudentProfileComponent,
 		//NotificationPageComponent
 	],
 	exports: [
@@ -161,6 +165,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 		ImageViewerModule,
 		NoDataComponent,
 		AdvancedSearchModalComponent,
+		MakePaymentViaEazypayComponent,
 		BookDetailComponent,
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
@@ -168,7 +173,8 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 		MessagesAdvancedSearchModalComponent,
 		DeleteModalComponent,
 		CKEditorModule,
-		InfiniteScrollModule
+		InfiniteScrollModule,
+		ViewStudentProfileComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
