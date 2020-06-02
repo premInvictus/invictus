@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { SisService, AxiomService, CommonAPIService, SmartService } from '../../_services';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
 	selector: 'app-assignment-attachment-dialog',
@@ -22,23 +23,33 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	topicArray: any[] = [];
 	subtopicArray: any[] = [];
 	class_id;
-	sec_id;
+	sec_id: any;
 	sub_id;
 	topic_id;
 	assignment_desc;
 	ckeConfig: any = {};
 	currentUser: any = {};
 	isTeacher = false;
+	assignmentForm: FormGroup;
 	disabledApiButton = false;
 	constructor(
 		public dialogRef: MatDialogRef<AssignmentAttachmentDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private sisService: SisService,
+		private fbuild: FormBuilder,
 		private commonAPIService: CommonAPIService,
 		private axiomService: AxiomService,
 		private smartService: SmartService
 	) { }
-
+	buildForm() {
+		this.assignmentForm = this.fbuild.group({
+			class_id: '',
+			sec_id: '',
+			sub_id: '',
+			topic_id: '',
+			assignment_desc: ''
+		});
+	}
 	ngOnInit() {
 		console.log(this.data);
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -46,6 +57,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			this.isTeacher = true;
 		}
 		this.getClass();
+		this.buildForm();
 		this.editFlag = this.data.edit;
 		this.imageArray = this.data.attachments;
 		this.class_id = this.data.class_id;
@@ -53,6 +65,12 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 		this.sub_id = this.data.sub_id;
 		this.topic_id = this.data.topic_id;
 		this.assignment_desc = this.data.assignment_desc;
+		this.assignmentForm.patchValue({
+			class_id: this.class_id,
+			sub_id: this.sub_id,
+			topic_id: this.topic_id,
+			assignment_desc: this.assignment_desc
+		});
 		this.ckeConfig = {
 			allowedContent: true,
 			pasteFromWordRemoveFontStyles: false,
@@ -107,14 +125,36 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				.subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.sectionArray = result.data;
+						if (this.sec_id instanceof Array) {
+						this.assignmentForm.patchValue({
+							sec_id: this.sec_id
+						});
+					} else {
+						const arr: any = [];
+						arr.push(this.sec_id);
+						this.assignmentForm.patchValue({
+							sec_id: arr
+						});
+					}
 					} else {
 						this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 					}
 				});
 		} else {
-			this.smartService.getSectionsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSectionsByClass({ class_id: this.assignmentForm.value.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.sectionArray = result.data;
+					if (this.sec_id instanceof Array) {
+						this.assignmentForm.patchValue({
+							sec_id: this.sec_id
+						});
+					} else {
+						const arr: any = [];
+						arr.push(this.sec_id);
+						this.assignmentForm.patchValue({
+							sec_id: arr
+						});
+					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 				}
@@ -127,7 +167,8 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 			if (this.sec_id) {
 				this.smartService.getSubjectByTeacherIdClassIdSectionId({
 					teacher_id: this.currentUser.login_id,
-					class_id: this.class_id, sec_id: this.sec_id
+					class_id: this.assignmentForm.value.class_id, 
+					sec_id: this.assignmentForm.value.sec_id
 				}).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.subjectArray = result.data;
@@ -140,7 +181,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				});
 			}
 		} else {
-			this.smartService.getSubjectsByClass({ class_id: this.class_id }).subscribe((result: any) => {
+			this.smartService.getSubjectsByClass({ class_id: this.assignmentForm.value.class_id }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 					if (this.sub_id) {
@@ -154,7 +195,8 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	getTopicByClassIdSubjectId() {
 		this.topicArray = [];
-		this.smartService.getTopicByClassIdSubjectId({ class_id: this.class_id, sub_id: this.sub_id }).subscribe((result: any) => {
+		this.smartService.getTopicByClassIdSubjectId({ class_id: this.assignmentForm.value.class_id,
+			 sub_id: this.assignmentForm.value.sub_id }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.topicArray = result.data;
 			} else {
@@ -208,7 +250,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 
 	submitAttachment() {
-		this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
+		this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignmentForm.value.assignment_desc });
 		/*if(this.assignment_desc) {
 			this.dialogRef.close({ attachments: this.imageArray, assignment_desc: this.assignment_desc });
 		} else {
@@ -230,14 +272,16 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 	}
 	addAttachment() {
 		console.log('addAttachment');
-		if (this.class_id && this.sec_id && this.sub_id && this.topic_id && this.assignment_desc) {
+		if (this.assignmentForm.value.class_id && this.assignmentForm.value.sec_id
+			&& this.assignmentForm.value.sub_id && this.assignmentForm.value.topic_id
+			&& this.assignmentForm.value.assignment_desc) {
 			this.disabledApiButton = true;
 			const param: any = {};
-			param.as_class_id = this.class_id;
-			param.as_sec_id = this.sec_id;
-			param.as_sub_id = this.sub_id;
-			param.as_topic_id = this.topic_id;
-			param.as_assignment_desc = this.assignment_desc;
+			param.as_class_id = this.assignmentForm.value.class_id;
+			param.as_sec_id = this.assignmentForm.value.sec_id;
+			param.as_sub_id = this.assignmentForm.value.sub_id;
+			param.as_topic_id = this.assignmentForm.value.topic_id;
+			param.as_assignment_desc = this.assignmentForm.value.assignment_desc;
 			param.as_attachment = this.imageArray;
 			this.smartService.assignmentInsert(param).subscribe((result: any) => {
 				this.disabledApiButton = false;
