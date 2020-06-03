@@ -1,0 +1,43 @@
+<ng-template #processDateModal>
+  <div class="modal-main-box">
+    <div>
+      <div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="close-button-content">
+              <button mat-icon-button class="close-button" (click)="closeDialog()">
+                <img src="/assets/images/clear-button.svg"></button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-12">
+            <div>
+              <h6 class="text-center"><b>Confirmation Message</b></h6>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!dateFlag" class="text-center">
+          <p [innerHTML]="processMessage"></p>
+          <button mat-raised-button class="btn-success" (click)="enableDate()">Yes</button>&nbsp;
+          <button mat-raised-button class="btn-danger" (click)="closeDialog()">No</button>
+        </div>
+      <div *ngIf="dateFlag" class="text-center">
+        <p [innerHTML]="processMessage"></p>
+        <form [formGroup]="dateForm">
+          <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Enter Leave Date</mat-label>
+            <input formControlName="processDate" [max]="maxdate"
+            matInput [matDatepicker]="picker" placeholder="Enter Process Date"
+              required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </form>
+        <button mat-raised-button class="btn-success" (click)="process()">Submit</button>&nbsp;
+        <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

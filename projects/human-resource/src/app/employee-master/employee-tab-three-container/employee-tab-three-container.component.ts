@@ -168,6 +168,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_ac: '',
 			nominee: '',
 			doj: '',
+			dol: '',
+			fnf_status: '',
 			pf_doj: '',
 			esi_doj: '',
 			probation: '',
@@ -444,6 +446,17 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		const datePipe = new DatePipe('en-in');
 		return datePipe.transform(value, format);
 	}
+	settleFnf($event) {
+		if ($event.checked) {
+			this.salaryDetails.patchValue({
+				fnf_status: true
+			});
+		} else {
+			this.salaryDetails.patchValue({
+				fnf_status: false
+			});
+		}
+	}
 	getSalartDetails() {
 		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : '';
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail && this.employeedetails.emp_salary_detail.emp_bank_detail.length > 0) {
@@ -476,7 +489,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.addPaymentMode();
 		}
 
-
+		console.log(this.employeedetails);
 		this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
 			aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
@@ -484,6 +497,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.esi_ac_no : '',
 			nominee: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.nominee_detail.name : '',
 			doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd') : '',
+			dol: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.dol, 'yyyy-MM-dd') : '',
 			pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
 			esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
 			probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
@@ -506,6 +520,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			da: '',
 			hra: '',
 			allowances: '',
+			fnf_status: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail
+				&& this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status ?
+				this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status : false,
 			pf_deduction: '',
 			esi_deduction: '',
 			tds_deduction: '',
@@ -559,6 +576,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				},
 				emp_organisation_relation_detail: {
 					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					dol: this.dateConversion(this.salaryDetails.value.dol, 'yyyy-MM-dd'),
+					fnf_status: this.salaryDetails.value.fnf_status ? this.salaryDetails.value.fnf_status : false,
 					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
 					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
 					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
@@ -644,6 +663,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				}
+
 			}
 			console.log(this.employeedetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
@@ -695,6 +715,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				},
 				emp_organisation_relation_detail: {
 					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					dol: this.dateConversion(this.salaryDetails.value.dol, 'yyyy-MM-dd'),
+					fnf_status: this.salaryDetails.value.fnf_status ? this.salaryDetails.value.fnf_status : false,
 					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
 					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
 					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
