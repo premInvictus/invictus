@@ -126,8 +126,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
 	chequeType: any[] = [
-		{ name: 'Cheque Received', id: 'cr' },
-		{ name: 'Cheque Pending', id: 'cp' },
+		{ name: 'Cheque Recieved', id: 'cp' },
+		{ name: 'Cheque Clearance', id: 'cr' }
 	];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
@@ -898,12 +898,12 @@ export class ChequeclearanceReportComponent implements OnInit {
 					obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
 						Number(repoArray[Number(index)]['receipt_amount'])
 						: 0;
-					obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
-						repoArray[Number(index)]['bank_name'] : '-';
+					obj['bank_name'] = repoArray[Number(index)]['bank_name_received'] ?
+						repoArray[Number(index)]['bank_name_received'] : '-';
 					obj['branch'] = repoArray[Number(index)]['branch_id'] ?
 						repoArray[Number(index)]['branch_id'] : '-';
-					obj['fcc_remarks'] = repoArray[Number(index)]['fcc_remarks'] ?
-						repoArray[Number(index)]['fcc_remarks'] : '-';
+					obj['fcc_remarks'] = repoArray[Number(index)]['remarks'] ?
+						repoArray[Number(index)]['remarks'] : '-';
 					this.dataset.push(obj);
 					index++;
 				}
