@@ -290,7 +290,7 @@
                         <input matInput
                           [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
                           formControlName="{{paymentModeArray[i]['pm_id']}}"
-                          value="{{element?.emp_modes_data?.mode_data[i]['pm_value']}}" autocomplete="off"
+                          value="{{formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]}}" autocomplete="off"
                           (keydown.enter)="setNetTotal(element, $event)" />
                       </span>
                       <span *ngIf="!(element?.emp_modes_data?.mode_data[i])">
