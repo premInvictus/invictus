@@ -125,6 +125,10 @@ export class ChequeclearanceReportComponent implements OnInit {
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
 	notFormatedCellArray: any[] = [];
+	chequeType: any[] = [
+		{ name: 'Cheque Received', id: 'cr' },
+		{ name: 'Cheque Pending', id: 'cp' },
+	];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -140,7 +144,32 @@ export class ChequeclearanceReportComponent implements OnInit {
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
-		this.getChequeReport(this.reportFilterForm.value);
+		//this.getChequeReport(this.reportFilterForm.value);
+	}
+	getChequeReportBasedOnValue() {
+		if (this.reportFilterForm.value.c_type) {
+
+			if (this.reportFilterForm.value.c_type === 'cr') {
+
+				this.getChequeReport(this.reportFilterForm.value);
+			}
+			if (this.reportFilterForm.value.c_type === 'cp') {
+
+				this.getChequeReport2(this.reportFilterForm.value);
+			}
+		} else {
+			this.common.showSuccessErrorMessage('Please choose type', 'error');
+		}
+	}
+	setCtype($event) {
+		if ($event.value === 'cr') {
+
+			this.getChequeReport(this.reportFilterForm.value);
+		}
+		if ($event.value === 'cp') {
+
+			this.getChequeReport2(this.reportFilterForm.value);
+		}
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
@@ -158,6 +187,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 	}
 	buildForm() {
 		this.reportFilterForm = this.fbuild.group({
+			c_type: '',
 			'report_type': '',
 			'fee_value': '',
 			'from_date': '',
@@ -558,6 +588,340 @@ export class ChequeclearanceReportComponent implements OnInit {
 				obj3['bank_name'] = '';
 				obj3['status'] = '';
 				obj3['fcc_reason_id'] = '';
+				obj3['fcc_remarks'] = '';
+				this.totalRow = obj3;
+				if (this.dataset.length <= 5) {
+					this.gridHeight = 300;
+				} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+					this.gridHeight = 400;
+				} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+					this.gridHeight = 550;
+				} else if (this.dataset.length > 20) {
+					this.gridHeight = 750;
+				}
+				this.tableFlag = true;
+			} else {
+				this.tableFlag = true;
+			}
+		});
+	}
+	getChequeReport2(value: any) {
+		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
+		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
+		this.dataArr = [];
+		this.aggregatearray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		this.tableFlag = false;
+		this.gridOptions = {
+			enableDraggableGrouping: true,
+			createPreHeaderPanel: true,
+			showPreHeaderPanel: true,
+			enableHeaderMenu: true,
+			preHeaderPanelHeight: 40,
+			enableFiltering: true,
+			enableSorting: true,
+			enableColumnReorder: true,
+			createFooterRow: true,
+			showFooterRow: true,
+			footerRowHeight: 35,
+			enableExcelCopyBuffer: true,
+			fullWidthRows: true,
+			enableAutoTooltip: true,
+			enableCellNavigation: true,
+			headerMenu: {
+				iconColumnHideCommand: 'fas fa-times',
+				iconSortAscCommand: 'fas fa-sort-up',
+				iconSortDescCommand: 'fas fa-sort-down',
+				title: 'Sort'
+			},
+			exportOptions: {
+				sanitizeDataExport: true,
+				exportWithFormatter: true
+			},
+			gridMenu: {
+				customItems: [{
+					title: 'pdf',
+					titleKey: 'Export as PDF',
+					command: 'exportAsPDF',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'excel',
+					titleKey: 'Export Excel',
+					command: 'exportAsExcel',
+					iconCssClass: 'fas fa-download'
+				},
+				{
+					title: 'expand',
+					titleKey: 'Expand Groups',
+					command: 'expandGroup',
+					iconCssClass: 'fas fa-expand-arrows-alt'
+				},
+				{
+					title: 'collapse',
+					titleKey: 'Collapse Groups',
+					command: 'collapseGroup',
+					iconCssClass: 'fas fa-compress'
+				},
+				{
+					title: 'cleargroup',
+					titleKey: 'Clear Groups',
+					command: 'cleargroup',
+					iconCssClass: 'fas fa-eraser'
+				}
+				],
+				onCommand: (e, args) => {
+					if (args.command === 'toggle-preheader') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsPDF') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportAsPDF(this.dataset);
+					}
+					if (args.command === 'expandGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.expandAllGroups();
+					}
+					if (args.command === 'collapseGroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.collapseAllGroups();
+					}
+					if (args.command === 'cleargroup') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.clearGrouping();
+					}
+					if (args.command === 'exportAsExcel') {
+						// in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+						this.exportToExcel(this.dataset);
+					}
+					if (args.command === 'export-csv') {
+						this.exportToFile('csv');
+					}
+				},
+				onColumnsChanged: (e, args) => {
+					console.log('Column selection changed from Grid Menu, visible columns: ', args.columns);
+					this.updateTotalRow(this.angularGrid.slickGrid);
+				},
+			},
+			draggableGrouping: {
+				dropPlaceHolderText: 'Drop a column header here to group by the column',
+				// groupIconCssClass: 'fa fa-outdent',
+				deleteIconCssClass: 'fa fa-times',
+				onGroupChanged: (e, args) => {
+					this.groupColumns = [];
+					this.groupColumns = args.groupColumns;
+					this.onGroupChanged(args && args.groupColumns);
+					setTimeout(() => {
+						this.updateTotalRow(this.angularGrid.slickGrid);
+					}, 100);
+				},
+				onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+			}
+		};
+		let repoArray = [];
+		this.columnDefinitions = [];
+		this.dataset = [];
+		const collectionJSON: any = {
+			'from_date': value.from_date,
+			'to_date': value.to_date,
+			'pageSize': value.pageSize,
+			'pageIndex': value.pageIndex,
+			'classId': value.fee_value,
+			'secId': value.hidden_value,
+			'login_id': value.login_id,
+			'orderBy': value.orderBy,
+			'downloadAll': true,
+		};
+		this.columnDefinitions = [
+			{
+				id: 'srno',
+				name: 'SNo.',
+				field: 'srno',
+				sortable: true,
+				maxWidth: 40
+			},
+			{
+				id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				width: 80,
+				grouping: {
+					getter: 'stu_admission_no',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+				groupTotalsFormatter: this.srnTotalsFormatter
+			},
+			{
+				id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'stu_full_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			},
+			{
+				id: 'invoice_no',
+				name: 'Invoice No.',
+				width: 40,
+				field: 'invoice_no',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			},
+
+			{
+				id: 'receipt_no',
+				name: 'Receipt No.',
+				width: 40,
+				field: 'receipt_no',
+				sortable: true,
+				filterable: true,
+				formatter: this.checkReceiptFormatter,
+				cssClass: 'receipt_collection_report',
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			},
+			{
+				id: 'cheque_no',
+				name: 'Cheque No.',
+				width: 40,
+				field: 'cheque_no',
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			},
+			{
+				id: 'cheque_date', name: 'Cheque Date', field: 'cheque_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'cheque_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
+				id: 'bank_name',
+				name: 'Bank Name',
+				field: 'bank_name',
+				sortable: true,
+				width: 120,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			},
+			{
+				id: 'branch',
+				name: 'Branch',
+				field: 'branch',
+				sortable: true,
+				width: 120,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			},
+			{
+				id: 'receipt_amount',
+				name: ' Amount.',
+				width: 40,
+				field: 'receipt_amount',
+				sortable: true,
+				filterable: true,
+				cssClass: 'amount-report-fee',
+				groupTotalsFormatter: this.sumTotalsFormatter,
+				formatter: this.checkFeeFormatter
+			},
+			{
+				id: 'fcc_remarks',
+				name: 'Remarks',
+				field: 'fcc_remarks',
+				width: 40,
+				sortable: true,
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+			}];
+		this.feeService.getCheckControlReport(collectionJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.common.showSuccessErrorMessage(result.message, 'success');
+				repoArray = result.data.reportData;
+				this.totalRecords = Number(result.data.totalRecords);
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				let index = 0;
+				for (const item of repoArray) {
+					const obj: any = {};
+					obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+						(index + 1);
+					obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+						(index + 1);
+					obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_no'] ?
+						repoArray[Number(index)]['au_admission_no'] : '-';
+					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+
+
+					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'] ? repoArray[Number(index)]['cheque_date'] : '-';
+
+					obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
+						repoArray[Number(index)]['receipt_no'] : '-';
+
+					obj['cheque_no'] = repoArray[Number(index)]['cheque_no'] ?
+						repoArray[Number(index)]['cheque_no'] : '-';
+					obj['invoice_no'] = repoArray[Number(index)]['invoice_no'] ?
+						repoArray[Number(index)]['invoice_no'] : '-';
+					obj['receipt_id'] = repoArray[Number(index)]['receipt_id'] ?
+						repoArray[Number(index)]['receipt_id'] : '0';
+					obj['receipt_amount'] = repoArray[Number(index)]['receipt_amount'] ?
+						Number(repoArray[Number(index)]['receipt_amount'])
+						: 0;
+					obj['bank_name'] = repoArray[Number(index)]['bank_name'] ?
+						repoArray[Number(index)]['bank_name'] : '-';
+					obj['branch'] = repoArray[Number(index)]['branch_id'] ?
+						repoArray[Number(index)]['branch_id'] : '-';
+					obj['fcc_remarks'] = repoArray[Number(index)]['fcc_remarks'] ?
+						repoArray[Number(index)]['fcc_remarks'] : '-';
+					this.dataset.push(obj);
+					index++;
+				}
+				this.totalRow = {};
+				const obj3: any = {};
+				obj3['id'] = '';
+				obj3['srno'] = '';
+				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+				obj3['stu_full_name'] = '';
+				obj3['cheque_date'] = '';
+				obj3['invoice_no'] = '';
+				obj3['receipt_no'] = '';
+				obj3['cheque_no'] = '';
+				obj3['receipt_id'] = '';
+				obj3['receipt_amount'] =
+					new DecimalPipe('en-in').transform(this.dataset.map(t => t['receipt_amount']).reduce((acc, val) => acc + val, 0));
+				obj3['bank_name'] = '';
+				obj3['branch'] = '';
 				obj3['fcc_remarks'] = '';
 				this.totalRow = obj3;
 				if (this.dataset.length <= 5) {
@@ -1100,7 +1464,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		filterArr.push(
 			this.common.dateConvertion(this.reportFilterForm.value.from_date, 'd-MMM-y') + ' - ' +
 			this.common.dateConvertion(this.reportFilterForm.value.to_date, 'd-MMM-y'));
-			return filterArr;
+		return filterArr;
 	}
 	getLevelFooter(level, groupItem) {
 		if (level === 0) {
@@ -1333,11 +1697,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
-					|| item2.id === 'deposite_date')) {
-					arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
-				} else {
-					arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
-				}
+						|| item2.id === 'deposite_date')) {
+						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
+					} else {
+						arr.push(this.common.htmlToText(this.dataset[key][item2.id]));
+					}
 				}
 				rowData.push(arr);
 				this.pdfrowdata.push(arr);
