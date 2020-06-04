@@ -62,7 +62,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	];
 	formatTypeArray = [
 		{ id: "1", name: 'Addition' },
-		{ id: "2", name: 'Deducation' },
+		{ id: "2", name: 'Deduction' },
 	];
 	typeArray = [
 		{ id: "1", name: 'Wing Master' },
