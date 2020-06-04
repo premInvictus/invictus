@@ -809,7 +809,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
 						this.disabledApiButton = false;
-						// this.getSalartDetails();
+						
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
 					this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
@@ -891,7 +891,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.addOnly) {
 			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag) {
-			this.getSalartDetails();
+			//this.getSalartDetails();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
 	}

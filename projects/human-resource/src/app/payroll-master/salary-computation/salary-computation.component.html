@@ -191,7 +191,7 @@
                       <input matInput
                         [placeholder]="!(formGroupArray[element.srno - 1]?.value.td) ? 'Type Here.' : ''"
                         formControlName="td" autocomplete="off" [value]="element?.emp_modes_data.td"
-                        (blur)="setNetSalary(element, $event)" />
+                        (keydown.enter)="setNetPerTA(element, $event)" />
                     </mat-form-field>
                   </form>
                 </td>
@@ -207,7 +207,7 @@
                       <input matInput
                         [placeholder]="!(formGroupArray[element.srno - 1]?.value.tds) ? 'Type Here.' : ''"
                         formControlName="tds" autocomplete="off" [value]="element?.emp_modes_data.tds"
-                        (blur)="setNetSalary(element, $event)" />
+                        (keydown.enter)="setNetPerTDS(element, $event);$event.stopPropagation()" />
                     </mat-form-field>
                   </form>
                 </td>
@@ -224,7 +224,7 @@
                       <input matInput
                         [placeholder]="!(formGroupArray[element.srno - 1]?.value.arrear) ? 'Type Here.' : ''"
                         formControlName="arrear" autocomplete="off" [value]="element?.emp_modes_data.arrear"
-                        (blur)="setNetSalary(element, $event)" />
+                        (keydown.enter)="setNetPerArr(element, $event)" />
                     </mat-form-field>
                   </form>
                 </td>
@@ -264,7 +264,7 @@
                       <input matInput
                         [placeholder]="!(formGroupArray[element.srno - 1]?.value.advance) ? 'Type Here.' : ''"
                         formControlName="advance" autocomplete="off" [value]="element?.emp_modes_data.advance"
-                        (blur)="setNetSalary(element, $event)" />
+                        (keydown.enter)="setNetPerAdv(element, $event)" />
                     </mat-form-field>
                   </form>
                 </td>
@@ -290,8 +290,8 @@
                         <input matInput
                           [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
                           formControlName="{{paymentModeArray[i]['pm_id']}}"
-                          value="{{element?.emp_modes_data?.mode_data[i]['pm_value']}}" autocomplete="off"
-                          (blur)="setNetTotal(element, $event)" />
+                          value="{{formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]}}" autocomplete="off"
+                          (keydown.enter)="setNetTotal(element, $event)" />
                       </span>
                       <span *ngIf="!(element?.emp_modes_data?.mode_data[i])">
                         <input matInput

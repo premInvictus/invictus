@@ -96,7 +96,7 @@ export class EmployeeCommonComponent implements OnInit {
 			if (data) {
 				if ((data && data.reRenderForm) || (data && data.viewMode)) {
 					//this.employeedetails = {};
-					this.employeedetails.emp_status = 'live';
+					//this.employeedetails.emp_status = 'live';
 					this.getEmployeeDetail(this.lastRecordId);
 				}
 			}
@@ -109,7 +109,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	ngOnChanges() {
 		this.buildForm();
-		this.employeedetails.emp_status == 'live';
+		//this.employeedetails.emp_status == 'live';
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
