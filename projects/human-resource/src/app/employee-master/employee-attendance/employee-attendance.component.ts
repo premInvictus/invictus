@@ -84,7 +84,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				month_id: this.searchForm.value.month_id,
 				emp_status: this.searchForm.value.status_id,
 				emp_cat_id: this.searchForm.value.cat_id,
-				session_id: this.session_id
+				session_id: this.session_id,
+				from_attendance : true
 			};
 			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				let element: any = {};
@@ -172,7 +173,18 @@ export class EmployeeAttendanceComponent implements OnInit {
 								var lwpDays =  emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
 								var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
+										if (item.emp_status === 'live') {
 										element.emp_total_attendance = presentDays;
+										}
+										if (item.emp_status === 'left') {
+											const month: any = item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+											new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+											if (Number(inputJson.month_id) === Number(month) + 1) {
+												element.emp_total_attendance = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+											} else {
+												element.emp_total_attendance = presentDays;
+											}
+										}
 										element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
 											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
 										this.formGroupArray[j] = {

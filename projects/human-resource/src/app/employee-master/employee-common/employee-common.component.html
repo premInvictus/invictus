@@ -10,13 +10,13 @@
     </button>
   </div>
   <div class="functional-button-three" *ngIf="employeedetails?.last_record > 0">
-    <button mat-fab *ngIf="editOnly && !(employeedetails.emp_status=='left')" (click)="editForm()"><i
+    <button mat-fab *ngIf="editOnly" (click)="editForm()"><i
         class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
         Employee</span></button>
   </div>
   <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="deleteOnly && !(employeedetails.emp_status=='left')" (click)="openDeleteDialog()">
-      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
+      <mat-icon class="btn-top-icon">exit_to_app</mat-icon><span class="right-btn-text">Mark As Left</span>
     </button>
   </div>
   <div class="row remove-top-margin">
@@ -155,5 +155,6 @@
   </div>
 </form>
 <app-imagecrop #cropModal (cropYes)="acceptCrop($event)" (cropNo)="acceptNo($event)"></app-imagecrop>
-<app-delete-modal #deleteModal [deleteMessage]="deleteMessage" (deleteOk)="deleteUser()"
-  (deleteCancel)="deleteCancel()"></app-delete-modal>
+  <app-processdate-modal #deleteModal (processOk)="deleteUser($event)"
+  [processMessage] ="deleteMessage"
+  (processCancel)="deleteCancel()"></app-processdate-modal>

@@ -55,9 +55,20 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Date of Joining</mat-label>
                                         <input matInput [matDatepicker]="picker" placeholder="Date of Joining"
-                                            formControlName="doj" required>
+                                            [readonly]="viewOnly" formControlName="doj" required>
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline"
+                                        *ngIf="employeedetails.emp_status === 'left'">
+                                        <mat-label>Date of Leaving</mat-label>
+                                        <input matInput [matDatepicker]="picker2" placeholder="Date of Leaving"
+                                            [readonly]="viewOnly" formControlName="dol">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -65,7 +76,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PF Joining Date</mat-label>
                                         <input matInput [matDatepicker]="picker1" placeholder="PF Joining Date"
-                                            formControlName="pf_doj">
+                                            [readonly]="viewOnly" formControlName="pf_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                         <mat-datepicker #picker1></mat-datepicker>
                                         <mat-error>
@@ -75,7 +86,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI Joining Date</mat-label>
                                         <input matInput [matDatepicker]="picker2" placeholder="ESI Joining Date"
-                                            formControlName="esi_doj">
+                                            [readonly]="viewOnly" formControlName="esi_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2></mat-datepicker>
                                         <mat-error>
@@ -85,7 +96,7 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Probation</mat-label>
                                         <input matInput [matDatepicker]="picker3" placeholder="Probation"
-                                            formControlName="probation">
+                                            [readonly]="viewOnly" formControlName="probation">
                                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                                         <mat-datepicker #picker3></mat-datepicker>
                                         <mat-error>
@@ -95,13 +106,19 @@
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Confirmation Date</mat-label>
                                         <input matInput [matDatepicker]="picker4" placeholder="Confirmation Date"
-                                            formControlName="confirm_date">
+                                            [readonly]="viewOnly" formControlName="confirm_date">
                                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                                         <mat-datepicker #picker4></mat-datepicker>
                                         <mat-error>
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
+                                    <ng-container *ngIf="employeedetails.emp_status === 'left'">
+                                        <mat-checkbox [checked]="salaryDetails.value.fnf_status" [disabled]="
+                                    viewOnly || 
+                                    employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status"
+                                            (change)="settleFnf($event)">FNF Settled </mat-checkbox>
+                                    </ng-container>
                                 </div>
                             </div>
                             <div class="col-3 col-pad-5">
@@ -300,7 +317,7 @@
                                                                 This field is required
                                                             </mat-error>
                                                         </mat-form-field>
-                                                    </ng-container> 
+                                                    </ng-container>
                                                 </form>
                                             </ng-container>
                                             <!-- </ng-container>
@@ -343,16 +360,16 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>TA</mat-label>
-                                        <input type="text" formControlName="td" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
-                                            placeholder="TA">
+                                        <input type="text" formControlName="td" (keyup)="getNetSalary()" matInput
+                                            [readonly]="viewOnly" placeholder="TA">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>TDS</mat-label>
-                                        <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
-                                            placeholder="TDS">
+                                        <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput
+                                            [readonly]="viewOnly" placeholder="TDS">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -390,7 +407,8 @@
                                             <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Pay Mode</mat-label>
                                                 <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
-                                                    [disabled]="viewOnly" [value]="empPaymentModeDetail[i].value.pay_mode"
+                                                    [disabled]="viewOnly"
+                                                    [value]="empPaymentModeDetail[i].value.pay_mode"
                                                     [errorStateMatcher]="confirmValidParentMatcher">
                                                     <mat-option value="">Please select</mat-option>
                                                     <mat-option *ngFor="let item of payMode" [value]="item.bnk_id">
@@ -443,7 +461,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Advace Deposite Per Month</mat-label>
-                                        <input type="text" formControlName="deposite_month_amount" matInput 
+                                        <input type="text" formControlName="deposite_month_amount" matInput
                                             placeholder="Advace Deposit Per Month" [readonly]="viewOnly">
                                         <mat-error>
                                             This field is required
@@ -458,22 +476,22 @@
                                         </mat-error>
                                     </mat-form-field> -->
                                     <mat-form-field class="form-field" appearance="outline">
-                                            <mat-label>Starting Month</mat-label>
-                                            <mat-select formControlName="starting_month" [disabled]="viewOnly">
-                                              <mat-option value="1">January</mat-option>
-                                              <mat-option value="2">February</mat-option>
-                                              <mat-option value="3">March</mat-option>
-                                              <mat-option value="4">April</mat-option>
-                                              <mat-option value="5">May</mat-option>
-                                              <mat-option value="6">June</mat-option>
-                                              <mat-option value="7">July</mat-option>
-                                              <mat-option value="8">August</mat-option>
-                                              <mat-option value="9">September</mat-option>
-                                              <mat-option value="10">October</mat-option>
-                                              <mat-option value="11">November</mat-option>
-                                              <mat-option value="12">December</mat-option>
-                                            </mat-select>
-                                          </mat-form-field>
+                                        <mat-label>Starting Month</mat-label>
+                                        <mat-select formControlName="starting_month" [disabled]="viewOnly">
+                                            <mat-option value="1">January</mat-option>
+                                            <mat-option value="2">February</mat-option>
+                                            <mat-option value="3">March</mat-option>
+                                            <mat-option value="4">April</mat-option>
+                                            <mat-option value="5">May</mat-option>
+                                            <mat-option value="6">June</mat-option>
+                                            <mat-option value="7">July</mat-option>
+                                            <mat-option value="8">August</mat-option>
+                                            <mat-option value="9">September</mat-option>
+                                            <mat-option value="10">October</mat-option>
+                                            <mat-option value="11">November</mat-option>
+                                            <mat-option value="12">December</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
                                 </div>
                             </div>
                         </div>
