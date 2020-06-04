@@ -166,9 +166,9 @@
                                     </mat-form-field>
 
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Reported to</mat-label>
+                                        <mat-label>Reporting Officer</mat-label>
                                         <mat-select formControlName="supervisor" required
-                                            placeholder="Select Reported to"
+                                            placeholder="Reporting Officer"
                                             [errorStateMatcher]="confirmValidParentMatcher" [disabled]="viewOnly">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of employeeArray" [value]="item.emp_login_id">
@@ -460,9 +460,9 @@
                                         </mat-error>
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Advace Deposite Per Month</mat-label>
+                                        <mat-label>Advance deducted per month</mat-label>
                                         <input type="text" formControlName="deposite_month_amount" matInput
-                                            placeholder="Advace Deposit Per Month" [readonly]="viewOnly">
+                                            placeholder="Advance deducted per month" [readonly]="viewOnly">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
