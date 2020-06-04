@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
@@ -56,6 +57,7 @@ export const MY_FORMATS = {
 		FormsModule,
 		ReactiveFormsModule,
 		MatSlideToggleModule,
+		DragDropModule,
 		MatButtonModule,
 		MatFormFieldModule,
 		MatInputModule,
@@ -122,6 +124,7 @@ export const MY_FORMATS = {
 		FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
+		DragDropModule,
 		MatButtonModule,
 		MatFormFieldModule,
 		MatRadioModule,
