@@ -252,8 +252,22 @@
                             </div>
                             <div class="col-3 col-pad-5">
                                 <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline" *ngIf="payScArr.length > 0">
+                                        <mat-label>Pay Scale</mat-label>
+                                        <mat-select formControlName="pay_scale_master"
+                                            placeholder="Pay Scale" [disabled]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                            <mat-option value="">Please select</mat-option>
+                                            <mat-option *ngFor="let item of payScArr" [value]="item.config_id">
+                                                {{item.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Salary Structure/Pay Scale</mat-label>
+                                        <mat-label>Salary Structure</mat-label>
                                         <mat-select formControlName="sal_str" (selectionChange)="onChangeData()"
                                             required placeholder="Salary Structure/Pay Scale" [disabled]="viewOnly"
                                             [errorStateMatcher]="confirmValidParentMatcher">

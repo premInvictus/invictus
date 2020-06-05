@@ -72,6 +72,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "6", name: 'Payment Mode' },
 		{ id: "7", name: 'Department' },
 		{ id: "12", name: 'Board' },
+		{ id: "13", name: 'Pay Scale' },
 	];
 	constructor(
 		private fbuild: FormBuilder,
