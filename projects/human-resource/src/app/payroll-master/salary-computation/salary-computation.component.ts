@@ -478,7 +478,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) - Number(element.emp_modes_data.arrear));
+							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
 						element.balance = Number(element.emp_present_days ? Number(empBasicPay) + element.emp_salary_payable : 0) - 0;
 					} else {
 						let advance_salary = 0;
@@ -576,7 +576,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-							- element.emp_modes_data.tds - element.emp_modes_data.advance - element.emp_modes_data.arrear);
+							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
 						element.balance = Number(element.emp_present_days ? Math.round(Number(empBasicPay) + element.emp_salary_payable) : 0) - 0;
 						if (element) {
 							var deduction = 0;
@@ -1573,7 +1573,7 @@ export class SalaryComputationComponent implements OnInit {
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) - Number(element.emp_modes_data.arrear));
+									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
 								element.balance = Number(element.emp_present_days ? Number(empBasicPay) + element.emp_salary_payable : 0) - 0;
 							} else {
 								let advance_salary = 0;
@@ -1671,7 +1671,7 @@ export class SalaryComputationComponent implements OnInit {
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-									- element.emp_modes_data.tds - element.emp_modes_data.advance - element.emp_modes_data.arrear);
+									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
 								element.balance = Number(element.emp_present_days ? Math.round(Number(empBasicPay) + element.emp_salary_payable) : 0) - 0;
 								if (element) {
 									var deduction = 0;
