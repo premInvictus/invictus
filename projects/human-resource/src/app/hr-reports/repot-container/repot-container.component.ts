@@ -33,7 +33,7 @@ export class RepotContainerComponent implements OnInit {
     },
     {
       report_id: '3',
-      report_name: 'Accumulative Deduction',
+      report_name: 'Accumulated Deduction',
       report_image: '/assets/images/Fee Reports/collection_report.png',
       main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
       report_main_image_class: '',
@@ -42,7 +42,7 @@ export class RepotContainerComponent implements OnInit {
     },
     {
       report_id: '4',
-      report_name: 'Employee Enguiry',
+      report_name: 'Career Enquiries',
       report_image: '/assets/images/Fee Reports/collection_report.png',
       main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
       report_main_image_class: '',

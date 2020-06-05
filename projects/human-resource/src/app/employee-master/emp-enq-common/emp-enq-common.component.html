@@ -108,7 +108,6 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Subject</mat-label>
                   <mat-select formControlName="enq_subject" multiple placeholder="Subject" required [disabled]="viewOnly">
-                    <mat-option value="">Please Select</mat-option>
                     <mat-option value="{{item.sub_id}}" *ngFor="let item of subjectArray">{{item.sub_name}}
                     </mat-option>
                   </mat-select>

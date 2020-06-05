@@ -15,6 +15,7 @@ export class LeaveApplicationComponent implements OnInit {
   leaveTypeArray: any[] = [];
   attachmentArray: any[] = [];
   showFormFlag = false;
+  maxDate = new Date();
   currentUser: any;
   employeeRecord: any;
   editFlag = false;

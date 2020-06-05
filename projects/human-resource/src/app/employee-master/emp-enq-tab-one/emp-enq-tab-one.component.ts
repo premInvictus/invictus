@@ -203,29 +203,13 @@ export class EmpEnqTabOneComponent implements OnInit {
 					enq_subject: subjectArray
 				}];
 			this.personaldetails['enq_academic_detail'] = [
-				{
-					qualification: "",
-					university: "",
-					year: "",
-					division: "",
-					percentage: "",
-					subjects: ""
-				}
+		
 			];
 			this.personaldetails['enq_work_experience_detail'] = [
-				{
-					organisation: "",
-					designation: "",
-					salary_drawn: "",
-					from_date: "",
-					to_date: ""
-				}
+				
 			];
 			this.personaldetails['enq_skills_detail'] = [
-				{
-					skill_id: "",
-					skill_name: ""
-				}
+			
 			];
 			this.personaldetails['enq_status_log'] = [
 				{
@@ -240,24 +224,13 @@ export class EmpEnqTabOneComponent implements OnInit {
 				}
 			];
 			this.personaldetails['enq_remarks'] = [
-				{
-					remark_name: "",
-					remark: ""
-				}
+				
 			];
 			this.personaldetails['enq_documents'] = [
-				{
-					doc_id: "",
-					doc_name: "",
-					doc_url: ""
-				}
+				
 			];
 			this.personaldetails['enq_question_answer_data'] = [
-				{
-					question_id: "",
-					question_name: "",
-					question_answer: ""
-				}
+				
 			];
 			this.personaldetails['enq_personal_detail'] = {
 				enq_full_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_name,
