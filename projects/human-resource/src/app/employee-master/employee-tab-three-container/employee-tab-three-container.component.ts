@@ -23,6 +23,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	isSubmit = false;
 	login_id;
 	parentId;
+	payScArr: any[] = [];
 	generalRemarkData: any[] = [];
 	sessionArray: any[] = [];
 	sessionName: any;
@@ -114,6 +115,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_ac: '',
 				nominee: '',
 				doj: '',
+				dol : '',
+				pay_scale_master : '',
 				pf_doj: '',
 				esi_doj: '',
 				probation: '',
@@ -169,6 +172,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			nominee: '',
 			doj: '',
 			dol: '',
+			pay_scale_master: '',
 			fnf_status: '',
 			pf_doj: '',
 			esi_doj: '',
@@ -211,6 +215,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
+		this.getPayScaleMaster();
 		this.getPayScale();
 		this.getPayMode();
 		this.getBank();
@@ -525,6 +530,11 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status : false,
 			pf_deduction: '',
 			esi_deduction: '',
+			pay_scale_master: this.employeedetails.emp_salary_detail && 
+			this.employeedetails.emp_salary_detail.emp_salary_structure && 
+			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id ?
+				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id : '',
 			tds_deduction: '',
 			advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
 			deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
@@ -542,6 +552,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 
 
+	}
+	getScaleName(value) {
+		const index = this.payScArr.findIndex(f => Number(f.config_id) === Number(value));
+		if (index !== -1) {
+			return this.payScArr[index].name
+		}
 	}
 	saveForm() {
 		var bankDetail = [];
@@ -610,6 +626,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					emp_pay_mode: {
 						pm_id: this.salaryDetails.value.pay_mode,
 						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+					},
+					emp_pay_scale_master: {
+						pay_scale_id: this.salaryDetails.value.pay_scale_master ? this.salaryDetails.value.pay_scale_master : '',
+						pay_scale_name: this.salaryDetails.value.pay_scale_master ? this.getScaleName(this.salaryDetails.value.pay_scale_master) : ''
 					},
 					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
 					emp_salary_heads: this.salaryFinalArray,
@@ -681,6 +701,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
 	}
+	getPayScaleMaster() {
+		this.commonAPIService.getMaster({ type_id: "13" }).subscribe((res: any) => {
+			if (res) {
+				this.payScArr = [];
+				this.payScArr = res;
+			}
+		});
+	}
 
 	updateForm(moveNext) {
 		var bankDetail = [];
@@ -746,6 +774,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						pm_id: this.salaryDetails.value.pay_mode,
 						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
 					},
+					emp_pay_scale_master: {
+						pay_scale_id: this.salaryDetails.value.pay_scale_master ? this.salaryDetails.value.pay_scale_master : '',
+						pay_scale_name: this.salaryDetails.value.pay_scale_master ? this.getScaleName(this.salaryDetails.value.pay_scale_master) : ''
+					},
 					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
 					emp_salary_heads: this.salaryFinalArray,
 					emp_deduction_detail: [
@@ -809,7 +841,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
 						this.disabledApiButton = false;
-						
+
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
 					this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
