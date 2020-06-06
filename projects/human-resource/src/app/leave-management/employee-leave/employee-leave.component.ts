@@ -16,7 +16,7 @@ export class EmployeeLeaveComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   currentUser: any;
   employeeArray: any[] = [];
-  myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'leave_to', 'action'];
+  myLeaveDisplayedColumns: string[] = ['srno', 'emp_name', 'leave_type', 'leave_reason', 'leave_no_of_days', 'leave_date', 'leave_to', 'leave_status', 'action'];
   MY_LEAVE_ELEMENT_DATA: EmployeeLeave[] = [];
   myLeaveDataSource = new MatTableDataSource<EmployeeLeave>(this.MY_LEAVE_ELEMENT_DATA);
   disabledApiButton = false;
@@ -47,12 +47,16 @@ export class EmployeeLeaveComponent implements OnInit {
           var leave_request_schedule_data = item.leave_request_schedule_data;
           var dataJson = {
             srno: pos,
+            emp_name: item.leave_emp_detail && item.leave_emp_detail.emp_name ?
+              item.leave_emp_detail.emp_name : '',
             leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
             leave_type: item.leave_type.leave_name,
             leave_no_of_days: leave_request_schedule_data.length,
             status: 'Pending',
             leave_reason: item.leave_reason,
             leave_to: item.leave_to,
+            leave_status: item.leave_status && item.leave_status === '0' ? "Pending" :
+              (item.leave_status === '1' ? 'Approved' : 'Declined'),
             action: item
           };
           this.MY_LEAVE_ELEMENT_DATA.push(dataJson);

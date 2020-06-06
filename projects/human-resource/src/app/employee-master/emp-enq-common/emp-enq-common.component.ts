@@ -125,7 +125,7 @@ export class EmpEnqCommonComponent implements OnInit {
       //this.setActionControls({viewMode : true})
       this.commonAPIService.getCareerEnq({ enq_id: enq_id }).subscribe((result: any) => {
         if (result) {
-          var subjectArray: any = this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
+          const subjectArray: any[] = this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
             this.employeedetails.enq_applied_job_detail[0].enq_subject : [];
           let sub_id_array: any[] = [];
           for (let item of subjectArray) {

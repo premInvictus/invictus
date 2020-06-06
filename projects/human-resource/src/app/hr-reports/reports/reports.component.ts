@@ -18,7 +18,7 @@ export class ReportsComponent implements OnInit {
 	feeReportArray: any[] = [
 		{
 			report_id: '1',
-			report_name: 'Employee Details Report',
+			report_name: 'Employee Details',
 			report_image: '/assets/images/Fee Reports/collection_report.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
@@ -27,7 +27,7 @@ export class ReportsComponent implements OnInit {
 		},
 		{
 			report_id: '2',
-			report_name: 'Employee Salary Report',
+			report_name: 'Salary Details',
 			report_image: '/assets/images/Fee Reports/fee_defaulter_list.png',
 			main_text_class: 'text-left inline-flex margin-top-5 icon-spacer',
 			report_main_image_class: '',
