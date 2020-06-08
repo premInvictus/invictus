@@ -22,7 +22,7 @@
               <mat-form-field class="form-field-150 margin-left-10 remove-form-field-bottom-margin"
                 appearance="outline">
                 <mat-label>Department</mat-label>
-                <mat-select formControlName="dept_id" required placeholder="Select Department"
+                <mat-select formControlName="dept_id"  placeholder="Select Department"
                   (selectionChange)="fetchDetailsIfCatId()">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of departmentArray" [value]="item.config_id">
@@ -32,7 +32,7 @@
               </mat-form-field>
               <mat-form-field class="form-field-150 margin-left-10" appearance="outline">
                 <mat-label>Category</mat-label>
-                <mat-select formControlName="cat_id" (selectionChange)="fetchDetails()" required
+                <mat-select formControlName="cat_id" (selectionChange)="fetchDetails()" 
                   placeholder="Select Category">
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of categoryOneArray" [value]="item.cat_id">
@@ -89,8 +89,10 @@
                   (click)="changeStudentAttendanceStatus($event,i)">
                 <div class="">
                   <i class="fas fa-check-circle mark-student-tick font-size-20 font-color-green"
-                    *ngIf="finalArray[i].attendance === 1"></i>
-                  <i class="fas fa-times-circle mark-student-tick font-size-20 font-color-red" *ngIf="finalArray[i].attendance !== 1
+                    *ngIf="finalArray[i] && 
+                    finalArray[i].attendance === 1"></i>
+                  <i class="fas fa-times-circle mark-student-tick font-size-20 font-color-red" *ngIf="
+                  finalArray[i] && finalArray[i].attendance !== 1
                   && finalArray[i].attendance !== ''"></i>
                 </div>
               </div>
