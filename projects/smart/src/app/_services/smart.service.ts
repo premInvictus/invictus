@@ -141,6 +141,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/getSyllabusDetailsEdit', value);
 	}
+	setOrderSyllabus(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/setOrderSyllabus', value);
+	}
 	insertPublishSyllabus(value: any) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/smtsyllabus/insertPublishSyllabus', value);
