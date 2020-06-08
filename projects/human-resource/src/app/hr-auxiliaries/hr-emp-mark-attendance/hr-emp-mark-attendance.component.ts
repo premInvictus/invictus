@@ -59,6 +59,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     this.buildForm();
     this.getDepartment();
     this.getCategoryOne();
+    this.fetchDetails();
   }
 
   buildForm() {
@@ -106,6 +107,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     this.attendanceForm.patchValue({
       'attendance': ''
     });
+    this.fetchDetails();
   }
   //  Get Class List functio
   fetchDetails() {
@@ -120,13 +122,15 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     this.studentAttendanceArray = [];
     this.monthEntryAvailable = false;
     this.employeeCatDeptAvail = false;
-    const checkifMonthEntry: any = {
-      "$and": [
-        { "ses_id": this.session.ses_id },
-        { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
-        { "month_id": new Date(this.firstForm.value.entry_date).getMonth() + 1 }
-      ]
-    };
+    const checkifMonthEntry: any = [{
+      "$match": {
+        "$and": [
+          { "ses_id": this.session.ses_id },
+          { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
+          { "month_id": (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString() }
+        ]
+      }
+    }];
     this.commonService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.monthEntryAvailable = true;
@@ -135,21 +139,115 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
         this.monthEntryAvailable = false;
       }
     });
-    const checkStatFilter: any = {
-      "$and": [
-        { "ses_id": this.session.ses_id },
-        { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
-        { "month_id": new Date(this.firstForm.value.entry_date).getMonth() + 1 },
-        {
-          "employeeList": {
-            "$elemMatch": {
-              "dpt_id": this.firstForm.value.dept_id.toString(),
-              "cat_id": this.firstForm.value.cat_id.toString()
+    let checkStatFilter: any[] = [];
+    if (this.firstForm.value.dept_id && this.firstForm.value.cat_id) {
+      checkStatFilter = [{
+        $match: {
+          "$and": [
+            { "ses_id": this.session.ses_id },
+            { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
+            { "month_id": (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString() },
+            {
+              "employeeList": {
+                "$elemMatch": {
+                  "dpt_id": this.firstForm.value.dept_id ?
+                    this.firstForm.value.dept_id.toString() : '',
+                  "cat_id": this.firstForm.value.cat_id ?
+                    this.firstForm.value.cat_id.toString() : ''
+                }
+              }
             }
-          }
+          ]
         }
-      ]
-    };
+      },
+      {
+        $project: {
+          employeeList: {
+            $filter: {
+              input: '$employeeList',
+              as: 'employeeList',
+              cond: {
+                $and: [
+                  { $eq: ['$$employeeList.dpt_id', this.firstForm.value.dept_id.toString()] },
+                  { $eq: ['$$employeeList.cat_id', this.firstForm.value.cat_id.toString()] }
+                ]
+              }
+            }
+          },
+
+        }
+      }
+      ];
+    } else if (this.firstForm.value.dept_id && !this.firstForm.value.cat_id) {
+      checkStatFilter = [{
+        "$match": {
+          "$and": [
+            { "ses_id": this.session.ses_id },
+            { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
+            { "month_id": (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString() },
+            {
+              "employeeList": {
+                "$elemMatch": {
+                  "dpt_id": this.firstForm.value.dept_id ?
+                    this.firstForm.value.dept_id.toString() : '',
+                }
+              }
+            }
+          ]
+        },
+      },
+      {
+        $project: {
+          employeeList: {
+            $filter: {
+              input: '$employeeList',
+              as: 'employeeList',
+              cond: { $eq: ['$$employeeList.dpt_id', this.firstForm.value.dept_id.toString()] }
+            }
+          },
+
+        }
+      }];
+    } else if (!this.firstForm.value.dept_id && this.firstForm.value.cat_id) {
+      checkStatFilter = [{
+        "$match": {
+          "$and": [
+            { "ses_id": this.session.ses_id },
+            { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
+            { "month_id": (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString() },
+            {
+              "employeeList": {
+                "$elemMatch": {
+                  "dpt_id": this.firstForm.value.cat_id ?
+                    this.firstForm.value.cat_id.toString() : '',
+                }
+              }
+            }
+          ]
+        },
+      },
+      {
+        $project: {
+          employeeList: {
+            $filter: {
+              input: '$employeeList',
+              as: 'employeeList',
+              cond: { $eq: ['$$employeeList.cat_id', this.firstForm.value.cat_id.toString()] }
+            }
+          },
+        }
+      }];
+    } else {
+      checkStatFilter = [{
+        "$match": {
+          "$and": [
+            { "ses_id": this.session.ses_id },
+            { "entrydate": new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') },
+            { "month_id": (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString() }
+          ]
+        }
+      }];
+    }
     this.commonService.checkAttendance(checkStatFilter).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.finalDivFlag = false;
@@ -157,55 +255,64 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
         this.studentArray = res.data[0].employeeList;
         let counter = 0;
         for (const item of this.studentArray) {
-          if (Number(item.dpt_id) === Number(this.firstForm.value.dept_id) &&
-            Number(item.cat_id) === Number(this.firstForm.value.cat_id)) {
-            this.studentAttendanceArray.push({
-              sr_no: counter,
-              au_profileimage: item.au_profileimage ? item.au_profileimage : '',
-              emp_name: new TitleCasePipe().transform(item.emp_name),
-              emp_id: item.emp_id,
-            });
-            this.finalArray.push({
-              dpt_id: item.dpt_id ? item.dpt_id : '',
-              cat_id: item.cat_id ? item.cat_id : '',
-              emp_id: item.emp_id ? item.emp_id : '',
-              emp_wing_detail: item.emp_wing_detail,
-              attendance: item.attendance === 0 || item.attendance === 1 ? Number(item.attendance) : '',
-              att_created_date: item.att_created_date,
-              att_updated_date: item.att_updated_date,
-              au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
-              emp_name: new TitleCasePipe().transform(item.emp_name),
-              created_by: {
-                id: item.created_by.id ? item.created_by.id : '',
-                name: item.created_by.name ? item.created_by.name : ''
-              },
-              updated_by: {
-                id: item.updated_by.id ? item.updated_by.id : '',
-                name: item.updated_by.name ? item.updated_by.name : ''
-              },
-            });
-            counter++;
-            this.totalStudent = counter;
-            if (Number(item.attendance) === 0) {
-              this.absentStudent++;
-            } else {
-              this.presentStudent++;
-            }
+          this.studentAttendanceArray.push({
+            sr_no: counter,
+            au_profileimage: item.au_profileimage ? item.au_profileimage : '',
+            emp_name: new TitleCasePipe().transform(item.emp_name),
+            emp_id: item.emp_id,
+          });
+          this.finalArray.push({
+            dpt_id: item.dpt_id ? item.dpt_id : '',
+            cat_id: item.cat_id ? item.cat_id : '',
+            emp_id: item.emp_id ? item.emp_id : '',
+            emp_wing_detail: item.emp_wing_detail,
+            attendance: item.attendance === 0 || item.attendance === 1 ? Number(item.attendance) : '',
+            att_created_date: item.att_created_date,
+            att_updated_date: item.att_updated_date,
+            au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+            emp_name: new TitleCasePipe().transform(item.emp_name),
+            created_by: {
+              id: item.created_by.id ? item.created_by.id : '',
+              name: item.created_by.name ? item.created_by.name : ''
+            },
+            updated_by: {
+              id: item.updated_by.id ? item.updated_by.id : '',
+              name: item.updated_by.name ? item.updated_by.name : ''
+            },
+          });
+          counter++;
+          this.totalStudent = counter;
+          if (Number(item.attendance) === 0) {
+            this.absentStudent++;
+          } else {
+            this.presentStudent++;
           }
+
         }
         this.employeeCatDeptAvail = true;
       } else {
         this.employeeCatDeptAvail = false;
-        const filterJSON = {
-          "generalFilters": {
-            "emp_department_detail.dpt_id": [
-              Number(this.firstForm.value.dept_id)
-            ],
-            "emp_category_detail.cat_id": [
-              Number(this.firstForm.value.cat_id)
-            ]
-          }
-        };
+        let filterJSON: any = {};
+        if (this.firstForm.value.dept_id
+          || this.firstForm.value.cat_id) {
+          filterJSON = {
+            "generalFilters": {
+              "emp_department_detail.dpt_id": this.firstForm.value.dept_id ? [
+                this.firstForm.value.dept_id
+              ] : '',
+              "emp_category_detail.cat_id": this.firstForm.value.cat_id ? [
+                this.firstForm.value.cat_id
+              ] : '',
+              emp_status: ['live']
+            }
+          };
+        } else {
+          filterJSON = {
+            generalFilters: {
+              emp_status: ['live']
+            }
+          };
+        }
         this.commonService.getFilterData(filterJSON)
           .subscribe(
             (result: any) => {
@@ -229,8 +336,11 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                     emp_id: item.emp_id,
                   });
                   this.finalArray.push({
-                    dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : '',
-                    cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() : '',
+                    dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
+                      && item.emp_department_detail.dpt_id ? item.emp_department_detail.dpt_id.toString() : ''),
+                    cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() :
+                      (item.emp_category_detail
+                        && item.emp_category_detail.cat_id ? item.emp_category_detail.cat_id.toString() : ''),
                     emp_id: item.emp_id ? item.emp_id : '',
                     emp_name: item.emp_name ? item.emp_name : '',
                     attendance: '',
@@ -288,9 +398,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     }
   }
   fetchDetailsIfCatId() {
-    if (this.firstForm.value.cat_id) {
-      this.fetchDetails();
-    }
+    this.fetchDetails();
   }
   submit() {
     this.requiredAll = true;
@@ -302,7 +410,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
     if (this.requiredAll) {
       this.disabledApiButton = true;
       const checkParam: any = {};
-      checkParam.month_id = new Date(this.firstForm.value.entry_date).getMonth() + 1;
+      checkParam.month_id = (new Date(this.firstForm.value.entry_date).getMonth() + 1).toString();
       checkParam.entrydate = this.firstForm.value.entry_date ? new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd') : '';
       checkParam.ses_id = this.session.ses_id ? this.session.ses_id : '';
       checkParam.created_by = {
@@ -322,13 +430,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
       if (this.monthEntryAvailable && !this.employeeCatDeptAvail) {
         const updateJSON = {
           att_id: this.att_id,
-          updateValue: {
-            "$push": {
-              "employeeList": {
-                "$each": this.finalArray
-              }
-            }
-          }
+          values: this.finalArray
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
           this.disabledApiButton = false;
@@ -341,11 +443,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
       if (this.monthEntryAvailable && this.employeeCatDeptAvail) {
         const updateJSON = {
           att_id: this.att_id,
-          updateValue: {
-            "$set": {
-              "employeeList": this.finalArray
-            }
-          }
+          values : this.finalArray
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
           this.disabledApiButton = false;

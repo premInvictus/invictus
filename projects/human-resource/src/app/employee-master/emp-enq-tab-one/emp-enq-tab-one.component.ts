@@ -201,15 +201,16 @@ export class EmpEnqTabOneComponent implements OnInit {
 						dept_name: this.getDepartmentName(this.employeeCommonDetails.employeeDetailsForm.value.enq_department)
 					},
 					enq_subject: subjectArray
+					
 				}];
 			this.personaldetails['enq_academic_detail'] = [
-		
+
 			];
 			this.personaldetails['enq_work_experience_detail'] = [
-				
+
 			];
 			this.personaldetails['enq_skills_detail'] = [
-			
+
 			];
 			this.personaldetails['enq_status_log'] = [
 				{
@@ -224,13 +225,13 @@ export class EmpEnqTabOneComponent implements OnInit {
 				}
 			];
 			this.personaldetails['enq_remarks'] = [
-				
+
 			];
 			this.personaldetails['enq_documents'] = [
-				
+
 			];
 			this.personaldetails['enq_question_answer_data'] = [
-				
+
 			];
 			this.personaldetails['enq_personal_detail'] = {
 				enq_full_name: this.employeeCommonDetails.employeeDetailsForm.value.enq_name,
@@ -266,6 +267,8 @@ export class EmpEnqTabOneComponent implements OnInit {
 				this.employeedetails.enq_cover_letter_detail = "";
 				this.employeedetails.enq_prefix = "";
 				this.employeedetails.enq_created_by = this.currentUser.login_id;
+				this.employeedetails.enq_hire_status = 
+				this.employeeCommonDetails.employeeDetailsForm.value.enq_hire_status;
 			}
 
 			this.commonAPIService.insertCareerEnq(this.employeedetails).subscribe((result: any) => {
@@ -348,6 +351,8 @@ export class EmpEnqTabOneComponent implements OnInit {
 				this.employeedetails.enq_profile_pic = this.employeeCommonDetails.employeeDetailsForm.value.enq_profile_pic;
 				this.employeedetails.enq_present_salary = this.personalDetails.value.enq_present_salary;
 				this.employeedetails.enq_expected_salary = this.personalDetails.value.enq_expected_salary;
+				this.employeedetails.enq_hire_status = 
+				this.employeeCommonDetails.employeeDetailsForm.value.enq_hire_status;
 			}
 			if (!moveStatus) {
 				this.commonAPIService.updateCareerEnq(this.employeedetails).subscribe((result: any) => {
