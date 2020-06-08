@@ -9,13 +9,14 @@ import { BrowseSyllabusComponent } from './browse-syllabus/browse-syllabus.compo
 import { SyllabusManagementComponent } from './syllabus-management/syllabus-management.component';
 import { EditSyllabusComponent } from './edit-syllabus/edit-syllabus.component';
 import { MessageModalComponent } from './message-modal/message-modal.component';
-
+import { DragDropModule } from '@angular/cdk/drag-drop';
 @NgModule({
 	imports: [
 		CommonModule,
 		SyllabusRoutingModule,
 		LoadingModule,
 		SmartSharedModule,
+		DragDropModule
 	],
 	// tslint:disable-next-line: max-line-length
 	declarations: [AddSyllabusComponent, ReviewSyllabusComponent, BrowseSyllabusComponent, SyllabusManagementComponent, EditSyllabusComponent, MessageModalComponent]
