@@ -60,52 +60,6 @@ export class BalanceSheetModalComponent implements OnInit {
     this.getTotal();
   }
 
-  getGroupArray() {
-    var tempLiabilitiesGroupArr = [];
-    var tempAssetsGrouparr = [];
-    this.param['liabilities_group_data'] = [];
-    this.param['assets_group_data'] = [];
-    for (var i = 0; i < this.param.ledger_data.length; i++) {
-      if (this.param.ledger_data[i]['account_display']['display_section']['balanceSheet']['liabilities']) {
-        if (!((tempLiabilitiesGroupArr.indexOf(this.param.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
-          tempLiabilitiesGroupArr.push(this.param.ledger_data[i]['coa_acc_group']['group_name']);
-          if (this.param.ledger_data[i]['credit_data'].length > 0 && this.param.ledger_data[i]['credit_data'][0] && this.param.ledger_data[i]['credit_data'][0]['vc_debit']) {
-            this.param['liabilities_group_data'][this.param.ledger_data[i]['coa_acc_group']['group_name']] = {
-              group_name: this.param.ledger_data[i]['coa_acc_group']['group_name'],
-              group_parent_name: this.param.ledger_data[i]['coa_acc_group']['group_parent_name'] ? this.param.ledger_data[i]['coa_acc_group']['group_parent_name'] : '',
-              group_data: [this.param.ledger_data[i]]
-            };
-          }
-        } else {
-          if (this.param.ledger_data[i]['credit_data'].length > 0 && this.param.ledger_data[i]['credit_data'][0] && this.param.ledger_data[i]['credit_data'][0]['vc_debit']) {
-            this.param['liabilities_group_data'][this.param.ledger_data[i]['coa_acc_group']['group_name']]['group_data'].push(
-              this.param.ledger_data[i]
-            );
-          }
-        }
-      }
-      if (this.param.ledger_data[i]['account_display']['display_section']['balanceSheet']['assets']) {
-        if (!((tempAssetsGrouparr.indexOf(this.param.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
-          tempAssetsGrouparr.push(this.param.ledger_data[i]['coa_acc_group']['group_name']);
-
-          if (this.param.ledger_data[i]['debit_data'].length > 0 && this.param.ledger_data[i]['debit_data'][0] && this.param.ledger_data[i]['debit_data'][0]['vc_credit']) {
-            this.param['assets_group_data'][this.param.ledger_data[i]['coa_acc_group']['group_name']] = {
-              group_name: this.param.ledger_data[i]['coa_acc_group']['group_name'],
-              group_parent_name: this.param.ledger_data[i]['coa_acc_group']['group_parent_name'] ? this.param.ledger_data[i]['coa_acc_group']['group_parent_name'] : '',
-              group_data: [this.param.ledger_data[i]]
-            };
-          }
-        } else {
-          if (this.param.ledger_data[i]['debit_data'].length > 0 && this.param.ledger_data[i]['debit_data'][0] && this.param.ledger_data[i]['debit_data'][0]['vc_credit']) {
-            this.param['assets_group_data'][this.param.ledger_data[i]['coa_acc_group']['group_name']]['group_data'].push(
-              this.param.ledger_data[i]
-            );
-          }
-        }
-      }
-    }
-    console.log(this.param);
-  }
 
   checkBlankArray() {
     this.blankArr = [];
@@ -193,16 +147,18 @@ export class BalanceSheetModalComponent implements OnInit {
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
         this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
         }
+        
 
       }
       for (var k = 0; k < this.param['ledger_data'][i]['credit_data'].length; k++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
         this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
         }
       }
+      console.log('this.debitTotal', this.debitTotal);
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
