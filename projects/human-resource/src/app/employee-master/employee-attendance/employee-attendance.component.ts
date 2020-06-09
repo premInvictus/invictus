@@ -84,7 +84,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				month_id: this.searchForm.value.month_id,
 				emp_status: this.searchForm.value.status_id,
 				emp_cat_id: this.searchForm.value.cat_id,
-				session_id: this.session_id
+				session_id: this.session_id,
+				from_attendance: true
 			};
 			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				let element: any = {};
@@ -169,10 +170,23 @@ export class EmployeeAttendanceComponent implements OnInit {
 								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
-								var lwpDays =  emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
-								var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
+										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+										var presentDays = Number(lwpDays) < 0 ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
-										element.emp_total_attendance = presentDays;
+										if (item.emp_status === 'live') {
+											element.emp_total_attendance = presentDays;
+										}
+										if (item.emp_status === 'left') {
+											const month: any = item.emp_salary_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+												new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+											if (Number(inputJson.month_id) === Number(month) + 1) {
+												element.emp_total_attendance = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+											} else {
+												element.emp_total_attendance = presentDays;
+											}
+										}
 										element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
 											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
 										this.formGroupArray[j] = {
@@ -326,28 +340,28 @@ export class EmployeeAttendanceComponent implements OnInit {
 		this.getEmployeeDetail();
 	}
 	getLWP(element, index) {
-		if (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted,10) > parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed,10)) {
-			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] ="0";
+		if (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted, 10) > parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed, 10)) {
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = "0";
 			this.formGroupArray[index].formGroup.patchValue({
-				emp_leave_granted:0,
-				emp_leave_availed:0
+				emp_leave_granted: 0,
+				emp_leave_availed: 0
 			});
-			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed','error');
-		} else       {
+			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed', 'error');
+		} else {
 			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
 
 
-		// var tPresent = element ? element.emp_present : 0;
-		// var lwpDays =  element && element ? element.emp_lwp : 0;
-		// var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
-		// element.emp_lwp = element && element ? element.emp_lwp : '';
-		// element.emp_total_attendance = presentDays;
-		 this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
-		//this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
+			// var tPresent = element ? element.emp_present : 0;
+			// var lwpDays =  element && element ? element.emp_lwp : 0;
+			// var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
+			// element.emp_lwp = element && element ? element.emp_lwp : '';
+			// element.emp_total_attendance = presentDays;
+			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+			//this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
-		console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
+			console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 		}
-		
+
 	}
 
 	getMonthName(ev) {

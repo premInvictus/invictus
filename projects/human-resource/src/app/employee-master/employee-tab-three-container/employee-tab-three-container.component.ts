@@ -23,6 +23,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	isSubmit = false;
 	login_id;
 	parentId;
+	payScArr: any[] = [];
 	generalRemarkData: any[] = [];
 	sessionArray: any[] = [];
 	sessionName: any;
@@ -114,6 +115,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_ac: '',
 				nominee: '',
 				doj: '',
+				dol : '',
+				pay_scale_master : '',
 				pf_doj: '',
 				esi_doj: '',
 				probation: '',
@@ -168,6 +171,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_ac: '',
 			nominee: '',
 			doj: '',
+			dol: '',
+			pay_scale_master: '',
+			fnf_status: '',
 			pf_doj: '',
 			esi_doj: '',
 			probation: '',
@@ -209,6 +215,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
+		this.getPayScaleMaster();
 		this.getPayScale();
 		this.getPayMode();
 		this.getBank();
@@ -444,6 +451,17 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		const datePipe = new DatePipe('en-in');
 		return datePipe.transform(value, format);
 	}
+	settleFnf($event) {
+		if ($event.checked) {
+			this.salaryDetails.patchValue({
+				fnf_status: true
+			});
+		} else {
+			this.salaryDetails.patchValue({
+				fnf_status: false
+			});
+		}
+	}
 	getSalartDetails() {
 		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : '';
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail && this.employeedetails.emp_salary_detail.emp_bank_detail.length > 0) {
@@ -476,7 +494,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.addPaymentMode();
 		}
 
-
+		console.log(this.employeedetails);
 		this.salaryDetails.patchValue({
 			pan: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.pan_no : '',
 			aadhar: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.aadhar_no : '',
@@ -484,6 +502,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			esi_ac: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.account_docment_detail.esi_ac_no : '',
 			nominee: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.account_docment_detail ? this.employeedetails.emp_salary_detail.nominee_detail.name : '',
 			doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd') : '',
+			dol: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.dol, 'yyyy-MM-dd') : '',
 			pf_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'yyyy-MM-dd') : '',
 			esi_doj: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.esic_joining_date, 'yyyy-MM-dd') : '',
 			probation: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail ? this.dateConversion(this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.probation_till_date, 'yyyy-MM-dd') : '',
@@ -506,8 +525,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			da: '',
 			hra: '',
 			allowances: '',
+			fnf_status: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail
+				&& this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status ?
+				this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status : false,
 			pf_deduction: '',
 			esi_deduction: '',
+			pay_scale_master: this.employeedetails.emp_salary_detail && 
+			this.employeedetails.emp_salary_detail.emp_salary_structure && 
+			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id ?
+				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id : '',
 			tds_deduction: '',
 			advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
 			deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
@@ -525,6 +552,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 
 
+	}
+	getScaleName(value) {
+		const index = this.payScArr.findIndex(f => Number(f.config_id) === Number(value));
+		if (index !== -1) {
+			return this.payScArr[index].name
+		}
 	}
 	saveForm() {
 		var bankDetail = [];
@@ -559,6 +592,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				},
 				emp_organisation_relation_detail: {
 					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					dol: this.dateConversion(this.salaryDetails.value.dol, 'yyyy-MM-dd'),
+					fnf_status: this.salaryDetails.value.fnf_status ? this.salaryDetails.value.fnf_status : false,
 					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
 					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
 					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
@@ -591,6 +626,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					emp_pay_mode: {
 						pm_id: this.salaryDetails.value.pay_mode,
 						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+					},
+					emp_pay_scale_master: {
+						pay_scale_id: this.salaryDetails.value.pay_scale_master ? this.salaryDetails.value.pay_scale_master : '',
+						pay_scale_name: this.salaryDetails.value.pay_scale_master ? this.getScaleName(this.salaryDetails.value.pay_scale_master) : ''
 					},
 					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
 					emp_salary_heads: this.salaryFinalArray,
@@ -644,6 +683,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				}
+
 			}
 			console.log(this.employeedetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
@@ -660,6 +700,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please fill all required field', 'error');
 		}
+	}
+	getPayScaleMaster() {
+		this.commonAPIService.getMaster({ type_id: "13" }).subscribe((res: any) => {
+			if (res) {
+				this.payScArr = [];
+				this.payScArr = res;
+			}
+		});
 	}
 
 	updateForm(moveNext) {
@@ -695,6 +743,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				},
 				emp_organisation_relation_detail: {
 					doj: this.dateConversion(this.salaryDetails.value.doj, 'yyyy-MM-dd'),
+					dol: this.dateConversion(this.salaryDetails.value.dol, 'yyyy-MM-dd'),
+					fnf_status: this.salaryDetails.value.fnf_status ? this.salaryDetails.value.fnf_status : false,
 					pf_joining_date: this.dateConversion(this.salaryDetails.value.pf_doj, 'yyyy-MM-dd'),
 					esic_joining_date: this.dateConversion(this.salaryDetails.value.esi_doj, 'yyyy-MM-dd'),
 					probation_till_date: this.dateConversion(this.salaryDetails.value.probation, 'yyyy-MM-dd'),
@@ -723,6 +773,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					emp_pay_mode: {
 						pm_id: this.salaryDetails.value.pay_mode,
 						pm_name: this.getPayModeName(this.salaryDetails.value.pay_mode)
+					},
+					emp_pay_scale_master: {
+						pay_scale_id: this.salaryDetails.value.pay_scale_master ? this.salaryDetails.value.pay_scale_master : '',
+						pay_scale_name: this.salaryDetails.value.pay_scale_master ? this.getScaleName(this.salaryDetails.value.pay_scale_master) : ''
 					},
 					emp_basic_pay_scale: this.salaryDetails.value.basic_pay,
 					emp_salary_heads: this.salaryFinalArray,
@@ -787,7 +841,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						this.commonAPIService.renderTab.next({ tabMove: true });
 					} else {
 						this.disabledApiButton = false;
-						// this.getSalartDetails();
+
 						this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 					}
 					this.commonAPIService.showSuccessErrorMessage('Employee Salary Details Updated Successfully', 'success');
@@ -869,7 +923,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		if (this.addOnly) {
 			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag) {
-			this.getSalartDetails();
+			//this.getSalartDetails();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
 	}

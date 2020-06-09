@@ -152,8 +152,9 @@ export class MyLeaveComponent implements OnInit {
 					// for (var j = 0; j < leave_request_schedule_data.length; j++) {
 					var dataJson = {
 						srno: pos,
-						emp_id: item.leave_emp_detail.emp_id,
-						emp_name: item.leave_emp_detail.emp_name,
+						emp_id: item.leave_emp_detail && item.leave_emp_detail.emp_id ? item.leave_emp_detail.emp_id : '' ,
+						emp_name: item.leave_emp_detail && item.leave_emp_detail.emp_name ? 
+						item.leave_emp_detail.emp_name : '',
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,

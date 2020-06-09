@@ -18,3 +18,30 @@
 h4 {
     text-transform: uppercase;
 }
+img.prof-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    position: relative;
+    left: calc(100% - 8px);
+}
+.prof-image2 {
+    display: block;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    right: 0;
+    position: absolute;
+    top: -1%;
+}
+.tr-mob {
+    display: none;
+}
+@media screen and (max-width:720px) {
+    .tr-mob {
+    display: block;
+    }
+    .prof-image2 {
+        display: none;
+    }
+}

@@ -54,6 +54,43 @@
 <div class="row row-margin">
     <div class="col-12 remove-col-padding text-right">
         <mat-card>
+            <div *ngIf="finalSpannedArray.length > 0" class="text-left">
+                <button class="btn-reor" mat-raised-button (click)="openCloseSwap()">
+                    <i class="fas fa-exchange-alt"></i> &nbsp;Reorder Syllabus
+                </button>
+            </div>
+            <div id="drag-dr" class="drag-drop-list" cdkDropList #selectedList="cdkDropList"
+                [cdkDropListData]="finalSpannedArray" (cdkDropListDropped)="drop($event)">
+                <ng-container *ngFor="let item of finalSpannedArray;let i=index">
+                    <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
+                        <div class="drag-drop-box" cdkDrag (click)="openInner(i)">
+                            {{getTopicName(item.sd_topic_id)}}
+                        </div>
+                        <div 
+                        [class]="innerst[i]"
+                        cdkDropList #selectedList="cdkDropList" [cdkDropListData]="item.details" 
+                        (cdkDropListDropped)="drop($event)">
+                            <ng-container *ngFor="let det of item.details;let j = index">
+                                <div *ngIf="det.sd_ctr_id == 1" class="drag-drop-box box-2" cdkDrag>
+                                    {{det.sd_st_name}}
+                                </div>
+                                <div *ngIf="det.sd_ctr_id == 2" class="drag-drop-box box-2" cdkDrag>
+                                    Test
+                                </div>
+                                <div *ngIf="det.sd_ctr_id == 3" class="drag-drop-box box-2" cdkDrag>
+                                   Revision
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <br>
+                <div class="text-center">
+                    <button class="btn-success" (click)="freezeOrder()"
+                    mat-raised-button>Freeze</button>
+                </div>
+                <br>
+            </div>
             <div class="inline-flex btn-spacer text-right" *ngIf="finalSpannedArray.length > 0">
                 <div>
                     <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"

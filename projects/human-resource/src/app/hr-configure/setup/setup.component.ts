@@ -62,7 +62,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	];
 	formatTypeArray = [
 		{ id: "1", name: 'Addition' },
-		{ id: "2", name: 'Deducation' },
+		{ id: "2", name: 'Deduction' },
 	];
 	typeArray = [
 		{ id: "1", name: 'Wing Master' },
@@ -72,6 +72,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "6", name: 'Payment Mode' },
 		{ id: "7", name: 'Department' },
 		{ id: "12", name: 'Board' },
+		{ id: "13", name: 'Pay Scale' },
 	];
 	constructor(
 		private fbuild: FormBuilder,

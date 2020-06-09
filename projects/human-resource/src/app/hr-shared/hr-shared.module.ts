@@ -45,6 +45,7 @@ import { PopoverModule } from 'ngx-bootstrap/popover';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
+import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -101,6 +102,7 @@ export const MY_FORMATS = {
 	],
 	declarations: [
 		CommonDynamicChartComponent,
+		ProcessdateModalComponent,
 		DeleteModalComponent,
 		ImagecropComponent,
 		EditRequestModalComponent,
@@ -137,6 +139,7 @@ export const MY_FORMATS = {
 		AdvancedSearchModalComponent,
 		EmployeeCommonComponent,
 		ComposeMessageComponent,
+		ProcessdateModalComponent,
 		MessagesAdvancedSearchModalComponent,
 		SearchViaNameComponent
 	],
@@ -148,6 +151,7 @@ export const MY_FORMATS = {
 		MatFormFieldModule,
 		MatRadioModule,
 		MatInputModule,
+		ProcessdateModalComponent,
 		MatCheckboxModule,
 		MatSelectModule,
 		MatIconModule,

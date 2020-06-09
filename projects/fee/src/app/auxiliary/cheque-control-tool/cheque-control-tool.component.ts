@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl } from '@angular/material';
+import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl, MatSort } from '@angular/material';
 import { ChequeToolElement } from './cheque-control-tool.model';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FeeService, CommonAPIService } from '../../_services';
@@ -23,6 +23,7 @@ import { BouncedChequeMultipleComponent } from './bounced-cheque-multiple/bounce
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild(MatSort)sort: MatSort;
 	displayedColumns: string[] =
 		['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
 			'processingdate', 'status',
@@ -62,6 +63,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
 	}
 	applyFilter(value: any) {
 		this.dataSource.filter = value.trim().toLowerCase();
@@ -71,7 +73,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'inv_process_type': '',
 			'inv_process_usr_no': '',
 			'invoice_no': '',
-			'pageSize': '10',
+			'pageSize': '100',
 			'pageIndex': '0',
 			'au_full_name': '',
 			'from_date': '',
@@ -166,8 +168,11 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					pos++;
 				}
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+				this.dataSource.sort = this.sort;
 				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
 				this.dataSource.paginator = this.paginator;
+				
 			}
 		});
 	}
@@ -282,7 +287,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		this.filterForm.patchValue({
 			'inv_process_type': '',
 			'invoice_no': '',
-			'pageSize': '10',
+			'pageSize': '100',
 			'pageIndex': '0',
 			'au_full_name': '',
 			'from_date': '',

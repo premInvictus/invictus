@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { SearchViaNameComponent } from '../../hr-shared/search-via-name/search-via-name.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-employee-common',
@@ -95,7 +96,7 @@ export class EmployeeCommonComponent implements OnInit {
 			if (data) {
 				if ((data && data.reRenderForm) || (data && data.viewMode)) {
 					//this.employeedetails = {};
-					this.employeedetails.emp_status = 'live';
+					//this.employeedetails.emp_status = 'live';
 					this.getEmployeeDetail(this.lastRecordId);
 				}
 			}
@@ -108,7 +109,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	ngOnChanges() {
 		this.buildForm();
-		this.employeedetails.emp_status == 'live';
+		//this.employeedetails.emp_status == 'live';
 		this.getDepartment();
 		this.getDesignation();
 		this.getWing();
@@ -383,8 +384,15 @@ export class EmployeeCommonComponent implements OnInit {
 		this.commonAPIService.reRenderForm.next({ reRenderForm: false, addMode: false, editMode: true, deleteMode: false });
 	}
 
-	deleteUser() {
-		this.commonAPIService.deleteEmployee({ emp_id: this.employeeDetailsForm.value.emp_id, emp_status: 'left' }).subscribe((result: any) => {
+	deleteUser($event) {
+		
+		const date = new DatePipe('en-in').transform($event.processDate, 'yyyy-MM-dd')
+		this.commonAPIService.deleteEmployee({
+			"emp_id": this.employeeDetailsForm.value.emp_id,
+			"emp_status": 'left',
+			"emp_salary_detail.emp_organisation_relation_detail.dol": date
+
+		}).subscribe((result: any) => {
 			if (result) {
 				this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
 				this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
