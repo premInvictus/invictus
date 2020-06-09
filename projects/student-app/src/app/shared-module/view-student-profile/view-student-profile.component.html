@@ -1,0 +1,912 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-8">
+          <span class="font-size-24 font-medium"> Profile Details</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <table border="0" id="report_table" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+              <tr>
+                <td width="100%">
+                  <table border="0" cellpadding="0" cellspacing="0"
+                    style="color: #333;font-family: Helvetica, Arial, sans-serif;border-collapse: collapse;"
+                    width="100%">
+                    <tbody>
+                      <tr>
+                        <td height="60" valign="top">
+                          <table border="0" cellpadding="0" cellspacing="0"
+                            style="color: #333; font-family: Helvetica, Arial, sans-serif;  border-collapse: collapse;"
+                            width="100%">
+                            <tbody>
+                              <tr>
+
+                                <td valign="middle" width="100%" style="text-align: right;">
+                                  <img [src]="profileimage" class="prof-image">
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+
+
+                      <tr>
+                        <td>&nbsp;</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td width="100%">
+                  <table border="0" cellpadding="0" cellspacing="0"
+                    style="color: #333; margin-left:3%; font-family: Helvetica, Arial, sans-serif; border-collapse: collapse;"
+                    width="100%">
+                    <tbody>
+                      <tr>
+                        <td align="left" style="vertical-align: top;" width="50%">
+                          <table *ngIf="studentDet && studentDet.length > 0">
+                            <tbody>
+                              <tr>
+                                <td style="font-size: 18px;"><b> Details</b></td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table *ngIf="studentDet && studentDet.length > 0" border="0" cellpadding="0"
+                                    cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Admission
+                                          No
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          {{studentdetails.au_admission_no}}
+                                        </td>
+                                      </tr>
+                                      <tr>
+                                        <td>
+                                          Name
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{currentUser.full_name ? currentUser.full_name : '-'}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('au_class_id') && studentDet[0].au_class_id">
+                                        <td>
+                                          Present Class
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{classArray2[studentDet[0].au_class_id]}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('au_class_id') && studentdetails.last_class">
+                                        <td>
+                                          Last Class
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{classArray2[studentdetails.last_class]}}
+                                        </td>
+                                      </tr>
+
+                                      <tr *ngIf="checkIfFieldExist2('upd_dob') && studentDet[1].upd_dob">
+                                        <td>
+                                          Date of Birth
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{studentDet[1].upd_dob | date: 'd-MMM-y'}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('upd_gender') && studentDet[1].upd_gender">
+                                        <td>
+                                          Gender
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{genderArray[studentDet[1].upd_gender]}}
+                                        </td>
+                                      </tr>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('upd_religion_id') && studentDet[1].upd_religion_id">
+                                        <td>
+                                          Religion
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{religionsArray[studentDet[1].upd_religion_id]}}
+                                        </td>
+                                      </tr>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('upd_nationality') && studentDet[1].upd_nationality">
+                                        <td>
+                                          Religion
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{nationalityArray[studentDet[1].upd_nationality]}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('upd_category') && studentDet[1].upd_category">
+                                        <td>
+                                          Category
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{categoryArray[studentDet[1].upd_category]}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('upd_mt_id') && studentDet[1].upd_mt_id">
+                                        <td>
+                                          Mother Tongue
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{ studentDet[1].upd_mt_id ? 
+                                            motherTongueArray[studentDet[1].upd_mt_id] : '-'}}
+                                        </td>
+                                      </tr>
+                                      <tr *ngIf="checkIfFieldExist2('upd_aadhaar_no') && studentDet[1].upd_aadhaar_no">
+                                        <td>
+                                          Aadhar No
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{studentDet[1].upd_aadhaar_no ? studentDet[1].upd_aadhaar_no : '-'}}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <br>
+                          <br>
+                          <ng-container *ngIf="parentDet && parentDet.length > 0">
+                            <ng-container *ngFor="let p of parentDet">
+                              <ng-container *ngIf="p.epd_parent_type === 'F' && p.epd_parent_name">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td style="font-size: 18px;"><b> Father Details</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                          <tbody>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_name') && p.epd_parent_name">
+                                              <td>
+                                                Father Name
+                                              </td>
+                                              <td width="10%" style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_name ? p.epd_parent_name : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_dob') && p.epd_parent_dob">
+                                              <td>
+                                                Date of Birth
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
+                                              <td>
+                                                Contact No.
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_contact_no ? p.epd_contact_no : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_nationality') && p.epd_parent_nationality">
+                                              <td>
+                                                Nationality
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
+                                              <td>
+                                                Email
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_email ? p.epd_email : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_qualification') && p.epd_qualification">
+                                              <td>
+                                                Qualifications
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_qualification ? qualificationArray[p.epd_qualification]
+                                                :'-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_occupation_type') && p.epd_parent_occupation_type">
+                                              <td>
+                                                Occupation Type
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_occupation_type ? 
+                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
+                                              <td>
+                                                Designation
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_designation ? 
+                                                  p.epd_designation : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
+                                              <td>
+                                                Annual Income
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_income ? 
+                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                          <br>
+                          <br>
+                          <ng-container *ngIf="parentDet && parentDet.length > 0">
+                            <ng-container *ngFor="let p of parentDet">
+                              <ng-container *ngIf="p.epd_parent_type === 'M' && p.epd_parent_name">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td style="font-size: 18px;"><b> Mother Details</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                          <tbody>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_name') && p.epd_parent_name">
+                                              <td>
+                                                Mother Name
+                                              </td>
+                                              <td width="10%" style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_name ? p.epd_parent_name : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_dob') && p.epd_parent_dob">
+                                              <td>
+                                                Date of Birth
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
+                                              <td>
+                                                Contact No.
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_contact_no ? p.epd_contact_no : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_nationality') && p.epd_parent_nationality">
+                                              <td>
+                                                Nationality
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
+                                              <td>
+                                                Email
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_email ? p.epd_email : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_qualification') && p.epd_qualification">
+                                              <td>
+                                                Qualifications
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_qualification ? qualificationArray[p.epd_qualification]
+                                                :'-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_occupation_type') && p.epd_parent_occupation_type">
+                                              <td>
+                                                Occupation Type
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_occupation_type ? 
+                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
+                                              <td>
+                                                Designation
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_designation ? 
+                                                  p.epd_designation : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
+                                              <td>
+                                                Annual Income
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_income ? 
+                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                          <br>
+                          <br>
+                          <ng-container *ngIf="parentDet && parentDet.length > 0">
+                            <ng-container *ngFor="let p of parentDet">
+                              <ng-container *ngIf="p.epd_parent_type === 'G' && p.epd_parent_name">
+                                <table>
+                                  <tbody>
+                                    <tr>
+                                      <td style="font-size: 18px;"><b> Guardian Details</b></td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                          <tbody>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_name') && p.epd_parent_name">
+                                              <td>
+                                                Guardian Name
+                                              </td>
+                                              <td width="10%" style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_name ? p.epd_parent_name : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_parent_dob') && p.epd_parent_dob">
+                                              <td>
+                                                Date of Birth
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_dob ? (p.epd_parent_dob  | date: 'd-MMM-y') : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_contact_no') && p.epd_contact_no">
+                                              <td>
+                                                Contact No.
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_contact_no ? p.epd_contact_no : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_nationality') && p.epd_parent_nationality">
+                                              <td>
+                                                Nationality
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_nationality ? nationalityArray[p.epd_parent_nationality] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_email') && p.epd_email">
+                                              <td>
+                                                Email
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_email ? p.epd_email : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_qualification') && p.epd_qualification">
+                                              <td>
+                                                Qualifications
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_qualification ? qualificationArray[p.epd_qualification]
+                                                :'-'}}
+                                              </td>
+                                            </tr>
+                                            <tr
+                                              *ngIf="checkIfFieldExist2('epd_parent_occupation_type') && p.epd_parent_occupation_type">
+                                              <td>
+                                                Occupation Type
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_parent_occupation_type ? 
+                                                  occupationTypeArray[p.epd_parent_occupation_type] : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_designation') && p.epd_designation">
+                                              <td>
+                                                Designation
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_designation ? 
+                                                  p.epd_designation : '-'}}
+                                              </td>
+                                            </tr>
+                                            <tr *ngIf="checkIfFieldExist2('epd_income') && p.epd_income">
+                                              <td>
+                                                Annual Income
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                :
+                                              </td>
+                                              <td style="padding-left:10px">
+                                                {{p.epd_income ? 
+                                                  annualIncomeArray[p.epd_income] : '-'}}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </ng-container>
+                            </ng-container>
+                          </ng-container>
+                          <br>
+                        </td>
+                        <td align="left" style="vertical-align: top;" width="50%">
+                          <table *ngIf="studentDet && studentDet.length > 0">
+                            <tbody>
+                              <tr>
+                                <td style="font-size: 18px;"><b> Address</b></td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                    <tbody>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('ea_address1') && studentDet[1].addressDetails[0].ea_address1">
+                                        <td>
+                                          Address
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{studentDet[1].addressDetails[0].ea_address1 ? studentDet[1].addressDetails[0].ea_address1 : '-'}}
+                                        </td>
+                                      </tr>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('ea_city') && studentDet[1].addressDetails[0].ea_city">
+                                        <td>
+                                          City
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{cityName ? cityName : '-'}}
+                                        </td>
+                                      </tr>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('ea_state') && studentDet[1].addressDetails[0].ea_state">
+                                        <td>
+                                          State
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{studentDet[1].addressDetails[0].ea_state ? stateArray[studentDet[1].addressDetails[0].ea_state] : '-'}}
+                                        </td>
+                                      </tr>
+                                      <tr
+                                        *ngIf="checkIfFieldExist2('ea_pincode') && studentDet[1].addressDetails[0].ea_pincode">
+                                        <td>
+                                          Area Pin
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td *ngIf="studentDet && studentDet.length > 0" style="padding-left:10px">
+                                          {{studentDet[1].addressDetails[0].ea_pincode ? studentDet[1].addressDetails[0].ea_pincode : '-'}}
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <br>
+                          <br>
+                          <table *ngIf="sibDet && sibDet.length > 0">
+                            <tbody>
+                              <tr>
+                                <td style="font-size: 18px;"><b> Sibling Details</b></td>
+                              </tr>
+                              <ng-container *ngFor="let item of sibDet">
+                                <tr *ngIf="checkIfFieldExist2('esd_admission_no') && item.esd_admission_no">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Admission No
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.esd_admission_no ? item.esd_admission_no : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('esd_name') && item.esd_name">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Sibling Name
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.esd_name ? item.esd_name : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('esd_class') && item.esd_class">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Class
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.esd_class ? classArray2[item.esd_class] : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('esd_school_name') && item.esd_school_name">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            School Name
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.esd_school_name ? item.esd_school_name : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </ng-container>
+                            </tbody>
+                          </table>
+                          <br>
+                          <table *ngIf="skillDetails && skillDetails.length > 0 
+                           ">
+                            <tbody>
+                              <tr>
+                                <td style="font-size: 18px;"><b> Skills Details</b></td>
+                              </tr>
+                              <ng-container *ngFor="let item of skillDetails">
+                                <tr *ngIf="checkIfFieldExist2('eaw_activity_name') && item.eaw_activity_name">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Activity Name
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.eaw_activity_name ? activityArray[item.eaw_activity_name] : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('eaw_level_of_interest') && item.eaw_level_of_interest">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Level of interest
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.eaw_level_of_interest ? levelOfIntrestArray[item.eaw_level_of_interest] : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('eaw_authority') && item.eaw_authority">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Authority
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.eaw_authority ? authorityArray[item.eaw_authority] : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('eaw_event_level') && item.eaw_event_level">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                             border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Event Level
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.eaw_event_level ? eventLevelArray[item.eaw_event_level] : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="checkIfFieldExist2('eaw_teacher_remark') && item.eaw_teacher_remark">
+                                  <td>
+                                    <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                             border-collapse: collapse;">
+                                      <tbody>
+                                        <tr>
+                                          <td>
+                                            Remarks
+                                          </td>
+                                          <td width="10%" style="padding-left:10px">
+                                            :
+                                          </td>
+                                          <td style="padding-left:10px">
+                                            {{item.eaw_teacher_remark ? item.eaw_teacher_remark : '-'}}
+                                          </td>
+                                      </tbody>
+                                    </table>
+                                  </td>
+                                </tr>
+                              </ng-container>
+                            </tbody>
+                          </table>
+                          <br>
+                          <br>
+                          <table *ngIf="studentdetails && studentdetails.ead_bus_route">
+                            <tbody>
+                              <tr>
+                                <td style="font-size: 18px;"><b> Transport Details</b></td>
+                              </tr>
+
+                              <tr *ngIf="checkIfFieldExist2('ead_bus_route') && studentdetails.ead_bus_route">
+                                <td>
+                                  <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Bus Route
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          {{studentdetails.ead_bus_route ? studentdetails.ead_bus_route : '-'}}
+                                        </td>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                              <tr *ngIf="checkIfFieldExist2('ead_pickup_point') && studentdetails.ead_pickup_point">
+                                <td>
+                                  <table border="0" cellpadding="0" cellspacing="0" style="font-size: 14px;;font-family: Arial, Helvetica, sans-serif;
+                                                           border-collapse: collapse;">
+                                    <tbody>
+                                      <tr>
+                                        <td>
+                                          Bus Stop
+                                        </td>
+                                        <td width="10%" style="padding-left:10px">
+                                          :
+                                        </td>
+                                        <td style="padding-left:10px">
+                                          {{studentdetails.ead_pickup_point ?studentdetails.ead_pickup_point : '-'}}
+                                        </td>
+                                    </tbody>
+                                  </table>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

@@ -19,6 +19,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	formGroupArray: any[] = [];
 	configValue: any;
 	disableApiCall = false;
+	customs: any[] = [
+		{ type: 'custom', name: 'Custom Type' },
+		{ type: 'learn', name: 'Learning Type' },
+	];
 	vaccinationArray: any[] = [];
 	reasonTypeArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
@@ -30,37 +34,25 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		'Qualification', 'Occupation',
 		'Income Range', 'Vaccination',
 		'Age', 'Activity', 'Level of Intrest', 'Event Level',
-		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality', 'Tag'];
+		'Activity Club', 'Authority', 'Area', 'Reason Title', 'Session Name', 'Category', 'Nationality', 'Tag',
+		'Question'];
 	secondHeaderArray: any[] = ['Alias', 'Required',
 		'Alias', 'Type',
 		'Alias', 'Alias',
 		'Alias', 'Alias',
 		'', 'Alias', 'Vaccinations', 'Alias', 'Alias', 'Alias', 'Alias',
-		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias'];
+		'Alias', 'Alias', 'Description', 'Alias', 'Alias', 'Alias', 'Alias', 'Type'];
 	configFlag = false;
 	updateFlag = false;
 	classArray: any[] = [];
 	requiredArray: any[] = [{ docreq_is_required: '1', docreq_is_required_name: 'Yes' },
 	{ docreq_is_required: '0', docreq_is_required_name: 'No' }];
-	// reasonTypeArray: any[] = [
-	// 	{ reason_type: '1', reason_type_desc: 'Question' },
-	// 	{ reason_type: '2', reason_type_desc: 'Question Paper' },
-	// 	{ reason_type: '3', reason_type_desc: 'Question Template' },
-	// 	{ reason_type: '4', reason_type_desc: 'Education Details' },
-	// 	{ reason_type: '5', reason_type_desc: 'Edit Request' },
-	// 	{ reason_type: '6', reason_type_desc: 'Suspension' },
-	// 	{ reason_type: '7', reason_type_desc: 'Change Enrolment Number' },
-	// 	{ reason_type: '8', reason_type_desc: 'Change Enrolment Status' },
-	// 	{ reason_type: '9', reason_type_desc: 'Request SLC/TC' },
-	// 	{ reason_type: '10', reason_type_desc: 'SLC/TC' },
-	// 	{ reason_type: '11', reason_type_desc: 'Cheque Bounced' },
-	// 	{ reason_type: '12', reason_type_desc: 'Change Book Status' }];
 	reason_type: any = '1';
 	constructor(private fbuild: FormBuilder,
 		private SmartService: SmartService,
 		private sisService: SisService,
 		private commonService: CommonAPIService,
-		) { }
+	) { }
 
 	ngOnInit() {
 		this.buildForm();
@@ -257,6 +249,15 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				tag_alias: '',
 				tag_status: ''
 			})
+		},
+		{
+			formGroup: this.fbuild.group({
+				equs_id: '',
+				equs_name: '',
+				equs_type: '',
+				equs_placeholder: '',
+				equs_status: ''
+			})
 		},];
 	}
 	loadConfiguration($event) {
@@ -267,7 +268,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		if (Number(this.configValue) === 1) {
 			this.getBloodGroupAll(this);
 			this.configFlag = true;
-		} else if (Number(this.configValue) === 2) {			
+		} else if (Number(this.configValue) === 2) {
 			this.getClassAll();
 			this.getDocumentsAll(this);
 			this.displayedColumns = ['position', 'name', 'alias', 'class', 'action', 'modify'];
@@ -331,6 +332,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 22) {
 			this.getStudentTagAll(this);
+			this.configFlag = true;
+		} else if (Number(this.configValue) === 23) {
+			this.getCustomAll(this);
+			this.displayedColumns = ['position', 'name', 'alias', 'placeholder', 'action', 'modify'];
 			this.configFlag = true;
 		}
 	}
@@ -421,6 +426,11 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			}
 		} else if (Number(this.configValue) === 22) {
 			if (value.tag_status === '1') {
+				return true;
+			}
+		}
+		else if (Number(this.configValue) === 23) {
+			if (value.equs_status === '1') {
 				return true;
 			}
 		}
@@ -704,6 +714,26 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				}
 			});
 		}
+		else if (Number(this.configValue) === 23) {
+			if (value.equs_status === '1') {
+				value.equs_status = '0';
+			} else {
+				value.equs_status = '1';
+			}
+			this.sisService.updateCustomRemarks(value).subscribe((result: any) => {
+				if (result.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getCustomAll(this);
+				}
+			});
+		}
+	}
+	changeTypeQues($event) {
+		if ($event.value === 'custom') {
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				'equs_placeholder': ''
+			});
+		}
 	}
 	deleteConfirm({ data, type }) {
 		switch (type) {
@@ -773,12 +803,39 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			case '22':
 				this.deleteEntry(data, 'deletestudenttags', this.getStudentTagAll);
 				break;
+			case '23':
+				data.equs_status = '5';
+				this.deleteEntry(data, 'updateCustomRemarks', this.getCustomAll);
+				break;
 		}
 	}
 	getVaccinations() {
 		this.sisService.getVaccinations().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.vaccinationArray = result.data;
+			}
+		});
+	}
+	getCustomAll(that) {
+		that.CONFIG_ELEMENT_DATA = [];
+		that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+		that.sisService.getCustomRemarks({}).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				let pos = 1;
+				for (const item of result.data) {
+					that.CONFIG_ELEMENT_DATA.push({
+						position: pos,
+						name: item.equs_name,
+						alias: item.equs_type,
+						placeholder: item.equs_placeholder ? item.equs_placeholder : '-',
+						action: item
+					});
+					pos++;
+				}
+				that.configDataSource = new MatTableDataSource<ConfigElement>(that.CONFIG_ELEMENT_DATA);
+				that.configDataSource.paginator = that.paginator;
+				that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+				that.configDataSource.sort = that.sort;
 			}
 		});
 	}
@@ -1320,6 +1377,19 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					this.formGroupArray[value - 1].formGroup.value.tag_status = '1';
 					this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertstudenttags', this.getStudentTagAll);
 					break;
+				case '23':
+					this.formGroupArray[value - 1].formGroup.value.equs_status = '1';
+					if (this.formGroupArray[value - 1].formGroup.value.equs_type === 'learn') {
+						if (this.formGroupArray[value - 1].formGroup.value.equs_placeholder) {
+							this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertCustomRemarks', this.getCustomAll);
+						} else {
+							this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
+						}
+					} else {
+						this.addEntry(this.formGroupArray[value - 1].formGroup.value, 'insertCustomRemarks', this.getCustomAll);
+					}
+
+					break;
 			}
 		}
 	}
@@ -1340,7 +1410,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				docreq_alias: value.docreq_alias,
 				docreq_status: value.docreq_status,
 				docreq_is_required: value.docreq_is_required,
-				docreq_class:value.docreq_class
+				docreq_class: value.docreq_class
 			});
 		} else if (Number(this.configValue) === 3) {
 			this.updateFlag = true;
@@ -1509,6 +1579,16 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				tag_status: value.tag_status
 			});
 		}
+		else if (Number(this.configValue) === 23) {
+			this.updateFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				equs_id: value.equs_id,
+				equs_name: value.equs_name,
+				equs_placeholder: value.equs_placeholder,
+				equs_type: value.equs_type,
+				equs_status: value.equs_status
+			});
+		}
 	}
 	updateConfiguration(value) {
 		if (!this.formGroupArray[value - 1].formGroup.valid) {
@@ -1595,6 +1675,18 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					break;
 				case '22':
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updatestudenttags', this.getStudentTagAll);
+					break;
+				case '23':
+
+					if (this.formGroupArray[value - 1].formGroup.value.equs_type === 'learn') {
+						if (this.formGroupArray[value - 1].formGroup.value.equs_placeholder) {
+							this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateCustomRemarks', this.getCustomAll);
+						} else {
+							this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
+						}
+					} else {
+						this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateCustomRemarks', this.getCustomAll);
+					}
 					break;
 			}
 		}

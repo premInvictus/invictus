@@ -1,0 +1,9 @@
+.parent-optiongroup {
+    margin-left: -15px;
+    font-weight: bold;
+}
+::ng-deep.mat-optgroup-label {
+    padding: 0px !important;
+    margin: 0px !important;
+    height: 0px !important;
+}

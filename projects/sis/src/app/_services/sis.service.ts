@@ -132,6 +132,18 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/remarks/insertManagementRemarks', value);
 	}
+	getCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/getCustomRemarks', value);
+	}
+	insertCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/insertCustomRemarks', value);
+	}
+	updateCustomRemarks(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/remarks/updateCustomRemarks', value);
+	}
 	insertEducationDetails(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/educationDetails/insertEducationDetails', value);
@@ -651,7 +663,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/changeEnrollmentStatus', value);
 	}
-
+	getStudentsDataPerProcessType(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/getStudentsDataPerProcessType', value);
+	}
+	changeEnrollBulk(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/auxiliaries/changeEnrollBulk', value);
+	}
 	maxEnrollmentNo(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/auxiliaries/maxEnrollmentNo', value);
@@ -675,7 +694,14 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/notificationTemplate/getNotificationTemplate', value);
 	}
-
+	getRoutes(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportroutes/getTransportRoutes', value);
+	}
+	getStoppages(value: any) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/transportstoppages/getTransportStoppages', value);
+	}
 	saveTemplate(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/notificationTemplate/insertNotificationTemplate', value);
@@ -930,6 +956,13 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/studentinfo/addAdditionalDetails', value);
 	}
+	downPdf(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/studentinfo/downPdf', value);
+	}
+	getCityNameByCityId(value) {
+		return this.http.post(environment.apiSisUrl  + '/slctc/getCityNameByCityId', value);
+	  }
 	getStudentRemarkDataThemeTwo(value) {
 		if (value) {
 			this.service.startLoading();

@@ -34,6 +34,14 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { PreviewDocumentComponent } from './preview-document/preview-document.component';
 import { ChartOfAccountsCreateComponent } from './chart-of-accounts-create/chart-of-accounts-create.component';
+import { LedgerEntryModelComponent } from './ledger-entry-model/ledger-entry-model.component';
+import { IndianCurrency } from '../_pipes/ indianCurrency.pipe';
+import { TrialBalanceModalComponent } from './trial-balance-modal/trial-balance-modal.component';
+import { IncomeAndExpenditureModalComponent } from './income-and-expenditure-model/income-and-expenditure-model.component';
+import { NoDataComponent } from './no-data/no-data.component';
+import { MAT_DIALOG_DATA,MatDialogRef} from '@angular/material/dialog';
+import { VoucherModalComponent } from './voucher-modal/voucher-modal.component';
+import { BalanceSheetModalComponent} from './balance-sheet-modal/balance-sheet-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -84,7 +92,7 @@ export const MY_FORMATS = {
 		NgxDocViewerModule,
 		NgxMaskModule.forRoot(),
 		InvictusSharedModule,
-		MatChipsModule,
+		MatChipsModule
 	],
 	declarations: [CommonDynamicChartComponent,
 		TruncatetextPipe,
@@ -95,7 +103,14 @@ export const MY_FORMATS = {
 		ImageViewerComponent, 
 		SearchViaNameComponent,
 		PreviewDocumentComponent,
-		ChartOfAccountsCreateComponent
+		ChartOfAccountsCreateComponent,
+		IndianCurrency,
+		LedgerEntryModelComponent,
+		TrialBalanceModalComponent,
+		NoDataComponent,
+		VoucherModalComponent,
+		IncomeAndExpenditureModalComponent,
+		BalanceSheetModalComponent
 
 	],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -135,16 +150,37 @@ export const MY_FORMATS = {
 		TruncatetextPipe,
 		MatChipsModule,
 		PreviewDocumentComponent,
-		ChartOfAccountsCreateComponent
+		ChartOfAccountsCreateComponent,
+		IndianCurrency,
+		LedgerEntryModelComponent,
+		TrialBalanceModalComponent,
+		NoDataComponent,
+		VoucherModalComponent,
+		IncomeAndExpenditureModalComponent,
+		BalanceSheetModalComponent
 
 	],
 	entryComponents: [ DeleteModalComponent, ImagecropComponent, EditRequestModalComponent,
 		ImageViewerComponent,
 		SearchViaNameComponent,
 		PreviewDocumentComponent,
-		ChartOfAccountsCreateComponent
+		ChartOfAccountsCreateComponent,
+		LedgerEntryModelComponent,
+		TrialBalanceModalComponent,
+		BalanceSheetModalComponent,
+		VoucherModalComponent,
+		IncomeAndExpenditureModalComponent,
+		BalanceSheetModalComponent
 	],
 	providers: [
+		{
+			provide: MatDialogRef,
+			useValue: {}
+		},
+		{
+			provide: MAT_DIALOG_DATA,
+			useValue: {}
+		},
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 		{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },

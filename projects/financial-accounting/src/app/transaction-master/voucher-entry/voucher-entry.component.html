@@ -3,17 +3,21 @@
     <mat-card>
 
       <div class="row">
-        <div class="col-5 remove-col-padding-left">
+        <div class="col-3 remove-col-padding-left">
           <span class="font-size-24">Vouchers</span>
         </div>
-        <div class="col-7">
-          <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">Journel Voucher</button> -->
+        <div class="col-9">
+          <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">journal Voucher</button> -->
           <mat-chip-list aria-label="Voucher Type">
-              <mat-chip class="pink" (click)="setVcType('Journel Entry')" [selected]="currentVcType === 'Journel Entry'"><span class="text-center">Journel Entry</span></mat-chip>
-              <mat-chip class="red" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
-              <mat-chip class="light-blue" (click)="setVcType('Payment')"  [selected]="currentVcType === 'Payment'"><span class="text-center">Payment</span></mat-chip>
-              <mat-chip class="dark-blue" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
-              <mat-chip class="orange" (click)="setVcType('Credit-Debit Note')"  [selected]="currentVcType === 'Credit-Debit Note'"><span class="text-center">Credit/Debit Note</span></mat-chip>
+              <mat-chip class="pink opacity-7" [ngClass]="{'active-entry':currentVcType === 'journal Entry'}" (click)="setVcType('journal Entry')" [selected]="currentVcType === 'journal Entry'"><span class="text-center">Journal Entry</span></mat-chip>
+              <mat-chip class="red opacity-7" [ngClass]="{'active-entry':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
+              <mat-chip class="light-blue opacity-7" [ngClass]="{'active-entry':currentVcType === 'Payment'}" (click)="setVcType('Payment')"  [selected]="currentVcType === 'Payment'"><span class="text-center">Payment</span></mat-chip>
+              <mat-chip class="dark-blue opacity-7" [ngClass]="{'active-entry':currentVcType === 'Receipt'}" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
+              <mat-chip class="orange opacity-7" [ngClass]="{'active-entry':currentVcType === 'Credit Note'}" (click)="setVcType('Credit Note')"  [selected]="currentVcType === 'Credit Note'"><span class="text-center">Credit Note</span></mat-chip>
+              <mat-chip class="orange-light opacity-7" [ngClass]="{'active-entry':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"  [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
+              <mat-chip class="gray-dark opacity-7" [ngClass]="{'active-entry':currentVcType === 'Purchase'}" (click)="setVcType('Purchase')"  [selected]="currentVcType === 'Purchase'"><span class="text-center">Purchase</span></mat-chip>
+              <mat-chip class="gray-light opacity-7" [ngClass]="{'active-entry':currentVcType === 'Sale'}" (click)="setVcType('Sale')"  [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span></mat-chip>
+
             </mat-chip-list>
         </div>
         <!-- <div class="col-2">
@@ -51,7 +55,7 @@
         <div class="col-6 text-right">
             <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="vc_date" required>
+                <input matInput [matDatepicker]="picker" formControlName="vc_date" (dateChange)="setDate();getVoucherTypeMaxId()" [value]="today" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -64,12 +68,16 @@
             <tr class="custom-tr">
               <th rowspan="2" class="custom-th text-center" width="10%">Sr. No.
               </th>
-              <th rowspan="2" class="custom-th text-center" width="25%">Account </th>
-              <th rowspan="2" class="custom-th text-center" width="30%">Particulars </th>
+              <th rowspan="2" class="custom-th text-center" width="15%">Account </th>
+              <th rowspan="2" class="custom-th text-center" width="25%">Particulars </th>
               <th rowspan="2" class="custom-th text-center" width="10%">
-                Debit</th>
+                GR No</th>
               <th rowspan="2" class="custom-th text-center" width="10%">
-                Credit</th>
+                Invoice No</th>
+              <th rowspan="2" class="custom-th text-center" width="10%">
+                <i class="fas fa-rupee-sign font-size-14"></i>Debit</th>
+              <th rowspan="2" class="custom-th text-center" width="10%">
+                <i class="fas fa-rupee-sign font-size-14"></i>Credit</th>
               <th rowspan="2" class="custom-th text-center" width="10%">
                 Action</th>
             </tr>
@@ -77,26 +85,48 @@
           <tbody>
             <ng-container *ngFor="let vform of voucherFormGroupArray; let i = index">
                 
-            <tr [formGroup]="vform">
+            <tr [formGroup]="vform" [ngStyle]="{'background-color':'green'}">
                 
-              <td class="custom-td text-center font-size-14">{{i+1}}</td>
-              <td class="custom-td text-left font-size-14" style="padding:10px;">
-                <mat-select formControlName="vc_account_type_id" required>
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-center font-size-14">{{i+1}}</td>
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
+                <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account" aria-label="State"
+                        [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)" required>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name" (onSelectionChange)="setaccount(aitem,i)">
+                    {{aitem.coa_acc_name | titlecase}}
+                  </mat-option>
+                </mat-autocomplete>
+                <!-- <mat-select formControlName="vc_account_type_id" required>
                   <mat-option value="">Please Select Account</mat-option>
                   <mat-option *ngFor="let aitem of accountsArray" value="{{aitem?.coa_id}}">{{aitem?.coa_acc_name}}</mat-option>
-                </mat-select>
+                </mat-select> -->
               </td>
-              <td class="custom-td text-left font-size-14" style="padding:10px;">
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
                 <input matInput type="text" class="remark-text" placeholder="Enter Particulars" required
                   formControlName="vc_particulars">
               </td>
-              <td class="custom-td text-left font-size-14" style="padding:10px;">
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
+                <input matInput type="text" class="remark-text" placeholder="Enter GR No"
+                [matAutocomplete]="auto1" formControlName="vc_grno" (keyup)="getOrderMaster($event)">
+                  <mat-autocomplete #auto1="matAutocomplete">
+                    <mat-option *ngFor="let aitem of orderMaster" [value]="aitem.pm_id" (onSelectionChange)="setOrderMaster(aitem,i)">
+                      {{aitem.pm_id}}
+                    </mat-option>
+                  </mat-autocomplete>
+              </td>
+                    
+
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
+                <input matInput type="text" class="remark-text" placeholder="Enter Invoice No"
+                  formControlName="vc_invoiceno">
+              </td>
+              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
                   <input matInput type="number" class="remark-text" placeholder="Enter Debit"
-                    formControlName="vc_debit" (blur)="calculateDebitTotal();">
+                    formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i)">
                 </td>
-                <td class="custom-td text-left font-size-14" style="padding:10px;">
+                <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
                     <input matInput type="number" class="remark-text" placeholder="Enter Credit"
-                      formControlName="vc_credit" (blur)="calculateCreditTotal();">
+                      formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
                      <a href="javascript:void(0)"><i class="fa fa-plus-circle gray-add"></i></a> | 
@@ -113,8 +143,10 @@
                   </div>
               </td>
               <td class="custom-td text-left font-size-14">Total</td>
-              <td class="custom-td text-left font-size-14">{{totalDebit}}</td>
-              <td class="custom-td text-left font-size-14">{{totalCredit}}</td>
+              <td class="custom-td text-left font-size-14">&nbsp;</td>
+              <td class="custom-td text-left font-size-14">&nbsp;</td>
+              <td class="custom-td text-left font-size-14">{{totalDebit | indianCurrency}}</td>
+              <td class="custom-td text-left font-size-14">{{totalCredit | indianCurrency}}</td>
               <td class="custom-td text-left font-size-14">&nbsp;</td>
             </tr>
           </tbody>
@@ -136,13 +168,13 @@
                                 (change)="fileChangeEvent($event)">
                         </div>
 
-                        <ul class="preview-attachment-base">
+                        <ul class="preview-attachment-base" style="display:flex">
                             <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
-                                <img *ngIf="checkThumbnail(item.imgName)" [src]="item.imgUrl"
+                                <img [src]="getuploadurl(item.imgUrl)"
                                     (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
-                                <img *ngIf="!checkThumbnail(item.imgName)"
+                                <!-- <img *ngIf="!checkThumbnail(item.imgName)"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
-                                    (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
+                                    (click)="previewImage(attachmentArray, i)" height="145px" width="150px"> -->
                             </li>
                         </ul>
             </div>
@@ -158,7 +190,7 @@
 
             <button *ngIf="editMode" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Update &
               Publish</button>
-            <button mat-button class="btn-danger btn-spacer" (click)="$event.stopPropagation(); cancel(); ">Cancel</button>
+            <button mat-button class="btn-danger btn-spacer" (click)="$event.stopPropagation(); listVoucherRoute(); ">Cancel</button>
 
           </div>
         </div>

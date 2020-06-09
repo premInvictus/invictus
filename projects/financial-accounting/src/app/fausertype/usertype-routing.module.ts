@@ -14,7 +14,7 @@ const routes: Routes = [
 			{ path: 'transaction-master', loadChildren:  '../transaction-master/transaction-master.module#TransactionMasterModule' },
 			{ path: 'auxiliaries', loadChildren:  '../fa-auxiliaries/auxiliaries.module#AuxiliariesModule' },
 			// { path: 'reports', loadChildren:  '../hr-reports/reports.module#ReportsModule' },
-			// { path: 'configure', loadChildren:  '../hr-configure/hr-configure.module#HrConfigureModule' },
+			{ path: 'configure', loadChildren:  '../fa-configure/fa-configure.module#FaConfigureModule' },
 			// { path: 'leave-management', loadChildren:  '../leave-management/leave-management.module#LeaveManagementModule' },
 			// { path: 'communication', loadChildren:  '../employee-messages/employee-messages.module#EmployeeMessagesModule' },
 			

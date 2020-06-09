@@ -1,0 +1,82 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12 remove-col-padding-left">
+          <span class="font-size-24">Account Position</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div *ngIf="tableDivFlag">
+        <div class="row remove-top-margin">
+          <div class="col-12">
+            <table class="table table-borderd table-stripped custom-table text-center"
+              style="margin-top: 5px;">
+              <thead>
+                <tr class="mat-header-row">
+                  <th class="mat-header-cell" colspan="2"></th>
+                  <th class="mat-header-cell" colspan="2">Income & Expenditure</th>
+                  <th class="mat-header-cell" colspan="2">Balance Sheet</th>
+                </tr>
+                <tr class="mat-header-row">
+                  <th width="25%" class="mat-header-cell">Account Type</th>
+                  <th width="15%" class="mat-header-cell">Trial Balance</th>
+                  <th width="15%" class="mat-header-cell">Income</th> 
+                  <th width="15%" class="mat-header-cell">Expenditure</th>
+                  <th width="15%" class="mat-header-cell">Liabilities</th>
+                  <th width="15%" class="mat-header-cell">Assets</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of ELEMENT_DATA;let i=index">
+                  <td>{{ item.acc_name | titlecase}}</td>
+                  <td>
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                        [checked]="item.display_section.trialBalance" aria-hidden="true"
+                        (change)="toggleStatus($event,i,'trialBalance')">
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                        [checked]="item.display_section.income" aria-hidden="true"
+                        (change)="toggleStatus($event,i,'income')">
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                        [checked]="item.display_section.expenditure" aria-hidden="true"
+                        (change)="toggleStatus($event,i,'expenditure')">
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                        [checked]="item.display_section.balanceSheet.liabilities" aria-hidden="true"
+                        (change)="toggleStatus($event,i,'liabilities')">
+                    </mat-slide-toggle>
+                  </td>
+                  <td>
+                    <mat-slide-toggle class="inline-form-radio-spacing"
+                        [checked]="item.display_section.balanceSheet.assets" aria-hidden="true"
+                        (change)="toggleStatus($event,i,'assets')">
+                    </mat-slide-toggle>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="col-12">
+            <div class="text-center margin-top-15">
+              <button mat-raised-button class="btn-success" (click)="submit()"
+                >Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

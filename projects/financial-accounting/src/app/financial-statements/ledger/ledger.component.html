@@ -1,0 +1,60 @@
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <div class="row">
+              <div class="col-7 remove-col-padding-left">
+                <span class="font-size-24">Ledger</span>
+              </div>
+              <div class="col-5 remove-col-padding-right text-right">
+                <form [formGroup]="accountForm">
+                  <mat-form-field class="form-field-150" appearance="outline">
+                    <mat-label>Account </mat-label>
+                    <mat-select formControlName="coa_id" multiple (selectionChange)="getLedger()">
+                      <mat-select-search [formControl]="bankMultiFilterCtrl"></mat-select-search>
+                      <!-- <input matInput (keyup)="applyfilter($event)"> -->
+                      <!-- <mat-select-search (keyup)="applyfilter($event)"></mat-select-search> -->
+                      <!-- <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option> -->
+                      <mat-option *ngFor="let item of accountsArray" [value]="item.coa_id">{{item.coa_acc_name}}</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  &nbsp;&nbsp;
+                  <mat-form-field class="form-field-150 m-l-10" appearance="outline">
+                    <mat-label>Month</mat-label>
+                    <mat-select placeholder="Month" formControlName="monthId"
+                        required (selectionChange)="getLedger()" >
+                        <mat-option value="">Please select</mat-option>
+                        <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
+                                style="font-size: 14px;">
+                                {{item.fm_name}}
+                        </mat-option>
+                    </mat-select>
+                    </mat-form-field>
+                    
+                </form>
+              </div>
+            </div>
+          </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12"></div>
+  </div>
+  <div class="row" *ngIf="tableDivFlag">
+    <div class="col-12">
+      <mat-card>
+        
+              <app-ledger-entry-model [param]="ledgerArray"></app-ledger-entry-model>
+            
+      </mat-card>
+    </div>
+  </div>
+  <div class="row" *ngIf="!tableDivFlag">
+    <div class="col-12 text-center">
+        <img
+        src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+      <br><br><br>
+      <br><span class="font-size-20 font-light font-color-brown">
+        Please select Account and Month
+      </span>
+    </div>
+  </div>

@@ -5,7 +5,7 @@
                 <div class="padding-15 padding-overall">
                     <form [formGroup]="salaryDetails">
                         <div class="row remove-top-margin">
-                            <div class="col-4 col-pad-5">
+                            <div class="col-3 col-pad-5">
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PAN</mat-label>
@@ -104,7 +104,7 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="col-4 col-pad-5">
+                            <div class="col-3 col-pad-5">
                                 <div class="row salary-card">
                                     <!-- <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Category I</mat-label>
@@ -230,64 +230,10 @@
                                                 style="color:#0078c2"></i></a>
                                     </div>
                                 </div>
-                                <div class="row salary-card">
 
-                                    <ng-container *ngFor="let item of empPaymentModeDetail; let i=index;">
-                                        <form [formGroup]="empPaymentModeDetail[i]">
-                                            <mat-form-field class="form-field" appearance="outline">
-                                                <mat-label>Pay Mode</mat-label>
-                                                <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
-                                                    [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-                                                    <mat-option value="">Please select</mat-option>
-                                                    <mat-option *ngFor="let item of payMode" [value]="item.config_id">
-                                                        {{item.name}}
-                                                    </mat-option>
-                                                </mat-select>
-                                                <mat-error>
-                                                    This field is required
-                                                </mat-error>
-                                            </mat-form-field>
-                                            <mat-form-field class="form-field" appearance="outline"
-                                                >
-                                                <mat-label>Calculation Type</mat-label>
-                                                <mat-select
-                                                    placeholder="Calcualtion Type"
-                                                    [disabled]="viewOnly"
-                                                    formControlName="calculation_type">
-                                                    <mat-option value="">Please select</mat-option>
-                                                    <mat-option *ngFor="let item of calculationTypeArray"
-                                                        [value]="item.id">
-                                                        {{item.name}}
-                                                    </mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                            <mat-form-field class="form-field" appearance="outline"
-                                                >
-                                                <mat-label>Value</mat-label>
-                                                <input matInput placeholder="Enter Value"
-                                                    class="text-capitalize" type="number"
-                                                    formControlName="value"
-                                                    [readonly]="viewOnly"
-                                                    [errorStateMatcher]="confirmValidParentMatcher"
-                                                    >
-                                                <mat-error>Please Enter Value</mat-error>
-                                            </mat-form-field>
-                                        </form>
-                                        <div style="float:right; margin-left:88% !important;">
-                                            <a *ngIf="empPaymentModeDetail.length > 1 && !viewOnly" style="float:right"
-                                                href="javascript:void(0)" (click)="removePaymentMode(i)"><i
-                                                    class="fas fa-minus-circle" style="color:#e11022"></i></a>&nbsp;
-                                        </div>
-                                    </ng-container>
-                                    <div style="float:right; margin-left:82%;margin-top:-21px">
-                                        <a *ngIf="!viewOnly" href="javascript:void(0)" style="float:right"
-                                            (click)="addPaymentMode()"><i class="fas fa-plus-circle"
-                                                style="color:#0078c2"></i></a>
-                                    </div>
-                                </div>
 
                             </div>
-                            <div class="col-4 col-pad-5">
+                            <div class="col-3 col-pad-5">
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Salary Structure/Pay Scale</mat-label>
@@ -354,7 +300,7 @@
                                                                 This field is required
                                                             </mat-error>
                                                         </mat-form-field>
-                                                    </ng-container>
+                                                    </ng-container> 
                                                 </form>
                                             </ng-container>
                                             <!-- </ng-container>
@@ -396,9 +342,25 @@
                                 </div>
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>TA</mat-label>
+                                        <input type="text" formControlName="td" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
+                                            placeholder="TA">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>TDS</mat-label>
+                                        <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput [readonly]="viewOnly"
+                                            placeholder="TDS">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Gratuity</mat-label>
                                         <input type="text" formControlName="gratuity" matInput [readonly]="viewOnly"
-                                            placeholder="Gratuity" >
+                                            placeholder="Gratuity">
                                         <mat-error>
                                             This field is required
                                         </mat-error>
@@ -419,6 +381,99 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-3 col-pad-5">
+                                <div class="row salary-card">
+                                    <ng-container *ngFor="let item of empPaymentModeDetail; let i=index;">
+                                        <form [formGroup]="empPaymentModeDetail[i]">
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Pay Mode</mat-label>
+                                                <mat-select formControlName="pay_mode" required placeholder="Pay Mode"
+                                                    [disabled]="viewOnly" [value]="empPaymentModeDetail[i].value.pay_mode"
+                                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of payMode" [value]="item.bnk_id">
+                                                        {{item.bank_name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error>
+                                                    This field is required
+                                                </mat-error>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Calculation Type</mat-label>
+                                                <mat-select placeholder="Calcualtion Type" [disabled]="viewOnly"
+                                                    formControlName="calculation_type">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of calculationTypeArray"
+                                                        [value]="item.id">
+                                                        {{item.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline">
+                                                <mat-label>Value</mat-label>
+                                                <input matInput placeholder="Enter Value" class="text-capitalize"
+                                                    type="number" formControlName="value" [readonly]="viewOnly"
+                                                    [errorStateMatcher]="confirmValidParentMatcher">
+                                                <mat-error>Please Enter Value</mat-error>
+                                            </mat-form-field>
+                                        </form>
+                                        <div style="float:right; margin-left:88% !important;">
+                                            <a *ngIf="empPaymentModeDetail.length > 1 && !viewOnly" style="float:right"
+                                                href="javascript:void(0)" (click)="removePaymentMode(i)"><i
+                                                    class="fas fa-minus-circle" style="color:#e11022"></i></a>&nbsp;
+                                        </div>
+                                    </ng-container>
+                                    <div style="float:right; margin-left:82%;margin-top:-21px">
+                                        <a *ngIf="!viewOnly" href="javascript:void(0)" style="float:right"
+                                            (click)="addPaymentMode()"><i class="fas fa-plus-circle"
+                                                style="color:#0078c2"></i></a>
+                                    </div>
+                                </div>
+                                <div class="row salary-card">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Advance</mat-label>
+                                        <input type="text" formControlName="advance" matInput [readonly]="viewOnly"
+                                            placeholder="Advance">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Advace Deposite Per Month</mat-label>
+                                        <input type="text" formControlName="deposite_month_amount" matInput 
+                                            placeholder="Advace Deposit Per Month" [readonly]="viewOnly">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <!-- <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Starting Month</mat-label>
+                                        <input type="text" formControlName="starting_month" matInput
+                                         placeholder="Starting Month" [readonly]="viewOnly">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field> -->
+                                    <mat-form-field class="form-field" appearance="outline">
+                                            <mat-label>Starting Month</mat-label>
+                                            <mat-select formControlName="starting_month" [disabled]="viewOnly">
+                                              <mat-option value="1">January</mat-option>
+                                              <mat-option value="2">February</mat-option>
+                                              <mat-option value="3">March</mat-option>
+                                              <mat-option value="4">April</mat-option>
+                                              <mat-option value="5">May</mat-option>
+                                              <mat-option value="6">June</mat-option>
+                                              <mat-option value="7">July</mat-option>
+                                              <mat-option value="8">August</mat-option>
+                                              <mat-option value="9">September</mat-option>
+                                              <mat-option value="10">October</mat-option>
+                                              <mat-option value="11">November</mat-option>
+                                              <mat-option value="12">December</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
                                 </div>
                             </div>
                         </div>

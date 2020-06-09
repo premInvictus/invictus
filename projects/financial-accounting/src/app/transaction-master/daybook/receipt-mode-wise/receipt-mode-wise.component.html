@@ -1,0 +1,51 @@
+<div *ngIf="tableDivFlag">
+
+  <div class="row remove-top-margin">
+    <div class="col-12">
+      <table *ngIf="ELEMENT_DATA.length > 0"
+        class="table table-borderd table-stripped custom-table text-center"
+        style="margin-top: 5px;"
+      >
+      <thead>
+        <tr class="mat-header-row">
+          <th class="mat-header-cell">Date</th>
+          <th class="mat-header-cell" *ngFor="let itm of displayedColumns">{{itm.name}}</th>
+          <th class="mat-header-cell">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of ELEMENT_DATA">
+          <td>{{item['date'] | date: 'd-MMM-yyyy'}}</td>
+          <ng-container *ngFor="let itm of displayedColumns">
+           <td>{{item['id_'+itm.id] | indianCurrency}}</td>
+          </ng-container>
+          <td>{{getColumnTotal(item) | indianCurrency}}</td>
+        </tr>
+        <tr>
+          <td class="text-bold">Total</td>
+          <td class="text-bold" *ngFor="let itm of displayedColumns">{{eachheadtotal_details['id_'+itm.id] | indianCurrency}}</td>
+          <td class="text-bold">{{headtoatl | indianCurrency}}</td>
+        </tr>
+      </tbody>
+      </table>
+      <table *ngIf="ELEMENT_DATA.length == 0"
+        class="table table-borderd table-stripped custom-table text-center"
+        style="margin-top: 5px;"
+      >
+        <tr>
+          <td>No Record Found</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+      <img
+      src="https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png">
+    <br><br><br>
+    <br><span class="font-size-20 font-light font-color-brown">
+      Please select Month
+    </span>
+  </div>
+</div>

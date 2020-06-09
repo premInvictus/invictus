@@ -1,0 +1,20 @@
+.stu-img-div {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    
+    margin: auto;
+}
+.stu-prof {
+    width: 100%;
+    border-radius: 50%;
+}
+.details-div:nth-child(odd) {
+    background: #f6f6f6;
+}
+.details-div {
+    padding: 10px;
+}
+h4 {
+    text-transform: uppercase;
+}

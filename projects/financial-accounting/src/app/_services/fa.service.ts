@@ -40,6 +40,48 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/account-master/getAllAccountMaster', value);
 	}
+	getOrderMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiInvUrl + '/requistion-master/getOrderMaster', value);
+	}
+	getVoucherTypeMaxId(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getMaxVoucherTypeId', value);
+	}
+	getInvoiceDayBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
+	}
+	getFeeMonths(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
+	getLedger(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/ledger/getLedger', value);
+	}
+	insertAccountMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/account-master/insertAccountMaster', value);
+	}
+	getSalaryComponent() {
+		return this.http.get(environment.apiHRUrl + '/salary-component/getSalaryComponent');
+	}
+	getBanks(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
+	}
+	getTrialBalance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/ledger/getTrialBalance', value);
+	}
+	updateAccountMaster(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/account-master/updateAccountMaster', value);
+	}
+	updateAccountPosition(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/account-master/updateAccountPosition', value);
+	}
 
 	
 	

@@ -142,27 +142,27 @@ export class CollectionReportComponent implements OnInit {
 		this.getSession();
 		this.buildForm();
 		this.getClassData();
-			if(this.common.isExistUserAccessMenu('649')) {
-				this.reportTypeArray.push({report_type: 'headwise', report_name: 'Head Wise'});
-			}
-			if(this.common.isExistUserAccessMenu('650')) {
-				this.reportTypeArray.push({report_type: 'classwise', report_name: 'Class Wise'});
-			}
-			if(this.common.isExistUserAccessMenu('651')) {
-				this.reportTypeArray.push({report_type: 'modewise', report_name: 'Mode Wise'});
-			}
-			if(this.common.isExistUserAccessMenu('652')) {
-				this.reportTypeArray.push({report_type: 'routewise', report_name: 'Route Wise'});
-			}
-			if(this.common.isExistUserAccessMenu('653')) {
-				this.reportTypeArray.push({report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)'});
-			}
-			if(this.common.isExistUserAccessMenu('654')) {
-				this.reportTypeArray.push({report_type: 'summary', report_name: 'Collection Summary'});
-			}
-			if(this.common.isExistUserAccessMenu('655')) {
-				this.reportTypeArray.push({report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise'});
-			}
+		if (this.common.isExistUserAccessMenu('649')) {
+			this.reportTypeArray.push({ report_type: 'headwise', report_name: 'Head Wise' });
+		}
+		if (this.common.isExistUserAccessMenu('650')) {
+			this.reportTypeArray.push({ report_type: 'classwise', report_name: 'Class Wise' });
+		}
+		if (this.common.isExistUserAccessMenu('651')) {
+			this.reportTypeArray.push({ report_type: 'modewise', report_name: 'Mode Wise' });
+		}
+		if (this.common.isExistUserAccessMenu('652')) {
+			this.reportTypeArray.push({ report_type: 'routewise', report_name: 'Route Wise' });
+		}
+		if (this.common.isExistUserAccessMenu('653')) {
+			this.reportTypeArray.push({ report_type: 'mfr', report_name: 'Monthly Fee Report (MFR)' });
+		}
+		if (this.common.isExistUserAccessMenu('654')) {
+			this.reportTypeArray.push({ report_type: 'summary', report_name: 'Collection Summary' });
+		}
+		if (this.common.isExistUserAccessMenu('655')) {
+			this.reportTypeArray.push({ report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise' });
+		}
 		this.reportType = 'headwise';
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
@@ -172,7 +172,7 @@ export class CollectionReportComponent implements OnInit {
 				'to_date': date
 			});
 		}
-		
+
 		this.filterFlag = true;
 	}
 	angularGridReady(angularGrid: AngularGridInstance) {
@@ -695,7 +695,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
-							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));						
+							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -880,7 +880,33 @@ export class CollectionReportComponent implements OnInit {
 						filter: { model: Filters.compoundInputNumber },
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
-					}];
+					},
+					{
+						id: 'payment_mode',
+						name: 'Payment Mode',
+						field: 'payment_mode',
+						width: 15,
+						sortable: true,
+						filterable: true,
+					},
+					{
+						id: 'bank_name',
+						name: 'Bank Name',
+						field: 'bank_name',
+						width: 15,
+						sortable: true,
+						filterable: true,
+
+					},
+					{
+						id: 'transaction_id',
+						name: 'Transaction Id/Cheque No.',
+						field: 'transaction_id',
+						width: 15,
+						sortable: true,
+						filterable: true
+					},
+				];
 				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -903,9 +929,9 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
-							
+
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ?
-							new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+								new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 							obj['receipt_id'] = repoArray[Number(index)]['rpt_id'] ?
 								repoArray[Number(index)]['rpt_id'] : '-';
 							obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
@@ -915,6 +941,19 @@ export class CollectionReportComponent implements OnInit {
 								repoArray[Number(index)]['receipt_no'] : '-';
 							obj['rpt_amount'] = repoArray[Number(index)]['rpt_amount'] ?
 								Number(repoArray[Number(index)]['rpt_amount']) : 0;
+							obj['payment_mode'] = repoArray[Number(index)]['pay_name'] ?
+								new CapitalizePipe().transform(repoArray[Number(index)]['pay_name']) : '-';
+							obj['bank_name'] = repoArray[Number(index)]['tb_name'] ?
+								new CapitalizePipe().transform(repoArray[Number(index)]['tb_name']) : '-';
+							if (Number(repoArray[Number(index)]['ftr_pay_id']) === 3) {
+								obj['transaction_id'] = repoArray[Number(index)]['ftr_cheque_no'] ?
+									(repoArray[Number(index)]['ftr_cheque_no']) : 0;
+							} else {
+							obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] ?
+								(repoArray[Number(index)]['ftr_transaction_id']) : 0;
+
+							}
+
 							this.dataset.push(obj);
 							index++;
 						}
@@ -929,6 +968,9 @@ export class CollectionReportComponent implements OnInit {
 						obj3['receipt_no'] = '';
 						obj3['rpt_amount'] = new IndianCurrency().transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
 						obj3['fp_name'] = '';
+						obj3['payment_mode'] = '';
+						obj3['bank_name'] = '';
+						obj3['transaction_id'] = '';
 						this.totalRow = obj3;
 						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
 						this.aggregatearray.push(new Aggregators.Sum('srno'));
@@ -1460,7 +1502,7 @@ export class CollectionReportComponent implements OnInit {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
 							}
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
-							
+
 							obj['invoice_created_date'] = repoArray[Number(index)]['ftr_transaction_date'];
 							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
 								repoArray[Number(index)]['fp_name'] : '-';
@@ -1894,7 +1936,7 @@ export class CollectionReportComponent implements OnInit {
 						const obj3: any = {};
 						obj3['id'] = 'footer';
 						obj3['fh_name'] = this.common.htmlToText('<div class="grand_total_class"><b>Grand Total</b></div>');
-						
+
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -2513,7 +2555,7 @@ export class CollectionReportComponent implements OnInit {
 				'orderBy': '',
 				'downloadAll': true
 			});
-		
+
 		//console.log('this.sessionName', this.sessionName);
 		//Number(this.sessionName.split('-')[0]) < Number(new Date().getFullYear())
 		var currentYear = Number(new Date().getFullYear());
@@ -2521,10 +2563,10 @@ export class CollectionReportComponent implements OnInit {
 		var sessionEndYear = Number(this.sessionName.split('-')[1]);
 		var sessionStartMonth = Number(this.schoolInfo.session_start_month);
 		var sessionEndMonth = Number(this.schoolInfo.session_end_month);
-		var sessionStartDate = sessionStartYear+'-'+this.schoolInfo.session_start_month+'-'+'01';
+		var sessionStartDate = sessionStartYear + '-' + this.schoolInfo.session_start_month + '-' + '01';
 		var sessionEndMonthLastDay = new Date(sessionEndYear, sessionEndMonth, 0).getDate();
-		var sessionEndDate = sessionEndYear+'-'+this.schoolInfo.session_start_month+'-'+sessionEndMonthLastDay;
-		var currentDate = new Date().getFullYear()+'-'+new Date().getMonth()+'-'+new Date().getDate();
+		var sessionEndDate = sessionEndYear + '-' + this.schoolInfo.session_start_month + '-' + sessionEndMonthLastDay;
+		var currentDate = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
 		// console.log(currentYear);
 		// console.log(sessionStartYear);
 		// console.log(sessionEndYear);
@@ -3051,7 +3093,7 @@ export class CollectionReportComponent implements OnInit {
 		}
 		else if (this.reportType === 'summary') {
 			reportType = new TitleCasePipe().transform('summaryfee_') + this.sessionName;
-		}else if (this.reportType === 'cumulativeheadwise') {
+		} else if (this.reportType === 'cumulativeheadwise') {
 			reportType = new TitleCasePipe().transform('cumulativeheadwise_') + this.sessionName;
 		}
 		let reportType2: any = '';
