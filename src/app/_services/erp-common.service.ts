@@ -675,6 +675,16 @@ export class ErpCommonService {
 		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
 	}
 
+	getChartsOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/getAllChartsOfAccount', value);
+	}
+
+	insertVoucherEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/insertVoucherEntry', value);
+	}
+
 }
 
 

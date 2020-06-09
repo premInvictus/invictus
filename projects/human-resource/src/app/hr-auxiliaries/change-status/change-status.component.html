@@ -88,10 +88,25 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-12">
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label *ngIf="empDetails.emp_status === 'live'">Date of Leaving</mat-label>
+                    <mat-label *ngIf="empDetails.emp_status === 'left'">Date of Joining</mat-label>
+                    <input matInput [matDatepicker]="picker2"
+                      [placeholder]="empDetails.emp_status === 'left' ? 'Date of Leaving' : 'Date of Joining'" required
+                      formControlName="dol">
+                    <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Remarks</mat-label>
-                    <input matInput placeholder="Remarks" formControlName="remarks" required>
+                    <textarea matInput placeholder="Remarks" formControlName="remarks" rows="4" required>
+                      </textarea>
                   </mat-form-field>
                 </div>
               </div>

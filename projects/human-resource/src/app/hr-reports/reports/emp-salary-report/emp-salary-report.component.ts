@@ -405,6 +405,21 @@ export class EmpSalaryReportComponent implements OnInit {
         },
       },
       {
+        id: 'dol', name: 'Date of Leaving', field: 'dol', sortable: true,
+        filterable: true,
+        width: 80,
+        filterSearchType: FieldType.number,
+        grouping: {
+          getter: 'dol',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+          aggregators: this.aggregatearray,
+          aggregateCollapsed: true,
+          collapsed: false,
+        },
+      },
+      {
         id: 'pf_joining_date', name: 'PF Joining Date', field: 'pf_joining_date', sortable: true,
         filterable: true,
         width: 120,
@@ -492,7 +507,22 @@ export class EmpSalaryReportComponent implements OnInit {
         },
       },
       {
-        id: 'emp_pay_scale', name: 'Pay Scale', field: 'emp_pay_scale', sortable: true,
+        id: 'emp_pay_scale_master', name: 'Pay Scale', field: 'emp_pay_scale_master', sortable: true,
+        filterable: true,
+        width: 120,
+        filterSearchType: FieldType.number,
+        grouping: {
+          getter: 'emp_pay_scale_master',
+          formatter: (g) => {
+            return `${g.value}  <span style="color:green">(${g.count})</span>`;
+          },
+
+          aggregateCollapsed: true,
+          collapsed: false,
+        },
+      },
+      {
+        id: 'emp_pay_scale', name: 'Structure', field: 'emp_pay_scale', sortable: true,
         filterable: true,
         width: 120,
         filterSearchType: FieldType.number,
@@ -501,7 +531,7 @@ export class EmpSalaryReportComponent implements OnInit {
           formatter: (g) => {
             return `${g.value}  <span style="color:green">(${g.count})</span>`;
           },
-          aggregators: this.aggregatearray,
+
           aggregateCollapsed: true,
           collapsed: false,
         },
@@ -649,6 +679,9 @@ export class EmpSalaryReportComponent implements OnInit {
           obj['pf_acc_no'] = item.emp_salary_detail.account_docment_detail ? item.emp_salary_detail.account_docment_detail.pf_acc_no : '';
           obj['doj'] = item.emp_salary_detail.emp_organisation_relation_detail ?
             this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'dd-MMM-y') : '';
+          obj['dol'] = item.emp_salary_detail.emp_organisation_relation_detail &&
+            item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+            this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.dol, 'dd-MMM-y') : '';
           obj['pf_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
             this.commonAPIService.dateConvertion(item.emp_salary_detail.emp_organisation_relation_detail.pf_joining_date, 'dd-MMM-y') : '';
           obj['esic_joining_date'] = item.emp_salary_detail.emp_organisation_relation_detail ?
@@ -666,7 +699,14 @@ export class EmpSalaryReportComponent implements OnInit {
           obj['category_1'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_1 ? item.emp_salary_detail.emp_job_detail.category_1.name : '';
           obj['category_2'] = item.emp_salary_detail.emp_job_detail && item.emp_salary_detail.emp_job_detail.category_2 ? item.emp_salary_detail.emp_job_detail.category_2.name : '';
           obj['supervisor'] = item.emp_supervisor ? item.emp_supervisor.name : '';
-          obj['emp_pay_scale'] = item.emp_salary_detail.emp_salary_structure.emp_pay_scale ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_name : '';
+          obj['emp_pay_scale'] = item.emp_salary_detail.emp_salary_structure
+          && item.emp_salary_detail.emp_salary_structure.emp_pay_scale
+          &&
+          item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name ? item.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_name : '-';
+          obj['emp_pay_scale_master'] = item.emp_salary_detail.emp_salary_structure &&
+            item.emp_salary_detail.emp_salary_structure.emp_pay_scale_master &&
+            item.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_name ?
+            item.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_name : '';
           for (const item of this.empShacolumns) {
             obj[item.columnDef] = item.value;
           }
@@ -711,6 +751,7 @@ export class EmpSalaryReportComponent implements OnInit {
         obj3['esi_ac_no'] = '';
         obj3['pf_acc_no'] = '';
         obj3['doj'] = '';
+        obj3['dol'] = '';
         obj3['pf_joining_date'] = '';
         obj3['esic_joining_date'] = '';
         obj3['probation_till_date'] = '';
@@ -725,12 +766,14 @@ export class EmpSalaryReportComponent implements OnInit {
         obj3['category_2'] = 'Grand Total';
         obj3['supervisor'] = '';
         obj3['emp_pay_scale'] = '';
+        obj3['emp_pay_scale_master'] = '';
         // obj3['Basic Pay'] = this.dataset.map(t => t['Basic Pay']).reduce((acc, val) => Number(acc) + Number(val), 0);
         Object.keys(salaryHead).forEach(key2 => {
           Object.keys(this.dataset).forEach(key3 => {
             Object.keys(this.dataset[key3]).forEach(key4 => {
               if (key4 === salaryHead[key2]) {
-                obj3[salaryHead[key2]] = this.dataset.map(t => t[salaryHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
+                obj3[salaryHead[key2]] = this.dataset.map(t =>
+                  Math.round(Number(t[salaryHead[key2]]))).reduce((acc, val) => Number(acc) + Number(val), 0);
               }
             });
           });
@@ -739,13 +782,16 @@ export class EmpSalaryReportComponent implements OnInit {
           Object.keys(this.dataset).forEach(key3 => {
             Object.keys(this.dataset[key3]).forEach(key4 => {
               if (key4 === deductionHead[key2]) {
-                obj3[deductionHead[key2]] = this.dataset.map(t => t[deductionHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
+                obj3[deductionHead[key2]] = this.dataset.map(t => 
+                  Math.round(Number(t[deductionHead[key2]]))).reduce((acc, val) => Number(acc) + Number(val), 0);
               }
             });
           });
         });
-        obj3['net_salary'] = this.dataset.map(t => t['net_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
-        obj3['total_salary'] = this.dataset.map(t => t['total_salary']).reduce((acc, val) => Number(acc) + Number(val), 0);
+        obj3['net_salary'] = this.dataset.map(t => 
+          Math.round(Number(t['net_salary']))).reduce((acc, val) => Number(acc) + Number(val), 0);
+        obj3['total_salary'] = this.dataset.map(t => 
+          Math.round(Number(t['total_salary']))).reduce((acc, val) => Number(acc) + Number(val), 0);
         if (this.dataset.length <= 5) {
           this.gridHeight = 300;
         } else if (this.dataset.length <= 10 && this.dataset.length > 5) {

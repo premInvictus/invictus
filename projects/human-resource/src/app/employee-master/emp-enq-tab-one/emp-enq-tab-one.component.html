@@ -12,8 +12,16 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Gender</mat-label>
-              <input class="text-capitalize" matInput placeholder="Gender" required [readonly]="viewOnly"
-                formControlName="gender" [errorStateMatcher]="confirmValidParentMatcher" />
+              <mat-select formControlName="gender" placeholder="Gender" required
+                [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="male">Male</mat-option>
+                <mat-option value="female">Female</mat-option>
+                <mat-option value="other">Other</mat-option>
+              </mat-select>
+              <mat-error>
+                This field is required
+              </mat-error>
             </mat-form-field>
           </div>
           <div class="col-4 col-pad-5">
@@ -31,8 +39,15 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Marital Status</mat-label>
-              <input matInput matInput placeholder="Marital Status" formControlName="enq_married_status" required
-                [readonly]="viewOnly" />
+              <mat-select formControlName="enq_married_status" placeholder="Marital Status" required
+                [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-option value="">Please Select</mat-option>
+                <mat-option value="single">Single</mat-option>
+                <mat-option value="divorced">Divorced</mat-option>
+                <mat-option value="married">Married</mat-option>
+                <mat-option value="widowed">Widowed</mat-option>
+                <mat-option value="seperated">Seperated</mat-option>
+              </mat-select>
               <mat-error>
                 This field is required
               </mat-error>

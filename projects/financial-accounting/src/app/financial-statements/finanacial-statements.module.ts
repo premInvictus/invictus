@@ -7,17 +7,25 @@ import { ChartsofAccountComponent } from './chart-of-accounts/chart-of-accounts.
 import { IncomeAndExpenditureComponent } from './income-and-expenditure/income-and-expenditure.component';
 import { ReceiptAndPaymentsComponent } from './receipts-and-payments/receipts-and-payments.component';
 import { StatementOfAffairsComponent } from './statement-of-affairs/statement-of-affairs.component';
+import { LedgerComponent } from './ledger/ledger.component';
+import { TrialBalanceComponent } from './trial-balance/trial-balance.component';
+import { MatSelectSearchModule } from '../mat-select-search/mat-select-search.module';
+import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
 @NgModule({
   imports: [
     CommonModule,
     FaSharedModule,
-    FinancialStatementRoutingModule
+    FinancialStatementRoutingModule,
+    MatSelectSearchModule
   ],
   declarations: [
     ChartsofAccountComponent,
     IncomeAndExpenditureComponent,
     ReceiptAndPaymentsComponent,
-    StatementOfAffairsComponent
+    StatementOfAffairsComponent,
+    LedgerComponent,
+    TrialBalanceComponent,
+    BalanceSheetComponent
   ],
   entryComponents: []
 })

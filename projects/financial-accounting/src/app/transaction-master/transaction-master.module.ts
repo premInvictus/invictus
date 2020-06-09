@@ -8,6 +8,10 @@ import { PartyCreationComponent } from './party-creation/party-creation.componen
 import { PartyWiseAccountsComponent } from './party-wise-accounts/party-wise-accounts.component';
 import { PrettyExpenseLogComponent } from './pretty-expense-log/pretty-expense-log.component';
 import { VoucherEntryComponent } from './voucher-entry/voucher-entry.component';
+import { IncomeDueComponent } from './daybook/income-due/income-due.component';
+import { ReceiptModeWiseComponent } from './daybook/receipt-mode-wise/receipt-mode-wise.component';
+import { TotalFeeReceivableComponent } from './daybook/total-fee-receivable/total-fee-receivable.component';
+import { VouchersListComponent } from './daybook/vouchers-list/vouchers-list.component';
 
 @NgModule({
   imports: [
@@ -20,7 +24,11 @@ import { VoucherEntryComponent } from './voucher-entry/voucher-entry.component';
     PartyCreationComponent,
     PartyWiseAccountsComponent,
     PrettyExpenseLogComponent,
-    VoucherEntryComponent
+    VoucherEntryComponent,
+    IncomeDueComponent,
+    ReceiptModeWiseComponent,
+    TotalFeeReceivableComponent,
+    VouchersListComponent
   ],
   entryComponents: []
 })

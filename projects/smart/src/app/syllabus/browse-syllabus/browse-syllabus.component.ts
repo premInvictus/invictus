@@ -7,6 +7,7 @@ declare var require;
 import * as Excel from 'exceljs/dist/exceljs';
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TitleCasePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import { CapitalizePipe } from '../../../../../fee/src/app/_pipes';
@@ -33,6 +34,7 @@ export class BrowseSyllabusComponent implements OnInit {
 	sd_status: any;
 	param: any = {};
 	currentUser: any;
+	innerst: any[] = [];
 	UnpublishParam: any = {};
 	teachingSum = 0;
 	testSum = 0;
@@ -108,6 +110,33 @@ export class BrowseSyllabusComponent implements OnInit {
 			syl_term_id: ''
 		});
 	}
+	drop(event: CdkDragDrop<string[]>) {
+		moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+	}
+	openInner(index) {
+		let i = 0;
+		for (const item of this.finalSpannedArray) {
+			if (i === index) {
+				if (this.innerst[i] === 'closed') {
+					this.innerst[i] = 'open';
+				} else {
+					this.innerst[i] = 'closed';
+				}
+
+			} else {
+				this.innerst[i] = 'closed';
+			}
+			i++;
+		}
+	}
+	openCloseSwap() {
+		if (document.getElementById('drag-dr').style.display === '' ||
+			document.getElementById('drag-dr').style.display === 'none') {
+			document.getElementById('drag-dr').style.display = 'block';
+		} else {
+			document.getElementById('drag-dr').style.display = 'none';
+		}
+	}
 	ngOnInit() {
 		this.buildForm();
 		this.getClass();
@@ -158,6 +187,7 @@ export class BrowseSyllabusComponent implements OnInit {
 	//  Get Class List function
 	getClass() {
 		this.finalSpannedArray = [];
+		this.innerst = [];
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
@@ -517,7 +547,9 @@ export class BrowseSyllabusComponent implements OnInit {
 
 	// fetch syllabus details for table
 	fetchSyllabusDetails() {
+		this.innerst = [];
 		this.teachingSum = 0;
+		this.innerst = [];
 		this.testSum = 0;
 		this.revisionSum = 0;
 		this.syllabusService.getSylIdByClassSubject(this.reviewform.value)
@@ -617,6 +649,7 @@ export class BrowseSyllabusComponent implements OnInit {
 													for (const dety of item.details) {
 														this.dataArr.push(dety);
 													}
+													this.innerst.push('closed');
 												}
 											}
 										} else {
@@ -639,6 +672,57 @@ export class BrowseSyllabusComponent implements OnInit {
 				}
 			);
 
+	}
+	freezeOrder() {
+		// console.log(this.finalSpannedArray);
+		const freezer: any[] = [];
+		let i = 1;
+		for (const item of this.finalSpannedArray) {
+			if (item.sd_topic_id && item.sd_topic_id === item.details[0].sd_topic_id) {
+				const index = freezer.findIndex(f => f.sd_topic_id === item.topic_id);
+				if (index === -1) {
+					const inner: any[] = [];
+					let j = 1;
+					for (const titem of item.details) {
+						if (Number(titem.sd_ctr_id) === 1) {
+							const findex = inner.findIndex(f => Number(f.sd_st_id) === Number(titem.sd_st_id));
+							if (findex === -1) {
+								inner.push({
+									sd_ctr_id :Number(titem.sd_ctr_id),
+									sd_st_id: Number(titem.sd_st_id),
+									sd_id : Number(titem.sd_id),
+									order: j
+								});
+							}
+						} else {
+							inner.push({
+								sd_ctr_id :Number(titem.sd_ctr_id),
+								sd_st_id: 0,
+								sd_id : Number(titem.sd_id),
+								order: j
+							});
+						}
+						j++;
+					}
+					freezer.push({
+						sd_topic_id: Number(item.sd_topic_id),
+						order: i,
+						innerDetails: inner,
+						syl_id : Number(item.syl_id)
+					});
+					i++;
+				}
+			}
+		}
+		if (freezer.length > 0) {
+			this.syllabusService.setOrderSyllabus({orderData : freezer}).subscribe((res: any) => {
+				if (res && res.status === 'ok') {
+					this.commonService.showSuccessErrorMessage('Topic subtopic order changed successfully', 'success');
+					this.openCloseSwap();
+					this.fetchSyllabusDetails();
+				}
+			});
+		}
 	}
 
 }

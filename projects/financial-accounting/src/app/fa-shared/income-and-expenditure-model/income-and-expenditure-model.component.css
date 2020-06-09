@@ -1,0 +1,24 @@
+.ledger-head{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* table tbody td.empty-same-height{
+    height: 40px;
+} */
+
+table tbody.header td {
+    background: #C8D6E5;
+}
+
+ table tbody tr:nth-child(even) {
+     background: #FAFAFA;
+ }
+
+ .row {
+     margin-top:0 !important
+ }
+
+ .cursor-pointer b{
+     cursor: pointer !important;
+ }

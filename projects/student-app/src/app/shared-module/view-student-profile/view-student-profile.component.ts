@@ -12,10 +12,10 @@ export class ViewStudentProfileComponent implements OnInit {
   sessionArray: any[] = [];
   nationalityArray: any[] = [];
   previousSchoolDet: any[] = [];
-	payMents: any[] = [];
-	transportDet: any[] = [];
-	customQArr: any[] = [];
-	skillDetails: any[] = [];
+  payMents: any[] = [];
+  transportDet: any[] = [];
+  customQArr: any[] = [];
+  skillDetails: any[] = [];
   religionsArray: any[] = [];
   motherTongueArray: any[] = [];
   genderArray: any[] = [];
@@ -29,7 +29,7 @@ export class ViewStudentProfileComponent implements OnInit {
   activityClubArray: any[] = [];
   levelOfIntrestArray: any[] = [];
   eventLevelArray: any[] = [];
-  studentDet : any[]  = [];
+  studentDet: any[] = [];
   authorityArray: any[] = [];
   busRouteArray: any[] = [];
   busStopArray: any[] = [];
@@ -73,7 +73,7 @@ export class ViewStudentProfileComponent implements OnInit {
     this.getReason();
   }
   getStudentDetails(user) {
-    this.erp.getStudent({ au_login_id: user.login_id, au_process_type: '4', last_class : true }).subscribe((res: any) => {
+    this.erp.getStudent({ au_login_id: user.login_id, au_process_type: '4', last_class: true }).subscribe((res: any) => {
       if (res && res.status === 'ok') {
         this.studentdetails = res.data[0];
         this.parentDet = this.studentdetails.parentDetails && this.studentdetails.parentDetails.length > 0 ?
@@ -84,7 +84,7 @@ export class ViewStudentProfileComponent implements OnInit {
         this.addressDetails = this.studentdetails.personalDetails && this.studentdetails.personalDetails.length > 0
           && this.studentdetails.personalDetails[0].addressDetails && this.studentdetails.personalDetails[0].addressDetails.length > 0
           ? this.studentdetails.personalDetails[0].addressDetails[0] : [];
-          this.studentDet.push({au_class_id : this.studentdetails.au_class_id});
+        this.studentDet.push({ au_class_id: this.studentdetails.au_class_id });
         if (this.studentdetails.personalDetails && this.studentdetails.personalDetails[0]) {
           this.getCityNameByCityId(this.studentdetails.personalDetails[0].addressDetails[0].ea_city);
           this.studentDet.push(this.studentdetails.personalDetails[0]);
@@ -115,14 +115,14 @@ export class ViewStudentProfileComponent implements OnInit {
     );
   }
   getSchool() {
-		this.erp.getSchool().subscribe(
-			(result: any) => {
-				if (result.status === 'ok') {
-					this.schoolInfo = result.data[0];
-				}
-			}
-		);
-	}
+    this.erp.getSchool().subscribe(
+      (result: any) => {
+        if (result.status === 'ok') {
+          this.schoolInfo = result.data[0];
+        }
+      }
+    );
+  }
 
   getSession() {
     this.erp.getSession().subscribe(
@@ -321,31 +321,31 @@ export class ViewStudentProfileComponent implements OnInit {
     return true;
   }
   getTabsData() {
-		this.erp.getAdditionalDetails({ au_login_id: this.currentUser.login_id }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				this.previousSchoolDet = result.data[0].educationDetails;
-				this.skillDetails = result.data[0].awardsDetails;
-				this.erp.getFeeAccount({ accd_login_id: this.currentUser.login_id }).subscribe((res: any) => {
-					if (res && res.status === 'ok') {
-						this.transportDet.push(res.data[0]);	
-					}
-				});
-			} else {
-			
-			}
-		});
+    this.erp.getAdditionalDetails({ au_login_id: this.currentUser.login_id, au_process_type: '4' }).subscribe((result: any) => {
+      if (result.status === 'ok') {
+        this.previousSchoolDet = result.data[0].educationDetails;
+        this.skillDetails = result.data[0].awardsDetails;
+        this.erp.getFeeAccount({ accd_login_id: this.currentUser.login_id }).subscribe((res: any) => {
+          if (res && res.status === 'ok') {
+            this.transportDet.push(res.data[0]);
+          }
+        });
+      } else {
+
+      }
+    });
   }
   getCityNameByCityId(city_id) {
-		this.erp.getCityNameByCityId({ city_id: city_id }).subscribe((result: any) => {
-			if (result.status === 'ok') {
-				if (result.data) {
-					this.cityName = result.data[0].cit_name;
-					this.getTabsData();
-				}
-			} else {
-				this.cityName = '-';
-				this.getTabsData();
-			}
-		});
-	}
+    this.erp.getCityNameByCityId({ city_id: city_id }).subscribe((result: any) => {
+      if (result.status === 'ok') {
+        if (result.data) {
+          this.cityName = result.data[0].cit_name;
+          this.getTabsData();
+        }
+      } else {
+        this.cityName = '-';
+        this.getTabsData();
+      }
+    });
+  }
 }

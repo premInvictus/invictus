@@ -15,6 +15,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
 	formGroupArray: any[] = [];
+	totalPresentArr : any[] = [];
 	//editFlag = false;
 	employeeData: any[] = [];
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
@@ -79,7 +80,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 	getEmployeeDetail() {
 		if (this.searchForm.value.month_id) {
-			var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
+			this.totalPresentArr = [];
 			let inputJson = {
 				month_id: this.searchForm.value.month_id,
 				emp_status: this.searchForm.value.status_id,
@@ -87,6 +88,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				session_id: this.session_id,
 				from_attendance: true
 			};
+			let no_of_days = Number(this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear()));
 			this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 				let element: any = {};
 				let recordArray = [];
@@ -100,6 +102,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 					let j = 0;
 					//console.log('result', result);
 					for (const item of result) {
+
 						var emp_month;
 						var emp_leave_approved;
 						var emp_attendance_detail;
@@ -132,8 +135,6 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 						}
 
-						// console.log('total_leave_closing_balance', total_leave_closing_balance);
-						// console.log('curr_total_leave_closing_balance', curr_total_leave_closing_balance);
 
 						element = {
 							srno: pos,
@@ -158,7 +159,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									emp_leave_granted: item.emp_leave_granted ? item.emp_leave_granted : '',
 									emp_remarks: item.emp_remarks ? item.emp_remarks : '',
 									emp_leave_availed: '',
-									emp_total_attendance: '',
+									emp_total_attendance: 0,
 									emp_balance_leaves: '0',
 									emp_lwp: '',
 									emp_leave_approved: item.emp_leave_approved ? item.emp_leave_approved : '',
@@ -169,12 +170,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 								emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
-										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail
+										&& emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
+										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail && 
+										emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
 										var presentDays = Number(lwpDays) < 0 ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
 										if (item.emp_status === 'live') {
-											element.emp_total_attendance = presentDays;
+											element.emp_total_attendance = presentDays && presentDays !== 0 ?
+											presentDays : no_of_days;
 										}
 										if (item.emp_status === 'left') {
 											const month: any = item.emp_salary_detail
@@ -225,6 +229,17 @@ export class EmployeeAttendanceComponent implements OnInit {
 							}
 						}
 						// this.getLWP(element, pos);
+
+						if (Number(element.emp_total_attendance)) {
+						element.emp_total_attendance = element.emp_total_attendance &&
+							element.emp_lwp ? (Number(element.emp_total_attendance)
+								- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
+								this.totalPresentArr.push(element.emp_total_attendance);
+						} else {
+							element.emp_total_attendance = Number(no_of_days);
+							this.totalPresentArr.push(element.emp_total_attendance);
+						}
+								console.log(this.totalPresentArr);
 						this.EMPLOYEE_ELEMENT.push(element);
 						pos++;
 						j++;
@@ -299,7 +314,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 			}
 		}
-		this.commonAPIService.updateEmployee(this.employeeData).subscribe((result: any) => {
+		const filterArr: any[] = [];
+		for (const item of this.employeeData) {
+			filterArr.push({
+				emp_id: item.emp_id,
+				emp_month_attendance_data: item.emp_month_attendance_data
+			});
+		}
+		this.commonAPIService.updateEmployee(filterArr).subscribe((result: any) => {
 			if (result) {
 				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
@@ -356,7 +378,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 			// element.emp_lwp = element && element ? element.emp_lwp : '';
 			// element.emp_total_attendance = presentDays;
-			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(element.emp_present, 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(this.totalPresentArr[index], 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
 			//this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 			console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);

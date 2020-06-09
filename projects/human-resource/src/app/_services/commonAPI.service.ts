@@ -451,5 +451,8 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/department-leave/checkDepartmentEntry', value);
 	}
+	getVoucherTypeMaxId(value) {
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getMaxVoucherTypeId', value);
+	}
 
 }

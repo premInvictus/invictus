@@ -54,6 +54,11 @@ export class EmpEnqCommonComponent implements OnInit {
   studentdetailsflag = false;
   lastRecordId;
   currentUser: any;
+  enqStatus: any[] = [
+    { id: 'shortlisted', name: 'Shortlisted' },
+    { id: 'approved', name: 'Approved' },
+    { id: 'rejected', name: 'Rejected' }
+  ];
   categoryOneArray: any[] = [];
   @ViewChild('deleteModal') deleteModal;
   @ViewChild('myInput') myInput: ElementRef;
@@ -125,7 +130,7 @@ export class EmpEnqCommonComponent implements OnInit {
       //this.setActionControls({viewMode : true})
       this.commonAPIService.getCareerEnq({ enq_id: enq_id }).subscribe((result: any) => {
         if (result) {
-          var subjectArray: any = this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
+          const subjectArray: any[] = this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_subject ?
             this.employeedetails.enq_applied_job_detail[0].enq_subject : [];
           let sub_id_array: any[] = [];
           for (let item of subjectArray) {
@@ -135,6 +140,7 @@ export class EmpEnqCommonComponent implements OnInit {
           this.employeeDetailsForm.patchValue({
             enq_profile_pic: result.enq_personal_detail.enq_profile_pic,
             enq_id: result.enq_id,
+            enq_hire_status : result && result.enq_hire_status ? result.enq_hire_status : '',
             enq_name: result.enq_personal_detail.enq_full_name,
             enq_applied_for: this.employeedetails.enq_applied_job_detail && this.employeedetails.enq_applied_job_detail[0].enq_applied_for ?
               this.employeedetails.enq_applied_job_detail[0].enq_applied_for.post_name : '',
@@ -230,6 +236,7 @@ export class EmpEnqCommonComponent implements OnInit {
     this.employeeDetailsForm = this.fbuild.group({
       enq_profile_pic: '',
       enq_id: '',
+      enq_hire_status : '',
       enq_name: '',
       enq_applied_for: '',
       enq_department: '',
