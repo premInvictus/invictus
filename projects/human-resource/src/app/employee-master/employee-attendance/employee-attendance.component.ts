@@ -20,7 +20,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	employeeData: any[] = [];
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
 	COPY_EMPLOYEE_ELEMENT: EmployeeElement[] = [];
-	session_id;
+	session_id: any = {};
 	categoryOneArray: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
@@ -85,7 +85,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				month_id: this.searchForm.value.month_id,
 				emp_status: this.searchForm.value.status_id,
 				emp_cat_id: this.searchForm.value.cat_id,
-				session_id: this.session_id,
+				session_id: this.session_id.ses_id,
 				from_attendance: true
 			};
 			let no_of_days = Number(this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear()));
@@ -267,7 +267,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			var flag = false;
 			if (this.employeeData[i]['emp_month_attendance_data'] && this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] && this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] > 0) {
-				inputJson = { "ses_id": this.session_id.ses_id, 'leave_opening_balance': this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] };
+				inputJson = { "ses_id": this.employeeData[i]['emp_month_attendance_data']['ses_id'], 'leave_opening_balance': this.employeeData[i]['emp_month_attendance_data']['leave_opening_balance'] };
 			} else {
 				inputJson = { "ses_id": this.session_id.ses_id, 'leave_opening_balance': 0 };
 			}
