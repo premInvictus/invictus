@@ -1,0 +1,22 @@
+.ledger-head{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* table tbody td.empty-same-height{
+    height: 40px;
+} */
+
+table thead th {
+    background: #C8D6E5;
+    height: 50px;
+}
+
+table tbody tr {
+    height: 50px;
+}
+
+ table tbody tr:nth-child(even) {
+     background: #FAFAFA;
+     
+ }

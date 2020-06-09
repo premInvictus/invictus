@@ -17,7 +17,7 @@ import { ChartOfAccountsCreateComponent } from '../../fa-shared/chart-of-account
 export class ChartsofAccountComponent implements OnInit {
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
-  displayedColumns: string[] = ['select', 'ac_code', 'ac_name', 'ac_group', 'ac_type', 'ac_cloosingbalance',  'action'];
+  displayedColumns: string[] = ['select', 'ac_code', 'ac_name', 'ac_group', 'ac_type', 'dependencies_type', 'ac_cloosingbalance','opening_balance','opening_date','status' ,'action'];
   dataSource = new MatTableDataSource<Element>();
   selection = new SelectionModel<Element>(true, []);
   accountsArray:any[] = [];
@@ -47,8 +47,8 @@ export class ChartsofAccountComponent implements OnInit {
       coa_id: element.coa_id,
       coa_code: element.coa_code,
       coa_acc_name: element.coa_acc_name,
-      coa_acc_group: {group_id: element.coa_acc_group},
-      coa_acc_type: { acc_type_id: element.coa_acc_type,"acc_type_name": "test"},
+      coa_acc_group: {group_id: element.coa_acc_group.group_id, group_name: element.coa_acc_group.group_name },
+      coa_acc_type: { acc_type_id: element.coa_acc_type.acc_type_id,acc_type_name: element.coa_acc_type.acc_type_name},
       coa_particulars: element.coa_particulars,
       coa_status:"delete"
     };
@@ -113,7 +113,10 @@ export class ChartsofAccountComponent implements OnInit {
               ac_name: item.coa_acc_name,
               ac_group: item.coa_acc_group.group_name,
               ac_type: item.coa_acc_type.acc_type_name,
-              ac_cloosingbalance:0,
+              dependencies_type: item.dependencies_type,
+              ac_cloosingbalance:item.total && item.total[0] && item.total[0]['deviation'] ? item.total[0]['deviation'] : 0, 
+              opening_balance : item.coa_opening_balance_data ? item.coa_opening_balance_data.opening_balance : '',
+              opening_date : item.coa_opening_balance_data ? item.coa_opening_balance_data.opening_balance_date: '',
               status:item.coa_status,
               action:item
 
@@ -163,10 +166,31 @@ export class ChartsofAccountComponent implements OnInit {
       coa_id: element.coa_id,
       coa_code: element.coa_code,
       coa_acc_name: element.coa_acc_name,
-      coa_acc_group: {group_id: element.coa_acc_group},
-      coa_acc_type: { acc_type_id: element.coa_acc_type,"acc_type_name": "test"},
+      coa_acc_group: {group_id: element.coa_acc_group.group_id, group_name: element.coa_acc_group.group_name },
+      coa_acc_type: { acc_type_id: element.coa_acc_type.acc_type_id,acc_type_name: element.coa_acc_type.acc_type_name},
       coa_particulars: element.coa_particulars,
       coa_status:"lock"
+    };
+    this.faService.updateChartOfAccount(inputJson).subscribe((data:any)=>{
+      if (data) {
+        this.commonAPIService.showSuccessErrorMessage("Account Updated Successfully", "success");
+      } else {
+        this.commonAPIService.showSuccessErrorMessage("Error While Updating Account", "error");
+      }
+      this.getAccounts();
+    });
+  }
+
+  changeStatus(element) {
+    console.log('element--',element);
+    var inputJson = {
+      coa_id: element.coa_id,
+      coa_code: element.coa_code,
+      coa_acc_name: element.coa_acc_name,
+      coa_acc_group: {group_id: element.coa_acc_group.group_id, group_name: element.coa_acc_group.group_name },
+      coa_acc_type: { acc_type_id: element.coa_acc_type.acc_type_id,acc_type_name: element.coa_acc_type.acc_type_name},
+      coa_particulars: element.coa_particulars,
+      coa_status: element.coa_status === 'active' ? 'deactive' : 'active'
     };
     this.faService.updateChartOfAccount(inputJson).subscribe((data:any)=>{
       if (data) {

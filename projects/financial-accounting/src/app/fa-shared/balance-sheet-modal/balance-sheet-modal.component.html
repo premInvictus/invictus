@@ -1,0 +1,233 @@
+<div class="row">
+  <div class="col-12">
+
+    <ng-container>
+      <div class="row">
+        <div class="col-6" style="padding-right: 0px;">
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+            <tbody class="header">
+
+              <tr>
+                <td width="20%">Account Code</td>
+                <td width="65%">Capital & Liabilites</td>
+                <td width="15%">Amount</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-6" style="padding-left: 0px;">
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+            <tbody class="header">
+
+              <tr>
+                <td width="20%">Account Code</td>
+                <td width="65%">Assets</td>
+                <td width="15%">Amount</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="row">
+
+      <ng-container>
+
+        <div class="col-6" style="padding-right: 0px;">
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+            <tbody>
+              <ng-container>
+                <tr *ngIf="incomeExpenditureDeviation != 0">
+                  <td width="20%"></td>
+                  <td width="65%" class="text-left">
+                    <span *ngIf="incomeExpenditureDeviation > 0">Excess of Income over Expenditure</span>
+                    <span *ngIf="incomeExpenditureDeviation < 0">Excess of Expenditure over Income</span>
+                  </td>
+                  <td width="15%" class="text-right">
+                    {{incomeExpenditureDeviation  | indianCurrency}}
+                  </td>
+                </tr>
+              </ng-container>
+              <!-- <ng-container *ngFor="let citem of param?.ledger_data; ">
+                <ng-container *ngIf="citem?.account_display.display_section.balanceSheet.liabilities">
+                  <ng-container *ngIf="citem?.coa_acc_group">
+                    <ng-container *ngIf="getDeviation(citem) < 0">
+
+                      <tr *ngIf="citem?.coa_acc_group?.group_parent_name">
+                        <td width="20%">{{citem.coa_code}}</td>
+                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
+                          <b>{{citem?.coa_acc_group?.group_parent_name | titlecase}}</b></td>
+                        <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                      </tr>
+                      <tr *ngIf="citem?.coa_acc_group?.group_name">
+                        <td width="20%">{{citem.coa_code}}</td>
+                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
+                          <b>{{citem?.coa_acc_group?.group_name | titlecase}}</b></td>
+                        <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                      </tr>
+
+                      <tr>
+                        <td width="20%"></td>
+                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
+                          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{citem?.coa_acc_name | titlecase}}</b></td>
+                        <td width="15%" class="text-right"><b>{{-(deviation_f)  | indianCurrency }}</b></td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container> -->
+              <ng-container *ngFor="let item of param.liabilities_group_data ">
+
+                <!-- <tr *ngIf="item?.group_name">
+                  <td width="20%"></td>
+                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                    <b>{{item?.group_name | titlecase}}</b></td>
+                  <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                </tr> -->
+                <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
+                  <td width="20%"></td>
+                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                    <b>{{item[0][0]['coa_acc_group']['group_parent_name'] | titlecase}}</b></td>
+                  <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                </tr>
+                <ng-container *ngIf="item && item[0] && item[0].length   > 0">
+                  <ng-container *ngFor="let gitem of item">
+                  <tr >
+                    <!-- <td width="20%">{{gitem.coa_code}}</td>
+                    <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name | titlecase}}</b></td>
+                    <td width="15%" class="text-right"><b><span
+                          *ngIf="gitem?.credit_data[0]?.vc_debit">{{gitem?.credit_data[0]?.vc_debit | indianCurrency}}</span>
+                        <span *ngIf="!(gitem?.credit_data[0]?.vc_debit)">0</span></b></td> -->
+                        <td width="20%">&nbsp;</td>
+                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name | titlecase}}</b></td>
+                        <td width="15%" class="text-right">&nbsp;</td>
+                  </tr>
+                  <tr  *ngFor="let ggitem of gitem">
+                    <td width="20%">{{ggitem?.coa_code}}</td>
+                    <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
+                      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name | titlecase}}</b></td>
+                    <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
+                  </tr>
+
+
+
+
+
+                </ng-container>
+                </ng-container>
+              </ng-container>
+              <!-- <ng-container *ngIf="debitRow > creditRow">
+                <tr *ngFor="let citem of blankArr">
+                  <td width="20%">&nbsp;</td>
+                  <td width="65%">&nbsp;</td>
+
+                  <td width="15%" class="text-right"></td>
+                </tr>
+              </ng-container> -->
+              <tr>
+                <td width="20%"></td>
+                <td width="65%" class="text-left"><b>Total</b></td>
+                <td width="15%" classs="text-right"><b>{{-creditSideTotal | indianCurrency}}</b></td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+        <div class="col-6" style="padding-left: 0px;">
+
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+            <tbody>
+
+              <tr>
+                <td width="20%">-</td>
+                <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
+                <td width="15%" class="text-right">
+                  <b>{{((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
+                </td>
+              </tr>
+
+              <ng-container *ngFor="let item of param.assets_group_data ">
+
+                <!-- <tr *ngIf="item?.group_name">
+                  <td width="20%"></td>
+                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                    <b>{{item?.group_name | titlecase}}</b></td>
+                  <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                </tr>
+                <tr *ngIf="item?.group_parent_name">
+                  <td width="20%"></td>
+                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                    <b>{{item?.coa_acc_group?.group_parent_name | titlecase}}</b></td>
+                  <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                </tr>
+                <ng-container *ngFor="let gitem of  item?.group_data">
+                  <tr>
+                    <td width="20%">{{gitem.coa_code}}</td>
+                    <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name | titlecase}}</b></td>
+                    <td width="15%" class="text-right"><b><span
+                          *ngIf="gitem?.debit_data[0]?.vc_credit">{{gitem?.debit_data[0]?.vc_credit | indianCurrency}}</span>
+                        <span *ngIf="!(gitem?.debit_data[0]?.vc_credit)">0</span></b></td>
+                  </tr>
+                </ng-container> -->
+                <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
+                    <td width="20%"></td>
+                    <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                      <b>{{item[0][0]['coa_acc_group']['group_parent_name'] | titlecase}}</b></td>
+                    <td width="15%" class="text-right"><b>&nbsp;</b></td>
+                  </tr>
+                  <ng-container *ngIf="item && item[0] && item[0].length   > 0">
+                    <ng-container *ngFor="let gitem of item">
+                    <tr >
+                      <!-- <td width="20%">{{gitem.coa_code}}</td>
+                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                        <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name | titlecase}}</b></td>
+                      <td width="15%" class="text-right"><b><span
+                            *ngIf="gitem?.credit_data[0]?.vc_debit">{{gitem?.credit_data[0]?.vc_debit | indianCurrency}}</span>
+                          <span *ngIf="!(gitem?.credit_data[0]?.vc_debit)">0</span></b></td> -->
+                          <td width="20%">&nbsp;</td>
+                          <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name | titlecase}}</b></td>
+                          <td width="15%" class="text-right">&nbsp;</td>
+                    </tr>
+                    <tr  *ngFor="let ggitem of gitem">
+                      <td width="20%">{{ggitem?.coa_code}}</td>
+                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
+                        <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name | titlecase}}</b></td>
+                      <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
+                    </tr>
+  
+  
+  
+  
+  
+                  </ng-container>
+                  </ng-container>     
+              </ng-container>
+              <ng-container *ngIf="debitRow < creditRow">
+                <tr *ngFor="let item of blankArr">
+                  <td width="20%">&nbsp;</td>
+                  <td width="65%">&nbsp;</td>
+
+                  <td width="15%" class="text-right"></td>
+                </tr>
+              </ng-container>
+              <tr>
+                <td width="20%"><b>&nbsp;</b></td>
+                <td width="65%" class="text-left"><b>Total</b></td>
+                <td width="15%" class="text-right"><b>{{debitSideTotal | indianCurrency}}</b></td>
+              </tr>
+            </tbody>
+          </table>
+
+
+        </div>
+      </ng-container>
+
+    </div>
+
+  </div>
+</div>

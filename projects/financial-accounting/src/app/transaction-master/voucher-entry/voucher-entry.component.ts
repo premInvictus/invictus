@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material';
 import { PreviewDocumentComponent } from '../../fa-shared/preview-document/preview-document.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemCodeGenerationComponent } from 'projects/inventory/src/app/inventory-configuration/item-code-generation/item-code-generation.component';
+import * as moment from 'moment';
 @Component({
 	selector: 'app-voucher-entry',
 	templateUrl: './voucher-entry.component.html',
@@ -24,11 +25,13 @@ export class VoucherEntryComponent implements OnInit {
 	fileCounter = 0;
 	totalDebit = 0;
 	totalCredit = 0;
-	currentVcType = 'Journel Entry';
+	currentVcType = 'journal Entry';
 	accountsArray:any[] = [];
 	editMode = false;
 	currentVoucherId = '';
 	dialogRef2: MatDialogRef<PreviewDocumentComponent>;
+	orderMaster: any[] = [];
+	today = new Date();
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -50,6 +53,61 @@ export class VoucherEntryComponent implements OnInit {
 		});
 		
 		this.setVcType(this.currentVcType);
+		this.getOrderMaster();
+	}
+	setaccount(item,i) {
+		this.voucherFormGroupArray[i].patchValue({
+			vc_account_type_id: item.coa_id,
+			vc_account_type: item.coa_acc_name
+		});
+		console.log('voucherFormGroupArray',this.voucherFormGroupArray[i].value);
+ 	}
+	getVoucherTypeMaxId() {
+		let param: any = {};
+		const tempDate = this.voucherForm.value.vc_date;
+		param.vc_type = this.currentVcType;
+		param.vc_date = tempDate.format('YYYY-MM-DD');
+		
+		this.faService.getVoucherTypeMaxId(param).subscribe((data:any)=>{
+			if(data) {       
+				this.voucherForm.patchValue({
+					vc_number:data.vc_code,
+				}) 
+				console.log('voucher max id--',data);
+			}												
+		});
+	}
+
+	getOrderMaster(event=null){
+		
+		if(event){
+			console.log('key',event.keyCode);
+			if(event.keyCode != 38 && event.keyCode != 40 ){
+				let param: any = {};
+				param.pm_type = 'GR'
+				if(event) {
+					param.pm_id = event.target.value
+				}
+				this.faService.getOrderMaster(param).subscribe((data:any)=>{
+					if(data) {
+						this.orderMaster = data;
+						console.log('getOrderMaster',data);
+					}												
+				});
+			}
+		} else {
+			let param: any = {};
+			param.pm_type = 'GR'
+			if(event) {
+				param.pm_id = event.target.value
+			}
+			this.faService.getOrderMaster(param).subscribe((data:any)=>{
+				if(data) {
+					this.orderMaster = data;
+					console.log('getOrderMaster',data);
+				}												
+			});	
+		}
 	}
 
 	getVoucherData(voucherId) {
@@ -57,15 +115,18 @@ export class VoucherEntryComponent implements OnInit {
 			if(data) {
 				this.currentVcType = data.vc_type;
 				this.voucherForm.patchValue({
-					vc_number : data.vc_number,
+					vc_number : data.vc_number.vc_code,
 					vc_date:data.vc_date,
 					vc_narrations:data.vc_narrations
 				});
 				this.attachmentArray = data.vc_attachments;
 				for (let i=0; i<data.vc_particulars_data.length;i++) {
 					var paramjson = this.fbuild.group({
+						vc_account_type: data.vc_particulars_data[i]['vc_account_type'],
 						vc_account_type_id: data.vc_particulars_data[i]['vc_account_type_id'],
 						vc_particulars: data.vc_particulars_data[i]['vc_particulars'],
+						vc_grno: data.vc_particulars_data[i]['vc_grno'],
+						vc_invoiceno: data.vc_particulars_data[i]['vc_invoiceno'],
 						vc_debit: data.vc_particulars_data[i]['vc_debit'],
 						vc_credit: data.vc_particulars_data[i]['vc_credit'],
 					});
@@ -88,39 +149,76 @@ export class VoucherEntryComponent implements OnInit {
 		this.getAccounts();
 	}
 
-	getAccounts() {
-		this.faService.getAllChartsOfAccount({}).subscribe((data:any)=>{
-			if(data) {
-				this.accountsArray = data;
-			} else {
-				this.accountsArray = [];
+	getAccounts(event = null) {
+		console.log('event',event);
+		if(event){
+			console.log('key',event.keyCode);
+			if(event.keyCode != 38 && event.keyCode != 40 ){
+				let param: any = {};
+				if(event) {
+					param.coa_acc_name = event.target.value
+				}
+				this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+					if(data) {
+						this.accountsArray = data;
+					} else {
+						this.accountsArray = [];
+					}
+				})
 			}
-		})
+		} else {
+			let param: any = {};
+			if(event) {
+				param.coa_acc_name = event.target.value
+			}
+			this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+				if(data) {
+					this.accountsArray = data;
+				} else {
+					this.accountsArray = [];
+				}
+			})	
+		}
 	}
-
+	setOrderMaster(item,i) {
+		this.voucherFormGroupArray[i].patchValue({
+			vc_grno: item.pm_id,
+			vc_invoiceno: item.pm_details.invoice_no
+		});
+		console.log('voucherFormGroupArray',this.voucherFormGroupArray[i].value);
+  	}
 	buildForm() {
 		this.voucherForm = this.fbuild.group({
 			vc_number: '',
-			vc_date:'',
+			vc_date: moment(),
 			vc_narrations: ''
 		});
 		if (!(this.editMode)) {
 			this.paramForm = this.fbuild.group({
+				vc_account_type: '',
 				vc_account_type_id: '',
 				vc_particulars: '',
+				vc_grno: '',
+				vc_invoiceno : '',
 				vc_debit: '',
 				vc_credit: ''
 			});
 			this.voucherFormGroupArray.push(this.paramForm);
+			this.addVoucher();
+			this.getVoucherTypeMaxId();
 		}
+
 		
 		console.log(this.voucherFormGroupArray);
 	}
 
 	addVoucher() {
 		this.paramForm = this.fbuild.group({
+			vc_account_type: '',
 			vc_account_type_id: '',
 			vc_particulars: '',
+			vc_grno: '',
+			vc_invoiceno: '',
 			vc_debit: '',
 			vc_credit: ''
 		});
@@ -133,109 +231,144 @@ export class VoucherEntryComponent implements OnInit {
 		this.calculateCreditTotal();
 	}
 
+	validateVoucher(){
+		let valid = true;
+		for (let i=0; i<this.voucherFormGroupArray.length;i++) {
+			if(this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit){
+				valid = false;
+				break;
+			}
+		}
+		return valid;
+	}
+
 	saveAsDraft() {
 		console.log('this.voucherForm', this.voucherForm);
 		console.log('this.voucherForm', this.voucherFormGroupArray);
-		if(this.voucherForm.valid) {
-		for (let i=0; i<this.voucherFormGroupArray.length;i++) {
-			let vFormJson = {};
-			vFormJson = {
-				vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
-				vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
-				vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
-				vc_credit: this.voucherFormGroupArray[i].value.vc_credit
-			};
-			this.voucherEntryArray.push(vFormJson);
-		}
-
-		var inputJson = {
-			vc_id : this.editMode ? this.currentVoucherId : null,
-			vc_type:this.currentVcType,
-			vc_number:this.voucherForm.value.vc_number,
-			vc_date:this.voucherForm.value.vc_date,
-			vc_narrations:this.voucherForm.value.vc_narrations,
-			vc_attachments: this.attachmentArray,
-			vc_particulars_data: this.voucherEntryArray,
-			vc_state : 'draft'
-		}
-
-		if (this.currentVoucherId) {
-			this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
-				if(data) {
-					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					this.cancel();
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+		this.voucherEntryArray = [];
+		if(this.validateVoucher()) {
+			if(this.voucherForm.valid) {
+			for (let i=0; i<this.voucherFormGroupArray.length;i++) {
+				if(this.voucherFormGroupArray[i].value.vc_credit || this.voucherFormGroupArray[i].value.vc_debit){
+					let vFormJson = {};
+					vFormJson = {
+						vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+						vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
+						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
+						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
+					};
+					this.voucherEntryArray.push(vFormJson);
 				}
-			});
+				
+			}
+			if(this.voucherEntryArray.length > 0){
+				var inputJson = {
+					vc_id : this.editMode ? this.currentVoucherId : null,
+					vc_type:this.currentVcType,
+					vc_number: { vc_code : this.voucherForm.value.vc_number, vc_name: this.getVcName()},
+					vc_date:this.voucherForm.value.vc_date.format("YYYY-MM-DD"),
+					vc_narrations:this.voucherForm.value.vc_narrations,
+					vc_attachments: this.attachmentArray,
+					vc_particulars_data: this.voucherEntryArray,
+					vc_state : 'draft'
+				}
+	
+				if (this.currentVoucherId) {
+					this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
+						if(data) {
+							this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+							this.cancel();
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+						}
+					});
+				} else {
+					this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
+						if(data) {
+							this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+							this.cancel();
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+						}
+					});
+				}
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+			}
+
+			
+			
+			}else {
+				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+			}
 		} else {
-			this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
-				if(data) {
-					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-					this.cancel();
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-				}
-			});
+			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
 		}
-		
-	}else {
-		this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
-	}
 	}
 
 	saveAndPublish() {
 		console.log('this.voucherForm', this.voucherForm);
 		console.log('this.voucherForm', this.voucherFormGroupArray);
 		console.log(this.totalCredit , this.totalDebit);
-		if(this.voucherForm.valid) {
-		if(this.totalDebit == this.totalCredit) {
-			for (let i=0; i<this.voucherFormGroupArray.length;i++) {
-				let vFormJson = {};
-				vFormJson = {
-					vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
-					vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
-					vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
-					vc_credit: this.voucherFormGroupArray[i].value.vc_credit
-				};
-				this.voucherEntryArray.push(vFormJson);
-			}
-	
-			var inputJson = {
-				vc_id : this.editMode ? this.currentVoucherId : null,
-				vc_type:this.currentVcType,
-				vc_number:this.voucherForm.value.vc_number,
-				vc_date:this.voucherForm.value.vc_date,
-				vc_narrations:this.voucherForm.value.vc_narrations,
-				vc_attachments: this.attachmentArray,
-				vc_particulars_data: this.voucherEntryArray,
-				vc_state : 'publish'
-			}
-			
-			if (this.currentVoucherId) {
-				this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
-					if(data) {
-						this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-						this.cancel();
-					} else {
-						this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					}
-				});
+		this.voucherEntryArray = [];
+		if(this.validateVoucher()) {
+			if(this.voucherForm.valid) {
+			if(this.totalDebit == this.totalCredit) {
+				for (let i=0; i<this.voucherFormGroupArray.length;i++) {
+					let vFormJson = {};
+					vFormJson = {
+						vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+						vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
+						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
+						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
+					};
+					this.voucherEntryArray.push(vFormJson);
+				}
+		
+				var inputJson = {
+					vc_id : this.editMode ? this.currentVoucherId : null,
+					vc_type:this.currentVcType,
+					vc_number: { vc_code : this.voucherForm.value.vc_number, vc_name: this.getVcName()},
+					vc_date:this.voucherForm.value.vc_date.format("YYYY-MM-DD"),
+					vc_narrations:this.voucherForm.value.vc_narrations,
+					vc_attachments: this.attachmentArray,
+					vc_particulars_data: this.voucherEntryArray,
+					vc_state : 'publish'
+				}
+				
+				if (this.currentVoucherId) {
+					this.faService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
+						if(data) {
+							this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+							this.cancel();
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+						}
+					});
+				} else {
+					this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
+						if(data) {
+							this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+							this.cancel();
+						} else {
+							this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+						}
+					});
+				}
+				
 			} else {
-				this.faService.insertVoucherEntry(inputJson).subscribe((data:any)=>{
-					if(data) {
-						this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
-						this.cancel();
-					} else {
-						this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-					}
-				});
+				this.commonAPIService.showSuccessErrorMessage('Total of Debit and Credit should be same for publish', 'error');
+			}}else {
+				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 			}
-			
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Total of Debit and Credit should be same for publish', 'error');
-		}}else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
 		}
 		
 	}
@@ -310,7 +443,12 @@ export class VoucherEntryComponent implements OnInit {
 		this.totalCredit =0;
 		this.totalDebit =0;
 		this.voucherFormGroupArray = [];
-		this.setVcType('Jornel Entry');
+		this.attachmentArray = [];
+		this.setVcType(this.currentVcType);
+		// this.voucherForm.patchValue({
+		// 	vc_date: moment()
+		// })
+		// this.getVoucherTypeMaxId();
 		this.router.navigate(['../../transaction-master/voucher-entry'], { queryParams: {}, relativeTo: this.route });
 	}
 
@@ -321,11 +459,61 @@ export class VoucherEntryComponent implements OnInit {
 		}
 
 	}
+	getColor(i){
+		var color = "#fe756d";
+		if(this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit){
+			return color;
+		} else {
+			return '';
+		}
+	}
+	oneValueDebitOrCredit(i){
+		if(this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit){
+			this.commonAPIService.showSuccessErrorMessage('Error Plese fill eiher credit or debit', 'error');
+		}
+	}
 
 	calculateCreditTotal() {
 		this.totalCredit = 0;
 		for (let i=0; i<this.voucherFormGroupArray.length;i++) {
 			this.totalCredit= this.totalCredit+Number(this.voucherFormGroupArray[i].value.vc_credit);
 	    }
+	}
+
+	getVcName() {
+		let vcType = '';
+		const vcTypeArr = this.currentVcType.split(" ");
+		if(vcTypeArr.length >0){
+			vcTypeArr.forEach(element => {
+				vcType += element.substring(0,1).toUpperCase();
+			});
+		}
+		//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
+		const tempDate = this.voucherForm.value.vc_date;
+		console.log('tempDate',tempDate);
+		let vcDay = tempDate.format('DD')
+		let vcMonth = tempDate.format('MMM');
+		let vcYear = tempDate.format('YYYY');
+		let vcNumber = this.voucherForm.value.vc_number;
+		return  vcType+'/'+vcMonth+((vcNumber.toString()).padStart(4,'0'));
+
+
+	}
+	setDate() {
+		console.log('imgArray--',this.voucherForm.value.vc_date);
+		
+	}
+	listVoucherRoute() {
+		this.router.navigate(['../../transaction-master/daybook'], { queryParams: {tab:3}, relativeTo: this.route });
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
+		}
 	}
 }

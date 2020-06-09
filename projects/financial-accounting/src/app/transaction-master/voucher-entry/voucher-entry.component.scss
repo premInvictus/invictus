@@ -23,7 +23,7 @@
 }
 
 .pink {
-    background-color:#F9DAF0 !important;
+    background-color:#e835b4 !important;
     color:#fff !important;
     width: 150px;
 }
@@ -83,6 +83,34 @@
     margin:0 auto;
 }
 
+.orange-light {
+    background-color:#f2b58a !important;
+    color:#fff !important;
+    width: 150px;
+}
+
+.orange-light span {
+    margin:0 auto;
+}
+
+.gray-dark {
+    background-color:#4c555c !important;
+    color:#fff !important;
+    width: 150px;
+}
+.gray-dark span {
+    margin:0 auto;
+}
+.gray-light {
+    background-color:#989ea2 !important;
+    color:#fff !important;
+    width: 150px;
+}
+
+.gray-light span {
+    margin:0 auto;
+}
+
 .gray-add {
     font-size: 18px;
     color: gray;
@@ -93,4 +121,16 @@
     font-size: 18px;
     color: red;
     vertical-align: middle;
+}
+.bgred{
+    background-color: red;
+}
+.opacity-7 {
+    opacity: .7
+}
+.active-entry{
+    opacity: 1 !important;
+}
+.font-size-14{
+    font-size: 14px;
 }

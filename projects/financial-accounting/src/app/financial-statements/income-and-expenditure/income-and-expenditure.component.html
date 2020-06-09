@@ -1,1 +1,43 @@
-<p>Income</p>
+<div class="row">
+    <div class="col-12">
+      <mat-card>
+        <div class="row">
+          <div class="col-8 remove-col-padding-left">
+            <span class="font-size-24">Income and Expenditure</span>
+          </div>
+          <div class="col-4 remove-col-padding-right text-right">
+            <form [formGroup]="accountForm">
+              <mat-form-field class="form-field" appearance="outline">
+                <!-- <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date"
+                  formControlName="tb_date" (dateChange)="getLedger()">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker> -->
+                <mat-label>Month</mat-label>
+                <mat-select placeholder="Month" formControlName="tb_month"
+                    required (selectionChange)="getIncomeAndExenditure()" >
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
+                            style="font-size: 14px;">
+                            {{item.fm_name}}
+                    </mat-option>
+                </mat-select>
+                </mat-form-field>
+              </form>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12"></div>
+  </div>
+  <div class="row" *ngIf="tableDivFlag">
+    <div class="col-12">
+      <mat-card>
+        
+              <app-income-and-expenditure-model [param]="ledgerArray" [date]="accountForm.value.tb_month"></app-income-and-expenditure-model>
+            
+      </mat-card>
+    </div>
+  </div>

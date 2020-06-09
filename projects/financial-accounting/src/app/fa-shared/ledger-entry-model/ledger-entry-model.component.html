@@ -1,0 +1,178 @@
+<div class="modal-custom-cotainer">
+    <div class="row remove-top-margin" *ngIf="showtitle">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">{{data.title}}</span><span
+            class="float-right margin-top-5"><i (click)="closeDialog()"
+              class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+        </div>
+      </div>
+    </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="row" *ngFor="let item of param?.ledger_data; ">
+        <div class="col-12 text-center" style="margin-top: 15px;">
+          <p class="ledger-head">
+            {{item.coa_acc_name | titlecase}}
+          </p>
+        </div>
+        <ng-container>
+        <div class="col-6" style="padding-right: 0px;">
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height" >
+            <thead>
+              <tr>
+                <th class="mat-header-cell" width="20%">Date</th>
+                <th class="mat-header-cell" width="40">Particulars</th>
+                <th class="mat-header-cell" width="25%">Folio</th>
+                <th class="mat-header-cell" width="15%">Amount</th> 
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let par of item.debit_data">
+              <tr *ngIf="par?.vc_account_type === 'Opening Balance'">
+                <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
+                <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
+                <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
+                <td class="text-right"><span *ngIf="par?.vc_credit < 0">{{-par?.vc_credit | indianCurrency}}</span><span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
+                  <span *ngIf="par?.vc_credit == 0">
+                    -</span></td>
+              </tr>
+            </ng-container>
+            <ng-container *ngFor="let par of item.debit_data">
+              <tr *ngIf="!(par?.vc_account_type === 'Opening Balance')">
+                  <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
+                  <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
+                  <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
+                  <td class="text-right">
+                    <span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
+                    <span *ngIf="par?.vc_credit < 0">{{par?.vc_credit | indianCurrency}}</span>
+                    <span *ngIf="par?.vc_credit == 0">-</span>
+                  </td>
+                </tr>
+            </ng-container>
+              <ng-container *ngIf="item.debit_data.length < item.credit_data.length">
+                  <tr *ngFor="let citem of checkBlankArray(item);">
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td class="text-right"></td>
+                  </tr>
+                </ng-container>
+                
+                <tr *ngIf="getDeviation(item) > 0">
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td class="text-right">&nbsp;</td>
+               </tr>
+                <tr *ngIf="getDeviation(item) < 0">
+                    <td>&nbsp;</td>
+                    <td class="text-left"><b> Balance c/d</b></td>
+                    <td>&nbsp;</td>
+                    <td class="text-right"><b>{{ -(deviation_f) | indianCurrency }}</b></td>
+                </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <!-- <td class="text-right">{{(item?.total[0]['credit_total']-item?.total[0]['deviation']) | indianCurrency}}</td> -->
+                <td class="text-right"><b><span *ngIf="deviation_f < 0">
+                  <span *ngIf="(debit_total_f-(deviation_f)) != 0">{{(debit_total_f-(deviation_f)) | indianCurrency}}</span>
+                  <span *ngIf="(debit_total_f-(deviation_f)) == 0">-</span>
+                
+                </span>
+                  <span *ngIf="deviation_f > 0">{{(debit_total_f) | indianCurrency}}</span>
+                  <span *ngIf="deviation_f == 0">-</span>
+                </b> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-6" style="padding-left: 0px;">
+          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+            <thead>
+              
+                  <tr>
+                      <th width="20%">Date</th>
+                      <th width="40">Particulars</th>
+                      <th width="25%">Folio</th>
+                      <th width="15%">Amount</th> 
+                    </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let par of item.credit_data">
+                <tr>
+                <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;</td>
+                <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_account_type | titlecase}}</span></td>
+                <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_number?.vc_name}}</span></td>
+                <td class="text-right"><span *ngIf="par?.vc_debit > 0">{{par?.vc_debit | indianCurrency}}</span></td>
+              </tr>
+              </ng-container>
+              
+              <ng-container *ngIf="item.debit_data.length > item.credit_data.length">
+              <tr *ngFor="let citem of checkBlankArray(item);">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-right"></td>
+              </tr>
+  
+            </ng-container>
+            <tr *ngIf="getDeviation(item) > 0">
+                <td>&nbsp;</td>
+                <td class="text-left"><b> Balance c/d</b></td>
+                <td>&nbsp;</td>
+                <td class="text-right"><b>{{deviation_f | indianCurrency}}</b></td>
+            </tr>
+            <tr *ngIf="getDeviation(item) < 0">
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td class="text-right">&nbsp;</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right">
+                  <b><span *ngIf="deviation_f > 0">
+                    {{(credit_total_f+deviation_f) | indianCurrency}}</span>
+                  <span *ngIf="deviation_f < 0">
+                    <span *ngIf="credit_total_f != 0">{{(credit_total_f) | indianCurrency}}
+                  </span>
+                  <span *ngIf="credit_total_f == 0">-
+                    </span></span>
+                  <span *ngIf="deviation_f == 0">-</span>
+                </b>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+      <div class="col-12" *ngIf="item?.total && item.debit_data.length ==0 &&  item.credit_data.length == 0">
+        <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height" >
+          <thead>
+            <tr>
+              <th class="mat-header-cell" width="10%">Date</th>
+              <th class="mat-header-cell" width="20">Particulars</th>
+              <th class="mat-header-cell" width="12,5%">Folio</th>
+              <th class="mat-header-cell" width="7.5%">Amount</th> 
+              <th class="mat-header-cell" width="10%">Date</th>
+              <th class="mat-header-cell" width="20">Particulars</th>
+              <th class="mat-header-cell" width="12.5%">Folio</th>
+              <th class="mat-header-cell" width="7.5%">Amount</th> 
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-center"  colspan="8">No Record Found</td>
+            </tr>
+          </tbody>
+          </table>
+          
+      </div>
+      </div>
+    </div>
+  </div>
+  </div>

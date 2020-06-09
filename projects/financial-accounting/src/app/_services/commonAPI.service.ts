@@ -7,6 +7,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { LoaderService } from './loader.service';
 import { DatePipe } from '@angular/common';
 import { CookieService } from 'ngx-cookie';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class CommonAPIService {
@@ -206,6 +207,9 @@ export class CommonAPIService {
 	}
 	getStudentData() {
 		return this.studentDataStore;
+	}
+	getBanks(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
 	}
 
 }
