@@ -100,6 +100,7 @@
                     </tr>
             </thead>
             <tbody>
+                
               <ng-container *ngFor="let par of item.credit_data">
                 <tr>
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;</td>

@@ -87,20 +87,20 @@
                 </tr> -->
                 <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
                   <td width="20%"></td>
-                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                  <td width="65%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
                   <td width="15%" class="text-right"><b>&nbsp;</b></td>
                 </tr>
                 <ng-container *ngFor="let gitem of item">
                     <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                         <td width="20%">&nbsp;</td>
-                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                        <td width="65%" class="text-left cursor-pointer">
                           <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
                         <td width="15%" class="text-right">&nbsp;</td>
                       </tr>
                   <tr *ngIf="gitem?.coa_acc_group?.group_name">
                     <td width="20%">&nbsp;</td>
-                    <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                    <td width="65%" class="text-left cursor-pointer">
                       <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
                     <td width="15%" class="text-right">&nbsp;</td>
                   </tr>
@@ -108,7 +108,7 @@
                   <tr *ngFor="let ggitem of gitem">
                     <td width="20%">{{ggitem?.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
-                      <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}</b>
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                     </td>
                     <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
                   </tr>
@@ -117,7 +117,7 @@
                     <tr>
                       <td width="20%">{{gitem?.coa_code}}</td>
                       <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
-                        <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}</b>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
                       <td width="15%" class="text-right"><b><span>{{getDeviation(gitem)}}</span></b></td>
                     </tr>
@@ -182,7 +182,7 @@
                 </ng-container> -->
                 <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
                   <td width="20%"></td>
-                  <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
+                  <td width="65%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
                   <td width="15%" class="text-right"><b>&nbsp;</b></td>
                 </tr>
@@ -190,13 +190,13 @@
                   <ng-container *ngFor="let gitem of item">
                       <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                           <td width="20%">&nbsp;</td>
-                          <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                          <td width="65%" class="text-left cursor-pointer">
                             <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
                           <td width="15%" class="text-right">&nbsp;</td>
                         </tr>
                     <tr *ngIf="gitem?.coa_acc_group?.group_name">
                       <td width="20%">&nbsp;</td>
-                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                      <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
                       <td width="15%" class="text-right">&nbsp;</td>
                     </tr>
@@ -204,7 +204,7 @@
                     <tr *ngFor="let ggitem of gitem">
                       <td width="20%">{{ggitem?.coa_code}}</td>
                       <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
-                        <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}</b>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                       </td>
                       <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
                     </tr>
@@ -213,7 +213,7 @@
                       <tr>
                         <td width="20%">{{gitem?.coa_code}}</td>
                         <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
-                          <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}</b>
+                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                         </td>
                         <td width="15%" class="text-right"><b><span>{{getDeviation(gitem)}}</span></b></td>
                       </tr>
