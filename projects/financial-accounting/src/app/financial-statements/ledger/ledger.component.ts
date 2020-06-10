@@ -149,12 +149,16 @@ export class LedgerComponent implements OnInit {
             if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );
 
+              var opening_balance = 0;
+              if (data.ledger_data[index]['debit_data'][0] && data.ledger_data[index]['debit_data'][0]['vc_account_type'] === 'opening_balance') {
+                opening_balance = data.ledger_data[index]['debit_data'][0]['vc_account_type']['vc_debit'];
+              }
              
               var receipt_value = receipt_data[index]['receipt_amt'];
               if (receipt_value > 0) {
                 var iJson:any = {
                   "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
-                      "vc_credit" : receipt_value
+                      "vc_credit" : receipt_value+opening_balance
                                           
                 }
                 data.ledger_data[i]['debit_data'].push(iJson);
