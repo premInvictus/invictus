@@ -114,9 +114,10 @@ export class ChartsofAccountComponent implements OnInit {
               ac_group: item.coa_acc_group.group_name,
               ac_type: item.coa_acc_type.acc_type_name,
               dependencies_type: item.dependencies_type,
-              ac_cloosingbalance:item.total && item.total[0] && item.total[0]['deviation'] ? item.total[0]['deviation'] : 0, 
+              ac_cloosingbalance:item.total && item.total[0] && item.total[0]['deviation'] ? this.getTwoDecimalValue(item.total[0]['deviation']) : 0, 
               opening_balance : item.coa_opening_balance_data ? this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance) : '',
-              opening_date : item.coa_opening_balance_data ? this.getTwoDecimalValue(item.coa_opening_balance_data.opening_balance_date): '',
+              opening_balance_type : item.coa_opening_balance_data && item.coa_opening_balance_data.opening_balance_type ? item.coa_opening_balance_data.opening_balance_type.substring(0,2) : '',
+              opening_date : item.coa_opening_balance_data ? item.coa_opening_balance_data.opening_balance_date: '',
               status:item.coa_status,
               action:item
 
@@ -208,7 +209,8 @@ export class ChartsofAccountComponent implements OnInit {
 		this.dataSource.filter = filterValue;
   }
   getTwoDecimalValue(value) {
-    if (value && value != 0) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
       return Number.parseFloat(value.toFixed(2));
     } else {
       return value;

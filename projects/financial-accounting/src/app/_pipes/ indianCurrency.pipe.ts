@@ -5,9 +5,16 @@ export class IndianCurrency implements PipeTransform {
   transform(value: number): any {
 
         if (! isNaN(value)) {
+            
             //var output = Number(input).toLocaleString('en-IN');   <-- This method is not working fine in all browsers!           
             var result = value.toString().split('.');
-
+            var sign = '';
+            if(value < 0) {
+                // console.log(result);
+                // console.log(result.length);
+                sign = result[0].substring(0,1);
+                result[0] = result[0].substring(1);
+            }
             var lastThree = result[0].substring(result[0].length - 3);
             var otherNumbers = result[0].substring(0, result[0].length - 3);
             if (otherNumbers != '')
@@ -18,7 +25,7 @@ export class IndianCurrency implements PipeTransform {
                 output += "." + result[1];
             }            
 
-            return output;
+            return sign+output;
         }
 
   }
