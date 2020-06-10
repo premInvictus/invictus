@@ -826,6 +826,23 @@ export class ChequeclearanceReportComponent implements OnInit {
 				},
 			},
 			{
+				id: 'transaction_date', name: 'Transaction Date', field: 'transaction_date', sortable: true,
+				filterable: true,
+				width: 120,
+				filterSearchType: FieldType.dateIso,
+				filter: { model: Filters.compoundDate },
+				formatter: this.checkDateFormatter,
+				grouping: {
+					getter: 'transaction_date',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
+				},
+			},
+			{
 				id: 'bank_name',
 				name: 'Bank Name',
 				field: 'bank_name',
@@ -886,6 +903,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 
 					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'] ? repoArray[Number(index)]['cheque_date'] : '-';
 
+					obj['transaction_date'] = repoArray[Number(index)]['transaction_date'] ? repoArray[Number(index)]['transaction_date'] : '-';
 					obj['receipt_no'] = repoArray[Number(index)]['receipt_no'] ?
 						repoArray[Number(index)]['receipt_no'] : '-';
 
@@ -914,6 +932,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 				obj3['stu_full_name'] = '';
 				obj3['cheque_date'] = '';
+				obj3['transaction_date'] = '';
 				obj3['invoice_no'] = '';
 				obj3['receipt_no'] = '';
 				obj3['cheque_no'] = '';
@@ -1279,7 +1298,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
 				for (const item2 of this.exportColumnDefinitions) {
-					if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+					if ((item2.id === 'transaction_date' ||
+					item2.id === 'cheque_date' || item2.id === 'deposite_date'
 						|| item2.id === 'dishonor_date') && json[key][item2.id] !== '-') {
 						obj[item2.id] = new DatePipe('en-in').transform((json[key][item2.id]));
 					} else {
@@ -1569,7 +1589,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const obj = {};
 						for (const item2 of this.exportColumnDefinitions) {
-							if ((item2.id === 'cheque_date' || item2.id === 'deposite_date'
+							if ((item2.id === 'transaction_date' ||
+							item2.id === 'cheque_date' || item2.id === 'deposite_date'
 								|| item2.id === 'dishonor_date') && groupItem.rows[key][item2.id] !== '-') {
 								obj[item2.id] = new DatePipe('en-in').transform((groupItem.rows[key][item2.id]));
 							} else {
@@ -1697,6 +1718,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				const arr: any[] = [];
 				for (const item2 of this.exportColumnDefinitions) {
 					if (this.dataset[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+					|| item2.id === 'transaction_date'
 						|| item2.id === 'deposite_date')) {
 						arr.push(new DatePipe('en-in').transform((this.dataset[key][item2.id])));
 					} else {
@@ -1920,7 +1942,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 					Object.keys(groupItem.rows).forEach(key => {
 						const arr: any = [];
 						for (const item2 of this.columnDefinitions) {
-							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date'
+							if (groupItem.rows[key][item2.id] !== '-' && (item2.id === 'cheque_date' || item2.id === 'dishonor_date' ||
+							item2.id === 'transaction_date' 
 								|| item2.id === 'deposite_date')) {
 								arr.push(new DatePipe('en-in').transform((groupItem.rows[key][item2.id])));
 							} else {
