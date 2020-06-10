@@ -95,7 +95,7 @@ export class BalanceSheetModalComponent implements OnInit {
       } }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
 
-      return this.deviation_f;
+      return this.deviation_f < 0 ? -this.deviation_f : this.deviation_f ;
     }
   }
 
