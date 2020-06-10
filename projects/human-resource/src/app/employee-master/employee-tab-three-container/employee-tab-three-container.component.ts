@@ -485,7 +485,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.empPaymentModeDetail = [];
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
 				this.empPaymentModeDetail.push(this.fbuild.group({
-					pay_mode: (this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString(),
+					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] ? 
+					(this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString() : '',
 					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
 					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
 				}));
