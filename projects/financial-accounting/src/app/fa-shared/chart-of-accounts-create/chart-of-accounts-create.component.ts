@@ -65,7 +65,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			coa_dependencies: '',
 			coa_dependency_local: '',
 			opening_balance_date:moment(),
-			opening_balance: ''
+			opening_balance: '',
+			opening_balance_type: ''
 		});
 		console.log('this.data.formData', this.data.formData);
 		if(this.data.formData && this.data.formData.coa_id) {
@@ -80,6 +81,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 				dependencies_type: this.data.formData.dependencies_type,
 				opening_balance_date: (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today),
 				opening_balance: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance : 0),
+				opening_balance_type: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance_type : ''),
 			});
 			this.today = (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today);
 			console.log('this.oday,,,,,,,,,,,,,,,,', this.today)
@@ -94,7 +96,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-3', name: 'Arrear'},
 		{id:'ca-4', name: 'Advance'},
 		{id:'ca-5', name: 'Salary Payable'},
-		{id:'ca-6', name: 'PF & ESI'},
+		// {id:'ca-6', name: 'PF & ESI'},
+		{id:'ca-6', name: 'TA'},
 		{id:'ca-7', name: 'TDS'}
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
@@ -251,7 +254,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 					'opening_balance': (this.accountform.value.opening_balance ? Number(this.accountform.value.opening_balance) : 0),
 					'opening_balance_date': oDate,
 					'opening_balance_month' : Number(this.accountform.value.opening_balance_date.format("MM")),
-					'opening_balance_year': Number(this.accountform.value.opening_balance_date.format("YYYY"))
+					'opening_balance_year': Number(this.accountform.value.opening_balance_date.format("YYYY")),
+					'opening_balance_type' : this.accountform.value.opening_balance_type
 				}
 			};
 			console.log(inputJson)

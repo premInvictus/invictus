@@ -6,6 +6,7 @@ export interface Element {
     dependencies_type:any;
     ac_cloosingbalance: any;
     opening_balance: any;
+    opening_balance_type: any
     opening_date: any
     status: any;
     action: any;
