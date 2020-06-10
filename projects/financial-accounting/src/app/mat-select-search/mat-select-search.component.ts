@@ -102,7 +102,7 @@ import {
   export class MatSelectSearchComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor {
   
     /** Label of the search placeholder */
-    @Input() placeholderLabel = 'Suche';
+    @Input() placeholderLabel = 'Search';
   
     /** Label to be shown when no entries are found. Set to null if no message should be shown. */
     @Input() noEntriesFoundLabel = 'Keine Optionen gefunden';

@@ -98,7 +98,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-5', name: 'Salary Payable'},
 		// {id:'ca-6', name: 'PF & ESI'},
 		{id:'ca-6', name: 'TA'},
-		{id:'ca-7', name: 'TDS'}
+		{id:'ca-7', name: 'TDS'},
+		{id:'ca-8', name: 'Gratuity'}
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
 		if(result && result.status == 'ok') {
