@@ -166,14 +166,18 @@ export class BalanceSheetModalComponent implements OnInit {
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
-        diffTotal = diffTotal + diff;
+        diffTotal = diffTotal - diff;
+        console.log(diff, i); 
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
+       
         diffCTotal = diffCTotal + diff;
-        this.debitSideTotal = diffCTotal;
+       this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
+
+      
 
 
     }

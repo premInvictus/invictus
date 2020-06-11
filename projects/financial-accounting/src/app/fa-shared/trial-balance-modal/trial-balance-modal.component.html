@@ -41,7 +41,8 @@
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">
-                  <b>{{getTwoDecimalValue(((param?.head_total_amt)  - (param?.total_receipt_amt))) | indianCurrency}}</b>
+                  <b *ngIf="((param?.head_total_amt)  - (param?.total_receipt_amt)) < 0">{{-getTwoDecimalValue(((param?.head_total_amt)  - (param?.total_receipt_amt))) | indianCurrency}}</b>
+                  <b *ngIf="((param?.head_total_amt)  - (param?.total_receipt_amt)) > 0">{{getTwoDecimalValue(((param?.head_total_amt)  - (param?.total_receipt_amt))) | indianCurrency}}</b>
                 </td>
               </tr>
 
@@ -66,7 +67,7 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%"><b *ngIf="debitSideTotal > 0">{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</b><b *ngIf="debitSideTotal < 0">{{-debitSideTotal | indianCurrency}}</b></td>
+                <td width="15%"><b>{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</b></td>
               </tr>
             </tbody>
           </table>
@@ -92,11 +93,11 @@
               </ng-container>
               <ng-container *ngFor="let citem of param?.ledger_data;let i=index; ">
                 <ng-container *ngIf="citem?.account_display.display_section.trialBalance">
-                  <tr *ngIf="citem?.credit_data?.length > 0 && citem?.credit_data[0]?.vc_debit ">
+                  <tr *ngIf="citem?.credit_data?.length > 0 && citem?.credit_data[0]?.vc_debit && getDeviation(citem) < 0  ">
                     <td width="20%">{{citem.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
                       <b>{{citem?.coa_acc_name | titlecase}}</b></td>
-                    <td width="15%" class="text-right"><b *ngIf="getDeviation(citem) < 0">{{getTwoDecimalValue(-(deviation_f))  | indianCurrency }}</b></td>
+                    <td width="15%" class="text-right"><b>{{getTwoDecimalValue(-(deviation_f))  | indianCurrency }}</b></td>
                   </tr>
                 </ng-container>
               </ng-container>
@@ -111,8 +112,8 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%"><b *ngIf="creditSideTotal < 0">
-                  {{getTwoDecimalValue(-creditSideTotal) | indianCurrency}}</b>
+                <td width="15%"><b>
+                  {{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</b>
                   <!-- <b *ngIf="creditSideTotal > 0">{{creditSideTotal | indianCurrency}}</b></td> -->
               </tr>
 
