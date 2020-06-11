@@ -45,7 +45,7 @@
                     <span *ngIf="incomeExpenditureDeviation < 0">Excess of Expenditure over Income</span>
                   </td>
                   <td width="15%" class="text-right">
-                    {{incomeExpenditureDeviation  | indianCurrency}}
+                    <i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>{{incomeExpenditureDeviation  | indianCurrency}}
                   </td>
                 </tr>
               </ng-container>
@@ -110,7 +110,7 @@
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                     </td>
-                    <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
+                    <td width="15%" class="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i><span>{{getDeviation(ggitem) | indianCurrency}}</span></b></td>
                   </tr>
                 </ng-container>
                 <ng-container *ngIf="!(gitem?.length > 0)">
@@ -119,7 +119,7 @@
                       <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
-                      <td width="15%" class="text-right"><b><span>{{getDeviation(gitem)}}</span></b></td>
+                      <td width="15%" class="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i><span>{{getDeviation(gitem) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
 
@@ -137,7 +137,7 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" classs="text-right"><b>{{-creditSideTotal | indianCurrency}}</b></td>
+                <td width="15%" classs="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>{{-creditSideTotal | indianCurrency}}</b></td>
               </tr>
 
             </tbody>
@@ -152,7 +152,7 @@
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">
-                  <b>{{((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
+                  <b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>{{((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
                 </td>
               </tr>
 
@@ -206,7 +206,7 @@
                       <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                       </td>
-                      <td width="15%" class="text-right"><b><span>{{getDeviation(ggitem)}}</span></b></td>
+                      <td width="15%" class="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i><span>{{getDeviation(ggitem) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
                   <ng-container *ngIf="!(gitem?.length > 0)">
@@ -215,7 +215,7 @@
                         <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                         </td>
-                        <td width="15%" class="text-right"><b><span>{{getDeviation(gitem)}}</span></b></td>
+                        <td width="15%" class="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i><span>{{getDeviation(gitem) | indianCurrency}}</span></b></td>
                       </tr>
                     </ng-container>
 
@@ -253,7 +253,7 @@
               <tr>
                 <td width="20%"><b>&nbsp;</b></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b>{{debitSideTotal | indianCurrency}}</b></td>
+                <td width="15%" class="text-right"><b><i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>{{debitSideTotal | indianCurrency}}</b></td>
               </tr>
             </tbody>
           </table>
