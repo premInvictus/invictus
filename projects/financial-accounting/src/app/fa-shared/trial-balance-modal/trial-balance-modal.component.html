@@ -66,7 +66,7 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%"><b *ngIf="debitSideTotal > 0">{{debitSideTotal | indianCurrency}}</b><b *ngIf="debitSideTotal < 0">{{-debitSideTotal | indianCurrency}}</b></td>
+                <td width="15%"><b>{{debitSideTotal | indianCurrency}}</b></td>
               </tr>
             </tbody>
           </table>
@@ -111,8 +111,8 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%"><b *ngIf="creditSideTotal < 0">
-                  {{-creditSideTotal | indianCurrency}}</b>
+                <td width="15%"><b>
+                  {{creditSideTotal | indianCurrency}}</b>
                   <!-- <b *ngIf="creditSideTotal > 0">{{creditSideTotal | indianCurrency}}</b></td> -->
               </tr>
 
