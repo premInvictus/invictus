@@ -9,7 +9,7 @@
               <tr>
                 <td width="20%">Account Code</td>
                 <td width="65%">Expenditure</td>
-                <td width="15%">Amount</td>
+                <td width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
               </tr>
             </tbody>
           </table>
@@ -21,7 +21,7 @@
               <tr>
                 <td width="20%">Account Code</td>
                 <td width="65%">Income</td>
-                <td width="15%">Amount</td>
+                <td width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
               </tr>
             </tbody>
           </table>
@@ -59,14 +59,14 @@
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Income over Expenditure</b></td>
 
-                  <td  width="15%" class="text-right">{{(debitSideTotal-creditSideTotal) | indianCurrency}}</td>
+                  <td  width="15%" class="text-right">{{getTwoDecimalValue(debitSideTotal-creditSideTotal) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
                 <td width="15%" class="text-right"><b><span *ngIf="!debitSideTotal">{{-creditSideTotal | indianCurrency}}</span>
-                  <span *ngIf="debitSideTotal != 0">{{(-debitSideTotal)+(debitSideTotal-creditSideTotal) | indianCurrency}}</span></b></td>
+                  <span *ngIf="debitSideTotal != 0">{{getTwoDecimalValue(-debitSideTotal)+(debitSideTotal-creditSideTotal) | indianCurrency}}</span></b></td>
               </tr>
             </tbody>
           </table>
@@ -87,7 +87,7 @@
                         *ngIf="pitem?.fh_name">{{pitem?.fh_name | titlecase}}</span><span
                         *ngIf="!(pitem?.fh_name)">Transport</span></b></td>
                   <td width="15%" class="text-right">
-                    <b>{{(pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt) | indianCurrency}}</b></td>
+                    <b>{{getTwoDecimalValue(pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt) | indianCurrency}}</b></td>
                 </tr>
               </ng-container>
               <ng-container *ngFor="let citem of param?.ledger_data; ">
@@ -96,7 +96,7 @@
                     <td width="20%">{{citem.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
                       <b>{{citem?.coa_acc_name | titlecase}}</b></td>
-                    <td width="15%" class="text-right"><b>{{-(deviation_f)  | indianCurrency }}</b></td>
+                    <td width="15%" class="text-right"><b>{{getTwoDecimalValue(-(deviation_f))  | indianCurrency }}</b></td>
                   </tr>
                 </ng-container>
 
@@ -114,14 +114,14 @@
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Expenditure over Income</b></td>
 
-                  <td width="15%" class="text-right">{{(creditSideTotal-debitSideTotal) | indianCurrency}}</td>
+                  <td width="15%" class="text-right">{{getTwoDecimalValue(creditSideTotal-debitSideTotal) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b><span *ngIf="debitSideTotal == 0">{{(-creditSideTotal) | indianCurrency}}</span>
-                  <span *ngIf="debitSideTotal != 0">{{(-creditSideTotal) | indianCurrency}}</span></b></td>
+                <td width="15%" class="text-right"><b><span *ngIf="debitSideTotal == 0">{{getTwoDecimalValue(-creditSideTotal) | indianCurrency}}</span>
+                  <span *ngIf="debitSideTotal != 0">{{getTwoDecimalValue(-creditSideTotal) | indianCurrency}}</span></b></td>
               </tr>
 
             </tbody>
