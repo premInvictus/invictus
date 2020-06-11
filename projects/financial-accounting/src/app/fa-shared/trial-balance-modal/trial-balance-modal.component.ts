@@ -69,7 +69,7 @@ export class TrialBalanceModalComponent implements OnInit {
         this.blankArr.push(i);
       }
     }
-    console.log(this.debitRow, this.creditRow);
+    console.log( this.debitRow, this.creditRow);
 
   }
 
@@ -105,7 +105,7 @@ export class TrialBalanceModalComponent implements OnInit {
       }
       for (var k = 0; k < param['ledger_data'][i]['credit_data'].length; k++) {
         this.creditTotal = this.creditTotal + (param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
-        console.log(k);
+       // console.log(k);
       }
 
       diff = this.debitTotal - this.creditTotal;
@@ -118,10 +118,14 @@ export class TrialBalanceModalComponent implements OnInit {
         this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
+
+      if(i=== param['ledger_data'].length-1) {
+        this.creditSideTotal = this.creditSideTotal - Number(param['head_total_amt']);
+        this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
+        this.checkBlankArray(this.param);
+      }
     }
-    this.creditSideTotal = this.creditSideTotal - Number(param['head_total_amt']);
-    this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
-    this.checkBlankArray(this.param);
+  
   }
 
   openLedgerModal(value) {

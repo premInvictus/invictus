@@ -147,18 +147,22 @@ export class BalanceSheetModalComponent implements OnInit {
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
-        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
+        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] < 0 ? -(this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+
+        console.log('debitTotal>', this.debitTotal, this.param['ledger_data'][i]['debit_data'][j]['vc_credit'], i);
         }
         
 
       }
       for (var k = 0; k < this.param['ledger_data'][i]['credit_data'].length; k++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
-        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ) : 0);
+
+        console.log('creditTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
         }
       }
-      console.log('this.debitTotal', this.debitTotal);
+      
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
@@ -173,8 +177,10 @@ export class BalanceSheetModalComponent implements OnInit {
 
 
     }
-    this.creditSideTotal = this.creditSideTotal - Number(this.param['head_total_amt']);
+    
+    this.creditSideTotal = this.creditSideTotal - this.incomeExpenditureDeviation;
     this.debitSideTotal = this.debitSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
+    console.log('this.debitSideTotal--',this.debitSideTotal, this.creditSideTotal);
     this.checkBlankArray();
   }
 

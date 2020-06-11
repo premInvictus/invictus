@@ -47,11 +47,11 @@
 
               <ng-container *ngFor="let item of param.ledger_data; ">
                 <ng-container *ngIf="item?.account_display.display_section.trialBalance">
-                  <tr *ngIf="getDeviation(item) != 0 && item?.debit_data?.length > 0">
+                  <tr *ngIf="item?.debit_data?.length > 0 && item?.debit_data[0]?.vc_credit && getDeviation(item) > 0">
                     <td width="20%">{{item.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(item)">
                       <b>{{item?.coa_acc_name | titlecase}}</b></td>
-                    <td width="15%" class="text-right"><b *ngIf="deviation_f > 0">{{deviation_f | indianCurrency}}</b><b *ngIf="deviation_f < 0">{{-deviation_f | indianCurrency}}</b></td>
+                    <td width="15%" class="text-right"><b>{{deviation_f | indianCurrency}}</b></td>
                   </tr>
                 </ng-container>
               </ng-container>
@@ -90,13 +90,13 @@
                     <b>{{(pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt) | indianCurrency}}</b></td>
                 </tr>
               </ng-container>
-              <ng-container *ngFor="let citem of param?.ledger_data; ">
+              <ng-container *ngFor="let citem of param?.ledger_data;let i=index; ">
                 <ng-container *ngIf="citem?.account_display.display_section.trialBalance">
-                  <tr *ngIf="getDeviation(citem) != 0 && citem?.credit_data?.length > 0 ">
+                  <tr *ngIf="citem?.credit_data?.length > 0 && citem?.credit_data[0]?.vc_debit ">
                     <td width="20%">{{citem.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
                       <b>{{citem?.coa_acc_name | titlecase}}</b></td>
-                    <td width="15%" class="text-right"><b *ngIf="deviation_f < 0">{{-(deviation_f)  | indianCurrency }}</b><b *ngIf="deviation_f > 0">{{(deviation_f)  | indianCurrency }}</b></td>
+                    <td width="15%" class="text-right"><b *ngIf="getDeviation(citem) < 0">{{-(deviation_f)  | indianCurrency }}</b></td>
                   </tr>
                 </ng-container>
               </ng-container>
@@ -111,7 +111,9 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%"><b *ngIf="creditSideTotal < 0">{{-creditSideTotal | indianCurrency}}</b><b *ngIf="creditSideTotal > 0">{{creditSideTotal | indianCurrency}}</b></td>
+                <td width="15%"><b *ngIf="creditSideTotal < 0">
+                  {{-creditSideTotal | indianCurrency}}</b>
+                  <!-- <b *ngIf="creditSideTotal > 0">{{creditSideTotal | indianCurrency}}</b></td> -->
               </tr>
 
             </tbody>

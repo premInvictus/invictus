@@ -105,7 +105,7 @@ export class TrialBalanceComponent implements OnInit {
                 data.ledger_data[i]['debit_data'].push({});
               }
             }
-            if(i===data.ledger_data.length -1 ) {
+            if(i===data.ledger_data.length-1 ) {
               this.ledgerArray = data;
               this.tableDivFlag = true;
             }
@@ -114,6 +114,7 @@ export class TrialBalanceComponent implements OnInit {
           this.ledgerArray  = data;
           this.tableDivFlag = true;
         }
+        
           
           console.log('this.ledgerArray--', this.ledgerArray);
 
