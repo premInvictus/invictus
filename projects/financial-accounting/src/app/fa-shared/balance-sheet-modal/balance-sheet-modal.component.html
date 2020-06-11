@@ -45,7 +45,12 @@
                     <span *ngIf="incomeExpenditureDeviation < 0">Excess of Expenditure over Income</span>
                   </td>
                   <td width="15%" class="text-right">
-                    {{getTwoDecimalValue(incomeExpenditureDeviation)  | indianCurrency}}
+                    <span *ngIf="incomeExpenditureDeviation   < 0">
+                    {{-getTwoDecimalValue(incomeExpenditureDeviation)  | indianCurrency}}
+                  </span>
+                  <span *ngIf="incomeExpenditureDeviation   > 0">
+                      {{getTwoDecimalValue(incomeExpenditureDeviation)  | indianCurrency}}
+                    </span>
                   </td>
                 </tr>
               </ng-container>
@@ -137,7 +142,7 @@
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" classs="text-right"><b>{{getTwoDecimalValue(-creditSideTotal) | indianCurrency}}</b></td>
+                <td width="15%" classs="text-right"><b>{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</b></td>
               </tr>
 
             </tbody>
@@ -152,7 +157,12 @@
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">
-                  <b>{{getTwoDecimalValue((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
+                  <span *ngIf="(param?.head_total_amt)  - (param?.total_receipt_amt) < 0">
+                  <b>{{-getTwoDecimalValue((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
+                </span>
+                <span *ngIf="(param?.head_total_amt)  - (param?.total_receipt_amt) > 0">
+                    <b>{{getTwoDecimalValue((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
+                  </span>
                 </td>
               </tr>
 
@@ -253,7 +263,7 @@
               <tr>
                 <td width="20%"><b>&nbsp;</b></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b>{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</b></td>
+                <td width="15%" class="text-right"><b>{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</b></td>
               </tr>
             </tbody>
           </table>
