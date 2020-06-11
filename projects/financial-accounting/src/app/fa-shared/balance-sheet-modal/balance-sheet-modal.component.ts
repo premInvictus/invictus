@@ -183,7 +183,13 @@ export class BalanceSheetModalComponent implements OnInit {
     }
     
     this.creditSideTotal = this.creditSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
+    if (this.creditSideTotal    < 0) {
+      this.creditSideTotal = -this.creditSideTotal;
+    }
     this.debitSideTotal = this.debitSideTotal  + this.incomeExpenditureDeviation;
+    if (this.debitSideTotal    < 0) {
+      this.debitSideTotal = -this.debitSideTotal;
+    }
     ///console.log('this.debitSideTotal--',this.debitSideTotal, this.creditSideTotal);
     this.checkBlankArray();
   }

@@ -126,6 +126,13 @@ export class TrialBalanceModalComponent implements OnInit {
       if(i=== param['ledger_data'].length-1) {
         this.creditSideTotal = this.creditSideTotal + Number(param['head_total_amt']);
         this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
+        if (this.creditSideTotal    < 0) {
+          this.creditSideTotal = -this.creditSideTotal;
+        }
+        
+        if (this.debitSideTotal    < 0) {
+          this.debitSideTotal = -this.debitSideTotal;
+        }
         this.checkBlankArray(this.param);
       }
       
