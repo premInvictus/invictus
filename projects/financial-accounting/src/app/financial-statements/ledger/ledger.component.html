@@ -9,7 +9,7 @@
                 <form [formGroup]="accountForm">
                   <mat-form-field class="form-field-150" appearance="outline">
                     <mat-label>Account </mat-label>
-                    <mat-select formControlName="coa_id" multiple (selectionChange)="getLedger()">
+                    <mat-select formControlName="coa_id" multiple (selectionChange)="getLedger()" required>
                       <mat-select-search [formControl]="bankMultiFilterCtrl"></mat-select-search>
                       <!-- <input matInput (keyup)="applyfilter($event)"> -->
                       <!-- <mat-select-search (keyup)="applyfilter($event)"></mat-select-search> -->

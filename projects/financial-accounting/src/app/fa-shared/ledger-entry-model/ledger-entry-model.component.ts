@@ -174,6 +174,15 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   closeDialog() {
 		this.dialogRef.close();
   }
+  getTwoDecimalValue(value) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+
+  }
 
 
 }

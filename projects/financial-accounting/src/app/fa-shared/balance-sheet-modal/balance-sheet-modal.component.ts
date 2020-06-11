@@ -166,14 +166,18 @@ export class BalanceSheetModalComponent implements OnInit {
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
-        diffTotal = diffTotal + diff;
+        diffTotal = diffTotal - diff;
+        console.log(diff, i); 
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
+       
         diffCTotal = diffCTotal + diff;
-        this.debitSideTotal = diffCTotal;
+       this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
+
+      
 
 
     }
@@ -199,6 +203,15 @@ export class BalanceSheetModalComponent implements OnInit {
         date: this.date
       }
     });
+  }
+  getTwoDecimalValue(value) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+
   }
 
 }
