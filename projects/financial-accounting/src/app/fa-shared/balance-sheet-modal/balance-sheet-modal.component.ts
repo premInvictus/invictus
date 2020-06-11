@@ -200,5 +200,14 @@ export class BalanceSheetModalComponent implements OnInit {
       }
     });
   }
+  getTwoDecimalValue(value) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+
+  }
 
 }

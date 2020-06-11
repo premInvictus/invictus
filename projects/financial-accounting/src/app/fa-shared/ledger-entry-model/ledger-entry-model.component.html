@@ -24,7 +24,7 @@
                 <th class="mat-header-cell" width="20%">Date</th>
                 <th class="mat-header-cell" width="40">Particulars</th>
                 <th class="mat-header-cell" width="25%">Folio</th>
-                <th class="mat-header-cell" width="15%">Amount</th> 
+                <th class="mat-header-cell" width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th> 
               </tr>
             </thead>
             <tbody>
@@ -33,7 +33,7 @@
                 <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
                 <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
                 <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
-                <td class="text-right"><span *ngIf="par?.vc_credit < 0">{{-par?.vc_credit | indianCurrency}}</span><span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
+                <td class="text-right"><span *ngIf="par?.vc_credit < 0">{{getTwoDecimalValue(-par?.vc_credit) | indianCurrency}}</span><span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
                   <span *ngIf="par?.vc_credit == 0">
                     -</span></td>
               </tr>
@@ -44,8 +44,8 @@
                   <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
                   <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
                   <td class="text-right">
-                    <span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
-                    <span *ngIf="par?.vc_credit < 0">{{par?.vc_credit | indianCurrency}}</span>
+                    <span *ngIf="par?.vc_credit > 0">{{getTwoDecimalValue(par?.vc_credit) | indianCurrency}}</span>
+                    <span *ngIf="par?.vc_credit < 0">{{getTwoDecimalValue(par?.vc_credit) | indianCurrency}}</span>
                     <span *ngIf="par?.vc_credit == 0">-</span>
                   </td>
                 </tr>
@@ -69,7 +69,7 @@
                     <td>&nbsp;</td>
                     <td class="text-left"><b> Balance c/d</b></td>
                     <td>&nbsp;</td>
-                    <td class="text-right"><b>{{ -(deviation_f) | indianCurrency }}</b></td>
+                    <td class="text-right"><b>{{getTwoDecimalValue(-(deviation_f)) | indianCurrency }}</b></td>
                 </tr>
               <tr>
                 <td></td>
@@ -77,11 +77,11 @@
                 <td></td>
                 <!-- <td class="text-right">{{(item?.total[0]['credit_total']-item?.total[0]['deviation']) | indianCurrency}}</td> -->
                 <td class="text-right"><b><span *ngIf="deviation_f < 0">
-                  <span *ngIf="(debit_total_f-(deviation_f)) != 0">{{(debit_total_f-(deviation_f)) | indianCurrency}}</span>
+                  <span *ngIf="(debit_total_f-(deviation_f)) != 0">{{getTwoDecimalValue((debit_total_f-(deviation_f))) | indianCurrency}}</span>
                   <span *ngIf="(debit_total_f-(deviation_f)) == 0">-</span>
                 
                 </span>
-                  <span *ngIf="deviation_f > 0">{{(debit_total_f) | indianCurrency}}</span>
+                  <span *ngIf="deviation_f > 0">{{getTwoDecimalValue(debit_total_f) | indianCurrency}}</span>
                   <span *ngIf="deviation_f == 0">-</span>
                 </b> </td>
               </tr>
@@ -96,7 +96,7 @@
                       <th width="20%">Date</th>
                       <th width="40">Particulars</th>
                       <th width="25%">Folio</th>
-                      <th width="15%">Amount</th> 
+                      <th width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th> 
                     </tr>
             </thead>
             <tbody>
@@ -106,7 +106,7 @@
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;</td>
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_account_type | titlecase}}</span></td>
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_number?.vc_name}}</span></td>
-                <td class="text-right"><span *ngIf="par?.vc_debit > 0">{{par?.vc_debit | indianCurrency}}</span></td>
+                <td class="text-right"><span *ngIf="par?.vc_debit > 0">{{getTwoDecimalValue(par?.vc_debit) | indianCurrency}}</span></td>
               </tr>
               </ng-container>
               
@@ -123,7 +123,7 @@
                 <td>&nbsp;</td>
                 <td class="text-left"><b> Balance c/d</b></td>
                 <td>&nbsp;</td>
-                <td class="text-right"><b>{{deviation_f | indianCurrency}}</b></td>
+                <td class="text-right"><b>{{getTwoDecimalValue(deviation_f) | indianCurrency}}</b></td>
             </tr>
             <tr *ngIf="getDeviation(item) < 0">
                 <td>&nbsp;</td>
@@ -137,9 +137,9 @@
                 <td></td>
                 <td class="text-right">
                   <b><span *ngIf="deviation_f > 0">
-                    {{(credit_total_f+deviation_f) | indianCurrency}}</span>
+                    {{getTwoDecimalValue(credit_total_f+deviation_f) | indianCurrency}}</span>
                   <span *ngIf="deviation_f < 0">
-                    <span *ngIf="credit_total_f != 0">{{(credit_total_f) | indianCurrency}}
+                    <span *ngIf="credit_total_f != 0">{{getTwoDecimalValue(credit_total_f) | indianCurrency}}
                   </span>
                   <span *ngIf="credit_total_f == 0">-
                     </span></span>
