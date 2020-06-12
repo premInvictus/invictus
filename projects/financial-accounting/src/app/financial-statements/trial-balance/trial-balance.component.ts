@@ -45,7 +45,7 @@ export class TrialBalanceComponent implements OnInit {
 		this.feeMonthArray = [];
 		this.faService.getFeeMonths({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				console.log(result.data);
+			//	console.log(result.data);
         this.feeMonthArray = result.data;
         this.feeMonthArray.push({
           fm_id:'consolidate',
@@ -84,12 +84,16 @@ export class TrialBalanceComponent implements OnInit {
             if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );
 
+              var opening_balance = 0;
+              if (data.ledger_data[i]['debit_data'] && data.ledger_data[i]['debit_data'][0] && data.ledger_data[i]['debit_data'][0]['vc_account_type'] === 'opening_balance') {
+                opening_balance = data.ledger_data[i]['debit_data'][0]['vc_account_type']['vc_debit'];
+              }
              
               var receipt_value = receipt_data[index]['receipt_amt'];
               if (receipt_value > 0) {
                 var iJson:any = {
                   "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
-                      "vc_credit" : receipt_value
+                      "vc_credit" : receipt_value + opening_balance
                                           
                 }
                 data.ledger_data[i]['debit_data'].push(iJson);
@@ -98,7 +102,7 @@ export class TrialBalanceComponent implements OnInit {
               if (receipt_value < 0) {
                 var iJson:any = {
                   "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
-                      "vc_debit" : receipt_value
+                      "vc_debit" : receipt_value + opening_balance
                                           
                 }
                 data.ledger_data[i]['credit_data'].push(iJson);
@@ -116,7 +120,7 @@ export class TrialBalanceComponent implements OnInit {
         }
         
           
-          console.log('this.ledgerArray--', this.ledgerArray);
+         // console.log('this.ledgerArray--', this.ledgerArray);
 
           
           
@@ -139,7 +143,7 @@ export class TrialBalanceComponent implements OnInit {
       }
 		});
 		dialogRef.afterClosed().subscribe(dresult => {
-			console.log(dresult);
+		//	console.log(dresult);
 			this.getAccounts();
 		});
   }

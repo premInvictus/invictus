@@ -34,6 +34,8 @@ export class BalanceSheetModalComponent implements OnInit {
   assetsGroupArr = [];
   liabilitiesGroupArr = [];
   incomeExpenditureDeviation = 0;
+  totalDebitRowLength = 0;
+  totalCreditRowLength = 0;
   @Input() param: any;
   @Input() incomeExpenditureArray: any;
   @Input() date: any;
@@ -56,6 +58,8 @@ export class BalanceSheetModalComponent implements OnInit {
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
     //this.getGroupArray();
+    this.recursiveDebitArraylength(this.param.liabilities_group_data);
+    this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
     this.getTotal();
   }
@@ -65,19 +69,44 @@ export class BalanceSheetModalComponent implements OnInit {
     this.blankArr = [];
     this.debitRow = 0;
     this.creditRow = 0;
-    this.debitRow = this.debitRow + this.debitSideBlankArr.length;
-    this.creditRow = this.creditRow + this.creditSideBlankArr.length;
+    this.debitRow = this.totalDebitRowLength;
+    this.creditRow = this.totalCreditRowLength;
     if (this.debitRow > this.creditRow) {
-      for (var i = 0; i < 2 * (this.debitRow - this.creditRow); i++) {
+      for (var i = 0; i <  (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
       }
     } else if (this.creditRow > this.debitRow) {
-      for (var i = 0; i < 2 * (this.creditRow - this.debitRow); i++) {
+      for (var i = 0; i <  (this.creditRow - this.debitRow); i++) {
         this.blankArr.push(i);
       }
     }
     console.log(this.debitRow, this.creditRow);
   }
+
+  
+ recursiveDebitArraylength(arr){
+
+   for(var ele in arr){
+     if(Array.isArray(arr[ele])){
+      this.recursiveDebitArraylength(arr[ele])
+     }else{
+         this.totalDebitRowLength++;
+     }
+   }
+
+}
+
+recursiveCreditArraylength(arr){
+
+  for(var ele in arr){
+    if(Array.isArray(arr[ele])){
+     this.recursiveCreditArraylength(arr[ele])
+    }else{
+        this.totalCreditRowLength++;
+    }
+  }
+
+}
 
 
   getDeviation(param) {
