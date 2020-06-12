@@ -5,6 +5,6 @@ export interface Element {
     vc_narrations: any;
     vc_debit: any;
     vc_credit: any;
-    status: any;
+    partyname: any;
     action: any;
   }

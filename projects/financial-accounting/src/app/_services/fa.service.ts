@@ -82,7 +82,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/account-master/updateAccountPosition', value);
 	}
-
+	printvoucher(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/printvoucher', value);
+	}
 	
 	
 }
