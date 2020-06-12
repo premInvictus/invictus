@@ -35,10 +35,9 @@ export class VoucherModalComponent implements OnInit {
   ELEMENT_DATA: Element[];
   displayedColumns: string[] = [
     // "srno",
+    "account_code",
     "account",
     "particular",
-    "grno",
-    "invoiceno",
     "debit",
     "credit",
   ];
@@ -80,7 +79,7 @@ export class VoucherModalComponent implements OnInit {
               srno: pos,
               account: item.vc_account_type,
               particular: item.vc_particulars,
-              grno: item.vc_grno,
+              account_code: item.coa_details.coa_code,
               invoiceno: item.vc_invoiceno,
               debit: item.vc_debit,
               credit: item.vc_credit
@@ -94,7 +93,7 @@ export class VoucherModalComponent implements OnInit {
             srno: '',
             account: '',
             particular: 'Total',
-            grno:'',
+            account_code:'',
             invoiceno: '',
             debit: this.dtotal,
             credit: this.ctotal
@@ -130,5 +129,11 @@ export class VoucherModalComponent implements OnInit {
 		} else {
 			return fileurl;
 		}
-	}
+  }
+  getGrno(){
+    return this.voucherData.vc_particulars_data[0].vc_grno ? this.voucherData.vc_particulars_data[0].vc_grno : '-';
+  }
+  getInv(){
+    return this.voucherData.vc_particulars_data[0].vc_invoiceno ? this.voucherData.vc_particulars_data[0].vc_invoiceno : '-';
+  }
 }
