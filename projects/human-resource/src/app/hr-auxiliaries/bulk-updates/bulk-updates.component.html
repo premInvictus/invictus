@@ -7,15 +7,6 @@
       </div>
     </div>
     <div class="row">
-
-      <!-- <div class="text-center">
-          <label for="bulkupdate">
-            <i class="fas fa-cloud-upload-alt fa-3x icon-green"></i><br> 
-            <span>Drag and Drop File</span>
-          </label>
-          <input style="display:none;" type="file" name="file" id="bulkupdate" (change)="bulkupdate($event)">
-        </div> -->
-
       <div class="col-4">
         <div class="row">
           <div class="col-12">
@@ -26,6 +17,25 @@
                 <mat-option value="1">Employee Personal Details</mat-option>
                 <mat-option value="2">Employee Salary Details</mat-option>
                 <mat-option value="3">Employee Documents</mat-option>
+                <mat-option value="4">Employee Attendance</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field *ngIf="uploadComponent && uploadComponent === '4'" class="form-field" appearance="outline">
+              <mat-label>Choose Month</mat-label>
+              <mat-select formControlName="starting_month" placeholder="Choose Month"
+              (selectionChange)="changeMonth($event)">
+                <mat-option value="1">January</mat-option>
+                <mat-option value="2">February</mat-option>
+                <mat-option value="3">March</mat-option>
+                <mat-option value="4">April</mat-option>
+                <mat-option value="5">May</mat-option>
+                <mat-option value="6">June</mat-option>
+                <mat-option value="7">July</mat-option>
+                <mat-option value="8">August</mat-option>
+                <mat-option value="9">September</mat-option>
+                <mat-option value="10">October</mat-option>
+                <mat-option value="11">November</mat-option>
+                <mat-option value="12">December</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
@@ -41,7 +51,7 @@
             </span>
           </div>
         </div>
-        <br/>
+        <br />
         <div class="container-box__uploadbox" *ngIf="uploadComponent !== '3'">
           <div class="bulk-upload-main-content">
             <label class="upload-box" for="bulkupdate">
@@ -53,10 +63,8 @@
                   <span><b>Choose a file</b> or drag it here !</span>
                   <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
                     (change)="bulkupdate($event)">
-                  <input style="display:none;" type="text" name="module" id="module"
-                    value="module">
-                    <input style="display:none;" type="text" name="component" id="component"
-                    value="{{uploadComponent}}">
+                  <input style="display:none;" type="text" name="module" id="module" value="module">
+                  <input style="display:none;" type="text" name="component" id="component" value="{{uploadComponent}}">
                 </div>
               </div>
             </label>
@@ -73,10 +81,8 @@
                   <span><b>Choose a zip file and excel file</b> or drag it here !</span>
                   <input style="display:none;" #inputFile type="file" name="uploadFile" id="bulkupdate"
                     (change)="bulkDocumentUpdate($event)" multiple>
-                  <input style="display:none;" type="text" name="module" id="module"
-                    value="module">
-                    <input style="display:none;" type="text" name="component" id="component"
-                    value="{{uploadComponent}}">
+                  <input style="display:none;" type="text" name="module" id="module" value="module">
+                  <input style="display:none;" type="text" name="component" id="component" value="{{uploadComponent}}">
                 </div>
               </div>
             </label>

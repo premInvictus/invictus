@@ -115,8 +115,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				esi_ac: '',
 				nominee: '',
 				doj: '',
-				dol : '',
-				pay_scale_master : '',
+				dol: '',
+				pay_scale_master: '',
 				pf_doj: '',
 				esi_doj: '',
 				probation: '',
@@ -172,6 +172,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			nominee: '',
 			doj: '',
 			dol: '',
+			leave_opening_balance: '',
 			pay_scale_master: '',
 			fnf_status: '',
 			pf_doj: '',
@@ -485,8 +486,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.empPaymentModeDetail = [];
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
 				this.empPaymentModeDetail.push(this.fbuild.group({
-					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] ? 
-					(this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString() : '',
+					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] ?
+						(this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString() : '',
 					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
 					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
 				}));
@@ -525,16 +526,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			basic_pay: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale : '',
 			da: '',
 			hra: '',
+			leave_opening_balance: this.employeedetails && this.employeedetails.emp_month_attendance_data
+				&& this.employeedetails.emp_month_attendance_data.leave_opening_balance ?
+				this.employeedetails.emp_month_attendance_data.leave_opening_balance : '',
 			allowances: '',
 			fnf_status: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_organisation_relation_detail
 				&& this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status ?
 				this.employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status : false,
 			pf_deduction: '',
 			esi_deduction: '',
-			pay_scale_master: this.employeedetails.emp_salary_detail && 
-			this.employeedetails.emp_salary_detail.emp_salary_structure && 
-			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master &&
-			this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id ?
+			pay_scale_master: this.employeedetails.emp_salary_detail &&
+				this.employeedetails.emp_salary_detail.emp_salary_structure &&
+				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master &&
+				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id ?
 				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id : '',
 			tds_deduction: '',
 			advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
@@ -683,10 +687,21 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_supervisor = {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
-				}
+				};
+				this.employeedetails.emp_month_attendance_data = {
+					ses_id: this.employeedetails.emp_month_attendance_data
+						&& this.employeedetails.emp_month_attendance_data.ses_id ?
+						this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
+					leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
+						this.salaryDetails.value.leave_opening_balance : '',
+					month_data: this.employeedetails.emp_month_attendance_data
+						&& this.employeedetails.emp_month_attendance_data.month_data &&
+						this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
+						this.employeedetails.emp_month_attendance_data.month_data : []
+				};
 
 			}
-			console.log(this.employeedetails);
+			console.log(this.salaryDetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.disabledApiButton = false;
@@ -830,7 +845,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_supervisor = {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
-				}
+				};
+				this.employeedetails.emp_month_attendance_data = {
+					ses_id: this.employeedetails.emp_month_attendance_data
+						&& this.employeedetails.emp_month_attendance_data.ses_id ?
+						this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
+					leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
+						this.salaryDetails.value.leave_opening_balance : '',
+					month_data: this.employeedetails.emp_month_attendance_data
+						&& this.employeedetails.emp_month_attendance_data.month_data &&
+						this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
+						this.employeedetails.emp_month_attendance_data.month_data : []
+				};
 			}
 
 			console.log('this.employeedetails', this.employeedetails);
