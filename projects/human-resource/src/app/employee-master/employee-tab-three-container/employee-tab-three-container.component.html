@@ -53,6 +53,15 @@
                                 </div>
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Leave Opening Balance</mat-label>
+                                        <input type="number" matInput formControlName="leave_opening_balance"
+                                            placeholder="Leave Opening Balance" [readonly]="viewOnly"
+                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-error>
+                                            This field is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Date of Joining</mat-label>
                                         <input matInput [matDatepicker]="picker" placeholder="Date of Joining"
                                             [readonly]="viewOnly" formControlName="doj" required>
@@ -254,9 +263,8 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline" *ngIf="payScArr.length > 0">
                                         <mat-label>Pay Scale</mat-label>
-                                        <mat-select formControlName="pay_scale_master"
-                                            placeholder="Pay Scale" [disabled]="viewOnly"
-                                            [errorStateMatcher]="confirmValidParentMatcher">
+                                        <mat-select formControlName="pay_scale_master" placeholder="Pay Scale"
+                                            [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
                                             <mat-option value="">Please select</mat-option>
                                             <mat-option *ngFor="let item of payScArr" [value]="item.config_id">
                                                 {{item.name}}
