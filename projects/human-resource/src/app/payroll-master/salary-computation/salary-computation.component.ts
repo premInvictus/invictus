@@ -32,6 +32,9 @@ export class SalaryComputationComponent implements OnInit {
 	salaryHeadsArr: any[] = [];
 	shacolumns = [];
 	empShacolumns = [];
+	monthNames = ["January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	];
 	shdcolumns = [];
 	empShdcolumns = [];
 	formGroupArray = [];
@@ -1867,7 +1870,9 @@ export class SalaryComputationComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report: ') + this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report Employee Salary Compute report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -2191,7 +2196,11 @@ export class SalaryComputationComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [[new TitleCasePipe().transform(' Employee Salary Computation report: ') + this.sessionName]],
+			head: [[
+				new TitleCasePipe().transform('Employee Salary Compute report for the month of '
+					+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+				+ this.sessionName
+			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},

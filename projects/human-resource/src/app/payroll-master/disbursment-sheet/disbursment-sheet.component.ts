@@ -27,6 +27,9 @@ export class DisbursmentSheetComponent implements OnInit {
 	searchForm: FormGroup;
 	employeeData: any;
 	salaryHeadsArr: any[] = [];
+	monthNames = ["January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	];
 	shacolumns = [];
 	empShacolumns = [];
 	shdcolumns = [];
@@ -301,7 +304,8 @@ export class DisbursmentSheetComponent implements OnInit {
 					}
 
 					this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
-					var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_structure.emp_basic_pay_scale) : 0;
+					var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ?
+						Math.round(Number(item.emp_salary_structure.emp_basic_pay_scale)) : 0;
 
 
 					for (var i = 0; i < this.shacolumns.length; i++) {
@@ -324,17 +328,17 @@ export class DisbursmentSheetComponent implements OnInit {
 											Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 										) {
 											if ((item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
-												value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+												value = Math.round(Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 											}
 
 											if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
-												value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
+												value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
 											}
 
 											this.empShacolumns[i]['value'] = value;
 											this.shacolumns[i]['value'] = value;
-											total_earnings = total_earnings + Number(value);
+											total_earnings = Math.round(Number(total_earnings) + Number(value));
 
 										} else {
 											this.shacolumns[i]['value'] = 0;
@@ -365,16 +369,16 @@ export class DisbursmentSheetComponent implements OnInit {
 										Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 									) {
 										if ((item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type']).toLowerCase() === 'text') {
-											value = Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+											value = Math.round(Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']));
 										}
 
 										if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-											value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
+											value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100);
 
 										}
 										this.empShdcolumns[i]['value'] = value;
 										this.shdcolumns[i]['value'] = value;
-										total_deductions = total_deductions - Number(value);
+										total_deductions = Math.round(Number(total_deductions) - Number(value));
 
 									} else {
 										this.shdcolumns[i]['value'] = 0;
@@ -408,7 +412,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 					var modeTotal = 0;
 					for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
-						modeTotal = Number(item.emp_modes_data.mode_data[i]['pm_value']) + modeTotal;
+						modeTotal = Math.round(Number((item.emp_modes_data.mode_data[i]['pm_value']) + Number(modeTotal)));
 					}
 
 					element = {
@@ -611,7 +615,8 @@ export class DisbursmentSheetComponent implements OnInit {
 								}
 
 								this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
-								var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_structure.emp_basic_pay_scale) : 0;
+								var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ?
+									Math.round(Number(item.emp_salary_structure.emp_basic_pay_scale)) : 0;
 
 
 								for (var i = 0; i < this.shacolumns.length; i++) {
@@ -634,17 +639,17 @@ export class DisbursmentSheetComponent implements OnInit {
 														Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 													) {
 														if ((item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
-															value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+															value = Math.round(Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 														}
 
 														if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
-															value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
+															value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
 														}
 
 														this.empShacolumns[i]['value'] = value;
 														this.shacolumns[i]['value'] = value;
-														total_earnings = total_earnings + Number(value);
+														total_earnings = Math.round(total_earnings + Number(value));
 
 													} else {
 														this.shacolumns[i]['value'] = 0;
@@ -675,11 +680,11 @@ export class DisbursmentSheetComponent implements OnInit {
 													Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 												) {
 													if ((item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type']).toLowerCase() === 'text') {
-														value = Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+														value = Math.round(Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']));
 													}
 
 													if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-														value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
+														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100);
 
 													}
 													this.empShdcolumns[i]['value'] = value;
@@ -707,7 +712,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 								var modeTotal = 0;
 								for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
-									modeTotal = Number(item.emp_modes_data.mode_data[i]['pm_value']) + modeTotal;
+									modeTotal = Math.round(Number(item.emp_modes_data.mode_data[i]['pm_value']) + Number(modeTotal));
 								}
 
 								element = {
@@ -776,7 +781,11 @@ export class DisbursmentSheetComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [[new TitleCasePipe().transform('Employee Disbursment Sheet report: ') + this.sessionName]],
+			head: [[
+				new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName
+			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -902,7 +911,9 @@ export class DisbursmentSheetComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report: ') + this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -950,7 +961,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			coun2++;
 			cound++;
 		}
-		
+
 		worksheet.getCell(this.alphabetJSON[coun2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
 			Math.round(Number(f.emp_total))).reduce((acc, val) => acc + val);
 		console.log(worksheet._rows.length, this.currentUser, totRow);
@@ -972,11 +983,11 @@ export class DisbursmentSheetComponent implements OnInit {
 			let indo = 5;
 			let inde = 0;
 			for (const pay of this.paymentModeArray) {
-				worksheet.getCell(this.alphabetJSON[indo] + this.length).value = item.emp_modes_data.mode_data[inde]['pm_value'];
+				worksheet.getCell(this.alphabetJSON[indo] + this.length).value = Math.round(Number(item.emp_modes_data.mode_data[inde]['pm_value']));
 				indo++;
 				inde++
 			}
-			worksheet.getCell(this.alphabetJSON[indo] + this.length).value = item.emp_total ? item.emp_total : '-';
+			worksheet.getCell(this.alphabetJSON[indo] + this.length).value = item.emp_total ? Math.round(Number(item.emp_total)) : '-';
 
 			worksheet.addRow(obj);
 		}
