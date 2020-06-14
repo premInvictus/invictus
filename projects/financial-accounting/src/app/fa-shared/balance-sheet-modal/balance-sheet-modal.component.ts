@@ -90,6 +90,8 @@ export class BalanceSheetModalComponent implements OnInit {
 
    for(var ele in arr){
      if(Array.isArray(arr[ele])){
+      console.log(this.totalDebitRowLength, arr[ele]) ;
+      this.totalDebitRowLength++;
       this.recursiveDebitArraylength(arr[ele])
      }else{
          this.totalDebitRowLength++;
@@ -102,6 +104,7 @@ recursiveCreditArraylength(arr){
 
   for(var ele in arr){
     if(Array.isArray(arr[ele])){
+      this.totalCreditRowLength++;
      this.recursiveCreditArraylength(arr[ele])
     }else{
         this.totalCreditRowLength++;

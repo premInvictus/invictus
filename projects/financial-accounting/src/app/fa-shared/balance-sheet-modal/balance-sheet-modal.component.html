@@ -142,7 +142,7 @@
                   </ng-container>
 
               </ng-container>
-              <ng-container *ngIf="debitRow > creditRow">
+              <ng-container *ngIf="debitRow < creditRow">
                 <tr *ngFor="let citem of blankArr">
                   <td width="20%">&nbsp;</td>
                   <td width="65%">&nbsp;</td>
@@ -231,7 +231,7 @@
 
 
               </ng-container>
-              <ng-container *ngIf="debitRow < creditRow">
+              <ng-container *ngIf="debitRow > creditRow">
                 <tr *ngFor="let item of blankArr">
                   <td width="20%">&nbsp;</td>
                   <td width="65%">&nbsp;</td>

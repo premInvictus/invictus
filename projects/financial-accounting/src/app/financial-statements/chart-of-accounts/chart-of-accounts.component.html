@@ -91,7 +91,7 @@
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="ac_cloosingbalance">
                       <th mat-header-cell *matHeaderCellDef> Closing Balance </th>
-                      <td mat-cell *matCellDef="let element"> {{element.ac_cloosingbalance | indianCurrency}} </td>
+                      <td mat-cell *matCellDef="let element"> {{(element.ac_cloosingbalance + element?.opening_balance_cal) | indianCurrency}} </td>
                     </ng-container>
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="opening_balance">
