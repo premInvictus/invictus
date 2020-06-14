@@ -193,13 +193,17 @@ export class VouchersListComponent implements OnInit {
 		}
 	}
 	printvoucher(value){
+		console.log(value);
 		const param: any = {};
+		if(value.vc_id) {
+			param.vc_id = value.vc_id;
+		}
 		this.faService.printvoucher(param).subscribe((result: any) => {
-			if (result) {
+			if (result && result.status == 'ok') {
 			  console.log(result.data);
 			  this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
-				const length = result.data.split('/').length;
-				saveAs(result.data, result.data.split('/')[length - 1]);
+				const length = result.data.fileUrl.split('/').length;
+				saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
 			}
 		  });
 	}
