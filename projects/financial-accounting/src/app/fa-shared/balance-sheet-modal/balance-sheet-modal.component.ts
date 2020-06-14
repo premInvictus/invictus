@@ -57,6 +57,8 @@ export class BalanceSheetModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
+    this.totalDebitRowLength = 0;
+    this.totalCreditRowLength = 0;
     //this.getGroupArray();
     this.recursiveDebitArraylength(this.param.liabilities_group_data);
     this.recursiveCreditArraylength(this.param.assets_group_data);
