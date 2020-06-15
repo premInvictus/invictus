@@ -58,7 +58,7 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row" *ngIf="assignment_desc">
+      <div class="row" *ngIf="assignmentForm.value.assignment_desc">
         <div class="col-12">
           <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment"
             style="display: none">
