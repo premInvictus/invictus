@@ -38,19 +38,48 @@ export class AccountWiseComponent implements OnInit {
   buildForm() {
     this.paramForm = this.fbuild.group({
       coa_id:'',
+      vc_account_type:'',
       monthId:'',
       type: 'credit'
     })
   }
-  getAccounts() {
-		this.faService.getAllChartsOfAccount({}).subscribe((data:any)=>{
-			if(data) {
-        this.accountsArray = data;
-			} else {
-				this.accountsArray = [];
+  getAccounts(event = null) {
+		console.log('event',event);
+		if(event){
+			console.log('key',event.keyCode);
+			if(event.keyCode != 38 && event.keyCode != 40 ){
+				let param: any = {};
+				if(event) {
+					param.coa_acc_name = event.target.value
+				}
+				this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+					if(data) {
+						this.accountsArray = data;
+					} else {
+						this.accountsArray = [];
+					}
+				})
 			}
-		})
+		} else {
+			let param: any = {};
+			if(event) {
+				param.coa_acc_name = event.target.value
+			}
+			this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+				if(data) {
+					this.accountsArray = data;
+				} else {
+					this.accountsArray = [];
+				}
+			})	
+		}
   }
+  setaccount(item) {
+		this.paramForm.patchValue({
+      coa_id: item.coa_id,
+      vc_account_type: item.coa_acc_name
+		});
+ 	}
 
   getFeeMonths() {
 		this.feeMonthArray = [];
@@ -77,17 +106,18 @@ export class AccountWiseComponent implements OnInit {
         inputJson['coa_id'] = [this.paramForm.value.coa_id ? this.paramForm.value.coa_id : null]
       }
       this.faService.getTrialBalance(inputJson).subscribe((data:any)=>{
+        this.tableDivFlag = true;
         if(data) { 
           const tempdata = data.ledger_data.find( e => e.coa_id == this.paramForm.value.coa_id);
           console.log(tempdata);
-          const renderdata = this.paramForm.value.type == 'credit' ? tempdata.credit_data : tempdata.debit_data;
+          // const renderdata = this.paramForm.value.type == 'credit' ? tempdata.credit_data : tempdata.debit_data;
           if(this.paramForm.value.type == 'credit'){
             const renderdata = tempdata.credit_data;
             for (const item of renderdata) {
               const element = {
                 vc_date: item.vc_date,
                 vc_account: item.vc_account_type,
-                vc_amount:item.vc_date.vc_credit,
+                vc_amount:item.vc_debit,
               };
               this.ELEMENT_DATA.push(element);              
             }
@@ -97,7 +127,7 @@ export class AccountWiseComponent implements OnInit {
               const element = {
                 vc_date: item.vc_date,
                 vc_account: item.vc_account_type,
-                vc_amount:item.vc_date.vc_debit,
+                vc_amount:item.vc_credit,
               };
               this.ELEMENT_DATA.push(element);              
             }

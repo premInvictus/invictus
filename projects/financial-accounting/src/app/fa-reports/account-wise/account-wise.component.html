@@ -3,13 +3,16 @@
       <div class="col-2">
         <mat-form-field class="form-field" appearance="outline">
           <mat-label>Account </mat-label>
-          <mat-select formControlName="coa_id" required>
-            <!-- <mat-select-search [formControl]="bankMultiFilterCtrl"></mat-select-search> -->
-            <!-- <input matInput (keyup)="applyfilter($event)"> -->
-            <!-- <mat-select-search (keyup)="applyfilter($event)"></mat-select-search> -->
-            <!-- <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option> -->
+          <!-- <mat-select formControlName="coa_id" required>
             <mat-option *ngFor="let item of accountsArray" [value]="item.coa_id">{{item.coa_acc_name}}</mat-option>
-          </mat-select>
+          </mat-select> -->
+          <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account" aria-label="State"
+                        [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)" required>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name" (onSelectionChange)="setaccount(aitem)">
+                    {{aitem.coa_acc_name | titlecase}}
+                  </mat-option>
+                </mat-autocomplete>
         </mat-form-field>
         
       </div>
@@ -52,14 +55,14 @@
       No Records Found
   </div>
 </div> -->
-<div class="row remove-top-margin" *ngIf="tableFlag">
+<div class="row remove-top-margin" *ngIf="tableDivFlag">
   <div class="col-12">
-    <table mat-table [dataSource]="dataSource" class="table-100 text-center" style="width:100% !important">
+    <table mat-table [dataSource]="dataSource" class="table-100 text-center" style="width:100% !important" *ngIf="ELEMENT_DATA.length > 0">
 
       <!-- Position Column -->
       <ng-container matColumnDef="vc_account">
         <th mat-header-cell *matHeaderCellDef width="15%"> Account </th>
-        <td mat-cell *matCellDef="let element"> {{element.vc_account.vc_name}} </td>
+        <td mat-cell *matCellDef="let element"> {{element.vc_account}} </td>
       </ng-container>
 
       <!-- Name Column -->
@@ -78,8 +81,8 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;">
       </tr>
     </table>
-    <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-      <tr *ngIf="vouchersArray.length == 0">
+    <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;" *ngIf="ELEMENT_DATA.length == 0">
+      <tr>
         <td colspan="8">No Record Found</td>
       </tr>
     </table>
