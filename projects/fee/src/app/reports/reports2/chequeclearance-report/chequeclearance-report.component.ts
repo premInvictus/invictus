@@ -332,6 +332,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			'pageSize': value.pageSize,
 			'pageIndex': value.pageIndex,
 			'classId': value.fee_value,
+			'type' : value.c_type,
 			'secId': value.hidden_value,
 			'login_id': value.login_id,
 			'orderBy': value.orderBy,
@@ -728,6 +729,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			'to_date': value.to_date,
 			'pageSize': value.pageSize,
 			'pageIndex': value.pageIndex,
+			'type' : value.c_type,
 			'classId': value.fee_value,
 			'secId': value.hidden_value,
 			'login_id': value.login_id,
@@ -773,6 +775,22 @@ export class ChequeclearanceReportComponent implements OnInit {
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
 					collapsed: false
+				},
+			},
+			{
+				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
+				filterable: true,
+				width: 80,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInput },
+				grouping: {
+					getter: 'stu_class_name',
+					formatter: (g) => {
+						return `${g.value}  <span style="color:green">(${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false,
 				},
 			},
 			{
@@ -900,7 +918,13 @@ export class ChequeclearanceReportComponent implements OnInit {
 						repoArray[Number(index)]['au_admission_no'] : '-';
 					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
 
-
+					obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
+					if (repoArray[Number(index)]['sec_id'] !== '0') {
+						obj['stu_class_name'] = repoArray[Number(index)]['class_name'] + '-' +
+							repoArray[Number(index)]['sec_name'];
+					} else {
+						obj['stu_class_name'] = repoArray[Number(index)]['class_name'];
+					}
 					obj['cheque_date'] = repoArray[Number(index)]['cheque_date'] ? repoArray[Number(index)]['cheque_date'] : '-';
 
 					obj['transaction_date'] = repoArray[Number(index)]['transaction_date'] ? repoArray[Number(index)]['transaction_date'] : '-';
@@ -931,6 +955,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				obj3['srno'] = '';
 				obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
 				obj3['stu_full_name'] = '';
+				obj3['stu_class_name'] = '';
 				obj3['cheque_date'] = '';
 				obj3['transaction_date'] = '';
 				obj3['invoice_no'] = '';
@@ -1803,8 +1828,8 @@ export class ChequeclearanceReportComponent implements OnInit {
 			},
 			useCss: true,
 			styles: {
-				fontSize: 18,
-				cellWidth: 'auto',
+				fontSize: 22,
+				cellWidth: 50,
 				textColor: 'black',
 				lineColor: '#89a8c8',
 			},

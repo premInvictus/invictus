@@ -119,6 +119,7 @@ export class ChartsofAccountComponent implements OnInit {
               opening_balance_type : item.coa_opening_balance_data && item.coa_opening_balance_data.opening_balance_type ? item.coa_opening_balance_data.opening_balance_type == 'debit' ? 'dr' : 'cr' : '',
               opening_date : item.coa_opening_balance_data ? item.coa_opening_balance_data.opening_balance_date: '',
               status:item.coa_status,
+              opening_balance_cal :item.coa_opening_balance_data ? (item.coa_opening_balance_data.opening_balance) : 0,
               action:item
 
             };

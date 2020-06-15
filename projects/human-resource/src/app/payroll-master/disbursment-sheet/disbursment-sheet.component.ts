@@ -27,6 +27,9 @@ export class DisbursmentSheetComponent implements OnInit {
 	searchForm: FormGroup;
 	employeeData: any;
 	salaryHeadsArr: any[] = [];
+	monthNames = ["January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	];
 	shacolumns = [];
 	empShacolumns = [];
 	shdcolumns = [];
@@ -140,19 +143,35 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 
 	getPaymentModes() {
-		this.commonAPIService.getMaster({type_id:"6"}).subscribe((res: any) => {
-			if (res) {
-				//this.paymentModeArray = res;
-				for (let i=0; i<res.length;i++) {
-					console.log('res', res);
-					var inputJson = {
-						'pm_id' : res[i]['name'] ? res[i]['name'].trim().toLowerCase().replace(' ','_') : '',
-						'pm_name':res[i]['name'],
-						'pm_value' : 0
+		this.commonAPIService.getBanks({}).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+
+				this.paymentModeArray.push(
+					{
+						'pm_id': 'Cash' ? 'Cash'.trim().toLowerCase().replace(' ', '_') : '',
+						'pm_name': 'Cash',
+						'pm_value': 0,
+						'calculation_type': '',
+						'calculation_value': '',
+						'config_id': '0'
+
 					}
-					this.paymentModeArray.push(inputJson);
+				);
+				for (const item of res.data) {
+					this.paymentModeArray.push(
+						{
+							'pm_id': item.bank_name ? item.bank_name.trim().toLowerCase().replace(' ', '_') : '',
+							'pm_name': item.bank_name,
+							'pm_value': 0,
+							'calculation_type': '',
+							'calculation_value': '',
+							'config_id': item.bnk_id
+
+						}
+					);
 				}
-			} 
+
+			}
 		});
 	}
 
@@ -217,7 +236,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			} else {
 				this.searchOk(this.filterJson);
 			}
-			
+
 		}
 	}
 
@@ -285,7 +304,8 @@ export class DisbursmentSheetComponent implements OnInit {
 					}
 
 					this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
-					var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_structure.emp_basic_pay_scale) : 0;
+					var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ?
+						Math.round(Number(item.emp_salary_structure.emp_basic_pay_scale)) : 0;
 
 
 					for (var i = 0; i < this.shacolumns.length; i++) {
@@ -308,17 +328,17 @@ export class DisbursmentSheetComponent implements OnInit {
 											Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 										) {
 											if ((item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
-												value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+												value = Math.round(Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 											}
 
 											if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
-												value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
+												value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
 											}
 
 											this.empShacolumns[i]['value'] = value;
 											this.shacolumns[i]['value'] = value;
-											total_earnings = total_earnings + Number(value);
+											total_earnings = Math.round(Number(total_earnings) + Number(value));
 
 										} else {
 											this.shacolumns[i]['value'] = 0;
@@ -349,16 +369,16 @@ export class DisbursmentSheetComponent implements OnInit {
 										Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 									) {
 										if ((item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type']).toLowerCase() === 'text') {
-											value = Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+											value = Math.round(Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']));
 										}
 
 										if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-											value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
+											value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100);
 
 										}
 										this.empShdcolumns[i]['value'] = value;
 										this.shdcolumns[i]['value'] = value;
-										total_deductions = total_deductions - Number(value);
+										total_deductions = Math.round(Number(total_deductions) - Number(value));
 
 									} else {
 										this.shdcolumns[i]['value'] = 0;
@@ -392,7 +412,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 					var modeTotal = 0;
 					for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
-						modeTotal = Number(item.emp_modes_data.mode_data[i]['pm_value']) + modeTotal;
+						modeTotal = Math.round(Number((item.emp_modes_data.mode_data[i]['pm_value']) + Number(modeTotal)));
 					}
 
 					element = {
@@ -471,8 +491,8 @@ export class DisbursmentSheetComponent implements OnInit {
 
 	openFilter() {
 		this.searchByFilter = true;
-		if (this.searchForm.value.month_id) {	
-				this.searchModal.openModal();
+		if (this.searchForm.value.month_id) {
+			this.searchModal.openModal();
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose Pay Month', 'error');
 		}
@@ -543,7 +563,7 @@ export class DisbursmentSheetComponent implements OnInit {
 				if (emp_ids.length > 0) {
 					let inputJson = {
 						'emp_ids': emp_ids,
-						'month_id' : this.searchForm.value.month_id
+						'month_id': this.searchForm.value.month_id
 					};
 					this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
 
@@ -571,65 +591,66 @@ export class DisbursmentSheetComponent implements OnInit {
 							this.displayedSalaryComputeColumns.push('emp_total');
 							let pos = 1;
 							let recordArray = [];
-			
+
 							for (var i = 0; i < result.length; i++) {
 								if (Number(result[i]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)) {
 									recordArray.push(result[i]['emp_salary_compute_data']);
 								}
 							}
-			
+
 							let emp_present_days;
 							for (const item of recordArray) {
 								this.empShacolumns = [];
 								this.empShdcolumns = [];
 								var total_deductions = 0;
 								var total_earnings = 0;
-			
+
 								var formJson = {
 									emp_id: item.emp_id,
 									advance: ''
 								};
-			
+
 								for (var i = 0; i < this.paymentModeArray.length; i++) {
 									formJson[this.paymentModeArray[i]['pm_id']] = '';
 								}
-			
+
 								this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
-								var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ? Number(item.emp_salary_structure.emp_basic_pay_scale) : 0;
-			
-			
+								var empBasicPay = item.emp_salary_structure && item.emp_salary_structure.emp_basic_pay_scale ?
+									Math.round(Number(item.emp_salary_structure.emp_basic_pay_scale)) : 0;
+
+
 								for (var i = 0; i < this.shacolumns.length; i++) {
 									if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 										var value = 0;
-			
+
 										if (this.shacolumns[i]['header'] === 'Basic Pay') {
 											this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: empBasicPay };
 										} else {
 											this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 										}
-			
-			
+
+
 										if (item.emp_salary_structure.emp_salary_heads) {
 											for (var j = 0; j < item.emp_salary_structure.emp_salary_heads.length; j++) {
 												if (item.emp_salary_structure.emp_salary_heads && item.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-			
+
 													if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 														item.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 														Number(item.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
 													) {
 														if ((item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
-															value = Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']);
+															value = Math.round(Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 														}
-			
+
 														if (item.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
-															value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100;
-			
+															value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
+
 														}
-			
+
 														this.empShacolumns[i]['value'] = value;
 														this.shacolumns[i]['value'] = value;
-														total_earnings = total_earnings + Number(value);
-			
+														total_earnings = Math.round(total_earnings + Number(value));
+
 													} else {
 														this.shacolumns[i]['value'] = 0;
 														this.empShacolumns[i]['value'] = 0;
@@ -637,39 +658,39 @@ export class DisbursmentSheetComponent implements OnInit {
 												}
 											}
 										}
-			
-			
+
+
 									}
 								}
 								for (var i = 0; i < this.shdcolumns.length; i++) {
 									if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 										var value = 0;
-			
-			
+
+
 										this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
-			
-			
-			
-			
+
+
+
+
 										for (var j = 0; j < item.emp_salary_structure.emp_deduction_detail.length; j++) {
 											if (Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_id'])) {
-			
+
 												if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] &&
 													item.emp_salary_structure.emp_deduction_detail[j]['sc_type'] &&
 													Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_type']['type_id']) === 2
 												) {
 													if ((item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type']).toLowerCase() === 'text') {
-														value = Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']);
+														value = Math.round(Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value']));
 													}
-			
+
 													if (item.emp_salary_structure.emp_deduction_detail[j]['sc_calculation_type'] === '%') {
-														value = (Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100;
-			
+														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_structure.emp_deduction_detail[j]['sc_value'])) / 100);
+
 													}
 													this.empShdcolumns[i]['value'] = value;
 													this.shdcolumns[i]['value'] = value;
 													total_deductions = total_deductions - Number(value);
-			
+
 												} else {
 													this.shdcolumns[i]['value'] = 0;
 													this.empShdcolumns[i]['value'] = 0;
@@ -677,23 +698,23 @@ export class DisbursmentSheetComponent implements OnInit {
 											}
 										}
 									}
-			
+
 								}
-			
-			
+
+
 								emp_present_days = item.emp_present_days;
-			
+
 								var salary_payable = 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, 2019);
 								emp_present_days = emp_present_days ? emp_present_days : 0;
-			
+
 								salary_payable = Math.round(((Number(total_earnings) + Number(total_deductions)) * Number(emp_present_days)) / Number(no_of_days));
-			
+
 								var modeTotal = 0;
 								for (var i = 0; i < item.emp_modes_data.mode_data.length; i++) {
-									modeTotal = Number(item.emp_modes_data.mode_data[i]['pm_value']) + modeTotal;
+									modeTotal = Math.round(Number(item.emp_modes_data.mode_data[i]['pm_value']) + Number(modeTotal));
 								}
-			
+
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
@@ -719,11 +740,11 @@ export class DisbursmentSheetComponent implements OnInit {
 									emp_total: modeTotal,
 									emp_status: item.emp_status ? item.emp_status : 'live',
 								};
-			
+
 								this.SALARY_COMPUTE_ELEMENT.push(element);
 								pos++;
 							}
-			
+
 							this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 							this.salaryComputeDataSource.paginator = this.paginator;
 							if (this.sort) {
@@ -760,7 +781,11 @@ export class DisbursmentSheetComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [[new TitleCasePipe().transform('Employee Disbursment Sheet report: ') + this.sessionName]],
+			head: [[
+				new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName
+			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},
@@ -862,18 +887,13 @@ export class DisbursmentSheetComponent implements OnInit {
 			key: 'emp_salary_payable',
 			width: this.checkWidth('emp_salary_payable', 'Salary Payable')
 		});
-		columns.push({
-			key: 'emp_modes_data',
-			width: this.checkWidth('emp_modes_data', 'Bank Transfer')
-		});
-		columns.push({
-			key: 'emp_modes_data2',
-			width: this.checkWidth('emp_modes_data2', 'Check')
-		});
-		columns.push({
-			key: 'emp_modes_data3',
-			width: this.checkWidth('emp_modes_data3', 'Cash')
-		});
+
+		for (const item of this.paymentModeArray) {
+			columns.push({
+				key: item.pm_id,
+				width: this.checkWidth(item.pm_id, item.pm_name)
+			});
+		}
 		columns.push({
 			key: 'emp_total',
 			width: this.checkWidth('emp_total', 'Total')
@@ -891,7 +911,9 @@ export class DisbursmentSheetComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report: ') + this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -902,23 +924,46 @@ export class DisbursmentSheetComponent implements OnInit {
 		worksheet.mergeCells('E3:F3');
 		worksheet.getCell('E3').value = '';
 		worksheet.getCell(`E3`).alignment = { horizontal: 'left' };
-		worksheet.mergeCells('A5:C5');
-		worksheet.getCell('A5').value = ' ';
-		worksheet.mergeCells('D5:G5');
-		worksheet.getCell('D5').value = 'Modes';
-		worksheet.getCell('H5').value = '';
+		worksheet.mergeCells('A5:D5');
+		worksheet.getCell('A5').value = ' Details';
+		let ind = 5;
+		for (const item of this.paymentModeArray) {
+			ind++;
+		}
+		worksheet.mergeCells('E5:' + this.alphabetJSON[ind] + '5');
+		worksheet.getCell('E5').value = 'Modes';
+		//worksheet.getCell(this.alphabetJSON[ind] + '5').value = '';
 		worksheet.getCell('A6').value = 'Emp. ID';
 		worksheet.getCell('B6').value = 'Emp Name';
 		worksheet.getCell('C6').value = 'Designation';
 		worksheet.getCell('D6').value = 'Salary Payable';
-		worksheet.getCell('E6').value = 'Bank Transfer';
-		worksheet.getCell('F6').value = 'Cheque';
-		worksheet.getCell('G6').value = 'Cash';
-		worksheet.getCell('H6').value = 'Total';
+		let coun = 5;
+		for (const item of this.paymentModeArray) {
+			worksheet.getCell(this.alphabetJSON[coun] + '6').value = item.pm_name;
+			coun++;
+		}
+		worksheet.getCell(this.alphabetJSON[coun] + '6').value = 'Total';
 
 		worksheet.columns = columns;
 		this.length = worksheet._rows.length;
+		let gtRow = this.length + this.SALARY_COMPUTE_ELEMENT.length + 1;
+		worksheet.getCell('A' + gtRow).value = '';
+		worksheet.getCell('B' + gtRow).value = 'Grand Total';
+		worksheet.getCell('C' + gtRow).value = '';
+		worksheet.getCell('D' + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
+			Math.round(Number(f.emp_salary_payable))).reduce((acc, val) => acc + val);
 		let totRow = this.length + this.employeeData.length + 5;
+		let coun2 = 5;
+		let cound = 0;
+		for (const item of this.paymentModeArray) {
+			worksheet.getCell(this.alphabetJSON[coun2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
+				Math.round(Number(f.emp_modes_data.mode_data[cound]['pm_value']))).reduce((acc, val) => acc + val);;
+			coun2++;
+			cound++;
+		}
+
+		worksheet.getCell(this.alphabetJSON[coun2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
+			Math.round(Number(f.emp_total))).reduce((acc, val) => acc + val);
 		console.log(worksheet._rows.length, this.currentUser, totRow);
 
 		worksheet.mergeCells('A' + totRow + ':' + 'D' + totRow);
@@ -935,10 +980,14 @@ export class DisbursmentSheetComponent implements OnInit {
 			worksheet.getCell('B' + this.length).value = item.emp_name;
 			worksheet.getCell('C' + this.length).value = item.emp_designation;
 			worksheet.getCell('D' + this.length).value = item.emp_salary_payable ? item.emp_salary_payable : '-';
-			worksheet.getCell('E' + this.length).value = item.emp_modes_data.mode_data[0].pm_value ? item.emp_modes_data.mode_data[0].pm_value : '-';
-			worksheet.getCell('F' + this.length).value = item.emp_modes_data.mode_data[1].pm_value ? item.emp_modes_data.mode_data[1].pm_value : '-';
-			worksheet.getCell('G' + this.length).value = item.emp_modes_data.mode_data[2].pm_value ? item.emp_modes_data.mode_data[2].pm_value : '-';
-			worksheet.getCell('H' + this.length).value = item.emp_total ? item.emp_total : '-';
+			let indo = 5;
+			let inde = 0;
+			for (const pay of this.paymentModeArray) {
+				worksheet.getCell(this.alphabetJSON[indo] + this.length).value = Math.round(Number(item.emp_modes_data.mode_data[inde]['pm_value']));
+				indo++;
+				inde++
+			}
+			worksheet.getCell(this.alphabetJSON[indo] + this.length).value = item.emp_total ? Math.round(Number(item.emp_total)) : '-';
 
 			worksheet.addRow(obj);
 		}
@@ -989,7 +1038,30 @@ export class DisbursmentSheetComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum >= 7 && rowNum <= this.employeeData.length + 7) {
+			if (rowNum === gtRow) {
+				row.eachCell(cell => {
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.alignment = { wrapText: true, horizontal: 'center' };
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '439f47' },
+						bgColor: { argb: '439f47' }
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+				});
+			}
+			if (rowNum >= 7 && rowNum !== gtRow && rowNum <= this.SALARY_COMPUTE_ELEMENT.length + 7) {
 				row.eachCell(cell => {
 					if (rowNum % 2 === 0) {
 						cell.fill = {

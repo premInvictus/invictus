@@ -34,6 +34,8 @@ export class BalanceSheetModalComponent implements OnInit {
   assetsGroupArr = [];
   liabilitiesGroupArr = [];
   incomeExpenditureDeviation = 0;
+  totalDebitRowLength = 0;
+  totalCreditRowLength = 0;
   @Input() param: any;
   @Input() incomeExpenditureArray: any;
   @Input() date: any;
@@ -55,7 +57,11 @@ export class BalanceSheetModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
+    this.totalDebitRowLength = 0;
+    this.totalCreditRowLength = 0;
     //this.getGroupArray();
+    this.recursiveDebitArraylength(this.param.liabilities_group_data);
+    this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
     this.getTotal();
   }
@@ -65,19 +71,47 @@ export class BalanceSheetModalComponent implements OnInit {
     this.blankArr = [];
     this.debitRow = 0;
     this.creditRow = 0;
-    this.debitRow = this.debitRow + this.debitSideBlankArr.length;
-    this.creditRow = this.creditRow + this.creditSideBlankArr.length;
+    this.debitRow = this.totalDebitRowLength;
+    this.creditRow = this.totalCreditRowLength;
     if (this.debitRow > this.creditRow) {
-      for (var i = 0; i < 2 * (this.debitRow - this.creditRow); i++) {
+      for (var i = 0; i <  (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
       }
     } else if (this.creditRow > this.debitRow) {
-      for (var i = 0; i < 2 * (this.creditRow - this.debitRow); i++) {
+      for (var i = 0; i <  (this.creditRow - this.debitRow); i++) {
         this.blankArr.push(i);
       }
     }
     console.log(this.debitRow, this.creditRow);
   }
+
+  
+ recursiveDebitArraylength(arr){
+
+   for(var ele in arr){
+     if(Array.isArray(arr[ele])){
+      console.log(this.totalDebitRowLength, arr[ele]) ;
+      this.totalDebitRowLength++;
+      this.recursiveDebitArraylength(arr[ele])
+     }else{
+         this.totalDebitRowLength++;
+     }
+   }
+
+}
+
+recursiveCreditArraylength(arr){
+
+  for(var ele in arr){
+    if(Array.isArray(arr[ele])){
+      this.totalCreditRowLength++;
+     this.recursiveCreditArraylength(arr[ele])
+    }else{
+        this.totalCreditRowLength++;
+    }
+  }
+
+}
 
 
   getDeviation(param) {
@@ -95,7 +129,7 @@ export class BalanceSheetModalComponent implements OnInit {
       } }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
 
-      return this.deviation_f;
+      return this.deviation_f < 0 ? -this.deviation_f : this.deviation_f ;
     }
   }
 
@@ -131,7 +165,7 @@ export class BalanceSheetModalComponent implements OnInit {
     creditSideTotal = creditSideTotal - Number(this.incomeExpenditureArray['head_total_amt']);
     debitSideTotal = debitSideTotal;
     console.log(debitSideTotal, creditSideTotal)
-    this.incomeExpenditureDeviation = debitSideTotal - creditSideTotal;
+    this.incomeExpenditureDeviation =  debitSideTotal - creditSideTotal;
   }
 
   
@@ -147,34 +181,50 @@ export class BalanceSheetModalComponent implements OnInit {
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
-        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
+        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] < 0 ? -(this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+
+        //console.log('debitTotal>', this.debitTotal, this.param['ledger_data'][i]['debit_data'][j]['vc_credit'], i);
         }
         
 
       }
       for (var k = 0; k < this.param['ledger_data'][i]['credit_data'].length; k++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
-        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
+        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ) : 0);
+
+        //console.log('debitTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
         }
       }
-      console.log('this.debitTotal', this.debitTotal);
+      
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
-        diffTotal = diffTotal + diff;
+        diffTotal = diffTotal - diff;
+        console.log(diff, i); 
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
+       
         diffCTotal = diffCTotal + diff;
-        this.debitSideTotal = diffCTotal;
+       this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
 
+      
+
 
     }
-    this.creditSideTotal = this.creditSideTotal - Number(this.param['head_total_amt']);
-    this.debitSideTotal = this.debitSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
+    
+    this.creditSideTotal = this.creditSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
+    if (this.creditSideTotal    < 0) {
+      this.creditSideTotal = -this.creditSideTotal;
+    }
+    this.debitSideTotal = this.debitSideTotal  + this.incomeExpenditureDeviation;
+    if (this.debitSideTotal    < 0) {
+      this.debitSideTotal = -this.debitSideTotal;
+    }
+    ///console.log('this.debitSideTotal--',this.debitSideTotal, this.creditSideTotal);
     this.checkBlankArray();
   }
 
@@ -193,6 +243,15 @@ export class BalanceSheetModalComponent implements OnInit {
         date: this.date
       }
     });
+  }
+  getTwoDecimalValue(value) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+
   }
 
 }

@@ -32,6 +32,9 @@ export class SalaryComputationComponent implements OnInit {
 	salaryHeadsArr: any[] = [];
 	shacolumns = [];
 	empShacolumns = [];
+	monthNames = ["January", "February", "March", "April", "May", "June",
+		"July", "August", "September", "October", "November", "December"
+	];
 	shdcolumns = [];
 	empShdcolumns = [];
 	formGroupArray = [];
@@ -402,9 +405,9 @@ export class SalaryComputationComponent implements OnInit {
 							}
 						}
 					}
-					
 
-			    	var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
+
+					var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 					if (eIndex > -1) {
 						if (this.salaryComputeEmployeeData[eIndex] && Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
 							&& Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)
@@ -1845,11 +1848,11 @@ export class SalaryComputationComponent implements OnInit {
 		});
 		columns.push({
 			key: 'td',
-			width: this.checkWidth('td', 'td')
+			width: this.checkWidth('td', 'TA')
 		});
 		columns.push({
 			key: 'tds',
-			width: this.checkWidth('tds', 'tds')
+			width: this.checkWidth('tds', 'TDS')
 		});
 		columns.push({
 			key: 'gratuity',
@@ -1867,7 +1870,9 @@ export class SalaryComputationComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report: ') + this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report Employee Salary Compute report for the month of '
+			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+			+ this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -1916,6 +1921,8 @@ export class SalaryComputationComponent implements OnInit {
 			worksheet.getCell(this.alphabetJSON[6 + i] + '6').value = this.shacolumns[i].header;
 			k++;
 		}
+		worksheet.getCell(this.alphabetJSON[k] + '6').value = 'TA';
+		k = k + 1;
 		worksheet.getCell(this.alphabetJSON[k] + '6').value = 'Total Earnings';
 
 		let l = k;
@@ -1923,6 +1930,8 @@ export class SalaryComputationComponent implements OnInit {
 			worksheet.getCell(this.alphabetJSON[k + j + 1] + '6').value = this.shdcolumns[j].header;
 			l++;
 		}
+		worksheet.getCell(this.alphabetJSON[l + 1] + '6').value = 'TDS';
+		l = l + 1;
 		worksheet.getCell(this.alphabetJSON[l + 1] + '6').value = 'Present Days';
 		worksheet.getCell(this.alphabetJSON[l + 2] + '6').value = 'Advance/Arrear';
 		worksheet.getCell(this.alphabetJSON[l + 3] + '6').value = 'Salary Payable';
@@ -1952,6 +1961,9 @@ export class SalaryComputationComponent implements OnInit {
 			k2++;
 		}
 		worksheet.getCell(this.alphabetJSON[k2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
+			Math.round(Number(f.emp_modes_data.td))).reduce((acc, val) => acc + val);
+		k2 = k2 + 1;
+		worksheet.getCell(this.alphabetJSON[k2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
 			Math.round(Number(f.emp_total_earnings))).reduce((acc, val) => acc + val);
 		let l2 = k2;
 		for (let j = 0; j < this.shdcolumns.length; j++) {
@@ -1960,6 +1972,10 @@ export class SalaryComputationComponent implements OnInit {
 					map(f => Math.round(Number(f.empShdcolumns[j]['value']))).reduce((acc, val) => acc + val);
 			l2++;
 		}
+		worksheet.getCell(this.alphabetJSON[l2 + 1] + gtRow).value =
+			this.SALARY_COMPUTE_ELEMENT.map(f =>
+				Math.round(Number(f.emp_modes_data.tds))).reduce((acc, val) => acc + val);
+		l2 = l2 + 1;
 		worksheet.getCell(this.alphabetJSON[l2 + 1] + gtRow).value =
 			this.SALARY_COMPUTE_ELEMENT.map(f =>
 				Math.round(Number(f.emp_present_days))).reduce((acc, val) => acc + val);
@@ -2005,12 +2021,16 @@ export class SalaryComputationComponent implements OnInit {
 				worksheet.getCell(this.alphabetJSON[6 + i] + this.length).value = item.empShacolumns[i]['value'];
 				k++;
 			}
+			worksheet.getCell(this.alphabetJSON[k] + this.length).value = item.emp_modes_data.td;
+			k = k + 1
 			worksheet.getCell(this.alphabetJSON[k] + this.length).value = item.emp_total_earnings;
 			let l = k;
 			for (let j = 0; j < this.shdcolumns.length; j++) {
 				worksheet.getCell(this.alphabetJSON[k + j + 1] + this.length).value = item.empShdcolumns[j]['value'];
 				l++;
 			}
+			worksheet.getCell(this.alphabetJSON[l + 1] + this.length).value = item.emp_modes_data.tds;
+			l = l + 1;
 			worksheet.getCell(this.alphabetJSON[l + 1] + this.length).value = item.emp_present_days;
 			worksheet.getCell(this.alphabetJSON[l + 2] + this.length).value = item.emp_modes_data.advance;
 			worksheet.getCell(this.alphabetJSON[l + 3] + this.length).value = item.emp_salary_payable;
@@ -2176,7 +2196,11 @@ export class SalaryComputationComponent implements OnInit {
 		});
 
 		doc.autoTable({
-			head: [[new TitleCasePipe().transform(' Employee Salary Computation report: ') + this.sessionName]],
+			head: [[
+				new TitleCasePipe().transform('Employee Salary Compute report for the month of '
+					+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+				+ this.sessionName
+			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
 			},

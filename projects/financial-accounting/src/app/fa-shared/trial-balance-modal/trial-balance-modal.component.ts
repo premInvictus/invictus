@@ -69,7 +69,7 @@ export class TrialBalanceModalComponent implements OnInit {
         this.blankArr.push(i);
       }
     }
-    console.log(this.debitRow, this.creditRow);
+    console.log( this.debitRow, this.creditRow);
 
   }
 
@@ -85,7 +85,7 @@ export class TrialBalanceModalComponent implements OnInit {
         this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
       }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
-
+      
       return this.deviation_f;
     }
   }
@@ -102,26 +102,42 @@ export class TrialBalanceModalComponent implements OnInit {
       this.creditTotal = 0;
       for (var j = 0; j < param['ledger_data'][i]['debit_data'].length; j++) {
         this.debitTotal = this.debitTotal + (param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? param['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+         
       }
+      
       for (var k = 0; k < param['ledger_data'][i]['credit_data'].length; k++) {
         this.creditTotal = this.creditTotal + (param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
-        console.log(k);
+       // console.log(k);
       }
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
-        diffTotal = diffTotal + diff;
+        diffTotal = diffTotal - diff;
+        console.log(diff, i); 
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
+       
         diffCTotal = diffCTotal + diff;
-        this.debitSideTotal = diffCTotal;
+       this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
+
+      if(i=== param['ledger_data'].length-1) {
+        this.creditSideTotal = this.creditSideTotal + Number(param['head_total_amt']);
+        this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
+        if (this.creditSideTotal    < 0) {
+          this.creditSideTotal = -this.creditSideTotal;
+        }
+        
+        if (this.debitSideTotal    < 0) {
+          this.debitSideTotal = -this.debitSideTotal;
+        }
+        this.checkBlankArray(this.param);
+      }
+      
     }
-    this.creditSideTotal = this.creditSideTotal - Number(param['head_total_amt']);
-    this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
-    this.checkBlankArray(this.param);
+    
   }
 
   openLedgerModal(value) {
@@ -137,6 +153,15 @@ export class TrialBalanceModalComponent implements OnInit {
         value: value
       }
     });
+  }
+  getTwoDecimalValue(value) {
+    // console.log('value',value);
+    if (value && value != 0 && value != '') {
+      return Number.parseFloat(value.toFixed(2));
+    } else {
+      return value;
+    }
+
   }
 
 }

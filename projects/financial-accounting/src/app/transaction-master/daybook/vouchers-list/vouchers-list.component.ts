@@ -8,6 +8,7 @@ import { SisService, CommonAPIService, FaService } from '../../../_services/inde
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-modal.component';
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-vouchers-list',
   templateUrl: './vouchers-list.component.html',
@@ -17,7 +18,7 @@ export class VouchersListComponent implements OnInit {
 
   tableDivFlag = false;
 	ELEMENT_DATA: Element[];
-	displayedColumns: string[] = ['select', 'vc_number', 'vc_type','vc_date', 'vc_narrations', 'vc_debit', 'vc_credit', 'status', 'action'];
+	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit', 'action'];
 	dataSource = new MatTableDataSource<Element>();
 	selection = new SelectionModel<Element>(true, []);
 	@ViewChild('deleteModal') deleteModal;
@@ -85,10 +86,11 @@ export class VouchersListComponent implements OnInit {
 				vc_number: item.vc_number,
 				vc_type: item.vc_type,
 				vc_date:item.vc_date,
+				partyname:this.getPartyName(item.vc_particulars_data),
 				vc_narrations: item.vc_narrations,
 				vc_debit: this.calculateDebit(item.vc_particulars_data),
 				vc_credit:this.calculateCredit(item.vc_particulars_data),
-				status:item.vc_state == 'publish' ? 'published' : item.vc_state,
+				// status:item.vc_state == 'publish' ? 'published' : item.vc_state,
 				action:item
   
 			  };
@@ -118,6 +120,9 @@ export class VouchersListComponent implements OnInit {
 		}
 		
 		return totalDebit;
+	}
+	getPartyName(voucherFormGroupArray) {
+		return voucherFormGroupArray[0].vc_account_type;
 	}
 
 	calculateCredit(voucherFormGroupArray) {
@@ -169,7 +174,7 @@ export class VouchersListComponent implements OnInit {
 			height: '50vh',
 			width: '100vh',
 			data: {
-				title: 'voucher',
+				title: value.vc_type + ' voucher',
 				vc_id: value.vc_id
 			}
 		});
@@ -186,6 +191,21 @@ export class VouchersListComponent implements OnInit {
 				}
 			});
 		}
+	}
+	printvoucher(value){
+		console.log(value);
+		const param: any = {};
+		if(value.vc_id) {
+			param.vc_id = value.vc_id;
+		}
+		this.faService.printvoucher(param).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+			  console.log(result.data);
+			  this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+				const length = result.data.fileUrl.split('/').length;
+				saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+			}
+		  });
 	}
 
 }

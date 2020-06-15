@@ -89,19 +89,19 @@
 
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="vc_debit">
-                  <th mat-header-cell *matHeaderCellDef width="10%"> Debit </th>
+                  <th mat-header-cell *matHeaderCellDef width="10%"> Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th>
                   <td mat-cell *matCellDef="let element"> {{element.vc_debit | indianCurrency}} </td>
                 </ng-container>
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="vc_credit"width="10%" >
-                    <th mat-header-cell *matHeaderCellDef> Credit </th>
+                    <th mat-header-cell *matHeaderCellDef> Credit (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th>
                     <td mat-cell *matCellDef="let element"> {{element.vc_credit | indianCurrency}} </td>
                   </ng-container>
                 <!-- Symbol Column -->
-                <ng-container matColumnDef="status" width="10%">
-                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                <ng-container matColumnDef="partyname" width="10%">
+                  <th mat-header-cell *matHeaderCellDef> Party Name </th>
                   <td mat-cell *matCellDef="let element">
-                    {{element.status | titlecase}} </td>
+                    {{element.partyname | titlecase}} </td>
                 </ng-container>
                 <!-- Symbol Column -->
                 <ng-container matColumnDef="action" width="10%">
@@ -116,6 +116,8 @@
                             <i class="fas fa-eye" (click)="openVoucherModal(element.action)"></i>
                             <span class="margin-left-15 ver-line-divider"></span>
                             <i class="fas fa-thumbs-down" (click)="toggleVoucherStatus(element.action)"></i>
+                            <span class="margin-left-15 ver-line-divider"></span>
+                            <i class="fas fa-print" (click)="printvoucher(element.action)"></i>
                           </span>
                   </td>
                 </ng-container>

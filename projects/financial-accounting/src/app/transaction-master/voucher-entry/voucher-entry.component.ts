@@ -25,7 +25,7 @@ export class VoucherEntryComponent implements OnInit {
 	fileCounter = 0;
 	totalDebit = 0;
 	totalCredit = 0;
-	currentVcType = 'journal Entry';
+	currentVcType = 'Journal Entry';
 	accountsArray:any[] = [];
 	editMode = false;
 	currentVoucherId = '';
@@ -495,7 +495,7 @@ export class VoucherEntryComponent implements OnInit {
 		let vcMonth = tempDate.format('MMM');
 		let vcYear = tempDate.format('YYYY');
 		let vcNumber = this.voucherForm.value.vc_number;
-		return  vcType+'/'+vcMonth+((vcNumber.toString()).padStart(4,'0'));
+		return  vcType+'/'+vcMonth+'/'+((vcNumber.toString()).padStart(4,'0'));
 
 
 	}
