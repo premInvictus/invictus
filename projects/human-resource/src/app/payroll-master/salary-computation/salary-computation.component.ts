@@ -1293,8 +1293,22 @@ export class SalaryComputationComponent implements OnInit {
 						'session_id': this.session_id.ses_id
 					});
 				}
+				
 				empJson['emp_salary_detail.emp_salary_structure.advance_month_wise'] = monthWiseAdvance;
 				empJson['emp_id'] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
+				empJson['emp_salary_detail.emp_salary_structure.emp_pay_scale'] = {
+					pc_id : this.SALARY_COMPUTE_ELEMENT[i] && 
+					this.SALARY_COMPUTE_ELEMENT[i] && 
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale'] &&
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_id'] ? 
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_id'] : '',
+					pc_name : this.SALARY_COMPUTE_ELEMENT[i] && 
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale'] &&
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_name'] ? 
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_name'] : '',
+				};
 				empArr.push(empJson);
 				inputJson = this.SALARY_COMPUTE_ELEMENT[i];
 				inputJson['emp_modes_data']['emp_id'] = this.formGroupArray[i]['value']['emp_id'];
@@ -1322,10 +1336,11 @@ export class SalaryComputationComponent implements OnInit {
 			}
 			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
 			finJson['emp_salary_compute_data'] = inputArr;
+			console.log(empArr);
 			if (!edit) {
 				this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
 					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployee(empArr).subscribe((result: any) => {
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 						this.getAllEmployee();
 					});
@@ -1333,7 +1348,7 @@ export class SalaryComputationComponent implements OnInit {
 			} else {
 				this.commonAPIService.updateSalaryCompute(finJson).subscribe((result: any) => {
 					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployee(empArr).subscribe((result: any) => {
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.getAllEmployee();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					});

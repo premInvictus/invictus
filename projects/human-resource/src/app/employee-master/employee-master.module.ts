@@ -26,6 +26,7 @@ import { EmpEnqTabTwoComponent } from './emp-enq-tab-two/emp-enq-tab-two.compone
 import { EmpEnqTabThreeComponent } from './emp-enq-tab-three/emp-enq-tab-three.component';
 import { EmpEnqTabFourComponent } from './emp-enq-tab-four/emp-enq-tab-four.component';
 import { EmpEnqTabFiveComponent } from './emp-enq-tab-five/emp-enq-tab-five.component';
+
 const moment = _moment;
 
 export const MY_FORMATS = {
@@ -64,7 +65,7 @@ export const MY_FORMATS = {
 		EmpEnqTabTwoComponent,
 		EmpEnqTabThreeComponent,
 		EmpEnqTabFourComponent,
-		EmpEnqTabFiveComponent
+		EmpEnqTabFiveComponent,
 	],
 	entryComponents: [PreviewDocumentComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -1,0 +1,43 @@
+.adm-no-student-30 {
+    font-size: 30px !important;
+}
+button.nav-button.mat-mini-fab.mat-accent {
+    width: 18px !important;
+    margin-top: -10px !important;
+}
+.blue-circle-btn{
+    cursor: pointer;
+}
+.center-field{
+    text-align: center !important;
+}
+.vertical-divider {
+    border-right: 2px solid #dee2e6;
+    margin-right: 1.5%;
+}
+.vertical-divide {
+    height: auto !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+}
+.blink{
+    background-color: #e11022;
+    text-align: center;
+}
+.blink span{
+    font-family: cursive;
+    color: white;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+    }
+    @media (max-width: 2399px) and (min-width: 1800px)
+{
+.smart-col-111 {
+    max-width: 19% !important;
+    flex: 1 0 15% !important;
+}
+}

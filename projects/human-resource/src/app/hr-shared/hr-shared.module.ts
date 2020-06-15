@@ -46,6 +46,7 @@ import { ComposeMessageComponent } from './compose-message/compose-message.compo
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
+import { EmpCommonProfileComponent } from '../employee-master/emp-common-profile/emp-common-profile.component';
 
 export const MY_FORMATS = {
 	parse: {
@@ -102,6 +103,7 @@ export const MY_FORMATS = {
 	],
 	declarations: [
 		CommonDynamicChartComponent,
+		EmpCommonProfileComponent,
 		ProcessdateModalComponent,
 		DeleteModalComponent,
 		ImagecropComponent,
@@ -128,6 +130,7 @@ export const MY_FORMATS = {
 		//EmployeeDetailsComponent
 	],
 	entryComponents: [
+		EmpCommonProfileComponent,
 		DeleteModalComponent,
 		ImagecropComponent,
 		ImageViewerComponent,
@@ -174,6 +177,7 @@ export const MY_FORMATS = {
 		ImageViewerModule,
 		CKEditorModule,
 		MatSortModule,
+		EmpCommonProfileComponent,
 		RouterModule, DeleteModalComponent, ImagecropComponent, PublishModalComponent, UnpublishModalComponent,
 		NgxMaskModule, CapitalizePipe, TruncatetextPipe, DateformatPipe, SafePipe, ImageViewerComponent,
 		EditRequestModalComponent,
