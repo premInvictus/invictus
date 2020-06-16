@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
 
@@ -9,18 +9,24 @@ import { SisService, CommonAPIService } from '../../_services/index';
 })
 export class EmployeeLedgerComponent implements OnInit {
 	
-	tabSelectedIndex = 0;
-	formsTab: any[] = [];
-	settingsArray: any[] = [];
-	reRenderFormSubscription: any;
-	reRenderTabSubscription: any;
-	studentRecord: any = {};
-	constructor(
-		private route: ActivatedRoute,
-		private commonAPIService: CommonAPIService,
-		private sisService: SisService
-	) { }
-
-	ngOnInit() {}
-	
+	employeedetails : any = {};
+	lastrecordFlag: boolean;
+	lastEmployeeDetails: any;
+	lastRecordId: any;
+	login_id: any;
+	employeeDetailsForm: any;
+	defaultsrc: any;
+	navigation_record: any;
+	viewOnly: boolean;
+	@ViewChild('myInput') myInput: ElementRef;
+	constructor(private commonAPIService : CommonAPIService) { }
+  
+	ngOnInit() {
+		this.getEmployeeNavigationRecords();
+	}
+	getEmployeeNavigationRecords() {
+		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
+			this.lastRecordId =  result.last_record;
+		});
+	}
 }
