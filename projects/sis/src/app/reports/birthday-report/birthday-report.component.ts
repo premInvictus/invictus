@@ -315,7 +315,7 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		this.levelHeading = [];
 		this.levelTotalFooter = [];
 		this.levelSubtotalFooter = [];
-		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
+		const reportType = this.getReportHeader() ;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -951,7 +951,7 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Birthday Report';
+		return 'Account Wise Ledger';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();

@@ -98,6 +98,8 @@ export class AccountWiseComponent implements OnInit {
 
   ngOnInit() {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getSchool();
+    this.getSession();
     this.buildForm();
     this.getFeeMonths();
     this.getAccounts();
@@ -247,7 +249,27 @@ export class AccountWiseComponent implements OnInit {
       coa_id: item.coa_id,
       vc_account_type: item.coa_acc_name
 		});
- 	}
+   }
+   getSchool() {
+		this.sisService.getSchool().subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				this.schoolInfo = res.data[0];
+			}
+		});
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				const sessionArray = result2.data;
+				const ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
+				sessionArray.forEach(element => {
+					if (element.ses_id === ses_id) {
+						this.currentSession = element;
+					}
+				});
+			}
+		});
+	}
 
   getFeeMonths() {
 		this.feeMonthArray = [];
@@ -365,7 +387,7 @@ export class AccountWiseComponent implements OnInit {
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			columnElement.innerHTML = '<b style="float:left">' + this.totalRow[columnId] + '<b>';
 		}
 	}
 	getGroupColumns(columns) {
@@ -1043,7 +1065,7 @@ export class AccountWiseComponent implements OnInit {
 		return paramArr;
 	}
 	getReportHeader() {
-		return 'Birthday Report';
+		return 'Account Wise Ledger';
 	}
 	exportToFile(type) {
 		const reportType = this.getReportHeader();
@@ -1105,7 +1127,7 @@ export class AccountWiseComponent implements OnInit {
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'BirthdayReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'Accountwise_' + (new Date).getTime() + '.xlsx');
 
   }
   print() {
