@@ -164,7 +164,7 @@
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
 
-              <tr>
+              <tr *ngIf="partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">

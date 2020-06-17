@@ -24,6 +24,7 @@ export class TotalFeeReceivableComponent implements OnInit {
   displayedDate: any[] = [];
   session: any;
   responseData: any;
+  
   constructor(
     private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -36,6 +37,7 @@ export class TotalFeeReceivableComponent implements OnInit {
 
   ngOnInit() {
     this.session = JSON.parse(localStorage.getItem('session'));
+    
     //this.getInvoiceDayBook();
   }
   ngOnChanges() {
@@ -44,6 +46,7 @@ export class TotalFeeReceivableComponent implements OnInit {
     this.getInvoiceDayBook();
     
   }
+  
   getInvoiceDayBook(){
     this.ELEMENT_DATA = [];
     this.faService.getInvoiceDayBook({sessionId: this.session.ses_id,monthId: this.param.month}).subscribe((data:any)=>{
@@ -109,6 +112,11 @@ export class TotalFeeReceivableComponent implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  createVoucher(item) {
+    console.log('item', item);
+
   }
 
 }

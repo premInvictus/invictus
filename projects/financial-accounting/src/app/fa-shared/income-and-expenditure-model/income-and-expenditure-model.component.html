@@ -76,12 +76,12 @@
         <div class="col-6" style="padding-left: 0px;">
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
-              <tr *ngIf="param?.invoice_due_data?.length > 0">
+              <tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="80%" class="text-left" colspan="2"><b>Income Due</b></td>
               </tr>
               <ng-container *ngFor="let pitem of param.invoice_due_data; ">
-                <tr>
+                <tr *ngIf="partialPaymentStatus">
                   <td width="20%">-</td>
                   <td width="65%" class="text-left"><b><span
                         *ngIf="pitem?.fh_name">{{pitem?.fh_name | titlecase}}</span><span

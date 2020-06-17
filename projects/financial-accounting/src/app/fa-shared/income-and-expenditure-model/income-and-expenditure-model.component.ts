@@ -34,6 +34,7 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
   @Input() param: any;
   @Input() date: any;
   currentReceiptData: any;
+  partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
     private fb: FormBuilder,
@@ -44,6 +45,7 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+    this.checkPartialPaymentStatus();
   }
   buildForm() {
   }
@@ -53,6 +55,20 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
     this.debitSideTotal = 0;
     this.getTotal(this.param);
 
+  }
+
+
+  checkPartialPaymentStatus() {
+    let param: any = {};
+    param.gs_alias = ['fa_partial_payment'];
+    this.faService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        if (result.data && result.data[0]) {
+          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+        }        
+       
+      }
+    })
   }
 
   checkBlankArray(param) {
@@ -125,7 +141,7 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
 
 
     }
-    this.creditSideTotal = this.creditSideTotal - Number(param['head_total_amt']);
+    this.creditSideTotal = this.creditSideTotal - (this.partialPaymentStatus ?  Number(param['head_total_amt']) : 0);
     this.debitSideTotal = this.debitSideTotal;
 
     console.log('debitSideTotal', this.debitSideTotal);
