@@ -233,6 +233,10 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/updateEmployeeDatainBulk', value);
 	}
+	getEmployeeLedger(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getEmployeeLedger', value);
+	}
 
 	deleteEmployee(value) {
 		this.loader.startLoading();

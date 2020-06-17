@@ -12,7 +12,95 @@
   </div>
   <div class="row">
     <div class="col-12">
-      <app-emp-common-profile [loginId]="lastRecordId"></app-emp-common-profile>
+      <app-emp-common-profile [loginId]="lastRecordId" (next)="getEmployeeLedger($event)"
+        (prev)="getEmployeeLedger($event)" (first)="getEmployeeLedger($event)" (last)="getEmployeeLedger($event)">
+      </app-emp-common-profile>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-top-title__container ">
+        <div class="row">
+          <div class="col-12">
+            <div>
+              <div class="table-overflow">
+                <table id="fee_ledger" #table mat-table [dataSource]="ledgerDataSource" class="text-center table-100">
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox></mat-checkbox>
+                    </th>
+                    <td mat-cell *matCellDef="let item">
+                      <mat-checkbox [value]="item.srno"></mat-checkbox>
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="particulars">
+                    <th mat-header-cell *matHeaderCellDef> Particulars </th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.particulars}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="month">
+                    <th mat-header-cell *matHeaderCellDef> Month</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.mon}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="attendance">
+                    <th mat-header-cell *matHeaderCellDef> Attendance</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.attendance}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="netearnings">
+                    <th mat-header-cell *matHeaderCellDef> Net Earnings (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.netearnings}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="deductions">
+                    <th mat-header-cell *matHeaderCellDef> Deductions (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.deductions}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="advances">
+                    <th mat-header-cell *matHeaderCellDef> Advances (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.advance}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="salarypayable">
+                    <th mat-header-cell *matHeaderCellDef> Salary Payable (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.salarypayable}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="salarypaid">
+                    <th mat-header-cell *matHeaderCellDef> Salary Paid (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.salarypaid}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="balance">
+                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.balance}}
+                    </td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="ledgerDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ledgerDisplayedColumns;"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
     </div>
   </div>
 </div>
