@@ -6,6 +6,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import { SisService, CommonAPIService, FaService } from '../../_services/index';
 import {Element} from './model';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
+import { CapitalizePipe, IndianCurrency } from '../../_pipes';
 
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
@@ -199,7 +200,7 @@ export class AccountWiseComponent implements OnInit {
 					aggregateCollapsed: true,
 					collapsed: false,
 				} },
-			{ id: 'vc_amount', name: 'Amount', field: 'vc_amount', sortable: true, filterable: true,
+			{ id: 'vc_amount', name: 'Amount', field: 'vc_amount', sortable: true, filterable: true,formatter: this.checkFeeFormatter,
 			groupTotalsFormatter: this.sumTotalsFormatter },
 			
 			
@@ -355,7 +356,7 @@ export class AccountWiseComponent implements OnInit {
 			if (element.id === 'vc_date') {
 				blankTempObj[element.id] = 'Grand Total';
 			} else if (element.id === 'vc_amount') {
-				blankTempObj[element.id] = this.dataset.reduce((a,b) => a+=b.vc_amount,0)
+				blankTempObj[element.id] = new IndianCurrency().transform(this.dataset.reduce((a,b) => a+=b.vc_amount,0))
 			} else {
 				blankTempObj[element.id] = '';
 			}
@@ -652,10 +653,10 @@ export class AccountWiseComponent implements OnInit {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'vc_date') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'vc_amount') {
+							levelArray.push( groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0));
 						} else {
 							levelArray.push('');
 						}
@@ -681,10 +682,10 @@ export class AccountWiseComponent implements OnInit {
 					});
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'vc_date') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'vc_amount') {
+							levelArray.push(groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0));
 						} else {
 							levelArray.push('');
 						}
@@ -734,10 +735,11 @@ export class AccountWiseComponent implements OnInit {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'vc_date') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
-							blankTempObj[element.id] = groupItem.rows.length;
+						} else if (element.id === 'vc_amount') {
+							//blankTempObj[element.id] = groupItem.rows.length;
+							blankTempObj[element.id] = groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0);
 						} else {
 							blankTempObj[element.id] = '';
 						}
@@ -795,10 +797,11 @@ export class AccountWiseComponent implements OnInit {
 					});
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'vc_date') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
-							blankTempObj[element.id] = groupItem.rows.length;
+						} else if (element.id === 'vc_amount') {
+							//blankTempObj[element.id] = groupItem.rows.length;
+							blankTempObj[element.id] = groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0);
 						} else {
 							blankTempObj[element.id] = '';
 						}
@@ -1139,6 +1142,18 @@ export class AccountWiseComponent implements OnInit {
 			'<body onload="window.print()"> <div class="headingDiv"><center><h2>Birthday Student Report</h2></center></div>' +
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
+	}
+	checkFeeFormatter(row, cell, value, columnDef, dataContext) {
+		if (value === 0) {
+			return '-';
+		} else {
+			if (value > 0) {
+				return new IndianCurrency().transform(value);
+			} else {
+				return '-' + new IndianCurrency().transform(-value);
+			}
+
+		}
 	}
 
 }
