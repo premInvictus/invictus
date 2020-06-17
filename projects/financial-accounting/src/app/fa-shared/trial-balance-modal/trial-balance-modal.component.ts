@@ -34,6 +34,7 @@ export class TrialBalanceModalComponent implements OnInit {
   @Input() param: any;
   @Input() date: any;
   currentReceiptData: any;
+  partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
     private fb: FormBuilder,
@@ -44,6 +45,7 @@ export class TrialBalanceModalComponent implements OnInit {
 
   ngOnInit() {
     this.buildForm();
+    this.checkPartialPaymentStatus();
   }
   buildForm() {
   }
@@ -51,13 +53,29 @@ export class TrialBalanceModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
-    this.getTotal(this.param);
+    
+    
+  }
+
+
+  checkPartialPaymentStatus() {
+    let param1: any = {};
+    param1.gs_alias = ['fa_partial_payment'];
+    this.faService.getGlobalSetting(param1).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        if (result.data && result.data[0]) {
+          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+          this.getTotal(this.param);
+        }        
+       
+      }
+    })
   }
 
   checkBlankArray(param) {
     this.blankArr = [];
-    this.debitRow = param['total_receipt_amt'] > 0 ? 1 : 0;
-    this.creditRow = param['invoice_due_data'] && param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length+1 : 0;
+    this.debitRow = this.partialPaymentStatus ? (param['total_receipt_amt'] > 0 ? 1 : 0) : 0;
+    this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'] && param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length+1 : 0) : 0;
     this.debitRow = this.debitRow + this.debitSideBlankArr.length;
     this.creditRow = this.creditRow + this.creditSideBlankArr.length;
     if (this.debitRow > this.creditRow) {
@@ -124,8 +142,8 @@ export class TrialBalanceModalComponent implements OnInit {
       }
 
       if(i=== param['ledger_data'].length-1) {
-        this.creditSideTotal = this.creditSideTotal + Number(param['head_total_amt']);
-        this.debitSideTotal = this.debitSideTotal + (Number(param['head_total_amt']) - Number(param['total_receipt_amt']));
+        this.creditSideTotal = this.creditSideTotal + (this.partialPaymentStatus  ? Number(param['head_total_amt']) : 0);
+        this.debitSideTotal = this.debitSideTotal + ( this.partialPaymentStatus ? (Number(param['head_total_amt']) - Number(param['total_receipt_amt'])) : 0 );
         if (this.creditSideTotal    < 0) {
           this.creditSideTotal = -this.creditSideTotal;
         }

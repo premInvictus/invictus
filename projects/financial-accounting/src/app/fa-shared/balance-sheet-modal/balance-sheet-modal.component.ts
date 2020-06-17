@@ -40,6 +40,7 @@ export class BalanceSheetModalComponent implements OnInit {
   @Input() incomeExpenditureArray: any;
   @Input() date: any;
   currentReceiptData: any;
+  partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
     private fb: FormBuilder,
@@ -60,10 +61,24 @@ export class BalanceSheetModalComponent implements OnInit {
     this.totalDebitRowLength = 0;
     this.totalCreditRowLength = 0;
     //this.getGroupArray();
+    this.checkPartialPaymentStatus();
     this.recursiveDebitArraylength(this.param.liabilities_group_data);
     this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
     this.getTotal();
+  }
+
+  checkPartialPaymentStatus() {
+    let param: any = {};
+    param.gs_alias = ['fa_partial_payment'];
+    this.faService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        if (result.data && result.data[0]) {
+          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+        }        
+       
+      }
+    })
   }
 
 
@@ -72,7 +87,7 @@ export class BalanceSheetModalComponent implements OnInit {
     this.debitRow = 0;
     this.creditRow = 0;
     this.debitRow = this.totalDebitRowLength;
-    this.creditRow = this.totalCreditRowLength;
+    this.creditRow = this.partialPaymentStatus ? this.totalCreditRowLength : this.totalCreditRowLength+1;
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i <  (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
@@ -162,7 +177,7 @@ recursiveCreditArraylength(arr){
 
 
     }
-    creditSideTotal = creditSideTotal - Number(this.incomeExpenditureArray['head_total_amt']);
+    creditSideTotal = creditSideTotal - (this.partialPaymentStatus ? Number(this.incomeExpenditureArray['head_total_amt']) : 0 );
     debitSideTotal = debitSideTotal;
     console.log(debitSideTotal, creditSideTotal)
     this.incomeExpenditureDeviation =  debitSideTotal - creditSideTotal;

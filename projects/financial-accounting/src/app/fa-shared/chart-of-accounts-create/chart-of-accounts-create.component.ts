@@ -27,6 +27,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
   currentVcType = "Journel Entry";
   maxVCNumber = '';
   tempAccountGroup: any[] = [];
+  feeHeadArr:any[] = [];
   constructor(
     public dialogRef: MatDialogRef<ChartOfAccountsCreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -41,6 +42,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 	this.buildForm();
 	this.getAccountMaster();
 	this.getVoucherTypeMaxId();
+	this.checkFeeHead();
   }
 
   getVoucherTypeMaxId() {
@@ -89,7 +91,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		}
   }
   async getDependancy(){
-	this.dependancyeArr = [];
+	
 	this.dependancyeArr.push(
 		{id:'ca-1', name: 'Cash'},
 		{id:'ca-2', name: 'Salary A/C'},
@@ -124,7 +126,26 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		}
 	})
 	
+	
 
+  }
+  checkFeeHead() {
+	this.dependancyeArr = [];
+	this.faService.getFeeHead({}).subscribe((result: any) => {
+		if(result) {
+			console.log('result-', result);
+			this.feeHeadArr = result.data;
+			for (const item of result.data) {
+				
+					this.dependancyeArr.push(
+						{id:'fh-'+item.fh_id, name: item.fh_name}
+					);
+					this.dependancyeArr.push({id:'fh-0', name:'Transport'});
+				
+			}
+		}
+	});
+	console.log('this.depeb', this.dependancyeArr);
   }
   setDependancyValue(){
 	if(this.accountform.value.coa_dependency_local){
@@ -154,7 +175,13 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 				tempjson.dependenecy_component = 'cash';
 				tempjson.dependency_name = temp.name;
 				return [tempjson];
-			}
+			} else if(temparr[0] == 'fh'){
+				tempjson.dependancy_id = temparr[1];
+				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
+				tempjson.dependenecy_component = 'fee_head';
+				tempjson.dependency_name = temp.name;
+				return [tempjson];
+			} 
 		}
 	}
   }

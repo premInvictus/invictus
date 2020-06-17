@@ -22,7 +22,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   debit_total_f =0;
   deviation_f =0;
   @Input() param: any;
-
+  partialPaymentStatus = 1;
   constructor(
     public dialogRef: MatDialogRef<LedgerEntryModelComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -39,6 +39,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     this.showtitle = true;
   }
   this.getLedger();
+  this.checkPartialPaymentStatus();
   }
   buildForm() {
   }
@@ -64,6 +65,20 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
       // }
     // });
     
+  }
+
+  
+  checkPartialPaymentStatus() {
+    let param: any = {};
+    param.gs_alias = ['fa_partial_payment'];
+    this.faService.getGlobalSetting(param).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        if (result.data && result.data[0]) {
+          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+        }        
+       
+      }
+    })
   }
 
   checkBlankArray(item) {
