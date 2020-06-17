@@ -50,23 +50,26 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
   buildForm() {
   }
   ngOnChanges() {
+    this.checkPartialPaymentStatus();
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
-    this.getTotal(this.param);
+
 
   }
 
 
   checkPartialPaymentStatus() {
-    let param: any = {};
-    param.gs_alias = ['fa_partial_payment'];
-    this.faService.getGlobalSetting(param).subscribe((result: any) => {
+    let param1: any = {};
+    param1.gs_alias = ['fa_partial_payment'];
+    this.faService.getGlobalSetting(param1).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         if (result.data && result.data[0]) {
           this.partialPaymentStatus = Number(result.data[0]['gs_value']);
-        }        
-       
+          console.log('this.partialPaymentStatus--', this.partialPaymentStatus);
+          this.getTotal(this.param);
+        }
+
       }
     })
   }
@@ -74,10 +77,11 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
   checkBlankArray(param) {
     this.blankArr = [];
     this.debitRow = 0;
-    this.creditRow = param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0;
+    console.log(this.partialPaymentStatus);
+    this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0) : 0;
     // if (this.debitSideTotal != this.creditSideTotal) {
-      this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length - 1 : this.debitRow + this.debitSideBlankArr.length;
-      this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length -1 : this.creditRow + this.creditSideBlankArr.length;
+    this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length - 1 : this.debitRow + this.debitSideBlankArr.length;
+    // this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length -1 : this.creditRow + this.creditSideBlankArr.length;
     // }
 
     if (this.debitRow > this.creditRow) {
@@ -141,7 +145,7 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
 
 
     }
-    this.creditSideTotal = this.creditSideTotal - (this.partialPaymentStatus ?  Number(param['head_total_amt']) : 0);
+    this.creditSideTotal = this.creditSideTotal - (this.partialPaymentStatus ? Number(param['head_total_amt']) : 0);
     this.debitSideTotal = this.debitSideTotal;
 
     console.log('debitSideTotal', this.debitSideTotal);

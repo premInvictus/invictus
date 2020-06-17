@@ -61,6 +61,7 @@ export class BalanceSheetModalComponent implements OnInit {
     this.totalDebitRowLength = 0;
     this.totalCreditRowLength = 0;
     //this.getGroupArray();
+    this.checkPartialPaymentStatus();
     this.recursiveDebitArraylength(this.param.liabilities_group_data);
     this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
