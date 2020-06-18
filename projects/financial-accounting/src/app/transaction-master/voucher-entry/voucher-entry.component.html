@@ -92,7 +92,7 @@
                 <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account" aria-label="State"
                         [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)" required>
                 <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name" (onSelectionChange)="setaccount(aitem,i)">
+                  <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name" (onSelectionChange)="setaccount(aitem,i);getSattleJV(aitem)">
                     {{aitem.coa_acc_name | titlecase}}
                   </mat-option>
                 </mat-autocomplete>
