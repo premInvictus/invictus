@@ -119,6 +119,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				console.log(res.data);
 				let srno = 1;
 				for (const item of res.data) {
+					let pay_name = '';
 					const obj: any = {};
 					obj['srno'] = srno;
 					obj['particulars'] = item.month + ' Pay';
@@ -145,7 +146,9 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 						item.details.balance : 0;
 					for (const pay of this.paymentModeArray) {
 						obj[pay.pm_id] = this.getPaymentDataFromMode(item, pay.pm_id);
+						pay_name = pay_name + this.getPaymentDataFromName(item, pay.pm_id) ;
 					}
+					obj['pay_mode'] = pay_name;
 					obj['remarks'] = '-';
 					obj['action'] = item;
 					this.EMPLOYEE_LEDGER_ELEMENT.push(obj);
@@ -182,13 +185,30 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 			return 0;
 		}
 	}
+	getPaymentDataFromName(item, pm_id) {
+		if (item && item.details && item.details.emp_modes_data
+			&& item.details.emp_modes_data.mode_data
+			&& item.details.emp_modes_data.mode_data.length > 0) {
+			const index = item.details.emp_modes_data.mode_data.findIndex(f => f.pm_id === pm_id);
+			if (index !== -1) {
+				if (item.details.emp_modes_data.mode_data[index].pm_value) {
+				return item.details.emp_modes_data.mode_data[index].pm_name ?
+					item.details.emp_modes_data.mode_data[index].pm_name  + ',': '';
+				} else {
+					return '';
+				}
+			}
+		} else {
+			return '';
+		}
+	}
 	openSalarySlip(item, emp_id) {
 		const dialogRef : any = this.dialog.open(SalarySlipModalComponent, {
 			data : {
 				values : item,
 				emp_id : emp_id
 			},
-			height: '70vh',
+			height: '60vh',
 			width : '70vh'
 		})
 	}

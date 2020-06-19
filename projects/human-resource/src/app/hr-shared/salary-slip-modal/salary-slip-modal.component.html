@@ -11,41 +11,258 @@
 </div>
 <br>
 <br>
-<table width="100%" border="0" style="border-collapse: collapse" cellspacing="0" cellpadding="0">
+<table width="100%" border="0" style="border-collapse: collapse" cellspacing="0" cellpadding="5">
   <tbody>
     <tr>
-      <td width="25%"></td>
-      <td align="center" [innerHTML]="header"></td>
-      <td width="25%"></td>
-    </tr>
-  </tbody>
-</table>
-<table width="100%" border="2" style="border-collapse: inherit" cellspacing="0" cellpadding="5">
-  <tbody>
-    <tr>
-      <td width="50%">
+      <td width="50%" style="vertical-align:top">
         <table width="100%">
           <tbody>
             <tr>
-              <td class="cus-td"><b>Emp Id :</b>{{data.emp_id}}</td>
+              <td class="cus-td"><b>Emp Id </b></td>
+              <td class="cus-td" align="right">
+                {{values.action.details.emp_id}}
+              </td>
             </tr>
             <tr>
-              <td class="cus-td"><b>Emp Name :</b>{{employeeDetails.emp_name}}</td>
+              <td class="cus-td"><b>Emp Name </b>
+              </td>
+              <td class="cus-td" align="right">{{values.action.details.emp_name}}</td>
             </tr>
             <tr>
-              <td class="cus-td"><b>Designation :</b>
+              <td class="cus-td"><b>Designation </b>
+              </td>
+              <td class="cus-td" align="right">
                 {{employeeDetails.emp_designation_detail && 
                   employeeDetails.emp_designation_detail.des_name ? 
                   (employeeDetails.emp_designation_detail.des_name  | titlecase): '-'}}</td>
             </tr>
             <tr>
-              <td class="cus-td"><b>F/H/W Name :</b>-</td>
+              <td class="cus-td"><b>F/H/W Name </b>
+              </td>
+              <td class="cus-td" align="right">-</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Address </b>
+              </td>
+              <td class="cus-td" align="right">
+                {{employeeDetails.emp_personal_detail && 
+                  employeeDetails.emp_personal_detail.addresss_detail &&
+                  employeeDetails.emp_personal_detail.addresss_detail.address? 
+                  (employeeDetails.emp_personal_detail.addresss_detail.address): '-'}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Mobile </b>
+              </td>
+              <td class="cus-td" align="right">
+                {{employeeDetails.emp_personal_detail && 
+                  employeeDetails.emp_personal_detail.contact_detail
+                  && employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no ? 
+                  (employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no): '-'}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Email </b>
+              </td>
+              <td class="cus-td" align="right">
+                {{employeeDetails.emp_personal_detail && 
+                  employeeDetails.emp_personal_detail.contact_detail
+                  && employeeDetails.emp_personal_detail.contact_detail.email_id ? 
+                  (employeeDetails.emp_personal_detail.contact_detail.email_id): '-'}}</td>
             </tr>
           </tbody>
         </table>
       </td>
-      <td width="50%">
+      <td width="50%" style="vertical-align:top">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td"><b> Month </b>
+              </td>
+              <td class="cus-td" align="right">{{values.mon}}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> Pay date </b>
+              </td>
+              <td class="cus-td" align="right">{{values.action.details.emp_salary_compute_date ?
+                (values.action.details.emp_salary_compute_date | date: 'd-MMM-y') : '-' }}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> Pay Mode </b>
+              </td>
+              <td class="cus-td" align="right">{{
+                values.pay_mode ?  values.pay_mode :''
+              }}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> Bank Name </b>
+              </td>
+              <td class="cus-td" align="right">{{
+                employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0] && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name  ?
+                (employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name)  : '-'
+              }}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> Account No :</b>
+              </td>
+              <td class="cus-td" align="right">{{
+                employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0] && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no  ?
+                (employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no)  : '-'
+              }}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> Basic Pay :</b>
+              </td>
+              <td class="cus-td" align="right">{{
+                employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_salary_structure &&
+              employeeDetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale 
+              ? (employeeDetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale |number)  : '-'  
+              }}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b> UAN/PF NO :</b>
+              </td>
+              <td class="cus-td" align="right">
+                {{employeeDetails.emp_salary_detail && employeeDetails.emp_salary_detail.account_docment_detail ? employeeDetails.emp_salary_detail.account_docment_detail.pan_no : '-'}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </td>
     </tr>
   </tbody>
 </table>
+<table width="100%" border="0" style="border-collapse: collapse" cellspacing="0" cellpadding="5">
+  <tbody>
+    <tr>
+      <td width="50%" style="vertical-align:top">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td"><b>Earnings</b></td>
+              <td class="cus-td" align="right"><b>Amount</b></td>
+            </tr>
+            <tr>
+            <tr *ngFor="let bas of values.action.details.empShacolumns">
+              <td class="cus-td"><b>{{bas.header ? bas.header : 'Basic Pay'}}</b>
+              </td>
+              <td class="cus-td" align="right">
+                {{bas.value ? (bas.value | number) : '-'}}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Gross Salary</b></td>
+              <td class="cus-td" align="right">
+                {{getGrossSalary(values.action.details.empShacolumns) | number}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td width="50%" style="vertical-align:top">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td"><b>Deductions</b></td>
+              <td class="cus-td" align="right"><b>Amount</b></td>
+            </tr>
+            <tr *ngFor="let bas of values.action.details.empShdcolumns">
+              <td class="cus-td"><b>{{bas.header}}</b>
+              </td>
+              <td class="cus-td" align="right">
+                {{bas.value ? (bas.value | number) : '-'}}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td">
+                <b>Total Deductions</b>
+              </td>
+              <td class="cus-td" align="right">
+                <b>{{getTotalDeductions(values.action.details.empShdcolumns)| number |zerodash}}</b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table width="100%" border="0" style="border-collapse: collapse" cellspacing="0" cellpadding="5">
+  <tbody>
+    <tr>
+      <td width="50%" style="vertical-align:top">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td"><b>Gross Salary</b></td>
+              <td class="cus-td" align="right">{{getGrossSalary(values.action.details.empShacolumns) | number}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Total Deductions</b></td>
+              <td class="cus-td" align="right">{{getTotalDeductions(values.action.details.empShdcolumns)| number
+                |zerodash}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Net Salary (Payable Amount)</b></td>
+              <td class="cus-td" align="right">
+                <b>
+                  {{((getGrossSalary(values.action.details.empShacolumns)) - 
+                  (getTotalDeductions(values.action.details.empShdcolumns))| number)}}
+                </b>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td width="50%" style="vertical-align:top">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td">
+                <b>Periods Served</b>
+              </td>
+              <td class="cus-td" align="right">
+                -
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td">
+                <b> Leaves Availed </b>
+              </td>
+              <td class="cus-td" align="right">
+                {{values.action.leaves &&
+                  values.action.leaves.emp_leave_availed ? values.action.leaves.emp_leave_availed : '-'}}
+              </td>
+            </tr>
+            <tr>
+              <td class="cus-td">
+                <b> Salary Processed </b>
+              </td>
+              <td class="cus-td" align="right">
+                -
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br>
+<div class="text-center">
+  <button mat-raised-button class="btn-spacer btn-danger" (click)="downloadSlip()"
+    style="background-color:#277d9d !important">
+    Print Slip
+  </button>
+</div>
