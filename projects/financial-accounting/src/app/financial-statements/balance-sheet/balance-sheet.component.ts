@@ -202,64 +202,59 @@ export class BalanceSheetComponent implements OnInit {
     var tempAssetsGrouparr = [];
     
     for (var i = 0; i < data.ledger_data.length; i++) {      
+    
+
       if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['liabilities']) {
-          if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
-            
-            if ( (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) )) {
+        if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
+          
+          if ( (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
 
-            data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
+          data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
 
-            if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
-            } else {
-              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];
-            }
-            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
-            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
-            } else {
-              if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
-                if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
-                } else {
-                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];
-                }
-                
-                tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
-              } else {
-                if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);}
-              }
-
-
-            }
-            
+          if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+            data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+          } else {
+            data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];
+          }
+          tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+          tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
           } else {
             if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
-              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
               } else {
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];
               }
               
               tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+            } else {
+              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
             }
+
+
           }
-         
           
-
-        // } else {
-
-        //   if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
-        //     console.log('in--');
-        //     if ( (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) > 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
-        //     data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);}
-        //   } else {
-        //     data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
-        //   }
-        // }
-        
-
-       // console.log(" data['liabilities_group_data']",  tempLiabilitiesGroupArr);
+        } else {
+         // console.log(data.ledger_data[i]['coa_acc_group']['group_name'], data.ledger_data[i]['coa_acc_name']);
+          
+          if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
+            if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+            }
+            
+           tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+          } else {
+            
+            if(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].length > 0) {
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push([data.ledger_data[i]]);
+            } else {
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]= [data.ledger_data[i]];
+            }
+            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+            
+          }
+        }
       }
       
       if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['assets']) {
@@ -329,7 +324,7 @@ export class BalanceSheetComponent implements OnInit {
       
 
       //console.log(" data['liabilities_group_data']", tempLiabilitiesGroupArr, tempAssetsGrouparr);
-    }
+      }
 
       if(i===data.ledger_data.length -1 ) {
         var assetsArr = [];
