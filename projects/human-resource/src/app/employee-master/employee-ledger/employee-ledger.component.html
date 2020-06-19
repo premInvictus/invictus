@@ -46,7 +46,7 @@
                   <ng-container matColumnDef="month">
                     <th mat-header-cell *matHeaderCellDef> Month</th>
                     <td mat-cell *matCellDef="let item">
-                      <span class="mon-span" (click)="openSalarySlip(item, lastRecordId)">{{item.mon}} </span>
+                      <span class="mon-span" (click)="openSalarySlip(item, item.action.details.emp_id)">{{item.mon}} </span>
                     </td>
                     <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
