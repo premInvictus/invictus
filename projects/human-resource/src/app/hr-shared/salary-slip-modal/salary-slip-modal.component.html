@@ -1,0 +1,51 @@
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">Employee Salary Slip</span><span
+          class="float-right margin-top-5"><i (click)="closeDialog()"
+            class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<br>
+<table width="100%" border="0" style="border-collapse: collapse" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td width="25%"></td>
+      <td align="center" [innerHTML]="header"></td>
+      <td width="25%"></td>
+    </tr>
+  </tbody>
+</table>
+<table width="100%" border="2" style="border-collapse: inherit" cellspacing="0" cellpadding="5">
+  <tbody>
+    <tr>
+      <td width="50%">
+        <table width="100%">
+          <tbody>
+            <tr>
+              <td class="cus-td"><b>Emp Id :</b>{{data.emp_id}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Emp Name :</b>{{employeeDetails.emp_name}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>Designation :</b>
+                {{employeeDetails.emp_designation_detail && 
+                  employeeDetails.emp_designation_detail.des_name ? 
+                  (employeeDetails.emp_designation_detail.des_name  | titlecase): '-'}}</td>
+            </tr>
+            <tr>
+              <td class="cus-td"><b>F/H/W Name :</b>-</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      <td width="50%">
+      </td>
+    </tr>
+  </tbody>
+</table>
