@@ -1,3 +1,91 @@
-<p>
-  voucher-ref-modal works!
-</p>
+<div class="modal-custom-cotainer">
+  <div class="row remove-top-margin">
+    <div class="col-12 remove-col-padding">
+      <div class="modal-title-box">
+        <span class="font-size-20 font-white font-regular">{{
+          data.title | titlecase
+        }}</span
+        ><span class="float-right margin-top-5"
+          ><i
+            (click)="closeDialog()"
+            class="far fa-times-circle font-white cursor-pointer font-size-24"
+          ></i
+        ></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <mat-tab-group (selectedIndexChange)="setIndex($event)" [selectedIndex]="currentTabIndex">
+        <mat-tab label="GR No">
+          <ng-template matTabContent>
+            The First Content
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Invoice No">
+          <ng-template matTabContent>
+            The Second Content
+          </ng-template>
+        </mat-tab>
+        <mat-tab label="Ref">
+          <ng-template matTabContent>
+            <div class="row remove-top-margin">
+              <div class="col-12">
+                <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="ELEMENT_DATA.length > 0">
+  
+                  <!-- Checkbox Column -->
+                  <ng-container matColumnDef="select">
+                    <th mat-header-cell *matHeaderCellDef>
+                      <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                      </mat-checkbox>
+                      <!-- Select -->
+                    </th>
+                    <td mat-cell *matCellDef="let row">
+                      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                      </mat-checkbox>
+                    </td>
+                  </ng-container>
+  
+                  <!-- Position Column -->
+                  <ng-container matColumnDef="vc_code">
+                    <th mat-header-cell *matHeaderCellDef> Voucher Code </th>
+                    <td mat-cell *matCellDef="let element"> {{element.vc_code}} </td>
+                  </ng-container>
+  
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="vc_amount">
+                    <th mat-header-cell *matHeaderCellDef> Amount </th>
+                    <td mat-cell *matCellDef="let element" class="text-left"> {{element.vc_amount | indianCurrency}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="vc_date">
+                    <th mat-header-cell *matHeaderCellDef>Voucher Date </th>
+                    <td mat-cell *matCellDef="let element"> {{element.vc_date | date: 'd-MMM-yyyy'}} </td>
+                  </ng-container>
+  
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                  </tr>
+                </table>
+                <table *ngIf="ELEMENT_DATA.length == 0" class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+                  <tr >
+                    <td class="text-center">No Record Found</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+            <div class="row margin-top-25" *ngIf="ELEMENT_DATA.length > 0">
+              <div class="col-12 text-center">
+                <button mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); refsubmit();">Submitt</button>
+
+              </div>
+            </div>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</div>

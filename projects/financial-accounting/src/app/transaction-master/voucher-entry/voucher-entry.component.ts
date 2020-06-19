@@ -15,6 +15,7 @@ import * as moment from 'moment';
 	styleUrls: ['./voucher-entry.component.scss']
 })
 export class VoucherEntryComponent implements OnInit {
+	refData:any
 	paramForm: FormGroup;
 	voucherForm: FormGroup;
 	voucherEntryArray:any[]=[];
@@ -519,22 +520,37 @@ export class VoucherEntryComponent implements OnInit {
 			return fileurl;
 		}
 	}
-	getSattleJV(value){
-		if(this.currentVcType == 'Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'){
-			console.log(value);
-			const inputJson:any = {};
-			inputJson.vc_type = 'Journal Entry';
-			inputJson.vc_sattle_status = 1;
-			inputJson.vc_state = 'publish';
-			inputJson.coa_id = value.coa_id;
-			const dialogRef3 = this.dialog.open(VoucherRefModalComponent, {
-				data: {
-					title:'Add Ref',
-					param:inputJson
-				},
-				height: '70vh',
-				width: '70vh'
-			});
+	getSattleJV(i){
+		if(this.voucherFormGroupArray[i].value.vc_account_type_id) {
+			if(this.currentVcType == 'Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'){
+				console.log('index',i);
+				const inputJson:any = {};
+				inputJson.vc_type = 'Journal Entry';
+				inputJson.vc_sattle_status = 1;
+				inputJson.vc_state = 'publish';
+				inputJson.coa_id = this.voucherFormGroupArray[i].value.vc_account_type_id;
+				const dialogRef3 = this.dialog.open(VoucherRefModalComponent, {
+					data: {
+						title:'Add Ref',
+						param:inputJson,
+						refData: this.refData
+					},
+					height: '70vh',
+					width: '70vh'
+				});
+				dialogRef3.afterClosed().subscribe((result: any) => {
+					if (result) {
+					 console.log(result);
+					 if(result){
+						this.voucherFormGroupArray[i].patchValue({
+							vc_invoiceno : result.selection,
+							vc_grno:result.currentTabIndex
+						})
+					 }
+					 this.refData = result
+					}
+				});
+			}
 		}
 		
 	}

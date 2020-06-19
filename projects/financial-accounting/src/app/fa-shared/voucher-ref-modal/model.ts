@@ -1,9 +1,6 @@
 export interface Element {
-  srno: any;
-  account: any;
-  particular: any;
-  account_code: any;
-  invoiceno: any;
-  debit: any;
-  credit: any;
+  vc_code:any,
+  vc_date:any,
+  vc_amount:any,
+  vc_amount_type:any
 }
