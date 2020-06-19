@@ -36,8 +36,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   currentVcType = 'Journel Entry';
   sessionArray: any[] = [];
   sessionName: any;
-  voucherDate:any;
-  currentVoucherData:any;
+  voucherDate: any;
+  currentVoucherData: any;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -115,9 +115,10 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           dateArray.forEach(e => {
             const tempelement: any = {};
             tempelement['date'] = e.date;
-            tempelement['vc_id'] = e.vc_id ;
-            tempelement['vc_state'] = e.vc_state ;
+            tempelement['vc_id'] = e.vc_id;
+            tempelement['vc_state'] = e.vc_state;
             tempelement['voucherExists'] = e.voucherExists;
+            tempelement['vc_records'] = e.vc_data;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -149,13 +150,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   getColumnTotal(item) {
     let total = 0;
     Object.keys(item).forEach(key => {
-      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists') {
+      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'vc_records') {
         let v = item[key] || 0;
-        
+
         total += v;
       }
     });
-    
+
     return total;
   }
   getTotal(id) {
@@ -168,17 +169,17 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
   getSession() {
     this.faService.getSession().subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            for (const citem of result.data) {
-              this.sessionArray[citem.ses_id] = citem.ses_name;
-            }
-            if (this.session) {
-              this.sessionName = this.sessionArray[this.session.ses_id];
-            }
-
+      (result: any) => {
+        if (result && result.status === 'ok') {
+          for (const citem of result.data) {
+            this.sessionArray[citem.ses_id] = citem.ses_name;
           }
-        });
+          if (this.session) {
+            this.sessionName = this.sessionArray[this.session.ses_id];
+          }
+
+        }
+      });
   }
 
   getChartsOfAccount() {
@@ -193,41 +194,140 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     });
   }
 
-  createVoucher(item) {
+  createVoucher(item, action) {
     console.log('item--', item);
     this.currentVoucherData = item;
     console.log('this.currentvoucherData', this.currentVoucherData)
     for (var i = 0; i < this.apiInvoiceData.length; i++) {
       if (this.apiInvoiceData[i]['date'] === item.date) {
         this.voucherDate = item.date;
-        this.checkForHeadData(this.apiInvoiceData[i]['value']);
+        this.checkForHeadData(this.apiInvoiceData[i]['value'], action);
         break;
       }
     }
   }
 
-  checkForHeadData(invoiceHeadArr) {
+  checkForHeadData(invoiceHeadArr, action) {
+    //invoiceHeadArr[0]['total_amt']=5500;
+    // invoiceHeadArr[6]['total_amt']=3500;
     console.log(this.chartsOfAccount, invoiceHeadArr);
     var voucherEntryArray = [];
+    var feeReceivableAmt = 0;
     for (var i = 0; i < invoiceHeadArr.length; i++) {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
         if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === invoiceHeadArr[i]['fh_name']) {
-          let vFormJson = {};
-          vFormJson = {
-            vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
-            vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
-            vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
-            vc_grno: '',
-            vc_invoiceno: '',
-            vc_debit: invoiceHeadArr[i]['head_amt'] + invoiceHeadArr[i]['fine_amt'] - invoiceHeadArr[i]['concession_at'] - invoiceHeadArr[i]['adjustment_amt'],
-            vc_credit: 0
-          };
-          voucherEntryArray.push(vFormJson);
+          if (action != 'update') {
+            let vFormJson = {};
+            vFormJson = {
+              vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+              vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_grno: '',
+              vc_invoiceno: '',
+              vc_debit: invoiceHeadArr[i]['total_amt'],
+              vc_credit: 0
+            };
+            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+            voucherEntryArray.push(vFormJson);
+          } else {
+            var mathchedFlag = 0;
+            var deviation = 0;
+            var accountDebitSum = 0;
+            var accountCreditSum = 0;
+            var totalPrevHeadAmt = 0;
+            for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
+              for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
+                
+                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
+                  mathchedFlag = 1;
+                  
+                  accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                  accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                }
+              }
+            }
+            console.log(mathchedFlag, 'matchedFlag')
+            if(!mathchedFlag) {
+              let vFormJson = {};
+              vFormJson = {
+                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_grno: '',
+                vc_invoiceno: '',
+                vc_debit:  invoiceHeadArr[i]['total_amt'],
+                vc_credit: 0
+              };
+              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+              voucherEntryArray.push(vFormJson);
+            } else {
+              totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+              deviation = invoiceHeadArr[i]['total_amt'] - totalPrevHeadAmt;
+              feeReceivableAmt = feeReceivableAmt + deviation;
+              if (deviation < 0 ) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit:  0,
+                  vc_credit: -deviation
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+              if (deviation > 0 ) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit:  deviation,
+                  vc_credit: 0
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+            }
+          }
         }
       }
     }
-    if (voucherEntryArray.length > 0) {
+    if (voucherEntryArray.length > 0  && action != 'update') {
+      let vFormJson = {
+        vc_account_type: 'Fee Receivable',
+        vc_account_type_id: 0,
+        vc_particulars: 'Fee Receivable',
+        vc_grno: '',
+        vc_invoiceno: '',
+        vc_debit: 0,
+        vc_credit: feeReceivableAmt
+      };
+      voucherEntryArray.push(vFormJson);
       this.getVoucherTypeMaxId(voucherEntryArray);
+    }
+    if (voucherEntryArray.length > 0  && action == 'update') {
+      
+      let vFormJson = {
+        vc_account_type: 'Fee Receivable',
+        vc_account_type_id: 0,
+        vc_particulars: 'Fee Receivable',
+        vc_grno: '',
+        vc_invoiceno: '',
+        vc_debit: 0,
+        vc_credit: feeReceivableAmt
+      };
+      voucherEntryArray.push(vFormJson);
+      this.getVoucherTypeMaxId(voucherEntryArray);
+    }
+
+    if (voucherEntryArray.length  === 0) {
+      this.commonAPIService.showSuccessErrorMessage('There is no information to update / create', 'error');
     }
 
 
@@ -285,7 +385,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
     if (this.vcData) {
       var fJson = {
-        vc_id:  this.currentVoucherData &&  this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
+        vc_id: null,
         vc_type: 'Journel Entry',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
@@ -293,7 +393,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
         vc_state: 'draft',
-        vc_process:'automatic/invoice'
+        vc_process: 'automatic/invoice'
       }
 
 
@@ -302,30 +402,33 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           if (data) {
             this.getInvoiceDayBook();
             this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
-  
-  
+
+
           } else {
             this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
           }
         });
       } else {
-        this.faService.updateVoucherEntry(fJson).subscribe((data: any) => {
-          if (data) {
-            this.getInvoiceDayBook();
-            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
-  
-  
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-          }
-        });
+        console.log('fJson--', fJson)
+        // this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+        //   if (data) {
+        //     this.getInvoiceDayBook();
+        //     this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
+
+
+        //   } else {
+        //     this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
+        //   }
+        // });
 
       }
-      
+
     }
 
 
   }
+
+
 
 
 }
