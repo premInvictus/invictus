@@ -129,6 +129,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: data.vc_particulars_data[i]['vc_particulars'],
 						vc_grno: data.vc_particulars_data[i]['vc_grno'],
 						vc_invoiceno: data.vc_particulars_data[i]['vc_invoiceno'],
+						selected: data.vc_particulars_data[i]['selected'],
 						vc_debit: data.vc_particulars_data[i]['vc_debit'],
 						vc_credit: data.vc_particulars_data[i]['vc_credit'],
 					});
@@ -136,6 +137,13 @@ export class VoucherEntryComponent implements OnInit {
 				}
 				this.calculateDebitTotal();
 				this.calculateCreditTotal();
+				this.refData = {
+					currentTabIndex:data.vc_particulars_data[0].vc_grno,
+					selection:data.vc_particulars_data[0].vc_invoiceno,
+					amount:data.vc_particulars_data[0].vc_debit,
+					selected:data.vc_particulars_data[0].selected,
+					update:true
+				}
 			} else {
 				
 			}
@@ -202,6 +210,7 @@ export class VoucherEntryComponent implements OnInit {
 				vc_particulars: '',
 				vc_grno: '',
 				vc_invoiceno : '',
+				selected:'',
 				vc_debit: '',
 				vc_credit: ''
 			});
@@ -221,6 +230,7 @@ export class VoucherEntryComponent implements OnInit {
 			vc_particulars: '',
 			vc_grno: '',
 			vc_invoiceno: '',
+			selected:'',
 			vc_debit: '',
 			vc_credit: ''
 		});
@@ -259,6 +269,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
 						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
 						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						selected:this.voucherFormGroupArray[i].value.selected,
 						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
 					};
@@ -328,6 +339,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
 						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
 						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						selected:this.voucherFormGroupArray[i].value.selected,
 						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
 					};
@@ -544,8 +556,11 @@ export class VoucherEntryComponent implements OnInit {
 					 if(result){
 						this.voucherFormGroupArray[i].patchValue({
 							vc_invoiceno : result.selection,
-							vc_grno:result.currentTabIndex
-						})
+							vc_grno:result.currentTabIndex,
+							vc_debit:result.amount,
+							selected:result.selected
+						});
+						this.calculateDebitTotal();
 					 }
 					 this.refData = result
 					}

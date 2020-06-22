@@ -43,7 +43,16 @@ export class VoucherRefModalComponent implements OnInit {
     'vc_date',
     'vc_amount',
   ];
+  displayedColumns1: string[] = [
+    'vc_code',
+    'vc_date',
+    'vc_amount',
+    'action'
+  ];
+  orderMaster: any[] = [];
+  sattleJVList:any[] = [];
   dataSource = new MatTableDataSource<Element>();
+  dataSource1 = new MatTableDataSource<Element>();
   constructor(
     public dialogRef: MatDialogRef<VoucherRefModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -59,8 +68,15 @@ export class VoucherRefModalComponent implements OnInit {
     if(this.data.refData){
       this.currentTabIndex = this.data.refData.currentTabIndex;
     }
+    if(this.currentTabIndex == 2 && this.data.refData.update == true) {
+    this.sattleJVList = this.data.refData.selected;
+    this.sattleJVPrepare();
+    }
     this.buildForm();
     this.getSattleJV();
+  }
+  sattleJVPrepare(){
+    this.dataSource1 = new MatTableDataSource<Element>(this.sattleJVList);
   }
   buildForm() {}
 
@@ -96,6 +112,7 @@ export class VoucherRefModalComponent implements OnInit {
         console.log(data);
         for(const item of data){
           this.ELEMENT_DATA.push({
+            vc_id:item.vc_id,
             vc_code:item.vc_number.vc_name,
             vc_date:item.vc_date,
             vc_amount:this.getAmt(item.vc_particulars_data),
@@ -122,6 +139,37 @@ export class VoucherRefModalComponent implements OnInit {
 		console.log(event);
 		this.currentTabIndex = event;
   }
+  getOrderMaster(event=null){
+		
+		if(event){
+			console.log('key',event.keyCode);
+			if(event.keyCode != 38 && event.keyCode != 40 ){
+				let param: any = {};
+				param.pm_type = 'GR'
+				if(event) {
+					param.pm_id = event.target.value
+				}
+				this.faService.getOrderMaster(param).subscribe((data:any)=>{
+					if(data) {
+						this.orderMaster = data;
+						console.log('getOrderMaster',data);
+					}												
+				});
+			}
+		} else {
+			let param: any = {};
+			param.pm_type = 'GR'
+			if(event) {
+				param.pm_id = event.target.value
+			}
+			this.faService.getOrderMaster(param).subscribe((data:any)=>{
+				if(data) {
+					this.orderMaster = data;
+					console.log('getOrderMaster',data);
+				}												
+			});	
+		}
+	}
   getAmt(value){
     let amt = 0;
     for(const item of value){
@@ -133,8 +181,14 @@ export class VoucherRefModalComponent implements OnInit {
     console.log(this.selection);
     this.dialogRef.close({
       currentTabIndex:this.currentTabIndex,
-      selection:this.selection.selected.map(e => e.vc_code)
+      selection:this.selection.selected.map(e => e.vc_code),
+      amount:this.selection.selected.reduce((a,b) => a+b.vc_amount,0),
+      selected:this.selection.selected,
+      update:this.data.refData.update ? this.data.refData.update : false
     })
+  }
+  deleteVoucherEntry(value){
+    console.log('vjal',value);
   }
 
 }
