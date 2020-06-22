@@ -42,6 +42,7 @@ import { NoDataComponent } from './no-data/no-data.component';
 import { MAT_DIALOG_DATA,MatDialogRef} from '@angular/material/dialog';
 import { VoucherModalComponent } from './voucher-modal/voucher-modal.component';
 import { BalanceSheetModalComponent} from './balance-sheet-modal/balance-sheet-modal.component';
+import { VoucherRefModalComponent } from './voucher-ref-modal/voucher-ref-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -110,7 +111,8 @@ export const MY_FORMATS = {
 		NoDataComponent,
 		VoucherModalComponent,
 		IncomeAndExpenditureModalComponent,
-		BalanceSheetModalComponent
+		BalanceSheetModalComponent,
+		VoucherRefModalComponent
 
 	],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -157,7 +159,8 @@ export const MY_FORMATS = {
 		NoDataComponent,
 		VoucherModalComponent,
 		IncomeAndExpenditureModalComponent,
-		BalanceSheetModalComponent
+		BalanceSheetModalComponent,
+		VoucherRefModalComponent
 
 	],
 	entryComponents: [ DeleteModalComponent, ImagecropComponent, EditRequestModalComponent,
@@ -170,7 +173,8 @@ export const MY_FORMATS = {
 		BalanceSheetModalComponent,
 		VoucherModalComponent,
 		IncomeAndExpenditureModalComponent,
-		BalanceSheetModalComponent
+		BalanceSheetModalComponent,
+		VoucherRefModalComponent
 	],
 	providers: [
 		{

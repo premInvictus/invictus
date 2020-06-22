@@ -129,7 +129,7 @@
                       formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
-                     <a href="javascript:void(0)"><i class="fa fa-plus-circle gray-add"></i></a> | 
+                     <a href="javascript:void(0)" (click)="getSattleJV(i)"><i class="fa fa-plus-circle gray-add"></i></a> | 
                      <a href="javascript:void(0)" (click)="deleteVoucherEntry()"><i class="fa fa-trash red-trash"></i></a>
                     </td>
                     
