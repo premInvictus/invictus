@@ -1,0 +1,30 @@
+tr.mat-footer-row {
+    height: 35px !important;
+    //background: green !important;
+    /* color: white; */
+}
+.mat-footer-row td {
+    color: #000 !important;
+    font-weight: bolder;
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+tr.mat-footer-row {
+   
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+td.mat-footer-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+span.mon-span {
+    color: #277d9d;
+    cursor: pointer;
+    font-weight: 500;
+}

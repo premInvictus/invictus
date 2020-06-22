@@ -26,75 +26,108 @@
               <div class="table-overflow">
                 <table id="fee_ledger" #table mat-table [dataSource]="ledgerDataSource" class="text-center table-100">
                   <ng-container matColumnDef="sno">
-                    <th mat-header-cell *matHeaderCellDef>
+                    <th mat-header-cell *matHeaderCellDef width="5%">
                       <mat-checkbox></mat-checkbox>
                     </th>
                     <td mat-cell *matCellDef="let item">
                       <mat-checkbox [value]="item.srno"></mat-checkbox>
                     </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="particulars">
-                    <th mat-header-cell *matHeaderCellDef> Particulars </th>
+                    <th mat-header-cell *matHeaderCellDef width="7%"> Particulars </th>
                     <td mat-cell *matCellDef="let item">
                       {{item.particulars}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>
+                      {{totalObj.particulars}}
                     </td>
                   </ng-container>
                   <ng-container matColumnDef="month">
                     <th mat-header-cell *matHeaderCellDef> Month</th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.mon}}
+                      <span class="mon-span" (click)="openSalarySlip(item, item.action.details.emp_id)">{{item.mon}} </span>
                     </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <ng-container matColumnDef="attendance">
                     <th mat-header-cell *matHeaderCellDef> Attendance</th>
                     <td mat-cell *matCellDef="let item">
                       {{item.attendance}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.attendance | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="netearnings">
-                    <th mat-header-cell *matHeaderCellDef> Net Earnings (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <th mat-header-cell *matHeaderCellDef> Net Earnings (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.netearnings}}
+                      {{item.netearnings | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.netearnings | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="deductions">
-                    <th mat-header-cell *matHeaderCellDef> Deductions (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <th mat-header-cell *matHeaderCellDef> Deductions (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.deductions}}
+                      {{item.deductions | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.deductions | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="advances">
-                    <th mat-header-cell *matHeaderCellDef> Advances (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <th mat-header-cell *matHeaderCellDef> Advances (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.advance}}
+                      {{item.advance | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.advance | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="salarypayable">
                     <th mat-header-cell *matHeaderCellDef> Salary Payable (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                          class="fas fa-rupee-sign"></i></span>)</th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.salarypayable}}
+                      {{item.salarypayable | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.salarypayable | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="salarypaid">
-                    <th mat-header-cell *matHeaderCellDef> Salary Paid (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <th mat-header-cell *matHeaderCellDef> Salary Paid (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.salarypaid}}
+                      {{item.salarypaid | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.salarypaid | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="balance">
-                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
                     <td mat-cell *matCellDef="let item">
-                      {{item.balance}}
+                      {{item.balance | number | zerodash}}
                     </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.balance | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container *ngIf="paymentModeArray.length > 0">
+                    <ng-container *ngFor="let item of paymentModeArray">
+                      <ng-container [matColumnDef]="item.pm_id">
+                        <th mat-header-cell *matHeaderCellDef>{{item.pm_name}}
+                          (<span><i class="fas fa-rupee-sign"></i></span>)
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                          {{element[item.pm_id] | number | zerodash}}
+                        </td>
+                        <td mat-footer-cell *matFooterCellDef>{{totalObj[item.pm_id] | number | zerodash}}</td>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container matColumnDef="remarks">
+                    <th mat-header-cell *matHeaderCellDef> Remarks</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.remarks}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
                   </ng-container>
                   <tr mat-header-row *matHeaderRowDef="ledgerDisplayedColumns"></tr>
                   <tr mat-row *matRowDef="let row; columns: ledgerDisplayedColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="ledgerDisplayedColumns;"
+                    [hidden]="EMPLOYEE_LEDGER_ELEMENT.length == 0"></tr>
                 </table>
               </div>
             </div>

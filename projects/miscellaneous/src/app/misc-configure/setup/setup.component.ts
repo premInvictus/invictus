@@ -44,6 +44,7 @@ export class SetupComponent implements OnInit {
     { id: '5', name: 'Extra Small' }];
     disableApiCall = false;
     headerforecolor: any;
+    payForm: FormGroup
     headerbackcolor: any;
     stunameforecolor: any;
     stunamebackcolor: any;
@@ -599,6 +600,18 @@ export class SetupComponent implements OnInit {
                             }
                         }
                     }
+                    if (value === 'employee salary slip') {
+                        const payJson: any = JSON.parse(this.settingForm.value.employee_salary_slip);
+                        if (Object.keys(payJson).length > 0) {
+                            this.payForm.patchValue({
+                                format: payJson.headerFormat
+                            })
+                        } else {
+                            this.payForm.patchValue({
+                                format: ''
+                            });
+                        }
+                    }
                     if (value === 'fees formats') {
                         if (Object.keys(this.settingForm.value.invoice_receipt_format).length > 0) {
                             const formatS = JSON.parse(this.settingForm.value.invoice_receipt_format);
@@ -674,6 +687,9 @@ export class SetupComponent implements OnInit {
         });
     }
     buildForm() {
+        this.payForm = this.fbuild.group({
+            format: ''
+        });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
             ps_card_layout: '',
@@ -855,6 +871,13 @@ export class SetupComponent implements OnInit {
         }
         if (this.settingForm.value && this.settingForm.value.mis_report_setting_data) {
             this.settingForm.value.mis_report_setting_data = JSON.stringify(this.settingForm.value.mis_report_setting_data[0]);
+        }
+        if (this.settingForm.value && this.settingForm.value.employee_salary_slip) {
+            if (this.payForm.value.format) {
+                this.settingForm.value.employee_salary_slip = JSON.stringify({
+                    headerFormat: this.payForm.value.format
+                });
+            }
         }
         if (this.settingForm.value && this.settingForm.value.idcard_printsetup) {
             if (this.idCardSettings.length > 0) {
