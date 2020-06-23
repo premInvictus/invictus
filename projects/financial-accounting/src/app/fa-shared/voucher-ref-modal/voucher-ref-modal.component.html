@@ -25,7 +25,7 @@
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>GR No</mat-label>
                 <input matInput type="text" class="remark-text" placeholder="Enter GR No"
-                [matAutocomplete]="auto1" formControlName="vc_grno" (keyup)="getOrderMaster($event)">
+                [matAutocomplete]="auto1" [formControl]="vc_grno" (keyup)="getOrderMaster($event)">
                   <mat-autocomplete #auto1="matAutocomplete">
                     <mat-option *ngFor="let aitem of orderMaster" [value]="aitem.pm_id" (onSelectionChange)="setOrderMaster(aitem,i)">
                       {{aitem.pm_id}}
@@ -33,6 +33,12 @@
                   </mat-autocomplete>
               </mat-form-field>
             </div>
+            </div>
+            <div class="row margin-top-25">
+              <div class="col-12 text-center">
+                <button mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); refsubmit();">Submitt</button>
+
+              </div>
             </div>
           </ng-template>
         </mat-tab>
@@ -42,9 +48,15 @@
               <div class="col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Invoice No</mat-label>
-                  <input matInput placeholder="Invoice No">
+                  <input matInput placeholder="Invoice No" [formControl]="vc_invoiceno">
                 </mat-form-field>
               </div>
+              </div>
+              <div class="row margin-top-25">
+                <div class="col-12 text-center">
+                  <button mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); refsubmit();">Submitt</button>
+  
+                </div>
               </div>
           </ng-template>
         </mat-tab>
@@ -52,7 +64,7 @@
           <ng-template matTabContent>
             <div class="row remove-top-margin">
               <div class="col-12">
-                <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="ELEMENT_DATA.length > 0">
+                <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="ELEMENT_DATA && ELEMENT_DATA.length > 0">
   
                   <!-- Checkbox Column -->
                   <ng-container matColumnDef="select">

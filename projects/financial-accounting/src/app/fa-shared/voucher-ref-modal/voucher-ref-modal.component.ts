@@ -4,7 +4,7 @@ import {
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from "@angular/material/dialog";
-import { FormGroup, FormArray, FormBuilder, Validators } from "@angular/forms";
+import { FormGroup, FormArray, FormBuilder, Validators,FormControl } from "@angular/forms";
 import {
   SisService,
   CommonAPIService,
@@ -30,13 +30,15 @@ import {SelectionModel} from '@angular/cdk/collections';
 export class VoucherRefModalComponent implements OnInit {
 
   selection = new SelectionModel<Element>(true, []);
+  vc_invoiceno = new FormControl()
+  vc_grno = new FormControl()
   currentTabIndex = 2;
   dtotal = 0;
   ctotal = 0;
   attachmentArray: any[] = [];
   voucherData: any;
   tableDivFlag = false;
-  ELEMENT_DATA: Element[];
+  ELEMENT_DATA: Element[]  = [];
   displayedColumns: string[] = [
     'select',
     'vc_code',
@@ -68,10 +70,15 @@ export class VoucherRefModalComponent implements OnInit {
     if(this.data.refData){
       this.currentTabIndex = this.data.refData.currentTabIndex;
     }
-    if(this.currentTabIndex == 2 && this.data.refData.update == true) {
+    if(this.currentTabIndex == 2 && this.data.refData && this.data.refData.update == true) {
     this.sattleJVList = this.data.refData.selected;
     this.sattleJVPrepare();
+    } else if(this.currentTabIndex == 0){
+      this.vc_grno.setValue(this.data.refData.selection);
+    } else if(this.currentTabIndex == 1){
+      this.vc_invoiceno.setValue(this.data.refData.selection);
     }
+    
     this.buildForm();
     this.getSattleJV();
   }
@@ -95,6 +102,7 @@ export class VoucherRefModalComponent implements OnInit {
     this.isAllSelected() ?
         this.selection.clear() :
         this.dataSource.data.forEach(row => this.selection.select(row));
+        console.log(this.dataSource.data)
   }
 
   /** The label for the checkbox on the passed row */
@@ -109,6 +117,11 @@ export class VoucherRefModalComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.faService.getSattleJV(this.data.param).subscribe((data:any)=>{
       if(data) {
+        // if(this.data.refData && this.data.refData.currentTabIndex == 2 && this.data.refData.selected.length > 0){
+          
+        //   this.data.refData.selected.forEach(row => this.selection.select(row));
+        //   console.log(this.selection);
+        // }
         console.log(data);
         for(const item of data){
           this.ELEMENT_DATA.push({
@@ -120,15 +133,7 @@ export class VoucherRefModalComponent implements OnInit {
           })
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        if(this.data.refData && this.data.refData.currentTabIndex == 2 && this.data.refData.selection.length > 0){
-          this.data.refData.selection.forEach(element => {
-            const edata = this.ELEMENT_DATA.find(e => e.vc_code == element);
-            if(edata){
-              this.selection.selected.push(edata);
-            }
-          });
-          console.log(this.selection);
-        }
+        
         this.commonAPIService.showSuccessErrorMessage('Fetched Successfully', 'success');
       } else {
         this.commonAPIService.showSuccessErrorMessage('Error to fetch', 'error');
@@ -179,16 +184,74 @@ export class VoucherRefModalComponent implements OnInit {
   }
   refsubmit() {
     console.log(this.selection);
-    this.dialogRef.close({
-      currentTabIndex:this.currentTabIndex,
-      selection:this.selection.selected.map(e => e.vc_code),
-      amount:this.selection.selected.reduce((a,b) => a+b.vc_amount,0),
-      selected:this.selection.selected,
-      update:this.data.refData.update ? this.data.refData.update : false
-    })
+    const item:any = {};
+    if(this.currentTabIndex == 0){
+      item.currentTabIndex=this.currentTabIndex;
+      item.selection=this.vc_grno.value;
+      item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
+    } else if(this.currentTabIndex == 1){
+      item.currentTabIndex=this.currentTabIndex;
+      item.selection=this.vc_invoiceno.value;
+      item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
+    } else if(this.currentTabIndex == 2 && this.selection.selected.length > 0){
+      const tselection = this.selection.selected.map(e => e.vc_code);
+      if(this.sattleJVList.length > 0){
+        this.sattleJVList.forEach(element => {
+          // const ti = this.selection.selected.findIndex(e => e.vc_id == element.vc_id);
+          // if(ti == -1) {            
+          // }
+          tselection.push(element.vc_code)
+          
+        });
+      }
+      let tamount=this.selection.selected.reduce((a,b) => a+b.vc_amount,0);
+      if(this.sattleJVList.length > 0){
+        this.sattleJVList.forEach(element => {
+          tamount += element.vc_amount
+        });
+      }
+      let tselected=this.selection.selected;
+      if(this.sattleJVList.length > 0){
+        this.sattleJVList.forEach(element => {
+          tselected.push(element)
+        });
+      }
+
+      item.currentTabIndex=this.currentTabIndex;
+      item.selection=tselection
+      item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
+      item.amount=tamount;
+      item.selected=tselected;
+    }
+    this.dialogRef.close(item);
   }
   deleteVoucherEntry(value){
     console.log('vjal',value);
+    if(value){
+      const param:any = {};
+      if(value.vc_id){
+        param.vc_id= value.vc_id;
+      }
+      param.vc_sattle_status = 1;
+      this.faService.changeSattleStatus(param).subscribe((data:any)=>{
+				if(data) {
+          console.log('data',data);
+          this.getSattleJV();
+          const findex = this.sattleJVList.findIndex(e => e.vc_id == value.vc_id);
+          this.sattleJVList.splice(findex,1);
+          this.commonAPIService.showSuccessErrorMessage('Unsattled Successfuly','success');
+				}												
+			});
+      
+    }
   }
+  // isSelected(row){
+  //   const findex = this.selection.selected.findIndex(e => e.vc_id = row.vc_id);
+  //   if(findex == -1){
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
 }
