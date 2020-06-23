@@ -115,7 +115,8 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
 		});
 		diaogRef.afterClosed().subscribe((result: any) => {
 			if (result && result.emp_id) {
-				this.getEmployeeDetail(result.emp_id);
+        this.getEmployeeDetail(result.emp_id);
+        this.next.emit(result.emp_id);
 			}
 		});
 	}
