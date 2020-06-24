@@ -380,7 +380,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     let vcYear = nYear;
     let vcNumber = vcData.vc_code;
     this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
-    console.log(voucherEntryArray, 'test');
+    
 
 
     if (this.vcData) {

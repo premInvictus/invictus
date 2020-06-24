@@ -117,11 +117,6 @@ export class VoucherRefModalComponent implements OnInit {
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.faService.getSattleJV(this.data.param).subscribe((data:any)=>{
       if(data) {
-        // if(this.data.refData && this.data.refData.currentTabIndex == 2 && this.data.refData.selected.length > 0){
-          
-        //   this.data.refData.selected.forEach(row => this.selection.select(row));
-        //   console.log(this.selection);
-        // }
         console.log(data);
         for(const item of data){
           this.ELEMENT_DATA.push({
@@ -133,7 +128,16 @@ export class VoucherRefModalComponent implements OnInit {
           })
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-        
+        // if(this.data.refData && this.data.refData.currentTabIndex == 2 && this.data.refData.selected.length > 0){
+        //   this.dataSource.data.forEach(row => {
+        //     const findex = this.data.refData.selected.findIndex(e => e.vc_id == row.vc_id);
+        //     if(findex != -1){
+        //       this.selection.select(row)
+        //     }            
+        //   });
+        //   console.log(this.selection);
+        // }
+       
         this.commonAPIService.showSuccessErrorMessage('Fetched Successfully', 'success');
       } else {
         this.commonAPIService.showSuccessErrorMessage('Error to fetch', 'error');

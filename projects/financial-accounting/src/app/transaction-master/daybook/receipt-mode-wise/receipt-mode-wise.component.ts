@@ -659,11 +659,11 @@ export class ReceiptModeWiseComponent implements OnInit {
         vc_credit: feeReceivableAmt
       };
       voucherEntryArray.push(vFormJson);
-      console.log('in voucher entry array');
+      
       this.getVoucherTypeMaxId(voucherEntryArray);
     }
 
-    if (voucherEntryArray.length  === 0) {
+    if (voucherEntryArray.length === 0) {
       this.commonAPIService.showSuccessErrorMessage('There is no information to update / create', 'error');
     }
 
