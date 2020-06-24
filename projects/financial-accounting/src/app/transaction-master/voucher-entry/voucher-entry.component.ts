@@ -142,7 +142,7 @@ export class VoucherEntryComponent implements OnInit {
 					selection:data.vc_particulars_data[0].vc_invoiceno,
 					amount:data.vc_particulars_data[0].vc_debit,
 					selected:data.vc_particulars_data[0].selected,
-					update:true
+					update:this.editMode
 				}
 			} else {
 				
@@ -351,12 +351,17 @@ export class VoucherEntryComponent implements OnInit {
 					};
 					this.voucherEntryArray.push(vFormJson);
 				}
-		
+				let tempdate:any;
+				if(!moment.isMoment(this.voucherForm.value.vc_date)){
+					tempdate = moment(this.voucherForm.value.vc_date);
+				} else {
+					tempdate = (this.voucherForm.value.vc_date);
+				}
 				var inputJson = {
 					vc_id : this.editMode ? this.currentVoucherId : null,
 					vc_type:this.currentVcType,
 					vc_number: { vc_code : this.voucherForm.value.vc_number, vc_name: this.getVcName()},
-					vc_date:this.voucherForm.value.vc_date.format("YYYY-MM-DD"),
+					vc_date:tempdate.format("YYYY-MM-DD"),
 					vc_narrations:this.voucherForm.value.vc_narrations,
 					vc_attachments: this.attachmentArray,
 					vc_particulars_data: this.voucherEntryArray,
@@ -467,6 +472,7 @@ export class VoucherEntryComponent implements OnInit {
 		this.voucherFormGroupArray = [];
 		this.attachmentArray = [];
 		this.setVcType(this.currentVcType);
+		this.refData = null;
 		// this.voucherForm.patchValue({
 		// 	vc_date: moment()
 		// })
