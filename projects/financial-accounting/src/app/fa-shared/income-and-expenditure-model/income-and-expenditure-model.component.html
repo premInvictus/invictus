@@ -76,7 +76,7 @@
         <div class="col-6" style="padding-left: 0px;">
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
-              <tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
+              <!--<tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="80%" class="text-left" colspan="2"><b>Income Due</b></td>
               </tr>
@@ -89,7 +89,7 @@
                   <td width="15%" class="text-right">
                     <b>{{getTwoDecimalValue(pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt) | indianCurrency}}</b></td>
                 </tr>
-              </ng-container>
+              </ng-container>-->
               <ng-container *ngFor="let citem of param?.ledger_data; ">
                 <ng-container *ngIf="item?.account_display.display_section.income">
                   <tr *ngIf="getDeviation(citem) < 0">

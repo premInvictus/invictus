@@ -37,14 +37,14 @@
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
 
-              <tr *ngIf="partialPaymentStatus">
+              <!-- <tr *ngIf="partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">
                   <b *ngIf="((param?.head_total_amt)  - (param?.total_receipt_amt)) < 0">{{-getTwoDecimalValue(((param?.head_total_amt)  - (param?.total_receipt_amt))) | indianCurrency}}</b>
                   <b *ngIf="((param?.head_total_amt)  - (param?.total_receipt_amt)) > 0">{{getTwoDecimalValue(((param?.head_total_amt)  - (param?.total_receipt_amt))) | indianCurrency}}</b>
                 </td>
-              </tr>
+              </tr> -->
 
               <ng-container *ngFor="let item of param.ledger_data; ">
                 <ng-container *ngIf="item?.account_display.display_section.trialBalance">
@@ -77,11 +77,11 @@
         <div class="col-6" style="padding-left: 0px;">
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
-              <tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
+              <!-- <tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="80%" class="text-left" colspan="2"><b>Income Due</b></td>
-              </tr>
-              <ng-container *ngFor="let pitem of param.invoice_due_data; ">
+              </tr> -->
+              <!-- <ng-container *ngFor="let pitem of param.invoice_due_data; ">
                 <tr *ngIf="partialPaymentStatus">
                   <td width="20%">-</td>
                   <td width="65%" class="text-left"><b><span
@@ -90,7 +90,7 @@
                   <td width="15%" class="text-right">
                     <b>{{getTwoDecimalValue((pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt)) | indianCurrency}}</b></td>
                 </tr>
-              </ng-container>
+              </ng-container> -->
               <ng-container *ngFor="let citem of param?.ledger_data;let i=index; ">
                 <ng-container *ngIf="citem?.account_display.display_section.trialBalance">
                   <tr *ngIf="citem?.credit_data?.length > 0 && citem?.credit_data[0]?.vc_debit && getDeviation(citem) < 0  ">
