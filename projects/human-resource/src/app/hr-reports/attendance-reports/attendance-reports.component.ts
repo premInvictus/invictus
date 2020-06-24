@@ -257,12 +257,15 @@ export class AttendanceReportsComponent implements OnInit {
             attendance_array: dateArray
           });
         }
-        const checkifMonthEntry: any = {
-          "$and": [
-            { "ses_id": this.session.ses_id },
-            { "month_id": new Date(this.attendanceReport.value.month_id).getMonth() + 1 }
-          ]
-        };
+        const checkifMonthEntry: any = [{
+          $match : {
+            "$and": [
+              { "ses_id": this.session.ses_id },
+              { "month_id": (new Date(this.attendanceReport.value.month_id).getMonth() + 1).toString() }
+            ]
+          },
+          
+      }];
         this.commonAPIService.checkAttendance(checkifMonthEntry).subscribe((res: any) => {
           if (res && res.status === 'ok') {
             this.attendanceArray = res.data;
