@@ -5,6 +5,7 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
 import { MatDialog } from '@angular/material';
 import { PreviewDocumentComponent } from '../../fa-shared/preview-document/preview-document.component';
+import { VoucherRefModalComponent } from '../../fa-shared/voucher-ref-modal/voucher-ref-modal.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ItemCodeGenerationComponent } from 'projects/inventory/src/app/inventory-configuration/item-code-generation/item-code-generation.component';
 import * as moment from 'moment';
@@ -14,6 +15,7 @@ import * as moment from 'moment';
 	styleUrls: ['./voucher-entry.component.scss']
 })
 export class VoucherEntryComponent implements OnInit {
+	refData:any
 	paramForm: FormGroup;
 	voucherForm: FormGroup;
 	voucherEntryArray:any[]=[];
@@ -127,6 +129,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: data.vc_particulars_data[i]['vc_particulars'],
 						vc_grno: data.vc_particulars_data[i]['vc_grno'],
 						vc_invoiceno: data.vc_particulars_data[i]['vc_invoiceno'],
+						selected: data.vc_particulars_data[i]['selected'],
 						vc_debit: data.vc_particulars_data[i]['vc_debit'],
 						vc_credit: data.vc_particulars_data[i]['vc_credit'],
 					});
@@ -134,6 +137,13 @@ export class VoucherEntryComponent implements OnInit {
 				}
 				this.calculateDebitTotal();
 				this.calculateCreditTotal();
+				this.refData = {
+					currentTabIndex:data.vc_particulars_data[0].vc_grno,
+					selection:data.vc_particulars_data[0].vc_invoiceno,
+					amount:data.vc_particulars_data[0].vc_debit,
+					selected:data.vc_particulars_data[0].selected,
+					update:true
+				}
 			} else {
 				
 			}
@@ -200,6 +210,7 @@ export class VoucherEntryComponent implements OnInit {
 				vc_particulars: '',
 				vc_grno: '',
 				vc_invoiceno : '',
+				selected:'',
 				vc_debit: '',
 				vc_credit: ''
 			});
@@ -219,6 +230,7 @@ export class VoucherEntryComponent implements OnInit {
 			vc_particulars: '',
 			vc_grno: '',
 			vc_invoiceno: '',
+			selected:'',
 			vc_debit: '',
 			vc_credit: ''
 		});
@@ -257,6 +269,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
 						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
 						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						selected:this.voucherFormGroupArray[i].value.selected,
 						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
 					};
@@ -273,7 +286,8 @@ export class VoucherEntryComponent implements OnInit {
 					vc_narrations:this.voucherForm.value.vc_narrations,
 					vc_attachments: this.attachmentArray,
 					vc_particulars_data: this.voucherEntryArray,
-					vc_state : 'draft'
+					vc_state : 'draft',
+					vc_sattle_status:1
 				}
 	
 				if (this.currentVoucherId) {
@@ -325,6 +339,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
 						vc_grno : this.voucherFormGroupArray[i].value.vc_grno,
 						vc_invoiceno : this.voucherFormGroupArray[i].value.vc_invoiceno,
+						selected:this.voucherFormGroupArray[i].value.selected,
 						vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 						vc_credit: this.voucherFormGroupArray[i].value.vc_credit
 					};
@@ -339,7 +354,8 @@ export class VoucherEntryComponent implements OnInit {
 					vc_narrations:this.voucherForm.value.vc_narrations,
 					vc_attachments: this.attachmentArray,
 					vc_particulars_data: this.voucherEntryArray,
-					vc_state : 'publish'
+					vc_state : 'publish',
+					vc_sattle_status:1
 				}
 				
 				if (this.currentVoucherId) {
@@ -515,5 +531,42 @@ export class VoucherEntryComponent implements OnInit {
 		} else {
 			return fileurl;
 		}
+	}
+	getSattleJV(i){
+		if(this.voucherFormGroupArray[i].value.vc_account_type_id) {
+			if(this.currentVcType == 'Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'){
+				console.log('index',i);
+				const inputJson:any = {};
+				inputJson.vc_type = 'Journal Entry';
+				inputJson.vc_sattle_status = 1;
+				inputJson.vc_state = 'publish';
+				inputJson.coa_id = this.voucherFormGroupArray[i].value.vc_account_type_id;
+				const dialogRef3 = this.dialog.open(VoucherRefModalComponent, {
+					data: {
+						title:'Add Ref',
+						param:inputJson,
+						refData: this.refData
+					},
+					height: '70vh',
+					width: '70vh'
+				});
+				dialogRef3.afterClosed().subscribe((result: any) => {
+					if (result) {
+					 console.log(result);
+					 if(result){
+						this.voucherFormGroupArray[i].patchValue({
+							vc_invoiceno : result.selection,
+							vc_grno:result.currentTabIndex,
+							vc_debit:result.amount,
+							selected:result.selected
+						});
+						this.calculateDebitTotal();
+					 }
+					 this.refData = result
+					}
+				});
+			}
+		}
+		
 	}
 }

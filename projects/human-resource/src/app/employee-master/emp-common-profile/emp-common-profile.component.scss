@@ -34,10 +34,13 @@ button.nav-button.mat-mini-fab.mat-accent {
     50%{opacity: .5;}
     100%{opacity: 1;}
     }
-    @media (max-width: 2399px) and (min-width: 1800px)
+    @media (max-width: 2399px) and (min-width: 1200px)
 {
 .smart-col-111 {
-    max-width: 19% !important;
-    flex: 1 0 15% !important;
+    border-right: 2px solid #d8d5d5 !important;
+    max-width: 14% !important;
+    white-space: pre-line;
+    word-break: break-all;
+    flex: 0 0 15% !important;
 }
 }

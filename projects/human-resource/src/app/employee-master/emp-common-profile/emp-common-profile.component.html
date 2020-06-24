@@ -13,7 +13,16 @@
       <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
         <div class="row">
           <div class="col-12 remove-col-padding text-center">
-            <div class="row ">
+            <div class="row remove-margin">
+              <div class="col-12 text-center">
+                <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
+                <span class="font-size-16">
+                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
+                    (click)="openSearchDialog()"></i>
+                </span>
+              </div>
+            </div>
+            <div class="row" style="margin-top: -10px !important;">
               <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
                   (click)="firstId(navigation_record.first_record)"><i class="material-icons">
@@ -43,26 +52,13 @@
                     last_page
                   </i>
                 </button>
-                <button mat-mini-fab class="nav-button1 tab-display-flex" style="position: absolute;
-                left: 61px;
-                top: -42px;">
-                  <i style="cursor: pointer;" class="fas fa-search margin-left-10" matTooltip="Search Employee"
-                    (click)="openSearchDialog()"></i>
-                </button>
+
               </div>
 
             </div>
           </div>
         </div>
       </div>
-      <!-- <div class="col-1 smart-col-111 ">
-        <div class="row margin-top-15">
-          <div class="col-12 text-left">
-           <br>
-
-          </div>
-        </div>
-      </div> -->
 
       <div class="col-3 smart-col-111">
         <div class="row margin-top-8">
@@ -81,13 +77,43 @@
             </div>
             <div class="col-12 text-left tab-remove-padding">
               <span style="position: relative;
-              top: 10px;" class="font-size-14 font-light">Contact :</span>
-              <span  style="position: relative;
-              top: 10px;" class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
+              top: 10px;" class="font-size-14 font-light"> Department: </span>
+              <span style="position: relative;
+              top: 10px;" class="font-size-14 font-bold"> {{employeeDetails.emp_department_detail && 
+              employeeDetails.emp_department_detail.dpt_name ? 
+              (employeeDetails.emp_department_detail.dpt_name  | titlecase): '-'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3 smart-col-111 ">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Category:</span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_category_detail && 
+                employeeDetails.emp_category_detail.cat_name ? 
+                (employeeDetails.emp_category_detail.cat_name  | titlecase): '-'}}
+            </span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact :</span>
+            <span class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
                 employeeDetails.emp_personal_detail.contact_detail
                 && employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no ? 
                 (employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no): '-'}}</span>
-            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Email :</span>
+            <span class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
+                  employeeDetails.emp_personal_detail.contact_detail
+                  && employeeDetails.emp_personal_detail.contact_detail.email_id ? 
+                  (employeeDetails.emp_personal_detail.contact_detail.email_id): '-'}}</span>
           </div>
         </div>
       </div>
@@ -104,6 +130,16 @@
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Date of Leaving: </span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail &&
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol? 
+                (employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol  | date : 'd-MMM-y'): '-'}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Balance of Advance:</span>
             <span class="font-size-14 font-bold">
               {{employeeDetails.emp_salary_detail && 
@@ -114,18 +150,7 @@
                 ): '-'}}</span>
           </div>
         </div>
-        <div class="row margin-top-8">
-          <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Date of Leaving: </span>
-            <span class="font-size-14 font-bold">
-              {{employeeDetails.emp_salary_detail && 
-                employeeDetails.emp_salary_detail.emp_organisation_relation_detail &&
-                employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol? 
-                (employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol  | date : 'd-MMM-y'): '-'}}</span>
-          </div>
-        </div>
       </div>
-
       <div class="col-3 smart-col-111 ">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
@@ -152,36 +177,6 @@
                 ): '-'}}</span>
           </div>
         </div>
-      </div>
-      <div class="col-3 smart-col-111 ">
-        <div class="row margin-top-8">
-          <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light"> Department: </span>
-            <span class="font-size-14 font-bold"> {{employeeDetails.emp_department_detail && 
-              employeeDetails.emp_department_detail.dpt_name ? 
-              (employeeDetails.emp_department_detail.dpt_name  | titlecase): '-'}}</span>
-          </div>
-        </div>
-        <div class="row margin-top-10">
-          <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Category:</span>
-            <span class="font-size-14 font-bold">
-              {{employeeDetails.emp_category_detail && 
-                employeeDetails.emp_category_detail.cat_name ? 
-                (employeeDetails.emp_category_detail.cat_name  | titlecase): '-'}}
-            </span>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Email :</span>
-            <span class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
-                  employeeDetails.emp_personal_detail.contact_detail
-                  && employeeDetails.emp_personal_detail.contact_detail.email_id ? 
-                  (employeeDetails.emp_personal_detail.contact_detail.email_id): '-'}}</span>
-          </div>
-        </div>
-
       </div>
       <div class="col-3  custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row remove-top-margin ">

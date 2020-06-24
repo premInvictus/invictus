@@ -101,6 +101,10 @@ export class FaService {
 	getFeeHead(value) {
 		return this.http.post(environment.apiFeeUrl + '/feeHeads/getFeeHeads', value);
 	}
+	getSattleJV(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getSattleJV', value);
+	}
 	
 	
 }
