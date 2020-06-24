@@ -11,7 +11,7 @@
           <th class="mat-header-cell">Date</th>
           <th class="mat-header-cell" *ngFor="let itm of displayedColumns">{{itm.name}}</th>
           <th class="mat-header-cell">Total</th>
-          <th class="mat-header-cell" *ngIf="!partialPaymentStatus">Action</th>
+          <th class="mat-header-cell">Action</th>
         </tr>
       </thead>
       <tbody>
@@ -21,7 +21,7 @@
            <td>{{item['id_'+itm.id] | indianCurrency}}</td>
           </ng-container>
           <td>{{getColumnTotal(item) | indianCurrency}}</td>
-          <td class="action-btn" *ngIf="!partialPaymentStatus">
+          <td class="action-btn">
               <span *ngIf="!item?.voucherExists"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
               <span *ngIf="item?.voucherExists && item?.vc_state =='draft'"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,'update'); ">Update Voucher</button></span>
           </td>

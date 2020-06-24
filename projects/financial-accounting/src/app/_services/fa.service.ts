@@ -52,6 +52,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
 	}
+	getNonPartialDayBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getNonPartialDayBook', value);
+	}
 	getFeeMonths(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');

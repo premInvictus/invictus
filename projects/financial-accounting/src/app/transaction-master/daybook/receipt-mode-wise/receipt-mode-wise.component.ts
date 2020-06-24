@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, Input, OnChanges  } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnChanges } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './model';
-import {SelectionModel} from '@angular/cdk/collections';
+import { SelectionModel } from '@angular/cdk/collections';
 import { TitleCasePipe } from '@angular/common';
 import { SisService, CommonAPIService, FaService } from '../../../_services/index';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -24,31 +24,33 @@ export class ReceiptModeWiseComponent implements OnInit {
   displayedDate: any[] = [];
   session: any;
   headtoatl = 0;
-  eachheadtotal_details:any;
+  eachheadtotal_details: any;
   partialPaymentStatus = 1;
   apiInvoiceData = [];
   apiReceiptData = [];
   chartsOfAccount: any[] = [];
+  chartsOfAccountInvoice: any[] = [];
   vcData: any;
   currentVcType = 'Journel Entry';
   sessionArray: any[] = [];
   sessionName: any;
-  voucherDate:any;
-  currentVoucherData:any;
+  voucherDate: any;
+  currentVoucherData: any;
+  tempChartsOfAccountInvoice: any[] = [];
   constructor(
     private fbuild: FormBuilder,
-		  private sisService: SisService,
-		  private commonAPIService: CommonAPIService,
-		  private faService:FaService,
-		  private dialog: MatDialog,            
-		  private router: Router,
-			private route: ActivatedRoute
+    private sisService: SisService,
+    private commonAPIService: CommonAPIService,
+    private faService: FaService,
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
     this.session = JSON.parse(localStorage.getItem('session'));
     this.checkPartialPaymentStatus();
-    this.getChartsOfAccount();
+    //this.getChartsOfAccount();
     this.getSession();
     //this.getInvoiceDayBook();
   }
@@ -57,8 +59,13 @@ export class ReceiptModeWiseComponent implements OnInit {
     console.log(this.param);
     this.getChartsOfAccount();
     this.getSession();
-    this.getInvoiceDayBook();
-    
+    if (this.partialPaymentStatus) {
+      this.getInvoiceDayBook();
+    } else {
+      this.getNonPartialDayBook();
+    }
+
+
   }
   checkPartialPaymentStatus() {
     let param: any = {};
@@ -67,27 +74,27 @@ export class ReceiptModeWiseComponent implements OnInit {
       if (result && result.status === 'ok') {
         if (result.data && result.data[0]) {
           this.partialPaymentStatus = Number(result.data[0]['gs_value']);
-        }        
-       
+        }
+
       }
     })
   }
-  getInvoiceDayBook(){
+  getInvoiceDayBook() {
     this.headtoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
-    this.faService.getInvoiceDayBook({sessionId: this.session.ses_id,monthId: Number(this.param.month)}).subscribe((data:any)=>{
-      if(data) {
+    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+      if (data) {
 
         const tempData: any = data.receipt_data;
         this.apiReceiptData = data.receipt_data;
-        
+
         const tempHeader: any[] = [];
 
         tempData.forEach(e => {
           e.value.forEach(element => {
-            element.temp_id = element.pay_name ? element.pay_name.toString().toLowerCase().replace(/ /g,'') : '';
-          }); 
+            element.temp_id = element.pay_name ? element.pay_name.toString().toLowerCase().replace(/ /g, '') : '';
+          });
         });
         console.log(tempData);
         tempData[0].value.forEach(element => {
@@ -95,37 +102,37 @@ export class ReceiptModeWiseComponent implements OnInit {
             id: element.temp_id,
             name: element.pay_name
           });
-        }); 
+        });
         const dateArray: any[] = [];
         tempData.forEach(e => {
           const index = dateArray.findIndex(t => t == e.date);
-          if(index == -1) {
+          if (index == -1) {
             dateArray.push(e);
           }
         });
         this.eachheadtotal_details = {};
         this.displayedColumns.forEach(ee => {
-          this.eachheadtotal_details['id_'+ee.id] = 0;
+          this.eachheadtotal_details['id_' + ee.id] = 0;
         });
-        if(tempData.length > 0) {
+        if (tempData.length > 0) {
           dateArray.forEach(e => {
             const tempelement: any = {};
             tempelement['date'] = e.date;
-            tempelement['vc_id'] = e.vc_id ;
-            tempelement['vc_state'] = e.vc_state ;
+            tempelement['vc_id'] = e.vc_id;
+            tempelement['vc_state'] = e.vc_state;
             tempelement['voucherExists'] = e.voucherExists;
             let tempvalue = tempData.find(element => element.date == e.date);
-            if(tempvalue) {
+            if (tempvalue) {
               this.displayedColumns.forEach(ee => {
                 tempvalue.value.forEach(element => {
-                  if(element.temp_id == ee.id){
+                  if (element.temp_id == ee.id) {
                     let tempvaluehead = element.receipt_amt ? Number(element.receipt_amt) : 0;
                     this.headtoatl += tempvaluehead;
-                    tempelement['id_'+ee.id] = tempvaluehead;
-                    this.eachheadtotal_details['id_'+ee.id] += tempvaluehead;
+                    tempelement['id_' + ee.id] = tempvaluehead;
+                    this.eachheadtotal_details['id_' + ee.id] += tempvaluehead;
                   }
                 });
-                              
+
               });
             }
             this.ELEMENT_DATA.push(tempelement);
@@ -154,10 +161,94 @@ export class ReceiptModeWiseComponent implements OnInit {
       }
     });
   }
-  getColumnTotal(item){
+
+  getNonPartialDayBook() {
+    this.headtoatl = 0;
+    this.displayedColumns = [];
+    this.ELEMENT_DATA = [];
+    this.faService.getNonPartialDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month) }).subscribe((data: any) => {
+      if (data) {
+
+        const tempData: any = data.receipt_data;
+        this.apiReceiptData = data.receipt_data;
+
+        const tempHeader: any[] = [];
+
+        tempData.forEach(e => {
+          e.value.forEach(element => {
+            element.temp_id = element.pay_name ? element.pay_name.toString().toLowerCase().replace(/ /g, '') : '';
+          });
+        });
+        console.log(tempData);
+        tempData[0].value.forEach(element => {
+          this.displayedColumns.push({
+            id: element.temp_id,
+            name: element.pay_name
+          });
+        });
+        const dateArray: any[] = [];
+        tempData.forEach(e => {
+          const index = dateArray.findIndex(t => t == e.date);
+          if (index == -1) {
+            dateArray.push(e);
+          }
+        });
+        this.eachheadtotal_details = {};
+        this.displayedColumns.forEach(ee => {
+          this.eachheadtotal_details['id_' + ee.id] = 0;
+        });
+        if (tempData.length > 0) {
+          dateArray.forEach(e => {
+            const tempelement: any = {};
+            tempelement['date'] = e.date;
+            tempelement['vc_id'] = e.vc_id;
+            tempelement['vc_state'] = e.vc_state;
+            tempelement['voucherExists'] = e.voucherExists;
+            tempelement['invoice_head_arr'] = e.invoice_head_arr;
+            let tempvalue = tempData.find(element => element.date == e.date);
+            if (tempvalue) {
+              this.displayedColumns.forEach(ee => {
+                tempvalue.value.forEach(element => {
+                  if (element.temp_id == ee.id) {
+                    let tempvaluehead = element.receipt_amt ? Number(element.receipt_amt) : 0;
+                    this.headtoatl += tempvaluehead;
+                    tempelement['id_' + ee.id] = tempvaluehead;
+                    this.eachheadtotal_details['id_' + ee.id] += tempvaluehead;
+                  }
+                });
+
+              });
+            }
+            this.ELEMENT_DATA.push(tempelement);
+          });
+          this.tableDivFlag = true;
+        }
+        // if(tempData.length > 0) {
+        //   dateArray.forEach(e => {
+        //     const tempelement: any = {};
+        //     tempelement['date'] = e;
+        //     tempHeader.forEach(ee => {
+        //       let tempvalue = tempData.find(element => element.ftr_pay_id == ee.id && element.ftr_transaction_date == e);
+        //       if(tempvalue) {
+        //         tempelement['id_'+ee.id] = Number(tempvalue.receipt_amt);
+        //         this.headtoatl += Number(tempvalue.receipt_amt);
+        //       } else {
+        //         tempelement['id_'+ee.id] = '';
+        //       }              
+        //     });
+        //     this.ELEMENT_DATA.push(tempelement);
+        //   });
+        //   this.tableDivFlag = true;
+        // }
+        console.log(this.ELEMENT_DATA);
+
+      }
+    });
+  }
+  getColumnTotal(item) {
     let total = 0;
     Object.keys(item).forEach(key => {
-      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists') {
+      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'invoice_head_arr') {
         let v = item[key] || 0;
         total += v;
       }
@@ -165,8 +256,8 @@ export class ReceiptModeWiseComponent implements OnInit {
     return total;
   }
   getTotal(id) {
-    if(this.ELEMENT_DATA.length > 0){
-      return this.ELEMENT_DATA.reduce((a,b) => a + Number(b['id_'+id]),0);
+    if (this.ELEMENT_DATA.length > 0) {
+      return this.ELEMENT_DATA.reduce((a, b) => a + Number(b['id_' + id]), 0);
     } else {
       return 0;
     }
@@ -174,24 +265,32 @@ export class ReceiptModeWiseComponent implements OnInit {
 
   getSession() {
     this.faService.getSession().subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            for (const citem of result.data) {
-              this.sessionArray[citem.ses_id] = citem.ses_name;
-            }
-            if (this.session) {
-              this.sessionName = this.sessionArray[this.session.ses_id];
-            }
-
+      (result: any) => {
+        if (result && result.status === 'ok') {
+          for (const citem of result.data) {
+            this.sessionArray[citem.ses_id] = citem.ses_name;
           }
-        });
+          if (this.session) {
+            this.sessionName = this.sessionArray[this.session.ses_id];
+          }
+
+        }
+      });
   }
 
   getChartsOfAccount() {
+    this.chartsOfAccountInvoice = [];
+    this.tempChartsOfAccountInvoice = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       for (var i = 0; i < result.length; i++) {
         if ((result[i]['dependencies_type']) === "internal" && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
           this.chartsOfAccount.push(result[i]);
+        }
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
+          //console.log('result--', result[i]);
+          this.chartsOfAccountInvoice.push(result[i]);
+          this.tempChartsOfAccountInvoice.push(result[i]['coa_dependencies'][0]['dependency_name']);
+          console.log('charts of account invoice,', this.chartsOfAccountInvoice)
         }
       }
     });
@@ -203,7 +302,12 @@ export class ReceiptModeWiseComponent implements OnInit {
     for (var i = 0; i < this.apiReceiptData.length; i++) {
       if (this.apiReceiptData[i]['date'] === item.date) {
         this.voucherDate = item.date;
-        this.checkForHeadData(this.apiReceiptData[i]['value'], action);
+        if (this.partialPaymentStatus) {
+          this.checkForHeadData(this.apiReceiptData[i]['value'], action);
+        } else {
+          this.checkForNonPartialHeadData(this.apiReceiptData[i]['value'], action);
+        }
+
         break;
       }
     }
@@ -217,42 +321,6 @@ export class ReceiptModeWiseComponent implements OnInit {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
         if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) {
           if (action != 'update') {
-          let vFormJson = {};
-          vFormJson = {
-            vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
-            vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
-            vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
-            vc_grno: '',
-            vc_invoiceno: '',
-            vc_debit: 0,
-            vc_credit: receiptHeadArr[i]['receipt_amt']
-          };
-          feeReceivableAmt = feeReceivableAmt + ( receiptHeadArr[i]['receipt_amt'])
-          voucherEntryArray.push(vFormJson);
-          break;
-          
-        } else {
-          var mathchedFlag = 0;
-          var deviation = 0;
-          var accountDebitSum = 0;
-          var accountCreditSum = 0;
-          var totalPrevHeadAmt = 0;
-          for (var k=0; k<this.currentVoucherData.vc_records.length;k++) {
-            for (var l=0; l<this.currentVoucherData.vc_records[k]['vc_particulars_data'].length;l++) {                
-              
-              if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type'] ) {
-                mathchedFlag = 1;
-                
-                accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
-                accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
-
-
-
-              }
-            }
-          }
-          console.log(mathchedFlag, 'matchedFlag')
-          if(!mathchedFlag) {
             let vFormJson = {};
             vFormJson = {
               vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -260,29 +328,34 @@ export class ReceiptModeWiseComponent implements OnInit {
               vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
               vc_grno: '',
               vc_invoiceno: '',
-              vc_debit:  receiptHeadArr[i]['receipt_amt'],
-              vc_credit: 0
+              vc_debit: 0,
+              vc_credit: receiptHeadArr[i]['receipt_amt']
             };
-            feeReceivableAmt = feeReceivableAmt + ( receiptHeadArr[i]['receipt_amt'])
+            feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
             voucherEntryArray.push(vFormJson);
+            break;
+
           } else {
-            totalPrevHeadAmt = accountDebitSum - accountCreditSum;
-            deviation = receiptHeadArr[i]['receipt_amt'] - totalPrevHeadAmt;
-            feeReceivableAmt = feeReceivableAmt + deviation;
-            if (deviation < 0 ) {
-              let vFormJson = {};
-              vFormJson = {
-                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
-                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
-                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
-                vc_grno: '',
-                vc_invoiceno: '',
-                vc_debit:  0,
-                vc_credit: -deviation
-              };
-              voucherEntryArray.push(vFormJson);
+            var mathchedFlag = 0;
+            var deviation = 0;
+            var accountDebitSum = 0;
+            var accountCreditSum = 0;
+            var totalPrevHeadAmt = 0;
+            for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+              for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
+                  mathchedFlag = 1;
+
+                  accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                  accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                }
+              }
             }
-            if (deviation > 0 ) {
+            if (!mathchedFlag) {
               let vFormJson = {};
               vFormJson = {
                 vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
@@ -290,21 +363,203 @@ export class ReceiptModeWiseComponent implements OnInit {
                 vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                 vc_grno: '',
                 vc_invoiceno: '',
-                vc_debit:  deviation,
+                vc_debit: receiptHeadArr[i]['receipt_amt'],
                 vc_credit: 0
               };
+              feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
               voucherEntryArray.push(vFormJson);
+            } else {
+              totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+              deviation = receiptHeadArr[i]['receipt_amt'] - totalPrevHeadAmt;
+              feeReceivableAmt = feeReceivableAmt + deviation;
+              if (deviation < 0) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: 0,
+                  vc_credit: -deviation
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+              if (deviation > 0) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: deviation,
+                  vc_credit: 0
+                };
+                voucherEntryArray.push(vFormJson);
+              }
             }
           }
         }
+      }
+    }
+    if (voucherEntryArray.length > 0) {
+      let vFormJson = {
+        vc_account_type: 'Fee Receiveable',
+        vc_account_type_id: 0,
+        vc_particulars: 'Fee Receiveable',
+        vc_grno: '',
+        vc_invoiceno: '',
+        vc_debit: 0,
+        vc_credit: feeReceivableAmt
+      };
+      voucherEntryArray.push(vFormJson);
+      this.getVoucherTypeMaxId(voucherEntryArray);
+    }
+
+
+  }
+
+  checkForNonPartialHeadData(receiptHeadArr, action) {
+    console.log(receiptHeadArr, this.chartsOfAccount);
+    var feeReceivableAmt = 0;
+    var voucherEntryArray = [];
+    for (var i = 0; i < receiptHeadArr.length; i++) {
+      for (var j = 0; j < this.chartsOfAccount.length; j++) {
+        if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) {
+          if (action != 'update') {
+            let vFormJson = {};
+            vFormJson = {
+              vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+              vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+              vc_grno: '',
+              vc_invoiceno: '',
+              vc_debit: receiptHeadArr[i]['receipt_amt'],
+              vc_credit: 0
+            };
+            voucherEntryArray.push(vFormJson);
+            // for (var k = 0; k < this.currentVoucherData['invoice_head_arr'].length; k++) {
+
+              var chartMatchedIndex = -1;
+              var currentHeadMatchedIndex = -1;
+
+
+
+              for (var l = 0; l < this.currentVoucherData['invoice_head_arr'][i]['head_data'].length; l++) {
+                var matchedIndexFlag = false;
+                if (this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']) > -1) {
+                  currentHeadMatchedIndex = l;
+                  chartMatchedIndex = this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']);
+                  matchedIndexFlag = true;
+                  console.log('in_'+i,this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name'] );
+                  if (matchedIndexFlag) {
+                    if (this.currentVoucherData['invoice_head_arr'][i]['head_data'][currentHeadMatchedIndex]['total_amount'] > 0) {
+                      let vFormJson1 = {};
+                      vFormJson1 = {
+                        vc_account_type: this.chartsOfAccountInvoice[chartMatchedIndex]['coa_acc_name'],
+                        vc_account_type_id: this.chartsOfAccountInvoice[chartMatchedIndex]['coa_id'],
+                        vc_particulars: this.chartsOfAccountInvoice[chartMatchedIndex]['coa_acc_name'],
+                        vc_grno: '',
+                        vc_invoiceno: '',
+                        vc_debit: 0,
+                        vc_credit: this.currentVoucherData['invoice_head_arr'][i]['head_data'][currentHeadMatchedIndex]['total_amount']
+                      };
+                      voucherEntryArray.push(vFormJson1);
+                    }
+                  // }
+
+
+                }
+              }
+              console.log('in1');
+
+              
+
+
+
+
+            }
+            console.log('out');
+            
+            feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt']);
+            
+            break;
+
+          } else {
+            var mathchedFlag = 0;
+            var deviation = 0;
+            var accountDebitSum = 0;
+            var accountCreditSum = 0;
+            var totalPrevHeadAmt = 0;
+            for (var k = 0; k < this.currentVoucherData.vc_records.length; k++) {
+              for (var l = 0; l < this.currentVoucherData.vc_records[k]['vc_particulars_data'].length; l++) {
+
+                if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] == this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_account_type']) {
+                  mathchedFlag = 1;
+
+                  accountDebitSum = accountDebitSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_debit'];
+                  accountCreditSum = accountCreditSum + this.currentVoucherData.vc_records[k]['vc_particulars_data'][l]['vc_credit'];
+
+
+
+                }
+              }
+            }
+            if (!mathchedFlag) {
+              let vFormJson = {};
+              vFormJson = {
+                vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                vc_grno: '',
+                vc_invoiceno: '',
+                vc_debit: receiptHeadArr[i]['receipt_amt'],
+                vc_credit: 0
+              };
+              feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
+              voucherEntryArray.push(vFormJson);
+            } else {
+              totalPrevHeadAmt = accountDebitSum - accountCreditSum;
+              deviation = receiptHeadArr[i]['receipt_amt'] - totalPrevHeadAmt;
+              feeReceivableAmt = feeReceivableAmt + deviation;
+              if (deviation < 0) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: 0,
+                  vc_credit: -deviation
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+              if (deviation > 0) {
+                let vFormJson = {};
+                vFormJson = {
+                  vc_account_type: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_account_type_id: this.chartsOfAccount[j]['coa_id'],
+                  vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
+                  vc_grno: '',
+                  vc_invoiceno: '',
+                  vc_debit: deviation,
+                  vc_credit: 0
+                };
+                voucherEntryArray.push(vFormJson);
+              }
+            }
+          }
         }
       }
     }
-    if (voucherEntryArray.length > 0 ) {
+    
+    if (voucherEntryArray.length > 0) {
       let vFormJson = {
-        vc_account_type: 'Fee Receipt',
+        vc_account_type: 'Fee Receiveable',
         vc_account_type_id: 0,
-        vc_particulars: 'Fee Receipt',
+        vc_particulars: 'Fee Receiveable',
         vc_grno: '',
         vc_invoiceno: '',
         vc_debit: 0,
@@ -369,7 +624,7 @@ export class ReceiptModeWiseComponent implements OnInit {
 
     if (this.vcData) {
       var fJson = {
-        vc_id:  this.currentVoucherData &&  this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
+        vc_id: this.currentVoucherData && this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
         vc_type: 'Journel Entry',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
@@ -377,38 +632,38 @@ export class ReceiptModeWiseComponent implements OnInit {
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
         vc_state: 'draft',
-        vc_process:'automatic/receipt'
+        vc_process: 'automatic/receipt'
 
       }
 
 
 
       console.log('fJson--', fJson);
-      if (!this.currentVoucherData.vc_id) {
-        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-          if (data) {
-            this.getInvoiceDayBook();
-            this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
-  
-  
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
-          }
-        });
-      } else {
-        
-        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-          if (data) {
-            this.getInvoiceDayBook();
-            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
-  
-  
-          } else {
-            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-          }
-        });
+      // if (!this.currentVoucherData.vc_id) {
+      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+      //     if (data) {
+      //       this.getInvoiceDayBook();
+      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
 
-      }
+
+      //     } else {
+      //       this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+      //     }
+      //   });
+      // } else {
+
+      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+      //     if (data) {
+      //       this.getInvoiceDayBook();
+      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
+
+
+      //     } else {
+      //       this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
+      //     }
+      //   });
+
+      // }
     }
 
 
