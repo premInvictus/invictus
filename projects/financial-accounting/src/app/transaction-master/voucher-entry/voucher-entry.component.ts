@@ -278,11 +278,17 @@ export class VoucherEntryComponent implements OnInit {
 				
 			}
 			if(this.voucherEntryArray.length > 0){
+				let tempdate:any;
+				if(!moment.isMoment(this.voucherForm.value.vc_date)){
+					tempdate = moment(this.voucherForm.value.vc_date);
+				} else {
+					tempdate = (this.voucherForm.value.vc_date);
+				}
 				var inputJson = {
 					vc_id : this.editMode ? this.currentVoucherId : null,
 					vc_type:this.currentVcType,
 					vc_number: { vc_code : this.voucherForm.value.vc_number, vc_name: this.getVcName()},
-					vc_date:this.voucherForm.value.vc_date.format("YYYY-MM-DD"),
+					vc_date:tempdate.format("YYYY-MM-DD"),
 					vc_narrations:this.voucherForm.value.vc_narrations,
 					vc_attachments: this.attachmentArray,
 					vc_particulars_data: this.voucherEntryArray,
@@ -505,8 +511,15 @@ export class VoucherEntryComponent implements OnInit {
 			});
 		}
 		//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
-		const tempDate = this.voucherForm.value.vc_date;
+		let tempDate:any;
+		if(!moment.isMoment(this.voucherForm.value.vc_date)) {
+			 tempDate = moment(this.voucherForm.value.vc_date);
+		} else {
+			 tempDate = this.voucherForm.value.vc_date;
+		}
+		
 		console.log('tempDate',tempDate);
+		
 		let vcDay = tempDate.format('DD')
 		let vcMonth = tempDate.format('MMM');
 		let vcYear = tempDate.format('YYYY');

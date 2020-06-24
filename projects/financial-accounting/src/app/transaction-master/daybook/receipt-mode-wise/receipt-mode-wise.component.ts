@@ -440,19 +440,15 @@ export class ReceiptModeWiseComponent implements OnInit {
             };
             voucherEntryArray.push(vFormJson);
             // for (var k = 0; k < this.currentVoucherData['invoice_head_arr'].length; k++) {
-
               var chartMatchedIndex = -1;
               var currentHeadMatchedIndex = -1;
-
-
-
               for (var l = 0; l < this.currentVoucherData['invoice_head_arr'][i]['head_data'].length; l++) {
                 var matchedIndexFlag = false;
                 if (this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']) > -1) {
                   currentHeadMatchedIndex = l;
                   chartMatchedIndex = this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']);
                   matchedIndexFlag = true;
-                  console.log('in_'+i,this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name'] );
+                 // console.log('in_'+i,this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name'] );
                   if (matchedIndexFlag) {
                     if (this.currentVoucherData['invoice_head_arr'][i]['head_data'][currentHeadMatchedIndex]['total_amount'] > 0) {
                       let vFormJson1 = {};
@@ -472,15 +468,7 @@ export class ReceiptModeWiseComponent implements OnInit {
 
                 }
               }
-              console.log('in1');
-
-              
-
-
-
-
             }
-            console.log('out');
             
             feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt']);
             

@@ -105,6 +105,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/getSattleJV', value);
 	}
+	changeSattleStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/changeSattleStatus', value);
+	}
 	
 	
 }
