@@ -132,10 +132,11 @@ export class ChartsofAccountComponent implements OnInit,AfterViewInit {
           }
           this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           this.dataSource.paginator = this.paginator;
-          if (this.sort) {
-            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-            this.dataSource.sort = this.sort;
-          }
+          this.dataSource.sort = this.sort;
+          // if (this.sort) {
+          //   this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          //   this.dataSource.sort = this.sort;
+          // }
         
 			} else {
 				this.accountsArray = [];
