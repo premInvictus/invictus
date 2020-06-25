@@ -13,6 +13,7 @@
           <th class="mat-header-cell">Receipt Amount</th>
           <th class="mat-header-cell">Concession & Adjustments</th>
           <th class="mat-header-cell">Balance Fee</th>
+          
         </tr>
       </thead>
       <tbody>
@@ -22,6 +23,7 @@
           <td>{{responseData.prev_month_total_receipt_amt | indianCurrency}}</td>
           <td>{{responseData.prev_month_concession_total_amt + responseData.prev_month_adjustment_total_amt | indianCurrency}}</td>
           <td>{{responseData.prev_month_head_total_amt - (responseData.prev_month_total_receipt_amt + responseData.prev_month_concession_total_amt + responseData.prev_month_adjustment_total_amt) | indianCurrency}}</td>
+          <td class="action-btn" *ngIf="!partialPaymentStatus">&nbsp;</td>
         </tr>
         <tr *ngFor="let item of ELEMENT_DATA">
           <td>{{item.date | date: 'd-MMM-yyyy'}}</td>
@@ -29,6 +31,7 @@
           <td>{{item.receipt_amt | indianCurrency}}</td>
           <td>{{item.con_adj | indianCurrency}}</td>
           <td>{{item.balance_amt | indianCurrency}}</td>
+         
         </tr>
         <tr *ngIf="param.month == '04'">
           <td class="text-bold">Total</td>
@@ -36,6 +39,7 @@
           <td class="text-bold">{{getTotal('receipt_amt') | indianCurrency}}</td>
           <td class="text-bold">{{getTotal('con_adj') | indianCurrency}}</td>
           <td class="text-bold">{{getTotal('balance_amt') | indianCurrency}}</td>
+         
         </tr>
         <tr *ngIf="param.month != '04'">
           <td class="text-bold">Total</td>
@@ -43,6 +47,7 @@
           <td class="text-bold">{{getTotal('receipt_amt') + responseData.prev_month_total_receipt_amt | indianCurrency}}</td>
           <td class="text-bold">{{getTotal('con_adj') + responseData.prev_month_concession_total_amt + responseData.prev_month_adjustment_total_amt | indianCurrency}}</td>
           <td class="text-bold">{{getTotal('balance_amt') + responseData.prev_month_head_total_amt - (responseData.prev_month_total_receipt_amt + responseData.prev_month_concession_total_amt + responseData.prev_month_adjustment_total_amt) | indianCurrency}}</td>
+         
         </tr>
       </tbody>
       </table>

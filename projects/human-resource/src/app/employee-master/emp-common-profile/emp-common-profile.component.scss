@@ -1,0 +1,46 @@
+.adm-no-student-30 {
+    font-size: 30px !important;
+}
+button.nav-button.mat-mini-fab.mat-accent {
+    width: 18px !important;
+    margin-top: -10px !important;
+}
+.blue-circle-btn{
+    cursor: pointer;
+}
+.center-field{
+    text-align: center !important;
+}
+.vertical-divider {
+    border-right: 2px solid #dee2e6;
+    margin-right: 1.5%;
+}
+.vertical-divide {
+    height: auto !important;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+}
+.blink{
+    background-color: #e11022;
+    text-align: center;
+}
+.blink span{
+    font-family: cursive;
+    color: white;
+    animation: blink 1s linear infinite;
+}
+@keyframes blink{
+    0%{opacity: 0;}
+    50%{opacity: .5;}
+    100%{opacity: 1;}
+    }
+    @media (max-width: 2399px) and (min-width: 1200px)
+{
+.smart-col-111 {
+    border-right: 2px solid #d8d5d5 !important;
+    max-width: 14% !important;
+    white-space: pre-line;
+    word-break: break-all;
+    flex: 0 0 15% !important;
+}
+}

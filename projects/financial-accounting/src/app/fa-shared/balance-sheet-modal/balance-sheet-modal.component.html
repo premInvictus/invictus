@@ -164,7 +164,7 @@
           <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
 
-              <tr>
+              <!-- <tr *ngIf="partialPaymentStatus">
                 <td width="20%">-</td>
                 <td width="65%" class="text-left"><b>Fee Receiveable</b></td>
                 <td width="15%" class="text-right">
@@ -175,7 +175,7 @@
                     <b>{{getTwoDecimalValue((param?.head_total_amt)  - (param?.total_receipt_amt)) | indianCurrency}}</b>
                   </span>
                 </td>
-              </tr>
+              </tr> -->
 
               <ng-container *ngFor="let item of param.assets_group_data ">
                 <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">

@@ -229,6 +229,18 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/update', value);
 	}
+	updateEmployeeDatainBulk(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/updateEmployeeDatainBulk', value);
+	}
+	generatePaySlip(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/generatePaySlip', value);
+	}
+	getEmployeeLedger(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getEmployeeLedger', value);
+	}
 
 	deleteEmployee(value) {
 		this.loader.startLoading();

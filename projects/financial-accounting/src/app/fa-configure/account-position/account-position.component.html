@@ -37,31 +37,31 @@
                   <td>{{ item.acc_name | titlecase}}</td>
                   <td>
                     <mat-slide-toggle class="inline-form-radio-spacing"
-                        [checked]="item.display_section.trialBalance" aria-hidden="true"
+                        [checked]="item?.display_section?.trialBalance" aria-hidden="true"
                         (change)="toggleStatus($event,i,'trialBalance')">
                     </mat-slide-toggle>
                   </td>
                   <td>
                     <mat-slide-toggle class="inline-form-radio-spacing"
-                        [checked]="item.display_section.income" aria-hidden="true"
+                        [checked]="item?.display_section?.income" aria-hidden="true"
                         (change)="toggleStatus($event,i,'income')">
                     </mat-slide-toggle>
                   </td>
                   <td>
                     <mat-slide-toggle class="inline-form-radio-spacing"
-                        [checked]="item.display_section.expenditure" aria-hidden="true"
+                        [checked]="item?.display_section?.expenditure" aria-hidden="true"
                         (change)="toggleStatus($event,i,'expenditure')">
                     </mat-slide-toggle>
                   </td>
                   <td>
                     <mat-slide-toggle class="inline-form-radio-spacing"
-                        [checked]="item.display_section.balanceSheet.liabilities" aria-hidden="true"
+                        [checked]="item?.display_section?.balanceSheet?.liabilities" aria-hidden="true"
                         (change)="toggleStatus($event,i,'liabilities')">
                     </mat-slide-toggle>
                   </td>
                   <td>
                     <mat-slide-toggle class="inline-form-radio-spacing"
-                        [checked]="item.display_section.balanceSheet.assets" aria-hidden="true"
+                        [checked]="item?.display_section?.balanceSheet?.assets" aria-hidden="true"
                         (change)="toggleStatus($event,i,'assets')">
                     </mat-slide-toggle>
                   </td>

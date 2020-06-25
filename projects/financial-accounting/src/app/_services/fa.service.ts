@@ -52,6 +52,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
 	}
+	getNonPartialDayBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getNonPartialDayBook', value);
+	}
 	getFeeMonths(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
@@ -85,6 +89,25 @@ export class FaService {
 	printvoucher(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/printvoucher', value);
+	}
+	getGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	getSession() {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/session');
+	}
+	getFeeHead(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeHeads/getFeeHeads', value);
+	}
+	getSattleJV(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getSattleJV', value);
+	}
+	changeSattleStatus(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/changeSattleStatus', value);
 	}
 	
 	

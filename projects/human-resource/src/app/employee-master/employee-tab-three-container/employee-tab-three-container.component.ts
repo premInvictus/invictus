@@ -469,10 +469,20 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.empBankDetail = [];
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.emp_bank_detail.length; i++) {
 				this.empBankDetail.push(this.fbuild.group({
-					bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] && this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'] ? this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString() : '',
+					bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]
+					&& 
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] 
+					&& this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'] 
+					? this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString() : '',
 					//bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_name'],
-					bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'],
-					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc']
+					bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[i]
+					&&  this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] && 
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] ?
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] : '',
+					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i] && 
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] &&
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] ?
+					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] : ''
 				}));
 			}
 		} else {

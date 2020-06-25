@@ -15,7 +15,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
 	formGroupArray: any[] = [];
-	totalPresentArr : any[] = [];
+	totalPresentArr: any[] = [];
 	//editFlag = false;
 	employeeData: any[] = [];
 	EMPLOYEE_ELEMENT: EmployeeElement[] = [];
@@ -171,14 +171,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 								if (emp_attendance_detail && (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
 									if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
 										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail
-										&& emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
-										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail && 
-										emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+											&& emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : 0;
+										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+											emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
 										var presentDays = Number(lwpDays) < 0 ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 										element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
 										if (item.emp_status === 'live') {
 											element.emp_total_attendance = presentDays && presentDays !== 0 ?
-											presentDays : no_of_days;
+												presentDays : no_of_days;
 										}
 										if (item.emp_status === 'left') {
 											const month: any = item.emp_salary_detail
@@ -231,15 +231,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 						// this.getLWP(element, pos);
 
 						if (Number(element.emp_total_attendance)) {
-						element.emp_total_attendance = element.emp_total_attendance &&
-							element.emp_lwp ? (Number(element.emp_total_attendance)
-								- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
-								this.totalPresentArr.push(element.emp_total_attendance);
+							element.emp_total_attendance = element.emp_total_attendance &&
+								element.emp_lwp ? (Number(element.emp_total_attendance)
+									- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
+							this.totalPresentArr.push(element.emp_total_attendance);
 						} else {
 							element.emp_total_attendance = Number(no_of_days);
 							this.totalPresentArr.push(element.emp_total_attendance);
 						}
-								console.log(this.totalPresentArr);
+						console.log(this.totalPresentArr);
 						this.EMPLOYEE_ELEMENT.push(element);
 						pos++;
 						j++;
@@ -321,8 +321,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				emp_month_attendance_data: item.emp_month_attendance_data
 			});
 		}
-		this.commonAPIService.updateEmployee(filterArr).subscribe((result: any) => {
-			if (result) {
+		this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
 				this.disabledApiButton = false;
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 			} else {
@@ -442,8 +442,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 			}
 		}
 		if (employeeArrData.length > 0) {
-			this.commonAPIService.updateEmployee(employeeArrData).subscribe((result: any) => {
-				if (result) {
+			const filterArr: any[] = [];
+			for (const item of this.employeeData) {
+				filterArr.push({
+					emp_id: item.emp_id,
+					emp_month_attendance_data: item.emp_month_attendance_data
+				});
+			}
+			this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
 					this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 					this.getEmployeeDetail();
 				} else {

@@ -1,4 +1,155 @@
-<div class="row remove-top-margin">
-  
-  Employee Ledger
+<div>
+  <div class="row">
+    <div class="col-12 ">
+      <mat-card class="card-top-title__container">
+        <div class="row">
+          <div class="col-6">
+            <h1 class="remove-bottom-margin font-size-24">Employee Ledger</h1>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <app-emp-common-profile [loginId]="lastRecordId" (next)="getEmployeeLedger($event)"
+        (prev)="getEmployeeLedger($event)" (first)="getEmployeeLedger($event)" (last)="getEmployeeLedger($event)">
+      </app-emp-common-profile>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="card-top-title__container ">
+        <div class="row">
+          <div class="col-12">
+            <div>
+              <div class="table-overflow" [hidden]="EMPLOYEE_LEDGER_ELEMENT.length == 0">
+                <table id="fee_ledger" #table mat-table [dataSource]="ledgerDataSource" class="text-center table-100">
+                  <ng-container matColumnDef="sno">
+                    <th mat-header-cell *matHeaderCellDef width="5%">
+                      #
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.srno}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="particulars">
+                    <th mat-header-cell *matHeaderCellDef width="12%"> Particulars </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.particulars}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>
+                      {{totalObj.particulars}}
+                    </td>
+                  </ng-container>
+                  <ng-container matColumnDef="month" width="8%">
+                    <th mat-header-cell *matHeaderCellDef> Month</th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      <span class="mon-span" (click)="openSalarySlip(item, item.action.details.emp_id)">{{item.mon}}
+                      </span>
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <ng-container matColumnDef="attendance">
+                    <th mat-header-cell *matHeaderCellDef> Attendance</th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.attendance}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.attendance | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="netearnings">
+                    <th mat-header-cell *matHeaderCellDef> Net Earnings (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.netearnings | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.netearnings | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="deductions">
+                    <th mat-header-cell *matHeaderCellDef> Deductions (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.deductions | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.deductions | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="advances">
+                    <th mat-header-cell *matHeaderCellDef> Advances (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.advance | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.advance | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="salarypayable">
+                    <th mat-header-cell *matHeaderCellDef> Salary Payable (<span><i
+                          class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.salarypayable | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.salarypayable | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="salarypaid">
+                    <th mat-header-cell *matHeaderCellDef> Salary Paid (<span><i class="fas fa-rupee-sign"></i></span>)
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.salarypaid | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.salarypaid | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="balance">
+                    <th mat-header-cell *matHeaderCellDef> Balance (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.balance | number | zerodash}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.balance | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="mop">
+                    <th mat-header-cell *matHeaderCellDef> MOP (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item">
+                      {{item.mop }}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef>{{totalObj.mop | number | zerodash}}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="remarks">
+                    <th mat-header-cell *matHeaderCellDef> Remarks
+                      <span style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                          src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
+                    </th>
+                    <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
+                      [style.display]="getRowSpan('mon', i) ? '' : 'none'">
+                      {{item.remarks}}
+                    </td>
+                    <td mat-footer-cell *matFooterCellDef></td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="ledgerDisplayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: ledgerDisplayedColumns;"></tr>
+                  <tr mat-footer-row *matFooterRowDef="ledgerDisplayedColumns;"
+                    [hidden]="EMPLOYEE_LEDGER_ELEMENT.length == 0"></tr>
+                </table>
+              </div>
+              <div *ngIf="EMPLOYEE_LEDGER_ELEMENT.length == 0">
+                <table class="table-100 text-center" style="margin-top:5px;">
+                  <tr>
+                    <td colspan="8">No Record Found</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+    </div>
+  </div>
 </div>

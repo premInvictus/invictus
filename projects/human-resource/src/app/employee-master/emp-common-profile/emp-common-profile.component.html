@@ -1,0 +1,204 @@
+<mat-card class="card-padding-5">
+  <form [formGroup]="employeeDetailsForm">
+    <div class="row remove-top-margin">
+      <div class="col-1 custom-fee-entry-col-8 ">
+        <div class="row margin-top-20">
+          <div class="col-12 text-center">
+            <img style="border-radius:50%"
+              [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'"
+              onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=68&w=68'" />
+          </div>
+        </div>
+      </div>
+      <div class="col-2 tab-col-18 remove-col-padding custom-fee-entry-col-15 custom-fee-entry-col-18">
+        <div class="row">
+          <div class="col-12 remove-col-padding text-center">
+            <div class="row remove-margin">
+              <div class="col-12 text-center">
+                <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
+                <span class="font-size-16">
+                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
+                    (click)="openSearchDialog()"></i>
+                </span>
+              </div>
+            </div>
+            <div class="row" style="margin-top: -10px !important;">
+              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+                <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
+                  (click)="firstId(navigation_record.first_record)"><i class="material-icons">
+                    first_page
+                  </i></button>
+                <button mat-mini-fab class="nav-button1 tab-display-contents" [disabled]="previousB"
+                  (click)="prevId(navigation_record.prev_record)"><i class="material-icons">
+                    navigate_before
+                  </i></button>
+              </div>
+              <div class="col-4 custom-col-30 text-center remove-col-padding">
+                <mat-form-field class="form-field text-center">
+                  <input matInput #enrollmentFocus class="adm-no-student-30 font-size-30" id="blur_id"
+                    formControlName="emp_id" (keydown.enter)="loadOnEnrollmentId($event)" #myInput
+                    (click)="myInput.select()">
+                </mat-form-field><br>
+                <div class="font-size-16 font-bold blink" *ngIf="employeeDetails.emp_status == 'left'">
+                  <span>Left</span></div>
+              </div>
+              <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
+                <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="nextB"
+                  (click)="nextId(navigation_record.next_record)"><i class="material-icons">
+                    navigate_next
+                  </i></button>
+                <button mat-mini-fab class="nav-button1 tab-display-contents" [disabled]="lastB"
+                  (click)="lastId(navigation_record.last_record)"><i class="material-icons">
+                    last_page
+                  </i>
+                </button>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3 smart-col-111">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Name:</span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_name ? (employeeDetails.emp_name | titlecase) : '-'}}
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-12 text-left tab-remove-padding">
+              <span class="font-size-14 font-light">Designation:</span>
+              <span class="font-size-14 font-bold">{{employeeDetails.emp_designation_detail && 
+                employeeDetails.emp_designation_detail.des_name ? 
+                (employeeDetails.emp_designation_detail.des_name  | titlecase): '-'}}</span>
+            </div>
+            <div class="col-12 text-left tab-remove-padding">
+              <span style="position: relative;
+              top: 10px;" class="font-size-14 font-light"> Department: </span>
+              <span style="position: relative;
+              top: 10px;" class="font-size-14 font-bold"> {{employeeDetails.emp_department_detail && 
+              employeeDetails.emp_department_detail.dpt_name ? 
+              (employeeDetails.emp_department_detail.dpt_name  | titlecase): '-'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-3 smart-col-111 ">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Category:</span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_category_detail && 
+                employeeDetails.emp_category_detail.cat_name ? 
+                (employeeDetails.emp_category_detail.cat_name  | titlecase): '-'}}
+            </span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Contact :</span>
+            <span class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
+                employeeDetails.emp_personal_detail.contact_detail
+                && employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no ? 
+                (employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no): '-'}}</span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Email :</span>
+            <span class="font-size-14 font-bold">{{employeeDetails.emp_personal_detail && 
+                  employeeDetails.emp_personal_detail.contact_detail
+                  && employeeDetails.emp_personal_detail.contact_detail.email_id ? 
+                  (employeeDetails.emp_personal_detail.contact_detail.email_id): '-'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-3 smart-col-111 ">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Date of Joining: </span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail &&
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail.doj? 
+                (employeeDetails.emp_salary_detail.emp_organisation_relation_detail.doj  | date : 'd-MMM-y'): '-'}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Date of Leaving: </span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail &&
+                employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol? 
+                (employeeDetails.emp_salary_detail.emp_organisation_relation_detail.dol  | date : 'd-MMM-y'): '-'}}</span>
+          </div>
+        </div>
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Balance of Advance:</span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_salary_detail && 
+                employeeDetails.emp_salary_detail.emp_salary_structure &&
+                employeeDetails.emp_salary_detail.emp_salary_structure.advance_details &&
+                employeeDetails.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance ? 
+                (employeeDetails.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance  
+                ): '-'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-3 smart-col-111 ">
+        <div class="row margin-top-8">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light"> Attendance: </span>
+            <span class="font-size-14 font-bold">
+              -</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Leaves Availed:</span>
+            <span class="font-size-14 font-bold">
+              -</span>
+          </div>
+        </div>
+        <div class="row margin-top-10">
+          <div class="col-12 text-left tab-remove-padding">
+            <span class="font-size-14 font-light">Balance of Leaves:</span>
+            <span class="font-size-14 font-bold">
+              {{employeeDetails.emp_month_attendance_data && 
+                employeeDetails.emp_month_attendance_data.leave_opening_balance 
+                 ? 
+                (employeeDetails.emp_month_attendance_data.leave_opening_balance  
+                ): '-'}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-3  custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
+        <div class="row remove-top-margin ">
+          <div class="col-6">
+            <div class=" blue-circle-btn margin-top-5" (click)="goToPage('student-profile')"
+              matTooltip="Student Profile">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/student_profile.svg">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="margin-top-5 blue-circle-btn" (click)="goToPage('fee-ledger')" matTooltip="Fee Ledger">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_modification.svg">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class=" blue-circle-btn margin-top-5" matTooltip="Fee Transaction Entry"
+              (click)="goToPage('fee-transaction-entry-individual')">
+              <img style="margin-left: 13px ; margin-top: 12px" src="/assets/fee_transaction_entry.svg">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-card>

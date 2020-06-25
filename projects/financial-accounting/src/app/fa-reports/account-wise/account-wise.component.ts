@@ -1,12 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewInit, ViewEncapsulation } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, FormArray } from '@angular/forms';
-import { DynamicComponent } from '../../sharedmodule/dynamiccomponent';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CommonAPIService, SisService } from '../../_services/index';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, ViewChild ,ElementRef } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FormGroup, FormArray, FormBuilder, Validators, FormControl } from '@angular/forms';
+import {SelectionModel} from '@angular/cdk/collections';
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
+import { SisService, CommonAPIService, FaService } from '../../_services/index';
+import {Element} from './model';
 import { DecimalPipe, DatePipe, TitleCasePipe } from '@angular/common';
-import * as XLSX from 'xlsx';
+import { CapitalizePipe, IndianCurrency } from '../../_pipes';
 
+import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import * as Excel from 'exceljs/dist/exceljs';
 declare var require;
@@ -23,14 +25,12 @@ import {
 } from 'angular-slickgrid';
 
 @Component({
-	selector: 'app-birthday-report',
-	templateUrl: './birthday-report.component.html',
-	styleUrls: ['./birthday-report.component.scss'],
-	encapsulation: ViewEncapsulation.None
+  selector: 'app-account-wise',
+  templateUrl: './account-wise.component.html',
+  styleUrls: ['./account-wise.component.css']
 })
-export class BirthdayReportComponent implements OnInit, AfterViewInit {
-
-	columnDefinitions: Column[] = [];
+export class AccountWiseComponent implements OnInit {
+  columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
 	angularGrid: AngularGridInstance;
@@ -80,43 +80,31 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 	pdfrowdata: any[] = [];
 	levelHeading: any[] = [];
 	levelTotalFooter: any[] = [];
-	levelSubtotalFooter: any[] = [];
-	
-	showDate = true;
-	showDateRange = false;
-	events: any;
-	@ViewChild('TABLE') table: ElementRef;
-	enrollMentTypeArray: any[] = [{
-		au_process_type: '1', au_process_name: 'Enquiry'
-	},
-	{
-		au_process_type: '2', au_process_name: 'Registration'
-	},
-	{
-		au_process_type: '3', au_process_name: 'Provisional Admission'
-	},
-	{
-		au_process_type: '4', au_process_name: 'Admission'
-	},
-	{
-		au_process_type: '5', au_process_name: 'Alumini'
-	}];
+  levelSubtotalFooter: any[] = [];
+  reportProcessWiseData: any[] = [];
+  @ViewChild('TABLE') table: ElementRef;
 
+  paramForm:FormGroup;
+  accountsArray:any[] = [];
+  ledgerArray:any[] = [];
+  feeMonthArray:any[] = [];
+  tableDivFlag = false;
+	ELEMENT_DATA: Element[];
+  constructor(
+    private fbuild: FormBuilder,
+		private sisService: SisService,
+		private commonAPIService: CommonAPIService,
+		private faService:FaService,
+  ) { }
 
-	birthdayReportForm: FormGroup;
-
-	reportProcessWiseData: any[] = [];
-	constructor(private fbuild: FormBuilder, public sanitizer: DomSanitizer,
-		private notif: CommonAPIService, private sisService: SisService,
-		private router: Router,
-		private route: ActivatedRoute) { }
-
-	ngOnInit() {
-		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-		this.getSchool();
-		this.getSession();
-		this.buildForm();
-		this.gridOptions = {
+  ngOnInit() {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.getSchool();
+    this.getSession();
+    this.buildForm();
+    this.getFeeMonths();
+    this.getAccounts();
+    this.gridOptions = {
 			enableDraggableGrouping: true,
 			enableGrouping: true,
 			createPreHeaderPanel: true,
@@ -191,9 +179,9 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 			}
 		};
 		this.columnDefinitions = [
-			{ id: 'admission_no', name: 'Adm.No.', field: 'admission_no', sortable: true, filterable: true,
+			{ id: 'vc_date', name: 'Date', field: 'vc_date', sortable: true, filterable: true,formatter: this.checkDateFormatter,
 			grouping: {
-				getter: 'admission_no',
+				getter: 'vc_date',
 				formatter: (g) => {
 					return `${g.value}  <span style="color:green">(${g.count})</span>`;
 				},
@@ -201,44 +189,69 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 				aggregateCollapsed: true,
 				collapsed: false,
 			},
-			groupTotalsFormatter: this.srnTotalsFormatter },
-			{ id: 'full_name', name: 'Student Name', field: 'full_name', sortable: true, filterable: true,
-			groupTotalsFormatter: this.countTotalsFormatter },
-			{ id: 'class_name', name: 'Class', field: 'class_name', sortable: true, filterable: true, maxWidth: 150,
-			grouping: {
-				getter: 'class_name',
-				formatter: (g) => {
-					return `${g.value}  <span style="color:green">(${g.count})</span>`;
-				},
-				aggregators: this.aggregatearray,
-				aggregateCollapsed: true,
-				collapsed: false,
-			}},
-			{ id: 'dob', name: 'DOB', field: 'dob', sortable: true, filterable: true,
-				 formatter: this.checkDateFormatter,
-				 grouping: {
-					getter: 'dob',
+      groupTotalsFormatter: this.srnTotalsFormatter },
+      { id: 'vc_account', name: 'Account', field: 'vc_account', sortable: true, filterable: true,
+				 grouping: { 
+					getter: 'vc_account',
 					formatter: (g) => {
 						return `${g.value}  <span style="color:green">(${g.count})</span>`;
 					},
 					aggregators: this.aggregatearray,
 					aggregateCollapsed: true,
 					collapsed: false,
-				} }
+				} },
+			{ id: 'vc_amount', name: 'Amount', field: 'vc_amount', sortable: true, filterable: true,formatter: this.checkFeeFormatter,
+			groupTotalsFormatter: this.sumTotalsFormatter },
+			
+			
 		];
-	}
-
-	ngAfterViewInit() {
-	}
-
-	buildForm() {
-		this.birthdayReportForm = this.fbuild.group({
-			fdate: new Date(),
-			cdate: new Date(),
-			tdate: new Date()
+  }
+  buildForm() {
+    this.paramForm = this.fbuild.group({
+      coa_id:'',
+      vc_account_type:'',
+      monthId:'',
+      type: 'credit'
+    })
+  }
+  getAccounts(event = null) {
+		console.log('event',event);
+		if(event){
+			console.log('key',event.keyCode);
+			if(event.keyCode != 38 && event.keyCode != 40 ){
+				let param: any = {};
+				if(event) {
+					param.coa_acc_name = event.target.value
+				}
+				this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+					if(data) {
+						this.accountsArray = data;
+					} else {
+						this.accountsArray = [];
+					}
+				})
+			}
+		} else {
+			let param: any = {};
+			if(event) {
+				param.coa_acc_name = event.target.value
+			}
+			this.faService.getAllChartsOfAccount(param).subscribe((data:any)=>{
+				if(data) {
+					this.accountsArray = data;
+				} else {
+					this.accountsArray = [];
+				}
+			})	
+		}
+  }
+  setaccount(item) {
+		this.paramForm.patchValue({
+      coa_id: item.coa_id,
+      vc_account_type: item.coa_acc_name
 		});
-	}
-	getSchool() {
+   }
+   getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
@@ -258,7 +271,109 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
-	onGroupChanged(groups: Grouping[]) {
+
+  getFeeMonths() {
+		this.feeMonthArray = [];
+		this.faService.getFeeMonths({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+			//	console.log(result.data);
+        this.feeMonthArray = result.data;
+        this.feeMonthArray.push({
+          fm_id:'consolidate',
+          fm_name:'Consolidated'
+        })
+			}
+		});
+  }
+  getLedger(){
+    this.tableFlag = false;
+    this.ELEMENT_DATA = [];
+    this.reportProcessWiseData = [];
+    if(this.paramForm.valid){
+      console.log(this.paramForm.value);
+      var inputJson = {
+        monthId : this.paramForm.value.monthId && (this.paramForm.value.monthId != 'consolidate') ? Number(this.paramForm.value.monthId) : 'consolidate'
+      };
+      if (this.paramForm.value.coa_id) {
+        inputJson['coa_id'] = [this.paramForm.value.coa_id ? this.paramForm.value.coa_id : null]
+      }
+      this.faService.getTrialBalance(inputJson).subscribe((data:any)=>{
+        this.tableFlag = true;
+        if(data) { 
+          const tempdata = data.ledger_data.find( e => e.coa_id == this.paramForm.value.coa_id);
+          console.log(tempdata);
+          const renderdata = this.paramForm.value.type == 'credit' ? tempdata.credit_data : tempdata.debit_data;
+          if(this.paramForm.value.type == 'credit'){
+            const renderdata = tempdata.credit_data;
+            for (const item of renderdata) {
+              const element = {
+                vc_date: item.vc_date,
+                vc_account: item.vc_account_type,
+                vc_amount:item.vc_debit,
+              };
+              this.ELEMENT_DATA.push(element);              
+            }
+          } else {
+            const renderdata = tempdata.debit_data;
+            for (const item of renderdata) {
+              const element = {
+                vc_date: item.vc_date,
+                vc_account: item.vc_account_type,
+                vc_amount:item.vc_credit,
+              };
+              this.ELEMENT_DATA.push(element);              
+            }
+          }
+          // this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+          // this.dataSource.paginator = this.paginator;
+          // if (this.sort) {
+          //   this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          //   this.dataSource.sort = this.sort;
+          // }
+          this.reportProcessWiseData = this.ELEMENT_DATA;
+					this.prepareDataSource();
+        } else {
+          
+        }
+      })
+    }
+  }
+  prepareDataSource() {
+    this.dataset = [];
+		let counter = 1;
+		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
+			const tempObj = {};
+			tempObj['id'] = counter;
+			tempObj['counter'] = counter;
+			tempObj['vc_date'] = this.valueAndDash(this.reportProcessWiseData[i]['vc_date']);
+			tempObj['vc_account'] = this.valueAndDash(this.reportProcessWiseData[i]['vc_account']);
+			tempObj['vc_amount'] = this.valueAndDash(this.reportProcessWiseData[i]['vc_amount']);
+			this.dataset.push(tempObj);
+			counter++;
+		}
+		const blankTempObj = {};
+		this.columnDefinitions.forEach(element => {
+			if (element.id === 'vc_date') {
+				blankTempObj[element.id] = 'Grand Total';
+			} else if (element.id === 'vc_amount') {
+				blankTempObj[element.id] = new IndianCurrency().transform(this.dataset.reduce((a,b) => a+=b.vc_amount,0))
+			} else {
+				blankTempObj[element.id] = '';
+			}
+		});
+		this.totalRow = blankTempObj;
+		if (this.dataset.length > 20) {
+			this.gridHeight = 800;
+		} else if (this.dataset.length > 10) {
+			this.gridHeight = 650;
+		} else if (this.dataset.length > 5) {
+			this.gridHeight = 500;
+		} else {
+			this.gridHeight = 400;
+		}
+		this.aggregatearray.push(new Aggregators.Sum('vc_amount'));
+  }
+  onGroupChanged(groups: Grouping[]) {
 		if (Array.isArray(this.selectedGroupingFields) && Array.isArray(groups) && groups.length > 0) {
 			// update all Group By select dropdown
 			this.selectedGroupingFields.forEach((g, i) => {
@@ -273,7 +388,7 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		while (columnIdx--) {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
-			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+			columnElement.innerHTML = '<b style="float:left">' + this.totalRow[columnId] + '<b>';
 		}
 	}
 	getGroupColumns(columns) {
@@ -315,7 +430,7 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		this.levelHeading = [];
 		this.levelTotalFooter = [];
 		this.levelSubtotalFooter = [];
-		const reportType = this.getReportHeader() ;
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const doc = new jsPDF('p', 'mm', 'a0');
 		doc.autoTable({
 			// tslint:disable-next-line:max-line-length
@@ -538,10 +653,10 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 					this.checkGroupLevelPDF(groupItem.groups, doc, headerData);
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'vc_date') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'vc_amount') {
+							levelArray.push( groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0));
 						} else {
 							levelArray.push('');
 						}
@@ -567,10 +682,10 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 					});
 					const levelArray: any[] = [];
 					for (const item2 of this.columnDefinitions) {
-						if (item2.id === 'admission_no') {
+						if (item2.id === 'vc_date') {
 							levelArray.push(this.getLevelFooter(groupItem.level));
-						} else if (item2.id === 'full_name') {
-							levelArray.push( groupItem.rows.length);
+						} else if (item2.id === 'vc_amount') {
+							levelArray.push(groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0));
 						} else {
 							levelArray.push('');
 						}
@@ -620,10 +735,11 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 					this.checkGroupLevel(groupItem.groups, worksheet);
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'vc_date') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
-							blankTempObj[element.id] = groupItem.rows.length;
+						} else if (element.id === 'vc_amount') {
+							//blankTempObj[element.id] = groupItem.rows.length;
+							blankTempObj[element.id] = groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0);
 						} else {
 							blankTempObj[element.id] = '';
 						}
@@ -681,10 +797,11 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 					});
 					const blankTempObj = {};
 					this.columnDefinitions.forEach(element => {
-						if (element.id === 'admission_no') {
+						if (element.id === 'vc_date') {
 							blankTempObj[element.id] = this.getLevelFooter(groupItem.level);
-						} else if (element.id === 'full_name') {
-							blankTempObj[element.id] = groupItem.rows.length;
+						} else if (element.id === 'vc_amount') {
+							//blankTempObj[element.id] = groupItem.rows.length;
+							blankTempObj[element.id] = groupItem.rows.map(t => t.vc_amount).reduce((acc, val) => acc + val, 0);
 						} else {
 							blankTempObj[element.id] = '';
 						}
@@ -940,14 +1057,14 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 	}
 	getParamValue() {
 		const paramArr: any[] = [];
-		if (this.showDateRange) {
-			paramArr.push(
-				this.notif.dateConvertion(this.birthdayReportForm.value.fdate, 'd-MMM-y') + ' - ' +
-				this.notif.dateConvertion(this.birthdayReportForm.value.tdate, 'd-MMM-y'));
-		} else {
-			paramArr.push(
-				this.notif.dateConvertion(this.birthdayReportForm.value.cdate, 'd-MMM-y'));
-		}
+		// if (this.showDateRange) {
+		// 	paramArr.push(
+		// 		this.notif.dateConvertion(this.birthdayReportForm.value.fdate, 'd-MMM-y') + ' - ' +
+		// 		this.notif.dateConvertion(this.birthdayReportForm.value.tdate, 'd-MMM-y'));
+		// } else {
+		// 	paramArr.push(
+		// 		this.notif.dateConvertion(this.birthdayReportForm.value.cdate, 'd-MMM-y'));
+		// }
 		return paramArr;
 	}
 	getReportHeader() {
@@ -998,113 +1115,25 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	showDateToggle() {
-		this.showDate = !this.showDate;
-		this.showDateRange = !this.showDateRange;
-	}
 
 	resetGrid() {
 		this.reportProcessWiseData = [];
 		this.dataset = [];
-	}
+  }
 
-	submit() {
-		this.resetGrid();
-		const inputJson = {};
-		if (this.showDate) {
-			inputJson['from_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.cdate, 'yyyy-MM-dd');
-		} else {
-			inputJson['from_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.fdate, 'yyyy-MM-dd');
-			inputJson['to_date'] = this.notif.dateConvertion(this.birthdayReportForm.value.tdate, 'yyyy-MM-dd');
-		}
-
-		const validateFlag = this.checkValidation();
-		if (validateFlag) {
-			this.sisService.getStudentBirthdayReport(inputJson).subscribe((result: any) => {
-				if (result.status === 'ok') {
-					this.reportProcessWiseData = result.data;
-					this.prepareDataSource();
-					this.tableFlag = true;
-				} else {
-					this.notif.showSuccessErrorMessage(result.data, 'error');
-					this.resetGrid();
-					this.tableFlag = true;
-				}
-			});
-		}
-	}
-
-	checkValidation() {
-		let validateFlag = 0;
-		if (this.showDate) {
-			if (!this.birthdayReportForm.value.cdate) {
-				this.notif.showSuccessErrorMessage('Please Choose Date', 'error');
-			} else {
-				validateFlag = 1;
-			}
-		} else {
-			if (!this.birthdayReportForm.value.fdate) {
-				this.notif.showSuccessErrorMessage('Please Choose From Date', 'error');
-			} else {
-				validateFlag = 1;
-			}
-		}
-
-		return validateFlag;
-	}
 	valueAndDash(value) {
 		return value && value !== '0' ? value : '-';
-	}
-	prepareDataSource() {
-		let counter = 1;
-		for (let i = 0; i < this.reportProcessWiseData.length; i++) {
-			const tempObj = {};
-			tempObj['id'] = counter;
-			tempObj['counter'] = counter;
-			tempObj['class_name'] = this.reportProcessWiseData[i]['sec_name'] ?
-			this.reportProcessWiseData[i]['class_name'] + '-' + this.reportProcessWiseData[i]['sec_name'] :
-			this.reportProcessWiseData[i]['class_name'];
-			tempObj['admission_no'] = this.valueAndDash(this.reportProcessWiseData[i]['au_admission_no']);
-			tempObj['full_name'] = new TitleCasePipe().transform(this.valueAndDash(this.reportProcessWiseData[i]['au_full_name']));
-			tempObj['dob'] = this.valueAndDash(this.reportProcessWiseData[i]['au_dob']);
-			this.dataset.push(tempObj);
-			counter++;
-		}
-		const blankTempObj = {};
-		this.columnDefinitions.forEach(element => {
-			if (element.id === 'admission_no') {
-				blankTempObj[element.id] = 'Grand Total';
-			} else if (element.id === 'full_name') {
-				blankTempObj[element.id] = '  ' + this.dataset.length;
-			} else {
-				blankTempObj[element.id] = '';
-			}
-		});
-		this.totalRow = blankTempObj;
-		if (this.dataset.length > 20) {
-			this.gridHeight = 800;
-		} else if (this.dataset.length > 10) {
-			this.gridHeight = 650;
-		} else if (this.dataset.length > 5) {
-			this.gridHeight = 500;
-		} else {
-			this.gridHeight = 400;
-		}
-		this.aggregatearray.push(new Aggregators.Sum('admission_no'));
-	}
-
-
-	exportAsExcel() {
+  }
+  exportAsExcel() {
 		const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement); // converts a DOM TABLE element to a worksheet
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
 		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
-		XLSX.writeFile(wb, 'BirthdayReport_' + (new Date).getTime() + '.xlsx');
+		XLSX.writeFile(wb, 'Accountwise_' + (new Date).getTime() + '.xlsx');
 
-	}
-
-	print() {
+  }
+  print() {
 		const printModal2 = document.getElementById('birthdayReportPrint');
 		const popupWin = window.open('', '_blank', 'width=' + screen.width + ',height=' + screen.height);
 		popupWin.document.open();
@@ -1114,7 +1143,17 @@ export class BirthdayReportComponent implements OnInit, AfterViewInit {
 			printModal2.innerHTML + '</html>');
 		popupWin.document.close();
 	}
+	checkFeeFormatter(row, cell, value, columnDef, dataContext) {
+		if (value === 0) {
+			return '-';
+		} else {
+			if (value > 0) {
+				return new IndianCurrency().transform(value);
+			} else {
+				return '-' + new IndianCurrency().transform(-value);
+			}
 
-
+		}
+	}
 
 }
