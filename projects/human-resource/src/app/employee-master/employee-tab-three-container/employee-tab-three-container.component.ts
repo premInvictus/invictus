@@ -23,6 +23,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	isSubmit = false;
 	login_id;
 	parentId;
+	currentDate = new Date();
 	payScArr: any[] = [];
 	generalRemarkData: any[] = [];
 	sessionArray: any[] = [];
@@ -74,6 +75,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	wingArray;
 	empBankDetail: any[] = [];
 	empPaymentModeDetail: any[] = [];
+	advanceDetails: any[] = [];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
@@ -202,9 +204,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			tds: '',
 			gratuity: '',
 			total_earning: '',
-			advance: '',
-			deposite_month_amount: '',
-			starting_month: '',
 		});
 
 
@@ -269,10 +268,45 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			value: ''
 		}));
 	}
+	addAdvance() {
+		this.advanceDetails.push(this.fbuild.group({
+			advance_start_date: '',
+			advance: '',
+			deposite_month_amount: '',
+			starting_month: '',
+			remaining_advance: '',
+			freezed: false
+		}));
+	}
+	addAdvanceCheck() {
+		if (this.advanceDetails.length > 0) {
+			const currentMonth = new Date().getMonth() + 1;
+			for (const item of this.advanceDetails) {
+				if (item.value.advance && item.value.advance_start_date
+					&& item.value.deposite_month_amount && item.value.starting_month && !item.value.freezed) {
+					const monthPay = Math.round(Number(item.value.advance) / Number(item.value.deposite_month_amount));
+					if (Number(currentMonth) >= (new Date(item.value.advance_start_date).getMonth() + 1 +
+						monthPay)) {
+						item.value.freezed = true;
+						this.addAdvance();
+					} else {
+						this.commonAPIService.showSuccessErrorMessage('Please wait for previous advance to settle to move to next', 'error');
+					}
+				}
+			}
+		}
+	}
 
 	removePaymentMode(index) {
 		if (this.empPaymentModeDetail.length > 1) {
 			this.empPaymentModeDetail.splice(index, 1);
+		}
+
+	}
+
+	delAdvanceDetails(index) {
+		if (this.advanceDetails.length > 1) {
+			this.advanceDetails.splice(index, 1);
 		}
 
 	}
@@ -470,19 +504,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.emp_bank_detail.length; i++) {
 				this.empBankDetail.push(this.fbuild.group({
 					bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]
-					&& 
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] 
-					&& this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'] 
-					? this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString() : '',
+						&&
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']
+						&& this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id']
+						? this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_id'].toString() : '',
 					//bank_name: this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_name'],
 					bank_ac: this.employeedetails.emp_salary_detail.emp_bank_detail[i]
-					&&  this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] && 
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] ?
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] : '',
-					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i] && 
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] &&
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] ?
-					this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] : ''
+						&& this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] &&
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] ?
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_acc_no'] : '',
+					ifsc_code: this.employeedetails.emp_salary_detail.emp_bank_detail[i] &&
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail'] &&
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] ?
+						this.employeedetails.emp_salary_detail.emp_bank_detail[i]['bnk_detail']['bnk_ifsc'] : ''
 				}));
 			}
 		} else {
@@ -492,6 +526,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				ifsc_code: ''
 			}));
 		}
+		this.advanceDetails = [];
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.empPaymentModeDetail && this.employeedetails.emp_salary_detail.empPaymentModeDetail.length > 0) {
 			this.empPaymentModeDetail = [];
 			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
@@ -504,6 +539,34 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		} else {
 			this.addPaymentMode();
+		}
+		if (this.employeedetails.emp_salary_detail &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details) {
+			const obj: any = this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details;
+			const objArr: any[] = this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details;
+			if (obj.constructor === Object) {
+				this.advanceDetails.push(this.fbuild.group({
+					advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
+					deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
+					starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.starting_month : '',
+					advance_start_date: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance_start_date : '',
+				}));
+			}
+			if (Array.isArray(objArr)) {
+				for (const t of objArr) {
+					this.advanceDetails.push(this.fbuild.group({
+						advance: t.advance ? t.advance : '',
+						deposite_month_amount: t.deposite_month_amount ? t.deposite_month_amount : '',
+						starting_month: t.starting_month ? t.starting_month : '',
+						advance_start_date: t.advance_start_date ? t.advance_start_date : '',
+						remaining_advance: t.remaining_advance ? t.remaining_advance : '',
+						freezed : t.freezed ? t.freezed  : false
+					}))
+				}
+			}
+		} else {
+			this.addAdvance();
 		}
 
 		console.log(this.employeedetails);
@@ -551,9 +614,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id ?
 				this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale_master.pay_scale_id : '',
 			tds_deduction: '',
-			advance: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.advance : '',
-			deposite_month_amount: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : '',
-			starting_month: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details ? this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details.starting_month : '',
 			net_salary: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '',
 			td: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.td : '',
 			tds: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.tds : '',
@@ -590,6 +650,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		var tempempPaymentModeDetail = [];
 		for (var i = 0; i < this.empPaymentModeDetail.length; i++) {
 			tempempPaymentModeDetail.push(this.empPaymentModeDetail[i].value);
+		}
+		const adv: any[] = [];
+		for (const it of this.advanceDetails) {
+			adv.push({
+				session_id: this.session_id.ses_id,
+				currentYear: this.currentYear,
+				advance_start_date: this.dateConversion(it.value.advance_start_date, 'yyyy-MM-dd'),
+				advance: it.value.advance,
+				remaining_advance: it.value.advance,
+				deposite_month_amount: it.value.deposite_month_amount,
+				starting_month: it.value.starting_month,
+				freezed : it.freezed ? it.freezed : ''
+			})
 		}
 		//this.salaryDetails.valid
 		if (this.salaryDetails.valid) {
@@ -655,14 +728,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
-					advance_details: {
-						session_id: this.session_id.ses_id,
-						currentYear: this.currentYear,
-						advance: this.salaryDetails.value.advance,
-						remaining_advance: this.salaryDetails.value.advance,
-						deposite_month_amount_amount: this.salaryDetails.value.deposite_month_amount,
-						starting_month: this.salaryDetails.value.starting_month,
-					},
+					advance_details: adv,
 					td: this.salaryDetails.value.td,
 					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,
@@ -753,6 +819,19 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		for (var i = 0; i < this.empPaymentModeDetail.length; i++) {
 			tempempPaymentModeDetail.push(this.empPaymentModeDetail[i].value);
 		}
+		const adv: any[] = [];
+		for (const it of this.advanceDetails) {
+			adv.push({
+				session_id: this.session_id.ses_id,
+				currentYear: this.currentYear,
+				advance_start_date: this.dateConversion(it.value.advance_start_date, 'yyyy-MM-dd'),
+				advance: it.value.advance,
+				remaining_advance: it.value.advance,
+				deposite_month_amount: it.value.deposite_month_amount,
+				starting_month: it.value.starting_month,
+				freezed : it.freezed ? it.freezed : ''
+			})
+		}
 		//this.salaryDetails.valid
 		if (true) {
 			this.disabledApiButton = true;
@@ -813,14 +892,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 							tds_deduction: this.salaryDetails.value.tds_deduction
 						}
 					],
-					advance_details: {
-						session_id: this.session_id.ses_id,
-						currentYear: this.currentYear,
-						advance: this.salaryDetails.value.advance,
-						remaining_advance: this.salaryDetails.value.advance,
-						deposite_month_amount: this.salaryDetails.value.deposite_month_amount,
-						starting_month: this.salaryDetails.value.starting_month,
-					},
+					advance_details: adv,
 					td: this.salaryDetails.value.td,
 					tds: this.salaryDetails.value.tds,
 					gratuity: this.salaryDetails.value.gratuity,

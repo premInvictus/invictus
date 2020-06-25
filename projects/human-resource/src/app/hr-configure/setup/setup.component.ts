@@ -112,7 +112,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				order: '',
 				status: '',
 				type: '',
-				value: ''
+				value: '',
+				optional: false
 			})
 		},
 		{
@@ -141,6 +142,17 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			})
 		},
 		];
+	}
+	setMandatory($event) {
+		if ($event.checked) {
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				optional: true
+			});
+		} else {
+			this.formGroupArray[Number(this.configValue) - 1].formGroup.patchValue({
+				optional: false
+			});
+		}
 	}
 	getGenre(that) {
 
@@ -401,7 +413,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				order: value.sc_order,
 				value: value.sc_value,
 				calculation_type: value.sc_calculation_type,
-				status: value.sc_status
+				status: value.sc_status,
+				optional: value.sc_type.type_id === '2' && value.sc_type.optional ? value.sc_type.optional : false
 			});
 		} else if (Number(this.configValue) === 3) {
 			this.setupUpdateFlag = true;
@@ -560,7 +573,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
 							type_id: this.formGroupArray[value - 1].formGroup.value.type,
-							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray)
+							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray),
+							optional: this.formGroupArray[value - 1].formGroup.value.type === '2' ?
+								this.formGroupArray[value - 1].formGroup.value.optional : ''
 						},
 						sc_order: this.formGroupArray[value - 1].formGroup.value.order,
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
@@ -645,7 +660,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
 							type_id: this.formGroupArray[value - 1].formGroup.value.type,
-							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray)
+							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray),
+							optional: this.formGroupArray[value - 1].formGroup.value.type === '2'
+								&& this.formGroupArray[value - 1].formGroup.value.optional ?
+								this.formGroupArray[value - 1].formGroup.value.optional : ''
 						},
 						sc_order: this.formGroupArray[value - 1].formGroup.value.order,
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
