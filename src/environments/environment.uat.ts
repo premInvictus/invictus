@@ -8,6 +8,7 @@ export const environment = {
 	apiReservUrl: 'http://uat-api-reservoir.invictusprojects.in',
 	apiHRUrl: 'http://uat-api-hrms.invictusprojects.in',
 	apiInvUrl: 'http://uat-api-inventory.invictusprojects.in',
+	 apiFaUrl: 'http://dev-api-fa.invictusprojects.in',
 	logoutUrl: 'http://uatlogin.invictusprojects.in',
 	socketUrl: 'http://13.127.2.18:8081',
 	testInitiateCode : 'T100',

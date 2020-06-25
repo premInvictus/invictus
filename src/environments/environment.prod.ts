@@ -8,6 +8,7 @@ export const environment = {
 	apiReservUrl: 'https://apireservoir.invictusdigisoft.com',
 	apiHRUrl: 'https://apihr.invictusdigisoft.com',
 	apiInvUrl: 'https://apiinventory.invictusdigisoft.com',
+	apiFaUrl: 'https://apifa.invictusdigisoft.com',
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	testInitiateCode : 'T100',
