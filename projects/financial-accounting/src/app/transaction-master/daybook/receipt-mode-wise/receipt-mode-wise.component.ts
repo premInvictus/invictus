@@ -737,31 +737,31 @@ export class ReceiptModeWiseComponent implements OnInit {
 
 
       console.log('fJson--', fJson);
-      // if (!this.currentVoucherData.vc_id) {
-      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-      //     if (data) {
-      //       this.getInvoiceDayBook();
-      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
+      if (!this.currentVoucherData.vc_id) {
+        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+          if (data) {
+            this.getInvoiceDayBook();
+            this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
 
 
-      //     } else {
-      //       this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
-      //     }
-      //   });
-      // } else {
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Error While Creating Voucher Entry', 'error');
+          }
+        });
+      } else {
 
-      //   this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-      //     if (data) {
-      //       this.getInvoiceDayBook();
-      //       this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
+        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+          if (data) {
+            this.getInvoiceDayBook();
+            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
 
 
-      //     } else {
-      //       this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-      //     }
-      //   });
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
+          }
+        });
 
-      // }
+      }
     }
 
 
