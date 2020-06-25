@@ -75,8 +75,8 @@ export class BalanceSheetModalComponent implements OnInit {
       if (result && result.status === 'ok') {
         if (result.data && result.data[0]) {
           this.partialPaymentStatus = Number(result.data[0]['gs_value']);
-        }        
-       
+        }
+
       }
     })
   }
@@ -87,46 +87,46 @@ export class BalanceSheetModalComponent implements OnInit {
     this.debitRow = 0;
     this.creditRow = 0;
     this.debitRow = this.totalDebitRowLength;
-    this.creditRow = this.partialPaymentStatus ? this.totalCreditRowLength : this.totalCreditRowLength+1;
+    this.creditRow = this.partialPaymentStatus ? this.totalCreditRowLength : this.totalCreditRowLength + 1;
     if (this.debitRow > this.creditRow) {
-      for (var i = 0; i <  (this.debitRow - this.creditRow); i++) {
+      for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
       }
     } else if (this.creditRow > this.debitRow) {
-      for (var i = 0; i <  (this.creditRow - this.debitRow); i++) {
+      for (var i = 0; i < (this.creditRow - this.debitRow); i++) {
         this.blankArr.push(i);
       }
     }
     console.log(this.debitRow, this.creditRow);
   }
 
-  
- recursiveDebitArraylength(arr){
 
-   for(var ele in arr){
-     if(Array.isArray(arr[ele])){
-      console.log(this.totalDebitRowLength, arr[ele]) ;
-      this.totalDebitRowLength++;
-      this.recursiveDebitArraylength(arr[ele])
-     }else{
-         this.totalDebitRowLength++;
-     }
-   }
+  recursiveDebitArraylength(arr) {
 
-}
-
-recursiveCreditArraylength(arr){
-
-  for(var ele in arr){
-    if(Array.isArray(arr[ele])){
-      this.totalCreditRowLength++;
-     this.recursiveCreditArraylength(arr[ele])
-    }else{
-        this.totalCreditRowLength++;
+    for (var ele in arr) {
+      if (Array.isArray(arr[ele])) {
+        console.log(this.totalDebitRowLength, arr[ele]);
+        this.totalDebitRowLength++;
+        this.recursiveDebitArraylength(arr[ele])
+      } else {
+        this.totalDebitRowLength++;
+      }
     }
+
   }
 
-}
+  recursiveCreditArraylength(arr) {
+
+    for (var ele in arr) {
+      if (Array.isArray(arr[ele])) {
+        this.totalCreditRowLength++;
+        this.recursiveCreditArraylength(arr[ele])
+      } else {
+        this.totalCreditRowLength++;
+      }
+    }
+
+  }
 
 
   getDeviation(param) {
@@ -134,17 +134,19 @@ recursiveCreditArraylength(arr){
       this.debit_total_f = 0;
       this.credit_total_f = 0;
       this.deviation_f = 0;
-      if ( param['debit_data']) {
-      for (var i = 0; i < param['debit_data'].length; i++) {
-        this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
-      } }
-      if ( param['credit_data']) {
-      for (var i = 0; i < param['credit_data'].length; i++) {
-        this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
-      } }
+      if (param['debit_data']) {
+        for (var i = 0; i < param['debit_data'].length; i++) {
+          this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+        }
+      }
+      if (param['credit_data']) {
+        for (var i = 0; i < param['credit_data'].length; i++) {
+          this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+        }
+      }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
 
-      return this.deviation_f < 0 ? -this.deviation_f : this.deviation_f ;
+      return this.deviation_f < 0 ? -this.deviation_f : this.deviation_f;
     }
   }
 
@@ -177,13 +179,13 @@ recursiveCreditArraylength(arr){
 
 
     }
-    creditSideTotal = creditSideTotal - (this.partialPaymentStatus ? Number(this.incomeExpenditureArray['head_total_amt']) : 0 );
+    creditSideTotal = creditSideTotal - (this.partialPaymentStatus ? Number(this.incomeExpenditureArray['head_total_amt']) : 0);
     debitSideTotal = debitSideTotal;
     console.log(debitSideTotal, creditSideTotal)
-    this.incomeExpenditureDeviation =  debitSideTotal - creditSideTotal;
+    this.incomeExpenditureDeviation = debitSideTotal - creditSideTotal;
   }
 
-  
+
 
   getTotal() {
 
@@ -196,47 +198,47 @@ recursiveCreditArraylength(arr){
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
-        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] < 0 ? -(this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+        if (this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
+          this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] < 0 ? -(this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
 
-        //console.log('debitTotal>', this.debitTotal, this.param['ledger_data'][i]['debit_data'][j]['vc_credit'], i);
+          //console.log('debitTotal>', this.debitTotal, this.param['ledger_data'][i]['debit_data'][j]['vc_credit'], i);
         }
-        
+
 
       }
       for (var k = 0; k < this.param['ledger_data'][i]['credit_data'].length; k++) {
-        if(this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
-        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ) : 0);
+        if (this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+          this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
 
-        //console.log('debitTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
+          //console.log('debitTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
         }
       }
-      
+
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
         diffTotal = diffTotal - diff;
-        console.log(diff, i); 
+        console.log(diff, i);
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
-       
+
         diffCTotal = diffCTotal + diff;
-       this.debitSideTotal = diffCTotal;
+        this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
 
-      
+
 
 
     }
-    
+
     this.creditSideTotal = this.creditSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
-    if (this.creditSideTotal    < 0) {
+    if (this.creditSideTotal < 0) {
       this.creditSideTotal = -this.creditSideTotal;
     }
-    this.debitSideTotal = this.debitSideTotal  + this.incomeExpenditureDeviation;
-    if (this.debitSideTotal    < 0) {
+    this.debitSideTotal = this.debitSideTotal + this.incomeExpenditureDeviation;
+    if (this.debitSideTotal < 0) {
       this.debitSideTotal = -this.debitSideTotal;
     }
     ///console.log('this.debitSideTotal--',this.debitSideTotal, this.creditSideTotal);
@@ -269,4 +271,85 @@ recursiveCreditArraylength(arr){
 
   }
 
+  toggle(parent, subgroup, mode) {
+    console.log(parent, mode);
+    var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
+    if (parent == '' && subgroup != '') {
+      if (activearr) {
+        for (var i = 0; i < activearr.length; i++) {
+          if (activearr[i]['coa_acc_group'] && activearr[i]['coa_acc_group']['group_name'] === subgroup) {
+            if (activearr[i]['expand']) {
+              activearr[i]['expand'] = false;
+            } else {
+              activearr[i]['expand'] = true;
+            }
+          }
+          for (var j = 0; j < activearr[i].length; j++) {
+            if (activearr[i][j]['coa_acc_group'] && activearr[i][j]['coa_acc_group']['group_name'] === subgroup) {
+              if (activearr[i][j]['expand']) {
+                activearr[i][j]['expand'] = false;
+              } else {
+                activearr[i][j]['expand'] = true;
+              }
+            }
+
+            if (activearr[i][j]) {
+              for (var k = 0; k < activearr[i][j].length; k++) {
+                if (activearr[i][j][k]['coa_acc_group'] && activearr[i][j][k]['coa_acc_group']['group_name'] === subgroup) {
+                  if (activearr[i][j][k]['expand']) {
+                    activearr[i][j][k]['expand'] = false;
+                  } else {
+                    activearr[i][j][k]['expand'] = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+        console.log(activearr)
+      }
+    }  else if (parent != '') {
+
+      if (activearr) {
+        for (var i = 0; i < activearr.length; i++) {
+          if (activearr[i]['coa_acc_group'] && activearr[i]['coa_acc_group']['group_parent_name'] === parent) {
+            if (activearr[i]['expand']) {
+              activearr[i]['expand'] = false;
+            } else {
+              activearr[i]['expand'] = true;
+            }
+          }
+          for (var j = 0; j < activearr[i].length; j++) {
+            if (activearr[i][j]['coa_acc_group'] && activearr[i][j]['coa_acc_group']['group_parent_name'] === parent) {
+              if (activearr[i][j]['expand']) {
+                activearr[i][j]['expand'] = false;
+              } else {
+                activearr[i][j]['expand'] = true;
+              }
+            }
+
+            if (activearr[i][j]) {
+              for (var k = 0; k < activearr[i][j].length; k++) {
+                if (activearr[i][j][k]['coa_acc_group'] && activearr[i][j][k]['coa_acc_group']['group_parent_name'] === parent) {
+                  if (activearr[i][j][k]['expand']) {
+                    activearr[i][j][k]['expand'] = false;
+                  } else {
+                    activearr[i][j][k]['expand'] = true;
+                  }
+                }
+              }
+            }
+          }
+        }
+        console.log(activearr)
+      }
+
+    }
+
+  }
+
+ 
+
 }
+
+
