@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './model';
@@ -14,9 +14,9 @@ import { saveAs } from 'file-saver';
   templateUrl: './vouchers-list.component.html',
   styleUrls: ['./vouchers-list.component.scss']
 })
-export class VouchersListComponent implements OnInit {
+export class VouchersListComponent implements OnInit,AfterViewInit {
 
-  tableDivFlag = false;
+  	tableDivFlag = false;
 	ELEMENT_DATA: Element[];
 	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit', 'action'];
 	dataSource = new MatTableDataSource<Element>();
@@ -40,6 +40,10 @@ export class VouchersListComponent implements OnInit {
 	  this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	  this.tableDivFlag = true;
 	  this.getVouchers();
+	}
+	ngAfterViewInit() {
+		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
 	}
 
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
@@ -99,13 +103,9 @@ export class VouchersListComponent implements OnInit {
 			  
 			}
 			this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-
-			
 				this.dataSource.paginator = this.paginator;
-				if (this.sort) {
-					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-					this.dataSource.sort = this.sort;
-				}
+				//this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+				this.dataSource.sort = this.sort;
 		  
 			  } else {
 				  this.vouchersArray = [];
@@ -206,6 +206,9 @@ export class VouchersListComponent implements OnInit {
 				saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
 			}
 		  });
+	}
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
 
 }

@@ -55,7 +55,7 @@ export class VoucherEntryComponent implements OnInit {
 		});
 		
 		this.setVcType(this.currentVcType);
-		this.getOrderMaster();
+		//this.getOrderMaster();
 	}
 	setaccount(item,i) {
 		this.voucherFormGroupArray[i].patchValue({
@@ -587,5 +587,8 @@ export class VoucherEntryComponent implements OnInit {
 			}
 		}
 		
+	}
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
 }
