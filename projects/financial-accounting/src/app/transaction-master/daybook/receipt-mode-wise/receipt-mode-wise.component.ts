@@ -766,6 +766,9 @@ export class ReceiptModeWiseComponent implements OnInit {
 
 
   }
+  isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
 
 
 }
