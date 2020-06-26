@@ -90,7 +90,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	};
 	constructor(private commonAPIService: CommonAPIService, private sis: SisService,
 		private dialog: MatDialog) {
-		
+
 	}
 
 	ngOnInit() {
@@ -177,8 +177,59 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				for (const item of res.data) {
 					let pay_name = '';
 					const obj: any = {};
+					const obj2: any = item.advance_details;
+					const objArr: any[] = item.advance_details;
+					if (obj2.constructor === Object) {
+						if (item.advance_details && item.advance_details.advance &&
+							Number(item.id) === Number(item.advance_details.starting_month)) {
+							const obj3: any = {};
+							obj3['srno'] = srno;
+							obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
+							obj3['mon'] = item.month;
+							obj3['attendance'] = '';
+							obj3['netearnings'] = '';
+							obj3['deductions'] = '';
+							obj3['advance'] = '';
+							obj3['salarypayable'] = '';
+							obj3['salarypaid'] = '';
+							obj3['balance'] = item.advance_details.advance;
+							obj3['mop'] = '-';
+							obj3['remarks'] = '-';
+							obj3['sum'] = 0;
+							obj['action'] = item;
+							this.EMPLOYEE_LEDGER_ELEMENT.push(obj3);
+							this.tempData.push(obj3);
+							srno++;
+						}
+					}
+					if (Array.isArray(objArr)) {
+						for (const st of objArr) {
+							if (st && st.advance &&
+								Number(item.id) === Number(st.starting_month)) {
+								const obj3: any = {};
+								obj3['srno'] = srno;
+								obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
+								obj3['mon'] = item.month;
+								obj3['attendance'] = '';
+								obj3['netearnings'] = '';
+								obj3['deductions'] = '';
+								obj3['advance'] = '';
+								obj3['salarypayable'] = '';
+								obj3['salarypaid'] = '';
+								obj3['balance'] = st.advance;
+								obj3['mop'] = '-';
+								obj3['remarks'] = '-';
+								obj3['sum'] = 0;
+								obj['action'] = item;
+								this.EMPLOYEE_LEDGER_ELEMENT.push(obj3);
+								this.tempData.push(obj3);
+								srno++;
+							}
+						}
+					}
+
 					obj['srno'] = srno;
-					obj['particulars'] = item.month + ' Pay';
+					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id) + ')';
 					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id);
 					obj['attendance'] = item && item.leaves && item.leaves.emp_total_attendance ?
 						item.leaves.emp_total_attendance : 0;
@@ -318,14 +369,16 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		}
 	}
 	openSalarySlip(item, emp_id) {
-		const dialogRef: any = this.dialog.open(SalarySlipModalComponent, {
-			data: {
-				values: item,
-				emp_id: emp_id
-			},
-			height: '60vh',
-			width: '70vh'
-		})
+		if (item.netearnings !== '-') {
+			const dialogRef: any = this.dialog.open(SalarySlipModalComponent, {
+				data: {
+					values: item,
+					emp_id: emp_id
+				},
+				height: '70%',
+				width: '55%'
+			})
+		}
 	}
 	checkWidth(id, header) {
 		const res = this.EMPLOYEE_LEDGER_ELEMENT.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
