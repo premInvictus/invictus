@@ -427,6 +427,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
 
   }
+  isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
 
 
 
