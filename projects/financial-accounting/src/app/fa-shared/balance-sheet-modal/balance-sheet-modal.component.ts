@@ -274,6 +274,7 @@ export class BalanceSheetModalComponent implements OnInit {
   toggle(parent, subgroup, mode) {
     console.log(parent, mode);
     var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
+    var total = 0;
     if (parent == '' && subgroup != '') {
       if (activearr) {
         for (var i = 0; i < activearr.length; i++) {
@@ -345,6 +346,72 @@ export class BalanceSheetModalComponent implements OnInit {
       }
 
     }
+
+  }
+
+
+  getGroupTotal(parent, subgroup, mode) {
+    console.log(parent, mode);
+    var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
+    var total = 0;
+    if (parent == '' && subgroup != '') {
+      if (activearr) {
+        for (var i = 0; i < activearr.length; i++) {
+          if (activearr[i]['coa_acc_group'] && activearr[i]['coa_acc_group']['group_name'] === subgroup) {
+            
+            total = total + this.getDeviation(activearr[i]);
+            activearr[i]['total'] = total;
+          }
+          for (var j = 0; j < activearr[i].length; j++) {
+            if (activearr[i][j]['coa_acc_group'] && activearr[i][j]['coa_acc_group']['group_name'] === subgroup) {
+              
+              total = total + this.getDeviation(activearr[i][j]);
+              activearr[i][j]['total'] = total;
+            }
+
+            if (activearr[i][j]) {
+              for (var k = 0; k < activearr[i][j].length; k++) {
+                if (activearr[i][j][k]['coa_acc_group'] && activearr[i][j][k]['coa_acc_group']['group_name'] === subgroup) {
+                  
+                  total = total + this.getDeviation(activearr[i][j][k]);
+                  activearr[i][j][k]['total'] = total;
+                }
+              }
+            }
+          }
+        }
+        console.log(activearr)
+      }
+    }  else if (parent != '') {
+
+      if (activearr) {
+        for (var i = 0; i < activearr.length; i++) {
+          if (activearr[i]['coa_acc_group'] && activearr[i]['coa_acc_group']['group_parent_name'] === parent) {
+            total = total + this.getDeviation(activearr[i]);
+            activearr[i]['total'] = total;
+          }
+          for (var j = 0; j < activearr[i].length; j++) {
+            if (activearr[i][j]['coa_acc_group'] && activearr[i][j]['coa_acc_group']['group_parent_name'] === parent) {
+              total = total + this.getDeviation(activearr[i][j]);
+              activearr[i][j]['total'] = total;
+            }
+
+            if (activearr[i][j]) {
+              for (var k = 0; k < activearr[i][j].length; k++) {
+                if (activearr[i][j][k]['coa_acc_group'] && activearr[i][j][k]['coa_acc_group']['group_parent_name'] === parent) {
+                  total = total + this.getDeviation(activearr[i][j][k]);
+                  activearr[i][j][k]['total'] = total;
+                }
+              }
+            }
+          }
+        }
+        console.log(activearr)
+      }
+
+    }
+
+    return this.getTwoDecimalValue(total);
 
   }
 
