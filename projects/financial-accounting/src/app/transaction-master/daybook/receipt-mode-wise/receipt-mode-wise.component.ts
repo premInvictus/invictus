@@ -37,6 +37,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   voucherDate: any;
   currentVoucherData: any;
   tempChartsOfAccountInvoice: any[] = [];
+  vcYearlyStatus = 0;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -50,6 +51,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   ngOnInit() {
     this.session = JSON.parse(localStorage.getItem('session'));
     this.checkPartialPaymentStatus();
+    this.getGlobalSetting();
     //this.getChartsOfAccount();
     this.getSession();
     //this.getInvoiceDayBook();
@@ -59,6 +61,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     console.log(this.param);
     this.getChartsOfAccount();
     this.getSession();
+    this.getGlobalSetting();
     if (this.partialPaymentStatus) {
       this.getInvoiceDayBook();
     } else {
@@ -67,6 +70,19 @@ export class ReceiptModeWiseComponent implements OnInit {
 
 
   }
+  getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['fa_voucher_code_format_yearly_status'];
+		this.faService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (result.data && result.data[0]) {
+					this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+					console.log('this.vcYearlyStatus', this.vcYearlyStatus)
+				}
+
+			}
+		})
+	}
   checkPartialPaymentStatus() {
     let param: any = {};
     param.gs_alias = ['fa_partial_payment'];
@@ -716,7 +732,8 @@ export class ReceiptModeWiseComponent implements OnInit {
     let vcMonth = monthNames[Number(month_id) - 1].substring(0, 3);
     let vcYear = nYear;
     let vcNumber = vcData.vc_code;
-    this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
+    //this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
+    this.vcData = { vc_code: vcData.vc_code, vc_name: this.vcYearlyStatus ? vcType + '/' + ((vcNumber.toString()).padStart(4, '0')) : vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
     console.log(voucherEntryArray, 'test');
 
 
