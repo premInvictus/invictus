@@ -203,6 +203,9 @@ export class AccountGroupComponent implements OnInit {
 	deleteComCancel() {
 
 	}
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
 
 }
 

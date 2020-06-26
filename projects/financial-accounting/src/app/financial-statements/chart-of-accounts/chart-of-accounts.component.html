@@ -6,14 +6,14 @@
             <span class="font-size-24">Chart Of Accounts</span>
           </div>
           <div class="col-6 remove-col-padding-right text-right">
-            <button style="background-color: #bdc2c9 !important;"
+            <button *ngIf="isExistUserAccessMenu('731')" style="background-color: #bdc2c9 !important;"
               mat-button
               class="btn-success-purple text-capitalize m-l-10"
               (click)="openDialog()"
             >
               Bulk Uplaod
             </button>&nbsp;&nbsp;
-            <button style="background-color: #1e88e5 !important;"
+            <button *ngIf="isExistUserAccessMenu('726')" style="background-color: #1e88e5 !important;"
               mat-button
               class="btn-success-purple text-capitalize m-l-10"
               (click)="openCreateModal()"
@@ -28,7 +28,7 @@
   <div class="row">
     <div class="col-12"></div>
   </div>
-  <div class="row" *ngIf="tableDivFlag">
+  <div class="row" [hidden]="!tableDivFlag">
     <div class="col-12">
       <mat-card>
         <div class="row">
@@ -43,7 +43,7 @@
             </div>
             <div class="row remove-top-margin">
               <div class="col-12">
-                <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+                <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
   
                   <!-- Checkbox Column -->
                   <ng-container matColumnDef="select">
@@ -63,44 +63,44 @@
   
                   <!-- Position Column -->
                   <ng-container matColumnDef="ac_code">
-                    <th mat-header-cell *matHeaderCellDef> Account Code </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Code </th>
                     <td mat-cell *matCellDef="let element"> {{element.ac_code}} </td>
                   </ng-container>
   
                   <!-- Name Column -->
                   <ng-container matColumnDef="ac_name">
-                    <th mat-header-cell *matHeaderCellDef> Account Name </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Name </th>
                     <td mat-cell *matCellDef="let element" class="text-left"> {{element.ac_name}} </td>
                   </ng-container>
   
                   <!-- Weight Column -->
                   <ng-container matColumnDef="ac_group">
-                    <th mat-header-cell *matHeaderCellDef> Group </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Group </th>
                     <td mat-cell *matCellDef="let element"> {{element.ac_group | titlecase}} </td>
                   </ng-container>
   
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="ac_type">
-                    <th mat-header-cell *matHeaderCellDef> Account Type </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Account Type </th>
                     <td mat-cell *matCellDef="let element"> {{element.ac_type | titlecase}} </td>
                   </ng-container>
                   <ng-container matColumnDef="dependencies_type">
-                    <th mat-header-cell *matHeaderCellDef> Dependancy Type </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Dependancy Type </th>
                     <td mat-cell *matCellDef="let element"> {{element.dependencies_type | titlecase}} </td>
                   </ng-container>
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="ac_cloosingbalance">
-                      <th mat-header-cell *matHeaderCellDef> Closing Balance </th>
+                      <th mat-header-cell *matHeaderCellDef mat-sort-header> Closing Balance </th>
                       <td mat-cell *matCellDef="let element"> {{(element.ac_cloosingbalance + element?.opening_balance_cal) | indianCurrency}} </td>
                     </ng-container>
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="opening_balance">
-                    <th mat-header-cell *matHeaderCellDef> Opening Balance </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header> Opening Balance </th>
                     <td mat-cell *matCellDef="let element"> {{element.opening_balance | indianCurrency}} {{element.opening_balance_type | titlecase}}</td>
                   </ng-container>
                   <!-- Symbol Column -->
                   <ng-container matColumnDef="opening_date">
-                    <th mat-header-cell *matHeaderCellDef>Opening Date </th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Opening Date </th>
                     <td mat-cell *matCellDef="let element"> {{element.opening_date | date: 'd-MMM-yyyy'}} </td>
                   </ng-container>
                   <!-- Symbol Column -->
@@ -116,19 +116,19 @@
                     <th mat-header-cell *matHeaderCellDef> Action </th>
                     <td mat-cell *matCellDef="let element">
                       
-                        <span *ngIf="element.status !== 'lock'"><i class="fas fa-unlock " (click)="lockAccount(element.action)"></i>
+                        <span *ngIf="element.status !== 'lock' && isExistUserAccessMenu('730')"><i class="fas fa-unlock " (click)="lockAccount(element.action)"></i>
                         </span>
 
-                        <span *ngIf="element.status === 'lock'"><i class="fas fa-lock "></i>
+                        <span *ngIf="element.status === 'lock' && isExistUserAccessMenu('729')"><i class="fas fa-lock "></i>
                         </span>
 
                         <span class="margin-left-15 ver-line-divider"></span>
 
-                     <span *ngIf="element.status !== 'lock'"> 
+                     <span *ngIf="element.status !== 'lock' && isExistUserAccessMenu('727')"> 
                        <i class="fas fa-edit blue" (click)="editAccountModel(element.action)"></i>
                       <span class="margin-left-15 ver-line-divider"></span>
                     </span>
-                      <i class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
+                      <i *ngIf="isExistUserAccessMenu('728')" class="fas fa-trash red" (click)="openDeleteDialog(element.action)"></i>
                     </td>
                   </ng-container>
   
