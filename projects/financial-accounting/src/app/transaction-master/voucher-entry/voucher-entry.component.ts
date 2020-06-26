@@ -603,6 +603,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (result && result.status === 'ok') {
 				if (result.data && result.data[0]) {
 					this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+					console.log('this.vcYearlyStatus', this.vcYearlyStatus)
 				}
 
 			}

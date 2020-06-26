@@ -59,8 +59,8 @@
                 <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
                   <td width="20%"><a href="javascript:void(0)"
                       (click)="toggle(item[0][0]['coa_acc_group']['group_parent_name'],'', 'liabilities'); ">
-                      <span *ngIf="item[0][0]['expand']">-</span>
-                      <span *ngIf="!(item[0][0]['expand'])">+</span>
+                      <span *ngIf="item[0][0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                      <span *ngIf="!(item[0][0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                     </a></td>
                   <td width="65%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
@@ -76,8 +76,8 @@
                     <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                       <td width="20%"><a href="javascript:void(0)"
                           (click)="toggle('',gitem[0]?.coa_acc_group?.group_name, 'liabilities')"><span
-                            *ngIf="gitem[0]['expand']">-</span>
-                          <span *ngIf="!(gitem[0]['expand'])">+</span></a></td>
+                            *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                          <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></a></td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
                       <td width="15%" class="text-right">
@@ -89,8 +89,8 @@
                     <tr *ngIf="gitem?.coa_acc_group?.group_name && i==0;">
                       <td width="20%"><a href="javascript:void(0)"
                           (click)="toggle('',gitem?.coa_acc_group?.group_name, 'liabilities')">
-                          <span *ngIf="gitem['expand']">-</span>
-                          <span *ngIf="!(gitem['expand'])">+</span>
+                          <span *ngIf="gitem['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                          <span *ngIf="!(gitem['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                         </a></td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
@@ -101,8 +101,8 @@
                     <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                       <td width="20%"><a href="javascript:void(0)"
                           (click)="toggle('',gitem[0]?.coa_acc_group?.group_name, 'liabilities')"><span
-                            *ngIf="gitem[0]['expand']">-</span>
-                          <span *ngIf="!(gitem[0]['expand'])">+</span></a> </td>
+                            *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                          <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></a> </td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
                       <td width="15%" class="text-right">
@@ -161,8 +161,8 @@
                 <tr *ngIf="item && item[0] && item[0][0] && item[0][0]['coa_acc_group']">
                   <td width="20%"><a href="javascript:void(0)"
                     (click)="toggle(item[0][0]['coa_acc_group']['group_parent_name'],'', 'assets'); ">
-                    <span *ngIf="item[0][0]['expand']">-</span>
-                    <span *ngIf="!(item[0][0]['expand'])">+</span>
+                    <span *ngIf="item[0][0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                    <span *ngIf="!(item[0][0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                   </a></td>
                   <td width="65%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
@@ -178,8 +178,8 @@
                     <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                       <td width="20%"><a href="javascript:void(0)"
                         (click)="toggle('',gitem[0]['coa_acc_group']['group_name'], 'assets'); ">
-                        <span *ngIf="gitem[0]['expand']">-</span>
-                        <span *ngIf="!(gitem[0]['expand'])">+</span>
+                        <span *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                        <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
@@ -192,8 +192,8 @@
                     <tr *ngIf="gitem?.coa_acc_group?.group_name && i==0;">
                       <td width="20%"><a href="javascript:void(0)"
                         (click)="toggle('',gitem['coa_acc_group']['group_name'], 'assets'); ">
-                        <span *ngIf="gitem['expand']">-</span>
-                        <span *ngIf="!(gitem['expand'])">+</span>
+                        <span *ngIf="gitem['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                        <span *ngIf="!(gitem['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
@@ -208,8 +208,8 @@
                     <tr *ngIf="gitem[0]?.coa_acc_group?.group_name">
                       <td width="20%"><a href="javascript:void(0)"
                         (click)="toggle('',gitem[0]['coa_acc_group']['group_name'], 'assets'); ">
-                        <span *ngIf="gitem[0]['expand']">-</span>
-                        <span *ngIf="!(gitem[0]['expand'])">+</span>
+                        <span *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
+                        <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
                       <td width="65%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
