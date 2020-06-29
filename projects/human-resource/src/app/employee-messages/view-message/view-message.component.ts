@@ -526,6 +526,7 @@ export class ViewMessageComponent implements OnInit, OnChanges {
 	}
 
 	getPermission(item) {
+		console.log('jitem',item);
 		if (this.currentUser.role_id === '2' && item.msg_type === 'C') {
 			return true;
 		} else {

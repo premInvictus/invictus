@@ -348,49 +348,17 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			// this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 1 }).subscribe((result: any) => {
-			// 	console.log('teacher data', result);
-			// 	if (result) {
-			// 		for (var i = 0; i < result.length; i++) {
-			// 			var inputJson = {
-			// 				au_login_id: result[i].emp_login_id,
-			// 				au_full_name: result[i].emp_name,
-			// 				au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-			// 				au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-			// 				au_profileimage: result[i].emp_profile_pic,
-			// 				au_role_id: '3',
-			// 				checked: false,
-			// 				class_name: '',
-			// 				sec_name: '',
-			// 				class_id: '',
-			// 				sec_id: '',
-			// 				au_admission_no: '',
-			// 			}
-			// 			this.userDataArr.push(inputJson);
-
-			// 			this.finUserDataArr.push(inputJson);
-			// 		}
-			// 		this.showUser = true;
-			// 		this.showClass = false;
-			// 	} else {
-			// 		this.showUser = false;
-			// 		this.showClass = true;
-			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
-			// 	}
-			// });
-			const param:any = {};
-			param.role_id='3';
-			this.erpCommonService.getTeacher(param).subscribe((result: any) => {
-				if (result && result.status == 'ok') {				
-					for (var i = 0; i < result.data.length; i++) {
-						const tempUserData = result.data[i];
+			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 1 }).subscribe((result: any) => {
+				console.log('teacher data', result);
+				if (result) {
+					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
-							au_login_id: tempUserData.au_login_id,
-							au_full_name: tempUserData.au_full_name,
-							au_email: tempUserData.au_email,
-							au_mobile: tempUserData.au_mobile,
-							au_profileimage: tempUserData.au_profileimage,
-							au_role_id: tempUserData.au_role_id,
+							au_login_id: result[i].emp_login_id,
+							au_full_name: result[i].emp_name,
+							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+							au_profileimage: result[i].emp_profile_pic,
+							au_role_id: '3',
 							checked: false,
 							class_name: '',
 							sec_name: '',
@@ -410,53 +378,53 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
 				}
 			});
+			// const param:any = {};
+			// param.role_id='3';
+			// this.erpCommonService.getTeacher(param).subscribe((result: any) => {
+			// 	if (result && result.status == 'ok') {				
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			const tempUserData = result.data[i];
+			// 			var inputJson = {
+			// 				au_login_id: tempUserData.au_login_id,
+			// 				au_full_name: tempUserData.au_full_name,
+			// 				au_email: tempUserData.au_email,
+			// 				au_mobile: tempUserData.au_mobile,
+			// 				au_profileimage: tempUserData.au_profileimage,
+			// 				au_role_id: tempUserData.au_role_id,
+			// 				checked: false,
+			// 				class_name: '',
+			// 				sec_name: '',
+			// 				class_id: '',
+			// 				sec_id: '',
+			// 				au_admission_no: '',
+			// 			}
+			// 			this.userDataArr.push(inputJson);
+
+			// 			this.finUserDataArr.push(inputJson);
+			// 		}
+			// 		this.showUser = true;
+			// 		this.showClass = false;
+			// 	} else {
+			// 		this.showUser = false;
+			// 		this.showClass = true;
+			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
+			// 	}
+			// });
 		} else if (this.currentReceivers === 'Staff') {
 			inputJson['role_id'] = '2';
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			// this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 2 }).subscribe((result: any) => {
-			// 	if (result) {
-			// 		for (var i = 0; i < result.length; i++) {
-			// 			var inputJson = {
-			// 				au_login_id: result[i].emp_login_id,
-			// 				au_full_name: result[i].emp_name,
-			// 				au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-			// 				au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-			// 				au_profileimage: result[i].emp_profile_pic,
-			// 				au_role_id: '2',
-			// 				checked: false,
-			// 				class_name: '',
-			// 				sec_name: '',
-			// 				class_id: '',
-			// 				sec_id: '',
-			// 				au_admission_no: '',
-			// 			}
-			// 			this.userDataArr.push(inputJson);
-			// 			this.finUserDataArr.push(inputJson);
-			// 		}
-			// 		this.showUser = true;
-			// 		this.showClass = false;
-			// 	} else {
-			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
-			// 		this.showUser = false;
-			// 		this.showClass = true;
-			// 	}
-			// });
-			const param:any = {};
-			param.role_id='2';
-			param.status='1';
-			this.erpCommonService.getUser(param).subscribe((result: any) => {
-				if (result && result.status == 'ok') {				
-					for (var i = 0; i < result.data.length; i++) {
-						const tempUserData = result.data[i];
+			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 2 }).subscribe((result: any) => {
+				if (result) {
+					for (var i = 0; i < result.length; i++) {
 						var inputJson = {
-							au_login_id: tempUserData.au_login_id,
-							au_full_name: tempUserData.au_full_name,
-							au_email: tempUserData.au_email,
-							au_mobile: tempUserData.au_mobile,
-							au_profileimage: tempUserData.au_profileimage,
-							au_role_id: tempUserData.au_role_id,
+							au_login_id: result[i].emp_login_id,
+							au_full_name: result[i].emp_name,
+							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+							au_profileimage: result[i].emp_profile_pic,
+							au_role_id: '2',
 							checked: false,
 							class_name: '',
 							sec_name: '',
@@ -475,6 +443,38 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					this.showClass = true;
 				}
 			});
+			// const param:any = {};
+			// param.role_id='2';
+			// param.status='1';
+			// this.erpCommonService.getUser(param).subscribe((result: any) => {
+			// 	if (result && result.status == 'ok') {				
+			// 		for (var i = 0; i < result.data.length; i++) {
+			// 			const tempUserData = result.data[i];
+			// 			var inputJson = {
+			// 				au_login_id: tempUserData.au_login_id,
+			// 				au_full_name: tempUserData.au_full_name,
+			// 				au_email: tempUserData.au_email,
+			// 				au_mobile: tempUserData.au_mobile,
+			// 				au_profileimage: tempUserData.au_profileimage,
+			// 				au_role_id: tempUserData.au_role_id,
+			// 				checked: false,
+			// 				class_name: '',
+			// 				sec_name: '',
+			// 				class_id: '',
+			// 				sec_id: '',
+			// 				au_admission_no: '',
+			// 			}
+			// 			this.userDataArr.push(inputJson);
+			// 			this.finUserDataArr.push(inputJson);
+			// 		}
+			// 		this.showUser = true;
+			// 		this.showClass = false;
+			// 	} else {
+			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
+			// 		this.showUser = false;
+			// 		this.showClass = true;
+			// 	}
+			// });
 		} else if (this.currentReceivers === 'Student') {
 			inputJson['class_ids'] = checkedClassIds;
 			this.userDataArr = [];
@@ -801,7 +801,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"msg_subject": this.messageForm.value.messageSubject,
 					"msg_description": this.messageForm.value.messageBody,
 					"msg_attachment": this.attachmentArray,
-					"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+					// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+					"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 					"msg_thread": []
 				}
