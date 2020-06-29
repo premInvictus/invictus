@@ -2,7 +2,7 @@
   <div class="row remove-top-margin">
     <div class="col-12 remove-col-padding">
       <div class="modal-title-box">
-        <span class="font-size-20 font-white font-regular">Employee Salary Slip</span><span
+        <span class="font-size-20 font-white font-regular">Salary Slip ({{values.mon}})</span><span
           class="float-right margin-top-5"><i (click)="closeDialog()"
             class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
       </div>
@@ -96,9 +96,7 @@
                 <td class="cus-td td-r"><b> Pay Mode </b>
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
-                <td class="cus-td td-r" align="left">{{
-                values.pay_mode ?  values.pay_mode :''
-              }}</td>
+                <td class="cus-td td-r" align="left">Bank Transfer</td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b> Bank Name </b>
@@ -153,7 +151,8 @@
       </tr>
     </tbody>
   </table>
-  <table width="100%" border="0" style="border-collapse: collapse;border-bottom: 2.5px solid;" cellspacing="0" cellpadding="0">
+  <table width="100%" border="0" style="border-collapse: collapse;border-bottom: 2.5px solid;" cellspacing="0"
+    cellpadding="0">
     <tbody>
       <tr>
         <td width="50%" style="vertical-align:top;border-right: 2.5px solid;border-left: 1.5px solid;
@@ -163,9 +162,8 @@
               <tr class="head1">
                 <td class="cus-td" style="background: #D5E9FF !important;padding: 8px;
                  border-bottom: 0.5px solid;"><b>Earnings</b></td>
-                <td class="cus-td"  style="background: #D5E9FF !important;padding: 8px;
-                 border-bottom: 0.5px solid;" 
-                align="right"><b>Amount</b></td>
+                <td class="cus-td" style="background: #D5E9FF !important;padding: 8px;
+                 border-bottom: 0.5px solid;" align="right"><b>Amount</b></td>
               </tr>
               <tr>
               <tr *ngFor="let bas of values.action.details.empShacolumns">
@@ -201,7 +199,8 @@
       </tr>
     </tbody>
   </table>
-  <table width="100%" border="0" style="border-collapse: collapse;border-bottom: 0.5px solid;" cellspacing="0" cellpadding="0">
+  <table width="100%" border="0" style="border-collapse: collapse;border-bottom: 0.5px solid;" cellspacing="0"
+    cellpadding="0">
     <tbody>
       <tr>
         <td width="50%" style="vertical-align:top;border-right: 2.5px solid;
@@ -272,7 +271,8 @@
                   Periods Served
                 </td>
                 <td class="cus-td" align="right">
-                  -
+                  {{values.action.leaves &&
+                    values.action.leaves.emp_total_attendance ? values.action.leaves.emp_total_attendance : '-'}}
                 </td>
               </tr>
               <tr>
@@ -289,7 +289,10 @@
                   Salary Processed
                 </td>
                 <td class="cus-td" align="right">
-                  -
+                  {{(values.action.leaves.emp_leave_availed ? 
+                    getNumFormat(values.action.leaves.emp_leave_availed) : 0) + 
+                  (values.action.leaves.emp_total_attendance ?
+                  getNumFormat(values.action.leaves.emp_total_attendance)  : 0)}}
                 </td>
               </tr>
             </tbody>

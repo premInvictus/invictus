@@ -107,7 +107,9 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 			if (res && res.status === 'ok') {
 				this.sessionArray = [];
 				this.sessionArray = res.data;
-				this.sessionName = this.sessionArray[this.session.ses_id]
+				const index = this.sessionArray.findIndex((f) => f.ses_id === this.session.ses_id);
+
+				this.sessionName = this.sessionArray[index].ses_name;
 				this.getEmployeeLedger(login_id);
 			}
 		});
@@ -187,6 +189,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
 							obj3['mon'] = item.month;
 							obj3['attendance'] = '';
+							obj3['leaves'] = 0;
 							obj3['netearnings'] = '';
 							obj3['deductions'] = '';
 							obj3['advance'] = '';
@@ -210,6 +213,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 								obj3['srno'] = srno;
 								obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
 								obj3['mon'] = item.month;
+								obj3['leaves'] = 0;
 								obj3['attendance'] = '';
 								obj3['netearnings'] = '';
 								obj3['deductions'] = '';
@@ -233,6 +237,8 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id);
 					obj['attendance'] = item && item.leaves && item.leaves.emp_total_attendance ?
 						item.leaves.emp_total_attendance : 0;
+					obj['leaves'] = item && item.leaves && item.leaves.emp_leave_availed ?
+						Number(item.leaves.emp_leave_availed) : 0;
 					obj['netearnings'] = item && item.details &&
 						item.details.emp_total_earnings ?
 						item.details.emp_total_earnings : 0;
@@ -313,6 +319,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				this.cacheSpan('remarks', d => d.remarks);
 				this.totalObj['particulars'] = 'Grand Total';
 				this.totalObj['attendance'] = (this.tempData.map(f => Math.round(Number(f.attendance))).reduce((acc, val) => acc + val, 0));
+				this.totalObj['leaves'] = (this.tempData.map(f => Math.round(Number(f.leaves))).reduce((acc, val) => acc + val, 0));
 				this.totalObj['netearnings'] = this.tempData.map(f => Math.round(Number(f.netearnings))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['deductions'] = this.tempData.map(f => Math.round(Number(f.deductions))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['advance'] = this.tempData.map(f => Math.round(Number(f.advance))).reduce((acc, val) => acc + val, 0);
@@ -546,13 +553,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				});
 			}
 
-			if (rowNum === totRow || rowNum === (totRow + 1)) {
-				row.font = {
-					name: 'Arial',
-					size: 14,
-					bold: true
-				};
-			}
+
 			if (rowNum === 4) {
 				row.eachCell(cell => {
 					cell.font = {

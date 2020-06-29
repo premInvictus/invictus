@@ -479,7 +479,8 @@
                                                 <mat-form-field class="form-field" appearance="outline">
                                                     <mat-label>Date of Advance</mat-label>
                                                     <input matInput [matDatepicker]="picker5"
-                                                    [min]="!item.value.freezed ? currentDate : ''"
+                                                    [min]="!item.value.freezed && advanceDetails.length > 1  
+                                                    ? currentDate : ''"
                                                         placeholder="Date of Joining" [readonly]="viewOnly ||
                                                         item.value.freezed"
                                                         formControlName="advance_start_date">
