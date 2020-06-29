@@ -325,37 +325,57 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                     } else {
                       this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
                     }
-                    this.studentAttendanceArray.push({
-                      sr_no: counter,
-                      au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
-                      emp_name: new TitleCasePipe().transform(item.emp_name),
-                      emp_id: item.emp_id,
-                    });
-                    this.finalArray.push({
-                      dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
-                        && item.emp_department_detail.dpt_id ? item.emp_department_detail.dpt_id.toString() : ''),
-                      cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() :
-                        (item.emp_category_detail
-                          && item.emp_category_detail.cat_id ? item.emp_category_detail.cat_id.toString() : ''),
-                      emp_id: item.emp_id ? item.emp_id : '',
-                      emp_name: item.emp_name ? item.emp_name : '',
-                      attendance: '',
-                      emp_wing_detail: item.emp_wing_detail,
-                      att_created_date: '',
-                      att_updated_date: '',
-                      au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
-                      created_by: {
-                        id: this.currentUser.login_id ? this.currentUser.login_id : '',
-                        name: this.currentUser.full_name ? this.currentUser.full_name : ''
-                      },
-                      updated_by: {
-                        id: this.currentUser.login_id ? this.currentUser.login_id : '',
-                        name: this.currentUser.full_name ? this.currentUser.full_name : ''
-                      },
-                    });
+                    let flag = false;
+                    if (item &&
+                      item.emp_salary_detail &&
+                      item.emp_salary_detail.emp_organisation_relation_detail) {
+                      if (!(item.emp_salary_detail.emp_organisation_relation_detail.doj)) {
+                        flag = true;
+                      }
+                      if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+                        const joinDate = new Date(new DatePipe('en-in').
+                        transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
+                        const selectedDate = new Date(new DatePipe('en-in').
+                        transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
+                        if (selectedDate >= joinDate) {
+                          flag = true;
+                        }
+                      }
+                    }
+                    if (flag) {
+                      this.studentAttendanceArray.push({
+                        sr_no: counter,
+                        au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                        emp_name: new TitleCasePipe().transform(item.emp_name),
+                        emp_id: item.emp_id,
+                      });
+                      this.finalArray.push({
+                        dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
+                          && item.emp_department_detail.dpt_id ? item.emp_department_detail.dpt_id.toString() : ''),
+                        cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() :
+                          (item.emp_category_detail
+                            && item.emp_category_detail.cat_id ? item.emp_category_detail.cat_id.toString() : ''),
+                        emp_id: item.emp_id ? item.emp_id : '',
+                        emp_name: item.emp_name ? item.emp_name : '',
+                        attendance: '',
+                        emp_wing_detail: item.emp_wing_detail,
+                        att_created_date: '',
+                        att_updated_date: '',
+                        au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                        created_by: {
+                          id: this.currentUser.login_id ? this.currentUser.login_id : '',
+                          name: this.currentUser.full_name ? this.currentUser.full_name : ''
+                        },
+                        updated_by: {
+                          id: this.currentUser.login_id ? this.currentUser.login_id : '',
+                          name: this.currentUser.full_name ? this.currentUser.full_name : ''
+                        },
+                      });
+                    }
+                    counter++;
+                    this.totalStudent = counter;
                   }
-                  counter++;
-                  this.totalStudent = counter;
+
                 }
               }
             });
@@ -398,36 +418,57 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                   } else {
                     this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
                   }
-                  this.studentAttendanceArray.push({
-                    sr_no: counter,
-                    au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
-                    emp_name: new TitleCasePipe().transform(item.emp_name),
-                    emp_id: item.emp_id,
-                  });
-                  this.finalArray.push({
-                    dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
-                      && item.emp_department_detail.dpt_id ? item.emp_department_detail.dpt_id.toString() : ''),
-                    cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() :
-                      (item.emp_category_detail
-                        && item.emp_category_detail.cat_id ? item.emp_category_detail.cat_id.toString() : ''),
-                    emp_id: item.emp_id ? item.emp_id : '',
-                    emp_name: item.emp_name ? item.emp_name : '',
-                    attendance: '',
-                    emp_wing_detail: item.emp_wing_detail,
-                    att_created_date: '',
-                    att_updated_date: '',
-                    au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
-                    created_by: {
-                      id: this.currentUser.login_id ? this.currentUser.login_id : '',
-                      name: this.currentUser.full_name ? this.currentUser.full_name : ''
-                    },
-                    updated_by: {
-                      id: this.currentUser.login_id ? this.currentUser.login_id : '',
-                      name: this.currentUser.full_name ? this.currentUser.full_name : ''
-                    },
-                  });
-                  counter++;
-                  this.totalStudent = counter;
+                  let flag = false;
+                  if (item &&
+                    item.emp_salary_detail &&
+                    item.emp_salary_detail.emp_organisation_relation_detail) {
+                    if (!(item.emp_salary_detail.emp_organisation_relation_detail.doj)) {
+                      flag = true;
+                    }
+                    if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
+                      const joinDate = new Date(new DatePipe('en-in').
+                      transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
+                      const selectedDate = new Date(new DatePipe('en-in').
+                      transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
+                     
+                      if (selectedDate >= joinDate) {
+                        flag = true;
+                      }
+                    }
+                  }
+                  if (flag) {
+                    this.studentAttendanceArray.push({
+                      sr_no: counter,
+                      au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                      emp_name: new TitleCasePipe().transform(item.emp_name),
+                      emp_id: item.emp_id,
+                    });
+                    this.finalArray.push({
+                      dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
+                        && item.emp_department_detail.dpt_id ? item.emp_department_detail.dpt_id.toString() : ''),
+                      cat_id: this.firstForm.value.cat_id ? this.firstForm.value.cat_id.toString() :
+                        (item.emp_category_detail
+                          && item.emp_category_detail.cat_id ? item.emp_category_detail.cat_id.toString() : ''),
+                      emp_id: item.emp_id ? item.emp_id : '',
+                      emp_name: item.emp_name ? item.emp_name : '',
+                      attendance: '',
+                      emp_wing_detail: item.emp_wing_detail,
+                      att_created_date: '',
+                      att_updated_date: '',
+                      au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                      created_by: {
+                        id: this.currentUser.login_id ? this.currentUser.login_id : '',
+                        name: this.currentUser.full_name ? this.currentUser.full_name : ''
+                      },
+                      updated_by: {
+                        id: this.currentUser.login_id ? this.currentUser.login_id : '',
+                        name: this.currentUser.full_name ? this.currentUser.full_name : ''
+                      },
+                    });
+                    counter++;
+                    this.totalStudent = counter;
+                  }
+
                 }
               }
             });
@@ -500,8 +541,8 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
         const updateJSON = {
           att_id: this.att_id,
           values: this.finalArray,
-          entry_date : new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd'),
-          session_id : this.session.ses_id ? this.session.ses_id : ''
+          entry_date: new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd'),
+          session_id: this.session.ses_id ? this.session.ses_id : ''
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
           this.disabledApiButton = false;
@@ -515,8 +556,8 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
         const updateJSON = {
           att_id: this.att_id,
           values: this.finalArray,
-          entry_date : new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd'),
-          session_id : this.session.ses_id ? this.session.ses_id : ''
+          entry_date: new DatePipe('en-in').transform(this.firstForm.value.entry_date, 'yyyy-MM-dd'),
+          session_id: this.session.ses_id ? this.session.ses_id : ''
         };
         this.commonService.updateAttendance(updateJSON).subscribe((res: any) => {
           this.disabledApiButton = false;

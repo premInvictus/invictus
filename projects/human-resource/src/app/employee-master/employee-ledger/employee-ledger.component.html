@@ -13,6 +13,7 @@
   <div class="row">
     <div class="col-12">
       <app-emp-common-profile [loginId]="lastRecordId" (next)="getEmployeeLedger($event)"
+      [total]= "totalObj"
         (prev)="getEmployeeLedger($event)" (first)="getEmployeeLedger($event)" (last)="getEmployeeLedger($event)">
       </app-emp-common-profile>
     </div>

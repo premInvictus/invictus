@@ -210,6 +210,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	ngOnChanges() {
 		this.empBankDetail = [];
+		this.getPayMode();
 		this.empPaymentModeDetail = [];
 		this.buildForm();
 		this.getDepartment();
@@ -217,7 +218,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getWing();
 		this.getPayScaleMaster();
 		this.getPayScale();
-		this.getPayMode();
 		this.getBank();
 		this.getCategoryOne();
 		this.getCategoryTwo();
@@ -342,6 +342,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	getPayMode() {
+		this.payMode = [];
 		this.payMode = [{
 			bnk_id: '0',
 			bank_name: 'Cash'
@@ -529,9 +530,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.advanceDetails = [];
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.empPaymentModeDetail && this.employeedetails.emp_salary_detail.empPaymentModeDetail.length > 0) {
 			this.empPaymentModeDetail = [];
-			for (var i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
+			for (let i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
 				this.empPaymentModeDetail.push(this.fbuild.group({
-					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] ?
+					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] || 
+					this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] === 0 ?
 						(this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString() : '',
 					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
 					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
@@ -540,6 +542,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		} else {
 			this.addPaymentMode();
 		}
+		
 		if (this.employeedetails.emp_salary_detail &&
 			this.employeedetails.emp_salary_detail.emp_salary_structure &&
 			this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details) {
