@@ -147,17 +147,55 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		console.log('this.showUserContextMenu--',this.showUserContextMenu);
 		this.showUserContextMenu =!this.showUserContextMenu; 
 		if (this.showUserContextMenu) {
-			this.erpCommonService.getAllEmployeeDetail({'emp_cat_id' : 1}).subscribe((result: any) => {
+			// const param:any = {};
+			// param.emp_cat_id=1;
+			// param.class_id=this.currentUser.class_id ? parseInt(this.currentUser.class_id) : '';
+			// this.erpCommonService.getAllEmployeeDetail(param).subscribe((result: any) => {
+			// 	var userData = [];
+			// 	if (result) {				
+			// 		for (var i = 0; i < result.length; i++) {
+			// 			var inputJson = {
+			// 				au_login_id: result[i].emp_login_id,
+			// 				au_full_name: result[i].emp_name,
+			// 				au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+			// 				au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+			// 				au_profileimage: result[i].emp_profile_pic,
+			// 				au_role_id: '3',
+			// 				checked: false,
+			// 				class_name: '',
+			// 				sec_name: '',
+			// 				class_id: '',
+			// 				sec_id: '',
+			// 				au_admission_no: '',
+			// 			}
+			// 			userData.push(inputJson);						
+			// 		}
+	
+			// 		this.userDataArr = this.uniqueUserArray(userData);
+			// 		this.finUserDataArr = this.uniqueUserArray(userData);
+			// 		this.showUser = true;
+			// 		this.showClass = false;
+			// 	} else {
+			// 		this.showUser = false;
+			// 		this.showClass = true;
+			// 		this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
+			// 	}
+			// });
+			const param:any = {};
+			param.role_id='3';
+			param.class_id=this.currentUser.class_id;
+			this.erpCommonService.getTeacher(param).subscribe((result: any) => {
 				var userData = [];
-				if (result) {				
-					for (var i = 0; i < result.length; i++) {
+				if (result && result.status == 'ok') {				
+					for (var i = 0; i < result.data.length; i++) {
+						const tempUserData = result.data[i];
 						var inputJson = {
-							au_login_id: result[i].emp_login_id,
-							au_full_name: result[i].emp_name,
-							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-							au_profileimage: result[i].emp_profile_pic,
-							au_role_id: '3',
+							au_login_id: tempUserData.au_login_id,
+							au_full_name: tempUserData.au_full_name,
+							au_email: tempUserData.au_email,
+							au_mobile: tempUserData.au_mobile,
+							au_profileimage: tempUserData.au_profileimage,
+							au_role_id: tempUserData.au_role_id,
 							checked: false,
 							class_name: '',
 							sec_name: '',

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SisService, CommonAPIService } from '../../_services/index';
+import { SisService, CommonAPIService,AxiomService } from '../../_services/index';
 import { ErpCommonService } from 'src/app/_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl, MatDialogRef } from '@angular/material';
@@ -66,7 +66,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService,
 		private erpCommonService: ErpCommonService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private axiomService: AxiomService
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -347,17 +348,49 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 1 }).subscribe((result: any) => {
-				console.log('teacher data', result);
-				if (result) {
-					for (var i = 0; i < result.length; i++) {
+			// this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 1 }).subscribe((result: any) => {
+			// 	console.log('teacher data', result);
+			// 	if (result) {
+			// 		for (var i = 0; i < result.length; i++) {
+			// 			var inputJson = {
+			// 				au_login_id: result[i].emp_login_id,
+			// 				au_full_name: result[i].emp_name,
+			// 				au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+			// 				au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+			// 				au_profileimage: result[i].emp_profile_pic,
+			// 				au_role_id: '3',
+			// 				checked: false,
+			// 				class_name: '',
+			// 				sec_name: '',
+			// 				class_id: '',
+			// 				sec_id: '',
+			// 				au_admission_no: '',
+			// 			}
+			// 			this.userDataArr.push(inputJson);
+
+			// 			this.finUserDataArr.push(inputJson);
+			// 		}
+			// 		this.showUser = true;
+			// 		this.showClass = false;
+			// 	} else {
+			// 		this.showUser = false;
+			// 		this.showClass = true;
+			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
+			// 	}
+			// });
+			const param:any = {};
+			param.role_id='3';
+			this.erpCommonService.getTeacher(param).subscribe((result: any) => {
+				if (result && result.status == 'ok') {				
+					for (var i = 0; i < result.data.length; i++) {
+						const tempUserData = result.data[i];
 						var inputJson = {
-							au_login_id: result[i].emp_login_id,
-							au_full_name: result[i].emp_name,
-							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-							au_profileimage: result[i].emp_profile_pic,
-							au_role_id: '3',
+							au_login_id: tempUserData.au_login_id,
+							au_full_name: tempUserData.au_full_name,
+							au_email: tempUserData.au_email,
+							au_mobile: tempUserData.au_mobile,
+							au_profileimage: tempUserData.au_profileimage,
+							au_role_id: tempUserData.au_role_id,
 							checked: false,
 							class_name: '',
 							sec_name: '',
@@ -382,16 +415,48 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			inputJson['status'] = '1';
 			this.userDataArr = [];
 			this.finUserDataArr = [];
-			this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 2 }).subscribe((result: any) => {
-				if (result) {
-					for (var i = 0; i < result.length; i++) {
+			// this.commonAPIService.getAllEmployeeDetail({ 'emp_cat_id': 2 }).subscribe((result: any) => {
+			// 	if (result) {
+			// 		for (var i = 0; i < result.length; i++) {
+			// 			var inputJson = {
+			// 				au_login_id: result[i].emp_login_id,
+			// 				au_full_name: result[i].emp_name,
+			// 				au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
+			// 				au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
+			// 				au_profileimage: result[i].emp_profile_pic,
+			// 				au_role_id: '2',
+			// 				checked: false,
+			// 				class_name: '',
+			// 				sec_name: '',
+			// 				class_id: '',
+			// 				sec_id: '',
+			// 				au_admission_no: '',
+			// 			}
+			// 			this.userDataArr.push(inputJson);
+			// 			this.finUserDataArr.push(inputJson);
+			// 		}
+			// 		this.showUser = true;
+			// 		this.showClass = false;
+			// 	} else {
+			// 		this.commonAPIService.showSuccessErrorMessage('No Record Found', 'error');
+			// 		this.showUser = false;
+			// 		this.showClass = true;
+			// 	}
+			// });
+			const param:any = {};
+			param.role_id='2';
+			param.status='1';
+			this.erpCommonService.getUser(param).subscribe((result: any) => {
+				if (result && result.status == 'ok') {				
+					for (var i = 0; i < result.data.length; i++) {
+						const tempUserData = result.data[i];
 						var inputJson = {
-							au_login_id: result[i].emp_login_id,
-							au_full_name: result[i].emp_name,
-							au_email: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.email_id : '',
-							au_mobile: result[i].emp_personal_detail && result[i].emp_personal_detail.contact_detail ? result[i].emp_personal_detail.contact_detail.primary_mobile_no : '',
-							au_profileimage: result[i].emp_profile_pic,
-							au_role_id: '2',
+							au_login_id: tempUserData.au_login_id,
+							au_full_name: tempUserData.au_full_name,
+							au_email: tempUserData.au_email,
+							au_mobile: tempUserData.au_mobile,
+							au_profileimage: tempUserData.au_profileimage,
+							au_role_id: tempUserData.au_role_id,
 							checked: false,
 							class_name: '',
 							sec_name: '',
