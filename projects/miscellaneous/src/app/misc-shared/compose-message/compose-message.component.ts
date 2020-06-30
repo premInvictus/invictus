@@ -75,6 +75,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 
 	ngOnInit() {
 		this.buildForm();
+		console.log('reRenderForm',this.reRenderForm);
 	}
 
 	ngOnChanges() {
