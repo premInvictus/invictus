@@ -266,7 +266,7 @@
                             <button mat-raised-button class="btn-success btn-consolidate btn-spacer"
                                 (click)="approveMessage(item)" *ngIf="getPermission(item) && item?.status?.status_name === 'pending'">Approve</button>
                             <button mat-raised-button class="btn-danger btn-consolidate btn-spacer"
-                                (click)="rejectMessage(item)" *ngIf="getPermission(item)">Reject</button>
+                                (click)="rejectMessage(item)" *ngIf="getPermission(item) && item?.status?.status_name === 'pending'">Reject</button>
                             <button mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 (click)="resolveMessage(item)" *ngIf="getPermission(item)">Resolve</button>
                             <button mat-raised-button class="btn-basic btn-consolidate btn-spacer" style="margin-left:10px;" 

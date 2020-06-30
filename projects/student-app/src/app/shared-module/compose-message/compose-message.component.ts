@@ -150,7 +150,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			// const param:any = {};
 			// param.emp_cat_id=1;
 			// param.class_id=this.currentUser.class_id ? parseInt(this.currentUser.class_id) : '';
-			// this.erpCommonService.getAllEmployeeDetail(param).subscribe((result: any) => {
+			// this.erpCommonService.getAllEmployeeByClassSection(param).subscribe((result: any) => {
 			// 	var userData = [];
 			// 	if (result) {				
 			// 		for (var i = 0; i < result.length; i++) {
@@ -181,6 +181,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			// 		this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 			// 	}
 			// });
+			console.log(this.currentUser);
 			const param:any = {};
 			param.role_id='3';
 			param.class_id=this.currentUser.class_id;
@@ -463,7 +464,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				"msg_subject": this.messageForm.value.messageSubject,
 				"msg_description": this.messageForm.value.messageBody,
 				"msg_attachment": this.attachmentArray,
-				"status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
+				"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 				"msg_status": { "status_id": 1, "status_name": "unread" },
 				"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 				"msg_thread": []
