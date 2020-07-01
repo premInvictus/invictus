@@ -11,13 +11,17 @@ import { DatePipe } from '@angular/common';
 })
 export class LeaveApplicationComponent implements OnInit {
   reviewArray: any[] = [];
+  subJSON: any = {};
   leaveForm: FormGroup;
   leaveTypeArray: any[] = [];
+  empArray: any[] = [];
   attachmentArray: any[] = [];
+  catArr: any[] = [];
   showFormFlag = false;
   maxDate = new Date();
   currentUser: any;
   employeeRecord: any;
+  selectedIndex: any = 0;
   editFlag = false;
   constructor(
     public dialogRef: MatDialogRef<LeaveApplicationComponent>,
@@ -28,6 +32,7 @@ export class LeaveApplicationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getClassIVStaff();
     this.buildForm();
     this.getLeaveType();
     if (this.data) {
@@ -72,7 +77,12 @@ export class LeaveApplicationComponent implements OnInit {
     this.dialogRef.close({ data: true });
   }
   submit() {
+    
     if (this.leaveForm.valid) {
+      this.leaveForm.value['tabIndex'] =  this.subJSON['tabIndex'];
+      this.leaveForm.value['leave_employee_id'] =  this.subJSON['leave_employee_id'];
+      this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
+      this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
     } else {
       this.common.showSuccessErrorMessage('Please Fill Required Fields', 'error');
@@ -80,6 +90,10 @@ export class LeaveApplicationComponent implements OnInit {
   }
   update() {
     if (this.leaveForm.valid) {
+      this.leaveForm.value['tabIndex'] =  this.subJSON['tabIndex'];
+      this.leaveForm.value['leave_employee_id'] =  this.subJSON['leave_employee_id'];
+      this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
+      this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
     } else {
       this.common.showSuccessErrorMessage('Please Fill Required Fields', 'error');
@@ -93,7 +107,22 @@ export class LeaveApplicationComponent implements OnInit {
     };
     fileReader.readAsDataURL(file);
   }
+  getClassIVStaff() {
+    this.common.getFilterData(
+      { "generalFilters": { "emp_department_detail.dpt_id": "", "emp_category_detail.cat_id": [3], "emp_status": ["live"] } }
+    ).subscribe((res: any) => {
+      if (res && res.status === 'ok') {
 
+        for (const item of res.data) {
+          this.empArray.push({
+            emp_id: item.emp_id,
+            emp_name: item.emp_name,
+            emp_supervisor: item.emp_supervisor && item.emp_supervisor.id ? item.emp_supervisor.id : ''
+          })
+        }
+      }
+    });
+  }
   uploadImage(fileName, au_profileimage) {
     this.sisService.uploadDocuments([
       { fileName: fileName, imagebase64: au_profileimage, module: 'employee-leave' }]).subscribe((result: any) => {
@@ -104,5 +133,29 @@ export class LeaveApplicationComponent implements OnInit {
   }
   reset() {
     this.leaveForm.reset();
+  }
+  tabChanged($event) {
+    this.selectedIndex = $event.index;
+  }
+  getStaff($event) {
+    this.subJSON['tabIndex'] = this.selectedIndex;
+    this.subJSON['leave_employee_id'] = $event.value;
+    this.subJSON['leave_to'] = this.getSupervisiorId($event.value);
+    this.subJSON['leave_emp_detail'] = {
+      emp_id: $event.value,
+      emp_name: this.getEmpName($event.value)
+    }
+  }
+  getSupervisiorId(id) {
+    const index = this.empArray.findIndex(f => Number(f.emp_id) === Number(id));
+    if (index !== -1) {
+      return this.empArray[index]['emp_supervisor'];
+    }
+  }
+  getEmpName(id) {
+    const index = this.empArray.findIndex(f => Number(f.emp_id) === Number(id));
+    if (index !== -1) {
+      return this.empArray[index]['emp_name'];
+    }
   }
 }

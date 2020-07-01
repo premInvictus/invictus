@@ -152,9 +152,9 @@ export class MyLeaveComponent implements OnInit {
 					// for (var j = 0; j < leave_request_schedule_data.length; j++) {
 					var dataJson = {
 						srno: pos,
-						emp_id: item.leave_emp_detail && item.leave_emp_detail.emp_id ? item.leave_emp_detail.emp_id : '' ,
-						emp_name: item.leave_emp_detail && item.leave_emp_detail.emp_name ? 
-						item.leave_emp_detail.emp_name : '',
+						emp_id: item.leave_emp_detail && item.leave_emp_detail.emp_id ? item.leave_emp_detail.emp_id : '',
+						emp_name: item.leave_emp_detail && item.leave_emp_detail.emp_name ?
+							item.leave_emp_detail.emp_name : '',
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
@@ -209,6 +209,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	submit(result, attachment) {
+
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -216,15 +217,23 @@ export class MyLeaveComponent implements OnInit {
 		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
-		inputJson['leave_to'] = this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal;
-		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
-		inputJson['leave_start_date'] = startDate;
+		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
+			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
+			(result.leave_to ? result.leave_to : this.principal);
+		inputJson['leave_from'] = result.tabIndex && result.tabIndex !== 1 ?
+			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
+			('');
+		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
+			inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
 		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
-		inputJson['leave_emp_detail'] = this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {};
+		inputJson['leave_emp_detail'] =
+			result.tabIndex === 0 ?
+				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
+				: result.leave_emp_detail;
 		inputJson['leave_status'] = 0;
 		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
@@ -233,6 +242,7 @@ export class MyLeaveComponent implements OnInit {
 			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
+
 		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
 				this.disabledApiButton = false;
@@ -256,15 +266,23 @@ export class MyLeaveComponent implements OnInit {
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
 		inputJson['leave_id'] = result.leave_id;
-		inputJson['leave_to'] = this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal;;
-		inputJson['leave_from'] = this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '';
-		inputJson['leave_start_date'] = startDate;
+		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
+			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
+			(result.leave_to ? result.leave_to : this.principal);
+		inputJson['leave_from'] = result.tabIndex && result.tabIndex !== 1 ?
+			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
+			('');
+		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
+			inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
 		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
-		inputJson['leave_emp_detail'] = this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {};
+		inputJson['leave_emp_detail'] =
+			result.tabIndex === 0 ?
+				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
+				: result.leave_emp_detail;
 		inputJson['leave_status'] = result.leave_status;
 		inputJson['leave_role'] = this.currentUser.role_id;
 		var newStartDate = new Date(startDate);
@@ -479,16 +497,38 @@ export class MyLeaveComponent implements OnInit {
 		});
 	}
 	openLeaveApplicationForm() {
-		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
-			width: '30%',
-			height: '55%',
-			data: ''
-		});
-		dialogRef.afterClosed().subscribe(dresult => {
-			if (dresult.data) {
-				this.submit(dresult.data, dresult.attachment);
-			}
-		});
+		let eRecord;
+		const month_data: any[] = this.employeeRecord.emp_month_attendance_data &&
+			this.employeeRecord.emp_month_attendance_data.month_data &&
+			this.employeeRecord.emp_month_attendance_data.month_data.length > 0 ?
+			this.employeeRecord.emp_month_attendance_data.month_data : [];
+		;
+		if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
+			month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
+			eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
+
+		} else {
+			eRecord = this.employeeRecord.emp_month_attendance_data &&
+				this.employeeRecord.emp_month_attendance_data.leave_opening_balance ?
+				this.employeeRecord.emp_month_attendance_data.leave_opening_balance : ''
+		}
+		console.log(eRecord);
+		if (eRecord && Number(eRecord) > 0) {
+			const dialogRef = this.dialog.open(LeaveApplicationComponent, {
+				width: '500px',
+				height: '500px',
+				data: ''
+			});
+			dialogRef.afterClosed().subscribe(dresult => {
+				if (dresult && dresult.data) {
+					this.submit(dresult.data, dresult.attachment);
+				}
+			});
+		} else {
+
+			this.common.showSuccessErrorMessage('No leave balance remaining', 'error');
+		}
+
 	}
 	deleteCancel() {
 

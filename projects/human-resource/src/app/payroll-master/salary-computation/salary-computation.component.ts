@@ -958,6 +958,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 				}
 			}
+			this.setNetTotal(element, event);
 		}
 	}
 	setNetPerAdv(element, event) {
@@ -1063,6 +1064,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 				}
 			}
+			this.setNetTotal(element, event);
 		}
 	}
 	setNetPerTDS(element, event) {
@@ -1173,6 +1175,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 				}
 			}
+			this.setNetTotal(element, event);
 		}
 	}
 	setNetPerArr(element, event) {
@@ -1276,6 +1279,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 				}
 			}
+			this.setNetTotal(element, event);
 		}
 	}
 
