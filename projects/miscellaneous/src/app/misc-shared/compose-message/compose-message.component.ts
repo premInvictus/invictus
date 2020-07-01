@@ -233,12 +233,19 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				'tpl_type': this.messageForm.value.messageType
 			};
 
-			if (this.messageForm.value.tpl_id) {
+			if (this.messageForm.value.tpl_id && this.messageForm.value.tpl_id != '0') {
 				inputJson['tpl_id'] = this.messageForm.value.tpl_id;
 				this.sisService.updateTemplate(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.disabledApiButton = false;
-						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
+						if(this.messageForm.value.messageType === 'E'){
+							var messageType = 'Email';
+						} else if(this.messageForm.value.messageType === 'S'){
+							var messageType = 'SMS';
+						} else  {
+							var messageType = 'notification';
+						}
+						//var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
 						this.getTemplate();
 						this.editTemplateFlag = true;
@@ -248,7 +255,14 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 				this.sisService.saveTemplate(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.disabledApiButton = false;
-						var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
+						if(this.messageForm.value.messageType === 'E'){
+							var messageType = 'Email';
+						} else if(this.messageForm.value.messageType === 'S'){
+							var messageType = 'SMS';
+						} else  {
+							var messageType = 'notification';
+						}
+						//var messageType = this.messageForm.value.messageType === 'E' ? 'Email' : 'SMS';
 						this.commonAPIService.showSuccessErrorMessage(messageType + ' Template Saved Successfully', 'success');
 						this.getTemplate();
 						this.editTemplateFlag = true;
