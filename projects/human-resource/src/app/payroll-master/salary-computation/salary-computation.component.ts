@@ -71,7 +71,9 @@ export class SalaryComputationComponent implements OnInit {
 	salaryComputeEmployeeData: any[] = [];
 	salaryComputeEmployeeIds: any[] = [];
 	sessionArray: any[] = [];
+	currentVcType = 'Journel Entry';
 	sessionName: any;
+	vcData: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -131,6 +133,8 @@ export class SalaryComputationComponent implements OnInit {
 		{ id: 2, name: 'Cash Transfer' }
 	];
 	records: any[] = [];
+	chartsOfAccount: any[] = [];
+	paymentModeAccount: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -141,7 +145,20 @@ export class SalaryComputationComponent implements OnInit {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'))
 		this.session_id = JSON.parse(localStorage.getItem('session'));
 	}
+	getChartsOfAccount() {
+		this.erpCommonService.getChartsOfAccount({}).subscribe((result: any) => {
 
+
+			for (var i = 0; i < result.length; i++) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component") {
+					this.chartsOfAccount.push(result[i]);
+				}
+				if ((result[i]['dependencies_type']) === "internal" && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+					this.paymentModeAccount.push(result[i]);
+				}
+			}
+		});
+	}
 	ngOnInit() {
 		this.buildForm();
 		this.getSession();
@@ -624,8 +641,8 @@ export class SalaryComputationComponent implements OnInit {
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 
 						total_earnings = total_earnings
-						salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) + 
-						((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
+						salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) +
+							((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
 						//////console.log('salary_payable',total_earnings, salary_payable);
 						element = {
 							srno: pos,
@@ -807,6 +824,332 @@ export class SalaryComputationComponent implements OnInit {
 			}
 
 		}
+		this.getChartsOfAccount();
+	}
+	getVcName(vcData, voucherEntryArray) {
+		let vcType = '';
+		const vcTypeArr = this.currentVcType.split(" ");
+		if (vcTypeArr.length > 0) {
+			vcTypeArr.forEach(element => {
+				vcType += element.substring(0, 1).toUpperCase();
+			});
+		}
+		//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
+		let currentSessionFirst = this.sessionName.split('-')[0];
+		let currentSessionSecond = this.sessionName.split('-')[1];
+		var nYear: any = '';
+		var month_id = this.searchForm.value.month_id;
+		if ((Number(month_id) != 1) && (Number(month_id) != 2) && (Number(month_id) != 3)) {
+			nYear = currentSessionFirst;
+		} else {
+			nYear = currentSessionSecond;
+		}
+		const monthNames = ["January", "February", "March", "April", "May", "June",
+			"July", "August", "September", "October", "November", "December"
+		];
+		var no_of_days = new Date(nYear, month_id, 0).getDate();
+
+
+		let vcDay = no_of_days;
+		let vcMonth = monthNames[Number(month_id) - 1].substring(0, 3);
+		let vcYear = nYear;
+		let vcNumber = vcData.vc_code;
+		this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcDay + '/' + vcMonth + '/' + vcYear + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
+		console.log(voucherEntryArray, 'test');
+
+
+		if (this.vcData) {
+			var fJson = {
+				vc_id: null,
+				vc_type: 'Journel Entry',
+				vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
+				vc_date: this.vcData.vc_date,
+				vc_narrations: 'Salary Computation of Month ' + this.vcData.vc_month,
+				vc_attachments: [],
+				vc_particulars_data: voucherEntryArray,
+				vc_state: 'draft'
+			}
+
+
+
+			this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
+				if (data) {
+					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+
+
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+				}
+			});
+		}
+
+
+	}
+	getVoucherTypeMaxId(voucherEntryArray) {
+		let param: any = {};
+		param.vc_type = this.currentVcType;
+		let flag = 0;
+		let result: any;
+
+		this.commonAPIService.getVoucherTypeMaxId(param).subscribe((data: any) => {
+			if (data) {
+				flag = 1;
+				result = data;
+
+				this.getVcName(result, voucherEntryArray);
+
+			}
+		});
+
+	}
+	async confirm() {
+		this.disabledApiButton = true;
+		var empArr = [];
+		let empJson = {};
+		let monthWiseAdvance = [];
+		var inputArr = [];
+		var edit = false;
+		let inputJson = {};
+		var finJson = {};
+		var validationStatus = false;
+		for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
+			if (this.SALARY_COMPUTE_ELEMENT[i]['colorCode']) {
+				this.commonAPIService.showSuccessErrorMessage('Please Correct Higlighted Employee Salary Total Amount, Should not be gretaer than Salary Payble', 'error');
+				validationStatus = true;
+				this.disabledApiButton = false;
+			}
+		}
+		if (!validationStatus) {
+			for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
+				monthWiseAdvance = [];
+				empJson = {};
+				monthWiseAdvance = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise ? this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise : [];
+				const findex = monthWiseAdvance.findIndex(f => Number(f.month_id) === Number(this.searchForm.value.month_id) && Number(f.currentYear) === Number(this.currentYear));
+				if (findex !== -1) {
+					monthWiseAdvance[findex] = {
+						'month_id': this.searchForm.value.month_id,
+						'deposite_amount': this.formGroupArray[i]['value']['advance'],
+						'currentYear': this.currentYear,
+						'session_id': this.session_id.ses_id
+					}
+				} else {
+					monthWiseAdvance.push({
+						'month_id': this.searchForm.value.month_id,
+						'deposite_amount': this.formGroupArray[i]['value']['advance'],
+						'currentYear': this.currentYear,
+						'session_id': this.session_id.ses_id
+					});
+				}
+
+				empJson['emp_salary_detail.emp_salary_structure.advance_month_wise'] = monthWiseAdvance;
+				empJson['emp_id'] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
+				empJson['emp_salary_detail.emp_salary_structure.emp_pay_scale'] = {
+					pc_id: this.SALARY_COMPUTE_ELEMENT[i] &&
+						this.SALARY_COMPUTE_ELEMENT[i] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale'] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_id'] ?
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_id'] : '',
+					pc_name: this.SALARY_COMPUTE_ELEMENT[i] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale'] &&
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_name'] ?
+						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure']['emp_pay_scale']['ss_name'] : '',
+				};
+				empArr.push(empJson);
+				inputJson = this.SALARY_COMPUTE_ELEMENT[i];
+				inputJson['emp_modes_data']['emp_id'] = this.formGroupArray[i]['value']['emp_id'];
+				inputJson['emp_modes_data']['arrear'] = this.formGroupArray[i]['value']['arrear'];
+				inputJson['emp_modes_data']['td'] = this.formGroupArray[i]['value']['td'];
+				inputJson['emp_modes_data']['tds'] = this.formGroupArray[i]['value']['tds'];
+				inputJson['emp_modes_data']['advance'] = this.formGroupArray[i]['value']['advance'];
+				inputJson['emp_modes_data']['mode_data'] = [];
+				if (this.SALARY_COMPUTE_ELEMENT[i]['isEditable']) {
+					edit = true;
+				} else {
+					edit = false;
+				}
+				for (var j = 0; j < this.paymentModeArray.length; j++) {
+					if (Object.keys(this.formGroupArray[i]['value']).indexOf(this.paymentModeArray[j]['pm_id']) > -1) {
+						inputJson['emp_modes_data']['mode_data'].push(
+							{
+								pm_id: this.paymentModeArray[j]['pm_id'], pm_name: this.paymentModeArray[j]['pm_name'], pm_value: this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']],
+								config_id: this.paymentModeArray[j]['config_id']
+							}
+						)
+					}
+				}
+				inputArr.push(inputJson);
+			}
+			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
+			finJson['emp_salary_compute_data'] = inputArr;
+			console.log(', this.salaryHeadsArr--', this.salaryHeadsArr);
+			var salaryDedArr = [];
+			for (var i = 0; i < this.salaryHeadsArr.length; i++) {
+
+				if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2) {
+					salaryDedArr.push(this.salaryHeadsArr[i]['sc_name']);
+				}
+			}
+			if (this.chartsOfAccount.length > 0) {
+				var voucherEntryArray = [];
+				console.log('this.chart', this.chartsOfAccount, this.salaryHeadsArr);
+				for (let i = 0; i < this.chartsOfAccount.length; i++) {
+					console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
+						var salary_total = 0;
+						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_total_earnings'];
+
+						}
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary a/c',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: salary_total,
+							vc_credit: 0
+						};
+						voucherEntryArray.push(vFormJson);
+
+					}
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
+						var salary_pay_total = 0;
+						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							salary_pay_total = salary_pay_total + finJson['emp_salary_compute_data'][ci]['emp_salary_payable'];
+
+						}
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary payable',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: salary_pay_total,
+							vc_credit: 0
+						};
+						voucherEntryArray.push(vFormJson);
+
+					}
+					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > 0) {
+						var salary_total = 0;
+						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length; cj++) {
+
+								if (finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
+									salary_total = salary_total + Number(finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['value']);
+
+							}
+
+
+						}
+
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary a/c',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: salary_total,
+							vc_credit: 0
+						};
+						voucherEntryArray.push(vFormJson);
+
+					}
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Advance') {
+						var advance_total = 0;
+						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							advance_total = advance_total + finJson['emp_salary_compute_data'][ci]['emp_modes_data']['advance'];
+							let vFormJson = {};
+							vFormJson = {
+								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+								vc_particulars: 'advance',
+								vc_grno: '',
+								vc_invoiceno: '',
+								vc_debit: advance_total,
+								vc_credit: 0
+							};
+							voucherEntryArray.push(vFormJson);
+						}
+
+					}
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Arrear') {
+						var arrear_total = 0;
+						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							arrear_total = arrear_total + finJson['emp_salary_compute_data'][ci]['emp_modes_data']['arrear'];
+							let vFormJson = {};
+							vFormJson = {
+								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+								vc_particulars: 'arrear',
+								vc_grno: '',
+								vc_invoiceno: '',
+								vc_debit: arrear_total,
+								vc_credit: 0
+							};
+							voucherEntryArray.push(vFormJson);
+						}
+
+					}
+				}
+				this.getVoucherTypeMaxId(voucherEntryArray);
+
+			}
+
+			var tempPMArr = [];
+			for (var i = 0; i < 1; i++) {
+				for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
+					tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
+				}
+			}
+
+			if (this.paymentModeAccount.length > 0) {
+				var paymentParticularData = [];
+				for (var i = 0; i < this.paymentModeAccount.length; i++) {
+					var amt_total = 0;
+
+					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
+						for (var k = 0; k < finJson['emp_salary_compute_data'][j].length; k++) {
+							if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_name'] === this.paymentModeAccount[i]['coa_dependencies'][0]['dependancy_name']) {
+								amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value']);
+							}
+						}
+					}
+					let vFormJson = {};
+					vFormJson = {
+						vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
+						vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
+						vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
+						vc_grno: '',
+						vc_invoiceno: '',
+						vc_debit: arrear_total,
+						vc_credit: 0
+					};
+					paymentParticularData.push(vFormJson);
+				}
+				this.getVoucherTypeMaxId(paymentParticularData);
+
+			}
+			if (!edit) {
+				this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
+					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+					this.getAllEmployee();
+				});
+			} else {
+				this.commonAPIService.updateSalaryCompute(finJson).subscribe((result: any) => {
+					this.disabledApiButton = false;
+					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+				});
+			}
+		}
+
+
 	}
 
 	searchWithoutFilter() {
