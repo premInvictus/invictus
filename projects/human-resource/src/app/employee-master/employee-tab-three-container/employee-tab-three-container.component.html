@@ -443,11 +443,22 @@
                                             </mat-form-field>
                                             <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Calculation Type</mat-label>
-                                                <mat-select placeholder="Calcualtion Type" [disabled]="viewOnly"
+                                                <mat-select placeholder="Calculation Type" [disabled]="viewOnly"
                                                     formControlName="calculation_type">
                                                     <mat-option value="">Please select</mat-option>
                                                     <mat-option *ngFor="let item of calculationTypeArray"
                                                         [value]="item.id">
+                                                        {{item.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline"
+                                                *ngIf="empPaymentModeDetail[i].value.pay_mode !== '0'">
+                                                <mat-label>Transfer Type</mat-label>
+                                                <mat-select placeholder="Transfer Type" [disabled]="viewOnly"
+                                                    formControlName="transfer_type">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of transMode" [value]="item.id">
                                                         {{item.name}}
                                                     </mat-option>
                                                 </mat-select>
@@ -478,12 +489,9 @@
                                             <form [formGroup]="item">
                                                 <mat-form-field class="form-field" appearance="outline">
                                                     <mat-label>Date of Advance</mat-label>
-                                                    <input matInput [matDatepicker]="picker5"
-                                                    [min]="!item.value.freezed && advanceDetails.length > 1  
-                                                    ? currentDate : ''"
-                                                        placeholder="Date of Joining" [readonly]="viewOnly ||
-                                                        item.value.freezed"
-                                                        formControlName="advance_start_date">
+                                                    <input matInput [matDatepicker]="picker5" [min]="!item.value.freezed && advanceDetails.length > 1  
+                                                    ? currentDate : ''" placeholder="Date of Joining" [readonly]="viewOnly ||
+                                                        item.value.freezed" formControlName="advance_start_date">
                                                     <mat-datepicker-toggle matSuffix [for]="picker5">
                                                     </mat-datepicker-toggle>
                                                     <mat-datepicker #picker5></mat-datepicker>
@@ -493,8 +501,7 @@
                                                 </mat-form-field>
                                                 <mat-form-field class="form-field" appearance="outline">
                                                     <mat-label>Advance</mat-label>
-                                                    <input type="text" formControlName="advance" matInput
-                                                    [readonly]="viewOnly ||
+                                                    <input type="text" formControlName="advance" matInput [readonly]="viewOnly ||
                                                     item.value.freezed" placeholder="Advance">
                                                     <mat-error>
                                                         This field is required
@@ -530,13 +537,12 @@
                                                 </mat-form-field>
                                             </form>
                                         </ng-container>
-                                        <div 
-                                        style="float:right; margin-left:88% !important;">
+                                        <div style="float:right; margin-left:88% !important;">
                                             <a *ngIf="advanceDetails.length > 1 && !viewOnly
                                                 && !item.value.freezed
-                                                " style="float:right"
-                                                href="javascript:void(0)" (click)="delAdvanceDetails(k)"><i
-                                                    class="fas fa-minus-circle" style="color:#e11022"></i></a>&nbsp;
+                                                " style="float:right" href="javascript:void(0)"
+                                                (click)="delAdvanceDetails(k)"><i class="fas fa-minus-circle"
+                                                    style="color:#e11022"></i></a>&nbsp;
                                         </div>
                                     </ng-container>
                                     <div style="float:right; margin-left:82%;margin-top:-21px">

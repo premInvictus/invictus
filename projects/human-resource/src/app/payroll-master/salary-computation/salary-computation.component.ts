@@ -126,6 +126,10 @@ export class SalaryComputationComponent implements OnInit {
 	showPdf = false;
 	searchByFilter = false;
 	tdArr: any[] = [];
+	transMode: any[] = [
+		{ id: 1, name: 'Bank Transfer' },
+		{ id: 2, name: 'Cash Transfer' }
+	];
 	records: any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
@@ -167,22 +171,29 @@ export class SalaryComputationComponent implements OnInit {
 						'pm_value': 0,
 						'calculation_type': '',
 						'calculation_value': '',
-						'config_id': '0'
+						'config_id': '0',
+						'transfer_id': 0
 
 					}
 				);
 				for (const item of res.data) {
-					this.paymentModeArray.push(
-						{
-							'pm_id': item.bank_name ? item.bank_name.trim().toLowerCase().replace(' ', '_') : '',
-							'pm_name': item.bank_name,
-							'pm_value': 0,
-							'calculation_type': '',
-							'calculation_value': '',
-							'config_id': item.bnk_id
+					let i = 0;
+					for (const trans of this.transMode) {
+						this.paymentModeArray.push(
+							{
+								'pm_id': item.bank_name ? (item.bank_name + i).trim().toLowerCase().replace(' ', '_') : '',
+								'pm_name': item.bank_name + '\n (' + trans.name + ')',
+								'pm_value': 0,
+								'calculation_type': '',
+								'calculation_value': '',
+								'config_id': item.bnk_id,
+								'transfer_id': trans.id,
 
-						}
-					);
+							}
+						);
+						i++;
+					}
+
 				}
 
 			}
@@ -250,6 +261,20 @@ export class SalaryComputationComponent implements OnInit {
 			const index = arr.findIndex(f => Number(f.pay_mode) === Number(id));
 			if (index !== -1) {
 				return arr[index].calculation_type;
+			}
+
+		} else {
+			return '';
+		}
+	}
+	getTransferType(value, id) {
+		if (value.emp_salary_detail && value.emp_salary_detail.empPaymentModeDetail
+			&& value.emp_salary_detail.empPaymentModeDetail.length > 0) {
+			console.log('yes')
+			const arr: any[] = value.emp_salary_detail.empPaymentModeDetail;
+			const index = arr.findIndex(f => Number(f.pay_mode) === Number(id));
+			if (index !== -1) {
+				return arr[index].transfer_type;
 			}
 
 		} else {
@@ -429,7 +454,8 @@ export class SalaryComputationComponent implements OnInit {
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 
 						emp_present_days = emp_present_days ? emp_present_days : 0;
-						salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions) + Number(arrearValue) - Number(advanceValue));
+						salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
+							((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
 
 						for (var i = 0; i < this.paymentModeArray.length; i++) {
 							formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'])) : '';
@@ -481,7 +507,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
 							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
-						element.balance = Number(element.emp_present_days ? Number(empBasicPay) + element.emp_salary_payable : 0) - 0;
+						element.balance = Number(element.emp_salary_payable) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']);
 					} else {
 						let advance_salary = 0;
 						if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details && item.emp_salary_detail.emp_salary_structure.advance_details) {
@@ -535,11 +561,11 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							}
 							if (Array.isArray(objArr)) {
-								
+
 								for (const it of objArr) {
 									if (Number(this.session_id.ses_id) === Number(it.session_id)) {
 										if (Number(this.searchForm.value.month_id) >= Number(it.starting_month)) {
-											
+
 											let remaining_advance = it.advance;
 											let total_advance_deposite = 0;
 											if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -551,7 +577,7 @@ export class SalaryComputationComponent implements OnInit {
 											if (Number(remaining_advance) > 0) {
 												if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
 													advance_salary += Math.round(it.deposite_month_amount);
-	
+
 												} else {
 													advance_salary += Math.round(it.remaining_advance);
 												}
@@ -561,9 +587,9 @@ export class SalaryComputationComponent implements OnInit {
 										} else {
 											advance_salary += 0;
 										}
-										
+
 									} else {
-										
+
 										let remaining_advance = Math.round(it.advance);
 										let total_advance_deposite = 0;
 										if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -575,14 +601,14 @@ export class SalaryComputationComponent implements OnInit {
 										if (Number(remaining_advance) > 0) {
 											if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
 												advance_salary += it.deposite_month_amount;
-	
+
 											} else {
 												advance_salary += Math.round(it.remaining_advance);
 											}
 										} else {
 											advance_salary += 0;
 										}
-	
+
 									}
 								}
 							}
@@ -598,7 +624,8 @@ export class SalaryComputationComponent implements OnInit {
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 
 						total_earnings = total_earnings
-						salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions));
+						salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) + 
+						((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
 						//////console.log('salary_payable',total_earnings, salary_payable);
 						element = {
 							srno: pos,
@@ -651,7 +678,8 @@ export class SalaryComputationComponent implements OnInit {
 							}
 							for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 								console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
-								let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+								let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+									e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 								if (curpaymetmode) {
 									if (Number(this.getCalculationType(item, this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 										var inputJson = {
@@ -659,7 +687,8 @@ export class SalaryComputationComponent implements OnInit {
 											'pm_name': this.paymentModeArray[pi]['pm_name'],
 											'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 											'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
-											'calculation_value': curpaymetmode['value']
+											'calculation_value': curpaymetmode['value'],
+											'transfer_type': curpaymetmode['transfer_id']
 										};
 										console.log(inputJson);
 										element.emp_modes_data.mode_data.push(inputJson);
@@ -682,7 +711,8 @@ export class SalaryComputationComponent implements OnInit {
 											'pm_name': this.paymentModeArray[pi]['pm_name'],
 											'pm_value': Number(curpaymetmode['value']),
 											'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
-											'calculation_value': curpaymetmode['value']
+											'calculation_value': curpaymetmode['value'],
+											'transfer_type': this.paymentModeArray[pi]['transfer_type']
 										};
 										console.log(inputJson);
 										formJson[this.paymentModeArray[pi]['pm_id']] = 0;
@@ -701,7 +731,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': 0,
 										'calculation_type': null,
-										'calculation_value': null
+										'calculation_value': null,
+										'transfer_type': this.paymentModeArray[pi]['transfer_type']
 									};
 
 									formJson[this.paymentModeArray[pi]['pm_id']] = 0;
@@ -885,7 +916,9 @@ export class SalaryComputationComponent implements OnInit {
 
 						for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 
-							let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+							let curpaymetmode = empPaymentModeDetail.find(
+								e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+									e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 							if (curpaymetmode) {
 								if (Number(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 									var inputJson = {
@@ -893,7 +926,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									element.emp_modes_data.mode_data.push(inputJson);
@@ -916,7 +950,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Number(curpaymetmode['value']),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': this.paymentModeArray[pi]['transfer_id']
 									};
 									console.log(inputJson);
 									this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -935,7 +970,8 @@ export class SalaryComputationComponent implements OnInit {
 									'pm_name': this.paymentModeArray[pi]['pm_name'],
 									'pm_value': 0,
 									'calculation_type': null,
-									'calculation_value': null
+									'calculation_value': null,
+									'transfer_type': this.paymentModeArray[pi]['transfer_id']
 								};
 
 								this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -993,7 +1029,9 @@ export class SalaryComputationComponent implements OnInit {
 						}
 						for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 							console.log(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']));
-							let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+							let curpaymetmode = empPaymentModeDetail.find(
+								e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+									e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 							if (curpaymetmode) {
 								if (Number(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 									var inputJson = {
@@ -1001,7 +1039,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									element.emp_modes_data.mode_data.push(inputJson);
@@ -1024,7 +1063,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Number(curpaymetmode['value']),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1043,7 +1083,8 @@ export class SalaryComputationComponent implements OnInit {
 									'pm_name': this.paymentModeArray[pi]['pm_name'],
 									'pm_value': 0,
 									'calculation_type': null,
-									'calculation_value': null
+									'calculation_value': null,
+									'transfer_type': this.paymentModeArray[pi]['transfer_id']
 								};
 
 								this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1101,7 +1142,9 @@ export class SalaryComputationComponent implements OnInit {
 						}
 						for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 							console.log(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']));
-							let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+							let curpaymetmode = empPaymentModeDetail.find(
+								e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+									e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 							if (curpaymetmode) {
 								if (Number(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 									var inputJson = {
@@ -1109,7 +1152,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									element.emp_modes_data.mode_data.push(inputJson);
@@ -1132,7 +1176,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Number(curpaymetmode['value']),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1151,7 +1196,8 @@ export class SalaryComputationComponent implements OnInit {
 									'pm_name': this.paymentModeArray[pi]['pm_name'],
 									'pm_value': 0,
 									'calculation_type': null,
-									'calculation_value': null
+									'calculation_value': null,
+									'transfer_type': this.paymentModeArray[pi]['transfer_id']
 								};
 
 								this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1210,7 +1256,9 @@ export class SalaryComputationComponent implements OnInit {
 						}
 						for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 							console.log(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']));
-							let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+							let curpaymetmode = empPaymentModeDetail.find(
+								e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+									e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 							if (curpaymetmode) {
 								if (Number(this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 									var inputJson = {
@@ -1218,7 +1266,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									element.emp_modes_data.mode_data.push(inputJson);
@@ -1241,7 +1290,8 @@ export class SalaryComputationComponent implements OnInit {
 										'pm_name': this.paymentModeArray[pi]['pm_name'],
 										'pm_value': Number(curpaymetmode['value']),
 										'calculation_type': this.getCalculationType(this.records[i], this.paymentModeArray[pi]['config_id']),
-										'calculation_value': curpaymetmode['value']
+										'calculation_value': curpaymetmode['value'],
+										'transfer_type': curpaymetmode['transfer_id']
 									};
 									console.log(inputJson);
 									this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1260,7 +1310,8 @@ export class SalaryComputationComponent implements OnInit {
 									'pm_name': this.paymentModeArray[pi]['pm_name'],
 									'pm_value': 0,
 									'calculation_type': null,
-									'calculation_value': null
+									'calculation_value': null,
+									'transfer_type': this.paymentModeArray[pi]['transfer_id']
 								};
 
 								this.formGroupArray[i]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
@@ -1464,8 +1515,8 @@ export class SalaryComputationComponent implements OnInit {
 						let recordArray = result;
 						this.records = [];
 						this.records = result;
-		
-		
+
+
 						for (const item of recordArray) {
 							console.log(item);
 							element = {};
@@ -1475,7 +1526,7 @@ export class SalaryComputationComponent implements OnInit {
 							this.empShdcolumns = [];
 							var total_deductions = 0;
 							var total_earnings = 0;
-		
+
 							var formJson: any = {
 								emp_id: item.emp_id,
 								arrear: '',
@@ -1483,23 +1534,23 @@ export class SalaryComputationComponent implements OnInit {
 								td: '',
 								tds: ''
 							};
-		
+
 							var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale)) : 0;
-		
+
 							for (var i = 0; i < this.shacolumns.length; i++) {
 								if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 									var value = 0;
-		
+
 									if (this.shacolumns[i]['header'] === 'Basic Pay') {
 										this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: empBasicPay };
 									} else {
 										this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 									}
-		
+
 									if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 										for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-		
+
 												if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 													item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 													Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
@@ -1507,15 +1558,15 @@ export class SalaryComputationComponent implements OnInit {
 													if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 														value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 													}
-		
+
 													if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 													}
-		
+
 													this.empShacolumns[i]['value'] = value.toFixed(2);
 													this.shacolumns[i]['value'] = value.toFixed(2);
 													total_earnings = total_earnings + Number(value);
-		
+
 												} else {
 													this.shacolumns[i]['value'] = 0;
 													this.empShacolumns[i]['value'] = 0;
@@ -1523,20 +1574,20 @@ export class SalaryComputationComponent implements OnInit {
 											}
 										}
 									}
-		
+
 								}
 							}
 							for (var i = 0; i < this.shdcolumns.length; i++) {
 								if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 									var value = 0;
 									this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
-		
+
 									if (item.emp_salary_detail
 										&& item.emp_salary_detail.emp_salary_structure
 										&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 										for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 											if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-		
+
 												if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 													item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 													Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
@@ -1544,15 +1595,15 @@ export class SalaryComputationComponent implements OnInit {
 													if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 														value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 													}
-		
+
 													if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
-		
+
 													}
 													this.empShdcolumns[i]['value'] = value.toFixed(2);
 													this.shdcolumns[i]['value'] = value.toFixed(2);
 													total_deductions = total_deductions - Number(value);
-		
+
 												} else {
 													this.shdcolumns[i]['value'] = 0;
 													this.empShdcolumns[i]['value'] = 0;
@@ -1560,15 +1611,15 @@ export class SalaryComputationComponent implements OnInit {
 											}
 										}
 									}
-		
+
 								}
-		
+
 							}
-		
+
 							if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 								for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 									let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-		
+
 									let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 										console.log('yes');
@@ -1581,8 +1632,8 @@ export class SalaryComputationComponent implements OnInit {
 									}
 								}
 							}
-		
-		
+
+
 							var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 							if (eIndex > -1) {
 								if (this.salaryComputeEmployeeData[eIndex] && Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
@@ -1603,17 +1654,17 @@ export class SalaryComputationComponent implements OnInit {
 								let advanceValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance || 0);
 								total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings']) : 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
-		
+
 								emp_present_days = emp_present_days ? emp_present_days : 0;
 								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions) + Number(arrearValue) - Number(advanceValue));
-		
+
 								for (var i = 0; i < this.paymentModeArray.length; i++) {
 									formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'])) : '';
 								}
 								formJson['td'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].td));
 								formJson['tds'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].tds));
 								formJson['advance'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance));
-		
+
 								this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
 								element = {
 									srno: pos,
@@ -1664,6 +1715,7 @@ export class SalaryComputationComponent implements OnInit {
 									const obj: any = item.emp_salary_detail.emp_salary_structure.advance_details;
 									const objArr: any[] = item.emp_salary_detail.emp_salary_structure.advance_details;
 									if (obj.constructor === Object) {
+										console.log('yes adv');
 										if (Number(this.session_id.ses_id) === Number(item.emp_salary_detail.emp_salary_structure.advance_details.session_id)) {
 											if (Number(this.searchForm.value.month_id) >= Number(item.emp_salary_detail.emp_salary_structure.advance_details.starting_month)) {
 												let remaining_advance = item.emp_salary_detail.emp_salary_structure.advance_details.advance;
@@ -1677,7 +1729,7 @@ export class SalaryComputationComponent implements OnInit {
 												if (Number(remaining_advance) > 0) {
 													if (Number(remaining_advance) > Number(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount)) {
 														advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount);
-		
+
 													} else {
 														advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance);
 													}
@@ -1699,20 +1751,22 @@ export class SalaryComputationComponent implements OnInit {
 											if (Number(remaining_advance) > 0) {
 												if (Number(remaining_advance) > Number(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount)) {
 													advance_salary = item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount;
-		
+
 												} else {
 													advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance);
 												}
 											} else {
 												advance_salary = 0;
 											}
-		
+
 										}
 									}
 									if (Array.isArray(objArr)) {
+
 										for (const it of objArr) {
 											if (Number(this.session_id.ses_id) === Number(it.session_id)) {
 												if (Number(this.searchForm.value.month_id) >= Number(it.starting_month)) {
+
 													let remaining_advance = it.advance;
 													let total_advance_deposite = 0;
 													if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -1723,18 +1777,20 @@ export class SalaryComputationComponent implements OnInit {
 													}
 													if (Number(remaining_advance) > 0) {
 														if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
-															advance_salary = Math.round(it.deposite_month_amount);
-			
+															advance_salary += Math.round(it.deposite_month_amount);
+
 														} else {
-															advance_salary = Math.round(it.remaining_advance);
+															advance_salary += Math.round(it.remaining_advance);
 														}
 													} else {
-														advance_salary = 0;
+														advance_salary += 0;
 													}
 												} else {
-													advance_salary = 0;
+													advance_salary += 0;
 												}
+
 											} else {
+
 												let remaining_advance = Math.round(it.advance);
 												let total_advance_deposite = 0;
 												if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -1745,28 +1801,29 @@ export class SalaryComputationComponent implements OnInit {
 												}
 												if (Number(remaining_advance) > 0) {
 													if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
-														advance_salary = it.deposite_month_amount;
-			
+														advance_salary += it.deposite_month_amount;
+
 													} else {
-														advance_salary = Math.round(it.remaining_advance);
+														advance_salary += Math.round(it.remaining_advance);
 													}
 												} else {
-													advance_salary = 0;
+													advance_salary += 0;
 												}
-			
+
 											}
 										}
 									}
-		
-		
+
+
 								}
-		
+								console.log(advance_salary);
+
 								item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details ? item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : 0;
-		
+
 								var salary_payable = 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 								emp_present_days = emp_present_days ? emp_present_days : 0;
-		
+
 								total_earnings = total_earnings
 								salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions));
 								//////console.log('salary_payable',total_earnings, salary_payable);
@@ -1821,7 +1878,8 @@ export class SalaryComputationComponent implements OnInit {
 									}
 									for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 										console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
-										let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id']);
+										let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+											e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 										if (curpaymetmode) {
 											if (Number(this.getCalculationType(item, this.paymentModeArray[pi]['config_id'])) === 2) { // % type
 												var inputJson = {
@@ -1829,21 +1887,22 @@ export class SalaryComputationComponent implements OnInit {
 													'pm_name': this.paymentModeArray[pi]['pm_name'],
 													'pm_value': Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
 													'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
-													'calculation_value': curpaymetmode['value']
+													'calculation_value': curpaymetmode['value'],
+													'transfer_type': curpaymetmode['transfer_id']
 												};
 												console.log(inputJson);
 												element.emp_modes_data.mode_data.push(inputJson);
 												if (element.emp_modes_data.mode_data[pi]) {
 													deduction = Math.round(deduction + Number(element.emp_modes_data.mode_data[pi]['pm_value']));
 												}
-		
+
 												//element.balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - deduction;
 												element.balance = element.emp_salary_payable - deduction;
 												element.emp_total = deduction;
-		
+
 												formJson[this.paymentModeArray[pi]['pm_id']] = Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100)
 												////console.log(formJson);
-		
+
 											} else {
 												//////console.log(this.paymentModeArray[pi]['calculation_value']);
 												var tdeduction = 0;
@@ -1852,17 +1911,18 @@ export class SalaryComputationComponent implements OnInit {
 													'pm_name': this.paymentModeArray[pi]['pm_name'],
 													'pm_value': Number(curpaymetmode['value']),
 													'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
-													'calculation_value': curpaymetmode['value']
+													'calculation_value': curpaymetmode['value'],
+													'transfer_type': this.paymentModeArray[pi]['transfer_type']
 												};
 												console.log(inputJson);
 												formJson[this.paymentModeArray[pi]['pm_id']] = 0;
 												element.emp_modes_data.mode_data.push(inputJson);
-		
+
 												tdeduction = Math.round(Number(element.emp_modes_data.mode_data[pi]['pm_value']));
-		
+
 												element.balance = Math.round(element.balance - tdeduction);
 											}
-		
+
 										} else {
 											//////console.log(this.paymentModeArray[pi]['calculation_value']);
 											var tdeduction = 0;
@@ -1871,14 +1931,15 @@ export class SalaryComputationComponent implements OnInit {
 												'pm_name': this.paymentModeArray[pi]['pm_name'],
 												'pm_value': 0,
 												'calculation_type': null,
-												'calculation_value': null
+												'calculation_value': null,
+												'transfer_type': this.paymentModeArray[pi]['transfer_type']
 											};
-		
+
 											formJson[this.paymentModeArray[pi]['pm_id']] = 0;
 											element.emp_modes_data.mode_data.push(inputJson);
-		
+
 											tdeduction = Math.round(Number(element.emp_modes_data.mode_data[pi]['pm_value']));
-		
+
 											element.balance = Math.round(element.balance - tdeduction);
 										}
 									}
@@ -1890,12 +1951,12 @@ export class SalaryComputationComponent implements OnInit {
 									//console.log(this.formGroupArray, '2345');
 								}
 							}
-		
-		
+
+
 							this.SALARY_COMPUTE_ELEMENT.push(element);
 							pos++;
 						}
-		
+
 						////console.log('this.SALARY_COMPUTE_ELEMENT', this.SALARY_COMPUTE_ELEMENT);
 						this.footerrow = {
 							emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0),
