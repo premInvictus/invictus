@@ -204,7 +204,14 @@ export class BroadcastComponent implements OnInit {
 
 
 	editMessage(element) {
-		var messageType = this.currentTab == 1 ? 'E' : 'S';
+		if(this.currentTab == 0){
+			var messageType = 'S';
+		} else if(this.currentTab == 1){
+			var messageType = 'E';
+		} else{
+			var messageType = 'notification';
+		}
+		//var messageType = this.currentTab == 1 ? 'E' : 'S';
 		element.messageType = messageType;
 		this.renderForm = { addMode: false, editMode: true, formData: element, viewMode: false };
 		this.showComposeMessage = true;
@@ -258,7 +265,14 @@ export class BroadcastComponent implements OnInit {
 
 	composeMessage() {
 		this.showComposeMessage = true;
-		var messageType = this.currentTab == 1 ? 'E' : 'S';
+		if(this.currentTab == 0){
+			var messageType = 'S';
+		} else if(this.currentTab == 1){
+			var messageType = 'E';
+		} else{
+			var messageType = 'notification';
+		}
+		// var messageType = this.currentTab == 1 ? 'E' : 'S';
 		this.renderForm = { addMode: true, editMode: false, messageType: messageType, formData: '', viewMode: false, };
 
 	}
