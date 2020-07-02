@@ -507,6 +507,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 						if (event.notification_type.module === 'timetable') {
 							this.router.navigate(['../academics/timetable'], { relativeTo: this.route });
 						}
+						if (event.notification_type.module === 'general') {
+							this.router.navigate(['student/notification'], { relativeTo: this.route });
+						}
+						this.router.navigate(['student/notification']);
 					}
 					if (this.currentUser.role_id === '3') {
 						if (event.notification_type.module === 'syllabus') {
