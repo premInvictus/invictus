@@ -136,7 +136,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%">Designation</th>
                 <td mat-cell *matCellDef="let element" class="text-left text-nowrap"
                   [ngStyle]="{'background-color':element?.colorCode}">
-                  <span class="text-left text-capitalize">{{element?.emp_designation | titlecase}} </span>
+                  <span class="text-left text-capitalize">{{element?.emp_designation }} </span>
                 </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
@@ -401,7 +401,9 @@
       </div>
       <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
         <div class="col-6" *ngIf="!editFlag" style="text-align: right">
-          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="save()"
+          <button mat-raised-button class="btn-success-green-1  margin-right-15" style="color:white;background: blue !important" (click)="save()"
+          [disabled]="disabledApiButton">Save</button> &nbsp;&nbsp;&nbsp;
+          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
             [disabled]="disabledApiButton">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">

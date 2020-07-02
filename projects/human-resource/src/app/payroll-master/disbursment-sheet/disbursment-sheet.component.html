@@ -97,7 +97,7 @@
                     <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Deductions </th>
                   </ng-container> -->
             <ng-container matColumnDef="header-row-three-group" width="50%">
-              <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> </th>
+              <th mat-header-cell *matHeaderCellDef [attr.colspan]="5"> </th>
             </ng-container>
             <ng-container matColumnDef="header-row-modes-group" width="40%">
               <th mat-header-cell *matHeaderCellDef [attr.colspan]="paymentModeArray.length+1"> Modes </th>
@@ -128,7 +128,7 @@
               </td>
             </ng-container>
             <ng-container matColumnDef="emp_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Emp Name</th>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%">Emp Name</th>
               <td mat-cell *matCellDef="let element" class="text-left">
                 <span class="text-left text-capitalize">{{element?.emp_name | titlecase}}</span>
               </td>
@@ -136,7 +136,13 @@
             <ng-container matColumnDef="emp_designation">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Designation</th>
               <td mat-cell *matCellDef="let element" class="text-left">
-                <span class="text-left text-capitalize">{{element?.emp_designation | titlecase}} </span>
+                <span class="text-left text-capitalize">{{element?.emp_designation }} </span>
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="emp_acc_no">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="15%">Account No.</th>
+              <td mat-cell *matCellDef="let element" class="text-left">
+                <span class="text-left text-capitalize">{{element?.emp_acc_no }} </span>
               </td>
             </ng-container>
             <!-- <ng-container matColumnDef="emp_pay_scale">
@@ -231,7 +237,7 @@
                     </td>
                   </ng-container> -->
             <ng-container *ngFor="let column of paymentModeArray; let i = index;" [matColumnDef]="column?.pm_id">
-              <th mat-header-cell *matHeaderCellDef width="11%" class="text-nowrap">{{column?.pm_name}} (<span><i
+              <th mat-header-cell *matHeaderCellDef width="12%" class="text-nowrap">{{column?.pm_name}} (<span><i
                     class="fas fa-rupee-sign"></i></span>)</th>
               <td mat-cell *matCellDef="let element" class="text-center"
                 [ngStyle]="{'background-color':element?.colorCode}">
@@ -250,8 +256,8 @@
             </ng-container>
             <ng-container matColumnDef="emp_total">
               <!-- mat-sort-header-->
-              <th mat-header-cell *matHeaderCellDef  width="20%"> Total (<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
+              <th mat-header-cell *matHeaderCellDef width="20%"> Total (<span><i class="fas fa-rupee-sign"></i></span>)
+              </th>
               <td mat-cell *matCellDef="let element">
                 {{element?.emp_total | number}}
               </td>

@@ -56,8 +56,12 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	currentYear: any;
 	payMode: any[] = [
 		{ id: 0, name: 'Bank Transfer' },
-		{ id: 1, name: 'Cash Payment' },
+		{ id: 1, name: 'Cash Transfer' },
 		{ id: 2, name: 'Cheque Payment' }
+	];
+	transMode: any[] = [
+		{ id: 1, name: 'Bank Transfer' },
+		{ id: 2, name: 'Cash Transfer' }
 	];
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },
@@ -265,6 +269,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.empPaymentModeDetail.push(this.fbuild.group({
 			pay_mode: '',
 			calculation_type: '',
+			transfer_type : 0,
 			value: ''
 		}));
 	}
@@ -532,17 +537,18 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			this.empPaymentModeDetail = [];
 			for (let i = 0; i < this.employeedetails.emp_salary_detail.empPaymentModeDetail.length; i++) {
 				this.empPaymentModeDetail.push(this.fbuild.group({
-					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] || 
-					this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] === 0 ?
+					pay_mode: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] ||
+						this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode'] === 0 ?
 						(this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['pay_mode']).toString() : '',
 					calculation_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['calculation_type'],
-					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value']
+					value: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['value'],
+					transfer_type: this.employeedetails.emp_salary_detail.empPaymentModeDetail[i]['transfer_type']
 				}));
 			}
 		} else {
 			this.addPaymentMode();
 		}
-		
+
 		if (this.employeedetails.emp_salary_detail &&
 			this.employeedetails.emp_salary_detail.emp_salary_structure &&
 			this.employeedetails.emp_salary_detail.emp_salary_structure.advance_details) {
@@ -564,7 +570,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						starting_month: t.starting_month ? t.starting_month : '',
 						advance_start_date: t.advance_start_date ? t.advance_start_date : '',
 						remaining_advance: t.remaining_advance ? t.remaining_advance : '',
-						freezed : t.freezed ? t.freezed  : false
+						freezed: t.freezed ? t.freezed : false
 					}))
 				}
 			}
@@ -664,7 +670,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				remaining_advance: it.value.advance,
 				deposite_month_amount: it.value.deposite_month_amount,
 				starting_month: it.value.starting_month,
-				freezed : it.freezed ? it.freezed : ''
+				freezed: it.freezed ? it.freezed : ''
 			})
 		}
 		//this.salaryDetails.valid
@@ -832,7 +838,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				remaining_advance: it.value.advance,
 				deposite_month_amount: it.value.deposite_month_amount,
 				starting_month: it.value.starting_month,
-				freezed : it.freezed ? it.freezed : ''
+				freezed: it.freezed ? it.freezed : ''
 			})
 		}
 		//this.salaryDetails.valid

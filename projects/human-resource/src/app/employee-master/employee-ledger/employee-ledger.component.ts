@@ -25,6 +25,10 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	session_id: any = {};
 	viewOnly: boolean;
 	totalObj: any = {};
+	transMode: any[] = [
+		{ id: 1, name: 'Bank Transfer' },
+		{ id: 2, name: 'Cash Transfer' }
+	];
 	EMPLOYEE_LEDGER_ELEMENT: any[] = [];
 	ledgerDisplayedColumns: any[] = ['sno', 'particulars', 'month', 'attendance', 'netearnings',
 		'deductions', 'advances', 'salarypayable', 'salarypaid', 'balance', 'mop', 'remarks'];
@@ -125,22 +129,29 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 						'pm_value': 0,
 						'calculation_type': '',
 						'calculation_value': '',
-						'config_id': '0'
+						'config_id': '0',
+						'transfer_id': 0
 
 					}
 				);
 				for (const item of res.data) {
-					this.paymentModeArray.push(
-						{
-							'pm_id': item.bank_name ? item.bank_name.trim().toLowerCase().replace(' ', '_') : '',
-							'pm_name': item.bank_name,
-							'pm_value': 0,
-							'calculation_type': '',
-							'calculation_value': '',
-							'config_id': item.bnk_id
+					let i = 0;
+					for (const trans of this.transMode) {
+						this.paymentModeArray.push(
+							{
+								'pm_id': item.bank_name ? (item.bank_name + i).trim().toLowerCase().replace(' ', '_') : '',
+								'pm_name': item.bank_name + '\n (' + trans.name + ')',
+								'pm_value': 0,
+								'calculation_type': '',
+								'calculation_value': '',
+								'config_id': item.bnk_id,
+								'transfer_id': trans.id,
 
-						}
-					);
+							}
+						);
+						i++;
+					}
+
 				}
 			}
 		});

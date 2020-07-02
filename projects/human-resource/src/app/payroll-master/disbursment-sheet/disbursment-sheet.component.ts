@@ -107,7 +107,10 @@ export class DisbursmentSheetComponent implements OnInit {
 	];
 
 	filterJson = {};
-
+	transMode: any[] = [
+		{ id: 1, name: 'Bank Transfer' },
+		{ id: 2, name: 'Cash Transfer' }
+	];
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 	// tslint:disable-next-line: max-line-length
@@ -153,22 +156,29 @@ export class DisbursmentSheetComponent implements OnInit {
 						'pm_value': 0,
 						'calculation_type': '',
 						'calculation_value': '',
-						'config_id': '0'
+						'config_id': '0',
+						'transfer_id': 0
 
 					}
 				);
 				for (const item of res.data) {
-					this.paymentModeArray.push(
-						{
-							'pm_id': item.bank_name ? item.bank_name.trim().toLowerCase().replace(' ', '_') : '',
-							'pm_name': item.bank_name,
-							'pm_value': 0,
-							'calculation_type': '',
-							'calculation_value': '',
-							'config_id': item.bnk_id
+					let i = 0;
+					for (const trans of this.transMode) {
+						this.paymentModeArray.push(
+							{
+								'pm_id': item.bank_name ? (item.bank_name + i).trim().toLowerCase().replace(' ', '_') : '',
+								'pm_name': item.bank_name + '\n (' + trans.name + ')',
+								'pm_value': 0,
+								'calculation_type': '',
+								'calculation_value': '',
+								'config_id': item.bnk_id,
+								'transfer_id': trans.id,
 
-						}
-					);
+							}
+						);
+						i++;
+					}
+
 				}
 
 			}
@@ -261,7 +271,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			this.employeeData = result;
 			this.SALARY_COMPUTE_ELEMENT = [];
 			//			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_pay_scale'];
-			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation'];
+			this.displayedSalaryComputeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_acc_no'];
 			this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 			if (result && result.length > 0) {
 				for (let i = 0; i < this.shacolumns.length; i++) {
@@ -280,14 +290,16 @@ export class DisbursmentSheetComponent implements OnInit {
 				this.displayedSalaryComputeColumns.push('emp_total');
 				let pos = 1;
 				let recordArray = [];
-
+				let relationsArray: any[] = [];
 				for (var i = 0; i < result.length; i++) {
 					if (Number(result[i]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)) {
 						recordArray.push(result[i]['emp_salary_compute_data']);
+						relationsArray.push(result[i]['relations']);
 					}
 				}
 
 				let emp_present_days;
+				let index = 0;
 				for (const item of recordArray) {
 					this.empShacolumns = [];
 					this.empShdcolumns = [];
@@ -420,9 +432,16 @@ export class DisbursmentSheetComponent implements OnInit {
 						emp_id: item.emp_id,
 						emp_name: item.emp_name,
 						emp_salary_compute_month_id: this.searchForm.value.month_id,
-						emp_designation: item.emp_designation,
+						emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
+							&& relationsArray[index].emp_designation_detail.des_name ? relationsArray[index].emp_designation_detail.des_name
+							: '-',
 						emp_pay_scale: item.emp_salary_structure && item.emp_salary_structure.emp_pay_scale ? item.emp_salary_structure.emp_pay_scale.pc_name : '',
 						emp_salary_structure: item.emp_salary_structure,
+						emp_acc_no: relationsArray[index] && relationsArray[index].emp_salary_detail
+							&& relationsArray[index].emp_salary_detail.emp_bank_detail && relationsArray[index].emp_salary_detail.emp_bank_detail[0] &&
+							relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail &&
+							relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no
+							? relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '-',
 						emp_salary_heads: item.emp_salary_structure.emp_salary_heads,
 						emp_allowances: '',
 						empShacolumns: this.empShacolumns,
@@ -443,6 +462,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 					this.SALARY_COMPUTE_ELEMENT.push(element);
 					pos++;
+					index++;
 				}
 
 				this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
@@ -591,14 +611,16 @@ export class DisbursmentSheetComponent implements OnInit {
 							this.displayedSalaryComputeColumns.push('emp_total');
 							let pos = 1;
 							let recordArray = [];
-
+							let relationsArray: any[] = [];
 							for (var i = 0; i < result.length; i++) {
 								if (Number(result[i]['emp_salary_compute_month_id']) === Number(this.searchForm.value.month_id)) {
 									recordArray.push(result[i]['emp_salary_compute_data']);
+									relationsArray.push(result[i]['relations']);
 								}
 							}
 
 							let emp_present_days;
+							let index = 0;
 							for (const item of recordArray) {
 								this.empShacolumns = [];
 								this.empShdcolumns = [];
@@ -720,7 +742,14 @@ export class DisbursmentSheetComponent implements OnInit {
 									emp_id: item.emp_id,
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
-									emp_designation: item.emp_designation,
+									emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
+										&& relationsArray[index].emp_designation_detail.des_name ? relationsArray[index].emp_designation_detail.des_name
+										: '-',
+									emp_acc_no: relationsArray[index] && relationsArray[index].emp_salary_detail
+										&& relationsArray[index].emp_salary_detail.emp_bank_detail && relationsArray[index].emp_salary_detail.emp_bank_detail[0] &&
+										relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail &&
+										relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no
+										? relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no : '-',
 									emp_pay_scale: item.emp_salary_structure && item.emp_salary_structure.emp_pay_scale ? item.emp_salary_structure.emp_pay_scale.pc_name : '',
 									emp_salary_structure: item.emp_salary_structure,
 									emp_salary_heads: item.emp_salary_structure.emp_salary_heads,
@@ -743,6 +772,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 								this.SALARY_COMPUTE_ELEMENT.push(element);
 								pos++;
+								index++;
 							}
 
 							this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
@@ -783,8 +813,8 @@ export class DisbursmentSheetComponent implements OnInit {
 		doc.autoTable({
 			head: [[
 				new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
-			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
-			+ this.sessionName
+					+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
+				+ this.sessionName
 			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
@@ -884,6 +914,10 @@ export class DisbursmentSheetComponent implements OnInit {
 			width: this.checkWidth('emp_designation', 'Designation')
 		});
 		columns.push({
+			key: 'emp_acc_no',
+			width: this.checkWidth('emp_acc_no', 'Account No')
+		});
+		columns.push({
 			key: 'emp_salary_payable',
 			width: this.checkWidth('emp_salary_payable', 'Salary Payable')
 		});
@@ -936,10 +970,12 @@ export class DisbursmentSheetComponent implements OnInit {
 		worksheet.getCell('A6').value = 'Emp. ID';
 		worksheet.getCell('B6').value = 'Emp Name';
 		worksheet.getCell('C6').value = 'Designation';
-		worksheet.getCell('D6').value = 'Salary Payable';
-		let coun = 5;
-		for (const item of this.paymentModeArray) {
-			worksheet.getCell(this.alphabetJSON[coun] + '6').value = item.pm_name;
+		worksheet.getCell('D6').value = 'Account Number';
+		worksheet.getCell('E6').value = 'Salary Payable';
+		let coun = 6;
+		for (const pay of this.paymentModeArray) {
+			console.log(pay);
+			worksheet.getCell(this.alphabetJSON[coun] + '6').value = pay.pm_name;
 			coun++;
 		}
 		worksheet.getCell(this.alphabetJSON[coun] + '6').value = 'Total';
@@ -950,10 +986,11 @@ export class DisbursmentSheetComponent implements OnInit {
 		worksheet.getCell('A' + gtRow).value = '';
 		worksheet.getCell('B' + gtRow).value = 'Grand Total';
 		worksheet.getCell('C' + gtRow).value = '';
-		worksheet.getCell('D' + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
+		worksheet.getCell('D' + gtRow).value = '';
+		worksheet.getCell('E' + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
 			Math.round(Number(f.emp_salary_payable))).reduce((acc, val) => acc + val);
 		let totRow = this.length + this.employeeData.length + 5;
-		let coun2 = 5;
+		let coun2 = 6;
 		let cound = 0;
 		for (const item of this.paymentModeArray) {
 			worksheet.getCell(this.alphabetJSON[coun2] + gtRow).value = this.SALARY_COMPUTE_ELEMENT.map(f =>
@@ -979,8 +1016,9 @@ export class DisbursmentSheetComponent implements OnInit {
 			worksheet.getCell('A' + this.length).value = item.emp_id;
 			worksheet.getCell('B' + this.length).value = item.emp_name;
 			worksheet.getCell('C' + this.length).value = item.emp_designation;
-			worksheet.getCell('D' + this.length).value = item.emp_salary_payable ? item.emp_salary_payable : '-';
-			let indo = 5;
+			worksheet.getCell('D' + this.length).value = item.emp_acc_no;
+			worksheet.getCell('E' + this.length).value = item.emp_salary_payable ? item.emp_salary_payable : '-';
+			let indo = 6;
 			let inde = 0;
 			for (const pay of this.paymentModeArray) {
 				worksheet.getCell(this.alphabetJSON[indo] + this.length).value = Math.round(Number(item.emp_modes_data.mode_data[inde]['pm_value']));
@@ -1118,6 +1156,7 @@ export interface SalaryComputeElement {
 	emp_name: string;
 	emp_designation: string;
 	emp_pay_scale: string;
+	emp_acc_no: string
 	// emp_salary_heads: any;
 	// emp_allowances: any;
 	emp_total_earnings: any;
