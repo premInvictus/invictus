@@ -261,7 +261,8 @@ export class SalaryComputationComponent implements OnInit {
 						Number(this.salaryHeadsArr[i]['sc_status']) === 1) {
 						this.shacolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i] });
 					}
-					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2 &&
+						!this.salaryHeadsArr[i]['sc_type']['optional']
 						&& Number(this.salaryHeadsArr[i]['sc_status']) === 1) {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
@@ -414,6 +415,13 @@ export class SalaryComputationComponent implements OnInit {
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 												value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
+											}
+											const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
+												this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
+											if (upperVal && value) {
+												if (Number(value) > Number(upperVal)) {
+													value = upperVal;
+												}
 											}
 											this.empShdcolumns[i]['value'] = value.toFixed(2);
 											this.shdcolumns[i]['value'] = value.toFixed(2);
@@ -1942,6 +1950,13 @@ export class SalaryComputationComponent implements OnInit {
 													if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
+													}
+													const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
+														this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
+													if (upperVal && value) {
+														if (Number(value) > Number(upperVal)) {
+															value = upperVal;
+														}
 													}
 													this.empShdcolumns[i]['value'] = value.toFixed(2);
 													this.shdcolumns[i]['value'] = value.toFixed(2);
