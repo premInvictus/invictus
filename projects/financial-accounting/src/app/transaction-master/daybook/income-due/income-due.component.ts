@@ -38,6 +38,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   sessionName: any;
   voucherDate: any;
   currentVoucherData: any;
+  vcYearlyStatus   = 0;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -52,6 +53,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.session = JSON.parse(localStorage.getItem('session'));
     this.checkPartialPaymentStatus();
     if (this.param.month) {
+      this.getGlobalSetting();
       this.getChartsOfAccount();
       this.getInvoiceDayBook();
       this.getSession();
@@ -60,12 +62,26 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   ngOnChanges() {
     console.log(this.param);
     if (this.param.month) {
+      this.getGlobalSetting();
       this.getChartsOfAccount();
       this.getSession();
       this.getInvoiceDayBook();
     }
 
   }
+  getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['fa_voucher_code_format_yearly_status'];
+		this.faService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (result.data && result.data[0]) {
+					this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+					console.log('this.vcYearlyStatus', this.vcYearlyStatus)
+				}
+
+			}
+		})
+	}
   checkPartialPaymentStatus() {
     let param: any = {};
     param.gs_alias = ['fa_partial_payment'];
@@ -379,7 +395,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     let vcMonth = monthNames[Number(month_id) - 1].substring(0, 3);
     let vcYear = nYear;
     let vcNumber = vcData.vc_code;
-    this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
+    this.vcData = { vc_code: vcData.vc_code, vc_name: this.vcYearlyStatus ? vcType + '/' + ((vcNumber.toString()).padStart(4, '0')) : vcType + '/' + vcMonth + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
     
 
 
@@ -427,6 +443,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
 
   }
+  isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
 
 
 

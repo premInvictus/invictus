@@ -31,6 +31,9 @@ export class SalarySlipModalComponent implements OnInit {
       }
     });
   }
+  getNumFormat(val) {
+    return Number(val);
+  }
   getGlobalSettings() {
     this.erp.getGlobalSetting({ gs_alias: 'employee_salary_slip' }).subscribe((res: any) => {
       if (res && res.status === 'ok') {

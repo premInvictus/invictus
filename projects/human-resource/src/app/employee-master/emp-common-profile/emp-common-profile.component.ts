@@ -19,11 +19,12 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   @Output() key = new EventEmitter();
   previousB: boolean;
   nextB: boolean;
+  balanceLeaves : any = 0;
   firstB: boolean;
   lastB: boolean;
   defaultsrc: any;
   navigation_record: any;
-  
+  @Input() total : any = {};
   viewOnly: boolean;
   @ViewChild('myInput') myInput: ElementRef;
   employeeDetailsForm: FormGroup;
@@ -54,6 +55,15 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
       this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
         if (result) {
           this.employeeDetails = result;
+          if (this.employeeDetails.emp_month_attendance_data && 
+            this.employeeDetails.emp_month_attendance_data.month_data 
+            && this.employeeDetails.emp_month_attendance_data.month_data.length > 0) {
+              for (const item of this.employeeDetails.emp_month_attendance_data.month_data) {
+                if (item.attendance_detail && item.attendance_detail.emp_balance_leaves) {
+                  this.balanceLeaves = item.attendance_detail.emp_balance_leaves;
+                }
+              }
+            }
           this.employeeDetailsForm.patchValue({
             emp_id: result.emp_id,
           });

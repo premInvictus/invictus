@@ -443,11 +443,22 @@
                                             </mat-form-field>
                                             <mat-form-field class="form-field" appearance="outline">
                                                 <mat-label>Calculation Type</mat-label>
-                                                <mat-select placeholder="Calcualtion Type" [disabled]="viewOnly"
+                                                <mat-select placeholder="Calculation Type" [disabled]="viewOnly"
                                                     formControlName="calculation_type">
                                                     <mat-option value="">Please select</mat-option>
                                                     <mat-option *ngFor="let item of calculationTypeArray"
                                                         [value]="item.id">
+                                                        {{item.name}}
+                                                    </mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                            <mat-form-field class="form-field" appearance="outline"
+                                                *ngIf="empPaymentModeDetail[i].value.pay_mode !== '0'">
+                                                <mat-label>Transfer Type</mat-label>
+                                                <mat-select placeholder="Transfer Type" [disabled]="viewOnly"
+                                                    formControlName="transfer_type">
+                                                    <mat-option value="">Please select</mat-option>
+                                                    <mat-option *ngFor="let item of transMode" [value]="item.id">
                                                         {{item.name}}
                                                     </mat-option>
                                                 </mat-select>
@@ -473,47 +484,72 @@
                                     </div>
                                 </div>
                                 <div class="row salary-card">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Advance</mat-label>
-                                        <input type="text" formControlName="advance" matInput [readonly]="viewOnly"
-                                            placeholder="Advance">
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Advance deducted per month</mat-label>
-                                        <input type="text" formControlName="deposite_month_amount" matInput
-                                            placeholder="Advance deducted per month" [readonly]="viewOnly">
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field>
-                                    <!-- <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Starting Month</mat-label>
-                                        <input type="text" formControlName="starting_month" matInput
-                                         placeholder="Starting Month" [readonly]="viewOnly">
-                                        <mat-error>
-                                            This field is required
-                                        </mat-error>
-                                    </mat-form-field> -->
-                                    <mat-form-field class="form-field" appearance="outline">
-                                        <mat-label>Starting Month</mat-label>
-                                        <mat-select formControlName="starting_month" [disabled]="viewOnly">
-                                            <mat-option value="1">January</mat-option>
-                                            <mat-option value="2">February</mat-option>
-                                            <mat-option value="3">March</mat-option>
-                                            <mat-option value="4">April</mat-option>
-                                            <mat-option value="5">May</mat-option>
-                                            <mat-option value="6">June</mat-option>
-                                            <mat-option value="7">July</mat-option>
-                                            <mat-option value="8">August</mat-option>
-                                            <mat-option value="9">September</mat-option>
-                                            <mat-option value="10">October</mat-option>
-                                            <mat-option value="11">November</mat-option>
-                                            <mat-option value="12">December</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    <ng-container *ngFor="let item of advanceDetails; let k = index">
+                                        <ng-container>
+                                            <form [formGroup]="item">
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Date of Advance</mat-label>
+                                                    <input matInput [matDatepicker]="picker5" [min]="!item.value.freezed && advanceDetails.length > 1  
+                                                    ? currentDate : ''" placeholder="Date of Joining" [readonly]="viewOnly ||
+                                                        item.value.freezed" formControlName="advance_start_date">
+                                                    <mat-datepicker-toggle matSuffix [for]="picker5">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker #picker5></mat-datepicker>
+                                                    <mat-error>
+                                                        This field is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Advance</mat-label>
+                                                    <input type="text" formControlName="advance" matInput [readonly]="viewOnly ||
+                                                    item.value.freezed" placeholder="Advance">
+                                                    <mat-error>
+                                                        This field is required
+                                                    </mat-error>
+                                                </mat-form-field>
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Advance deducted per month</mat-label>
+                                                    <input type="text" formControlName="deposite_month_amount" matInput
+                                                        placeholder="Advance deducted per month" [readonly]="viewOnly ||
+                                                        item.value.freezed">
+                                                    <mat-error>
+                                                        This field is required
+                                                    </mat-error>
+                                                </mat-form-field>
+
+                                                <mat-form-field class="form-field" appearance="outline">
+                                                    <mat-label>Starting Month</mat-label>
+                                                    <mat-select formControlName="starting_month" [disabled]="viewOnly || 
+                                                    item.value.freezed">
+                                                        <mat-option value="1">January</mat-option>
+                                                        <mat-option value="2">February</mat-option>
+                                                        <mat-option value="3">March</mat-option>
+                                                        <mat-option value="4">April</mat-option>
+                                                        <mat-option value="5">May</mat-option>
+                                                        <mat-option value="6">June</mat-option>
+                                                        <mat-option value="7">July</mat-option>
+                                                        <mat-option value="8">August</mat-option>
+                                                        <mat-option value="9">September</mat-option>
+                                                        <mat-option value="10">October</mat-option>
+                                                        <mat-option value="11">November</mat-option>
+                                                        <mat-option value="12">December</mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </form>
+                                        </ng-container>
+                                        <div style="float:right; margin-left:88% !important;">
+                                            <a *ngIf="advanceDetails.length > 1 && !viewOnly
+                                                && !item.value.freezed
+                                                " style="float:right" href="javascript:void(0)"
+                                                (click)="delAdvanceDetails(k)"><i class="fas fa-minus-circle"
+                                                    style="color:#e11022"></i></a>&nbsp;
+                                        </div>
+                                    </ng-container>
+                                    <div style="float:right; margin-left:82%;margin-top:-21px">
+                                        <a *ngIf="!viewOnly" href="javascript:void(0)" style="float:right"
+                                            (click)="addAdvanceCheck()"><i class="fas fa-plus-circle"
+                                                style="color:#0078c2"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,5 +1,5 @@
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild,AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { Element } from './model';
@@ -14,7 +14,7 @@ import { ChartOfAccountsCreateComponent } from '../../fa-shared/chart-of-account
   templateUrl: './chart-of-accounts.component.html',
   styleUrls: ['./chart-of-accounts.component.scss']
 })
-export class ChartsofAccountComponent implements OnInit {
+export class ChartsofAccountComponent implements OnInit,AfterViewInit {
   tableDivFlag = false;
   ELEMENT_DATA: Element[];
   displayedColumns: string[] = ['select', 'ac_code', 'ac_name', 'ac_group', 'ac_type', 'dependencies_type', 'ac_cloosingbalance','opening_balance','opening_date','status' ,'action'];
@@ -34,10 +34,13 @@ export class ChartsofAccountComponent implements OnInit {
   
 
   ngOnInit(){
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     this.tableDivFlag = true;
     this.getAccounts();
   }
+  ngAfterViewInit() {
+		this.dataSource.paginator = this.paginator;
+		this.dataSource.sort = this.sort;
+	}
 
   openDeleteDialog = (data) => this.deleteModal.openModal(data);
 
@@ -129,10 +132,11 @@ export class ChartsofAccountComponent implements OnInit {
           }
           this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           this.dataSource.paginator = this.paginator;
-          if (this.sort) {
-            this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-            this.dataSource.sort = this.sort;
-          }
+          this.dataSource.sort = this.sort;
+          // if (this.sort) {
+          //   this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+          //   this.dataSource.sort = this.sort;
+          // }
         
 			} else {
 				this.accountsArray = [];
@@ -218,4 +222,7 @@ export class ChartsofAccountComponent implements OnInit {
     }
 
   }
+  isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
 }

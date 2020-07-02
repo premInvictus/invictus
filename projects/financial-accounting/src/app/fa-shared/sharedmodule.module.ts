@@ -10,7 +10,7 @@ import {
 	MatExpansionModule, MatSelectModule,
 	MatInputModule, MatFormFieldModule,
 	MatButtonModule, MatIconModule, MatToolbarModule, MatPaginatorModule,
-	MatCardModule, MatListModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule
+	MatCardModule, MatListModule,MatSortModule, MatTabsModule, MatDatepickerModule, MatNativeDateModule, MatDialogModule, MatAutocompleteModule
 } from '@angular/material';
 import { RouterModule } from '@angular/router';
 import { LayoutModule } from '@angular/cdk/layout';
@@ -93,7 +93,8 @@ export const MY_FORMATS = {
 		NgxDocViewerModule,
 		NgxMaskModule.forRoot(),
 		InvictusSharedModule,
-		MatChipsModule
+		MatChipsModule,
+		MatSortModule
 	],
 	declarations: [CommonDynamicChartComponent,
 		TruncatetextPipe,
@@ -137,6 +138,7 @@ export const MY_FORMATS = {
 		MatDatepickerModule,
 		MatNativeDateModule,
 		MatDialogModule,
+		MatSortModule,
 		MatTableModule,
 		MatPaginatorModule,
 		ImageViewerModule,

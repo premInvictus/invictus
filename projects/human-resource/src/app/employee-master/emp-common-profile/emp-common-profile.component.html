@@ -154,27 +154,23 @@
       <div class="col-3 smart-col-111 ">
         <div class="row margin-top-8">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light"> Attendance: </span>
+            <span class="font-size-14 font-light"> Total Attendance: </span>
             <span class="font-size-14 font-bold">
-              -</span>
+              {{total.attendance}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
-            <span class="font-size-14 font-light">Leaves Availed:</span>
+            <span class="font-size-14 font-light">Total Leaves Availed:</span>
             <span class="font-size-14 font-bold">
-              -</span>
+              {{total.leaves}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Balance of Leaves:</span>
             <span class="font-size-14 font-bold">
-              {{employeeDetails.emp_month_attendance_data && 
-                employeeDetails.emp_month_attendance_data.leave_opening_balance 
-                 ? 
-                (employeeDetails.emp_month_attendance_data.leave_opening_balance  
-                ): '-'}}</span>
+              {{balanceLeaves}}</span>
           </div>
         </div>
       </div>

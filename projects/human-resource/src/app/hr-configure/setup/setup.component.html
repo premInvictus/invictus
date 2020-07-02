@@ -137,6 +137,11 @@
                                                                 required>
                                                             <mat-error>Please Enter Order</mat-error>
                                                         </mat-form-field>
+                                                        <ng-container
+                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
+                                                            Check if optional ? <mat-slide-toggle [checked]="formGroupArray[configValue-1].formGroup.value.optional"
+                                                            (change)="setMandatory($event)"></mat-slide-toggle>
+                                                        </ng-container>
                                                     </div>
                                                 </div>
                                             </form>
