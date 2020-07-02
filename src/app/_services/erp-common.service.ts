@@ -684,6 +684,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/insertVoucherEntry', value);
 	}
+	getAllEmployeeByClassSection(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployeeByClassSection', value);
+	}
 
 }
 
