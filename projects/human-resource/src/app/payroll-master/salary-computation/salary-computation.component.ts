@@ -1143,8 +1143,8 @@ export class SalaryComputationComponent implements OnInit {
 						vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
 						vc_grno: '',
 						vc_invoiceno: '',
-						vc_debit: amt_total,
-						vc_credit: 0
+						vc_debit: '',
+						vc_credit: amt_total
 					};
 					paymentParticularData.push(vFormJson);
 					console.log('paymentParticularData--', vFormJson);
