@@ -9,11 +9,12 @@ import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 
 @Component({
-  selector: 'app-change-status',
-  templateUrl: './change-status.component.html',
-  styleUrls: ['./change-status.component.scss']
+  selector: 'app-change-enrollment-no',
+  templateUrl: './change-enrollment-no.component.html',
+  styleUrls: ['./change-enrollment-no.component.scss']
 })
-export class ChangeStatusComponent implements OnInit {
+export class ChangeEnrollmentNoComponent implements OnInit {
+
   changeEnrolmentStatusForm: FormGroup;
   changeEnrollmentNumberData: any[] = [];
   reasonDataArray: any[] = [];
@@ -35,7 +36,6 @@ export class ChangeStatusComponent implements OnInit {
     private route: ActivatedRoute) {
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'))
   }
-
   ngOnInit() {
     this.buildForm();
     this.getReason(16);
@@ -48,6 +48,7 @@ export class ChangeStatusComponent implements OnInit {
       emp_name: '',
       emp_designation: '',
       dol: '',
+      emp_code_no: '',
       emp_type: '',
       emplyoee_to: '',
       reason_id: '',
@@ -71,18 +72,15 @@ export class ChangeStatusComponent implements OnInit {
           this.viewFlag = true;
           this.changeEnrolmentStatusForm.patchValue({
             emp_id: result.emp_id,
+            emp_code_no: result.emp_code_no,
             emp_name: result.emp_name,
             emp_designation: result.emp_designation_detail ? result.emp_designation_detail.name : '',
             emp_type: result.emp_category_detail ? result.emp_category_detail.cat_name : '',
           });
           this.change_status = '';
-          if (this.empDetails.emp_status === 'live') {
-            this.enrollMentToArray.push({ id: 0, name: 'Left' });
-          } else if (this.empDetails.emp_status === 'left') {
-            this.enrollMentToArray.push({ id: 0, name: 'Live' });
-          }
+
         } else {
-          this.notif.showSuccessErrorMessage('No Record found for this Employee', 'error');
+          this.notif.showSuccessErrorMessage('No Record found for this Student', 'error');
           this.changeEnrolmentStatusForm.reset();
         }
       });
@@ -103,39 +101,43 @@ export class ChangeStatusComponent implements OnInit {
       let inputJson: any = {};
       if (this.empDetails.emp_status === 'live') {
         inputJson = {
-          emp_status: "left",
           emp_id: this.changeEnrolmentStatusForm.value.emp_id,
-          "emp_salary_detail.emp_organisation_relation_detail.dol":
-            new DatePipe('en-in').transform(this.changeEnrolmentStatusForm.value.dol, 'yyyy-MM-dd'),
-          emp_left_log: {
+          emp_code_no: this.changeEnrolmentStatusForm.value.emp_code_no,
+          emp_no_log: {
             created_by: this.currentUser.login_id,
             created_date: this.notif.dateConvertion(new Date()),
             reason_id: this.changeEnrolmentStatusForm.value.emp_id,
             remarks: this.changeEnrolmentStatusForm.value.remarks,
           }
-  
+
         };
-      } else  if (this.empDetails.emp_status === 'left') {
+      } else if (this.empDetails.emp_status === 'left') {
         inputJson = {
-          emp_status: "live",
           emp_id: this.changeEnrolmentStatusForm.value.emp_id,
-          "emp_salary_detail.emp_organisation_relation_detail.doj":
-            new DatePipe('en-in').transform(this.changeEnrolmentStatusForm.value.dol, 'yyyy-MM-dd'),
-          emp_left_log: {
+          emp_code_no: this.changeEnrolmentStatusForm.value.emp_code_no,
+          emp_no_log: {
             created_by: this.currentUser.login_id,
             created_date: this.notif.dateConvertion(new Date()),
             reason_id: this.changeEnrolmentStatusForm.value.emp_id,
             remarks: this.changeEnrolmentStatusForm.value.remarks,
           }
-  
+
         };
       }
-      this.notif.updateEmployee(inputJson).subscribe((result: any) => {
-        this.disabledApiButton = false;
-        if (result) {
-          this.notif.showSuccessErrorMessage('Status Change Successfully', 'success');
-          this.reset();
-          this.enrollMentToArray = [];
+
+      this.notif.checkEmpCodeNo(inputJson).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.notif.updateEmployee(inputJson).subscribe((result: any) => {
+            this.disabledApiButton = false;
+            if (result) {
+              this.notif.showSuccessErrorMessage('Employee No Change Successfully', 'success');
+              this.reset();
+              this.enrollMentToArray = [];
+            }
+          });
+        } else {
+          this.disabledApiButton = false;
+          this.notif.showSuccessErrorMessage('Employee No Already  Exists', 'error');
         }
       });
 
@@ -147,4 +149,5 @@ export class ChangeStatusComponent implements OnInit {
   reset() {
     this.changeEnrolmentStatusForm.reset();
   }
+
 }
