@@ -1004,6 +1004,7 @@ export class SalaryComputationComponent implements OnInit {
 							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_total_earnings'];
 
 						}
+						if (salary_total > 0) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1014,7 +1015,7 @@ export class SalaryComputationComponent implements OnInit {
 							vc_debit: salary_total,
 							vc_credit: 0
 						};
-						voucherEntryArray.push(vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
@@ -1023,6 +1024,7 @@ export class SalaryComputationComponent implements OnInit {
 							salary_pay_total = salary_pay_total + finJson['emp_salary_compute_data'][ci]['emp_salary_payable'];
 
 						}
+						if (salary_pay_total) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1033,7 +1035,7 @@ export class SalaryComputationComponent implements OnInit {
 							vc_debit: salary_pay_total,
 							vc_credit: 0
 						};
-						voucherEntryArray.push(vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
 
@@ -1049,7 +1051,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 						}
-
+						if (salary_total != 0) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1061,13 +1063,14 @@ export class SalaryComputationComponent implements OnInit {
 							vc_credit: 0
 						};
 						console.log('vFormJson--deduction', vFormJson);
-						voucherEntryArray.push(vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Advance') {
 						var advance_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							advance_total = advance_total + Number(finJson['emp_salary_compute_data'][ci]['emp_modes_data']['advance']);
+							if (advance_total != 0)  {
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1078,7 +1081,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: advance_total,
 								vc_credit: 0
 							};
-							voucherEntryArray.push(vFormJson);
+							voucherEntryArray.push(vFormJson);}
 						}
 
 					}
@@ -1086,6 +1089,7 @@ export class SalaryComputationComponent implements OnInit {
 						var arrear_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							arrear_total = arrear_total + Number(finJson['emp_salary_compute_data'][ci]['emp_modes_data']['arrear']);
+							if (arrear_total != 0) {
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1096,7 +1100,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: arrear_total,
 								vc_credit: 0
 							};
-							voucherEntryArray.push(vFormJson);
+							voucherEntryArray.push(vFormJson); }
 						}
 
 					}
