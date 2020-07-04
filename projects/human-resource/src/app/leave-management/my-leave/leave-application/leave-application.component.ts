@@ -13,6 +13,7 @@ export class LeaveApplicationComponent implements OnInit {
   reviewArray: any[] = [];
   subJSON: any = {};
   leaveForm: FormGroup;
+  halfDay = false;
   leaveTypeArray: any[] = [];
   empArray: any[] = [];
   attachmentArray: any[] = [];
@@ -43,6 +44,7 @@ export class LeaveApplicationComponent implements OnInit {
         'leave_start_date': this.data.leave_start_date ? this.common.dateConvertion(this.data.leave_start_date, 'yyyy-MM-dd') : '',
         'leave_end_date': this.data.leave_end_date ? this.common.dateConvertion(this.data.leave_end_date, 'yyyy-MM-dd') : '',
         'leave_type': this.data.leave_type.leave_type_id,
+        'leave_half_day': this.data.leave_half_day,
         'leave_reason': this.data.leave_reason,
         'leave_attachment': this.data.leave_attachment,
         'leave_status': this.data.leave_status
@@ -53,12 +55,26 @@ export class LeaveApplicationComponent implements OnInit {
       this.showFormFlag = false;
     }
   }
+  checkIfHalf($event) {
+    if ($event.checked) {
+      this.halfDay = true;
+      this.leaveForm.patchValue({
+        'leave_half_day': this.halfDay
+      });
+    } else {
+      this.halfDay = false;
+      this.leaveForm.patchValue({
+        'leave_half_day': this.halfDay
+      });
+    }
+  }
   buildForm() {
     this.leaveForm = this.fbuild.group({
       'leave_id': '',
       'leave_type': '',
       'leave_start_date': '',
       'leave_end_date': '',
+      'leave_half_day': '',
       'leave_reason': '',
       'leave_attachment': '',
       'leave_status': ''
@@ -77,10 +93,14 @@ export class LeaveApplicationComponent implements OnInit {
     this.dialogRef.close({ data: true });
   }
   submit() {
-    
-    if (this.leaveForm.valid) {
-      this.leaveForm.value['tabIndex'] =  this.subJSON['tabIndex'];
-      this.leaveForm.value['leave_employee_id'] =  this.subJSON['leave_employee_id'];
+
+    if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
+      (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason) {
+      if (this.halfDay) {
+        this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
+      }
+      this.leaveForm.value['tabIndex'] = this.selectedIndex;
+      this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
       this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
@@ -89,9 +109,13 @@ export class LeaveApplicationComponent implements OnInit {
     }
   }
   update() {
-    if (this.leaveForm.valid) {
-      this.leaveForm.value['tabIndex'] =  this.subJSON['tabIndex'];
-      this.leaveForm.value['leave_employee_id'] =  this.subJSON['leave_employee_id'];
+    if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
+      (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason) {
+      if (this.halfDay) {
+        this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
+      }
+      this.leaveForm.value['tabIndex'] = this.selectedIndex;
+      this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
       this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });

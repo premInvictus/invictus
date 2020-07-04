@@ -228,6 +228,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_end_date'] = endDate;
 		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
+		inputJson['leave_half_day'] = result.leave_half_day;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =
@@ -277,6 +278,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_end_date'] = endDate;
 		inputJson['leave_type'] = { "leave_type_id": result.leave_type, "leave_type_name": this.getLeaveTypeName(result.leave_type) };
 		inputJson['leave_reason'] = result.leave_reason;
+		inputJson['leave_half_day'] = result.leave_half_day;
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =

@@ -827,6 +827,8 @@ export class SalaryComputationComponent implements OnInit {
 		if (element && element.empShdcolumns[index]['value']) {
 			return Math.round((Number(element.empShdcolumns[index]['value']) * Number(element.emp_present_days)
 				/ Number(this.nod)));
+		} else {
+			return 0;
 		}
 	}
 	checkForFilter() {
