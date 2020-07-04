@@ -203,7 +203,7 @@
                     </mat-form-field>
                   </form>
                 </td>
-                <td mat-footer-cell *matFooterCellDef></td>
+                <td mat-footer-cell *matFooterCellDef>{{getTATotal()}}</td>
               </ng-container>
               <ng-container matColumnDef="tds">
                 <th mat-header-cell *matHeaderCellDef width="5%"> TDS<br />(<span><i
@@ -219,7 +219,7 @@
                     </mat-form-field>
                   </form>
                 </td>
-                <td mat-footer-cell *matFooterCellDef></td>
+                <td mat-footer-cell *matFooterCellDef>{{getTDSTotal()}}</td>
               </ng-container>
 
               <ng-container matColumnDef="emp_arrear">
@@ -236,7 +236,7 @@
                     </mat-form-field>
                   </form>
                 </td>
-                <td mat-footer-cell *matFooterCellDef></td>
+                <td mat-footer-cell *matFooterCellDef>{{getArrearTotal()}}</td>
               </ng-container>
               <ng-container *ngFor="let column of shdcolumns; let i = index;" [matColumnDef]="column?.columnDef + column?.data.sc_id">
                 <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.header}} <br />(<span><i
