@@ -113,7 +113,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				status: '',
 				type: '',
 				value: '',
-				optional: false
+				optional: false,
+				upper_value: ''
 			})
 		},
 		{
@@ -225,6 +226,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							order: item.sc_order,
 							value: item.sc_value,
 							type: item.sc_type.type_name,
+							optional : item.sc_type.optional ?  item.sc_type.optional : '',
+							upper_value : item.sc_type.upper_value ?  item.sc_type.upper_value : '',
 							calculation_type: item.sc_calculation_type,
 							status: item.sc_status,
 							action: item
@@ -414,6 +417,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				value: value.sc_value,
 				calculation_type: value.sc_calculation_type,
 				status: value.sc_status,
+				upper_value: value.sc_type && value.sc_type.upper_value ? value.sc_type.upper_value : '',
 				optional: value.sc_type.type_id === '2' && value.sc_type.optional ? value.sc_type.optional : false
 			});
 		} else if (Number(this.configValue) === 3) {
@@ -478,7 +482,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getSalaryComponent();
-			this.displayedColumns = ['position', 'name', 'calculation_type', 'type', 'value', 'order', 'status', 'action'];
+			this.displayedColumns = 
+				['position', 'name', 'calculation_type', 'type', 'value', 'order', 'optional', 'upper_value', 'status', 'action'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSalaryComponent();
@@ -575,7 +580,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							type_id: this.formGroupArray[value - 1].formGroup.value.type,
 							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray),
 							optional: this.formGroupArray[value - 1].formGroup.value.type === '2' ?
-								this.formGroupArray[value - 1].formGroup.value.optional : ''
+								this.formGroupArray[value - 1].formGroup.value.optional : '',
+							upper_value: this.formGroupArray[value - 1].formGroup.value.upper_value
+								? this.formGroupArray[value - 1].formGroup.value.upper_value : '',
 						},
 						sc_order: this.formGroupArray[value - 1].formGroup.value.order,
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
@@ -663,7 +670,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							type_name: this.getName(this.formGroupArray[value - 1].formGroup.value.type, this.formatTypeArray),
 							optional: this.formGroupArray[value - 1].formGroup.value.type === '2'
 								&& this.formGroupArray[value - 1].formGroup.value.optional ?
-								this.formGroupArray[value - 1].formGroup.value.optional : ''
+								this.formGroupArray[value - 1].formGroup.value.optional : '',
+							upper_value: this.formGroupArray[value - 1].formGroup.value.upper_value
+								? this.formGroupArray[value - 1].formGroup.value.upper_value : '',
 						},
 						sc_order: this.formGroupArray[value - 1].formGroup.value.order,
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,

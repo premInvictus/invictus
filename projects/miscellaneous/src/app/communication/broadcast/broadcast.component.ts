@@ -35,16 +35,19 @@ export class BroadcastComponent implements OnInit {
 		private sisService: SisService,
 		private router: Router,
 		private dialog: MatDialog
-	) { }
+		
+	) {console.log('constructor'); }
 
 	ngOnInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
 		this.buildForm();
 		this.getSMSScheduleData();
+		console.log('ngoninit');
 	}
 
 	ngAfterViewInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
+		console.log('aftervewinit');
 	}
 
 	buildForm() {
@@ -125,7 +128,14 @@ export class BroadcastComponent implements OnInit {
 		inputJson['to_date'] = new DatePipe('en-in').transform(this.broadcastForm.value.to_date, 'yyyy-MM-dd');
 		this.commonAPIService.getMessage(inputJson).subscribe((result: any) => {
 			if (result && result.data && result.data[0]) {
-				this.scheduleMessageData = result.data;
+				const tempresult = result.data;
+				tempresult.forEach(element => {
+					if(!(element.msg_to.length == 0 || element.msg_from == '')){
+						this.scheduleMessageData.push(element);
+					}
+				});
+				//this.scheduleMessageData = result.data;
+
 				this.prepareDataSource();
 			}
 		});

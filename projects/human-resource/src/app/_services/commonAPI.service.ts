@@ -219,6 +219,10 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
 	}
+	checkEmpCodeNo(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/checkEmpCodeNo', value);
+	}
 
 	getEmployeeDetail(value) {
 		this.loader.startLoading();
@@ -289,6 +293,14 @@ export class CommonAPIService {
 	insertSalaryCompute(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/insert', value);
+	}
+	updateInBulk(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/salary-compute/updateInBulk', value);
+	}
+	insertInBulk(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/salary-compute/insertInBulk', value);
 	}
 
 	updateSalaryCompute(value) {
