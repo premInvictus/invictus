@@ -791,6 +791,27 @@ export class SalaryComputationComponent implements OnInit {
 		});
 
 	}
+	getArrearTotal(){
+		let ttotal=0;
+		for (let i = 0; i < this.formGroupArray.length; i++) {
+			ttotal += Number(this.formGroupArray[i].value.arrear);
+		}
+		return ttotal;
+	}
+	getTDSTotal(){
+		let ttotal=0;
+		for (let i = 0; i < this.formGroupArray.length; i++) {
+			ttotal += Number(this.formGroupArray[i].value.tds);
+		}
+		return ttotal;
+	}
+	getTATotal(){
+		let ttotal=0;
+		for (let i = 0; i < this.formGroupArray.length; i++) {
+			ttotal += Number(this.formGroupArray[i].value.td);
+		}
+		return ttotal;
+	}
 
 	salaryheadGT(index) {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.empShacolumns[index]['value'] || 0), 0);
@@ -2423,9 +2444,8 @@ export class SalaryComputationComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Compute report Employee Salary Compute report for the month of '
-			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
-			+ this.sessionName;
+		worksheet.getCell('A2').value = new TitleCasePipe().transform('Employee Salary Computation For The Month Of '
+			+ this.getMonthWithYear());
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A3:B3');
 		worksheet.getCell('A3').value = '';
@@ -2750,9 +2770,8 @@ export class SalaryComputationComponent implements OnInit {
 
 		doc.autoTable({
 			head: [[
-				new TitleCasePipe().transform('Employee Salary Compute report for the month of '
-					+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
-				+ this.sessionName
+				new TitleCasePipe().transform('Employee Salary Computation For The Month Of '
+					+ this.getMonthWithYear())
 			]],
 			didDrawPage: function (data) {
 				doc.setFont('Roboto');
@@ -2826,6 +2845,21 @@ export class SalaryComputationComponent implements OnInit {
 
 		doc.save('EmployeeSalaryCompute_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
 		this.showPdf = false;
+	}
+	getMonthWithYear(){
+		let str='';
+		let nYear = 0;
+		let currentSessionFirst = this.sessionName.split('-')[0];
+		let currentSessionSecond = this.sessionName.split('-')[1];
+		var month_id = this.searchForm.value.month_id;
+		if ((Number(month_id) != 1) && (Number(month_id) != 2) && (Number(month_id) != 3)) {
+			nYear = currentSessionFirst;
+		} else {
+			nYear = currentSessionSecond;
+		}
+		str = this.monthNames[Number(month_id) - 1].substring(0, 3)+'\'';
+		str+=nYear.toString().substring(nYear.toString().length-2);
+		return str;
 	}
 
 }

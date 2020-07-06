@@ -122,11 +122,15 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
-                                    <ng-container *ngIf="employeedetails.emp_status === 'left'">
+                                    <!-- <ng-container *ngIf="employeedetails.emp_status === 'left'">
                                         <mat-checkbox [checked]="salaryDetails.value.fnf_status" [disabled]="
                                     viewOnly || 
                                     employeedetails.emp_salary_detail.emp_organisation_relation_detail.fnf_status"
                                             (change)="settleFnf($event)">FNF Settled </mat-checkbox>
+                                    </ng-container> -->
+                                    <ng-container *ngIf="employeedetails.emp_status === 'left'">
+                                        <mat-checkbox [checked]="salaryDetails.value.fnf_status" [disabled]="
+                                    viewOnly" (change)="settleFnf($event)">FNF Settled </mat-checkbox>
                                     </ng-container>
                                 </div>
                             </div>

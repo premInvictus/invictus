@@ -35,16 +35,19 @@ export class BroadcastComponent implements OnInit {
 		private sisService: SisService,
 		private router: Router,
 		private dialog: MatDialog
-	) { }
+		
+	) {console.log('constructor'); }
 
 	ngOnInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
 		this.buildForm();
 		this.getSMSScheduleData();
+		console.log('ngoninit');
 	}
 
 	ngAfterViewInit() {
 		this.scheduleMessageDataSource.sort = this.sort;
+		console.log('aftervewinit');
 	}
 
 	buildForm() {
