@@ -87,7 +87,7 @@
             <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog"
               id="salary_compute_log">
               <ng-container matColumnDef="header-row-first-group">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5">General Details </th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">General Details </th>
               </ng-container>
 
               <ng-container matColumnDef="header-row-salary-heads-group">
@@ -113,10 +113,11 @@
                 'header-row-modes-group',
                 'header-row-four-group'
               ]"></tr>
-              <!-- <ng-container matColumnDef="srno">
+              <ng-container matColumnDef="srno">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
                 <td mat-cell *matCellDef="let element"  [ngStyle]="{'background-color':element?.colorCode}"> {{element.srno}} </td>
-              </ng-container> -->
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
               <ng-container matColumnDef="emp_id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
@@ -170,9 +171,9 @@
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" class="text-center text-nowrap"
                   [ngStyle]="{'background-color':element?.colorCode}">
-                  <span class="text-center text-capitalize">{{element?.empShacolumns[i]['value'] | number }} </span>
+                  <span class="text-center text-capitalize">{{element?.empShacolumns[i]['value'] | indianCurrency }} </span>
                 </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{salaryheadGT(i) | number}}</td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{salaryheadGT(i) | indianCurrency}}</td>
               </ng-container>
               <!-- <ng-container matColumnDef="emp_allowances">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%" [attr.rowspan]="2">Allowances</th>
@@ -185,8 +186,8 @@
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" class="text-center text-nowrap"
                   [ngStyle]="{'background-color':element?.colorCode}"> <span
-                    *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings | number )}} </span> </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{footerrow?.emp_total_earnings | number}}</td>
+                    *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings | indianCurrency )}} </span> </td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{footerrow?.emp_total_earnings | indianCurrency}}</td>
               </ng-container>
 
               <ng-container matColumnDef="td">
@@ -243,9 +244,9 @@
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" class="text-center"
                   [ngStyle]="{'background-color':element?.colorCode}">
-                  <span class="text-center text-capitalize">{{getShdData(element, i) | number}} </span>
+                  <span class="text-center text-capitalize">{{getShdData(element, i) | indianCurrency}} </span>
                 </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{deductionGT(i) | number}}</td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{deductionGT(i) | indianCurrency}}</td>
               </ng-container>
               <!-- <ng-container matColumnDef="emp_deductions">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Deductions</th>
@@ -282,9 +283,9 @@
                 <th mat-header-cell *matHeaderCellDef width="8%" class="text-nowrap"> Salary Payable <br />(<span><i
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
-                  {{element?.emp_salary_payable | number }}
+                  {{element?.emp_salary_payable | indianCurrency }}
                 </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{salarypayableGT() | number}}</td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{salarypayableGT() | indianCurrency}}</td>
               </ng-container>
               <ng-container *ngFor="let column of paymentModeArray; let i = index;" [matColumnDef]="column?.pm_id">
                 <th mat-header-cell *matHeaderCellDef width="5%" class="text-nowrap">{{column?.pm_name}} <br />(<span><i
@@ -355,18 +356,18 @@
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
                   class="text-nowrap">
-                  {{element?.emp_total | number}}
+                  {{element?.emp_total | indianCurrency}}
                 </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{emptotalGT() | number}}</td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{emptotalGT() | indianCurrency}}</td>
               </ng-container>
               <ng-container matColumnDef="balance">
                 <th mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Balance <br />(<span><i
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
                   class="text-nowrap">
-                  {{element?.balance | number}}
+                  {{element?.balance | indianCurrency}}
                 </td>
-                <td mat-footer-cell *matFooterCellDef class="text-center">{{balanceGT() | number}}</td>
+                <td mat-footer-cell *matFooterCellDef class="text-center">{{balanceGT() | indianCurrency}}</td>
               </ng-container>
               <ng-container matColumnDef="emp_status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%"> Status</th>
@@ -381,7 +382,7 @@
                       class="fas fa-rupee-sign"></i></span>)</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
                   class="text-nowrap">
-                  {{element?.gratuity | number}} 
+                  {{element?.gratuity | indianCurrency}} 
                 </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
