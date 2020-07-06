@@ -224,7 +224,9 @@ export class DisbursmentSheetComponent implements OnInit {
 					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 1) {
 						this.shacolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i] });
 					}
-					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2) {
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2 &&
+						!this.salaryHeadsArr[i]['sc_type']['optional']
+						&& Number(this.salaryHeadsArr[i]['sc_status']) === 1) {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
 				}

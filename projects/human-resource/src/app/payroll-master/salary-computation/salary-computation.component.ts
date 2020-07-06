@@ -30,6 +30,7 @@ export class SalaryComputationComponent implements OnInit {
 	currentYear: any;
 	employeeData: any[] = [];
 	salaryHeadsArr: any[] = [];
+	nod: any = 0;
 	shacolumns = [];
 	empShacolumns = [];
 	monthNames = ["January", "February", "March", "April", "May", "June",
@@ -262,7 +263,8 @@ export class SalaryComputationComponent implements OnInit {
 						Number(this.salaryHeadsArr[i]['sc_status']) === 1) {
 						this.shacolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i] });
 					}
-					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2
+					if (Number(this.salaryHeadsArr[i]['sc_type']['type_id']) === 2 &&
+						!this.salaryHeadsArr[i]['sc_type']['optional']
 						&& Number(this.salaryHeadsArr[i]['sc_status']) === 1) {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
@@ -416,6 +418,13 @@ export class SalaryComputationComponent implements OnInit {
 												value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
 											}
+											const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
+												this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
+											if (upperVal && value) {
+												if (Number(value) > Number(upperVal)) {
+													value = upperVal;
+												}
+											}
 											this.empShdcolumns[i]['value'] = value.toFixed(2);
 											this.shdcolumns[i]['value'] = value.toFixed(2);
 											total_deductions = total_deductions - Number(value);
@@ -432,10 +441,10 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 
+
 					if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 						for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 							let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-
 							let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 							if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 								console.log('yes');
@@ -524,7 +533,8 @@ export class SalaryComputationComponent implements OnInit {
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
+							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
+							(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
 						element.balance = Number(element.emp_salary_payable) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']);
 					} else {
 						let advance_salary = 0;
@@ -686,7 +696,8 @@ export class SalaryComputationComponent implements OnInit {
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
+							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
+							(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
 						element.balance = Number(element.emp_present_days ? Math.round(Number(empBasicPay) + element.emp_salary_payable) : 0) - 0;
 						if (element) {
 							var deduction = 0;
@@ -818,7 +829,9 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	deductionGT(index) {
-		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.empShdcolumns[index]['value'] || 0), 0);
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + (
+			Math.round(Number(b.empShdcolumns[index]['value']
+		* Number(b.emp_present_days) / this.nod)) || 0), 0);
 	}
 
 	salarypayableGT() {
@@ -832,9 +845,17 @@ export class SalaryComputationComponent implements OnInit {
 	emptotalGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
 	}
-
+	getShdData(element, index) {
+		if (element && element.empShdcolumns[index]['value']) {
+			return Math.round((Number(element.empShdcolumns[index]['value']) * Number(element.emp_present_days)
+				/ Number(this.nod)));
+		} else {
+			return 0;
+		}
+	}
 	checkForFilter() {
 		// ////console.log('searchByFilter--', this.searchByFilter);
+		this.nod = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 		if (!this.searchByFilter) {
 			this.searchWithoutFilter();
 		} else {
@@ -963,9 +984,9 @@ export class SalaryComputationComponent implements OnInit {
 					});
 				}
 
-				empJson['emp_salary_detail.emp_salary_structure.advance_month_wise'] = monthWiseAdvance;
-				empJson['emp_id'] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
-				empJson['emp_salary_detail.emp_salary_structure.emp_pay_scale'] = {
+				empJson["emp_salary_detail.emp_salary_structure.advance_month_wise"] = monthWiseAdvance;
+				empJson["emp_id"] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
+				empJson["emp_salary_detail.emp_salary_structure.emp_pay_scale"] = {
 					pc_id: this.SALARY_COMPUTE_ELEMENT[i] &&
 						this.SALARY_COMPUTE_ELEMENT[i] &&
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
@@ -1284,9 +1305,11 @@ export class SalaryComputationComponent implements OnInit {
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'] = Math.round(Number(total_earnings));
 					}
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
+						Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days)));
 					if (element) {
 						const formJson: any = {};
 						var deduction = 0;
@@ -1398,9 +1421,11 @@ export class SalaryComputationComponent implements OnInit {
 
 
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					if (element) {
 						const formJson: any = {};
 						var deduction = 0;
@@ -1509,11 +1534,13 @@ export class SalaryComputationComponent implements OnInit {
 					console.log(tdsValue);
 
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(((Number(element['emp_total_earnings']) * (Number(element.emp_present_days)) / Number(no_of_days))) + - Number(tdsValue) - Number(advanceValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(((Number(element['emp_total_earnings']) * (Number(element.emp_present_days)) / Number(no_of_days))) + - Number(tdsValue) - Number(advanceValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					console.log(element.emp_total_deductions);
 					console.log(element);
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					if (element.emp_id) {
 						const formJson: any = {};
 						var deduction = 0;
@@ -1625,9 +1652,11 @@ export class SalaryComputationComponent implements OnInit {
 
 
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) + Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue)
+						+ (Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
 					if (element) {
 						const formJson: any = {};
 						var deduction = 0;
@@ -1755,10 +1784,9 @@ export class SalaryComputationComponent implements OnInit {
 		var empArr = [];
 		let empJson = {};
 		let monthWiseAdvance = [];
-		var inputArr = [];
+		let inputArr: any[] = [];
 		var edit = false;
-		let inputJson = {};
-		var finJson = {};
+		let finJson: any = {};
 		var validationStatus = false;
 		for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
 			if (this.SALARY_COMPUTE_ELEMENT[i]['colorCode']) {
@@ -1768,7 +1796,8 @@ export class SalaryComputationComponent implements OnInit {
 			}
 		}
 		if (!validationStatus) {
-			for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
+			for (let i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
+				let inputJson = {};
 				monthWiseAdvance = [];
 				empJson = {};
 				monthWiseAdvance = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise ? this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise : [];
@@ -1789,9 +1818,9 @@ export class SalaryComputationComponent implements OnInit {
 					});
 				}
 
-				empJson['emp_salary_detail.emp_salary_structure.advance_month_wise'] = monthWiseAdvance;
-				empJson['emp_id'] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
-				empJson['emp_salary_detail.emp_salary_structure.emp_pay_scale'] = {
+				empJson["emp_salary_detail.emp_salary_structure.advance_month_wise"] = monthWiseAdvance;
+				empJson["emp_id"] = this.SALARY_COMPUTE_ELEMENT[i].emp_id;
+				empJson["emp_salary_detail.emp_salary_structure.emp_pay_scale"] = {
 					pc_id: this.SALARY_COMPUTE_ELEMENT[i] &&
 						this.SALARY_COMPUTE_ELEMENT[i] &&
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'] &&
@@ -1828,24 +1857,27 @@ export class SalaryComputationComponent implements OnInit {
 						)
 					}
 				}
-				inputArr.push(inputJson);
+				inputArr.push({
+					emp_id: this.SALARY_COMPUTE_ELEMENT[i].emp_id,
+					session_id: this.session_id.ses_id,
+					emp_salary_compute_month_id: this.searchForm.value.month_id,
+					emp_salary_compute_data: inputJson
+				});
 			}
-			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
-			finJson['emp_salary_compute_data'] = inputArr;
 			console.log(empArr);
 			if (!edit) {
-				this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
+				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						this.getAllEmployee();
+						this.checkForFilter();
 					});
 				});
 			} else {
-				this.commonAPIService.updateSalaryCompute(finJson).subscribe((result: any) => {
+				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.getAllEmployee();
+						this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					});
 				});
@@ -1982,6 +2014,13 @@ export class SalaryComputationComponent implements OnInit {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 
 													}
+													const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
+														this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
+													if (upperVal && value) {
+														if (Number(value) > Number(upperVal)) {
+															value = upperVal;
+														}
+													}
 													this.empShdcolumns[i]['value'] = value.toFixed(2);
 													this.shdcolumns[i]['value'] = value.toFixed(2);
 													total_deductions = total_deductions - Number(value);
@@ -1998,10 +2037,10 @@ export class SalaryComputationComponent implements OnInit {
 
 							}
 
+
 							if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 								for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 									let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-
 									let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 										console.log('yes');
@@ -2038,7 +2077,8 @@ export class SalaryComputationComponent implements OnInit {
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 
 								emp_present_days = emp_present_days ? emp_present_days : 0;
-								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions) + Number(arrearValue) - Number(advanceValue));
+								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
+									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
 
 								for (var i = 0; i < this.paymentModeArray.length; i++) {
 									formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'])) : '';
@@ -2089,8 +2129,9 @@ export class SalaryComputationComponent implements OnInit {
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
-								element.balance = Number(element.emp_present_days ? Number(empBasicPay) + element.emp_salary_payable : 0) - 0;
+									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
+									(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
+								element.balance = Number(element.emp_salary_payable) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']);
 							} else {
 								let advance_salary = 0;
 								if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details && item.emp_salary_detail.emp_salary_structure.advance_details) {
@@ -2207,7 +2248,8 @@ export class SalaryComputationComponent implements OnInit {
 								emp_present_days = emp_present_days ? emp_present_days : 0;
 
 								total_earnings = total_earnings
-								salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) + Number(total_deductions));
+								salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) +
+									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
 								//////console.log('salary_payable',total_earnings, salary_payable);
 								element = {
 									srno: pos,
@@ -2250,7 +2292,8 @@ export class SalaryComputationComponent implements OnInit {
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
-									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) + Number(total_deductions));
+									- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
+									(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
 								element.balance = Number(element.emp_present_days ? Math.round(Number(empBasicPay) + element.emp_salary_payable) : 0) - 0;
 								if (element) {
 									var deduction = 0;
@@ -2542,7 +2585,7 @@ export class SalaryComputationComponent implements OnInit {
 		for (let j = 0; j < this.shdcolumns.length; j++) {
 			worksheet.getCell(this.alphabetJSON[k2 + j + 1] + gtRow).value =
 				this.SALARY_COMPUTE_ELEMENT.
-					map(f => Math.round(Number(f.empShdcolumns[j]['value']))).reduce((acc, val) => acc + val);
+					map(f => Math.round(Number(f.empShdcolumns[j]['value'])* Number(f.emp_present_days) / this.nod)).reduce((acc, val) => acc + val);
 			l2++;
 		}
 		worksheet.getCell(this.alphabetJSON[l2 + 1] + gtRow).value =
@@ -2599,7 +2642,8 @@ export class SalaryComputationComponent implements OnInit {
 			worksheet.getCell(this.alphabetJSON[k] + this.length).value = item.emp_total_earnings;
 			let l = k;
 			for (let j = 0; j < this.shdcolumns.length; j++) {
-				worksheet.getCell(this.alphabetJSON[k + j + 1] + this.length).value = item.empShdcolumns[j]['value'];
+				worksheet.getCell(this.alphabetJSON[k + j + 1] + this.length).value = 
+				Math.round(Number(item.empShdcolumns[j]['value']) * Number(item.emp_present_days) / Number(this.nod));
 				l++;
 			}
 			worksheet.getCell(this.alphabetJSON[l + 1] + this.length).value = item.emp_modes_data.tds;

@@ -127,6 +127,17 @@
                                                                 </mat-option>
                                                             </mat-select>
                                                         </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline"
+                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
+                                                            <mat-label>Upper Value</mat-label>
+                                                            <input matInput placeholder="Enter Upper Value"
+                                                                class="text-capitalize" type="number"
+                                                                formControlName="upper_value"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.value.upper_value"
+                                                                required>
+                                                            <mat-error>Please Enter Order</mat-error>
+                                                        </mat-form-field>
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Order</mat-label>
                                                             <input matInput placeholder="Enter Name"
@@ -139,8 +150,9 @@
                                                         </mat-form-field>
                                                         <ng-container
                                                             *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
-                                                            Check if optional ? <mat-slide-toggle [checked]="formGroupArray[configValue-1].formGroup.value.optional"
-                                                            (change)="setMandatory($event)"></mat-slide-toggle>
+                                                            Check if optional ? <mat-slide-toggle
+                                                                [checked]="formGroupArray[configValue-1].formGroup.value.optional"
+                                                                (change)="setMandatory($event)"></mat-slide-toggle>
                                                         </ng-container>
                                                     </div>
                                                 </div>
@@ -321,6 +333,34 @@
                                                                                     <span
                                                                                         *ngIf="item.name">{{ item.name }}</span>
                                                                                     <span *ngIf="!item.name">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue === '2'"
+                                                                                matColumnDef="upper_value">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Upper Value
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.upper_value">{{ item.upper_value }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.upper_value">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue === '2'"
+                                                                                matColumnDef="optional">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Optional
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.optional">{{ item.optional }}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.optional">-</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container matColumnDef="component_type">

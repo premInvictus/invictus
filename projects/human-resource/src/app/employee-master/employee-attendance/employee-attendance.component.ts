@@ -213,6 +213,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 													presentDays : no_of_days;
 											}
 											if (item.emp_status === 'left') {
+
 												const month: any = item.emp_salary_detail
 													&& item.emp_salary_detail.emp_organisation_relation_detail
 													&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
@@ -241,6 +242,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 											}
 
 										} else {
+											console.log('yes');
 											let totP: any = '';
 											let lwp: any = '';
 											let la: any = '';
@@ -258,8 +260,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 												}
 
 											}
+											if (item.emp_status === 'left') {
 
-											element.emp_total_attendance = totP ? totP : element.emp_total_attendance ;
+												const month: any = item.emp_salary_detail
+													&& item.emp_salary_detail.emp_organisation_relation_detail
+													&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+													new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+												if (Number(inputJson.month_id) === Number(month) + 1) {
+													totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+												} else {
+													totP = presentDays;
+												}
+												totP = totP - (lwp ? lwp : 0)
+											}
+
+											element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 											element.emp_leave_availed = la ? la : element.emp_leave_availed;
 											element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 											element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -271,7 +286,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 													emp_leave_granted: lg ? lg : '',
 													emp_remarks: '',
 													emp_leave_availed: la ? la : '',
-													emp_total_attendance: totP ? totP : '',
+													emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 													emp_balance_leaves: 0,
 													emp_lwp: lwp ? lwp : '',
 													emp_leave_approved: '1'
@@ -297,8 +312,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 												lwp = la - lg;
 											}
 										}
+										if (item.emp_status === 'left') {
 
-										element.emp_total_attendance = totP ? totP : element.emp_total_attendance;
+											const month: any = item.emp_salary_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+												new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+											if (Number(inputJson.month_id) === Number(month) + 1) {
+												totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+											} else {
+												totP = presentDays;
+											}
+											totP = totP - (lwp ? lwp : 0)
+										}
+										element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 										element.emp_leave_availed = la ? la : element.emp_leave_availed;
 										element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 										element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -310,7 +337,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 												emp_leave_granted: lg,
 												emp_remarks: '',
 												emp_leave_availed: la,
-												emp_total_attendance: totP ? totP : '',
+												emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 												emp_balance_leaves: 0,
 												emp_lwp: lwp,
 												emp_leave_approved: '1'
@@ -338,8 +365,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 										}
 
 									}
+									if (item.emp_status === 'left') {
 
-									element.emp_total_attendance = totP ? totP : element.emp_total_attendance;
+										const month: any = item.emp_salary_detail
+											&& item.emp_salary_detail.emp_organisation_relation_detail
+											&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+											new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+										if (Number(inputJson.month_id) === Number(month) + 1) {
+											totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+										} else {
+											totP = presentDays;
+										}
+										totP = totP - (lwp ? lwp : 0)
+									}
+									element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 									element.emp_leave_availed = la ? la : element.emp_leave_availed;
 									element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 									element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -351,7 +390,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 											emp_leave_granted: lg ? lg : '',
 											emp_remarks: '',
 											emp_leave_availed: la ? la : '',
-											emp_total_attendance: totP ? totP : '',
+											emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 											emp_balance_leaves: 0,
 											emp_lwp: lwp ? lwp : '',
 											emp_leave_approved: '1'
@@ -366,7 +405,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 											- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								} else {
-									element.emp_total_attendance = Number(no_of_days) - this.holidayArray.length;
+									element.emp_total_attendance = Number(no_of_days) - this.holidayArray.length -
+									(element.emp_lwp ?
+										Number(element.emp_lwp) : 0);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								}
 
@@ -523,8 +564,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 												}
 
 											}
+											if (item.emp_status === 'left') {
 
-											element.emp_total_attendance = totP ? totP : element.emp_total_attendance;
+												const month: any = item.emp_salary_detail
+													&& item.emp_salary_detail.emp_organisation_relation_detail
+													&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+													new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+												if (Number(inputJson.month_id) === Number(month) + 1) {
+													totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+												} else {
+													totP = presentDays;
+												}
+												totP = totP - (lwp ? lwp : 0)
+											}
+
+											element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 											element.emp_leave_availed = la ? la : element.emp_leave_availed;
 											element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 											element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -536,7 +590,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 													emp_leave_granted: lg ? lg : '',
 													emp_remarks: '',
 													emp_leave_availed: la ? la : '',
-													emp_total_attendance: totP ? totP : '',
+													emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 													emp_balance_leaves: 0,
 													emp_lwp: lwp ? lwp : '',
 													emp_leave_approved: '1'
@@ -561,8 +615,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 												lwp = la - lg;
 											}
 										}
+										if (item.emp_status === 'left') {
 
-										element.emp_total_attendance = totP ? totP : element.emp_total_attendance;
+											const month: any = item.emp_salary_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail
+												&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+												new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+											if (Number(inputJson.month_id) === Number(month) + 1) {
+												totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+											} else {
+												totP = presentDays;
+											}
+											totP = totP - (lwp ? lwp : 0)
+										}
+
+										element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 										element.emp_leave_availed = la ? la : element.emp_leave_availed;
 										element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 										element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -574,7 +641,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 												emp_leave_granted: lg,
 												emp_remarks: '',
 												emp_leave_availed: la,
-												emp_total_attendance: totP ? totP : '',
+												emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 												emp_balance_leaves: 0,
 												emp_lwp: lwp,
 												emp_leave_approved: '1'
@@ -600,8 +667,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 										}
 
 									}
+									if (item.emp_status === 'left') {
 
-									element.emp_total_attendance = totP ? totP : element.emp_total_attendance;
+										const month: any = item.emp_salary_detail
+											&& item.emp_salary_detail.emp_organisation_relation_detail
+											&& item.emp_salary_detail.emp_organisation_relation_detail.dol ?
+											new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getMonth() : ''
+										if (Number(inputJson.month_id) === Number(month) + 1) {
+											totP = new Date(item.emp_salary_detail.emp_organisation_relation_detail.dol).getDate();
+											totP = totP - (lwp ? lwp : 0)
+										} else {
+											totP = presentDays;
+											totP = totP - (lwp ? lwp : 0)
+										}
+									}
+									element.emp_total_attendance = totP ? totP - (lwp ? lwp : 0) : element.emp_total_attendance;
 									element.emp_leave_availed = la ? la : element.emp_leave_availed;
 									element.emp_leave_granted = lg ? lg : element.emp_leave_granted;
 									element.emp_lwp = lwp ? lwp : element.emp_lwp;
@@ -613,7 +693,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 											emp_leave_granted: lg ? lg : '',
 											emp_remarks: '',
 											emp_leave_availed: la ? la : '',
-											emp_total_attendance: totP ? totP : '',
+											emp_total_attendance: totP ? totP - (lwp ? lwp : 0) : '',
 											emp_balance_leaves: 0,
 											emp_lwp: lwp ? lwp : '',
 											emp_leave_approved: '1'
@@ -628,7 +708,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 											- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								} else {
-									element.emp_total_attendance = Number(no_of_days);
+									element.emp_total_attendance = Number(no_of_days) - (element.emp_lwp ?
+										Number(element.emp_lwp) : 0);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								}
 
