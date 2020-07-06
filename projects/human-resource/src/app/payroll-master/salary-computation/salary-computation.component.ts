@@ -201,6 +201,7 @@ export class SalaryComputationComponent implements OnInit {
 								'pm_id': item.bank_name ? (item.bank_name + i).trim().toLowerCase().replace(' ', '_') : '',
 								'pm_name': item.bank_name + '\n (' + trans.name + ')',
 								'pm_value': 0,
+								'pm_acc_name': item.bank_name,
 								'calculation_type': '',
 								'calculation_value': '',
 								'config_id': item.bnk_id,
@@ -861,17 +862,17 @@ export class SalaryComputationComponent implements OnInit {
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
-				vc_type: 'Journel Entry',
+				vc_type: 'Journal Entry',
 				vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
 				vc_date: this.vcData.vc_date,
-				vc_narrations: 'Salary Computation of Month ' + this.vcData.vc_month,
+				vc_narrations: 'Salary Computation of Month ' + vcMonth,
 				vc_attachments: [],
 				vc_particulars_data: voucherEntryArray,
 				vc_state: 'draft'
 			}
 
 
-
+			console.log('fjJson--',fJson);
 			this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
 				if (data) {
 					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -959,10 +960,10 @@ export class SalaryComputationComponent implements OnInit {
 				empArr.push(empJson);
 				inputJson = this.SALARY_COMPUTE_ELEMENT[i];
 				inputJson['emp_modes_data']['emp_id'] = this.formGroupArray[i]['value']['emp_id'];
-				inputJson['emp_modes_data']['arrear'] = this.formGroupArray[i]['value']['arrear'];
-				inputJson['emp_modes_data']['td'] = this.formGroupArray[i]['value']['td'];
-				inputJson['emp_modes_data']['tds'] = this.formGroupArray[i]['value']['tds'];
-				inputJson['emp_modes_data']['advance'] = this.formGroupArray[i]['value']['advance'];
+				inputJson['emp_modes_data']['arrear'] = Number(this.formGroupArray[i]['value']['arrear']);
+				inputJson['emp_modes_data']['td'] = Number(this.formGroupArray[i]['value']['td']);
+				inputJson['emp_modes_data']['tds'] = Number(this.formGroupArray[i]['value']['tds']);
+				inputJson['emp_modes_data']['advance'] = Number(this.formGroupArray[i]['value']['advance']);
 				inputJson['emp_modes_data']['mode_data'] = [];
 				if (this.SALARY_COMPUTE_ELEMENT[i]['isEditable']) {
 					edit = true;
@@ -973,8 +974,9 @@ export class SalaryComputationComponent implements OnInit {
 					if (Object.keys(this.formGroupArray[i]['value']).indexOf(this.paymentModeArray[j]['pm_id']) > -1) {
 						inputJson['emp_modes_data']['mode_data'].push(
 							{
-								pm_id: this.paymentModeArray[j]['pm_id'], pm_name: this.paymentModeArray[j]['pm_name'], pm_value: this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']],
-								config_id: this.paymentModeArray[j]['config_id']
+								pm_id: this.paymentModeArray[j]['pm_id'], pm_name: this.paymentModeArray[j]['pm_name'], pm_value: Number(this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']]),
+								config_id: this.paymentModeArray[j]['config_id'],
+								pm_acc_name: this.paymentModeArray[j]['pm_acc_name'],
 							}
 						)
 					}
@@ -993,7 +995,7 @@ export class SalaryComputationComponent implements OnInit {
 			}
 			if (this.chartsOfAccount.length > 0) {
 				var voucherEntryArray = [];
-				console.log('this.chart', this.chartsOfAccount, this.salaryHeadsArr);
+				console.log('this.chart', this.chartsOfAccount, this.salaryHeadsArr, salaryDedArr);
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 					console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
@@ -1002,6 +1004,7 @@ export class SalaryComputationComponent implements OnInit {
 							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_total_earnings'];
 
 						}
+						if (salary_total > 0) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1012,7 +1015,7 @@ export class SalaryComputationComponent implements OnInit {
 							vc_debit: salary_total,
 							vc_credit: 0
 						};
-						voucherEntryArray.push(vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
@@ -1021,6 +1024,7 @@ export class SalaryComputationComponent implements OnInit {
 							salary_pay_total = salary_pay_total + finJson['emp_salary_compute_data'][ci]['emp_salary_payable'];
 
 						}
+						if (salary_pay_total) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1031,10 +1035,11 @@ export class SalaryComputationComponent implements OnInit {
 							vc_debit: salary_pay_total,
 							vc_credit: 0
 						};
-						voucherEntryArray.push(vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
-					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > 0) {
+
+					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > -1) {
 						var salary_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length; cj++) {
@@ -1046,7 +1051,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 						}
-
+						if (salary_total != 0) {
 						let vFormJson = {};
 						vFormJson = {
 							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1057,13 +1062,15 @@ export class SalaryComputationComponent implements OnInit {
 							vc_debit: salary_total,
 							vc_credit: 0
 						};
-						voucherEntryArray.push(vFormJson);
+						console.log('vFormJson--deduction', vFormJson);
+						voucherEntryArray.push(vFormJson);}
 
 					}
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Advance') {
 						var advance_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-							advance_total = advance_total + finJson['emp_salary_compute_data'][ci]['emp_modes_data']['advance'];
+							advance_total = advance_total + Number(finJson['emp_salary_compute_data'][ci]['emp_modes_data']['advance']);
+							if (advance_total != 0)  {
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1074,14 +1081,15 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: advance_total,
 								vc_credit: 0
 							};
-							voucherEntryArray.push(vFormJson);
+							voucherEntryArray.push(vFormJson);}
 						}
 
 					}
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Arrear') {
 						var arrear_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-							arrear_total = arrear_total + finJson['emp_salary_compute_data'][ci]['emp_modes_data']['arrear'];
+							arrear_total = arrear_total + Number(finJson['emp_salary_compute_data'][ci]['emp_modes_data']['arrear']);
+							if (arrear_total != 0) {
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1092,7 +1100,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: arrear_total,
 								vc_credit: 0
 							};
-							voucherEntryArray.push(vFormJson);
+							voucherEntryArray.push(vFormJson); }
 						}
 
 					}
@@ -1110,16 +1118,24 @@ export class SalaryComputationComponent implements OnInit {
 
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
+				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
+				// console.log('paymentModeAccount--', this.paymentModeAccount)
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
 					var amt_total = 0;
-
+					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
-						for (var k = 0; k < finJson['emp_salary_compute_data'][j].length; k++) {
-							if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_name'] === this.paymentModeAccount[i]['coa_dependencies'][0]['dependancy_name']) {
-								amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value']);
+
+						for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'].length; k++) {
+							// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+							if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
+								// console.log('in1111');
+								amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
+								console.log('amt_total--', amt_total,this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
 							}
+							
 						}
 					}
+					
 					let vFormJson = {};
 					vFormJson = {
 						vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
@@ -1127,10 +1143,11 @@ export class SalaryComputationComponent implements OnInit {
 						vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
 						vc_grno: '',
 						vc_invoiceno: '',
-						vc_debit: arrear_total,
-						vc_credit: 0
+						vc_debit: '',
+						vc_credit: amt_total
 					};
 					paymentParticularData.push(vFormJson);
+					console.log('paymentParticularData--', vFormJson);
 				}
 				this.getVoucherTypeMaxId(paymentParticularData);
 
@@ -1784,7 +1801,8 @@ export class SalaryComputationComponent implements OnInit {
 						inputJson['emp_modes_data']['mode_data'].push(
 							{
 								pm_id: this.paymentModeArray[j]['pm_id'], pm_name: this.paymentModeArray[j]['pm_name'], pm_value: this.formGroupArray[i]['value'][this.paymentModeArray[j]['pm_id']],
-								config_id: this.paymentModeArray[j]['config_id']
+								config_id: this.paymentModeArray[j]['config_id'],
+								'pm_acc_name': this.paymentModeArray[j]['pm_acc_name'],
 							}
 						)
 					}
