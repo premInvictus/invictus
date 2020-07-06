@@ -34,3 +34,12 @@ th {
     white-space: pre !important;
     word-break: break-word !important;
 }
+tr.mat-footer-row {
+    font-weight: bold;
+    text-align: center;
+  }
+  td.mat-footer-cell{
+    border-top: 1px solid #89A8C9 !important;
+    border-left: 1px solid #89A8C9 !important;
+    border-right: 1px solid #89A8C9 !important;
+  }
