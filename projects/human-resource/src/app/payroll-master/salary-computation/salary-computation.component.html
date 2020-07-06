@@ -87,7 +87,7 @@
             <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center" class="booklog"
               id="salary_compute_log">
               <ng-container matColumnDef="header-row-first-group">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="5">General Details </th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">General Details </th>
               </ng-container>
 
               <ng-container matColumnDef="header-row-salary-heads-group">
@@ -113,10 +113,11 @@
                 'header-row-modes-group',
                 'header-row-four-group'
               ]"></tr>
-              <!-- <ng-container matColumnDef="srno">
+              <ng-container matColumnDef="srno">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="2%"> Sr. No. </th>
                 <td mat-cell *matCellDef="let element"  [ngStyle]="{'background-color':element?.colorCode}"> {{element.srno}} </td>
-              </ng-container> -->
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
               <ng-container matColumnDef="emp_id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header width="5%">Emp. ID</th>
                 <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}">
