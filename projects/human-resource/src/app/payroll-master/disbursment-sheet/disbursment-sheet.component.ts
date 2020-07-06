@@ -259,7 +259,16 @@ export class DisbursmentSheetComponent implements OnInit {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose Pay Month', 'error');
 		}
 	}
-
+	salarypayableGT() {
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0);
+	}
+	paymentmodeGT(index) {
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + (
+			Math.round(Number(b.emp_modes_data.mode_data[index]['pm_value'])) || 0), 0);
+	}
+	totalGT() {
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
+	}
 	getAllEmployee() {
 		//this.displayedSalaryComputeColumns.push('emp_salary_heads', 'emp_allowances', 'emp_total_earnings', 'emp_deductions', 'emp_present_days', 'emp_salary_payable', 'emp_pay_mode', 'emp_total', 'emp_status']
 		let inputJson = {
@@ -466,7 +475,7 @@ export class DisbursmentSheetComponent implements OnInit {
 					pos++;
 					index++;
 				}
-
+				console.log('this.SALARY_COMPUTE_ELEMENT',this.SALARY_COMPUTE_ELEMENT);
 				this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 				this.salaryComputeDataSource.paginator = this.paginator;
 				if (this.sort) {
