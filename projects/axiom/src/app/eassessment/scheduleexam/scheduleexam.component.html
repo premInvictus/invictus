@@ -135,3 +135,8 @@
 <!-- Delete Modal -->
 <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteScheduledExam(currentQues)" (deleteCancel)="deleteComCancel()">
 </app-delete-modal>
+
+<!-- Admit Code Confirmation Modal -->
+<app-admit-code-confirmation-modal #admitCodeModalRef [admitCodeMessage]="'Are you Sure? You want to Delete '" (admitCodeOk)="verifyAdmitCode($event)" (admitCodeCancel)="admitCodeCancel()">
+</app-admit-code-confirmation-modal>
+

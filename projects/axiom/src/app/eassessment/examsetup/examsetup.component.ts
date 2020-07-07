@@ -127,7 +127,8 @@ export class ExamsetupComponent implements OnInit {
 			es_grace_minute: '',
 			es_grace_extended_time: '',
 			es_pass_marks: '',
-			es_message: ''
+			es_message: '',
+			es_admit_code:''
 		});
 	}
 	// Material Calendar
@@ -267,7 +268,8 @@ export class ExamsetupComponent implements OnInit {
 						'es_grace_hour': this.scheduleExamDetail.es_grace_extended_time.split(':')[0],
 						'es_grace_minute': this.scheduleExamDetail.es_grace_extended_time.split(':')[1],
 						'es_pass_marks': this.scheduleExamDetail.es_pass_marks,
-						'es_message': this.scheduleExamDetail.es_message
+						'es_message': this.scheduleExamDetail.es_message,
+						'es_admit_code':this.scheduleExamDetail.es_admit_code === '1' ?     true : false
 					});
 				}
 			}
@@ -388,7 +390,8 @@ export class ExamsetupComponent implements OnInit {
 						'es_grace_time_extend': '',
 						'es_grace_extended_time': '',
 						'es_pass_marks': '',
-						'es_message': ''
+						'es_message': '',
+						'es_admit_code':''
 					});
 					this.currentQuestion = [];
 					if (this.showGraceTime) {
@@ -486,7 +489,9 @@ export class ExamsetupComponent implements OnInit {
 						'es_grace_time_extend': '',
 						'es_grace_extended_time': '',
 						'es_pass_marks': '',
-						'es_message': ''
+						'es_message': '',
+						'es_admit_code': ''
+						
 					});
 				}
 			);
