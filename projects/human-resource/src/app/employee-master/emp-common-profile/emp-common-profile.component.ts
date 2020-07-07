@@ -19,24 +19,25 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   @Output() key = new EventEmitter();
   previousB: boolean;
   nextB: boolean;
-  balanceLeaves : any = 0;
+  balanceLeaves: any = 0;
   firstB: boolean;
   lastB: boolean;
   defaultsrc: any;
   navigation_record: any;
-  @Input() total : any = {};
+  @Input() total: any = {};
   viewOnly: boolean;
   @ViewChild('myInput') myInput: ElementRef;
   employeeDetailsForm: FormGroup;
   constructor(private commonAPIService: CommonAPIService,
-    private dialog : MatDialog,
+    private dialog: MatDialog,
     private fbuild: FormBuilder) { }
   ngOnInit() {
     this.buildForm();
   }
   buildForm() {
     this.employeeDetailsForm = this.fbuild.group({
-      emp_id: ''
+      emp_id: '',
+      emp_code_no: ''
     });
 
   }
@@ -45,27 +46,28 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
       this.getEmployeeDetail(this.loginId);
     }
   }
-  getEmployeeDetail(emp_id) {
-    if (emp_id) {
+  getEmployeeDetail(emp_code_no) {
+    if (emp_code_no) {
       this.previousB = true;
       this.nextB = true;
       this.firstB = true;
       this.lastB = true;
       //this.setActionControls({viewMode : true})
-      this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+      this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
         if (result) {
           this.employeeDetails = result;
-          if (this.employeeDetails.emp_month_attendance_data && 
-            this.employeeDetails.emp_month_attendance_data.month_data 
+          if (this.employeeDetails.emp_month_attendance_data &&
+            this.employeeDetails.emp_month_attendance_data.month_data
             && this.employeeDetails.emp_month_attendance_data.month_data.length > 0) {
-              for (const item of this.employeeDetails.emp_month_attendance_data.month_data) {
-                if (item.attendance_detail && item.attendance_detail.emp_balance_leaves) {
-                  this.balanceLeaves = item.attendance_detail.emp_balance_leaves;
-                }
+            for (const item of this.employeeDetails.emp_month_attendance_data.month_data) {
+              if (item.attendance_detail && item.attendance_detail.emp_balance_leaves) {
+                this.balanceLeaves = item.attendance_detail.emp_balance_leaves;
               }
             }
+          }
           this.employeeDetailsForm.patchValue({
             emp_id: result.emp_id,
+            emp_code_no: result.emp_code_no
           });
           if (result.emp_profile_pic) {
             this.defaultsrc = this.employeeDetails.emp_profile_pic
@@ -78,11 +80,11 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
 
         if (this.navigation_record) {
           if (this.navigation_record.first_record &&
-            this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id) {
+            this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_code_no) {
             this.firstB = false;
           }
           if (this.navigation_record.last_record &&
-            this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_id) {
+            this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_code_no) {
             this.lastB = false;
           }
           if (this.navigation_record.next_record) {
@@ -100,34 +102,52 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   }
   nextId(emp_id) {
     this.getEmployeeDetail(emp_id);
-    this.next.emit(emp_id);
+    this.next.emit({
+      emp_id: this.employeeDetailsForm.value.emp_id,
+      emp_code_no: emp_id
+    });
   }
   lastId(emp_id) {
     this.getEmployeeDetail(emp_id);
-    this.last.emit(emp_id);
+    this.last.emit(
+      {
+        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_code_no: emp_id
+      }
+    );
   }
   prevId(emp_id) {
     this.getEmployeeDetail(emp_id);
-    this.prev.emit(emp_id);
+    this.prev.emit(
+      {
+        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_code_no: emp_id
+      }
+    );
   }
   firstId(emp_id) {
     this.getEmployeeDetail(emp_id);
-    this.first.emit(emp_id);
+    this.first.emit(
+      {
+        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_code_no: emp_id
+      }
+    );
   }
   openSearchDialog() {
-		const diaogRef = this.dialog.open(SearchViaNameComponent, {
-			width: '20%',
-			height: '30%',
-			position: {
-				top: '10%'
-			},
-			data: {}
-		});
-		diaogRef.afterClosed().subscribe((result: any) => {
-			if (result && result.emp_id) {
-        this.getEmployeeDetail(result.emp_id);
-        this.next.emit(result.emp_id);
-			}
-		});
-	}
+    const diaogRef = this.dialog.open(SearchViaNameComponent, {
+      width: '20%',
+      height: '30%',
+      position: {
+        top: '10%'
+      },
+      data: {}
+    });
+    diaogRef.afterClosed().subscribe((result: any) => {
+      if (result && result.emp_id) {
+        this.getEmployeeDetail(result.emp_code_no);
+        this.next.emit(result.emp_code_no);
+      }
+    });
+  }
 }
