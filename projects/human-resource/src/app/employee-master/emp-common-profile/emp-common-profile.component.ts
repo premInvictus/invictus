@@ -24,6 +24,7 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   lastB: boolean;
   defaultsrc: any;
   navigation_record: any;
+  navigation_record_sec: any;
   @Input() total: any = {};
   viewOnly: boolean;
   @ViewChild('myInput') myInput: ElementRef;
@@ -75,6 +76,7 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
             this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
           }
           this.navigation_record = this.employeeDetails.navigation;
+          this.navigation_record_sec = this.employeeDetails.navigation_sec;
           //this.employeedetails['last_record'] = emp_id;
         }
 
@@ -100,36 +102,36 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
       });
     }
   }
-  nextId(emp_id) {
+  nextId(emp_id, em_id) {
     this.getEmployeeDetail(emp_id);
     this.next.emit({
-      emp_id: this.employeeDetailsForm.value.emp_id,
+      emp_id: em_id,
       emp_code_no: emp_id
     });
   }
-  lastId(emp_id) {
+  lastId(emp_id, em_id) {
     this.getEmployeeDetail(emp_id);
     this.last.emit(
       {
-        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_id: em_id,
         emp_code_no: emp_id
       }
     );
   }
-  prevId(emp_id) {
+  prevId(emp_id, em_id) {
     this.getEmployeeDetail(emp_id);
     this.prev.emit(
       {
-        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_id: em_id,
         emp_code_no: emp_id
       }
     );
   }
-  firstId(emp_id) {
+  firstId(emp_id, em_id) {
     this.getEmployeeDetail(emp_id);
     this.first.emit(
       {
-        emp_id: this.employeeDetailsForm.value.emp_id,
+        emp_id: em_id,
         emp_code_no: emp_id
       }
     );
