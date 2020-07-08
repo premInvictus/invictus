@@ -45,6 +45,7 @@ import { CallRemarksComponent } from './call-remarks/call-remarks.component';
 import { CallLogRemarksModalComponent } from './call-log-remarks-modal/call-log-remarks-modal.component';
 import { CreateFolderComponent } from './create-folder/create-folder.component';
 import { UploadFileModalComponent } from './upload-file-modal/upload-file-modal.component';
+import { ScheduleMessageComponent } from './schedule-message/schedule-message.component';
 //import { EmployeeDetailsComponent } from '../employee-master/employee-details/employee-details.component';
 
 export const MY_FORMATS = {
@@ -123,6 +124,7 @@ export const MY_FORMATS = {
 		CallLogRemarksModalComponent,
 		CreateFolderComponent,
 		UploadFileModalComponent,
+		ScheduleMessageComponent,
 	],
 	entryComponents: [
 		DeleteModalComponent,
@@ -139,7 +141,8 @@ export const MY_FORMATS = {
 		CallRemarksComponent,
 		CallLogRemarksModalComponent,
 		CreateFolderComponent,
-		UploadFileModalComponent
+		UploadFileModalComponent,
+		ScheduleMessageComponent
 	],
 	exports: [
 		FormsModule, ReactiveFormsModule,
@@ -185,7 +188,8 @@ export const MY_FORMATS = {
 		ComposeMessageComponent,
 		PreviewDocumentComponent,
 		CreateFolderComponent,
-		UploadFileModalComponent
+		UploadFileModalComponent,
+		ScheduleMessageComponent
 	],
 	providers: [
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

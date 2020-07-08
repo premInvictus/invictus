@@ -2523,6 +2523,9 @@ export class SalaryComputationComponent implements OnInit {
 		}
 		worksheet.mergeCells('F5:' + this.alphabetJSON[w] + '5');
 		worksheet.getCell('F5').value = 'Salary Heads';
+		w=w+1;
+		worksheet.getCell(this.alphabetJSON[w] + '5').value = 'Earning';
+		//w=w+1;
 		let x = w;
 		for (let b = 0; b < this.shdcolumns.length; b++) {
 			x++;

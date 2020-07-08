@@ -7,6 +7,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,
 import { MatDialog } from '@angular/material';
 import { ckconfig } from '../../config/ckeditorconfig';
 import { PreviewDocumentComponent } from '../../misc-shared/preview-document/preview-document.component';
+import { ScheduleMessageComponent } from '../../misc-shared/schedule-message/schedule-message.component';
 
 @Component({
 	selector: 'app-compose-message',
@@ -60,6 +61,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	showSearchByUserFlag = false;
 	disabledApiButton = false;
 	module: any;
+	schedule:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -821,6 +823,10 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
 					"msg_thread": []
 				}
+				if(this.schedule){
+					inputJson.msg_schedule_date=this.schedule.schedule_date.format('YYYY-MM-DD');
+					inputJson.msg_schedule_time=this.schedule.schedule_time;
+				}
 			}
 			if (this.messageForm.value.messageType === 'notification') {
 				for (var i = 0; i < this.selectedUserArr.length; i++) {
@@ -1073,4 +1079,23 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 			this.userDataArr = this.finUserDataArr;
 		}
 	}
+	openSchedule() {
+		const dialogRef = this.dialog.open(ScheduleMessageComponent, {
+			data: {
+				schedule:this.schedule
+			},
+			height: '70vh',
+			width: '70vh'
+		});
+		dialogRef.afterClosed().subscribe((res: any) => {
+			console.log(res);
+			if(res){
+				this.schedule = res;
+				console.log(this.schedule.schedule_date.format('YYYY-MM-DD'));
+				this.sendMessage();
+			}
+			
+		})
+	}
+	
 }
