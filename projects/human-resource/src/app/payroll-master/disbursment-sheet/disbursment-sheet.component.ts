@@ -977,7 +977,8 @@ export class DisbursmentSheetComponent implements OnInit {
 		}
 		worksheet.mergeCells('E5:' + this.alphabetJSON[ind] + '5');
 		worksheet.getCell('E5').value = 'Modes';
-		//worksheet.getCell(this.alphabetJSON[ind] + '5').value = '';
+		
+		worksheet.getCell(this.alphabetJSON[ind+1] + '5').value = '';
 		worksheet.getCell('A6').value = 'Emp. ID';
 		worksheet.getCell('B6').value = 'Emp Name';
 		worksheet.getCell('C6').value = 'Designation';
