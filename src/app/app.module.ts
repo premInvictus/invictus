@@ -40,7 +40,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 		MatDialogModule,
 		HttpClientModule,
 		AppRoutingModule,
-		UserIdleModule.forRoot({ idle: 60, timeout: 1, ping: 30 }),
+		UserIdleModule.forRoot({ idle: 600, timeout: 1, ping: 30 }),
 		LoadingModule,
 		RouterModule,
 		BrowserAnimationsModule,
