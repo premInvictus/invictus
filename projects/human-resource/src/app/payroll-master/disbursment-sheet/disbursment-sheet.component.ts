@@ -308,7 +308,7 @@ export class DisbursmentSheetComponent implements OnInit {
 						relationsArray.push(result[i]['relations']);
 					}
 				}
-
+				
 				let emp_present_days;
 				let index = 0;
 				for (const item of recordArray) {
@@ -441,13 +441,14 @@ export class DisbursmentSheetComponent implements OnInit {
 					element = {
 						srno: pos,
 						emp_id: item.emp_id,
+						emp_code_no : relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
 						emp_name: item.emp_name,
 						emp_salary_compute_month_id: this.searchForm.value.month_id,
 						emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
 							&& relationsArray[index].emp_designation_detail.des_name ? relationsArray[index].emp_designation_detail.des_name
 							: '-',
 						emp_pay_scale: item.emp_salary_structure && item.emp_salary_structure.emp_pay_scale ? item.emp_salary_structure.emp_pay_scale.pc_name : '',
-						emp_salary_structure: item.emp_salary_structure,
+						emp_salary_structure: item.emp_salary_structusre,
 						emp_acc_no: relationsArray[index] && relationsArray[index].emp_salary_detail
 							&& relationsArray[index].emp_salary_detail.emp_bank_detail && relationsArray[index].emp_salary_detail.emp_bank_detail[0] &&
 							relationsArray[index].emp_salary_detail.emp_bank_detail[0].bnk_detail &&
@@ -751,6 +752,7 @@ export class DisbursmentSheetComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
+									emp_code_no : relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
 									emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
@@ -1024,7 +1026,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			const prev = this.length + 1;
 			const obj: any = {};
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.emp_id;
+			worksheet.getCell('A' + this.length).value = item.emp_code_no;
 			worksheet.getCell('B' + this.length).value = item.emp_name;
 			worksheet.getCell('C' + this.length).value = item.emp_designation;
 			worksheet.getCell('D' + this.length).value = item.emp_acc_no;
@@ -1164,6 +1166,7 @@ export class DisbursmentSheetComponent implements OnInit {
 export interface SalaryComputeElement {
 	srno: number;
 	emp_id: string;
+	emp_code_no : any;
 	emp_name: string;
 	emp_designation: string;
 	emp_pay_scale: string;

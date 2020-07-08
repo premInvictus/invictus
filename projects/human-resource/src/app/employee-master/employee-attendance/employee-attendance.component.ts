@@ -170,6 +170,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
+									emp_code_no  : item.emp_code_no ? item.emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 									emp_bol: total_leave_closing_balance,
@@ -477,6 +478,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
+									emp_code_no : item.emp_code_no ? item.emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 									emp_bol: total_leave_closing_balance,

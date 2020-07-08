@@ -25,18 +25,20 @@
             <div class="row" style="margin-top: -10px !important;">
               <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="firstB"
-                  (click)="firstId(navigation_record.first_record)"><i class="material-icons">
+                  (click)="firstId(navigation_record.first_record, navigation_record_sec.first_record)"><i
+                    class="material-icons">
                     first_page
                   </i></button>
                 <button mat-mini-fab class="nav-button1 tab-display-contents" [disabled]="previousB"
-                  (click)="prevId(navigation_record.prev_record)"><i class="material-icons">
+                  (click)="prevId(navigation_record.prev_record, navigation_record_sec.prev_record)"><i
+                    class="material-icons">
                     navigate_before
                   </i></button>
               </div>
               <div class="col-4 custom-col-30 text-center remove-col-padding">
                 <mat-form-field class="form-field text-center">
                   <input matInput #enrollmentFocus class="adm-no-student-30 font-size-30" id="blur_id"
-                    formControlName="emp_id" (keydown.enter)="loadOnEnrollmentId($event)" #myInput
+                    formControlName="emp_code_no" (keydown.enter)="loadOnEnrollmentId($event)" #myInput
                     (click)="myInput.select()">
                 </mat-form-field><br>
                 <div class="font-size-16 font-bold blink" *ngIf="employeeDetails.emp_status == 'left'">
@@ -44,11 +46,13 @@
               </div>
               <div class="col-4 custom-col-30 text-center margin-top-20 remove-padding">
                 <button mat-mini-fab class="nav-button1 tab-display-flex" [disabled]="nextB"
-                  (click)="nextId(navigation_record.next_record)"><i class="material-icons">
+                  (click)="nextId(navigation_record.next_record, navigation_record_sec.next_record)"><i
+                    class="material-icons">
                     navigate_next
                   </i></button>
                 <button mat-mini-fab class="nav-button1 tab-display-contents" [disabled]="lastB"
-                  (click)="lastId(navigation_record.last_record)"><i class="material-icons">
+                  (click)="lastId(navigation_record.last_record, navigation_record_sec.last_record)"><i
+                    class="material-icons">
                     last_page
                   </i>
                 </button>

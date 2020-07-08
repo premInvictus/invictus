@@ -56,7 +56,7 @@
               </div>
               <div class="col-4 text-center remove-col-padding">
                 <mat-form-field class="form-field text-center" id="iemp_id">
-                  <input class="text-center enroll-font-30 font-size-30" formControlName="emp_id" matInput
+                  <input class="text-center enroll-font-30 font-size-30" formControlName="emp_code_no" matInput
                     [readonly]="!viewOnly" (keydown.enter)="$event.preventDefault();loadEmployee($event)" #myInput>
                 </mat-form-field><br>
                 <div class="font-size-16 font-bold blink" *ngIf="employeedetails.emp_status=='left'"><span>LEFT</span>

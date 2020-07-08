@@ -106,7 +106,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	ngAfterViewInit() {
 		this.ledgerDataSource.paginator = this.paginator;
 	}
-	getSession(login_id) {
+	getSession(emp_id,login_id) {
 		this.sis.getSession().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.sessionArray = [];
@@ -114,14 +114,14 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				const index = this.sessionArray.findIndex((f) => f.ses_id === this.session.ses_id);
 
 				this.sessionName = this.sessionArray[index].ses_name;
-				this.getEmployeeLedger(login_id);
+				this.getEmployeeLedger(emp_id ,login_id);
 			}
 		});
 	}
-	getPaymentModes(loginid) {
+	getPaymentModes(emp_id, loginid) {
 		this.commonAPIService.getBanks({}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
-				this.getSession(loginid);
+				this.getSession(emp_id, loginid);
 				this.paymentModeArray.push(
 					{
 						'pm_id': 'Cash' ? 'Cash'.trim().toLowerCase().replace(' ', '_') : '',
@@ -172,13 +172,13 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	getEmployeeNavigationRecords() {
 		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
 			this.lastRecordId = result.last_record;
-			this.getPaymentModes(this.lastRecordId);
+			this.getPaymentModes(result.emp_id, result.last_record);
 
 		});
 	}
 
-	getEmployeeLedger(emp_id) {
-		this.commonAPIService.getEmployeeLedger({ emp_id: emp_id }).subscribe((res: any) => {
+	getEmployeeLedger(emp_id, emp_code_no) {
+		this.commonAPIService.getEmployeeLedger({ emp_id: emp_id , emp_code_no : emp_code_no}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.EMPLOYEE_LEDGER_ELEMENT = [];
 				this.tempData = [];
@@ -258,13 +258,13 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 						item.details.emp_total_deductions : 0;
 					obj['advance'] = item && item.details &&
 						item.details.emp_modes_data && item.details.emp_modes_data.advance
-						? item.details.emp_modes_data.advance : 0;
+						? Number(item.details.emp_modes_data.advance) : 0;
 					obj['salarypayable'] = item && item.details &&
 						item.details.emp_salary_payable ?
-						item.details.emp_salary_payable : 0;
+						Number(item.details.emp_salary_payable) : 0;
 					obj['salarypaid'] = item && item.details &&
-						item.details.emp_total ?
-						item.details.emp_total : 0;
+					Number(item.details.emp_total) ?
+						Number(item.details.emp_total) : 0;
 					obj['balance'] = item && item.details &&
 						item.details.balance ?
 						item.details.balance : 0;
@@ -303,8 +303,8 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							netearnings: next.netearnings,
 							deductions: next.deductions,
 							advance: next.advance,
-							salarypayable: next.salarypayable,
-							salarypaid: next.salarypaid,
+							salarypayable: Number(next.salarypayable),
+							salarypaid: Number(next.salarypaid),
 							balance: next.balance,
 							mop: b,
 							remarks: next.remarks,

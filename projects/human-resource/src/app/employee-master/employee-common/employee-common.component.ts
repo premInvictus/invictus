@@ -103,7 +103,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.setActionControls(data);
 		});
 
-		this.getEmployeeDetail(result.emp_id);
+		this.getEmployeeDetail(result.emp_code_no);
 
 	}
 
@@ -115,7 +115,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.getWing();
 		this.getCategoryOne();
 		if (this.employeedetails) {
-			this.getEmployeeDetail(this.employeedetails.emp_id);
+			this.getEmployeeDetail(this.employeedetails.emp_code_no);
 		}
 	}
 	getDepartment() {
@@ -149,14 +149,14 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
-	getEmployeeDetail(emp_id) {
-		if (emp_id) {
+	getEmployeeDetail(emp_code_no) {
+		if (emp_code_no) {
 			this.previousB = true;
 			this.nextB = true;
 			this.firstB = true;
 			this.lastB = true;
 			//this.setActionControls({viewMode : true})
-			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				if (result) {
 					let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
 					let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
@@ -167,6 +167,7 @@ export class EmployeeCommonComponent implements OnInit {
 					this.employeeDetailsForm.patchValue({
 						emp_profile_pic: result.emp_profile_pic,
 						emp_id: result.emp_id,
+						emp_code_no : result.emp_code_no,
 						emp_name: result.emp_name,
 						emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
 						emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
@@ -186,12 +187,12 @@ export class EmployeeCommonComponent implements OnInit {
 
 				if (this.navigation_record) {
 					if (this.navigation_record.first_record &&
-						this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_id &&
+						this.navigation_record.first_record !== this.employeeDetailsForm.value.emp_code_no &&
 						this.viewOnly) {
 						this.firstB = false;
 					}
 					if (this.navigation_record.last_record &&
-						this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_id &&
+						this.navigation_record.last_record !== this.employeeDetailsForm.value.emp_code_no &&
 						this.viewOnly) {
 						this.lastB = false;
 					}
@@ -243,7 +244,7 @@ export class EmployeeCommonComponent implements OnInit {
 			const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 			inputElem.select();
 			this.lastEmployeeDetails = {};
-			if (this.lastEmployeeDetails['emp_id'] === this.employeeDetailsForm.value.emp_id) {
+			if (this.lastEmployeeDetails['emp_code_no'] === this.employeeDetailsForm.value.emp_code_no) {
 				this.firstB = false;
 				this.previousB = false;
 				this.lastB = true;
@@ -262,6 +263,7 @@ export class EmployeeCommonComponent implements OnInit {
 		this.employeeDetailsForm = this.fbuild.group({
 			emp_profile_pic: '',
 			emp_id: '',
+			emp_code_no : '',
 			emp_name: '',
 			emp_category_id: '',
 			emp_honorific_id: '',
@@ -438,7 +440,7 @@ export class EmployeeCommonComponent implements OnInit {
 				this.lastRecordId = result.emp_id;
 				this.commonAPIService.employeeData.next(
 					{
-						last_record: result.emp_id
+						last_record: result.emp_code_no
 					});
 			}
 		});

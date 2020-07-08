@@ -495,6 +495,7 @@ export class SalaryComputationComponent implements OnInit {
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
+							emp_code_no : item.emp_code_no ? item.emp_code_no  : '-',
 							emp_name: item.emp_name,
 							emp_salary_compute_month_id: this.searchForm.value.month_id,
 							emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
@@ -658,6 +659,7 @@ export class SalaryComputationComponent implements OnInit {
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
+							emp_code_no : item.emp_code_no ? item.emp_code_no  : '-',
 							emp_name: item.emp_name,
 							emp_salary_compute_month_id: this.searchForm.value.month_id,
 							emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
@@ -2102,6 +2104,7 @@ export class SalaryComputationComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
+									emp_code_no : item.emp_code_no ? item.emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
@@ -2265,6 +2268,7 @@ export class SalaryComputationComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
+									emp_code_no : item.emp_code_no ? item.emp_code_no  : '-',
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
@@ -2638,7 +2642,7 @@ export class SalaryComputationComponent implements OnInit {
 			const prev = this.length + 1;
 			const obj: any = {};
 			this.length++;
-			worksheet.getCell('A' + this.length).value = item.emp_id;
+			worksheet.getCell('A' + this.length).value = item.emp_code_no;
 			worksheet.getCell('B' + this.length).value = item.emp_name;
 			worksheet.getCell('C' + this.length).value = item.emp_designation;
 			worksheet.getCell('D' + this.length).value = item.emp_pay_scale_master;
@@ -2953,6 +2957,7 @@ export class SalaryComputationComponent implements OnInit {
 export interface SalaryComputeElement {
 	srno: number;
 	emp_id: string;
+	emp_code_no : any;
 	emp_name: string;
 	emp_designation: string;
 	emp_pay_scale: string;
