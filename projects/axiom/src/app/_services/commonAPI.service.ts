@@ -76,4 +76,9 @@ export class CommonAPIService {
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
 
+	getAdmmitCodeVerification(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/getAdmmitCodeVerification', value);
+	}
+
 }

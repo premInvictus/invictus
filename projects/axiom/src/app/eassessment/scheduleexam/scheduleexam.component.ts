@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { UserAccessMenuService, BreadCrumbService, NotificationService, SocketService } from '../../_services/index';
+import { UserAccessMenuService, BreadCrumbService, NotificationService, SocketService, CommonAPIService } from '../../_services/index';
 import { Element } from './scheduleexam.model';
 @Component({
 	selector: 'app-scheduleexam',
@@ -21,22 +21,25 @@ export class ScheduleexamComponent implements OnInit {
 	homeUrl: string;
 	ELEMENT_DATA: Element[] = [];
 	tableCollection: Boolean = false;
+	examData:any;
 
 	currentUser: any;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
+	@ViewChild('admitCodeModalRef') admitCodeModalRef;
 
 	displayedColumns = ['position', 'name', 'location', 'marks', 'duration', 'date', 'time', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-
+	verifyAdmitCodeStatus = false;
 	constructor(
 		private formbuilder: FormBuilder,
 		private qelementService: QelementService,
 		private notif: NotificationService,
 		private userAccessMenuService: UserAccessMenuService,
 		private breadCrumbService: BreadCrumbService,
-		private socketService: SocketService
+		private socketService: SocketService,
+		private _commonAPIService: CommonAPIService
 	) {
 		// this.socket = io.connect(appConfig.socketUrl);
 	}
@@ -146,34 +149,65 @@ export class ScheduleexamComponent implements OnInit {
 	}
 
 	startTest(examData: any) {
-		for (const item of this.scheduleExamArray) {
-			if (item.es_id === examData.action.es_id) {
-				const examscheduledate = new Date(item.es_start_date + ' 00:00:01');
-				const today = new Date();
-				const year = today.getFullYear();
-				const tmon = today.getMonth() + 1;
-				const tdate = today.getDate();
-				const examstartdate = new Date(year + '-' + (tmon) + '-' + tdate + ' 00:00:01');
-				if (+examscheduledate > +examstartdate) {
-					this.notif.showSuccessErrorMessage('Exam can not be started prior to the scheduled date', 'error');
-				} else if (+examscheduledate < +examstartdate) {
-					this.notif.showSuccessErrorMessage('The date of examination has lapsed', 'error');
-				} else {
-					let url1 = '';
-					if (this.currentUser.role_id === '2') {
-						url1 = 'axiom/school/';
-					} else if (this.currentUser.role_id === '3') {
-						url1 = 'axiom/teacher/';
-					}
-					const url = url1 + 'eassessment/testscreeen/' + examData.action.es_id;
-
-					const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
-					window.open(url, '_blank', param);
-				}
-				break;
-
-			}
+		this.examData = examData;
+		console.log('exam data--', examData);	
+		if (this.examData.action.es_admit_code === '1') {
+			this.verifyAdmitCodeStatus = false;
+		} else {
+			this.verifyAdmitCodeStatus = true;
 		}
+		if (this.verifyAdmitCodeStatus) {
+			for (const item of this.scheduleExamArray) {
+				if (item.es_id === examData.action.es_id) {
+					const examscheduledate = new Date(item.es_start_date + ' 00:00:01');
+					const today = new Date();
+					const year = today.getFullYear();
+					const tmon = today.getMonth() + 1;
+					const tdate = today.getDate();
+					const examstartdate = new Date(year + '-' + (tmon) + '-' + tdate + ' 00:00:01');
+					if (+examscheduledate > +examstartdate) {
+						this.notif.showSuccessErrorMessage('Exam can not be started prior to the scheduled date', 'error');
+					} else if (+examscheduledate < +examstartdate) {
+						this.notif.showSuccessErrorMessage('The date of examination has lapsed', 'error');
+					} else {
+						let url1 = '';
+						if (this.currentUser.role_id === '2') {
+							url1 = 'axiom/school/';
+						} else if (this.currentUser.role_id === '3') {
+							url1 = 'axiom/teacher/';
+						}
+						const url = url1 + 'eassessment/testscreeen/' + examData.action.es_id;
+	
+						const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
+						window.open(url, '_blank', param);
+					}
+					break;
+	
+				}
+			}
+		} else {
+			this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+			this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+		}
+
+
+		
+	}
+
+	
+
+	verifyAdmitCode(data) {
+		console.log('data--', data);
+		
+		this._commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
+			if(result && result.status === 'ok') {
+				this.verifyAdmitCodeStatus = true;
+				//this.startTest(this.examData);
+			} else {
+				this.verifyAdmitCodeStatus = false;
+				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
+			}
+		})
 	}
 
 	getClass() {

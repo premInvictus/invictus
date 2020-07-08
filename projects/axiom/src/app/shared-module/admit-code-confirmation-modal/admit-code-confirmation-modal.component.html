@@ -1,0 +1,50 @@
+<!-- <ng-template #deleteComReference>
+    <div class="modal-header">
+        <p class="modal-title pull-left">Confirmation Message</p>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modelRef.hide()">
+    <span aria-hidden="true">&times;</span>
+    </button>
+    </div>
+    <div class="modal-body text-center">
+        <br>
+        <p> {{deleteMessage}}</p>
+        <br>
+        <button type="button" class="btn btn-sm btn-primary" (click)="delete();modelRef.hide()">Yes</button>
+        <button type="button" class="btn btn-sm btn-secondary" (click)="modelRef.hide()">No</button>
+    </div>
+</ng-template> -->
+
+<ng-template #admitCodeReference>
+    <div class="modal-main-box">
+    <div class="modal-delete-content-box">
+    <div>
+        <div class="row">
+            <div class="col-lg-12">
+                    <div class="close-button-content">
+                            <button mat-icon-button class="close-button" (click)="modelRef.hide()"><img src="/assets/images/clear-button.svg"></button>
+                        </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                    <div>
+                            <h6 class="text-center">Admit Code Confirmation</h6>
+                    </div>
+            </div>
+        </div>
+        
+          
+    
+    </div>
+    <div class="text-center">
+        <br>
+        <span> Please Enter Your Admit Code to Proceed !</span>
+        <br>
+        <input type="text" placeholder="Enter Your Admit Code" value="" [(ngModel)]="admitCodeText"/>
+        <br>
+        <button mat-button class="submit-button" (click)="delete();modelRef.hide()">Submit</button>
+        <button mat-button class="reset-button" (click)="modelRef.hide()">Cancel</button>
+    </div>
+</div>
+</div>
+</ng-template>

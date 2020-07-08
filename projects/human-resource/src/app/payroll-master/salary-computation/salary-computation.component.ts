@@ -948,9 +948,9 @@ export class SalaryComputationComponent implements OnInit {
 	async confirm() {
 		this.disabledApiButton = true;
 		var empArr = [];
+		let inputArr: any[] = [];
 		let empJson = {};
 		let monthWiseAdvance = [];
-		var inputArr = [];
 		var edit = false;
 		let inputJson = {};
 		var finJson = {};
@@ -966,6 +966,7 @@ export class SalaryComputationComponent implements OnInit {
 			for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
 				monthWiseAdvance = [];
 				empJson = {};
+				let inputJson = {};
 				monthWiseAdvance = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise ? this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_structure'].advance_month_wise : [];
 				const findex = monthWiseAdvance.findIndex(f => Number(f.month_id) === Number(this.searchForm.value.month_id) && Number(f.currentYear) === Number(this.currentYear));
 				if (findex !== -1) {
@@ -1023,7 +1024,12 @@ export class SalaryComputationComponent implements OnInit {
 						)
 					}
 				}
-				inputArr.push(inputJson);
+				inputArr.push({
+					emp_id: this.SALARY_COMPUTE_ELEMENT[i].emp_id,
+					session_id: this.session_id.ses_id,
+					emp_salary_compute_month_id: this.searchForm.value.month_id,
+					emp_salary_compute_data: inputJson
+				});
 			}
 			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
 			finJson['emp_salary_compute_data'] = inputArr;
@@ -1195,15 +1201,20 @@ export class SalaryComputationComponent implements OnInit {
 
 			}
 			if (!edit) {
-				this.commonAPIService.insertSalaryCompute(finJson).subscribe((result: any) => {
+				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
-					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-					this.getAllEmployee();
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+						this.checkForFilter();
+					});
 				});
 			} else {
-				this.commonAPIService.updateSalaryCompute(finJson).subscribe((result: any) => {
+				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
-					this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+						this.checkForFilter();
+						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+					});
 				});
 			}
 		}

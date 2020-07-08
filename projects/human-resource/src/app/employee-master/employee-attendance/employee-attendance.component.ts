@@ -845,7 +845,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			});
 			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed', 'error');
 		} else {
-			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (parseInt(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0', 10) - parseInt(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0', 10)).toString();
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (Number(this.formGroupArray[index].formGroup.value.emp_leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_availed : '0') - Number(this.formGroupArray[index].formGroup.value.emp_leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_granted : '0'));
 
 
 			// var tPresent = element ? element.emp_present : 0;
@@ -853,7 +853,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 			// element.emp_lwp = element && element ? element.emp_lwp : '';
 			// element.emp_total_attendance = presentDays;
-			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = (parseInt(this.totalPresentArr[index], 10) - parseInt(this.EMPLOYEE_ELEMENT[index]['emp_lwp'])).toString();
+			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = Number(this.totalPresentArr[index]) -Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 			//this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 			console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
@@ -952,11 +952,11 @@ export interface EmployeeElement {
 	emp_name: string;
 	emp_designation: string;
 	//emp_present: any;
-	emp_leave_availed: string;
+	emp_leave_availed: any;
 	emp_leave_granted: any;
-	emp_lwp: string;
-	emp_total_attendance: string;
-	emp_balance_leaves: string;
+	emp_lwp: any;
+	emp_total_attendance: any;
+	emp_balance_leaves: any;
 	emp_remarks: any;
 	emp_status: string;
 	action: any;
