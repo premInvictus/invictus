@@ -353,6 +353,9 @@
                                 (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important"
                                 [disabled]="disabledApiButton">Send Message<i
                                     class="fa fa-caret-up float-right margin-top-10"></i></button>
+                            <button *ngIf="!editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+                            (click)="$event.preventDefault();openSchedule()" style="margin-left:15 !important; width: 150px !important;"
+                            [disabled]="disabledApiButton">Schedule Message</button>
                             <button *ngIf="editMode" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
                                 (click)="$event.preventDefault();sendMessage()" style="margin-left:0 !important"
                                 [disabled]="disabledApiButton">Update
