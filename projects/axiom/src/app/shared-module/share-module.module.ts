@@ -6,6 +6,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { AccordionModule } from 'ngx-bootstrap';
 import { CKEditorModule } from 'ng2-ckeditor';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-modal/admit-code-confirmation-modal.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -99,7 +100,8 @@ import { TreeviewModule } from 'ngx-treeview';
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		ImagecropComponent,
-		AssignRightsMultipleComponent
+		AssignRightsMultipleComponent,
+		AdmitCodeConfirmationModalComponent
 	],
 	exports: [
 		DeleteModalComponent,
@@ -138,7 +140,8 @@ import { TreeviewModule } from 'ngx-treeview';
 		AddInstructionComponent,
 		ImageCropperModule,
 		AssignRightsMultipleComponent,
-		ImagecropComponent
+		ImagecropComponent,
+		AdmitCodeConfirmationModalComponent
 	],
 	entryComponents: [ImagecropComponent, AssignRightsMultipleComponent]
 })
