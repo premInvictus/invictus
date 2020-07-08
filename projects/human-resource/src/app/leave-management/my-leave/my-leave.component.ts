@@ -113,7 +113,11 @@ export class MyLeaveComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.MY_LEAVE_ELEMENT_DATA = [];
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({ 'leave_from': this.currentUser ? this.currentUser.login_id : '', 'leave_status': '' }).subscribe((result: any) => {
+		this.common.getEmployeeLeaveData({
+			'leave_from': this.currentUser ? this.currentUser.login_id : '',
+			'role_id' : this.currentUser.role_id,
+			'leave_status': ''
+		}).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
 				for (const item of result) {
@@ -499,37 +503,17 @@ export class MyLeaveComponent implements OnInit {
 		});
 	}
 	openLeaveApplicationForm() {
-		let eRecord;
-		const month_data: any[] = this.employeeRecord.emp_month_attendance_data &&
-			this.employeeRecord.emp_month_attendance_data.month_data &&
-			this.employeeRecord.emp_month_attendance_data.month_data.length > 0 ?
-			this.employeeRecord.emp_month_attendance_data.month_data : [];
-		;
-		if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-			month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-			eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-
-		} else {
-			eRecord = this.employeeRecord.emp_month_attendance_data &&
-				this.employeeRecord.emp_month_attendance_data.leave_opening_balance ?
-				this.employeeRecord.emp_month_attendance_data.leave_opening_balance : ''
-		}
-		console.log(eRecord);
-		if (eRecord && Number(eRecord) > 0) {
-			const dialogRef = this.dialog.open(LeaveApplicationComponent, {
-				width: '500px',
-				height: '500px',
-				data: ''
-			});
-			dialogRef.afterClosed().subscribe(dresult => {
-				if (dresult && dresult.data) {
-					this.submit(dresult.data, dresult.attachment);
-				}
-			});
-		} else {
-
-			this.common.showSuccessErrorMessage('No leave balance remaining', 'error');
-		}
+		localStorage.setItem('eRecord', JSON.stringify(this.employeeRecord));
+		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
+			width: '500px',
+			height: '500px',
+			data: ''
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult && dresult.data) {
+				this.submit(dresult.data, dresult.attachment);
+			}
+		});
 
 	}
 	deleteCancel() {

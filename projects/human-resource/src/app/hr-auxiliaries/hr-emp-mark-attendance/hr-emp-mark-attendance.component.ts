@@ -292,6 +292,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       au_profileimage: this.studentArray[index].au_profileimage ? this.studentArray[index].au_profileimage : '',
                       emp_name: new TitleCasePipe().transform(this.studentArray[index].emp_name),
                       emp_id: this.studentArray[index].emp_id,
+                       emp_code_no : this.studentArray[index].emp_code_no
                     });
                     this.finalArray.push({
                       dpt_id: this.studentArray[index].dpt_id ? this.studentArray[index].dpt_id : '',
@@ -348,6 +349,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                         au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
                         emp_name: new TitleCasePipe().transform(item.emp_name),
                         emp_id: item.emp_id,
+                        emp_code_no : item.emp_code_no
                       });
                       this.finalArray.push({
                         dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
@@ -442,6 +444,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
                       emp_name: new TitleCasePipe().transform(item.emp_name),
                       emp_id: item.emp_id,
+                      emp_code_no : item.emp_code_no
                     });
                     this.finalArray.push({
                       dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail

@@ -66,11 +66,11 @@ export class EmployeeDetailComponent implements OnInit {
 		});
 	}
 
-	getEmployeeDetail(emp_id) {
-		if (emp_id) {
-			this.commonAPIService.getEmployeeDetail({ emp_id: Number(emp_id) }).subscribe((result: any) => {
+	getEmployeeDetail(emp_code_no) {
+		if (emp_code_no) {
+			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				var finResult = result ? result : {}
-				finResult['last_record'] = emp_id ? emp_id : 0;
+				finResult['last_record'] = emp_code_no ? emp_code_no : 0;
 				this.employeeRecord = finResult;
 				this.rendorForm = true;
 			});
