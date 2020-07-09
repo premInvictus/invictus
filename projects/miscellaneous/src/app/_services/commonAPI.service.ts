@@ -277,5 +277,9 @@ export class CommonAPIService {
 	getPushNotification(value) {
 		return this.http.post(environment.apiHRUrl + '/communication/getPushNotification', value);
 	}
+	getSMSBalance(value) {
+		this.loader.startLoading();
+		return this.http.get(environment.apiHRUrl + '/communication/getSMSBalance', value);
+	}
 
 }

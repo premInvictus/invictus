@@ -62,6 +62,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	disabledApiButton = false;
 	module: any;
 	schedule:any;
+	smsleft = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -78,8 +79,15 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		console.log('reRenderForm',this.reRenderForm);
+		this.getSMSBalance()
 	}
-
+	getSMSBalance(){
+		this.commonAPIService.getSMSBalance({}).subscribe((result: any) => {
+			if (result && result.status == 'OK') {
+				this.smsleft = result.data.balance;
+			}
+		});
+	}
 	ngOnChanges() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(this.reRenderForm);
