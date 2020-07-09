@@ -64,6 +64,9 @@
                                 </mat-select>
                             </mat-form-field>
                         </div>
+                        <div class="col-3 text-right" *ngIf="messageForm.value.messageType === 'S'">
+                            SMS Left: <b>{{smsleft}}</b>
+                        </div>
                     </div>
                     <div class="message-container">
                         <div class="row">
