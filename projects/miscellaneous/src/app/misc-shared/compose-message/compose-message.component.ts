@@ -62,6 +62,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	disabledApiButton = false;
 	module: any;
 	schedule:any;
+	smsleft = 0;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -78,8 +79,15 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 	ngOnInit() {
 		this.buildForm();
 		console.log('reRenderForm',this.reRenderForm);
+		this.getSMSBalance()
 	}
-
+	getSMSBalance(){
+		this.commonAPIService.getSMSBalance({}).subscribe((result: any) => {
+			if (result && result.status == 'OK') {
+				this.smsleft = result.data.balance;
+			}
+		});
+	}
 	ngOnChanges() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		console.log(this.reRenderForm);
@@ -821,7 +829,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 					"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
-					"msg_thread": []
+					"msg_thread": [],
+					"vendor_msgid": ''
 				}
 				if(this.schedule){
 					inputJson.msg_schedule_date=this.schedule.schedule_date.format('YYYY-MM-DD');
