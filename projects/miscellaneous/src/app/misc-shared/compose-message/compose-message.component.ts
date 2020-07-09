@@ -829,7 +829,8 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 					"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
-					"msg_thread": []
+					"msg_thread": [],
+					"vendor_msgid": ''
 				}
 				if(this.schedule){
 					inputJson.msg_schedule_date=this.schedule.schedule_date.format('YYYY-MM-DD');
