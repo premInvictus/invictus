@@ -125,15 +125,21 @@ export class TeinvilagationComponent implements OnInit {
 							if (result1 && result1.status === 'ok') {
 								this.studentArray = result1.data;
 								const flag = 0;
+								// for (const item of this.presentSArray) {
+								// 	let findex = 0;
+								// 	for (const item2 of this.studentArray) {
+								// 		if (Number(item.eva_login_id) === Number(item2.au_login_id)) {
+								// 			this.studentArray.splice(findex, 1);
+								// 			break;
+								// 		} else {
+								// 			findex++;
+								// 		}
+								// 	}
+								// }
 								for (const item of this.presentSArray) {
-									let findex = 0;
-									for (const item2 of this.studentArray) {
-										if (Number(item.eva_login_id) === Number(item2.au_login_id)) {
-											this.studentArray.splice(findex, 1);
-											break;
-										} else {
-											findex++;
-										}
+									let findex = this.studentArray.findIndex(e => e.au_login_id == item.eva_login_id);
+									if(findex != -1){
+										this.studentArray.splice(findex, 1);
 									}
 								}
 								this.absentArray = this.studentArray;
