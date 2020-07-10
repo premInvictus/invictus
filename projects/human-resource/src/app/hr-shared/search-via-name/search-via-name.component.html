@@ -42,7 +42,7 @@
                         <tr *ngFor="let item of studentArrayByName let i = index">
                           <td>{{i+1}}</td>
                           <td><a style="color: #007bff !important; cursor: pointer !important"
-                              (click)="setId(item.emp_code_no)">{{item.emp_code_no}}</a>
+                              (click)="setId(item,item.emp_code_no)">{{item.emp_code_no}}</a>
                           </td>
                           <td style="text-align: left">
                             <span class="icon-spacer">{{item.emp_name}}

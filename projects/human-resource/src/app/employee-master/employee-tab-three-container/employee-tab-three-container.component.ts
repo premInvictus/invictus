@@ -61,7 +61,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	];
 	transMode: any[] = [
 		{ id: 1, name: 'Bank Transfer' },
-		{ id: 2, name: 'Cash Transfer' }
+		{ id: 2, name: 'Cheque Transfer' }
 	];
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },

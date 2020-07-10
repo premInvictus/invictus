@@ -46,7 +46,7 @@ export class SalarySlipModalComponent implements OnInit {
           this.header = this.header.replace(/{{si_school_address}}/g, this.schoolInfo.school_address);
           this.header = this.header.replace(/{{si_school_pin}},/g, '');
           this.header = this.header.replace(/{{si_school_phone}}/g, this.schoolInfo.school_phone);
-          
+
         }
 
       }
@@ -61,11 +61,15 @@ export class SalarySlipModalComponent implements OnInit {
       }
     });
   }
-  getGrossSalary(values: any[]) {
-    return values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val);
+  getGrossSalary(values: any[], value2: any) {
+    const td = value2.emp_salary_structure && value2.emp_salary_structure.td ?
+      Math.round(Number(value2.emp_salary_structure.td)) : 0;
+    return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + td;
   }
-  getTotalDeductions(values: any[]) {
-    return values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val);
+  getTotalDeductions(values: any[], value2: any) {
+    const tds = value2.emp_salary_structure && value2.emp_salary_structure.tds ?
+      Math.round(Number(value2.emp_salary_structure.tds)) : 0;
+    return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
   }
   closeDialog() {
     this.dialogRef.close();
@@ -74,12 +78,12 @@ export class SalarySlipModalComponent implements OnInit {
     this.common.generatePaySlip({
       values: this.values,
       school: this.schoolInfo,
-      employeeDetails : this.employeeDetails
+      employeeDetails: this.employeeDetails
     }).subscribe((result: any) => {
-        if (result) {
-          const length = result.data.fileUrl.split('/').length;
-          saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
-        }
+      if (result) {
+        const length = result.data.fileUrl.split('/').length;
+        saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+      }
     });
   }
 
