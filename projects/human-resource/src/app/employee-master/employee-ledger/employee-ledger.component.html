@@ -14,7 +14,8 @@
     <div class="col-12">
       <app-emp-common-profile [loginId]="lastRecordId" (next)="getEmployeeLedger($event.emp_id, $event.emp_code_no)"
       [total]= "totalObj"
-        (prev)="getEmployeeLedger($event.emp_id, $event.emp_code_no)" 
+        (prev)="getEmployeeLedger($event.emp_id, $event.emp_code_no)"
+        (key)="getEmployeeLedger($event.emp_id, $event.emp_code_no)" 
         (first)="getEmployeeLedger($event.emp_id, $event.emp_code_no)" 
         (last)="getEmployeeLedger($event.emp_id, $event.emp_code_no)">
       </app-emp-common-profile>

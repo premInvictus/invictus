@@ -37,9 +37,9 @@
                 </td>
                 <td class="cus-td td-r">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails.emp_designation_detail && 
-                  employeeDetails.emp_designation_detail.des_name ? 
-                  (employeeDetails.emp_designation_detail.des_name  | titlecase): '-'}}</td>
+                  {{values.action.details.emp_designation_detail && 
+                  values.action.details.emp_designation_detail.name ? 
+                  (values.action.details.emp_designation_detail.name  | titlecase): '-'}}</td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b>Address </b>
@@ -173,6 +173,16 @@
                   {{bas.value ? (bas.value | number) : '-'}}
                 </td>
               </tr>
+              <tr>
+                <td class="cus-td">
+                  T.A
+                </td>
+                <td class="cus-td" align="right">
+                  {{values.action.details && values.action.details.emp_salary_structure
+                  && values.action.details.emp_salary_structure.td  ? 
+                  values.action.details.emp_salary_structure.td : '-'}}
+                </td>
+              </tr>
             </tbody>
           </table>
         </td>
@@ -193,6 +203,16 @@
                   {{bas.value ? (bas.value | number) : '-'}}
                 </td>
               </tr>
+              <tr>
+                <td class="cus-td">
+                  T. D .S
+                </td>
+                <td class="cus-td" align="right">
+                  {{values.action.details && values.action.details.emp_salary_structure
+                  && values.action.details.emp_salary_structure.tds  ? 
+                  values.action.details.emp_salary_structure.tds : '-'}}
+                </td>
+              </tr>
             </tbody>
           </table>
         </td>
@@ -211,7 +231,7 @@
                 <td class="cus-td" style="background: #FFDBC0 !important;padding: 8px;
                 border-bottom: 0px solid;"><b>Gross Salary</b></td>
                 <td class="cus-td" align="right" style="background: #FFDBC0 !important;padding: 8px;">
-                  {{getGrossSalary(values.action.details.empShacolumns) | number}}
+                  {{getGrossSalary(values.action.details.empShacolumns, values.action.details) | number}}
                 </td>
               </tr>
             </tbody>
@@ -225,7 +245,7 @@
                   <b>Total Deductions</b>
                 </td>
                 <td class="cus-td" align="right" style="background: #FFDBC0 !important;padding: 8px;">
-                  {{getTotalDeductions(values.action.details.empShdcolumns)| number |zerodash}}
+                  {{getTotalDeductions(values.action.details.empShdcolumns , values.action.details)| number |zerodash}}
                 </td>
               </tr>
             </tbody>
@@ -244,19 +264,21 @@
             <tbody>
               <tr>
                 <td class="cus-td">Gross Salary</td>
-                <td class="cus-td" align="right">{{getGrossSalary(values.action.details.empShacolumns) | number}}</td>
+                <td class="cus-td" align="right">
+                  {{getGrossSalary(values.action.details.empShacolumns, values.action.details) | number}}</td>
               </tr>
               <tr>
                 <td class="cus-td">Total Deductions</td>
-                <td class="cus-td" align="right">{{getTotalDeductions(values.action.details.empShdcolumns)| number
+                <td class="cus-td" align="right">{{getTotalDeductions(values.action.details.empShdcolumns, 
+                  values.action.details)| number
                 |zerodash}}</td>
               </tr>
               <tr>
                 <td class="cus-td">Net Salary (Payout)</td>
                 <td class="cus-td" align="right">
 
-                  {{((getGrossSalary(values.action.details.empShacolumns)) - 
-                  (getTotalDeductions(values.action.details.empShdcolumns))| number)}}
+                  {{((getGrossSalary(values.action.details.empShacolumns, values.action.details)) - 
+                  (getTotalDeductions(values.action.details.empShdcolumns, values.action.details))| number)}}
 
                 </td>
               </tr>
