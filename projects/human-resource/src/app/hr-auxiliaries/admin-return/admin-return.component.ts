@@ -1198,6 +1198,10 @@ export class AdminReturnComponent implements OnInit {
 
 	}
 
+	reset() {
+		this.getSalaryComputeEmployee();
+	}
+
 }
 export interface AdminReturnElement {
 	srno: number;
