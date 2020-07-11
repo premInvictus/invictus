@@ -203,7 +203,7 @@
                   {{bas.value ? (bas.value | number) : '-'}}
                 </td>
               </tr>
-              <tr>
+              <tr *ngIf="values.configs && values.configs.tds">
                 <td class="cus-td">
                   T. D .S
                 </td>
@@ -245,7 +245,7 @@
                   <b>Total Deductions</b>
                 </td>
                 <td class="cus-td" align="right" style="background: #FFDBC0 !important;padding: 8px;">
-                  {{getTotalDeductions(values.action.details.empShdcolumns , values.action.details)| number |zerodash}}
+                  {{getTotalDeductions(values.action.details.empShdcolumns , values.action.details, values)| number |zerodash}}
                 </td>
               </tr>
             </tbody>
@@ -270,7 +270,7 @@
               <tr>
                 <td class="cus-td">Total Deductions</td>
                 <td class="cus-td" align="right">{{getTotalDeductions(values.action.details.empShdcolumns, 
-                  values.action.details)| number
+                  values.action.details, values)| number
                 |zerodash}}</td>
               </tr>
               <tr>
@@ -278,7 +278,7 @@
                 <td class="cus-td" align="right">
 
                   {{((getGrossSalary(values.action.details.empShacolumns, values.action.details)) - 
-                  (getTotalDeductions(values.action.details.empShdcolumns, values.action.details))| number)}}
+                  (getTotalDeductions(values.action.details.empShdcolumns, values.action.details, values))| number)}}
 
                 </td>
               </tr>
