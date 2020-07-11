@@ -69,6 +69,7 @@ export class BroadcastComponent implements OnInit {
 			'no',
 			'user_type',
 			'schedule_date',
+			'schedule_date_time',
 			'subject',
 			'attachment',
 			'send_by',
@@ -94,6 +95,7 @@ export class BroadcastComponent implements OnInit {
 			'no',
 			'user_type',
 			'schedule_date',
+			'schedule_date_time',
 			'subject',
 			'send_by',
 			'status',
@@ -153,6 +155,13 @@ export class BroadcastComponent implements OnInit {
 			//tempObj['description'] = this.scheduleMessageData[i]['msg_description'];
 			//tempObj['class'] = this.scheduleMessageData[i]['class_name'] + ' - ' + this.scheduleMessageData[i]['sec_name'];
 			tempObj['schedule_date'] = this.scheduleMessageData[i]['msg_created_date'];
+			if(this.scheduleMessageData[i]['msg_schedule_date'] && this.scheduleMessageData[i]['msg_schedule_time']){
+				tempObj['schedule_date_time'] = this.scheduleMessageData[i]['msg_schedule_date']+' '+this.scheduleMessageData[i]['msg_schedule_time'];
+
+			} else{
+				tempObj['schedule_date_time'] = '';
+
+			}
 			if (this.scheduleMessageData[i]['msg_receivers'] === 'Student') {
 				tempObj['user_type'] = 'Student';
 			} else if (this.scheduleMessageData[i]['msg_receivers'] === 'Parent') {
@@ -174,6 +183,7 @@ export class BroadcastComponent implements OnInit {
 			this.USER_ELEMENT_DATA.push(tempObj);
 			counter++;
 		}
+		console.log('this.USER_ELEMENT_DATA',this.USER_ELEMENT_DATA);
 		this.scheduleMessageDataSource = new MatTableDataSource(this.USER_ELEMENT_DATA);
 		this.scheduleMessageDataSource.paginator = this.paginator;
 		if (this.sort) {

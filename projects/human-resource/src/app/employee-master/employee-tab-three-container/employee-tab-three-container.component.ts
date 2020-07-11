@@ -18,6 +18,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	@Input() employeedetails;
 	addOnly = false;
 	editOnly = false;
+	deductions: any = {};
 	viewOnly = true;
 	saveFlag = false;
 	isSubmit = false;
@@ -108,6 +109,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				}
 			}
 		});
+		this.getGlobalSettings();
 	}
 	setActionControls(data) {
 		if (data.addMode) {
@@ -269,7 +271,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.empPaymentModeDetail.push(this.fbuild.group({
 			pay_mode: '',
 			calculation_type: '',
-			transfer_type : 0,
+			transfer_type: 0,
 			value: ''
 		}));
 	}
@@ -1106,5 +1108,16 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 
 	}
 
+	getGlobalSettings() {
+		this.erpCommonService.getGlobalSetting({ gs_alias: 'deduction_config' }).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				if (res.data[0] && res.data[0].gs_value) {
+					this.deductions = JSON.parse(res.data[0].gs_value);
+				} else {
+					this.deductions = {};
+				}
+			}
+		});
 
+	}
 }
