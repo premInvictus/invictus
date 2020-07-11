@@ -58,6 +58,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	designationArray;
 	wingArray;
 	disabledApiButton = false;
+	today = new Date();
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
@@ -486,6 +487,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
 					this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
+
 				} else {
 					this.disabledApiButton = false;
 					this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
@@ -696,7 +698,15 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {
-						this.cityCountryArray = result.data;
+						if(result.data.length > 0){
+							this.cityCountryArray = result.data;
+						}else {
+							this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+							$event.target.value = '';
+						}
+					} else{
+						this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+						$event.target.value = '';
 					}
 				});
 			}
@@ -711,10 +721,17 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 	}
 	getCityPerId(item: any) {
 		this.cityId = item.cit_id;
-		this.personalDetails.patchValue({
-			p_city: this.getCityName(item.cit_id),
-			p_state: item.sta_id,
-		});
+		if(item.cit_id){
+			this.personalDetails.patchValue({
+				p_city: this.getCityName(item.cit_id),
+				p_state: item.sta_id,
+			});
+		} else {
+			this.personalDetails.patchValue({
+				p_city: '',
+				p_state: '',
+			});
+		}
 	}
 
 	getCityName(id) {

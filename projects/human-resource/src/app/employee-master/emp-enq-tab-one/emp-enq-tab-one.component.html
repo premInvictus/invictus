@@ -79,7 +79,7 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field class="form-field" appearance="outline">
-              <mat-label>State</mat-label>
+              <mat-label>State asdfa</mat-label>
               <mat-select formControlName="p_state" placeholder="State" required disabled="true"
                 [errorStateMatcher]="confirmValidParentMatcher">
                 <mat-option value="">Please Select</mat-option>
@@ -108,6 +108,9 @@
               <input class="text-capitalize" matInput placeholder="Primary Mobile No." required minlength="10"
                 maxlength="10" pattern="[0-9]*" [readonly]="viewOnly" formControlName="pri_mobile"
                 [errorStateMatcher]="confirmValidParentMatcher" />
+                <mat-error>
+                  This field is required
+                </mat-error>
             </mat-form-field>
             <i class="fab fa-whatsapp whatsapp-field-icon" matTooltip="Mark as What's app No."
               (click)="copyForWhatsapp('primary')" matPrefix></i>
