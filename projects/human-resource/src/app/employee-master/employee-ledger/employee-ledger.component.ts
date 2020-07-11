@@ -6,6 +6,7 @@ import { DecimalPipe, TitleCasePipe } from '@angular/common';
 import { SalarySlipModalComponent } from '../../hr-shared/salary-slip-modal/salary-slip-modal.component';
 import * as Excel from 'exceljs/dist/exceljs';
 import { saveAs } from 'file-saver';
+import { ErpCommonService } from 'src/app/_services';
 @Component({
 	selector: 'app-employee-ledger',
 	templateUrl: './employee-ledger.component.html',
@@ -45,6 +46,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	sessionName: string;
 	tempData: any[] = [];
 	length = 0;
+	deductions: any;
 	alphabetJSON = {
 		1: 'A',
 		2: 'B',
@@ -93,11 +95,25 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 
 	};
 	constructor(private commonAPIService: CommonAPIService, private sis: SisService,
+		private erpCommonService: ErpCommonService,
 		private dialog: MatDialog) {
+
+	}
+	getGlobalSettings() {
+		this.erpCommonService.getGlobalSetting({ gs_alias: 'deduction_config' }).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				if (res.data[0] && res.data[0].gs_value) {
+					this.deductions = JSON.parse(res.data[0].gs_value);
+				} else {
+					this.deductions = {};
+				}
+			}
+		});
 
 	}
 
 	ngOnInit() {
+		this.getGlobalSettings();
 		this.getSchool();
 		this.getEmployeeNavigationRecords();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -389,6 +405,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		}
 	}
 	openSalarySlip(item, emp_id) {
+		item['configs'] = this.deductions;
 		if (item.netearnings !== '-') {
 			const dialogRef: any = this.dialog.open(SalarySlipModalComponent, {
 				data: {
