@@ -4,6 +4,7 @@ import { SisService, CommonAPIService, SmartService } from '../../_services/inde
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import { MatDialog } from '@angular/material';
+import { ErpCommonService } from 'src/app/_services';
 @Component({
 	selector: 'app-employee-attendance',
 	templateUrl: './employee-attendance.component.html',
@@ -14,6 +15,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
+	sessionArray: any[] = [];
 	formGroupArray: any[] = [];
 	totalPresentArr: any[] = [];
 	//editFlag = false;
@@ -32,12 +34,16 @@ export class EmployeeAttendanceComponent implements OnInit {
 	editAllStatus = true;
 	disabledApiButton = false;
 	holidayArray: any[] = [];
+	sessionName : any;
+	currSess: any;
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private smartService: SmartService,
 		private commonAPIService: CommonAPIService,
-		private sisService: SisService
+		private sisService: SisService,
+		private erpCommonService: ErpCommonService
+
 	) {
 
 		this.session_id = JSON.parse(localStorage.getItem('session'));
@@ -45,6 +51,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 	ngOnInit() {
 		this.buildForm();
+		this.getSession();
 	}
 
 	buildForm() {
@@ -79,6 +86,21 @@ export class EmployeeAttendanceComponent implements OnInit {
 	getDaysInMonth(month, year) {
 		return new Date(year, month, 0).getDate();
 	};
+	getSession() {
+		this.erpCommonService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						if (this.session_id) {
+							this.sessionName = this.sessionArray[this.session_id.ses_id];
+						}
+
+					}
+				});
+	}
 
 	getEmployeeDetail() {
 		if (this.searchForm.value.month_id) {
@@ -88,7 +110,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 				emp_status: this.searchForm.value.status_id,
 				emp_cat_id: this.searchForm.value.cat_id,
 				session_id: this.session_id.ses_id,
-				from_attendance: true
+				from_attendance: true,
+				year : this.currSess
 			};
 			var no_of_days2 = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			const inputJson2: any = {};
@@ -865,6 +888,12 @@ export class EmployeeAttendanceComponent implements OnInit {
 
 	getMonthName(ev) {
 		this.currentMonthName = ev.source.selected.viewValue;
+		if (Number(ev.value) === 1 || Number(ev.value) === 2 || Number(ev.value) === 3) {
+			this.currSess = this.sessionName.split('-')[1];
+		} else {
+			this.currSess = this.sessionName.split('-')[0];
+		}
+		
 	}
 	getStatusName(ev) {
 		this.currentStatusName = ev.source.selected.viewValue;

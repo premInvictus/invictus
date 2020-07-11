@@ -33,6 +33,7 @@ export class SetupComponent implements OnInit {
         { id: '1', name: 'Yes' },
         { id: '0', name: 'No' },
     ];
+    flaggedForm: FormGroup;
     departmentArray: any[] = [];
     curl_call_urlArray: any[] = [];
     idcardForm: FormGroup;
@@ -612,6 +613,20 @@ export class SetupComponent implements OnInit {
                             });
                         }
                     }
+                    if (value === 'flagged deductions') {
+                        const deduction: any = JSON.parse(this.settingForm.value.deduction_config);
+                        if (Object.keys(deduction).length > 0) {
+                            this.flaggedForm.patchValue({
+                                tds: deduction.tds,
+                                gratuity: deduction.gratuity
+                            });
+                        } else {
+                            this.flaggedForm.patchValue({
+                                tds: false,
+                                gratuity: false
+                            });
+                        }
+                    }
                     if (value === 'fees formats') {
                         if (Object.keys(this.settingForm.value.invoice_receipt_format).length > 0) {
                             const formatS = JSON.parse(this.settingForm.value.invoice_receipt_format);
@@ -686,9 +701,35 @@ export class SetupComponent implements OnInit {
             //console.log(this.settingForm);
         });
     }
+    enableTDS($event) {
+        if ($event.checked) {
+            this.flaggedForm.patchValue({
+                tds: true
+            });
+        } else {
+            this.flaggedForm.patchValue({
+                tds: false
+            });
+        }
+    }
+    enableGratuity($event) {
+        if ($event.checked) {
+            this.flaggedForm.patchValue({
+                gratuity: true
+            });
+        } else {
+            this.flaggedForm.patchValue({
+                gratuity: false
+            });
+        }
+    }
     buildForm() {
         this.payForm = this.fbuild.group({
             format: ''
+        });
+        this.flaggedForm = this.fbuild.group({
+            tds: false,
+            gratuity: false
         });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
@@ -878,6 +919,11 @@ export class SetupComponent implements OnInit {
                     headerFormat: this.payForm.value.format
                 });
             }
+        }
+        if (this.settingForm.value && this.settingForm.value.deduction_config) {
+
+            this.settingForm.value.deduction_config = JSON.stringify(this.flaggedForm.value);
+
         }
         if (this.settingForm.value && this.settingForm.value.idcard_printsetup) {
             if (this.idCardSettings.length > 0) {
