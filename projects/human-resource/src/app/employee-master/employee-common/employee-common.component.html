@@ -38,7 +38,7 @@
               <div class="col-12 text-center">
                 <span class="font-size-16 font-medium">Employee ID</span>&nbsp;
                 <span class="font-size-16">
-                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Students"
+                  <i style="cursor: pointer;" class="fas fa-search" matTooltip="Search Employee"
                     (click)="openSearchDialog()"></i>
                 </span>
               </div>
@@ -109,6 +109,9 @@
                     <mat-option value="{{item?.config_id}}" *ngFor="let item of designationArray">{{item?.name}}
                     </mat-option>
                   </mat-select>
+                  <mat-error>
+                    This field is required
+                  </mat-error>
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
