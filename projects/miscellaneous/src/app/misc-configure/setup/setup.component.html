@@ -40,7 +40,8 @@
                                 control.gs_alias !== 'invoice_receipt_format'
                                 && control.gs_alias !== 'enquiry_registration_email_sms'
                                 && control.gs_alias !== 'payment_banks'
-                                && control.gs_alias !== 'employee_salary_slip'">
+                                && control.gs_alias !== 'employee_salary_slip'
+                                && control.gs_alias !== 'deduction_config'">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                   style="margin-top: 20px;">
                                   <mat-label>{{control.gs_name | titlecase}}
@@ -332,6 +333,42 @@
                                         </ng-container>
                                       </ng-container>
                                     </ng-container>
+                                  </ng-container>
+                                </div>
+                              </div>
+                              <div class="row" *ngIf="control.gs_alias === 'deduction_config'">
+                                <div class="col-12">
+                                  <ng-container *ngIf="control.gs_alias == 'deduction_config'">
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <div class="text-center">
+                                          <span style="font-weight: bold;
+                          font-size: 16px;
+                          text-transform: uppercase;">Flagged Deduction Configurations</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <form [formGroup]="flaggedForm">
+                                          <div class="row">
+                                            <div class="col-12">
+                                              <mat-checkbox (change)="enableTDS($event)"
+                                              formControlName="tds"> &nbsp;&nbsp;Enable T.D.S
+                                              </mat-checkbox>
+                                            </div>
+                                          </div>
+                                          <div class="row">
+                                            <div class="col-12">
+                                              <mat-checkbox  formControlName="gratuity" 
+                                              (change)="enableGratuity($event)"> &nbsp;&nbsp;Enable
+                                                Gratuity
+                                              </mat-checkbox>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
                                   </ng-container>
                                 </div>
                               </div>
@@ -2106,7 +2143,8 @@
                                               </div>
                                               <div class="col-2"><br>
                                                 <mat-checkbox (change)="enableDisablePg($event, i)"
-                                                  [checked]="checkIfpgEnabled(i)">{{checkedArray[i]}}</mat-checkbox>
+                                                  [checked]="checkIfpgEnabled(i)">
+                                                  {{checkedArray[i]}}</mat-checkbox>
                                               </div>
                                             </div>
                                           </form>

@@ -392,7 +392,8 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
-                                    <mat-form-field class="form-field" appearance="outline">
+                                    <mat-form-field class="form-field" appearance="outline"
+                                    *ngIf="deductions && deductions.tds">
                                         <mat-label>TDS</mat-label>
                                         <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput
                                             [readonly]="viewOnly" placeholder="TDS">
@@ -400,7 +401,8 @@
                                             This field is required
                                         </mat-error>
                                     </mat-form-field>
-                                    <mat-form-field class="form-field" appearance="outline">
+                                    <mat-form-field class="form-field" appearance="outline"
+                                    *ngIf="deductions && deductions.gratuity">
                                         <mat-label>Gratuity</mat-label>
                                         <input type="text" formControlName="gratuity" matInput [readonly]="viewOnly"
                                             placeholder="Gratuity">
@@ -525,9 +527,6 @@
                                                     <mat-label>Starting Month</mat-label>
                                                     <mat-select formControlName="starting_month" [disabled]="viewOnly || 
                                                     item.value.freezed">
-                                                        <mat-option value="1">January</mat-option>
-                                                        <mat-option value="2">February</mat-option>
-                                                        <mat-option value="3">March</mat-option>
                                                         <mat-option value="4">April</mat-option>
                                                         <mat-option value="5">May</mat-option>
                                                         <mat-option value="6">June</mat-option>
@@ -537,6 +536,9 @@
                                                         <mat-option value="10">October</mat-option>
                                                         <mat-option value="11">November</mat-option>
                                                         <mat-option value="12">December</mat-option>
+                                                        <mat-option value="1">January</mat-option>
+                                                        <mat-option value="2">February</mat-option>
+                                                        <mat-option value="3">March</mat-option>
                                                     </mat-select>
                                                 </mat-form-field>
                                             </form>
