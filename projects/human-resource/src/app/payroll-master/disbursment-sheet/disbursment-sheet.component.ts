@@ -1161,6 +1161,10 @@ export class DisbursmentSheetComponent implements OnInit {
 			saveAs(blob, fileName);
 		});
 	}
+
+	searchCancel() {
+		this.searchByFilter = false;
+	}
 }
 
 

@@ -15,6 +15,7 @@ export class AdvancedSearchModalComponent implements OnInit {
   dialogRef: MatDialogRef<AdvancedSearchModalComponent>;
   @ViewChild('searchModal') searchModal;
   @Output() searchOk = new EventEmitter;
+  @Output() searchCancel = new EventEmitter;
   formGroupArray: any[] = [];
   placeholder: any[] = [];
   fieldType: any[] = [];
@@ -286,6 +287,7 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   closeDialog() {
     this.dialogRef.close();
+    this.searchCancel.emit();
   }
   submit() {
     const dataArr: any[] = [];

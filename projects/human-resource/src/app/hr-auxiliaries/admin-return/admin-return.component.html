@@ -132,7 +132,7 @@
                   <ng-container *ngIf="shacolumns[i]['header'] === 'Basic Pay'">
                     <mat-form-field class="form-field lib-form">
                       <span class="text-center text-capitalize">
-                        <input matInput
+                        <input matInput type="number"
                           [placeholder]="!(formGroupArray2[element.srno - 1]?.value[shacolumns[i]['header']]) ? 'Type Here.' : ''"
                           formControlName="{{shacolumns[i]['header']}}" (keyup)="getNetSalary()"
                           value="{{element?.empShacolumns[i]['value']}}" autocomplete="off" />
@@ -144,7 +144,7 @@
                       *ngIf="(shacolumns[i]['data'].sc_calculation_type ) === 'text' || (shacolumns[i]['data'].sc_calculation_type) === 'Text'">
                       <mat-form-field class="form-field lib-form">
                         <span class="text-center text-capitalize">
-                          <input matInput
+                          <input matInput type="number"
                             [placeholder]="!(formGroupArray2[element.srno - 1]?.value[shacolumns[i]['header']]) ? 'Type Here.' : ''"
                             formControlName="{{shacolumns[i]['header']}}" (keyup)="getNetSalary()"
                             value="{{element?.empShacolumns[i]['value']}}" autocomplete="off" />
@@ -153,7 +153,7 @@
                     </ng-container>
                     <ng-container *ngIf="shacolumns[i]['data'].sc_calculation_type === '%'">
                       <mat-form-field class="form-field lib-form">
-                        <input matInput
+                        <input matInput type="number"
                           [placeholder]="!(formGroupArray2[element.srno - 1]?.value[shacolumns[i]['header']]) ? 'Type Here.' : ''"
                           formControlName="{{shacolumns[i]['header']}}"
                           [ngModel]="getDynamicValue(shacolumns[i]['data'].sc_value,formGroupArray2[element.srno - 1]?.value['Basic Pay'])"
@@ -185,7 +185,7 @@
                     *ngIf="(shdcolumns[i]['data'].sc_calculation_type ) === 'text' || (shdcolumns[i]['data'].sc_calculation_type) === 'Text'">
                     <mat-form-field class="form-field lib-form">
                       <span class="text-center text-capitalize">
-                        <input matInput
+                        <input matInput type="number"
                           [placeholder]="!(formGroupArray[element.srno - 1]?.value[shdcolumns[i]['header']]) ? 'Type Here.' : ''"
                           formControlName="{{shdcolumns[i]['header']}}" (keyup)="getNetSalary()"
                           value="{{element?.empShdcolumns[i]['value']}}" autocomplete="off" />
@@ -194,7 +194,7 @@
                   </ng-container>
                   <ng-container *ngIf="shdcolumns[i]['data'].sc_calculation_type === '%'">
                     <mat-form-field class="form-field lib-form">
-                      <input matInput
+                      <input matInput type="number"
                         [placeholder]="!(formGroupArray[element.srno - 1]?.value[shdcolumns[i]['header']]) ? 'Type Here.' : ''"
                         formControlName="{{shdcolumns[i]['header']}}"
                         [ngModel]="getDynamicValue(shdcolumns[i]['data'].sc_value,formGroupArray2[element.srno - 1]?.value['Basic Pay'])"

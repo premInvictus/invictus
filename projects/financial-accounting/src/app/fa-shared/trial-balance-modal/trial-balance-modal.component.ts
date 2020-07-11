@@ -53,7 +53,7 @@ export class TrialBalanceModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
-    
+    this.checkPartialPaymentStatus();
     
   }
 
@@ -73,11 +73,12 @@ export class TrialBalanceModalComponent implements OnInit {
   }
 
   checkBlankArray(param) {
+    console.log('in')
     this.blankArr = [];
-    this.debitRow = this.partialPaymentStatus ? (param['total_receipt_amt'] > 0 ? 1 : 0) : 0;
-    this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'] && param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length+1 : 0) : 0;
-    this.debitRow = this.debitRow + this.debitSideBlankArr.length;
-    this.creditRow = this.creditRow + this.creditSideBlankArr.length;
+    this.debitRow =  (param['total_receipt_amt'] > 0 ? 1 : 0) ;
+    this.creditRow =  (param['invoice_due_data'] && param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length+1 : 0) ;
+    this.debitRow =  this.debitSideBlankArr.length;
+    this.creditRow =  this.creditSideBlankArr.length;
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
