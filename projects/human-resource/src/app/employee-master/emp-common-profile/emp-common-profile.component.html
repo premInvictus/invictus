@@ -76,16 +76,16 @@
             <div class="col-12 text-left tab-remove-padding">
               <span class="font-size-14 font-light">Designation:</span>
               <span class="font-size-14 font-bold">{{employeeDetails.emp_designation_detail && 
-                employeeDetails.emp_designation_detail.des_name ? 
-                (employeeDetails.emp_designation_detail.des_name  | titlecase): '-'}}</span>
+                employeeDetails.emp_designation_detail.name ? 
+                (employeeDetails.emp_designation_detail.name  | titlecase): '-'}}</span>
             </div>
             <div class="col-12 text-left tab-remove-padding">
               <span style="position: relative;
               top: 10px;" class="font-size-14 font-light"> Department: </span>
               <span style="position: relative;
               top: 10px;" class="font-size-14 font-bold"> {{employeeDetails.emp_department_detail && 
-              employeeDetails.emp_department_detail.dpt_name ? 
-              (employeeDetails.emp_department_detail.dpt_name  | titlecase): '-'}}</span>
+              employeeDetails.emp_department_detail.name ? 
+              (employeeDetails.emp_department_detail.name  | titlecase): '-'}}</span>
             </div>
           </div>
         </div>

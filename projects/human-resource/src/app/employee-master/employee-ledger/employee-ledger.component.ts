@@ -27,7 +27,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	totalObj: any = {};
 	transMode: any[] = [
 		{ id: 1, name: 'Bank Transfer' },
-		{ id: 2, name: 'Cash Transfer' }
+		{ id: 2, name: 'Cheque Transfer' }
 	];
 	EMPLOYEE_LEDGER_ELEMENT: any[] = [];
 	ledgerDisplayedColumns: any[] = ['sno', 'particulars', 'month', 'attendance', 'netearnings',
@@ -178,6 +178,8 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 	}
 
 	getEmployeeLedger(emp_id, emp_code_no) {
+		this.EMPLOYEE_LEDGER_ELEMENT = [];
+		this.ledgerDataSource = new MatTableDataSource<any>(this.EMPLOYEE_LEDGER_ELEMENT);
 		this.commonAPIService.getEmployeeLedger({ emp_id: emp_id , emp_code_no : emp_code_no}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.EMPLOYEE_LEDGER_ELEMENT = [];
@@ -329,7 +331,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 				this.cacheSpan('mop', d => d.mop);
 				this.cacheSpan('remarks', d => d.remarks);
 				this.totalObj['particulars'] = 'Grand Total';
-				this.totalObj['attendance'] = (this.tempData.map(f => Math.round(Number(f.attendance))).reduce((acc, val) => acc + val, 0));
+				this.totalObj['attendance'] = (this.tempData.map(f => Number(f.attendance)).reduce((acc, val) => acc + val, 0));
 				this.totalObj['leaves'] = (this.tempData.map(f => Math.round(Number(f.leaves))).reduce((acc, val) => acc + val, 0));
 				this.totalObj['netearnings'] = this.tempData.map(f => Math.round(Number(f.netearnings))).reduce((acc, val) => acc + val, 0);
 				this.totalObj['deductions'] = this.tempData.map(f => Math.round(Number(f.deductions))).reduce((acc, val) => acc + val, 0);

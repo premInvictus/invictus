@@ -109,7 +109,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	filterJson = {};
 	transMode: any[] = [
 		{ id: 1, name: 'Bank Transfer' },
-		{ id: 2, name: 'Cash Transfer' }
+		{ id: 2, name: 'Cheque Transfer' }
 	];
 	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);

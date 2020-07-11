@@ -47,8 +47,8 @@ export class SearchViaNameComponent implements OnInit {
       });
     }
   }
-  setId(emp_code_no) {
-    this.dialogRef.close({ emp_code_no: emp_code_no });
+  setId(item, emp_code_no) {
+    this.dialogRef.close({ emp_code_no: emp_code_no, emp_id :item.emp_id });
   }
   closeDialog() {
     this.dialogRef.close();
