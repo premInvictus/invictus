@@ -30,7 +30,8 @@
             <tbody>
               <ng-container *ngFor="let par of item.debit_data">
               <tr *ngIf="par?.vc_account_type === 'Opening Balance'">
-                <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
+                <td><span *ngIf="par?.vc_credit != 0 && !(par?.vc_mode)">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span><span *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date}}</span></td>
+                
                 <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
                 <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
                 <td class="text-right"><span *ngIf="par?.vc_credit < 0">{{getTwoDecimalValue(-par?.vc_credit) | indianCurrency}}</span><span *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
@@ -40,7 +41,8 @@
             </ng-container>
             <ng-container *ngFor="let par of item.debit_data">
               <tr *ngIf="!(par?.vc_account_type === 'Opening Balance')">
-                  <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
+                  <td><span *ngIf="par?.vc_credit != 0 && !(par?.vc_mode)">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span><span *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date}}</span></td>
+                  
                   <td class="text-left"><span *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
                   <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
                   <td class="text-right">
@@ -103,7 +105,7 @@
                 
               <ng-container *ngFor="let par of item.credit_data">
                 <tr>
-                <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;</td>
+                <td class="text-left"><span *ngIf="par?.vc_debit > 0 && !(par?.vc_mode == 'consolidate')">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span><span *ngIf="par?.vc_debit > 0 && par?.vc_mode=='consolidate'">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span>&nbsp;</td>
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_account_type | titlecase}}</span></td>
                 <td class="text-left"><span *ngIf="par?.vc_debit > 0">{{par?.vc_number?.vc_name}}</span></td>
                 <td class="text-right"><span *ngIf="par?.vc_debit > 0">{{getTwoDecimalValue(par?.vc_debit) | indianCurrency}}</span></td>

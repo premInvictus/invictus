@@ -66,9 +66,13 @@ export class SalarySlipModalComponent implements OnInit {
       Math.round(Number(value2.emp_salary_structure.td)) : 0;
     return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + td;
   }
-  getTotalDeductions(values: any[], value2: any) {
-    const tds = value2.emp_salary_structure && value2.emp_salary_structure.tds ?
-      Math.round(Number(value2.emp_salary_structure.tds)) : 0;
+  getTotalDeductions(values: any[], value2: any, value3) {
+    let tds = 0;
+    if (value3.configs && value3.configs.tds) {
+      tds = value2.emp_salary_structure && value2.emp_salary_structure.tds ?
+        Math.round(Number(value2.emp_salary_structure.tds)) : 0;
+    }
+
     return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
   }
   closeDialog() {
