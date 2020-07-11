@@ -862,11 +862,14 @@ export class SalaryComputationComponent implements OnInit {
 			this.searchWithoutFilter();
 		} else {
 			////console.log(Object.keys(this.filterJson).length);
-			if (Object.keys(this.filterJson).length === 0) {
-				this.searchModal.openModal();
-			} else {
-				this.searchOk(this.filterJson);
+			if (this.searchByFilter) {
+				if (Object.keys(this.filterJson).length === 0) {
+					this.searchModal.openModal();
+				} else {
+					this.searchOk(this.filterJson);
+				}
 			}
+			
 
 		}
 		this.getChartsOfAccount();
@@ -1765,6 +1768,10 @@ export class SalaryComputationComponent implements OnInit {
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please Choose Pay Month', 'error');
 		}
+	}
+
+	searchCancel() {
+		this.searchByFilter = false;
 	}
 
 	resetAll() {
