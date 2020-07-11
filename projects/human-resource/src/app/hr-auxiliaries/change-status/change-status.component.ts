@@ -92,9 +92,9 @@ export class ChangeStatusComponent implements OnInit {
 
   getReason(reason_type) {
     this.sisService.getReason({ reason_type: reason_type }).subscribe((result: any) => {
-      if (result) {
+      if (result.status !== 'error') {
         this.reasonDataArray = result.data;
-      }
+      } 
     });
   }
   saveEnrolmentStatus() {

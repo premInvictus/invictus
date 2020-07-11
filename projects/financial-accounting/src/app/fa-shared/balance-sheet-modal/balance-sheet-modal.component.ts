@@ -86,8 +86,8 @@ export class BalanceSheetModalComponent implements OnInit {
     this.blankArr = [];
     this.debitRow = 0;
     this.creditRow = 0;
-    this.debitRow = this.totalDebitRowLength;
-    this.creditRow = this.partialPaymentStatus ? this.totalCreditRowLength : this.totalCreditRowLength + 1;
+    this.debitRow = this.incomeExpenditureDeviation != 0 ? this.totalDebitRowLength+1 : this.totalDebitRowLength;
+    this.creditRow = this.incomeExpenditureDeviation != 0 ? this.totalCreditRowLength : this.totalCreditRowLength;
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
