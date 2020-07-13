@@ -25,6 +25,7 @@ export class LedgerComponent implements OnInit {
   feeMonthArray:any[] = [];
   tableDivFlag = false;
   filteredList: any[] = [];
+  
   public bankMultiFilterCtrl: FormControl = new FormControl();
   private _onDestroy = new Subject<void>();
   public filteredBanks: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);

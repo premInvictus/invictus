@@ -22,6 +22,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   debit_total_f =0;
   deviation_f =0;
   @Input() param: any;
+  closingDate:any;
   partialPaymentStatus = 1;
   constructor(
     public dialogRef: MatDialogRef<LedgerEntryModelComponent>,
