@@ -301,10 +301,10 @@ export class ReceiptModeWiseComponent implements OnInit {
     this.tempChartsOfAccountInvoice = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       for (var i = 0; i < result.length; i++) {
-        if ((result[i]['dependencies_type']) === "internal" && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
           this.chartsOfAccount.push(result[i]);
         }
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
           //console.log('result--', result[i]);
           this.chartsOfAccountInvoice.push(result[i]);
           this.tempChartsOfAccountInvoice.push(result[i]['coa_dependencies'][0]['dependency_name']);
@@ -460,6 +460,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             // for (var k = 0; k < this.currentVoucherData['invoice_head_arr'].length; k++) {
             var chartMatchedIndex = -1;
             var currentHeadMatchedIndex = -1;
+            if (this.currentVoucherData['invoice_head_arr']) {
             for (var l = 0; l < this.currentVoucherData['invoice_head_arr'][i]['head_data'].length; l++) {
               var matchedIndexFlag = false;
               if (this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']) > -1) {
@@ -487,7 +488,7 @@ export class ReceiptModeWiseComponent implements OnInit {
                 }
               }
             }
-
+          }
             feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt']);
 
             break;
