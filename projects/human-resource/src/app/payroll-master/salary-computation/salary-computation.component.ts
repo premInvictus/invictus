@@ -74,7 +74,7 @@ export class SalaryComputationComponent implements OnInit {
 	salaryComputeEmployeeData: any[] = [];
 	salaryComputeEmployeeIds: any[] = [];
 	sessionArray: any[] = [];
-	currentVcType = 'Journel Entry';
+	currentVcType = 'Journal Voucher';
 	sessionName: any;
 	vcData: any;
 	alphabetJSON = {
@@ -937,7 +937,7 @@ export class SalaryComputationComponent implements OnInit {
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
-				vc_type: 'Journal Entry',
+				vc_type: 'Journal Voucher',
 				vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
 				vc_date: this.vcData.vc_date,
 				vc_narrations: 'Salary Computation of Month ' + vcMonth,
