@@ -350,6 +350,19 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 		const datePipe = new DatePipe('en-in');
 		return datePipe.transform(value, format);
 	}
+	// filterCityStateCountry($event) {
+	// 	// keyCode
+	// 	if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
+	// 		if ($event.target.value !== '' && $event.target.value.length >= 3) {
+	// 			this.cityCountryArray = [];
+	// 			this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
+	// 				if (result.status === 'ok') {
+	// 					this.cityCountryArray = result.data;
+	// 				}
+	// 			});
+	// 		}
+	// 	}
+	// }
 	filterCityStateCountry($event) {
 		// keyCode
 		if (Number($event.keyCode) !== 40 && Number($event.keyCode) !== 38) {
@@ -357,7 +370,20 @@ export class EmployeeTabTwoContainerComponent implements OnInit, OnChanges {
 				this.cityCountryArray = [];
 				this.sisService.getStateCountryByCity({ cit_name: $event.target.value }).subscribe((result: any) => {
 					if (result.status === 'ok') {
-						this.cityCountryArray = result.data;
+						if(result.data.length > 0){
+							this.cityCountryArray = result.data;
+						}else {
+							this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+							$event.target.value = '';
+						}
+					} else{
+						this.commonAPIService.showSuccessErrorMessage('Does not exist','error');
+						//$event.target.value = '';
+
+						this.personalContacts.patchValue({
+							city: '',
+							state: '',
+						});
 					}
 				});
 			}

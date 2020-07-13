@@ -110,6 +110,10 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			}
 		});
 		this.getGlobalSettings();
+		if (this.employeedetails) {
+			this.getSalartDetails();
+			this.onChangeData();
+		}
 	}
 	setActionControls(data) {
 		if (data.addMode) {
