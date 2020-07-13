@@ -63,7 +63,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Date of Joining</mat-label>
-                                        <input matInput [matDatepicker]="picker" placeholder="Date of Joining"
+                                        <input matInput [max]="currentDate" [matDatepicker]="picker" placeholder="Date of Joining"
                                             [readonly]="viewOnly" formControlName="doj" required>
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
@@ -74,7 +74,7 @@
                                     <mat-form-field class="form-field" appearance="outline"
                                         *ngIf="employeedetails.emp_status === 'left'">
                                         <mat-label>Date of Leaving</mat-label>
-                                        <input matInput [matDatepicker]="picker2" placeholder="Date of Leaving"
+                                        <input [max]="currentDate" matInput [matDatepicker]="picker2" placeholder="Date of Leaving"
                                             [readonly]="viewOnly" formControlName="dol">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2></mat-datepicker>
@@ -84,7 +84,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>PF Joining Date</mat-label>
-                                        <input matInput [matDatepicker]="picker1" placeholder="PF Joining Date"
+                                        <input matInput [max]="currentDate" [matDatepicker]="picker1" placeholder="PF Joining Date"
                                             [readonly]="viewOnly" formControlName="pf_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                         <mat-datepicker #picker1></mat-datepicker>
@@ -94,7 +94,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>ESI Joining Date</mat-label>
-                                        <input matInput [matDatepicker]="picker2" placeholder="ESI Joining Date"
+                                        <input matInput [max]="currentDate" [matDatepicker]="picker2" placeholder="ESI Joining Date"
                                             [readonly]="viewOnly" formControlName="esi_doj">
                                         <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                                         <mat-datepicker #picker2></mat-datepicker>
@@ -104,7 +104,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Probation</mat-label>
-                                        <input matInput [matDatepicker]="picker3" placeholder="Probation"
+                                        <input matInput [max]="currentDate" [matDatepicker]="picker3" placeholder="Probation"
                                             [readonly]="viewOnly" formControlName="probation">
                                         <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                                         <mat-datepicker #picker3></mat-datepicker>
@@ -114,7 +114,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Confirmation Date</mat-label>
-                                        <input matInput [matDatepicker]="picker4" placeholder="Confirmation Date"
+                                        <input matInput [max]="currentDate" [matDatepicker]="picker4" placeholder="Confirmation Date"
                                             [readonly]="viewOnly" formControlName="confirm_date">
                                         <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
                                         <mat-datepicker #picker4></mat-datepicker>
@@ -307,7 +307,7 @@
                                     </mat-form-field> -->
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Basic Pay</mat-label>
-                                        <input type="text" formControlName="basic_pay" matInput placeholder="Basic Pay"
+                                        <input type="number" formControlName="basic_pay" matInput placeholder="Basic Pay"
                                             (keyup)="getNetSalary()" required
                                             [errorStateMatcher]="confirmValidParentMatcher" [readonly]="viewOnly">
                                         <mat-error>
@@ -323,7 +323,7 @@
                                                         *ngIf="(item.sc_calculation_type ) === 'text' || item.sc_calculation_type === 'Text'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name}}</mat-label>
-                                                            <input type="text" matInput [formControlName]="'sc_value'+i"
+                                                            <input type="number" matInput [formControlName]="'sc_value'+i"
                                                                 (keyup)="getNetSalary()" placeholder="{{item.sc_name}}"
                                                                 required [errorStateMatcher]="confirmValidParentMatcher"
                                                                 [readonly]="viewOnly" [value]="getValue(item.sc_id)">
@@ -335,7 +335,7 @@
                                                     <ng-container *ngIf="item.sc_calculation_type === '%'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name}}</mat-label>
-                                                            <input type="text" matInput placeholder="{{item.sc_name}}"
+                                                            <input type="number" matInput placeholder="{{item.sc_name}}"
                                                                 [formControlName]="'sc_value'+i"
                                                                 [value]="getDynamicValue(item.sc_value,salaryDetails.value.basic_pay)"
                                                                 readonly>
@@ -355,7 +355,7 @@
                                                         *ngIf="(item.sc_calculation_type ) === 'text'  || item.sc_calculation_type === 'Text'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name  + ' Deduction' }}</mat-label>
-                                                            <input type="text" matInput [formControlName]="'sc_value'+i"
+                                                            <input type="number" matInput [formControlName]="'sc_value'+i"
                                                                 (keyup)="getNetSalary()"
                                                                 placeholder="{{item.sc_name + ' Deduction'}}" required
                                                                 [errorStateMatcher]="confirmValidParentMatcher"
@@ -368,7 +368,7 @@
                                                     <ng-container *ngIf="item.sc_calculation_type === '%'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name + ' Deduction'}}</mat-label>
-                                                            <input type="text" matInput
+                                                            <input type="number" matInput
                                                                 placeholder="{{item.sc_name + ' Deduction'}}"
                                                                 [formControlName]="'sc_value'+i"
                                                                 [value]="getDynamicValue(item.sc_value,salaryDetails.value.basic_pay)"
@@ -386,7 +386,7 @@
                                 <div class="row salary-card">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>TA</mat-label>
-                                        <input type="text" formControlName="td" (keyup)="getNetSalary()" matInput
+                                        <input type="number" formControlName="td" (keyup)="getNetSalary()" matInput
                                             [readonly]="viewOnly" placeholder="TA">
                                         <mat-error>
                                             This field is required
@@ -395,7 +395,7 @@
                                     <mat-form-field class="form-field" appearance="outline"
                                     *ngIf="deductions && deductions.tds">
                                         <mat-label>TDS</mat-label>
-                                        <input type="text" formControlName="tds" (keyup)="getNetSalary()" matInput
+                                        <input type="number" formControlName="tds" (keyup)="getNetSalary()" matInput
                                             [readonly]="viewOnly" placeholder="TDS">
                                         <mat-error>
                                             This field is required
@@ -404,7 +404,7 @@
                                     <mat-form-field class="form-field" appearance="outline"
                                     *ngIf="deductions && deductions.gratuity">
                                         <mat-label>Gratuity</mat-label>
-                                        <input type="text" formControlName="gratuity" matInput [readonly]="viewOnly"
+                                        <input type="number" formControlName="gratuity" matInput [readonly]="viewOnly"
                                             placeholder="Gratuity">
                                         <mat-error>
                                             This field is required
@@ -412,7 +412,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Net Salary</mat-label>
-                                        <input type="text" formControlName="net_salary" matInput [value]="netSalary"
+                                        <input type="number" formControlName="net_salary" matInput [value]="netSalary"
                                             placeholder="Net Salary" readonly>
                                         <mat-error>
                                             This field is required
@@ -420,7 +420,7 @@
                                     </mat-form-field>
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Total Earning</mat-label>
-                                        <input type="text" formControlName="total_earning" matInput
+                                        <input type="number" formControlName="total_earning" matInput
                                             [value]="totalEarning" placeholder="Total Earning" readonly>
                                         <mat-error>
                                             This field is required
@@ -495,7 +495,7 @@
                                             <form [formGroup]="item">
                                                 <mat-form-field class="form-field" appearance="outline">
                                                     <mat-label>Date of Advance</mat-label>
-                                                    <input matInput [matDatepicker]="picker5" [min]="!item.value.freezed && advanceDetails.length > 1  
+                                                    <input matInput [matDatepicker]="picker5" [max]="currentDate" [min]="!item.value.freezed && advanceDetails.length > 1  
                                                     ? currentDate : ''" placeholder="Date of Joining" [readonly]="viewOnly ||
                                                         item.value.freezed" formControlName="advance_start_date">
                                                     <mat-datepicker-toggle matSuffix [for]="picker5">

@@ -90,7 +90,7 @@
                 </mat-error>
               </mat-form-field>
 
-              <mat-form-field class="form-field" appearance="outline">
+              <!-- <mat-form-field class="form-field" appearance="outline">
                 <mat-label>City</mat-label>
                 <input type="text" matInput placeholder="City" [readonly]="viewOnly" formControlName="city" 
                   [errorStateMatcher]="confirmValidParentMatcher">
@@ -102,6 +102,34 @@
                 <mat-label>State</mat-label>
                 <input type="text" matInput placeholder="State" [readonly]="viewOnly" formControlName="state" 
                   [errorStateMatcher]="confirmValidParentMatcher">
+                <mat-error>
+                  This field is required
+                </mat-error>
+              </mat-form-field> -->
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>City</mat-label>
+                <input type="text" matInput placeholder="City" formControlName="city" [readonly]="viewOnly"
+                  [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
+                  (keyup)="filterCityStateCountry($event)">
+                <mat-autocomplete #autoGroup="matAutocomplete">
+                  <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="getCityPerId(item)"
+                    (click)="getCityPerId(item)" *ngFor="let item of cityCountryArray" [value]="item.cit_id">
+                    {{item.cit_name}} -
+                    {{item.sta_name}} - {{item.cou_name}}</mat-option>
+                </mat-autocomplete>
+                <mat-error>
+                  This field is required
+                </mat-error>
+              </mat-form-field>
+              <mat-form-field class="form-field" appearance="outline">
+                <mat-label>State</mat-label>
+                <mat-select formControlName="state" placeholder="State" disabled="true"
+                  [errorStateMatcher]="confirmValidParentMatcher">
+                  <mat-option value="">Please Select</mat-option>
+                  <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
+                    {{item.sta_name}}
+                  </mat-option>
+                </mat-select>
                 <mat-error>
                   This field is required
                 </mat-error>
@@ -130,7 +158,7 @@
   </div>
   <div class="row">
     <div class="col-12 text-center">
-      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()"  [disabled]="disabledApiButton" >Save &
+      <button *ngIf="addOnly" mat-raised-button class="btn-success btn-save-continue" (click)="saveForm()" >Save &
         Continue</button>
       <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm(false)"  [disabled]="disabledApiButton" >Submit</button>
       <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
