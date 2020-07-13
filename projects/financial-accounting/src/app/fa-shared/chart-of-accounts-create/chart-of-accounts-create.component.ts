@@ -135,12 +135,14 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		if(result) {
 			console.log('result-', result);
 			this.feeHeadArr = result.data;
+			this.dependancyeArr.push({id:'fh-0', name:'Transport Fee'});
+			this.dependancyeArr.push({id:'fh--1', name:'Fine'});
 			for (const item of result.data) {
 				
 					this.dependancyeArr.push(
 						{id:'fh-'+item.fh_id, name: item.fh_name}
 					);
-					this.dependancyeArr.push({id:'fh-0', name:'Transport'});
+					
 				
 			}
 		}

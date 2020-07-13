@@ -24,23 +24,26 @@
           <td class="action-btn">
            <span *ngIf="(!item?.voucherExists) && isExistUserAccessMenu('745')"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
            <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('747')"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span>
-          </td>
+
+           <!-- <span *ngIf="(!item?.voucherExists) "> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+           <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') "> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span> -->         
+          </td> 
         </tr>
         <tr>
           <td class="text-bold">Total</td>
           <td class="text-bold" *ngFor="let itm of displayedColumns">{{eachheadtotal_details['id_'+itm.id] | indianCurrency}}</td>
           <td class="text-bold">{{headtoatl | indianCurrency}}</td>
         </tr>
-        <tr>
+        <!-- <tr>
           <td class="text-bold">Concession & Adjustment</td>
           <td class="text-bold" *ngFor="let itm of displayedColumns">{{con_adj_details['id_'+itm.id] | indianCurrency}}</td>
           <td class="text-bold">{{contoatl | indianCurrency}}</td>
-        </tr>
-        <tr>
+        </tr> -->
+        <!-- <tr>
           <td class="text-bold">Net Amount</td>
           <td class="text-bold" *ngFor="let itm of displayedColumns">{{eachheadtotal_details['id_'+itm.id] - con_adj_details['id_'+itm.id] | indianCurrency}}</td>
           <td class="text-bold">{{(headtoatl - contoatl) | indianCurrency}}</td>
-        </tr>
+        </tr> -->
       </tbody>
       </table>
       <table *ngIf="ELEMENT_DATA.length == 0"
