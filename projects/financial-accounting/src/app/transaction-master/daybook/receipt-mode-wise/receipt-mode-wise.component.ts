@@ -31,7 +31,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   chartsOfAccount: any[] = [];
   chartsOfAccountInvoice: any[] = [];
   vcData: any;
-  currentVcType = 'Journel Entry';
+  currentVcType = 'Journal Voucher';
   sessionArray: any[] = [];
   sessionName: any;
   voucherDate: any;
@@ -740,7 +740,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     if (this.vcData) {
       var fJson = {
         vc_id: this.currentVoucherData && this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
-        vc_type: 'Journel Entry',
+        vc_type: 'Journal Voucher',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
         vc_narrations: 'Receipt Computation of Date ' + this.voucherDate,

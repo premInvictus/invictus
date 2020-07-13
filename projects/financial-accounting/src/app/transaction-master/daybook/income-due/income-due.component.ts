@@ -33,7 +33,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   apiReceiptData = [];
   chartsOfAccount: any[] = [];
   vcData: any;
-  currentVcType = 'Journel Entry';
+  currentVcType = 'Journal Voucher';
   sessionArray: any[] = [];
   sessionName: any;
   voucherDate: any;
@@ -199,11 +199,12 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   }
 
   getChartsOfAccount() {
+    this.chartsOfAccount = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
-          //console.log('result--', result[i]);
+          console.log('result--', result[i]);
           this.chartsOfAccount.push(result[i]);
         }
       }
@@ -402,7 +403,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     if (this.vcData) {
       var fJson = {
         vc_id: null,
-        vc_type: 'Journel Entry',
+        vc_type: 'Journal Voucher',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
         vc_narrations: 'Invoice Due of Date ' + this.voucherDate,
@@ -412,7 +413,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_process: 'automatic/invoice'
       }
 
-
+      console.log('fJson--', fJson)
       if (!this.currentVoucherData.vc_id) {
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
@@ -425,17 +426,17 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           }
         });
       } else {
-        console.log('fJson--', fJson)
-        // this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
-        //   if (data) {
-        //     this.getInvoiceDayBook();
-        //     this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
+        
+        this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
+          if (data) {
+            this.getInvoiceDayBook();
+            this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
 
 
-        //   } else {
-        //     this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
-        //   }
-        // });
+          } else {
+            this.commonAPIService.showSuccessErrorMessage('Error While Updating Voucher Entry', 'error');
+          }
+        });
 
       }
 

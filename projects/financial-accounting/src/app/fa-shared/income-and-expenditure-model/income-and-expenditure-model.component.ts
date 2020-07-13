@@ -77,13 +77,16 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
   checkBlankArray(param) {
     this.blankArr = [];
     this.debitRow = 0;
+    this.creditRow = 0;
     console.log(this.partialPaymentStatus);
-    this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0) : 0;
+    // this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0) : 0;
     // if (this.debitSideTotal != this.creditSideTotal) {
-    this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length - 1 : this.debitRow + this.debitSideBlankArr.length;
-    // this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length -1 : this.creditRow + this.creditSideBlankArr.length;
+     this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length - 1 : this.debitRow + this.debitSideBlankArr.length;
+     this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length -1 : this.creditRow +param['invoice_due_data'].length-1+ this.creditSideBlankArr.length;
     // }
-
+    // this.debitRow = this.debitSideBlankArr.length;
+    // this.creditRow = this.creditSideBlankArr.length;
+ 
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
