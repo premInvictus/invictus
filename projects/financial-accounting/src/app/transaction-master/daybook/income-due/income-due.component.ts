@@ -203,7 +203,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       for (var i = 0; i < result.length; i++) {
         //console.log(result[i]);
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
           console.log('result--', result[i]);
           this.chartsOfAccount.push(result[i]);
         }
@@ -241,8 +241,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
               vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
               vc_grno: '',
               vc_invoiceno: '',
-              vc_debit: invoiceHeadArr[i]['total_amt'],
-              vc_credit: 0
+              vc_debit: 0,
+              vc_credit: invoiceHeadArr[i]['total_amt']
             };
             feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
             voucherEntryArray.push(vFormJson);
@@ -275,8 +275,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                 vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                 vc_grno: '',
                 vc_invoiceno: '',
-                vc_debit:  invoiceHeadArr[i]['total_amt'],
-                vc_credit: 0
+                vc_debit:  0,
+                vc_credit: invoiceHeadArr[i]['total_amt']
               };
               feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
               voucherEntryArray.push(vFormJson);
@@ -292,8 +292,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  0,
-                  vc_credit: -deviation
+                  vc_debit:  -deviation,
+                  vc_credit: 0
                 };
                 voucherEntryArray.push(vFormJson);
               }
@@ -305,8 +305,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                   vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
                   vc_grno: '',
                   vc_invoiceno: '',
-                  vc_debit:  deviation,
-                  vc_credit: 0
+                  vc_debit:  0,
+                  vc_credit: deviation
                 };
                 voucherEntryArray.push(vFormJson);
               }
@@ -322,8 +322,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_particulars: 'Fee Receivable',
         vc_grno: '',
         vc_invoiceno: '',
-        vc_debit: 0,
-        vc_credit: feeReceivableAmt
+        vc_debit: feeReceivableAmt,
+        vc_credit: 0
       };
       voucherEntryArray.push(vFormJson);
       this.getVoucherTypeMaxId(voucherEntryArray);
@@ -336,8 +336,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_particulars: 'Fee Receivable',
         vc_grno: '',
         vc_invoiceno: '',
-        vc_debit: 0,
-        vc_credit: feeReceivableAmt
+        vc_debit: feeReceivableAmt,
+        vc_credit: 0
       };
       voucherEntryArray.push(vFormJson);
       this.getVoucherTypeMaxId(voucherEntryArray);
