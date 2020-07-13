@@ -482,17 +482,31 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 					cat_name: this.getCategoryOneName(this.employeeCommonDetails.employeeDetailsForm.value.emp_category_id)
 				};
 			}
-			this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
-				if (result) {
-					this.disabledApiButton = false;
-					this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
-					this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
-
-				} else {
-					this.disabledApiButton = false;
-					this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
-				}
-			});
+			if(this.employeeCommonDetails.employeeDetailsForm.value.emp_id && this.employeeCommonDetails.employeeDetailsForm.value.emp_id != ''){
+				this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
+					if (result) {
+						this.disabledApiButton = false;
+						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Updated Successfully', 'success');
+						//this.commonAPIService.renderTab.next({ tabMove: true });
+						this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
+					} else {
+						this.disabledApiButton = false;
+						this.commonAPIService.showSuccessErrorMessage('Error while updating Employee Personal Detail', 'error');
+					}
+				});
+			} else {
+				this.commonAPIService.insertEmployeeDetails(this.employeedetails).subscribe((result: any) => {
+					if (result) {
+						this.disabledApiButton = false;
+						this.commonAPIService.showSuccessErrorMessage('Employee Personal Details Inserted Successfully', 'success');
+						this.commonAPIService.renderTab.next({ tabMove: true, renderForAdd: true });
+	
+					} else {
+						this.disabledApiButton = false;
+						this.commonAPIService.showSuccessErrorMessage('Error while inserting Employee Personal Detail', 'error');
+					}
+				});
+			}
 		} else {
 			this.commonAPIService.showSuccessErrorMessage('Please fill all Required field', 'error');
 		}

@@ -44,7 +44,7 @@ export class EmployeeDetailComponent implements OnInit {
 				this.getEmployeeNavigationRecords();
 			} else if (data && data.tabMove && data.renderForAdd) {
 				this.tabSelectedIndex += 1;
-				//this.getEmployeeNavigationRecords();
+				this.getEmployeeNavigationRecords();
 			} else if (data && data.tabMove) {
 				this.tabSelectedIndex += 1;
 			}
