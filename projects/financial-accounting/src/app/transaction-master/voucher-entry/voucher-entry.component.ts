@@ -27,7 +27,7 @@ export class VoucherEntryComponent implements OnInit {
 	fileCounter = 0;
 	totalDebit = 0;
 	totalCredit = 0;
-	currentVcType = 'Journal Entry';
+	currentVcType = 'Journal Voucher';
 	accountsArray: any[] = [];
 	editMode = false;
 	currentVoucherId = '';
@@ -560,7 +560,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (this.currentVcType == 'Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note') {
 				console.log('index', i);
 				const inputJson: any = {};
-				inputJson.vc_type = 'Journal Entry';
+				inputJson.vc_type = 'Journal Voucher';
 				inputJson.vc_sattle_status = 1;
 				inputJson.vc_state = 'publish';
 				inputJson.coa_id = this.voucherFormGroupArray[i].value.vc_account_type_id;
