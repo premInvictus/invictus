@@ -68,7 +68,7 @@
                   <td class="text-right">&nbsp;</td>
                </tr>
                 <tr *ngIf="getDeviation(item) < 0">
-                    <td>&nbsp;</td>
+                    <td><span *ngIf="item?.credit_data.length > 0">{{item?.credit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span></td>
                     <td class="text-left"><b> Balance c/d</b></td>
                     <td>&nbsp;</td>
                     <td class="text-right"><b>{{getTwoDecimalValue(-(deviation_f)) | indianCurrency }}</b></td>
@@ -122,7 +122,7 @@
   
             </ng-container>
             <tr *ngIf="getDeviation(item) > 0">
-                <td>&nbsp;</td>
+              <td><span *ngIf="item?.debit_data.length > 0">{{item?.debit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span></td>
                 <td class="text-left"><b> Balance c/d</b></td>
                 <td>&nbsp;</td>
                 <td class="text-right"><b>{{getTwoDecimalValue(deviation_f) | indianCurrency}}</b></td>
