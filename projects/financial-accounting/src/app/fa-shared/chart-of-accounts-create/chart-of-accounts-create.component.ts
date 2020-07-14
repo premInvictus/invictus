@@ -98,10 +98,11 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-3', name: 'Arrear'},
 		{id:'ca-4', name: 'Advance'},
 		{id:'ca-5', name: 'Salary Payable'},
-		// {id:'ca-6', name: 'PF & ESI'},
-		{id:'ca-6', name: 'TA'},
+		{id:'ca-6', name: 'ESI'},
+		// {id:'ca-6', name: 'TA'},
 		{id:'ca-7', name: 'TDS'},
-		{id:'ca-8', name: 'Gratuity'}
+		{id:'ca-8', name: 'Gratuity'},
+		{id:'fr-1', name: 'Fee Receivable'},
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
 		if(result && result.status == 'ok') {
@@ -117,7 +118,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		if(result) {
 			this.salaryComponentArr = result;
 			for (const item of result) {
-				if(item.sc_type.type_id == '2'){ //Deducation
+				if(item.sc_type.type_id == '2' && item.sc_status=="1"){ //Deducation
 					this.dependancyeArr.push(
 						{id:'sc-'+item.sc_id, name: item.sc_name}
 					);
@@ -181,6 +182,12 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 				tempjson.dependancy_id = temparr[1];
 				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
 				tempjson.dependenecy_component = 'fee_head';
+				tempjson.dependency_name = temp.name;
+				return [tempjson];
+			} else if(temparr[0] == 'fr'){
+				tempjson.dependancy_id = temparr[1];
+				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
+				tempjson.dependenecy_component = 'fee_receivable';
 				tempjson.dependency_name = temp.name;
 				return [tempjson];
 			} 
