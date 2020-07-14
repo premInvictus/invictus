@@ -39,6 +39,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   voucherDate: any;
   currentVoucherData: any;
   vcYearlyStatus   = 0;
+  feeReceivableAccountId = 0;
+  feeReceivableAccountName = 'Fee Receivable';
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -207,6 +209,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           console.log('result--', result[i]);
           this.chartsOfAccount.push(result[i]);
         }
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
+          console.log('result--', result[i]);
+          //this.chartsOfAccount.push(result[i]);
+          this.feeReceivableAccountId = result[i]['coa_id'];
+          this.feeReceivableAccountName = result[i]['coa_acc_name'];
+        }
+        
       }
     });
   }
@@ -317,8 +326,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     }
     if (voucherEntryArray.length > 0  && action != 'update') {
       let vFormJson = {
-        vc_account_type: 'Fee Receivable',
-        vc_account_type_id: 0,
+        vc_account_type: this.feeReceivableAccountName,
+        vc_account_type_id: this.feeReceivableAccountId,
         vc_particulars: 'Fee Receivable',
         vc_grno: '',
         vc_invoiceno: '',
@@ -331,8 +340,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     if (voucherEntryArray.length > 0  && action == 'update') {
       
       let vFormJson = {
-        vc_account_type: 'Fee Receivable',
-        vc_account_type_id: 0,
+        vc_account_type: this.feeReceivableAccountName,
+        vc_account_type_id: this.feeReceivableAccountId,
         vc_particulars: 'Fee Receivable',
         vc_grno: '',
         vc_invoiceno: '',
