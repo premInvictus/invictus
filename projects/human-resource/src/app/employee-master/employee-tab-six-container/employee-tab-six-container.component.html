@@ -44,11 +44,11 @@
                                   </button>
                                 </div>
                                 <div *ngIf="img.docreq_id ===  item.docreq_id">
-                                  <img *ngIf="checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
-                                    [src]="img.imgName" (click)="previewImage(imageArray, i)">
-                                  <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
+                                  <img class="btn-doc-upload-preview thumbnail-img"
+                                  [src]="getuploadurl(img.imgName)" (click)="previewImage(imageArray, i)">
+                                  <!-- <img *ngIf="!checkThumbnail(img.imgName)" class="btn-doc-upload-preview thumbnail-img"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
-                                    (click)="previewImage(imageArray, i)"><br>
+                                    (click)="previewImage(imageArray, i)"><br> -->
                                 </div>
                                 <br>
                               </div>

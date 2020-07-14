@@ -774,6 +774,7 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 			this.commonAPIService.reRenderForm.next({ reRenderForm: true, viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		} else if (this.saveFlag || this.editRequestFlag) {
 			this.getPersonalDetailsdata();
+			this.employeeCommonDetails.onCancelSet();
 			this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		}
 	}
