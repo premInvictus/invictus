@@ -31,7 +31,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   chartsOfAccount: any[] = [];
   chartsOfAccountInvoice: any[] = [];
   vcData: any;
-  currentVcType = 'Journal Voucher';
+  currentVcType = 'Receipt';
   sessionArray: any[] = [];
   sessionName: any;
   voucherDate: any;
@@ -346,8 +346,8 @@ export class ReceiptModeWiseComponent implements OnInit {
               vc_particulars: this.chartsOfAccount[j]['coa_acc_name'],
               vc_grno: '',
               vc_invoiceno: '',
-              vc_debit: 0,
-              vc_credit: receiptHeadArr[i]['receipt_amt']
+              vc_debit: receiptHeadArr[i]['receipt_amt'],
+              vc_credit: 0
             };
             feeReceivableAmt = feeReceivableAmt + (receiptHeadArr[i]['receipt_amt'])
             voucherEntryArray.push(vFormJson);
@@ -460,7 +460,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             // for (var k = 0; k < this.currentVoucherData['invoice_head_arr'].length; k++) {
             var chartMatchedIndex = -1;
             var currentHeadMatchedIndex = -1;
-            if (this.currentVoucherData['invoice_head_arr']) {
+            if (this.currentVoucherData['invoice_head_arr'] && this.currentVoucherData['invoice_head_arr'][i]) {
             for (var l = 0; l < this.currentVoucherData['invoice_head_arr'][i]['head_data'].length; l++) {
               var matchedIndexFlag = false;
               if (this.tempChartsOfAccountInvoice.indexOf(this.currentVoucherData['invoice_head_arr'][i]['head_data'][l]['invg_fh_name']) > -1) {
@@ -690,6 +690,7 @@ export class ReceiptModeWiseComponent implements OnInit {
   getVoucherTypeMaxId(voucherEntryArray) {
     let param: any = {};
     param.vc_type = this.currentVcType;;
+    param.vc_date = this.currentVoucherData.date;
     let flag = 0;
     let result: any;
 
@@ -741,7 +742,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     if (this.vcData) {
       var fJson = {
         vc_id: this.currentVoucherData && this.currentVoucherData.vc_id ? this.currentVoucherData.vc_id : null,
-        vc_type: 'Journal Voucher',
+        vc_type: 'Receipt',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
         vc_narrations: 'Receipt Computation of Date ' + this.voucherDate,

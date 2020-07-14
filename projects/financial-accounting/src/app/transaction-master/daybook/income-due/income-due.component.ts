@@ -353,6 +353,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   getVoucherTypeMaxId(voucherEntryArray) {
     let param: any = {};
     param.vc_type = this.currentVcType;;
+    param.vc_date = this.currentVoucherData.date;
     let flag = 0;
     let result: any;
 
