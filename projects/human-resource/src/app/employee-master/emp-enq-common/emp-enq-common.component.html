@@ -6,17 +6,17 @@
   </div>
   <div class="functional-button-two">
     <button mat-fab *ngIf="addOnly" (click)="addNew()">
-      <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Employee</span>
+      <mat-icon class="btn-top-icon">person_add</mat-icon><span class="right-btn-text">Add Enquiry</span>
     </button>
   </div>
   <div class="functional-button-three" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="editOnly && !(employeedetails.enq_status=='left')" (click)="editForm()"><i
         class="fas fa-user-edit float-btn-right"></i><span class="right-btn-text">Edit
-        Employee</span></button>
+        Enquiry</span></button>
   </div>
   <div class="functional-button-four" *ngIf="employeedetails?.last_record > 0">
     <button mat-fab *ngIf="deleteOnly && !(employeedetails.enq_status=='left')" (click)="openDeleteDialog()">
-      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Employee</span>
+      <mat-icon class="btn-top-icon">delete</mat-icon><span class="right-btn-text">Delete Enquiry</span>
     </button>
   </div>
   <div class="row remove-top-margin">
@@ -55,7 +55,7 @@
                 </button>
               </div>
               <div class="col-4 text-center remove-col-padding">
-                <mat-form-field class="form-field text-center" id="ienq_id">
+                <mat-form-field class="form-field text-center" id="ienq_id" style="margin-top:-25px !important;">
                   <input class="text-center enroll-font-30 font-size-30" formControlName="enq_id" matInput
                     [readonly]="!viewOnly" (keydown.enter)="$event.preventDefault();loadEmployee($event)" #myInput>
                 </mat-form-field><br>
@@ -81,13 +81,13 @@
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Full Name</mat-label>
                   <input class="text-capitalize" formControlName="enq_name" matInput placeholder="Full Name" required
-                    [readonly]="viewOnly" [value]="employeeDetailsForm.get('enq_name').value | capitalize">
+                    [readonly]="viewOnly" pattern="/^[a-zA-Z]+$/" (keypress)="ValidateAlpha($event);"  [value]="employeeDetailsForm.get('enq_name').value | capitalize">
                 </mat-form-field>
               </div>
               <div class="col-xl-2 col-lg-2 col-md-4 col-sm-6 col-12">
                 <mat-form-field class="form-field" appearance="outline">
                   <mat-label>Applied Position</mat-label>
-                  <input class="text-capitalize" formControlName="enq_applied_for" matInput placeholder="Full Name"
+                  <input class="text-capitalize" formControlName="enq_applied_for" matInput placeholder="Applied Position"
                     required [readonly]="viewOnly">
                   <mat-error>
                     This field is required

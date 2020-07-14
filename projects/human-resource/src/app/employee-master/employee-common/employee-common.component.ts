@@ -140,7 +140,7 @@ export class EmployeeCommonComponent implements OnInit {
 		});
 	}
 	getWing() {
-		this.commonAPIService.getMaster({ type_id: '1' }).subscribe((result: any) => {
+		this.commonAPIService.getMaster({ type_id: '1', status:'1' }).subscribe((result: any) => {
 			if (result) {
 				this.wingArray = result;
 			} else {

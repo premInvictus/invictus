@@ -971,7 +971,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	}
 
 	applyFilter(filterValue: String) {
-		//console.log('filterValue', filterValue);
+		console.log('filterValue', filterValue);
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
 	}
 

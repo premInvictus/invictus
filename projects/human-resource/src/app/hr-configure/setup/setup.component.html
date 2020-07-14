@@ -279,7 +279,7 @@
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class="text-center margin-top-15">
+                                        <div class="text-center margin-top-15" *ngIf="configValue != ''">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                                                 (click)="addConfiguration(configValue)"
                                                 [disabled]="disabledApiButton">Add</button>

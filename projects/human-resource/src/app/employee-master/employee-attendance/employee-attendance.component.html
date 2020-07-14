@@ -68,14 +68,14 @@
       </div>
       <div class="row" class="overflow" [hidden]="formGroupArray.length === 0">
         <div class="col-12">
-          <!-- <div class="row ">
+          <div class="row ">
             <div class="col-10 remove-col-padding">
               <mat-form-field appearance="legacy lib-form">
-                <input matInput placeholder="Search" (keyUp)="applyFilter($event)" />
+                <input matInput placeholder="Search" (keyup)="applyFilter($event.target.value)" />
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
-          </div> -->
+          </div>
           <table mat-table [dataSource]="employeedataSource" matSort class="table-100 text-center" id="report_table3">
             <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="2%"> Sr. No. </th>
