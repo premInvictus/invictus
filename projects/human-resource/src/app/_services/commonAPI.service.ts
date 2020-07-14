@@ -233,6 +233,16 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/update', value);
 	}
+
+	updateEnquiry(value) {
+		
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/update-career-enquiry', value);
+	}
+	deleteEnquiry(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/career-enquiry/update-career-enquiry', value);
+	}
 	updateEmployeeDatainBulk(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/updateEmployeeDatainBulk', value);
