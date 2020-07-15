@@ -258,11 +258,14 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				});
 	}
 	addEmpBank() {
-		this.empBankDetail.push(this.fbuild.group({
-			bank_name: '',
-			bank_ac: '',
-			ifsc_code: ''
-		}));
+		const lemlength = this.empBankDetail.length;
+		if(this.empBankDetail[lemlength - 1].valid){
+			this.empBankDetail.push(this.fbuild.group({
+				bank_name: '',
+				bank_ac: '',
+				ifsc_code: ''
+			}));
+		}
 	}
 
 	removeEmpBank(index) {

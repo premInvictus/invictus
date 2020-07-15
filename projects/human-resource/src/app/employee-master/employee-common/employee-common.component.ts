@@ -22,6 +22,7 @@ export class EmployeeCommonComponent implements OnInit {
 	@Output() nextUserEvent: EventEmitter<any> = new EventEmitter<any>();
 	employeeDetailsForm: FormGroup;
 	studentdetails: any = {};
+	commonDetails:any;
 	lastEmployeeDetails: any;
 	lastrecordFlag = true;
 	navigation_record: any = {};
@@ -149,6 +150,34 @@ export class EmployeeCommonComponent implements OnInit {
 
 		});
 	}
+	onCancelSet(){
+		if (this.commonDetails) {
+			const result =this.commonDetails;
+			let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
+			let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
+			let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';
+			let emp_category_id = result.emp_category_detail ? result.emp_category_detail.cat_id : '';
+			let emp_wing_id = result.emp_wing_detail ? result.emp_wing_detail.config_id : '';
+
+			this.employeeDetailsForm.patchValue({
+				emp_profile_pic: result.emp_profile_pic,
+				emp_id: result.emp_id,
+				emp_code_no : result.emp_code_no,
+				emp_name: result.emp_name,
+				emp_honorific_id: emp_honorific_id ? emp_honorific_id.toString() : '',
+				emp_designation_id: emp_designation_id ? emp_designation_id.toString() : '',
+				emp_department_id: emp_department_id ? emp_department_id.toString() : '',
+				emp_category_id: emp_category_id ? Number(emp_category_id) : '',
+				emp_wing_id: emp_wing_id ? emp_wing_id.toString() : '',
+				emp_status: result.emp_status
+			});
+			if (result.emp_profile_pic) {
+				this.defaultsrc = result.emp_profile_pic
+			} else {
+				this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+			}
+		}
+	}
 	getEmployeeDetail(emp_code_no) {
 		if (emp_code_no) {
 			this.previousB = true;
@@ -158,6 +187,7 @@ export class EmployeeCommonComponent implements OnInit {
 			//this.setActionControls({viewMode : true})
 			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				if (result) {
+					this.commonDetails = result;
 					let emp_honorific_id = result.emp_honorific_detail ? result.emp_honorific_detail.hon_id : '';
 					let emp_designation_id = result.emp_designation_detail ? result.emp_designation_detail.config_id : '';
 					let emp_department_id = result.emp_department_detail ? result.emp_department_detail.config_id : '';

@@ -15,6 +15,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	@Input() employeeCommonDetails;
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	toMin = new Date();
+	today=new Date();
 	Education_Form: FormGroup;
 	Experience_Form: FormGroup;
 	educationsArray: any[] = [];
@@ -41,9 +42,9 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 	login_id = '';
 	otherFlag = false;
 	divisonArray: any[] = [
-		{ id: 0, name: 'First Divison' },
-		{ id: 1, name: 'Second Divison' },
-		{ id: 2, name: 'Third Divison' }
+		{ id: 1, name: 'First Divison' },
+		{ id: 2, name: 'Second Divison' },
+		{ id: 3, name: 'Third Divison' }
 	];
 	honrificArr = [
 		{ hon_id: "1", hon_name: 'Mr.' },
@@ -229,6 +230,7 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 				}
 			});
 		}
+		console.log('this.educationsArray',this.educationsArray);
 	}
 	addexperience() {
 		if (this.Experience_Form.valid) {
@@ -284,9 +286,12 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getdivisonName(value) {
+		console.log('this.divisonArray',this.divisonArray);
 		const findex = this.divisonArray.findIndex(f => Number(f.id) === Number(value));
 		if (findex !== -1) {
 			return this.divisonArray[findex].name;
+		} else{
+			return '';
 		}
 	}
 	editEducation(value) {
@@ -310,11 +315,16 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		});
 	}
 	updateEducation() {
-		this.educationsArray[this.educationValue] = this.Education_Form.value;
-		this.otherFlag = false;
-		this.commonAPIService.showSuccessErrorMessage('Education List Updated', 'success');
-		this.Education_Form.reset();
-		this.educationUpdateFlag = false;
+		if(this.Education_Form.valid){
+			this.educationsArray[this.educationValue] = this.Education_Form.value;
+			this.otherFlag = false;
+			this.commonAPIService.showSuccessErrorMessage('Education List Updated', 'success');
+			this.Education_Form.reset();
+			this.educationUpdateFlag = false;
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+		}
+		
 	}
 	editExperience(value) {
 		this.experienceUpdateFlag = true;
@@ -334,10 +344,15 @@ export class EmployeeTabFourContainerComponent implements OnInit, OnChanges {
 		this.Experience_Form.patchValue({
 			'end_date': this.dateConversion(this.Experience_Form.value.end_date, 'd-MMM-y')
 		});
-		this.experiencesArray[this.experienceValue] = this.Experience_Form.value;
-		this.commonAPIService.showSuccessErrorMessage('Experience List Updated', 'success');
-		this.Experience_Form.reset();
-		this.experienceUpdateFlag = false;
+		if(this.Experience_Form.valid) {
+			this.experiencesArray[this.experienceValue] = this.Experience_Form.value;
+			this.commonAPIService.showSuccessErrorMessage('Experience List Updated', 'success');
+			this.Experience_Form.reset();
+			this.experienceUpdateFlag = false;
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please fill all required fields', 'error');
+		}
+		
 	}
 	deleteEducation(index) {
 		this.educationsArray.splice(index, 1);
