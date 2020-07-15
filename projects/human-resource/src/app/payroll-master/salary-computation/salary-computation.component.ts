@@ -177,17 +177,7 @@ export class SalaryComputationComponent implements OnInit {
 		});
 	}
 	ngOnInit() {
-		const month = new Date().getMonth() + 1;
-		this.monthArr = this.monthArr.filter(item => {
-			if (Number(month) > 4) {
-				return Number(item.id) > 3 && (Number(item.id) <= Number(month));
-			} else if (Number(month) < 4) {
-				return Number(item.id) <= month || (
-					(Number(item.id) !== 1 &&
-						Number(item.id) !== 2 &&
-						Number(item.id) !== 3) && (Number(item.id) > Number(month)));
-			}
-		});
+
 		console.log(this.monthArr);
 		this.buildForm();
 		this.getSession();
@@ -259,6 +249,38 @@ export class SalaryComputationComponent implements OnInit {
 							this.sessionName = this.sessionArray[this.session_id.ses_id];
 							this.year = this.sessionName.split('-');
 							this.currentYear = this.year[0];
+							const year = new Date().getFullYear();
+							if (Number(this.sessionName.split('-')[0]) >= year) {
+								if (year + '-' + (year + 1) === this.sessionName
+									&& (Number(this.sessionName.split('-')[1]) !== year
+									)) {
+									const month = new Date().getMonth() + 1;
+									this.monthArr = this.monthArr.filter(item => {
+										if (Number(month) > 4) {
+											return Number(item.id) > 3 && (Number(item.id) <= Number(month));
+										} else if (Number(month) < 4) {
+											return Number(item.id) <= month || (
+												(Number(item.id) !== 1 &&
+													Number(item.id) !== 2 &&
+													Number(item.id) !== 3) && (Number(item.id) > Number(month)));
+										}
+									});
+								}
+								if (year - 1 + '-' + (year) === this.sessionName
+									&& (Number(this.sessionName.split('-')[1]) === year
+									)) {
+
+									const month = new Date().getMonth() + 1;
+									this.monthArr = this.monthArr.filter(item => {
+										if (Number(month) < 4) {
+											return Number(item.id) <= month || (
+												(Number(item.id) !== 1 &&
+													Number(item.id) !== 2 &&
+													Number(item.id) !== 3) && (Number(item.id) > Number(month)));
+										}
+									});
+								}
+							}
 						}
 
 					}

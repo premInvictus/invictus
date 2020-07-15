@@ -57,7 +57,7 @@
           <div class="col-1">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Year</mat-label>
-              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="year"
+              <input type="number" onKeyPress="if(this.value.length==4) return false;" [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize" formControlName="year"
                 required matInput placeholder="Year" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
@@ -74,15 +74,12 @@
                   {{item.name}}
                 </mat-option>
               </mat-select>
-              <mat-error>
-                This field is required*
-              </mat-error>
             </mat-form-field>
           </div>
           <div class="col-1">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>%/CGPA</mat-label>
-              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+              <input type="number" onKeyPress="if(this.value.length==5) return false;" [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
                 formControlName="percentage" required matInput placeholder="%/CGPA" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
@@ -199,7 +196,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Last salary drawn</mat-label>
-              <input [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
+              <input type="number" [errorStateMatcher]="confirmValidParentMatcher" class="text-capitalize"
                 formControlName="last_salary" matInput placeholder="Last salary drawn" [readonly]="viewOnly">
               <mat-error>
                 This field is required*
@@ -209,7 +206,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Start Date</mat-label>
-              <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date"
+              <input matInput [max]="today" [matDatepicker]="picker" placeholder="Start Date" formControlName="start_date"
                 (dateChange)="setMinTo($event)" [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -221,7 +218,7 @@
           <div class="col-2">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>End Date</mat-label>
-              <input matInput [matDatepicker]="picker2" placeholder="End Date" [min]="toMin" formControlName="end_date"
+              <input [max]="today" matInput [matDatepicker]="picker2" placeholder="End Date" [min]="toMin" formControlName="end_date"
                 [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
               <mat-datepicker #picker2></mat-datepicker>
