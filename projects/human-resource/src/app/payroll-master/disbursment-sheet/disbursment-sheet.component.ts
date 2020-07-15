@@ -91,6 +91,20 @@ export class DisbursmentSheetComponent implements OnInit {
 		44: 'AR',
 
 	};
+	monthArr: any[] = [
+		{ id: '4', name: 'April' },
+		{ id: '5', name: 'May' },
+		{ id: '6', name: 'June' },
+		{ id: '7', name: 'July' },
+		{ id: '8', name: 'August' },
+		{ id: '9', name: 'September' },
+		{ id: '10', name: 'October' },
+		{ id: '11', name: 'November' },
+		{ id: '12', name: 'December' },
+		{ id: '1', name: 'January' },
+		{ id: '2', name: 'February' },
+		{ id: '3', name: 'March' }
+	];
 	paymentModeArray: any[] = [
 		// {
 		// 	pm_id: 'bank_transfer',
@@ -128,6 +142,17 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		const month = new Date().getMonth() + 1;
+		this.monthArr = this.monthArr.filter(item => {
+			if (Number(month) > 4) {
+				return Number(item.id) > 3 && (Number(item.id) <= Number(month));
+			} else if (Number(month) < 4) {
+				return Number(item.id) <= month || (
+					(Number(item.id) !== 1 &&
+						Number(item.id) !== 2 &&
+						Number(item.id) !== 3) && (Number(item.id) > Number(month)));
+			}
+		});
 		this.buildForm();
 		this.getPaymentModes();
 		this.getSalaryHeads();
@@ -308,7 +333,7 @@ export class DisbursmentSheetComponent implements OnInit {
 						relationsArray.push(result[i]['relations']);
 					}
 				}
-				
+
 				let emp_present_days;
 				let index = 0;
 				for (const item of recordArray) {
@@ -441,7 +466,7 @@ export class DisbursmentSheetComponent implements OnInit {
 					element = {
 						srno: pos,
 						emp_id: item.emp_id,
-						emp_code_no : relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
+						emp_code_no: relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
 						emp_name: item.emp_name,
 						emp_salary_compute_month_id: this.searchForm.value.month_id,
 						emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
@@ -476,7 +501,7 @@ export class DisbursmentSheetComponent implements OnInit {
 					pos++;
 					index++;
 				}
-				console.log('this.SALARY_COMPUTE_ELEMENT',this.SALARY_COMPUTE_ELEMENT);
+				console.log('this.SALARY_COMPUTE_ELEMENT', this.SALARY_COMPUTE_ELEMENT);
 				this.salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 				this.salaryComputeDataSource.paginator = this.paginator;
 				if (this.sort) {
@@ -752,7 +777,7 @@ export class DisbursmentSheetComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
-									emp_code_no : relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
+									emp_code_no: relationsArray[index].emp_code_no ? relationsArray[index].emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_salary_compute_month_id: this.searchForm.value.month_id,
 									emp_designation: relationsArray[index] && relationsArray[index].emp_designation_detail
@@ -825,7 +850,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 		doc.autoTable({
 			head: [[
-				new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+				new TitleCasePipe().transform(' Employee Disbursement Sheet report for the month of '
 					+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
 				+ this.sessionName
 			]],
@@ -899,7 +924,7 @@ export class DisbursmentSheetComponent implements OnInit {
 		// doc.setFontSize(5);
 		// doc.autoTable({ html: '#book_log' });
 
-		doc.save('EmployeeDisbursmentSheet_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
+		doc.save('EmployeeDisbursementSheet_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
 		this.showPdf = false;
 	}
 	checkWidth(id, header) {
@@ -947,8 +972,8 @@ export class DisbursmentSheetComponent implements OnInit {
 		});
 
 
-		reportType2 = new TitleCasePipe().transform(' employeeDisbursmentSheet_') + this.sessionName;
-		reportType = new TitleCasePipe().transform(' Employee Disbursment Sheet report: ') + this.sessionName;
+		reportType2 = new TitleCasePipe().transform(' employeeDisbursementSheet_') + this.sessionName;
+		reportType = new TitleCasePipe().transform(' Employee Disbursement Sheet report: ') + this.sessionName;
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
@@ -958,7 +983,7 @@ export class DisbursmentSheetComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[8] + '2');
-		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursment Sheet report for the month of '
+		worksheet.getCell('A2').value = new TitleCasePipe().transform(' Employee Disbursement Sheet report for the month of '
 			+ this.monthNames[Number(this.searchForm.value.month_id) - 1]) + ':'
 			+ this.sessionName;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
@@ -979,8 +1004,8 @@ export class DisbursmentSheetComponent implements OnInit {
 		}
 		worksheet.mergeCells('E5:' + this.alphabetJSON[ind] + '5');
 		worksheet.getCell('E5').value = 'Modes';
-		
-		worksheet.getCell(this.alphabetJSON[ind+1] + '5').value = '';
+
+		worksheet.getCell(this.alphabetJSON[ind + 1] + '5').value = '';
 		worksheet.getCell('A6').value = 'Emp. ID';
 		worksheet.getCell('B6').value = 'Emp Name';
 		worksheet.getCell('C6').value = 'Designation';
@@ -1171,7 +1196,7 @@ export class DisbursmentSheetComponent implements OnInit {
 export interface SalaryComputeElement {
 	srno: number;
 	emp_id: string;
-	emp_code_no : any;
+	emp_code_no: any;
 	emp_name: string;
 	emp_designation: string;
 	emp_pay_scale: string;

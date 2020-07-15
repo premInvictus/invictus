@@ -27,7 +27,7 @@
           <div class="col-4 col-pad-5">
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Date of Birth</mat-label>
-              <input matInput [matDatepicker]="picker" placeholder="Date of Joining" formControlName="dob" required
+              <input matInput [matDatepicker]="picker" [max]="maxDate"  placeholder="Date of Joining" formControlName="dob" required
                 [readonly]="viewOnly">
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
@@ -95,7 +95,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Pincode</mat-label>
               <input type="number" matInput placeholder="Pincode" required [readonly]="viewOnly"
-                formControlName="p_pincode" [errorStateMatcher]="confirmValidParentMatcher">
+                formControlName="p_pincode" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="6" [errorStateMatcher]="confirmValidParentMatcher">
               <mat-error>
                 This field is required
               </mat-error>
@@ -148,7 +148,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Expected Salary</mat-label>
               <input class="text-capitalize" matInput placeholder="Expected Salary" [readonly]="viewOnly"
-                formControlName="enq_expected_salary" [errorStateMatcher]="confirmValidParentMatcher" />
+                formControlName="enq_expected_salary" (keypress)="ValidateAlpha($event);" [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>
@@ -156,7 +156,7 @@
             <mat-form-field class="form-field" appearance="outline">
               <mat-label>Current Salary</mat-label>
               <input class="text-capitalize" matInput placeholder="Current Salary" [readonly]="viewOnly"
-                formControlName="enq_present_salary" [errorStateMatcher]="confirmValidParentMatcher" />
+                formControlName="enq_present_salary" (keypress)="ValidateAlpha($event);" [errorStateMatcher]="confirmValidParentMatcher" />
               <mat-error>
                 This field is required
               </mat-error>

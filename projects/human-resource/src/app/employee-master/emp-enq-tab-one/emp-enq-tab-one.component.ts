@@ -46,6 +46,7 @@ export class EmpEnqTabOneComponent implements OnInit {
 	currentUser: any;
 	subjectArray: any[] = [];
 	departmentArray: any[] = [];
+	maxDate = new Date();
 	@ViewChild('editReference') editReference;
 
 	constructor(public commonAPIService: CommonAPIService,
@@ -508,4 +509,12 @@ export class EmpEnqTabOneComponent implements OnInit {
 			}
 		});
 	}
+	ValidateAlpha(evt)
+    {
+        var keyCode = (evt.which) ? evt.which : evt.keyCode
+        if(evt.keyCode >= 48 && evt.keyCode <= 57) 
+         
+        return true;
+            return false;
+    }
 }

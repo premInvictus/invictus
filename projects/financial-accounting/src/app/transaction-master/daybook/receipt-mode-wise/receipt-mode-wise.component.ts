@@ -38,6 +38,8 @@ export class ReceiptModeWiseComponent implements OnInit {
   currentVoucherData: any;
   tempChartsOfAccountInvoice: any[] = [];
   vcYearlyStatus = 0;
+  feeReceivableAccountId = 0;
+  feeReceivableAccountName = 'Fee Receivable';
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -310,6 +312,12 @@ export class ReceiptModeWiseComponent implements OnInit {
           this.tempChartsOfAccountInvoice.push(result[i]['coa_dependencies'][0]['dependency_name']);
           console.log('charts of account invoice,', this.chartsOfAccountInvoice)
         }
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
+          console.log('result--', result[i]);
+          //this.chartsOfAccount.push(result[i]);
+          this.feeReceivableAccountId = result[i]['coa_id'];
+          this.feeReceivableAccountName = result[i]['coa_acc_name'];
+        }
       }
     });
   }
@@ -423,8 +431,8 @@ export class ReceiptModeWiseComponent implements OnInit {
     }
     if (voucherEntryArray.length > 0) {
       let vFormJson = {
-        vc_account_type: 'Fee Receiveable',
-        vc_account_type_id: 0,
+        vc_account_type: this.feeReceivableAccountName,
+        vc_account_type_id: this.feeReceivableAccountId,
         vc_particulars: 'Fee Receiveable',
         vc_grno: '',
         vc_invoiceno: '',
@@ -667,8 +675,8 @@ export class ReceiptModeWiseComponent implements OnInit {
 
     if (voucherEntryArray.length > 0) {
       let vFormJson = {
-        vc_account_type: 'Fee Receiveable',
-        vc_account_type_id: 0,
+        vc_account_type: this.feeReceivableAccountName,
+        vc_account_type_id: this.feeReceivableAccountId,
         vc_particulars: 'Fee Receiveable',
         vc_grno: '',
         vc_invoiceno: '',

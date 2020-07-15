@@ -17,7 +17,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	deleteMessage: any = 'Are You Sure you want to Delete...?';
 	formGroupArray: any[] = [];
-	configValue: any;
+	configValue: any='';
 	currentUser: any;
 	session: any;
 	param: any = {};

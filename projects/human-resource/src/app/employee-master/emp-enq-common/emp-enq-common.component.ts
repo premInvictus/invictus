@@ -259,7 +259,7 @@ export class EmpEnqCommonComponent implements OnInit {
             enq_profile_pic: result.data[0].file_url
           });
           if (result.data[0].file_url && this.employeeDetailsForm.value.enq_id) {
-            this.commonAPIService.updateEmployee({
+            this.commonAPIService.updateEnquiry({
               enq_id: this.employeeDetailsForm.value.enq_id,
               enq_profile_pic: result.data[0].file_url
             }).subscribe((result1: any) => {
@@ -352,12 +352,12 @@ export class EmpEnqCommonComponent implements OnInit {
   }
 
   deleteUser() {
-    this.commonAPIService.deleteEmployee({ enq_id: this.employeeDetailsForm.value.enq_id, enq_status: 'left' }).subscribe((result: any) => {
+    this.commonAPIService.deleteEnquiry({ enq_id: this.employeeDetailsForm.value.enq_id, enq_status: 'left' }).subscribe((result: any) => {
       if (result) {
-        this.commonAPIService.showSuccessErrorMessage('Employee Detail Deleted Successfully', 'success');
+        this.commonAPIService.showSuccessErrorMessage('Employee Enquiry Deleted Successfully', 'success');
         this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
       } else {
-        this.commonAPIService.showSuccessErrorMessage('Error While Deleting Employee Detail', 'error');
+        this.commonAPIService.showSuccessErrorMessage('Error While Deleting Employee Enquiry', 'error');
       }
     });
   }
@@ -434,4 +434,13 @@ export class EmpEnqCommonComponent implements OnInit {
       return this.subjectArray[findex].sub_name;
     }
   }
+
+  ValidateAlpha(evt)
+    {
+        var keyCode = (evt.which) ? evt.which : evt.keyCode
+        if ((keyCode < 65 || keyCode > 90) && (keyCode < 97 || keyCode > 123) && keyCode != 32)
+         
+        return false;
+            return true;
+    }
 }
