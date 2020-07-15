@@ -111,7 +111,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 		this.getGlobalSettings();
 		if (this.employeedetails) {
-			this.getSalartDetails();
+			console.log('ngOnInit employeedetails',this.employeedetails);
+			
 			this.onChangeData();
 		}
 	}
@@ -235,6 +236,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getAllEpmployeeList();
 		this.getSession();
 		if (this.employeedetails) {
+			console.log('ngOnChange employeedetails',this.employeedetails);
 			this.getSalartDetails();
 			this.onChangeData();
 		}
@@ -513,6 +515,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 	}
 	getSalartDetails() {
+		console.log('calling getSalartDetails');
 		this.salaryHeadsArray = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads : '';
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_bank_detail && this.employeedetails.emp_salary_detail.emp_bank_detail.length > 0) {
 			this.empBankDetail = [];
@@ -638,7 +641,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			gratuity: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
 		});
-		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.pc_id) {
+		console.log('this.employeedetails.emp_salary_detail',this.employeedetails.emp_salary_detail);
+		console.log('this.employeedetails.emp_salary_detail',this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id)
+		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id) {
 			this.onChangeData();
 			this.netSalary = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '';
 			this.totalEarning = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '';
