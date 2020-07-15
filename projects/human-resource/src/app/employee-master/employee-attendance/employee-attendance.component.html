@@ -13,7 +13,7 @@
               <mat-label>Month</mat-label>
               <mat-select formControlName="month_id" required
                 (selectionChange)="getMonthName($event);getEmployeeDetail();">
-                <mat-option value="4">April</mat-option>
+                <!-- <mat-option value="4">April</mat-option>
                 <mat-option value="5">May</mat-option>
                 <mat-option value="6">June</mat-option>
                 <mat-option value="7">July</mat-option>
@@ -24,7 +24,8 @@
                 <mat-option value="12">December</mat-option>
                 <mat-option value="1">January</mat-option>
                 <mat-option value="2">February</mat-option>
-                <mat-option value="3">March</mat-option>
+                <mat-option value="3">March</mat-option> -->
+                <mat-option value="{{item?.month_id}}" *ngFor="let item of monthArr">{{item?.month_name}}</mat-option>
               </mat-select>
             </mat-form-field>
           </div>
