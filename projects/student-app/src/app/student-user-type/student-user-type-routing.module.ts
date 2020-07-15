@@ -9,6 +9,7 @@ import { NotificationPageComponent } from 'src/app/login/notification-page/notif
 import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment-basedonprovider/make-payment-basedonprovider.component';
 import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
 import { ViewStudentProfileComponent } from '../shared-module/view-student-profile/view-student-profile.component';
+import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-payment-hdfc.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -65,6 +66,11 @@ const routes: Routes = [
 		path: 'make-paymentviaeazypay',
 		canActivate: [AuthGuard],
 		component: MakePaymentViaEazypayComponent
+	},
+	{
+		path: 'make-paymentviarazorpay',
+		canActivate: [AuthGuard],
+		component: MakePaymentHdfcComponent
 	}
 ];
 
