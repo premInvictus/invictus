@@ -1843,7 +1843,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 	openFilter() {
-		this.searchByFilter = true;
+		
 		if (this.searchForm.value.month_id) {
 			this.searchModal.openModal();
 		} else {
@@ -1991,6 +1991,7 @@ export class SalaryComputationComponent implements OnInit {
 
 	searchOk(event) {
 		//this.searchByFilter = false;
+		this.searchByFilter = true;
 		this.filterJson = event;
 		////console.log('filterJson--', this.filterJson);
 		var inputJson = {
