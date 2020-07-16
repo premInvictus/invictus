@@ -109,7 +109,7 @@
                   <mat-label>Subject</mat-label>
                   <mat-select formControlName="enq_subject" multiple placeholder="Subject" required
                     [disabled]="viewOnly">
-                    <mat-option value="{{item.sub_id}}" *ngFor="let item of subjectArray">{{item.sub_name}}
+                    <mat-option value="{{item.config_id}}" *ngFor="let item of subjectArray">{{item.name}}
                     </mat-option>
                   </mat-select>
                 </mat-form-field>
