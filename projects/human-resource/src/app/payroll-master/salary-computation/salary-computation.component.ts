@@ -145,6 +145,7 @@ export class SalaryComputationComponent implements OnInit {
 	showPdf = false;
 	searchByFilter = false;
 	tdArr: any[] = [];
+	tAr :any[] = [];
 	transMode: any[] = [
 		{ id: 1, name: 'Bank Transfer' },
 		{ id: 2, name: 'Cheque Transfer' }
@@ -536,6 +537,7 @@ export class SalaryComputationComponent implements OnInit {
 					if (editableStatus) {
 						var salary_payable = 0;
 						let arrearValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].arrear || 0);
+						formJson['arrear'] = arrearValue;
 						let advanceValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance || 0);
 						total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings']) : 0;
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
@@ -597,6 +599,7 @@ export class SalaryComputationComponent implements OnInit {
 							balance: Math.round(Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'])),
 							isEditable: editableStatus
 						};
+						this.tAr.push(element.emp_modes_data.arrear);
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
@@ -764,6 +767,7 @@ export class SalaryComputationComponent implements OnInit {
 							balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
 						};
 						element.emp_total_earnings = Math.round(element.emp_total_earnings + element.emp_modes_data.td);
+						this.tAr.push(element.emp_modes_data.arrear);
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
 						element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
@@ -1843,7 +1847,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 	openFilter() {
-		this.searchByFilter = true;
+		
 		if (this.searchForm.value.month_id) {
 			this.searchModal.openModal();
 		} else {
@@ -1991,6 +1995,7 @@ export class SalaryComputationComponent implements OnInit {
 
 	searchOk(event) {
 		//this.searchByFilter = false;
+		this.searchByFilter = true;
 		this.filterJson = event;
 		////console.log('filterJson--', this.filterJson);
 		var inputJson = {
@@ -2184,7 +2189,7 @@ export class SalaryComputationComponent implements OnInit {
 								let advanceValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance || 0);
 								total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings']) : 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
-
+								formJson['arrear'] = arrearValue;
 								emp_present_days = emp_present_days ? emp_present_days : 0;
 								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
 									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
@@ -2242,6 +2247,7 @@ export class SalaryComputationComponent implements OnInit {
 									balance: Math.round(Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'])),
 									isEditable: editableStatus
 								};
+								this.tAr.push(element.emp_modes_data.arrear);
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))
@@ -2409,6 +2415,7 @@ export class SalaryComputationComponent implements OnInit {
 									balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
 								};
 								element.emp_total_earnings = Math.round(element.emp_total_earnings + element.emp_modes_data.td);
+								this.tAr.push(element.emp_modes_data.arrear);
 								this.tdArr.push(element.emp_modes_data.td);
 								this.totalEarnings.push(element.emp_total_earnings);
 								element.emp_salary_payable = Math.round((Number(element.emp_total_earnings) * Number(element.emp_present_days) / Number(no_of_days))

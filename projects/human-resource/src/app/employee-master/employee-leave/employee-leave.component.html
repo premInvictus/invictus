@@ -18,9 +18,9 @@
               <input matInput placeholder="Enter Employee Name" formControlName="emp_name" required
                 [matAutocomplete]="auto" (keyup)="getFilterEmployee($event)" />
               <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let item of allEmployeeData" [value]="item.emp_id"
+                <mat-option *ngFor="let item of allEmployeeData" [value]="item.emp_code_no"
                   (onSelectionChange)="setEmployeeId(item)">
-                  <small>{{item.emp_name | capitalize}}( {{item.emp_id}} )</small>
+                  <small>{{item.emp_name | capitalize}}( {{item.emp_code_no}} )</small>
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
@@ -45,10 +45,10 @@
                 {{employeeData?.emp_name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Designation : </span><span
-                class="font-size-14 opacity-7">{{employeeData?.emp_designation_detail?.des_name}} </span>
+                class="font-size-14 opacity-7">{{employeeData?.emp_designation_detail?.name}} </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Department : </span><span
                 class="font-size-14 opacity-7">
-                {{employeeData?.emp_department_detail?.dpt_name}}
+                {{employeeData?.emp_department_detail?.name}}
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Category : </span><span
                 class="font-size-14 opacity-7">
@@ -60,7 +60,7 @@
               </span>
               <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
                 class="font-size-14 opacity-7">
-                {{leave_opening_balance}}
+                {{employeeData?.emp_month_attendance_data?.leave_opening_balance}}}
               </span>
             </div>
 
