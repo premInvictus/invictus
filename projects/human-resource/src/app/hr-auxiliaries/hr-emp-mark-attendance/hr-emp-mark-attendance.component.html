@@ -86,7 +86,7 @@
               <div class="col-4 remove-col-padding-right text-center custom-tooltip">
                 <img style="border-radius:50%"
                   [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + item.au_profileimage + '&h=72&w=72'"
-                  (click)="changeStudentAttendanceStatus($event,i)">
+                  (click)="changeStudentAttendanceStatus(i)">
                 <div class="">
                   <i class="fas fa-check-circle mark-student-tick font-size-20 font-color-green"
                     *ngIf="finalArray[i] && 

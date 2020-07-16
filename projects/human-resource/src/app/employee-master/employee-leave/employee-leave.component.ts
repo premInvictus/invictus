@@ -20,6 +20,7 @@ export class EmployeeLeaveComponent implements OnInit {
 	session_id;
 	allEmployeeData: any[] = [];
 	tmpAllEmployeeData: any;
+	tempEmpData: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	leave_opening_balance = 0;
 	//'leave_opening_balance',
@@ -45,37 +46,34 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	getAllEmployee() {
 		this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-
+			this.allEmployeeData = result;
+			this.tempEmpData = result;
 			this.tmpAllEmployeeData = result;
+			this.employeeData = {};
 		});
 	}
 
 	getFilterEmployee(event) {
 		var tempArr = [];
+
 		if (event.target.value.length > 2) {
-			this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-				this.tmpAllEmployeeData = result;
-				if (this.tmpAllEmployeeData && (event.target.value.length > 2)) {
-					for (var i = 0; i < this.tmpAllEmployeeData.length; i++) {
-						if (this.tmpAllEmployeeData[i]['emp_name'].toLowerCase().includes(event.target.value)) {
-							tempArr.push(this.tmpAllEmployeeData[i]);
-						}
-					}
-					if (tempArr.length > 0) {
-						this.allEmployeeData = tempArr;
-					}
-				}
-			});
+			const filterVal = event.target.value;
+			this.allEmployeeData = this.tempEmpData.filter(f => {
+				console.log(f);
+				return (f.emp_name.toLowerCase()).includes(filterVal)
+			})
 		} else {
-			this.allEmployeeData = []
+			this.allEmployeeData = this.tempEmpData;
 		}
 	}
 
 	getEmployeeDetail() {
-		let inputJson = {}
+		let inputJson = {};
+		this.allEmployeeData = [];
+		this.tempEmpData = [];
 		if (this.searchForm.value && this.searchForm.value.emp_id && this.searchForm.value.emp_name) {
 			inputJson = {
-				emp_id: this.searchForm.value.emp_id
+				emp_code_no: this.searchForm.value.emp_id
 			}
 		}
 
@@ -102,8 +100,10 @@ export class EmployeeLeaveComponent implements OnInit {
 						var emp_month = result.emp_month_attendance_data.month_data[i].month_id;
 						var emp_attendance_detail = result.emp_month_attendance_data.month_data[i].attendance_detail;
 						let leave_credited = 0;
-						for (let item of emp_attendance_detail.emp_leave_credited) {
-							leave_credited = leave_credited + item.leave_credit_count;
+						if (emp_attendance_detail.emp_leave_credited && emp_attendance_detail.emp_leave_credited.length > 0) {
+							for (let item of emp_attendance_detail.emp_leave_credited) {
+								leave_credited = leave_credited + item.leave_credit_count;
+							}
 						}
 						element = {
 							srno: pos,
@@ -144,6 +144,7 @@ export class EmployeeLeaveComponent implements OnInit {
 					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 					this.employeedataSource.sort = this.sort;
 				}
+				console.log(this.tempEmpData);
 			} else {
 				let element: any = {};
 				let recordArray = [];
@@ -159,10 +160,10 @@ export class EmployeeLeaveComponent implements OnInit {
 	setEmployeeId(empDetails) {
 		console.log('empDetails', empDetails);
 		this.searchForm.patchValue({
-			emp_id: empDetails.emp_id,
+			emp_id: empDetails.emp_code_no,
 			emp_name: empDetails.emp_name,
 		});
-		this.allEmployeeData = [];
+		this.allEmployeeData = this.tmpAllEmployeeData;
 		this.getEmployeeDetail();
 	}
 
