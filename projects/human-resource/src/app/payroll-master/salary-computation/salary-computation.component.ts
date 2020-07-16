@@ -167,10 +167,10 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			for (var i = 0; i < result.length; i++) {
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component") {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component") {
 					this.chartsOfAccount.push(result[i]);
 				}
-				if ((result[i]['dependencies_type']) === "internal" && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
 					this.paymentModeAccount.push(result[i]);
 				}
 			}
@@ -996,15 +996,15 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			console.log('fjJson--', fJson);
-			this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
-				if (data) {
-					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+			// this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
+			// 	if (data) {
+			// 		this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
 
 
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-				}
-			});
+			// 	} else {
+			// 		this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+			// 	}
+			// });
 		}
 
 
@@ -1173,12 +1173,13 @@ export class SalaryComputationComponent implements OnInit {
 					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > -1) {
 						var salary_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+							if (finJson['emp_salary_compute_data'][ci]['empShdcolumns']) {
 							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length; cj++) {
 
 								if (finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
 									salary_total = salary_total + Number(finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['value']);
 
-							}
+							}}
 
 
 						}
@@ -1245,9 +1246,10 @@ export class SalaryComputationComponent implements OnInit {
 
 			var tempPMArr = [];
 			for (var i = 0; i < 1; i++) {
+				if (finJson['emp_salary_compute_data'][i]['emp_modes_data']) {
 				for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
 					tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
-				}
+				}}
 			}
 
 			if (this.paymentModeAccount.length > 0) {
@@ -1258,7 +1260,7 @@ export class SalaryComputationComponent implements OnInit {
 					var amt_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
-
+						if (finJson['emp_salary_compute_data'][j]['emp_modes_data']){
 						for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'].length; k++) {
 							// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
 							if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
@@ -1267,7 +1269,7 @@ export class SalaryComputationComponent implements OnInit {
 								console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
 							}
 
-						}
+						}}
 					}
 
 					let vFormJson = {};
@@ -1286,23 +1288,23 @@ export class SalaryComputationComponent implements OnInit {
 				this.getVoucherTypeMaxId(paymentParticularData);
 
 			}
-			if (!edit) {
-				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						this.checkForFilter();
-					});
-				});
-			} else {
-				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.checkForFilter();
-						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-					});
-				});
-			}
+			// if (!edit) {
+			// 	this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
+			// 		this.disabledApiButton = false;
+			// 		this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+			// 			this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+			// 			this.checkForFilter();
+			// 		});
+			// 	});
+			// } else {
+			// 	this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+			// 		this.disabledApiButton = false;
+			// 		this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+			// 			this.checkForFilter();
+			// 			this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+			// 		});
+			// 	});
+			// }
 		}
 
 
