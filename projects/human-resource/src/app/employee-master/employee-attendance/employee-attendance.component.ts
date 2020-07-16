@@ -34,8 +34,22 @@ export class EmployeeAttendanceComponent implements OnInit {
 	editAllStatus = true;
 	disabledApiButton = false;
 	holidayArray: any[] = [];
-	sessionName : any;
+	sessionName: any;
 	currSess: any;
+	tempMonthArr = [{ month_id: 4, month_name: 'April' },
+	{ month_id: 5, month_name: 'May' },
+	{ month_id: 6, month_name: 'June' },
+	{ month_id: 7, month_name: 'July' },
+	{ month_id: 8, month_name: 'August' },
+	{ month_id: 9, month_name: 'September' },
+	{ month_id: 10, month_name: 'October' },
+	{ month_id: 11, month_name: 'November' },
+	{ month_id: 12, month_name: 'December' },
+	{ month_id: 1, month_name: 'January' },
+	{ month_id: 2, month_name: 'Feburary' },
+	{ month_id: 3, month_name: 'March' }
+	];
+	monthArr = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -98,6 +112,29 @@ export class EmployeeAttendanceComponent implements OnInit {
 							this.sessionName = this.sessionArray[this.session_id.ses_id];
 						}
 
+						for (const citem of result.data) {
+							if (Number(citem.ses_id) == Number(this.session_id.ses_id)) {
+								if (citem.ses_alias === 'current') {
+									let curMonth = new Date().getMonth() + 1;
+									for (var i = 0; i < this.tempMonthArr.length; i++) {
+										if (this.tempMonthArr[i]['month_id'] <= curMonth && ([1, 2, 3].indexOf(this.tempMonthArr[i]['month_id']) < 0)) {
+											this.monthArr.push(this.tempMonthArr[i]);
+										}
+										if ((curMonth == 1
+											|| curMonth == 2 || curMonth == 3)) {
+											if ((this.tempMonthArr[i]['month_id'] >= 4 && this.tempMonthArr[i]['month_id'] <= 12) || this.tempMonthArr[i]['month_id'] <= curMonth) {
+												this.monthArr.push(this.tempMonthArr[i]);
+											}
+										}
+									}
+								} else {
+									this.monthArr = this.tempMonthArr;
+								}
+							}
+
+						}
+
+
 					}
 				});
 	}
@@ -111,7 +148,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				emp_cat_id: this.searchForm.value.cat_id,
 				session_id: this.session_id.ses_id,
 				from_attendance: true,
-				year : this.currSess
+				year: this.currSess
 			};
 			var no_of_days2 = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			const inputJson2: any = {};
@@ -193,7 +230,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
-									emp_code_no  : item.emp_code_no ? item.emp_code_no : '-',
+									emp_code_no: item.emp_code_no ? item.emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 									emp_bol: total_leave_closing_balance,
@@ -430,8 +467,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 									this.totalPresentArr.push(element.emp_total_attendance);
 								} else {
 									element.emp_total_attendance = Number(no_of_days) - this.holidayArray.length -
-									(element.emp_lwp ?
-										Number(element.emp_lwp) : 0);
+										(element.emp_lwp ?
+											Number(element.emp_lwp) : 0);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								}
 
@@ -501,7 +538,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 								element = {
 									srno: pos,
 									emp_id: item.emp_id,
-									emp_code_no : item.emp_code_no ? item.emp_code_no : '-',
+									emp_code_no: item.emp_code_no ? item.emp_code_no : '-',
 									emp_name: item.emp_name,
 									emp_designation: item.emp_designation_detail ? item.emp_designation_detail.name : '',
 									emp_bol: total_leave_closing_balance,
@@ -878,7 +915,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// var presentDays =Number(lwpDays) < 0  ? (Number(tPresent) + Number(lwpDays)) : tPresent;
 			// element.emp_lwp = element && element ? element.emp_lwp : '';
 			// element.emp_total_attendance = presentDays;
-			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = Number(this.totalPresentArr[index]) -Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
+			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = Number(this.totalPresentArr[index]) - Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 			//this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = presentDays;
 
 			console.log(element.emp_present, this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
@@ -893,7 +930,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 		} else {
 			this.currSess = this.sessionName.split('-')[0];
 		}
-		
+
 	}
 	getStatusName(ev) {
 		this.currentStatusName = ev.source.selected.viewValue;

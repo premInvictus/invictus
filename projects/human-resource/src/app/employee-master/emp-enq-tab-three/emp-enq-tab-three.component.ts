@@ -745,7 +745,7 @@ export class EmpEnqTabThreeComponent implements OnInit {
   }
   //  Get Class List function
   getAllSubjects() {
-    this.smartService.getAllSubjects({})
+    this.commonAPIService.getAllSubjects({})
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {

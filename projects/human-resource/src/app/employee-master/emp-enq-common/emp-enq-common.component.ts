@@ -352,7 +352,7 @@ export class EmpEnqCommonComponent implements OnInit {
   }
 
   deleteUser() {
-    this.commonAPIService.deleteEnquiry({ enq_id: this.employeeDetailsForm.value.enq_id, enq_status: 'left' }).subscribe((result: any) => {
+    this.commonAPIService.deleteEnquiry({ enq_id: this.employeeDetailsForm.value.enq_id, enq_status: 'delete' }).subscribe((result: any) => {
       if (result) {
         this.commonAPIService.showSuccessErrorMessage('Employee Enquiry Deleted Successfully', 'success');
         this.commonAPIService.reRenderForm.next({ reRenderForm: true, addMode: false, editMode: false, deleteMode: false });
@@ -419,11 +419,12 @@ export class EmpEnqCommonComponent implements OnInit {
   }
   //  Get Class List function
   getAllSubjects() {
-    this.smartService.getAllSubjects({})
+    this.commonAPIService.getAllSubjects({type_id:'14', status:'1'})
       .subscribe(
         (result: any) => {
-          if (result && result.status === 'ok') {
-            this.subjectArray = result.data;
+          console.log('all subjects', result);
+          if (result ) {
+            this.subjectArray = result;
           }
         }
       );
