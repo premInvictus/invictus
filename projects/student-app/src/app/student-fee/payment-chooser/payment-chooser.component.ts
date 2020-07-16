@@ -25,8 +25,8 @@ export class PaymentChooserComponent implements OnInit {
   openModal() {
     this.chosenBank = '';
     this.dialogRef = this.dialog.open(this.provider, {
-      height: '40vh',
-      width: '40vh',
+      height: '60vh',
+      width: '60vh',
       position: {
         top: '20px'
       }
