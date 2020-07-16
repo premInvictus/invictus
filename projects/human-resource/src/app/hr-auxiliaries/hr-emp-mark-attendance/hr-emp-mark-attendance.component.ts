@@ -36,7 +36,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
   absentStudent = 0;
   monthEntryAvailable = false;
   att_id: any;
-  defaultsrc: any;
+  defaultsrc: any = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
   attendanceArray: any[] = [
     { aid: 0, a_name: 'Absent' },
     { aid: 1, a_name: 'Present' },
@@ -289,10 +289,10 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                   if (index !== -1) {
                     this.studentAttendanceArray.push({
                       sr_no: counter,
-                      au_profileimage: this.studentArray[index].au_profileimage ? this.studentArray[index].au_profileimage : '',
+                      au_profileimage: item.emp_profile_pic ? item.emp_profile_pic : this.defaultsrc,
                       emp_name: new TitleCasePipe().transform(this.studentArray[index].emp_name),
                       emp_id: this.studentArray[index].emp_id,
-                       emp_code_no : this.studentArray[index].emp_code_no
+                      emp_code_no: this.studentArray[index].emp_code_no
                     });
                     this.finalArray.push({
                       dpt_id: this.studentArray[index].dpt_id ? this.studentArray[index].dpt_id : '',
@@ -302,7 +302,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       attendance: this.studentArray[index].attendance === 0 || this.studentArray[index].attendance === 1 ? Number(this.studentArray[index].attendance) : '',
                       att_created_date: this.studentArray[index].att_created_date,
                       att_updated_date: this.studentArray[index].att_updated_date,
-                      au_profileimage: this.studentArray[index].au_profileimage ? this.studentArray[index].au_profileimage : this.defaultsrc,
+                      au_profileimage: item.emp_profile_pic ? item.emp_profile_pic : this.defaultsrc,
                       emp_name: new TitleCasePipe().transform(this.studentArray[index].emp_name),
                       created_by: {
                         id: this.studentArray[index].created_by.id ? this.studentArray[index].created_by.id : '',
@@ -335,21 +335,22 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       }
                       if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
                         const joinDate = new Date(new DatePipe('en-in').
-                        transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
+                          transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
                         const selectedDate = new Date(new DatePipe('en-in').
-                        transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
-                        if (selectedDate >= joinDate) {
-                          flag = true;
+                          transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
+                          if (selectedDate >= joinDate) {
+                            flag = true;
+                         
                         }
                       }
                     }
-                    if (flag) {
+                    if (flag && item.emp_status === 'live') {
                       this.studentAttendanceArray.push({
                         sr_no: counter,
-                        au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                        au_profileimage: item.emp_profile_pic ? item.emp_profile_pic : this.defaultsrc,
                         emp_name: new TitleCasePipe().transform(item.emp_name),
                         emp_id: item.emp_id,
-                        emp_code_no : item.emp_code_no
+                        emp_code_no: item.emp_code_no
                       });
                       this.finalArray.push({
                         dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
@@ -363,7 +364,7 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                         emp_wing_detail: item.emp_wing_detail,
                         att_created_date: '',
                         att_updated_date: '',
-                        au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                        au_profileimage: item.emp_profile_pic ? item.emp_profile_pic : this.defaultsrc,
                         created_by: {
                           id: this.currentUser.login_id ? this.currentUser.login_id : '',
                           name: this.currentUser.full_name ? this.currentUser.full_name : ''
@@ -375,8 +376,9 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       });
                     }
                     counter++;
-                    this.totalStudent = counter;
+
                   }
+                  this.totalStudent = counter;
 
                 }
               }
@@ -429,22 +431,22 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                     }
                     if (item.emp_salary_detail.emp_organisation_relation_detail.doj) {
                       const joinDate = new Date(new DatePipe('en-in').
-                      transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
+                        transform(item.emp_salary_detail.emp_organisation_relation_detail.doj, 'yyyy-MM-dd')).getTime();
                       const selectedDate = new Date(new DatePipe('en-in').
-                      transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
-                     
+                        transform(this.firstForm.value.entry_date, 'yyyy-MM-dd')).getTime();
+
                       if (selectedDate >= joinDate) {
                         flag = true;
                       }
                     }
                   }
-                  if (flag) {
+                  if (flag && item.emp_status === 'live') {
                     this.studentAttendanceArray.push({
                       sr_no: counter,
-                      au_profileimage: item.au_profileimage ? item.au_profileimage : this.defaultsrc,
+                      au_profileimage: item.emp_profile_pic ? item.emp_profile_pic : this.defaultsrc,
                       emp_name: new TitleCasePipe().transform(item.emp_name),
                       emp_id: item.emp_id,
-                      emp_code_no : item.emp_code_no
+                      emp_code_no: item.emp_code_no
                     });
                     this.finalArray.push({
                       dpt_id: this.firstForm.value.dept_id ? this.firstForm.value.dept_id.toString() : (item.emp_department_detail
@@ -469,13 +471,16 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
                       },
                     });
                     counter++;
-                    this.totalStudent = counter;
+
                   }
+
+                  this.totalStudent = counter;
 
                 }
               }
             });
       }
+      console.log(this.finalArray);
     });
   }
   markStudentAttendance() {
@@ -498,17 +503,22 @@ export class HrEmpMarkAttendanceComponent implements OnInit {
       }
     }
   }
-  changeStudentAttendanceStatus($event, i) {
+  changeStudentAttendanceStatus(i) {
+
     this.submitFlag = true;
-    if (Number(this.finalArray[i].attendance) === 1) {
+    if (this.finalArray[i].attendance === '') {
+      this.finalArray[i].attendance = 1;
+      this.presentStudent++;
+    } else if (Number(this.finalArray[i].attendance) === 1) {
       this.finalArray[i].attendance = 0;
       this.presentStudent--;
       this.absentStudent++;
-    } else {
+    } else if (Number(this.finalArray[i].attendance) === 0) {
+      this.finalArray[i].attendance = 1;
       this.presentStudent++;
       this.absentStudent--;
-      this.finalArray[i].attendance = 1;
     }
+    console.log(this.finalArray[i].attendance);
   }
   fetchDetailsIfCatId() {
     this.fetchDetails();

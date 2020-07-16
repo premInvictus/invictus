@@ -570,7 +570,7 @@ export class DisbursmentSheetComponent implements OnInit {
 
 
 	openFilter() {
-		this.searchByFilter = true;
+		
 		if (this.searchForm.value.month_id) {
 			this.searchModal.openModal();
 		} else {
@@ -632,6 +632,7 @@ export class DisbursmentSheetComponent implements OnInit {
 	}
 
 	searchOk(event) {
+		this.searchByFilter = true;
 		this.filterJson = event;
 		var emp_ids = [];
 		this.commonAPIService.getFilterData(event).subscribe((results: any) => {
