@@ -489,4 +489,9 @@ export class CommonAPIService {
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/getMaxVoucherTypeId', value);
 	}
 
+	getAllSubjects(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
+	}
+
 }

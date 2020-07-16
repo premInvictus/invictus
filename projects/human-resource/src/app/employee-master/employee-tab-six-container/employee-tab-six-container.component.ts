@@ -507,3 +507,4 @@ export class EmployeeTabSixContainerComponent implements OnInit, OnChanges {
 			return fileurl;
 		}
 	}
+}

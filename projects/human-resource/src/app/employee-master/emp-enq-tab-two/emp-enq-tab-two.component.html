@@ -109,7 +109,7 @@
         <button *ngIf="editOnly" mat-raised-button class="btn-success" (click)="updateForm()"
           [disabled]="disabledApiButton">Submit</button>
         <button *ngIf="editOnly" mat-raised-button class="btn-success btn-spacer btn-save-continue"
-          (click)="updateForm()" [disabled]="disabledApiButton">Update </button>
+          (click)="updateForm()" [disabled]="disabledApiButton">Update & Continue </button>
         <!-- <button mat-raised-button class="btn-neutral btn-spacer" *ngIf="editRequestFlag"
           (click)="checkFormChangedValue()">Edit & Continue</button> -->
         <button *ngIf="!viewOnly" mat-raised-button class="btn-danger btn-spacer" (click)="cancelForm()">Cancel</button>

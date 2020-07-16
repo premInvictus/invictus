@@ -459,6 +459,32 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 
 				});
 			}
+			if (bank === 'hdfc') {
+				this.erpCommonService.makeTransaction(inputJson).subscribe((result: any) => {
+					localStorage.setItem('paymentData', '');
+					if (result && result.status === 'ok') {
+						this.paytmResult = result.data[0];
+						console.log(this.paytmResult);
+						const ORDER_ID = this.paytmResult.id;
+						const MID = this.paytmResult.merchant;
+						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
+						const hostName = window.location.href.split('/')[2];
+						var left = (screen.width / 2) - (800 / 2);
+						var top = (screen.height / 2) - (800 / 2);
+						window.open(location.protocol + '//' + hostName + '/student/make-paymentviarazorpay', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+							top + ',' + 'left=' + left);
+						localStorage.setItem('paymentWindowStatus', '1');
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
+
+					} else {
+						this.paymentOrderModel.closeDialog();
+					}
+				});
+			}
 
 		}
 	}
