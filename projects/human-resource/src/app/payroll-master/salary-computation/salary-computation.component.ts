@@ -1207,14 +1207,14 @@ export class SalaryComputationComponent implements OnInit {
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS')                       {
 									console.log('in tds');
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
+									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
 									salary_total = salary_total + tempTotal;
 
 								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity")                       {
 									console.log('in gratuity');
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
+									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
 									salary_total = salary_total + tempTotal;
 
 								}
