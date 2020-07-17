@@ -680,9 +680,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				session_id: this.session_id.ses_id,
 				currentYear: this.currentYear,
 				advance_start_date: this.dateConversion(it.value.advance_start_date, 'yyyy-MM-dd'),
-				advance: it.value.advance,
-				remaining_advance: it.value.advance,
-				deposite_month_amount: it.value.deposite_month_amount,
+				advance: Number(it.value.advance),
+				remaining_advance: Number(it.value.advance),
+				deposite_month_amount: Number(it.value.deposite_month_amount),
 				starting_month: it.value.starting_month,
 				freezed: it.freezed ? it.freezed : ''
 			})
