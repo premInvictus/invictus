@@ -331,6 +331,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.shdcolumns.push({ columnDef: this.salaryHeadsArr[i]['sc_name'], header: this.salaryHeadsArr[i]['sc_name'], data: this.salaryHeadsArr[i], value: 0 });
 					}
 				}
+				console.log('shdcolumns--', this.shdcolumns)
 				//this.getAllEmployee();
 			}
 		});
@@ -1044,6 +1045,7 @@ export class SalaryComputationComponent implements OnInit {
 
 	}
 	async confirm() {
+		console.log(this.salaryComputeEmployeeData);
 		this.disabledApiButton = true;
 		var empArr = [];
 		let inputArr: any[] = [];
@@ -1147,7 +1149,7 @@ export class SalaryComputationComponent implements OnInit {
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
 						var salary_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_total_earnings'];
+							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_total_earnings'];
 
 						}
 						if (salary_total > 0) {
@@ -1190,13 +1192,32 @@ export class SalaryComputationComponent implements OnInit {
 
 					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > -1) {
 						var salary_total = 0;
-						console.log('finJson.emp_salary_compute_data',finJson['emp_salary_compute_data'])
+						// console.log('finJson.emp_salary_compute_data',finJson['emp_salary_compute_data'])
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns']) {
 							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'].length; cj++) {
+								console.log(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']);
+								if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) {
+									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value'] ) *  Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_present_days'])/no_of_days; 
+									salary_total = salary_total + tempTotal; 
+								
+									// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
+								}
+								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS')                       {
+									console.log('in tds');
+									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+									let tempTotal = this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
+									salary_total = salary_total + tempTotal;
 
-								if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
-									salary_total = salary_total + Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']);
+								}
+								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity")                       {
+									console.log('in gratuity');
+									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+									let tempTotal = this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
+									salary_total = salary_total + tempTotal;
+
+								}
 
 							}}
 
@@ -1213,7 +1234,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: salary_total,
 								vc_credit: 0
 							};
-							// console.log('vFormJson--deduction', vFormJson);
+							 console.log('vFormJson--deduction', vFormJson);
 							voucherEntryArray.push(vFormJson);
 						}
 
@@ -1278,12 +1299,12 @@ export class SalaryComputationComponent implements OnInit {
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
 				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
-				 console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
+				 //console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
 					var amt_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
-						console.log(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']);
+						//console.log(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']);
 						if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length > 0){
 						for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length; k++) {
 							// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
