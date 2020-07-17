@@ -955,6 +955,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.getChartsOfAccount();
 	}
 	getVcName(vcData, voucherEntryArray) {
+		console.log('jcalling getVCname');
 		let vcType = '';
 		const vcTypeArr = this.currentVcType.split(" ");
 		if (vcTypeArr.length > 0) {
@@ -985,7 +986,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcDay + '/' + vcMonth + '/' + vcYear + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
 		console.log(voucherEntryArray, 'test');
 
-
+		console.log('vcData', vcData);
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
@@ -1176,13 +1177,17 @@ export class SalaryComputationComponent implements OnInit {
 
 					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > -1) {
 						var salary_total = 0;
+						console.log('finJson.emp_salary_compute_data',finJson['emp_salary_compute_data'])
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length; cj++) {
+							if(finJson['emp_salary_compute_data'][ci]['empShdcolumns'] && finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length > 0){
+								for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['empShdcolumns'].length; cj++) {
 
-								if (finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
-									salary_total = salary_total + Number(finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['value']);
-
+									if (finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
+										salary_total = salary_total + Number(finJson['emp_salary_compute_data'][ci]['empShdcolumns'][cj]['value']);
+	
+								}
 							}
+							
 
 
 						}
@@ -1249,9 +1254,12 @@ export class SalaryComputationComponent implements OnInit {
 
 			var tempPMArr = [];
 			for (var i = 0; i < 1; i++) {
-				for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
-					tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
+				if(finJson['emp_salary_compute_data'][i]['emp_modes_data'] && finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'] && finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length > 0){
+					for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
+						tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
+					}
 				}
+				
 			}
 
 			if (this.paymentModeAccount.length > 0) {
@@ -1262,16 +1270,18 @@ export class SalaryComputationComponent implements OnInit {
 					var amt_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
-
-						for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'].length; k++) {
-							// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
-							if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
-								// console.log('in1111');
-								amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
-								console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+						if(finJson['emp_salary_compute_data'][j]['emp_modes_data'] && finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'] && finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'].length > 0){
+							for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'].length; k++) {
+								// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+								if (finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
+									// console.log('in1111');
+									amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
+									console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+								}
+	
 							}
-
 						}
+						
 					}
 
 					let vFormJson = {};
