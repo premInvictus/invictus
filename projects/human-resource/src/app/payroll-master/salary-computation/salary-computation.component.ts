@@ -966,6 +966,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.getChartsOfAccount();
 	}
 	getVcName(vcData, voucherEntryArray) {
+		console.log('jcalling getVCname');
 		let vcType = '';
 		const vcTypeArr = this.currentVcType.split(" ");
 		if (vcTypeArr.length > 0) {
@@ -996,7 +997,7 @@ export class SalaryComputationComponent implements OnInit {
 		this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcDay + '/' + vcMonth + '/' + vcYear + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
 		// console.log(voucherEntryArray, 'test');
 
-
+		console.log('vcData', vcData);
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
@@ -1189,6 +1190,7 @@ export class SalaryComputationComponent implements OnInit {
 
 					if (salaryDedArr.indexOf(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) > -1) {
 						var salary_total = 0;
+						console.log('finJson.emp_salary_compute_data',finJson['emp_salary_compute_data'])
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns']) {
 							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'].length; cj++) {
