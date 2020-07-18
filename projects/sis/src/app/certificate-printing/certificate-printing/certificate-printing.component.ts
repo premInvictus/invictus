@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort, MatTableDataSource, ErrorStateMatcher } from '@angular/material';
-import { CommonAPIService, SisService,SmartService } from '../../_services/index';
+import { CommonAPIService, SisService, SmartService } from '../../_services/index';
 import { FormGroup, FormBuilder, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Element } from './certificate-printing.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
@@ -25,7 +25,7 @@ export class CertificatePrintingComponent implements OnInit {
   classArray: any[] = [];
   sectionArray: any[] = [];
   studentsArray: any[] = [];
-
+  isBoard = false;
   confirmValidParentMatcher = new ConfirmValidParentMatcher();
   displayedColumns: any[] = ['select', 'no', 'name', 'class', 'action'];
   ELEMENT_DATA: Element[] = [];
@@ -38,11 +38,11 @@ export class CertificatePrintingComponent implements OnInit {
     private sisService: SisService,
     private SmartService: SmartService,
     private fbuild: FormBuilder
-    ) { }
+  ) { }
   getProcesstypeHeading(processType) {
-    if(processType) {
+    if (processType) {
       return this.enrollMentTypeArray.find(e => e.au_process_type === processType).au_process_name;
-    }    
+    }
   }
   ngOnInit() {
     this.buildForm();
@@ -71,13 +71,18 @@ export class CertificatePrintingComponent implements OnInit {
     this.sectionArray = [];
     this.sisService.getSectionsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
       if (result.status === 'ok') {
+        const index = this.classArray.findIndex(f => Number(f.class_id) === Number(this.paramForm.value.class_id));
         this.sectionArray = result.data;
+        if (index !== -1) {
+          this.isBoard = this.classArray[index] && this.classArray[index].is_board === '0' ? false : true;
+
+        }
       }
     });
   }
   getSlcTcTemplateSetting() {
-    this.sisService.getSlcTcTemplateSetting({usts_certificate_type: '1'}).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+    this.sisService.getSlcTcTemplateSetting({ usts_certificate_type: '1' }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
         this.certificate_type_arr = result.data;
       }
     })
@@ -114,13 +119,13 @@ export class CertificatePrintingComponent implements OnInit {
           this.studentsArray = result.data;
           let counter = 1;
           let enrollment_fieldname = '';
-          if(this.paramForm.value.enrollment_type === '2'){
+          if (this.paramForm.value.enrollment_type === '2') {
             enrollment_fieldname = 'em_regd_no';
-          } else if(this.paramForm.value.enrollment_type === '3'){
+          } else if (this.paramForm.value.enrollment_type === '3') {
             enrollment_fieldname = 'em_provisional_admission_no';
-          } else if(this.paramForm.value.enrollment_type === '4'){
+          } else if (this.paramForm.value.enrollment_type === '4') {
             enrollment_fieldname = 'em_admission_no';
-          }else if(this.paramForm.value.enrollment_type === '5'){
+          } else if (this.paramForm.value.enrollment_type === '5') {
             enrollment_fieldname = 'em_alumini_no';
           }
           for (const item of this.studentsArray) {
@@ -128,7 +133,7 @@ export class CertificatePrintingComponent implements OnInit {
               select: counter++,
               no: item.au_login_id,
               name: item.au_full_name,
-              class: item.sec_name ? item.class_name+'-'+item.sec_name : item.class_name,
+              class: item.sec_name ? item.class_name + '-' + item.sec_name : item.class_name,
               em_admission_no: item[enrollment_fieldname],
               action: item
             });
@@ -140,23 +145,24 @@ export class CertificatePrintingComponent implements OnInit {
       })
     }
   }
-  printcertificate(item=null) {
+  printcertificate(item = null) {
     const printData: any[] = [];
-    if(item) {
+    if (item) {
       printData.push(item.au_login_id);
     } else {
       this.selection.selected.forEach(e => {
         printData.push(e.action.au_login_id);
       });
     }
-    console.log(printData);
+
     const param: any = {};
     param.certificate_type = this.paramForm.value.certificate_type;
     param.class_id = this.paramForm.value.class_id,
-    param.sec_id = this.paramForm.value.sec_id,
-    param.printData = printData;
-    this.sisService.printAllCertificate({param}).subscribe((result: any) => {
-      if(result && result.status === 'ok') {
+      param.sec_id = this.paramForm.value.sec_id,
+      param.printData = printData;
+    param.is_board = this.isBoard;
+    this.sisService.printAllCertificate({ param }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
         this.commonApiService.showSuccessErrorMessage('Download Successfully', 'success');
         const length = result.data.split('/').length;
         saveAs(result.data, result.data.split('/')[length - 1]);
