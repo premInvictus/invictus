@@ -1182,8 +1182,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'salary payable',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: salary_pay_total,
-								vc_credit: 0
+								vc_debit: 0,
+								vc_credit: salary_pay_total
 							};
 							voucherEntryArray.push(vFormJson);
 						}
@@ -1231,8 +1231,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'salary a/c',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: salary_total,
-								vc_credit: 0
+								vc_debit: 0,
+								vc_credit: salary_total
 							};
 							 console.log('vFormJson--deduction', vFormJson);
 							voucherEntryArray.push(vFormJson);
@@ -1254,8 +1254,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'advance',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: advance_total,
-								vc_credit: 0
+								vc_debit: 0,
+								vc_credit: advance_total
 							};
 							voucherEntryArray.push(vFormJson);
 						}
@@ -1276,8 +1276,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'arrear',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: arrear_total,
-								vc_credit: 0
+								vc_debit: 0,
+								vc_credit: arrear_total
 							};
 							voucherEntryArray.push(vFormJson);
 						}
@@ -1298,6 +1298,32 @@ export class SalaryComputationComponent implements OnInit {
 
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
+				for (let i = 0; i < this.chartsOfAccount.length; i++) {
+
+				if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
+					console.log('injd')
+					var salary_pay_total = 0;
+					for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+						salary_pay_total = salary_pay_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_salary_payable'];
+
+					}
+					if (salary_pay_total) {
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary payable',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: salary_pay_total,
+							vc_credit: 0
+						};
+						paymentParticularData.push(vFormJson);
+					}
+
+				} }
+				
+				
 				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
 				 //console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
