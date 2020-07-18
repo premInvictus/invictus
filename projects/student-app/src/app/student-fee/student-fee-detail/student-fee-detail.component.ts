@@ -377,7 +377,9 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 					localStorage.setItem('paymentData', '');
 					if (result && result.status === 'ok') {
 						console.log('result.data[0]', result.data[0]);
-						this.paytmResult['url'] = result.data[0];
+						this.paytmResult['url'] = result.data[0]['url'];
+						const ORDER_ID = this.paytmResult.order_id;
+						const MID = this.getMID(bank);
 						this.paytmResult['amount'] = this.outStandingAmt;
 						localStorage.setItem('paymentData', JSON.stringify(this.paytmResult));
 						const hostName = window.location.href.split('/')[2];
@@ -386,6 +388,13 @@ export class StudentFeeDetailComponent implements OnInit, OnDestroy {
 						window.open(location.protocol + '//' + hostName + '/student/make-paymentviaeazypay', 'Payment', 'height=800,width=800,dialog=yes,resizable=no, top=' +
 							top + ',' + 'left=' + left);
 						localStorage.setItem('paymentWindowStatus', '1');
+						this.payAPICall = setInterval(() => {
+							if (ORDER_ID && MID) {
+								this.checkForPaymentStatus(ORDER_ID, MID);
+							}
+						}, 10000);
+					} else {
+						this.paymentOrderModel.closeDialog();
 					}
 				});
 			}
