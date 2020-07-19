@@ -17,7 +17,7 @@
             <div class="col-lg-2 col-md-4 col-sm-12 col-xl-2">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select placeholder="Subject" formControlName="es_sub_id" required>
+                <mat-select placeholder="Subject" formControlName="es_sub_id" >
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                     {{item.sub_name}}
                   </mat-option>
@@ -100,7 +100,7 @@
                 <ng-container matColumnDef="action">
                   <th *matHeaderCellDef> Action </th>
                   <td *matCellDef="let item">
-                    <a (click)="startTest(item.action)">
+                    <a (click)="startTest(item)">
                       <i class="fas fa-play fa-lg" data-toggle="tooltip" data-placement="top" matTooltip="Start Test"
                         aria-hidden="true"></i>
                     </a>
@@ -118,3 +118,7 @@
     </mat-card>
   </div>
 </div>
+
+<!-- Admit Code Confirmation Modal -->
+<app-admit-code-confirmation-modal #admitCodeModalRef [admitCodeMessage]="'Are you Sure? You want to Delete '" (admitCodeOk)="verifyAdmitCode($event)" (admitCodeCancel)="admitCodeCancel()">
+</app-admit-code-confirmation-modal>

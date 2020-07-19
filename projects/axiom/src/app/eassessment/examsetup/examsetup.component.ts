@@ -269,7 +269,7 @@ export class ExamsetupComponent implements OnInit {
 						'es_grace_minute': this.scheduleExamDetail.es_grace_extended_time.split(':')[1],
 						'es_pass_marks': this.scheduleExamDetail.es_pass_marks,
 						'es_message': this.scheduleExamDetail.es_message,
-						'es_admit_code':this.scheduleExamDetail.es_admit_code === '1' ?     true : false
+						'es_admit_code':this.scheduleExamDetail.es_admit_code === '1' ? true : false
 					});
 				}
 			}
@@ -336,10 +336,19 @@ export class ExamsetupComponent implements OnInit {
 		if (this.Exam_setup_Form.value.es_exam_type !== '2') {
 			setup_form.es_end_date = this.Exam_setup_Form.value.es_start_date;
 		}
+
+		if (this.exam_toggle_Form.value.es_admit_code ) {
+			setup_form.es_admit_code = true;
+		} else {
+			setup_form.es_admit_code = false;
+		}
+
 		if (this.Exam_setup_Form.valid && this.exam_toggle_Form.valid) {
 			const datePipe = new DatePipe('en-US');
 			setup_form.es_start_date = datePipe.transform(setup_form.es_start_date, 'yyyy-MM-dd');
 			setup_form.es_end_date = datePipe.transform(setup_form.es_end_date, 'yyyy-MM-dd');
+			
+			console.log('setup_form--', setup_form);
 			this.qelementService.addExamSetup(setup_form).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
