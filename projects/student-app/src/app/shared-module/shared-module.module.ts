@@ -58,6 +58,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
 import { ViewStudentProfileComponent } from './view-student-profile/view-student-profile.component';
 import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-payment-hdfc.component';
+import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-modal/admit-code-confirmation-modal.component';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
 @NgModule({
 	imports: [
@@ -124,6 +125,7 @@ import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-
 		DeleteModalComponent,
 		ViewStudentProfileComponent,
 		MakePaymentHdfcComponent,
+		AdmitCodeConfirmationModalComponent
 		//NotificationPageComponent
 	],
 	exports: [
@@ -177,7 +179,8 @@ import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-
 		CKEditorModule,
 		InfiniteScrollModule,
 		ViewStudentProfileComponent,
-		MakePaymentHdfcComponent
+		MakePaymentHdfcComponent,
+		AdmitCodeConfirmationModalComponent
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
@@ -185,7 +188,8 @@ import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
-		DeleteModalComponent
+		DeleteModalComponent,
+		AdmitCodeConfirmationModalComponent
 	]
 })
 export class SharedModuleModule {

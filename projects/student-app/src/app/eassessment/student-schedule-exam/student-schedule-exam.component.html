@@ -100,7 +100,7 @@
                 <ng-container matColumnDef="action">
                   <th *matHeaderCellDef> Action </th>
                   <td *matCellDef="let item">
-                    <a (click)="startTest(item.action)">
+                    <a (click)="startTest(item)">
                       <i class="fas fa-play fa-lg" data-toggle="tooltip" data-placement="top" matTooltip="Start Test"
                         aria-hidden="true"></i>
                     </a>
@@ -118,3 +118,7 @@
     </mat-card>
   </div>
 </div>
+
+<!-- Admit Code Confirmation Modal -->
+<app-admit-code-confirmation-modal #admitCodeModalRef [admitCodeMessage]="'Are you Sure? You want to Delete '" (admitCodeOk)="verifyAdmitCode($event)" (admitCodeCancel)="admitCodeCancel()">
+</app-admit-code-confirmation-modal>

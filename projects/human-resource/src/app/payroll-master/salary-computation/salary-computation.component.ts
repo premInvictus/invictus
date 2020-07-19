@@ -966,15 +966,15 @@ export class SalaryComputationComponent implements OnInit {
 		}
 		this.getChartsOfAccount();
 	}
-	getVcName(vcData, voucherEntryArray) {
+	getVcName(vcData, voucherEntryArray, vcType1) {
 		console.log('jcalling getVCname');
-		let vcType = '';
-		const vcTypeArr = this.currentVcType.split(" ");
-		if (vcTypeArr.length > 0) {
-			vcTypeArr.forEach(element => {
-				vcType += element.substring(0, 1).toUpperCase();
-			});
-		}
+		let vcType = (vcType1 === 'jv') ? 'JV' : 'P';
+		// const vcTypeArr = vcType.split(" ");
+		// if (vcTypeArr.length > 0) {
+		// 	vcTypeArr.forEach(element => {
+		// 		vcType += element.substring(0, 1).toUpperCase();
+		// 	});
+		// }
 		//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
 		let currentSessionFirst = this.sessionName.split('-')[0];
 		let currentSessionSecond = this.sessionName.split('-')[1];
@@ -1002,7 +1002,7 @@ export class SalaryComputationComponent implements OnInit {
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
-				vc_type: 'Journal Voucher',
+				vc_type: (vcType1 === 'jv') ? 'Journal Voucher' : 'Payment',
 				vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
 				vc_date: this.vcData.vc_date,
 				vc_narrations: 'Salary Computation of Month ' + vcMonth,
@@ -1026,9 +1026,9 @@ export class SalaryComputationComponent implements OnInit {
 
 
 	}
-	getVoucherTypeMaxId(voucherEntryArray) {
+	getVoucherTypeMaxId(voucherEntryArray, vcType) {
 		let param: any = {};
-		param.vc_type = this.currentVcType;
+		param.vc_type = vcType == 'jv' ?  this.currentVcType : 'Payment';
 		param.vc_date = this.currentYear+'-'+this.searchForm.value.month_id+'-01';
 		let flag = 0;
 		let result: any;
@@ -1038,7 +1038,7 @@ export class SalaryComputationComponent implements OnInit {
 				flag = 1;
 				result = data;
 
-				this.getVcName(result, voucherEntryArray);
+				this.getVcName(result, voucherEntryArray, vcType);
 
 			}
 		});
@@ -1143,30 +1143,31 @@ export class SalaryComputationComponent implements OnInit {
 			}
 			if (this.chartsOfAccount.length > 0) {
 				var voucherEntryArray = [];
+				var stTotal  = 0;
 				console.log('this.chart',  salaryDedArr);
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 					// console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
-					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
-						var salary_total = 0;
-						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-							salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_total_earnings'];
+					// if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
+					// 	var salary_total = 0;
+					// 	for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+					// 		salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_total_earnings'];
 
-						}
-						if (salary_total > 0) {
-							let vFormJson = {};
-							vFormJson = {
-								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
-								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
-								vc_particulars: 'salary a/c',
-								vc_grno: '',
-								vc_invoiceno: '',
-								vc_debit: salary_total,
-								vc_credit: 0
-							};
-							voucherEntryArray.push(vFormJson);
-						}
+					// 	}
+					// 	if (salary_total > 0) {
+					// 		let vFormJson = {};
+					// 		vFormJson = {
+					// 			vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+					// 			vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+					// 			vc_particulars: 'salary a/c',
+					// 			vc_grno: '',
+					// 			vc_invoiceno: '',
+					// 			vc_debit: salary_total,
+					// 			vc_credit: 0
+					// 		};
+					// 		voucherEntryArray.push(vFormJson);
+					// 	}
 
-					}
+					// }
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
 						console.log('injd')
 						var salary_pay_total = 0;
@@ -1183,8 +1184,9 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: salary_pay_total
+								vc_credit: Math.round(salary_pay_total)
 							};
+							stTotal = stTotal + salary_pay_total;
 							voucherEntryArray.push(vFormJson);
 						}
 
@@ -1200,8 +1202,7 @@ export class SalaryComputationComponent implements OnInit {
 								if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) {
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value'] ) *  Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_present_days'])/no_of_days; 
-									salary_total = salary_total + tempTotal; 
-								
+									salary_total = salary_total + tempTotal;
 									// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
 								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS')                       {
@@ -1209,14 +1210,13 @@ export class SalaryComputationComponent implements OnInit {
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
 									salary_total = salary_total + tempTotal;
-
 								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity")                       {
 									console.log('in gratuity');
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
 									salary_total = salary_total + tempTotal;
-
+									
 								}
 
 							}}
@@ -1224,6 +1224,7 @@ export class SalaryComputationComponent implements OnInit {
 
 						}
 						if (salary_total != 0) {
+							stTotal = stTotal + salary_total;
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1232,7 +1233,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: salary_total
+								vc_credit: Math.round(salary_total)
 							};
 							 console.log('vFormJson--deduction', vFormJson);
 							voucherEntryArray.push(vFormJson);
@@ -1247,7 +1248,7 @@ export class SalaryComputationComponent implements OnInit {
 							
 						}
 						if (advance_total != 0) {
-								
+							stTotal = stTotal+(advance_total < 0 ? -advance_total : advance_total);
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1255,7 +1256,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: advance_total
+								vc_credit: advance_total < 0 ? -Math.round(advance_total) : Math.round(advance_total)
 							};
 							voucherEntryArray.push(vFormJson);
 						}
@@ -1269,7 +1270,8 @@ export class SalaryComputationComponent implements OnInit {
 							
 						}
 						if (arrear_total != 0) {
-								
+							stTotal = stTotal+arrear_total < 0 ? -Math.round(arrear_total)
+							: Math.round(arrear_total)	;
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1277,14 +1279,37 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: arrear_total
-							};
+								vc_credit: arrear_total < 0 ? -Math.round(arrear_total)
+ : Math.round(arrear_total)							};
 							voucherEntryArray.push(vFormJson);
 						}
 
 					}
 				}
-				this.getVoucherTypeMaxId(voucherEntryArray);
+				for (let i = 0; i < this.chartsOfAccount.length; i++) {
+					// console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
+						var salary_total = 0;
+						// for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
+						// 	salary_total = salary_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_total_earnings'];
+
+						// }
+						if (stTotal > 0) {
+							let vFormJson = {};
+							vFormJson = {
+								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+								vc_particulars: 'salary a/c',
+								vc_grno: '',
+								vc_invoiceno: '',
+								vc_debit: Math.round(stTotal),
+								vc_credit: 0
+							};
+							voucherEntryArray.push(vFormJson);
+						}		
+
+					}}
+				this.getVoucherTypeMaxId(voucherEntryArray, 'jv');
 
 			}
 
@@ -1298,34 +1323,12 @@ export class SalaryComputationComponent implements OnInit {
 
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
-				for (let i = 0; i < this.chartsOfAccount.length; i++) {
-
-				if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
-					console.log('injd')
-					var salary_pay_total = 0;
-					for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
-						salary_pay_total = salary_pay_total + finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_salary_payable'];
-
-					}
-					if (salary_pay_total) {
-						let vFormJson = {};
-						vFormJson = {
-							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
-							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
-							vc_particulars: 'salary payable',
-							vc_grno: '',
-							vc_invoiceno: '',
-							vc_debit: salary_pay_total,
-							vc_credit: 0
-						};
-						paymentParticularData.push(vFormJson);
-					}
-
-				} }
+				
 				
 				
 				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
 				 //console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
+				 var spTotal = 0;
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
 					var amt_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
@@ -1343,6 +1346,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 
 					let vFormJson = {};
+					if (this.paymentModeAccount[i]['coa_acc_name'] != 'Outstanding Salary A/c') {
 					vFormJson = {
 						vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
 						vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
@@ -1352,10 +1356,31 @@ export class SalaryComputationComponent implements OnInit {
 						vc_debit: '',
 						vc_credit: amt_total
 					};
-					paymentParticularData.push(vFormJson);
+					spTotal = spTotal + amt_total;
+					paymentParticularData.push(vFormJson);}
 					// console.log('paymentParticularData--', vFormJson);
 				}
-				this.getVoucherTypeMaxId(paymentParticularData);
+				for (let i = 0; i < this.chartsOfAccount.length; i++) {
+
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
+						console.log('injd')
+						
+						
+							let vFormJson = {};
+							vFormJson = {
+								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+								vc_particulars: 'salary payable',
+								vc_grno: '',
+								vc_invoiceno: '',
+								vc_debit: spTotal,
+								vc_credit: 0
+							};
+							paymentParticularData.push(vFormJson);
+						
+	
+					} }
+				this.getVoucherTypeMaxId(paymentParticularData, 'payment');
 
 			}
 			if (!edit) {
