@@ -17,7 +17,7 @@
             <div class="col-lg-2 col-md-4 col-sm-12 col-xl-2">
               <mat-form-field class="form-field" appearance="outline">
                 <mat-label>Subject</mat-label>
-                <mat-select placeholder="Subject" formControlName="es_sub_id" >
+                <mat-select placeholder="Subject" formControlName="es_sub_id" required>
                   <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">
                     {{item.sub_name}}
                   </mat-option>
