@@ -220,7 +220,8 @@
 							<p class="font-size-15 margin-top-10">{{currentExam?.ti_instruction}} </p>
 						</div>
 						<div class="col-2 text-center" *ngIf="testView == 'past'">
-							<a (click)="startTest(currentExam)" class="left-dash-card-play-btn">
+							<!-- startTest(currentExam)-->
+							<a href="javascript:void(0)" class="left-dash-card-play-btn">
 								<i class="fas fa-play start-button-icon" data-toggle="tooltip" data-placement="top"
 									matTooltip="Start Test" aria-hidden="true"></i>
 							</a>
@@ -472,7 +473,8 @@
 							<div class="row">
 								<div class="col-12" style="position: relative;">
 									<span class="subname">Test Question</span>
-									<a *ngIf="testView == 'past'" (click)="startTest(currentExam)"
+									<!-- startTest(currentExam) -->
+									<a *ngIf="testView == 'past'" href="javascript:void(0)"
 										class="left-dash-card-play-btn">
 										<i class="fas fa-play start-button-icon"></i>
 									</a>

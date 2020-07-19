@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
-import { NotificationService, SocketService, SmartService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService, SocketService, SmartService,CommonAPIService } from 'projects/axiom/src/app/_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { appConfig } from 'projects/axiom/src/app/app.config';
 import { Event } from 'projects/axiom/src/app/_models/event';
@@ -12,7 +12,8 @@ import { Event } from 'projects/axiom/src/app/_models/event';
 	styleUrls: ['./student-schedule-exam.component.css']
 })
 export class StudentScheduleExamComponent implements OnInit {
-
+	examData:any;
+	verifyAdmitCodeStatus = false;
 	Student_Schedule_Form: FormGroup;
 	classArray: any[];
 	subjectArray: any[];
@@ -27,6 +28,7 @@ export class StudentScheduleExamComponent implements OnInit {
 	tableCollection = false;
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild('admitCodeModalRef') admitCodeModalRef;
 	currentUser: any;
 	displayedColumns = ['position', 'name', 'class', 'subject', 'duration', 'marks', 'location', 'date', 'time', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -38,7 +40,8 @@ export class StudentScheduleExamComponent implements OnInit {
 		private notif: NotificationService,
 		private qelementService: QelementService,
 		private socketService: SocketService,
-		private smartService: SmartService
+		private smartService: SmartService,
+		private commonAPIService: CommonAPIService
 	) { }
 
 	ngOnInit() {
@@ -213,6 +216,14 @@ export class StudentScheduleExamComponent implements OnInit {
 	}
 
 	startTest(examDetail) {
+		this.examData = examDetail;
+		if ((examDetail.action.es_admit_code === '1' || examDetail.action.es_admit_code) && !this.verifyAdmitCodeStatus) {
+			this.verifyAdmitCodeStatus = false;
+		} else {
+			this.verifyAdmitCodeStatus = true;
+		}
+
+		if (this.verifyAdmitCodeStatus) {
 
 		this.socketService.initSocket();
 
@@ -221,9 +232,9 @@ export class StudentScheduleExamComponent implements OnInit {
 				if (this.currentUser) {
 					console.log('examDetail', examDetail);
 					const userDetail = {
-						examId: examDetail.es_id,
+						examId: examDetail.action.es_id,
 						userId: this.currentUser.login_id,
-						paperId: examDetail.es_qp_id,
+						paperId: examDetail.action.es_qp_id,
 						schoolId: this.currentUser.Prefix,
 						userType: this.currentUser.role_id
 					};
@@ -239,15 +250,33 @@ export class StudentScheduleExamComponent implements OnInit {
 			});
 
 		let url = '';
-		if (examDetail.es_template_type === '1') {
-			url = '/student/test/instruction-screen/' + examDetail.es_id;
-		} else if (examDetail.es_template_type === '2') {
-			url = '/student/test/jee-mains-instruction/' + examDetail.es_id;
-		} else if (examDetail.es_template_type === '3') {
-			url = '/student/test/jee-advanced-instruction/' + examDetail.es_id;
+		if (examDetail.action.es_template_type === '1') {
+			url = '/student/test/instruction-screen/' + examDetail.action.es_id;
+		} else if (examDetail.action.es_template_type === '2') {
+			url = '/student/test/jee-mains-instruction/' + examDetail.action.es_id;
+		} else if (examDetail.action.es_template_type === '3') {
+			url = '/student/test/jee-advanced-instruction/' + examDetail.action.es_id;
 		}
 		const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
-		window.open(url, '_blank', param);
+		window.open(url, '_blank', param); 
+	  } else {
+		this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+		this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+	  }
+	}
+
+
+	verifyAdmitCode(data) {
+		console.log('data--', data);
+		this.commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
+			if(result && result.status === 'ok') {
+				this.verifyAdmitCodeStatus = true;
+				this.startTest(this.examData);
+			} else {
+				this.verifyAdmitCodeStatus = false;
+				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
+			}
+		})
 	}
 }
 

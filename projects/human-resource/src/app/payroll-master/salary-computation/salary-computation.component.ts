@@ -1184,7 +1184,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: salary_pay_total
+								vc_credit: Math.round(salary_pay_total)
 							};
 							stTotal = stTotal + salary_pay_total;
 							voucherEntryArray.push(vFormJson);
@@ -1202,8 +1202,7 @@ export class SalaryComputationComponent implements OnInit {
 								if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) {
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value'] ) *  Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_present_days'])/no_of_days; 
-									salary_total = salary_total + tempTotal; 
-									stTotal = stTotal+salary_total;
+									salary_total = salary_total + tempTotal;
 									// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
 								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS')                       {
@@ -1211,14 +1210,13 @@ export class SalaryComputationComponent implements OnInit {
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
 									salary_total = salary_total + tempTotal;
-									stTotal = stTotal + salary_total;
 								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity")                       {
 									console.log('in gratuity');
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
 									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
 									salary_total = salary_total + tempTotal;
-									stTotal = stTotal + salary_total;
+									
 								}
 
 							}}
@@ -1226,6 +1224,7 @@ export class SalaryComputationComponent implements OnInit {
 
 						}
 						if (salary_total != 0) {
+							stTotal = stTotal + salary_total;
 							let vFormJson = {};
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
@@ -1234,7 +1233,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: salary_total
+								vc_credit: Math.round(salary_total)
 							};
 							 console.log('vFormJson--deduction', vFormJson);
 							voucherEntryArray.push(vFormJson);
@@ -1249,7 +1248,7 @@ export class SalaryComputationComponent implements OnInit {
 							
 						}
 						if (advance_total != 0) {
-							stTotal = stTotal+advance_total;
+							stTotal = stTotal+(advance_total < 0 ? -advance_total : advance_total);
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1257,7 +1256,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: advance_total
+								vc_credit: advance_total < 0 ? -Math.round(advance_total) : Math.round(advance_total)
 							};
 							voucherEntryArray.push(vFormJson);
 						}
@@ -1271,7 +1270,8 @@ export class SalaryComputationComponent implements OnInit {
 							
 						}
 						if (arrear_total != 0) {
-							stTotal = stTotal+arrear_total;
+							stTotal = stTotal+arrear_total < 0 ? -Math.round(arrear_total)
+							: Math.round(arrear_total)	;
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1279,8 +1279,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_grno: '',
 								vc_invoiceno: '',
 								vc_debit: 0,
-								vc_credit: arrear_total
-							};
+								vc_credit: arrear_total < 0 ? -Math.round(arrear_total)
+ : Math.round(arrear_total)							};
 							voucherEntryArray.push(vFormJson);
 						}
 
@@ -1302,11 +1302,11 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'salary a/c',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: stTotal,
+								vc_debit: Math.round(stTotal),
 								vc_credit: 0
 							};
 							voucherEntryArray.push(vFormJson);
-						}
+						}		
 
 					}}
 				this.getVoucherTypeMaxId(voucherEntryArray, 'jv');
@@ -1346,6 +1346,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 
 					let vFormJson = {};
+					if (this.paymentModeAccount[i]['coa_acc_name'] != 'Outstanding Salary A/c') {
 					vFormJson = {
 						vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
 						vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
@@ -1356,7 +1357,7 @@ export class SalaryComputationComponent implements OnInit {
 						vc_credit: amt_total
 					};
 					spTotal = spTotal + amt_total;
-					paymentParticularData.push(vFormJson);
+					paymentParticularData.push(vFormJson);}
 					// console.log('paymentParticularData--', vFormJson);
 				}
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
@@ -1372,7 +1373,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_particulars: 'salary payable',
 								vc_grno: '',
 								vc_invoiceno: '',
-								vc_debit: salary_pay_total,
+								vc_debit: spTotal,
 								vc_credit: 0
 							};
 							paymentParticularData.push(vFormJson);
