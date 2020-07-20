@@ -217,13 +217,13 @@ export class StudentScheduleExamComponent implements OnInit {
 
 	startTest(examDetail) {
 		this.examData = examDetail;
-		if ((examDetail.action.es_admit_code === '1' || examDetail.action.es_admit_code) && !this.verifyAdmitCodeStatus) {
-			this.verifyAdmitCodeStatus = false;
-		} else {
+		if ((examDetail.action.es_admit_code === '1') && this.verifyAdmitCodeStatus) {
 			this.verifyAdmitCodeStatus = true;
+		} else {
+			this.verifyAdmitCodeStatus = false;
 		}
 
-		if (this.verifyAdmitCodeStatus) {
+		if (!this.verifyAdmitCodeStatus) {
 
 		this.socketService.initSocket();
 
@@ -270,10 +270,10 @@ export class StudentScheduleExamComponent implements OnInit {
 		console.log('data--', data);
 		this.commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
 			if(result && result.status === 'ok') {
-				this.verifyAdmitCodeStatus = true;
+				this.verifyAdmitCodeStatus = false;
 				this.startTest(this.examData);
 			} else {
-				this.verifyAdmitCodeStatus = false;
+				this.verifyAdmitCodeStatus = true;
 				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
 			}
 		})
