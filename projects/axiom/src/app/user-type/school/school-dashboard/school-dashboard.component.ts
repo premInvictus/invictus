@@ -540,11 +540,12 @@ export class SchoolDashboardComponent implements OnInit {
 	startTest(es_id) {
 		for (const item of this.comingExamArray) {
 			if (Number(item.es_id) === Number(es_id)) {
-				if (item.es_admit_code === '1') {
-					this.verifyAdmitCodeStatus = false;
-				} else {
-					this.verifyAdmitCodeStatus = true;
-				}
+				this.verifyAdmitCodeStatus = true;
+				// if (item.es_admit_code === '1') {
+				// 	this.verifyAdmitCodeStatus = false;
+				// } else {
+				// 	this.verifyAdmitCodeStatus = true;
+				// }
 				if (this.verifyAdmitCodeStatus) {
 					const examscheduledate = new Date(item.es_start_date + ' 00:00:01');
 					const today = new Date();
@@ -569,8 +570,8 @@ export class SchoolDashboardComponent implements OnInit {
 					}
 					break;
 				} else {
-					this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
-			this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+			// 		this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+			// this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
 				}
 			}
 		}
@@ -592,15 +593,15 @@ export class SchoolDashboardComponent implements OnInit {
 
 	verifyAdmitCode(data) {
 		console.log('data--', data);
-
-		this.common.getAdmmitCodeVerification(data).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-				this.verifyAdmitCodeStatus = true;
-				//this.startTest(this.examData);
-			} else {
-				this.verifyAdmitCodeStatus = false;
-				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
-			}
-		})
+		this.verifyAdmitCodeStatus = true;
+		// this.common.getAdmmitCodeVerification(data).subscribe((result: any) => {
+		// 	if (result && result.status === 'ok') {
+		// 		this.verifyAdmitCodeStatus = true;
+		// 		//this.startTest(this.examData);
+		// 	} else {
+		// 		this.verifyAdmitCodeStatus = false;
+		// 		this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
+		// 	}
+		// })
 	}
 }

@@ -151,11 +151,12 @@ export class ScheduleexamComponent implements OnInit {
 	startTest(examData: any) {
 		this.examData = examData;
 		console.log('exam data--', examData);	
-		if (this.examData.action.es_admit_code === '1') {
-			this.verifyAdmitCodeStatus = false;
-		} else {
-			this.verifyAdmitCodeStatus = true;
-		}
+		// if (this.examData.action.es_admit_code === '1') {
+		// 	this.verifyAdmitCodeStatus = false;
+		// } else {
+		// 	this.verifyAdmitCodeStatus = true;
+		// }
+		this.verifyAdmitCodeStatus = true;
 		if (this.verifyAdmitCodeStatus) {
 			for (const item of this.scheduleExamArray) {
 				if (item.es_id === examData.action.es_id) {
