@@ -6,12 +6,13 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 	styleUrls: ['./delete-modal.component.scss']
 })
 export class DeleteModalComponent implements OnInit {
-	inputData: any = {'text':''};
+	inputData: any = { 'text': '' };
 	@Input() deleteMessage;
 	@Output() deleteOk = new EventEmitter<any>();
 	@Output() deleteCancel = new EventEmitter<any>();
 	dialogRef: MatDialogRef<DeleteModalComponent>;
 	@ViewChild('deleteModal') deleteModal;
+	head: any = '';
 	constructor(private dialog: MatDialog) { }
 
 	ngOnInit() {
@@ -19,8 +20,14 @@ export class DeleteModalComponent implements OnInit {
 	openModal(data) {
 		this.inputData = data;
 
-		if (! (this.inputData && this.inputData.text)) {
+		if (!(this.inputData && this.inputData.text)) {
 			this.inputData.text = 'Do You Wish to Delete ';
+		} else {
+			if (this.inputData.head) {
+				this.head = this.inputData.head;
+			} else {
+				this.head = this.inputData.text;
+			}
 		}
 		this.dialogRef = this.dialog.open(this.deleteModal, {
 			'height': '30vh',
