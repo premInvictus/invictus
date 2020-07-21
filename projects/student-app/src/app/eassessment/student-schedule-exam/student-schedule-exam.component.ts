@@ -273,7 +273,43 @@ export class StudentScheduleExamComponent implements OnInit {
 		this.commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
 			if(result && result.status === 'ok') {
 				this.verifyAdmitCodeStatus = false;
-				this.startTest(this.examData);
+				//this.startTest(this.examData);
+				var examDetail = this.examData;
+				this.socketService.initSocket();
+
+				this.socketService.onEvent(Event.CONNECT)
+					.subscribe(() => {
+						if (this.currentUser) {
+							console.log('examDetail2', examDetail);
+							const userDetail = {
+								examId: examDetail.action.es_id,
+								userId: this.currentUser.login_id,
+								paperId: examDetail.action.es_qp_id,
+								schoolId: this.currentUser.Prefix,
+								userType: this.currentUser.role_id
+							};
+							this.socketService.sendUserInformation(userDetail);
+							userDetail['action'] = appConfig.testInitiateCode;
+							this.socketService.sendUserTestActionDetail(userDetail);
+						}
+					}
+					);
+				this.socketService.onEvent(Event.DISCONNECT)
+					.subscribe(() => {
+						console.log('Disconnected');
+					});
+
+				let url = '';
+				if (examDetail.action.es_template_type === '1') {
+					url = '/student/test/instruction-screen/' + examDetail.action.es_id;
+				} else if (examDetail.action.es_template_type === '2') {
+					url = '/student/test/jee-mains-instruction/' + examDetail.action.es_id;
+				} else if (examDetail.action.es_template_type === '3') {
+					url = '/student/test/jee-advanced-instruction/' + examDetail.action.es_id;
+				}
+				const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
+				window.open(url, '_blank', param); 
+				
 			} else {
 				this.verifyAdmitCodeStatus = true;
 				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
