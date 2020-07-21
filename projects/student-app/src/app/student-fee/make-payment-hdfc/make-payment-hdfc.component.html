@@ -9,8 +9,8 @@
       <input type="hidden" name="amount" [value]="paytmResult.amount">
       <input type="hidden" name="name" value="HDFC VAS">
       <input type="hidden" name="description" value="Enter description">
-      <input type="hidden" name="prefill[email]" value="gaurav.kumar@example.com">
-      <input type="hidden" name="prefill[contact]" value="9999999999">
+      <input type="hidden" name="prefill[email]" [value]="paytmResult.email">
+      <input type="hidden" name="prefill[contact]" [value]="paytmResult.contact">
       <input type="hidden" name="notes[transaction_id]" [value]="paytmResult.receipt">
       <input type="hidden" name="callback_url" [value]="paytmResult.callback">
 

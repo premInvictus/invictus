@@ -81,7 +81,7 @@ export class SalaryComputationComponent implements OnInit {
 		// },
 	];
 	footerrow: any;
-	SALARY_COMPUTE_ELEMENT: SalaryComputeElement[] = [];
+	SALARY_COMPUTE_ELEMENT: any[] = [];
 	salaryComputeDataSource = new MatTableDataSource<SalaryComputeElement>(this.SALARY_COMPUTE_ELEMENT);
 	// tslint:disable-next-line: max-line-length
 	displayedSalaryComputeColumns: string[] = [];
@@ -145,7 +145,7 @@ export class SalaryComputationComponent implements OnInit {
 	showPdf = false;
 	searchByFilter = false;
 	tdArr: any[] = [];
-	tAr :any[] = [];
+	tAr: any[] = [];
 	transMode: any[] = [
 		{ id: 1, name: 'Bank Transfer' },
 		{ id: 2, name: 'Cheque Transfer' }
@@ -162,9 +162,9 @@ export class SalaryComputationComponent implements OnInit {
 	) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'))
 		this.session_id = JSON.parse(localStorage.getItem('session'));
-		
+
 	}
-	
+
 	ngOnInit() {
 
 		// console.log(this.monthArr);
@@ -220,7 +220,7 @@ export class SalaryComputationComponent implements OnInit {
 						'calculation_value': '',
 						'config_id': '0',
 						'transfer_id': 0,
-						'pm_acc_name':'Cash'
+						'pm_acc_name': 'Cash'
 
 					}
 				);
@@ -398,9 +398,9 @@ export class SalaryComputationComponent implements OnInit {
 					this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 				}
 				if (this.deductions && this.deductions.gratuity) {
-					this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity');
+					this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity', 'action');
 				} else {
-					this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
+					this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'action');
 				}
 				let pos = 1;
 				let recordArray = result;
@@ -454,8 +454,8 @@ export class SalaryComputationComponent implements OnInit {
 												value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 											}
 
-											this.empShacolumns[i]['value'] = value.toFixed(2);
-											this.shacolumns[i]['value'] = value.toFixed(2);
+											this.empShacolumns[i]['value'] = Number(value);
+											this.shacolumns[i]['value'] = Number(value);
 											total_earnings = total_earnings + Number(value);
 
 										} else {
@@ -609,7 +609,8 @@ export class SalaryComputationComponent implements OnInit {
 							// tds: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['tds'],
 							gratuity: this.deductions && this.deductions.gratuity ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['gratuity'])) : 0,
 							balance: Math.round(Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'])),
-							isEditable: editableStatus
+							isEditable: editableStatus,
+							action: item
 						};
 						this.tAr.push(element.emp_modes_data.arrear);
 						this.tdArr.push(element.emp_modes_data.td);
@@ -777,6 +778,7 @@ export class SalaryComputationComponent implements OnInit {
 							isEditable: editableStatus,
 							colorCode: '',
 							balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
+							action: item
 						};
 						element.emp_total_earnings = Math.round(element.emp_total_earnings + element.emp_modes_data.td);
 						this.tAr.push(element.emp_modes_data.arrear);
@@ -940,6 +942,242 @@ export class SalaryComputationComponent implements OnInit {
 			return 0;
 		}
 	}
+	refreshComputation(val, index) {
+		const findex = this.records.findIndex(f => Number(f.emp_code_no) === Number(val.emp_code_no));
+		let item: any;
+		if (findex !== -1) {
+			item = this.records[index];
+		}
+		let total_deductions = 0;
+		let total_earnings = 0;
+		let emp_present_days = 0;
+		var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale)) : 0;
+		for (var i = 0; i < this.shacolumns.length; i++) {
+			if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
+				var value = 0;
+
+				if (this.shacolumns[i]['header'] === 'Basic Pay') {
+					this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: empBasicPay };
+				} else {
+					this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
+				}
+
+				if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
+					for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
+						if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+
+							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
+								item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
+								Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
+							) {
+								if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
+									value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
+								}
+
+								if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
+									value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
+								}
+
+								this.empShacolumns[i]['value'] = Number(value);
+								this.shacolumns[i]['value'] = Number(value);
+								total_earnings = total_earnings + Number(value);
+
+							} else {
+								this.shacolumns[i]['value'] = 0;
+								this.empShacolumns[i]['value'] = 0;
+							}
+						}
+					}
+				}
+
+			}
+		}
+		for (var i = 0; i < this.shdcolumns.length; i++) {
+			if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
+				var value = 0;
+				this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
+
+				if (item.emp_salary_detail
+					&& item.emp_salary_detail.emp_salary_structure
+					&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
+					for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
+						if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+
+							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
+								item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
+								Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
+							) {
+								if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
+									value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
+								}
+
+								if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
+									value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
+
+								}
+								const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
+									this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
+								if (upperVal && value) {
+									if (Number(value) > Number(upperVal)) {
+										value = upperVal;
+									}
+								}
+								this.empShdcolumns[i]['value'] = Number(value);
+								this.shdcolumns[i]['value'] = Number(value);
+								total_deductions = total_deductions - Number(value);
+
+							} else {
+								this.shdcolumns[i]['value'] = 0;
+								this.empShdcolumns[i]['value'] = 0;
+							}
+						}
+					}
+				}
+
+			}
+
+		}
+
+		if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
+			for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
+				let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
+				let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
+				if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+					// console.log('yes');
+					var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+					var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+					var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+						emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+					var presentDays = totalDays;
+					emp_present_days = presentDays;
+				}
+			}
+		}
+		var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(val.emp_id));
+		var salary_payable = 0;
+		let arrearValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].arrear || 0);
+		this.formGroupArray[index]['value']['arrear'] = arrearValue;
+		var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
+		this.formGroupArray[index]['value']['td'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].td));
+		if (this.deductions && this.deductions.tds) {
+			this.formGroupArray[index]['value']['tds'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].tds));
+		}
+		else {
+			this.formGroupArray[index]['value']['tds'] = 0;
+		}
+		console.log(total_earnings);
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_pay_mode'] = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_pay_mode ? item.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_name : [];
+		salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) +
+			((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_total_earnings'] = Math.round((Number(empBasicPay) + total_earnings));
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_payable'] = emp_present_days ? salary_payable : 0
+		this.SALARY_COMPUTE_ELEMENT[index]['balance'] = Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0;
+		this.formGroupArray[index]['value']['advance'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance));
+		emp_present_days = emp_present_days ? emp_present_days : 0;
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_structure'] = item.emp_salary_detail.emp_salary_structure;
+		this.SALARY_COMPUTE_ELEMENT[index]['empShacolumns'] = this.empShacolumns;
+		this.SALARY_COMPUTE_ELEMENT[index]['empShdcolumns'] = this.empShdcolumns;
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_total_deductions'] = Math.round(total_deductions);
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_modes_data']['arrear'] = arrearValue;
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_modes_data']['td'] = this.formGroupArray[index]['value']['td'];
+		this.SALARY_COMPUTE_ELEMENT[index]['emp_modes_data']['tds'] = this.formGroupArray[index]['value']['tds'];
+		this.SALARY_COMPUTE_ELEMENT[index]['gratuity'] = this.deductions && this.deductions.gratuity ?
+			(item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure
+				? Math.round(Number(item.emp_salary_detail.emp_salary_structure.gratuity)) : 0) : 0,
+			this.SALARY_COMPUTE_ELEMENT[index].emp_total_earnings = Math.round(this.SALARY_COMPUTE_ELEMENT[index].emp_total_earnings + this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.td);
+		this.tAr[index] = (this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.arrear);
+		this.tdArr[index] = (this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.td);
+		this.totalEarnings[index] = (this.SALARY_COMPUTE_ELEMENT[index].emp_total_earnings);
+		this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable = Math.round((Number(this.SALARY_COMPUTE_ELEMENT[index].emp_total_earnings) * Number(this.SALARY_COMPUTE_ELEMENT[index].emp_present_days) / Number(no_of_days))
+			- Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.tds) - Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.advance) + Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.arrear) +
+			(Number(total_deductions) * Number(this.SALARY_COMPUTE_ELEMENT[index].emp_present_days) / Number(no_of_days)));
+		this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) -
+			Number(this.SALARY_COMPUTE_ELEMENT[index].emp_total));
+		if (this.SALARY_COMPUTE_ELEMENT[index]) {
+			//this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data = [];
+			var deduction = 0;
+			let empPaymentModeDetail: any[] = [];
+			this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data = [];
+			if (item.emp_salary_detail && item.emp_salary_detail.empPaymentModeDetail && item.emp_salary_detail.empPaymentModeDetail.length > 0) {
+				empPaymentModeDetail = item.emp_salary_detail.empPaymentModeDetail;
+			}
+			for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
+				// console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
+				let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
+					e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
+				if (curpaymetmode) {
+					if (Number(this.getCalculationType(item, this.paymentModeArray[pi]['config_id'])) === 2) { // % type
+						var inputJson = {
+							'pm_id': this.paymentModeArray[pi]['pm_id'],
+							'pm_name': this.paymentModeArray[pi]['pm_name'],
+							'pm_value': Math.round((Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) * Number(curpaymetmode['value'])) / 100),
+							'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
+							'calculation_value': curpaymetmode['value'],
+							'transfer_type': curpaymetmode['transfer_id']
+						};
+						// console.log(inputJson);
+						this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data.push(inputJson);
+						if (this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]) {
+							deduction = Math.round(deduction + Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]['pm_value']));
+						}
+
+						//this.SALARY_COMPUTE_ELEMENT[index].balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - deduction;
+						this.SALARY_COMPUTE_ELEMENT[index].balance = this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable - deduction;
+						this.SALARY_COMPUTE_ELEMENT[index].emp_total = deduction;
+
+						this.formGroupArray[index]['value'][this.paymentModeArray[pi]['pm_id']] = Math.round((Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) * Number(curpaymetmode['value'])) / 100)
+						////console.log(formJson);
+
+					} else {
+						//////console.log(this.paymentModeArray[pi]['calculation_value']);
+						var tdeduction = 0;
+						var inputJson = {
+							'pm_id': this.paymentModeArray[pi]['pm_id'],
+							'pm_name': this.paymentModeArray[pi]['pm_name'],
+							'pm_value': Number(curpaymetmode['value']),
+							'calculation_type': this.getCalculationType(item, this.paymentModeArray[pi]['config_id']),
+							'calculation_value': curpaymetmode['value'],
+							'transfer_type': this.paymentModeArray[pi]['transfer_type']
+						};
+						// console.log(inputJson);
+						this.formGroupArray[index]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
+						this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data.push(inputJson);
+
+						tdeduction = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]['pm_value']));
+
+						this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
+					}
+
+				} else {
+					//////console.log(this.paymentModeArray[pi]['calculation_value']);
+					var tdeduction = 0;
+					var inputJson = {
+						'pm_id': this.paymentModeArray[pi]['pm_id'],
+						'pm_name': this.paymentModeArray[pi]['pm_name'],
+						'pm_value': 0,
+						'calculation_type': null,
+						'calculation_value': null,
+						'transfer_type': this.paymentModeArray[pi]['transfer_type']
+					};
+
+					this.formGroupArray[index]['value'][this.paymentModeArray[pi]['pm_id']] = 0;
+					this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data.push(inputJson);
+
+					tdeduction = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]['pm_value']));
+
+					this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
+				}
+			}
+
+			//console.log(this.formGroupArray, '2345');
+		}
+		this.footerrow = {
+			emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0),
+			emp_total_earnings: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total_earnings || 0), 0),
+			balance: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.balance || 0), 0)
+		}
+
+	}
 	checkForFilter() {
 		// ////console.log('searchByFilter--', this.searchByFilter);
 		this.nod = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
@@ -954,7 +1192,7 @@ export class SalaryComputationComponent implements OnInit {
 					this.searchOk(this.filterJson);
 				}
 			}
-			
+
 
 		}
 		if (Number(this.searchForm.value.month_id) === 1
@@ -1028,8 +1266,8 @@ export class SalaryComputationComponent implements OnInit {
 	}
 	getVoucherTypeMaxId(voucherEntryArray, vcType) {
 		let param: any = {};
-		param.vc_type = vcType == 'jv' ?  this.currentVcType : 'Payment';
-		param.vc_date = this.currentYear+'-'+this.searchForm.value.month_id+'-01';
+		param.vc_type = vcType == 'jv' ? this.currentVcType : 'Payment';
+		param.vc_date = this.currentYear + '-' + this.searchForm.value.month_id + '-01';
 		let flag = 0;
 		let result: any;
 
@@ -1143,8 +1381,8 @@ export class SalaryComputationComponent implements OnInit {
 			}
 			if (this.chartsOfAccount.length > 0) {
 				var voucherEntryArray = [];
-				var stTotal  = 0;
-				console.log('this.chart',  salaryDedArr);
+				var stTotal = 0;
+				console.log('this.chart', salaryDedArr);
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 					// console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
 					// if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
@@ -1197,29 +1435,30 @@ export class SalaryComputationComponent implements OnInit {
 						// console.log('finJson.emp_salary_compute_data',finJson['emp_salary_compute_data'])
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns']) {
-							for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'].length; cj++) {
-								console.log(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']);
-								if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) {
-									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value'] ) *  Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_present_days'])/no_of_days; 
-									salary_total = salary_total + tempTotal;
-									// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
-								}
-								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS')                       {
-									console.log('in tds');
-									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ) : 0; 
-									salary_total = salary_total + tempTotal;
-								}
-								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity")                       {
-									console.log('in gratuity');
-									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ) : 0; 
-									salary_total = salary_total + tempTotal;
-									
-								}
+								for (var cj = 0; cj < finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'].length; cj++) {
+									console.log(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']);
+									if (finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['header'] === this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']) {
+										let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+										let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']) * Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_present_days']) / no_of_days;
+										salary_total = salary_total + tempTotal;
+										// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
+									}
+									if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS') {
+										console.log('in tds');
+										let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+										let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds']) : 0;
+										salary_total = salary_total + tempTotal;
+									}
+									if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity") {
+										console.log('in gratuity');
+										let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+										let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity']) : 0;
+										salary_total = salary_total + tempTotal;
 
-							}}
+									}
+
+								}
+							}
 
 
 						}
@@ -1235,7 +1474,7 @@ export class SalaryComputationComponent implements OnInit {
 								vc_debit: 0,
 								vc_credit: Math.round(salary_total)
 							};
-							 console.log('vFormJson--deduction', vFormJson);
+							console.log('vFormJson--deduction', vFormJson);
 							voucherEntryArray.push(vFormJson);
 						}
 
@@ -1245,10 +1484,10 @@ export class SalaryComputationComponent implements OnInit {
 						var advance_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							advance_total = advance_total + Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_modes_data']['advance']);
-							
+
 						}
 						if (advance_total != 0) {
-							stTotal = stTotal+(advance_total < 0 ? -advance_total : advance_total);
+							stTotal = stTotal + (advance_total < 0 ? -advance_total : advance_total);
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1267,11 +1506,11 @@ export class SalaryComputationComponent implements OnInit {
 						var arrear_total = 0;
 						for (var ci = 0; ci < finJson['emp_salary_compute_data'].length; ci++) {
 							arrear_total = arrear_total + Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_modes_data']['arrear']);
-							
+
 						}
 						if (arrear_total != 0) {
-							stTotal = stTotal+arrear_total < 0 ? -Math.round(arrear_total)
-							: Math.round(arrear_total)	;
+							stTotal = stTotal + arrear_total < 0 ? -Math.round(arrear_total)
+								: Math.round(arrear_total);
 							vFormJson = {
 								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
 								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
@@ -1280,7 +1519,8 @@ export class SalaryComputationComponent implements OnInit {
 								vc_invoiceno: '',
 								vc_debit: 0,
 								vc_credit: arrear_total < 0 ? -Math.round(arrear_total)
- : Math.round(arrear_total)							};
+									: Math.round(arrear_total)
+							};
 							voucherEntryArray.push(vFormJson);
 						}
 
@@ -1306,9 +1546,10 @@ export class SalaryComputationComponent implements OnInit {
 								vc_credit: 0
 							};
 							voucherEntryArray.push(vFormJson);
-						}		
+						}
 
-					}}
+					}
+				}
 				this.getVoucherTypeMaxId(voucherEntryArray, 'jv');
 
 			}
@@ -1316,70 +1557,74 @@ export class SalaryComputationComponent implements OnInit {
 			var tempPMArr = [];
 			for (var i = 0; i < 1; i++) {
 				if (finJson['emp_salary_compute_data'][i]['emp_modes_data']) {
-				for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
-					tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
-				}}
+					for (var j = 0; j < finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'].length; j++) {
+						tempPMArr.push(finJson['emp_salary_compute_data'][i]['emp_modes_data']['mode_data'][j]['pm_name']);
+					}
+				}
 			}
 
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
-				
-				
-				
+
+
+
 				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
-				 //console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
-				 var spTotal = 0;
+				//console.log('paymentModeAccount--', this.paymentModeAccount, finJson['emp_salary_compute_data'])
+				var spTotal = 0;
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
 					var amt_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
 						//console.log(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']);
-						if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length > 0){
-						for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length; k++) {
-							// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
-							if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
-								amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
-								// console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
-							}
+						if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length > 0) {
+							for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length; k++) {
+								// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+								if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']) {
+									amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
+									// console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+								}
 
-						}}
+							}
+						}
 					}
 
 					let vFormJson = {};
 					if (this.paymentModeAccount[i]['coa_acc_name'] != 'Outstanding Salary A/c') {
-					vFormJson = {
-						vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
-						vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
-						vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
-						vc_grno: '',
-						vc_invoiceno: '',
-						vc_debit: '',
-						vc_credit: amt_total
-					};
-					spTotal = spTotal + amt_total;
-					paymentParticularData.push(vFormJson);}
+						vFormJson = {
+							vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
+							vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: '',
+							vc_credit: amt_total
+						};
+						spTotal = spTotal + amt_total;
+						paymentParticularData.push(vFormJson);
+					}
 					// console.log('paymentParticularData--', vFormJson);
 				}
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
 						console.log('injd')
-						
-						
-							let vFormJson = {};
-							vFormJson = {
-								vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
-								vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
-								vc_particulars: 'salary payable',
-								vc_grno: '',
-								vc_invoiceno: '',
-								vc_debit: spTotal,
-								vc_credit: 0
-							};
-							paymentParticularData.push(vFormJson);
-						
-	
-					} }
+
+
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary payable',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: spTotal,
+							vc_credit: 0
+						};
+						paymentParticularData.push(vFormJson);
+
+
+					}
+				}
 				this.getVoucherTypeMaxId(paymentParticularData, 'payment');
 
 			}
@@ -1940,7 +2185,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 	openFilter() {
-		
+
 		if (this.searchForm.value.month_id) {
 			this.searchModal.openModal();
 		} else {
@@ -2128,18 +2373,18 @@ export class SalaryComputationComponent implements OnInit {
 							this.displayedSalaryComputeColumns.push(this.paymentModeArray[i]['pm_id']);
 						}
 						if (this.deductions && this.deductions.gratuity) {
-							this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity');
+							this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'gratuity', 'action');
 						} else {
-							this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status');
+							this.displayedSalaryComputeColumns.push('emp_total', 'balance', 'emp_status', 'action');
 						}
 						let pos = 1;
 						let recordArray = result;
 						this.records = [];
 						this.records = result;
-
-
+		
+		
 						for (const item of recordArray) {
-							console.log(item);
+							// console.log(item);
 							element = {};
 							var editableStatus = false;
 							let emp_present_days = 0;
@@ -2147,7 +2392,7 @@ export class SalaryComputationComponent implements OnInit {
 							this.empShdcolumns = [];
 							var total_deductions = 0;
 							var total_earnings = 0;
-
+		
 							var formJson: any = {
 								emp_id: item.emp_id,
 								arrear: '',
@@ -2155,23 +2400,23 @@ export class SalaryComputationComponent implements OnInit {
 								td: '',
 								tds: ''
 							};
-
+		
 							var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale)) : 0;
-
+		
 							for (var i = 0; i < this.shacolumns.length; i++) {
 								if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 									var value = 0;
-
+		
 									if (this.shacolumns[i]['header'] === 'Basic Pay') {
 										this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: empBasicPay };
 									} else {
 										this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 									}
-
+		
 									if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 										for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 											if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shacolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-
+		
 												if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 													item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 													Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 1
@@ -2179,15 +2424,15 @@ export class SalaryComputationComponent implements OnInit {
 													if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 														value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 													}
-
+		
 													if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
 													}
-
-													this.empShacolumns[i]['value'] = value.toFixed(2);
-													this.shacolumns[i]['value'] = value.toFixed(2);
+		
+													this.empShacolumns[i]['value'] = Number(value);
+													this.shacolumns[i]['value'] = Number(value);
 													total_earnings = total_earnings + Number(value);
-
+		
 												} else {
 													this.shacolumns[i]['value'] = 0;
 													this.empShacolumns[i]['value'] = 0;
@@ -2195,20 +2440,20 @@ export class SalaryComputationComponent implements OnInit {
 											}
 										}
 									}
-
+		
 								}
 							}
 							for (var i = 0; i < this.shdcolumns.length; i++) {
 								if (Number(this.shdcolumns[i]['data']['sc_type']['type_id']) === 2) {
 									var value = 0;
 									this.empShdcolumns[i] = { columnDef: this.shdcolumns[i]['data']['sc_name'], header: this.shdcolumns[i]['data']['sc_name'], value: 0 };
-
+		
 									if (item.emp_salary_detail
 										&& item.emp_salary_detail.emp_salary_structure
 										&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 										for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
 											if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
-
+		
 												if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 													item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
 													Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type']['type_id']) === 2
@@ -2216,10 +2461,10 @@ export class SalaryComputationComponent implements OnInit {
 													if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'text') {
 														value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 													}
-
+		
 													if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] === '%') {
 														value = Math.round((Number(empBasicPay) * Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value'])) / 100);
-
+		
 													}
 													const upperVal = this.shdcolumns[i]['data']['sc_type']['upper_value'] ?
 														this.shdcolumns[i]['data']['sc_type']['upper_value'] : '';
@@ -2231,7 +2476,7 @@ export class SalaryComputationComponent implements OnInit {
 													this.empShdcolumns[i]['value'] = value.toFixed(2);
 													this.shdcolumns[i]['value'] = value.toFixed(2);
 													total_deductions = total_deductions - Number(value);
-
+		
 												} else {
 													this.shdcolumns[i]['value'] = 0;
 													this.empShdcolumns[i]['value'] = 0;
@@ -2239,18 +2484,18 @@ export class SalaryComputationComponent implements OnInit {
 											}
 										}
 									}
-
+		
 								}
-
+		
 							}
-
-
+		
+		
 							if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
 								for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
 									let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
 									let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
 									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
-										console.log('yes');
+										// console.log('yes');
 										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
 										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
 										var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
@@ -2260,8 +2505,8 @@ export class SalaryComputationComponent implements OnInit {
 									}
 								}
 							}
-
-
+		
+		
 							var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
 							if (eIndex > -1) {
 								if (this.salaryComputeEmployeeData[eIndex] && Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_id']) === Number(item.emp_id)
@@ -2274,19 +2519,20 @@ export class SalaryComputationComponent implements OnInit {
 							} else {
 								editableStatus = false;
 							}
-							console.log('pos-->' + pos);
-							console.log('editable-->' + editableStatus);
+							// console.log('pos-->' + pos);
+							// console.log('editable-->' + editableStatus);
 							if (editableStatus) {
 								var salary_payable = 0;
 								let arrearValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].arrear || 0);
+								formJson['arrear'] = arrearValue;
 								let advanceValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance || 0);
 								total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings']) : 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
-								formJson['arrear'] = arrearValue;
+		
 								emp_present_days = emp_present_days ? emp_present_days : 0;
 								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
 									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
-
+		
 								for (var i = 0; i < this.paymentModeArray.length; i++) {
 									formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'])) : '';
 								}
@@ -2298,7 +2544,7 @@ export class SalaryComputationComponent implements OnInit {
 									formJson['tds'] = 0;
 								}
 								formJson['advance'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance));
-
+		
 								this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
 								element = {
 									srno: pos,
@@ -2338,7 +2584,8 @@ export class SalaryComputationComponent implements OnInit {
 									// tds: this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['tds'],
 									gratuity: this.deductions && this.deductions.gratuity ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['gratuity'])) : 0,
 									balance: Math.round(Number(emp_present_days ? salary_payable : 0) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total'])),
-									isEditable: editableStatus
+									isEditable: editableStatus,
+									action: item
 								};
 								this.tAr.push(element.emp_modes_data.arrear);
 								this.tdArr.push(element.emp_modes_data.td);
@@ -2353,7 +2600,7 @@ export class SalaryComputationComponent implements OnInit {
 									const obj: any = item.emp_salary_detail.emp_salary_structure.advance_details;
 									const objArr: any[] = item.emp_salary_detail.emp_salary_structure.advance_details;
 									if (obj.constructor === Object) {
-										console.log('yes adv');
+										// console.log('yes adv');
 										if (Number(this.session_id.ses_id) === Number(item.emp_salary_detail.emp_salary_structure.advance_details.session_id)) {
 											if (Number(this.searchForm.value.month_id) >= Number(item.emp_salary_detail.emp_salary_structure.advance_details.starting_month)) {
 												let remaining_advance = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.advance);
@@ -2367,7 +2614,7 @@ export class SalaryComputationComponent implements OnInit {
 												if (Number(remaining_advance) > 0) {
 													if (Number(remaining_advance) > Number(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount)) {
 														advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount);
-
+		
 													} else {
 														advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance);
 													}
@@ -2389,23 +2636,23 @@ export class SalaryComputationComponent implements OnInit {
 											if (Number(remaining_advance) > 0) {
 												if (Number(remaining_advance) > Number(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount)) {
 													advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount);
-
+		
 												} else {
 													advance_salary = Math.round(item.emp_salary_detail.emp_salary_structure.advance_details.remaining_advance);
 												}
 											} else {
 												advance_salary = 0;
 											}
-
+		
 										}
 									}
 									if (Array.isArray(objArr)) {
-
+		
 										for (const it of objArr) {
 											if (Number(this.session_id.ses_id) === Number(it.session_id)) {
 												if (Number(this.searchForm.value.month_id) >= Number(it.starting_month)) {
-
-													let remaining_advance = it.advance;
+		
+													let remaining_advance = Number(it.advance);
 													let total_advance_deposite = 0;
 													if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
 														for (const dety of item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -2416,7 +2663,7 @@ export class SalaryComputationComponent implements OnInit {
 													if (Number(remaining_advance) > 0) {
 														if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
 															advance_salary += Math.round(it.deposite_month_amount);
-
+		
 														} else {
 															advance_salary += Math.round(it.remaining_advance);
 														}
@@ -2426,9 +2673,9 @@ export class SalaryComputationComponent implements OnInit {
 												} else {
 													advance_salary += 0;
 												}
-
+		
 											} else {
-
+		
 												let remaining_advance = Math.round(it.advance);
 												let total_advance_deposite = 0;
 												if (item.emp_salary_detail.emp_salary_structure.advance_month_wise) {
@@ -2439,29 +2686,29 @@ export class SalaryComputationComponent implements OnInit {
 												}
 												if (Number(remaining_advance) > 0) {
 													if (Number(remaining_advance) > Number(it.deposite_month_amount)) {
-														advance_salary += it.deposite_month_amount;
-
+														advance_salary += Math.round(it.deposite_month_amount);
+		
 													} else {
 														advance_salary += Math.round(it.remaining_advance);
 													}
 												} else {
 													advance_salary += 0;
 												}
-
+		
 											}
 										}
 									}
-
-
+		
+		
 								}
-								console.log(advance_salary);
-
+								// console.log(advance_salary);
+		
 								item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details ? item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details.deposite_month_amount : 0;
-
+		
 								var salary_payable = 0;
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 								emp_present_days = emp_present_days ? emp_present_days : 0;
-
+		
 								total_earnings = total_earnings
 								salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) +
 									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
@@ -2506,6 +2753,7 @@ export class SalaryComputationComponent implements OnInit {
 									isEditable: editableStatus,
 									colorCode: '',
 									balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
+									action: item
 								};
 								element.emp_total_earnings = Math.round(element.emp_total_earnings + element.emp_modes_data.td);
 								this.tAr.push(element.emp_modes_data.arrear);
@@ -2522,7 +2770,7 @@ export class SalaryComputationComponent implements OnInit {
 										empPaymentModeDetail = item.emp_salary_detail.empPaymentModeDetail;
 									}
 									for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
-										console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
+										// console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
 										let curpaymetmode = empPaymentModeDetail.find(e => e.pay_mode == this.paymentModeArray[pi]['config_id'] &&
 											e.transfer_type === this.paymentModeArray[pi]['transfer_id']);
 										if (curpaymetmode) {
@@ -2535,19 +2783,19 @@ export class SalaryComputationComponent implements OnInit {
 													'calculation_value': curpaymetmode['value'],
 													'transfer_type': curpaymetmode['transfer_id']
 												};
-												console.log(inputJson);
+												// console.log(inputJson);
 												element.emp_modes_data.mode_data.push(inputJson);
 												if (element.emp_modes_data.mode_data[pi]) {
 													deduction = Math.round(deduction + Number(element.emp_modes_data.mode_data[pi]['pm_value']));
 												}
-
+		
 												//element.balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - deduction;
 												element.balance = element.emp_salary_payable - deduction;
 												element.emp_total = deduction;
-
+		
 												formJson[this.paymentModeArray[pi]['pm_id']] = Math.round((Number(element.emp_salary_payable) * Number(curpaymetmode['value'])) / 100)
 												////console.log(formJson);
-
+		
 											} else {
 												//////console.log(this.paymentModeArray[pi]['calculation_value']);
 												var tdeduction = 0;
@@ -2559,15 +2807,15 @@ export class SalaryComputationComponent implements OnInit {
 													'calculation_value': curpaymetmode['value'],
 													'transfer_type': this.paymentModeArray[pi]['transfer_type']
 												};
-												console.log(inputJson);
+												// console.log(inputJson);
 												formJson[this.paymentModeArray[pi]['pm_id']] = 0;
 												element.emp_modes_data.mode_data.push(inputJson);
-
+		
 												tdeduction = Math.round(Number(element.emp_modes_data.mode_data[pi]['pm_value']));
-
+		
 												element.balance = Math.round(element.balance - tdeduction);
 											}
-
+		
 										} else {
 											//////console.log(this.paymentModeArray[pi]['calculation_value']);
 											var tdeduction = 0;
@@ -2579,12 +2827,12 @@ export class SalaryComputationComponent implements OnInit {
 												'calculation_value': null,
 												'transfer_type': this.paymentModeArray[pi]['transfer_type']
 											};
-
+		
 											formJson[this.paymentModeArray[pi]['pm_id']] = 0;
 											element.emp_modes_data.mode_data.push(inputJson);
-
+		
 											tdeduction = Math.round(Number(element.emp_modes_data.mode_data[pi]['pm_value']));
-
+		
 											element.balance = Math.round(element.balance - tdeduction);
 										}
 									}
@@ -2596,12 +2844,12 @@ export class SalaryComputationComponent implements OnInit {
 									//console.log(this.formGroupArray, '2345');
 								}
 							}
-
-
+		
+		
 							this.SALARY_COMPUTE_ELEMENT.push(element);
 							pos++;
 						}
-
+		
 						////console.log('this.SALARY_COMPUTE_ELEMENT', this.SALARY_COMPUTE_ELEMENT);
 						this.footerrow = {
 							emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0),
