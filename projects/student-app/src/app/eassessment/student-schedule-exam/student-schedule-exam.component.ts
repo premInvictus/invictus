@@ -217,7 +217,7 @@ export class StudentScheduleExamComponent implements OnInit {
 
 	startTest(examDetail) {
 		this.examData = examDetail;
-		if ((examDetail.action.es_admit_code === '1') && this.verifyAdmitCodeStatus) {
+		if (examDetail.action.es_admit_code === '1' || examDetail.action.es_admit_code) {
 			this.verifyAdmitCodeStatus = true;
 		} else {
 			this.verifyAdmitCodeStatus = false;
