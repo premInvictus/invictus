@@ -12,6 +12,7 @@ import { CommonAPIService, SmartService } from '../../_services/index';
 	styleUrls: ['./teacher-score-card.component.css']
 })
 export class TeacherScoreCardComponent implements OnInit {
+	@ViewChild(MatSort) sort: MatSort;
 	reportArray: any[] = [];
 	rankArray: any[] = [];
 	login_id: string;
@@ -257,6 +258,11 @@ export class TeacherScoreCardComponent implements OnInit {
 										}
 								}
 								this.reportdatasource = new MatTableDataSource<ReportElement>(this.REPORT_ELEMENT_DATA);
+								// this.sort.sortChange.subscribe(
+								// 	() => (this.paginator.pageIndex = 0)
+								// );
+								this.reportdatasource.sort = this.sort;
+
 								this.scoreCardDiv = true;
 							} else {
 								for (const item of this.REPORT_ELEMENT_DATA) {
