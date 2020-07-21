@@ -292,18 +292,14 @@
                   <form [formGroup]="formGroupArray[element.srno - 1]">
                     <mat-form-field class="form-field lib-form">
                       <span *ngIf="element?.emp_modes_data?.mode_data[i]">
-                        <input matInput 
-                        type="number"
-                        min="0" oninput="validity.valid||(value='');"
+                        <input matInput type="number" min="0" oninput="validity.valid||(value='');"
                           [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
                           formControlName="{{paymentModeArray[i]['pm_id']}}"
                           value="{{formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]}}"
                           autocomplete="off" (keydown.enter)="setNetTotal(element, $event)" />
                       </span>
                       <span *ngIf="!(element?.emp_modes_data?.mode_data[i])">
-                        <input matInput
-                        type="number"
-                        min="0" oninput="validity.valid||(value='');"
+                        <input matInput type="number" min="0" oninput="validity.valid||(value='');"
                           [placeholder]="!(formGroupArray[element.srno - 1]?.value[paymentModeArray[i]['pm_id']]) ? 'Type Here.' : ''"
                           formControlName="{{paymentModeArray[i]['pm_id']}}" value="0" autocomplete="off"
                           (blur)="setNetTotal(element, $event)" />
@@ -386,6 +382,15 @@
                 </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
+              <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Action </th>
+                <td mat-cell *matCellDef="let element" [ngStyle]="{'background-color':element?.colorCode}"
+                  class="text-nowrap">
+                  <i *ngIf="element.isEditable" class="fas fa-sync-alt" style="color:brown"
+                    (click)="refreshComputation(element.action, element.srno - 1)"></i>
+                </td>
+                <td mat-footer-cell *matFooterCellDef></td>
+              </ng-container>
               <tr mat-header-row *matHeaderRowDef="displayedSalaryComputeColumns ; sticky: true"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedSalaryComputeColumns;">
               </tr>
@@ -427,4 +432,5 @@
   </div>
 </div>
 
-<app-advanced-search-modal (searchOk)="searchOk($event)" (searchCancel)="searchCancel($event)" #searchModal></app-advanced-search-modal>
+<app-advanced-search-modal (searchOk)="searchOk($event)" (searchCancel)="searchCancel($event)" #searchModal>
+</app-advanced-search-modal>
