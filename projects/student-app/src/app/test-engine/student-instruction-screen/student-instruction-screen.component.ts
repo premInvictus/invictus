@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { appConfig } from 'projects/axiom/src/app/app.config';
-import { NotificationService, SocketService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService, SocketService, CommonAPIService } from 'projects/axiom/src/app/_services/index';
 import { Event } from 'projects/axiom/src/app/_models/event';
 
 @Component({
@@ -26,14 +26,16 @@ export class StudentInstructionScreenComponent implements OnInit {
 	schoolinfoArray: any = {};
 	evalutionDetail: any;
 	hosturl = appConfig.apiUrl;
-
+	verifyAdmitCodeStatus = false;
+	@ViewChild('admitCodeModalRef') admitCodeModalRef;
 	constructor(
 		private router: Router,
 		private route: ActivatedRoute,
 		private qelementService: QelementService,
 		private fb: FormBuilder,
 		private notif: NotificationService,
-		private socketService: SocketService
+		private socketService: SocketService,
+		public commonAPIService: CommonAPIService
 	) { }
 
 	ngOnInit() {
@@ -219,6 +221,23 @@ export class StudentInstructionScreenComponent implements OnInit {
 	}
 
 	startTest() {
+		
+		if (this.examDetail.es_admit_code === '1') {
+			this.verifyAdmitCodeStatus = true;
+		} else {
+			this.verifyAdmitCodeStatus = false;
+		}
+		if (!this.verifyAdmitCodeStatus) {
+			this.conductExam();
+		} else {
+			this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+			this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+		}
+
+		
+	}
+
+	conductExam() {
 		if (this.socketService.checkSocketConnection()) {
 			if (this.currentUser) {
 				const userDetail = {
@@ -256,4 +275,20 @@ export class StudentInstructionScreenComponent implements OnInit {
 			this.router.navigate(['../../ongoing-test', this.es_id], { relativeTo: this.route });
 		}
 	}
+
+	verifyAdmitCode(data) {
+		console.log('data--', data);
+		this.commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
+			if(result && result.status === 'ok') {
+				this.verifyAdmitCodeStatus = false;
+				this.conductExam(); 
+				
+			} else {
+				this.verifyAdmitCodeStatus = true;
+				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
+			}
+		})
+	}
+
+	
 }
