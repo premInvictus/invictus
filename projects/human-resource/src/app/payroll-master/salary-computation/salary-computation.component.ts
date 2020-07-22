@@ -480,7 +480,10 @@ export class SalaryComputationComponent implements OnInit {
 								&& item.emp_salary_detail.emp_salary_structure
 								&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 								for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-									if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+									if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] 
+									&& !(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_opt'])
+									&& Number(this.shdcolumns[i]['data']['sc_id']) === 
+									Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
 
 										if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 											item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
@@ -1014,7 +1017,9 @@ export class SalaryComputationComponent implements OnInit {
 					&& item.emp_salary_detail.emp_salary_structure
 					&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 					for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-						if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+						if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] 
+						&& !(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_opt'])
+						&& Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
 
 							if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 								item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
@@ -2472,7 +2477,9 @@ export class SalaryComputationComponent implements OnInit {
 										&& item.emp_salary_detail.emp_salary_structure
 										&& item.emp_salary_detail.emp_salary_structure.emp_salary_heads) {
 										for (var j = 0; j < item.emp_salary_detail.emp_salary_structure.emp_salary_heads.length; j++) {
-											if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] && Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
+											if (this.shdcolumns[i]['data'] && item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j] 
+											&& !(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_opt'])
+											&& Number(this.shdcolumns[i]['data']['sc_id']) === Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_id'])) {
 
 												if (item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type'] &&
 													item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_type'] &&
