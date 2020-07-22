@@ -111,8 +111,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		});
 		this.getGlobalSettings();
 		if (this.employeedetails) {
-			console.log('ngOnInit employeedetails',this.employeedetails);
-			
+			console.log('ngOnInit employeedetails', this.employeedetails);
+
 			this.onChangeData();
 		}
 	}
@@ -236,7 +236,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		this.getAllEpmployeeList();
 		this.getSession();
 		if (this.employeedetails) {
-			console.log('ngOnChange employeedetails',this.employeedetails);
+			console.log('ngOnChange employeedetails', this.employeedetails);
 			this.getSalartDetails();
 			this.onChangeData();
 		}
@@ -261,7 +261,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	addEmpBank() {
 		const lemlength = this.empBankDetail.length;
-		if(this.empBankDetail[lemlength - 1].valid){
+		if (this.empBankDetail[lemlength - 1].valid) {
 			this.empBankDetail.push(this.fbuild.group({
 				bank_name: '',
 				bank_ac: '',
@@ -485,12 +485,24 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			salaryData['sc_type' + i] = item.sc_type;
 			salaryData['type' + i] = item.sc_type.type_id;
 			salaryData['sc_value' + i] = item.sc_value;
+			if (Number(item.sc_type.type_id) === 2) {
+			salaryData['sc_opt' + i] = item.sc_opt ? item.sc_opt : false
+			}
+			
 			this.formGroupArray2.push({
 				formGroup: this.fbuild.group(salaryData)
 			});
 			i++;
 		}
 		this.getNetSalary();
+	}
+	checkValS(i, $event) {
+		if ($event.checked) {
+			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = true;
+		} else {
+			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = false;
+		}
+		this.salaryFinalArray[i]['sc_opt'] = this.formGroupArray2[i].formGroup['value']['sc_opt' + i];
 	}
 	getDynamicValue(weigtage, value) {
 		if (Number(value) > 0) {
@@ -641,8 +653,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			gratuity: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.gratuity : '',
 			total_earning: this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_total_earning : '',
 		});
-		console.log('this.employeedetails.emp_salary_detail',this.employeedetails.emp_salary_detail);
-		console.log('this.employeedetails.emp_salary_detail',this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id)
+		console.log('this.employeedetails.emp_salary_detail', this.employeedetails.emp_salary_detail);
+		console.log('this.employeedetails.emp_salary_detail', this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id)
 		if (this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale && this.employeedetails.emp_salary_detail.emp_salary_structure.emp_pay_scale.ss_id) {
 			this.onChangeData();
 			this.netSalary = this.employeedetails.emp_salary_detail && this.employeedetails.emp_salary_detail.emp_salary_structure ? this.employeedetails.emp_salary_detail.emp_salary_structure.emp_net_salary : '';
@@ -1035,7 +1047,8 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 						sc_name: item.formGroup.value['sc_name' + i],
 						sc_order: item.formGroup.value['sc_order' + i],
 						sc_type: item.formGroup.value['sc_type' + i],
-						sc_value: item.formGroup.value['sc_value' + i]
+						sc_value: item.formGroup.value['sc_value' + i],
+						sc_opt: item.formGroup.value['sc_opt' + i]
 					}
 				);
 				i++;
