@@ -62,3 +62,6 @@
     </div>
     <br>
 </div>
+<!-- Admit Code Confirmation Modal -->
+<app-admit-code-confirmation-modal #admitCodeModalRef [admitCodeMessage]="'Are you Sure? You want to Delete '" (admitCodeOk)="verifyAdmitCode($event)" (admitCodeCancel)="admitCodeCancel()">
+</app-admit-code-confirmation-modal>

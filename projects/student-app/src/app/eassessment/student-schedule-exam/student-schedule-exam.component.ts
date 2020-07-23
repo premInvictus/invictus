@@ -217,14 +217,14 @@ export class StudentScheduleExamComponent implements OnInit {
 
 	startTest(examDetail) {
 		this.examData = examDetail;
-		console.log('examDetail1', examDetail);
-		if (examDetail.action.es_admit_code === '1') {
-			this.verifyAdmitCodeStatus = true;
-		} else {
-			this.verifyAdmitCodeStatus = false;
-		}
+		// console.log('examDetail1', examDetail);
+		// if (examDetail.action.es_admit_code === '1') {
+		// 	this.verifyAdmitCodeStatus = true;
+		// } else {
+		// 	this.verifyAdmitCodeStatus = false;
+		// }
 
-		if (!this.verifyAdmitCodeStatus) {
+		// if (!this.verifyAdmitCodeStatus) {
 
 		this.socketService.initSocket();
 
@@ -260,11 +260,12 @@ export class StudentScheduleExamComponent implements OnInit {
 		}
 		const param = 'width=' + screen.width + ',height=' + screen.height + ',toolbar=0,location=0,menubar=0,status=0,resizable=0';
 		window.open(url, '_blank', param); 
-	  } else {
-		console.log('examDetail3', examDetail);
-		this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
-		this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
-	  }
+	//   }
+	//    else {
+	// 	console.log('examDetail3', examDetail);
+	// 	this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+	// 	this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+	//   }
 	}
 
 

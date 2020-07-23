@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Event } from 'projects/axiom/src/app/_models/event';
 import {
@@ -9,7 +9,7 @@ import {
 } from '@angular/forms';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { appConfig } from 'projects/axiom/src/app/app.config';
-import { NotificationService, SocketService } from 'projects/axiom/src/app/_services/index';
+import { NotificationService, SocketService, CommonAPIService } from 'projects/axiom/src/app/_services/index';
 
 @Component({
 	selector: 'app-jee-mains-instruction',
@@ -30,14 +30,16 @@ export class JeeMainsInstructionComponent implements OnInit {
 	currentUser: any = {};
 	schoolinfoArray: any = {};
 	hosturl = appConfig.apiUrl;
-
+	verifyAdmitCodeStatus = false;
+	@ViewChild('admitCodeModalRef') admitCodeModalRef;
 	constructor(
 		private router: Router,
 		private route: ActivatedRoute,
 		private qelementService: QelementService,
 		private fb: FormBuilder,
 		private notif: NotificationService,
-		private socketService: SocketService
+		private socketService: SocketService,
+		private commonAPIService:CommonAPIService
 	) { }
 
 	ngOnInit() {
@@ -302,42 +304,77 @@ export class JeeMainsInstructionComponent implements OnInit {
 	}
 
 	startTest() {
-		if (this.socketService.checkSocketConnection()) {
-			if (this.currentUser) {
-				console.log('this.currentUser', this.currentUser);
-				const userDetail = {
-					examId: this.examDetail.es_id,
-					userId: this.currentUser.login_id,
-					paperId: this.examDetail.es_qp_id,
-					schoolId: this.currentUser.Prefix,
-					userType: this.currentUser.role_id
-				};
-				userDetail['action'] = appConfig.testStartCode;
-				this.socketService.sendUserTestActionDetail(userDetail);
-			}
-		}
-		if (this.examDetail.es_exam_type === '2') {
-			const presentS: any = {};
-			const presentSArray = [];
-			presentS.eva_es_id = this.es_id;
-			presentS.eva_login_id = this.currentUser.login_id;
-			presentSArray.push(presentS);
-			this.qelementService.addExamAttendance(presentSArray).subscribe(
-				(result1: any) => {
-					if (result1 && result1.status === 'ok') {
-						const timeLeft = Number(result1.time_left) * 1000;
-						if (timeLeft > 0) {
-							this.router.navigate(['../../jee-mains', this.es_id], { relativeTo: this.route });
-						} else {
-							this.notif.showSuccessErrorMessage('Already Submitted', 'error');
-						}
-					} else {
-						this.notif.showSuccessErrorMessage(result1.data, 'error');
-					}
-				});
-
+		
+		if (this.examDetail.es_admit_code === '1') {
+			this.verifyAdmitCodeStatus = true;
 		} else {
-			this.router.navigate(['../../jee-mains', this.es_id], { relativeTo: this.route });
+			this.verifyAdmitCodeStatus = false;
 		}
+		if (!this.verifyAdmitCodeStatus) {
+			this.conductExam();
+		} else {
+			this.admitCodeModalRef.openAdmitCodeConfirmationModal({login_id:this.currentUser.login_id, admitCode:''});
+			this.notif.showSuccessErrorMessage('You are not authorized to give this test', 'error');
+		}
+
+		
+	}
+
+	
+
+	conductExam() {
+			if (this.socketService.checkSocketConnection()) {
+				if (this.currentUser) {
+					console.log('this.currentUser', this.currentUser);
+					const userDetail = {
+						examId: this.examDetail.es_id,
+						userId: this.currentUser.login_id,
+						paperId: this.examDetail.es_qp_id,
+						schoolId: this.currentUser.Prefix,
+						userType: this.currentUser.role_id
+					};
+					userDetail['action'] = appConfig.testStartCode;
+					this.socketService.sendUserTestActionDetail(userDetail);
+				}
+			}
+			if (this.examDetail.es_exam_type === '2') {
+				const presentS: any = {};
+				const presentSArray = [];
+				presentS.eva_es_id = this.es_id;
+				presentS.eva_login_id = this.currentUser.login_id;
+				presentSArray.push(presentS);
+				this.qelementService.addExamAttendance(presentSArray).subscribe(
+					(result1: any) => {
+						if (result1 && result1.status === 'ok') {
+							const timeLeft = Number(result1.time_left) * 1000;
+							if (timeLeft > 0) {
+								this.router.navigate(['../../jee-mains', this.es_id], { relativeTo: this.route });
+							} else {
+								this.notif.showSuccessErrorMessage('Already Submitted', 'error');
+							}
+						} else {
+							this.notif.showSuccessErrorMessage(result1.data, 'error');
+						}
+					});
+	
+			} else {
+				this.router.navigate(['../../jee-mains', this.es_id], { relativeTo: this.route });
+			}
+		
+	}
+
+
+	verifyAdmitCode(data) {
+		console.log('data--', data);
+		this.commonAPIService.getAdmmitCodeVerification(data).subscribe((result:any)=>{
+			if(result && result.status === 'ok') {
+				this.verifyAdmitCodeStatus = false;
+				this.conductExam(); 
+				
+			} else {
+				this.verifyAdmitCodeStatus = true;
+				this.notif.showSuccessErrorMessage('Invalid Admit Code, Please Choose Another One', 'error');
+			}
+		})
 	}
 }
