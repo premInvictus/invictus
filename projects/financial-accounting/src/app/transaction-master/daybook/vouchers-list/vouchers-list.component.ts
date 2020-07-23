@@ -21,10 +21,12 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit', 'action'];
 	dataSource = new MatTableDataSource<Element>();
 	selection = new SelectionModel<Element>(true, []);
+	@ViewChild('searchModal') searchModal;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	vouchersArray:any[] = [];
+	searchData:any;
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -74,7 +76,14 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
   
 	getVouchers() {
-		  this.faService.getAllVoucherEntry({}).subscribe((data:any)=>{
+		const param:any = {};
+		if(this.searchData && this.searchData.from_date){
+			param.from_date = this.searchData.from_date;
+		}
+		if(this.searchData && this.searchData.to_date){
+			param.to_date = this.searchData.to_date;
+		}
+		  this.faService.getAllVoucherEntry(param).subscribe((data:any)=>{
 			  if(data) {
 		  this.vouchersArray = data;
 		  let element: any = {};        
@@ -209,6 +218,18 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
 	isExistUserAccessMenu(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
+	}
+	openFilter() {
+
+		this.searchModal.openModal();
+	}
+	searchOk(event){
+		console.log(event);
+		this.searchData = event;
+		this.getVouchers();
+	}
+	searchCancel(){
+
 	}
 
 }
