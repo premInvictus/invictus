@@ -28,8 +28,9 @@ export class CommonAPIService {
 	reRenderForm = new Subject();
 	renderTab = new Subject();
 	tabChange = new Subject();
+	currentVcType:string;
 	htmlToText(html: any) {
-		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
+		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular 
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
 	}

@@ -57,8 +57,11 @@ export class VoucherEntryComponent implements OnInit {
 			}
 		});
 		this.getGlobalSetting();
-
-		this.setVcType(this.currentVcType);
+		if(this.commonAPIService.currentVcType){
+			this.setVcType(this.commonAPIService.currentVcType);
+		} else {
+			this.setVcType(this.currentVcType);
+		}
 		//this.getOrderMaster();
 	}
 	setaccount(item, i) {
@@ -154,6 +157,7 @@ export class VoucherEntryComponent implements OnInit {
 		})
 	}
 	setVcType(vcType) {
+		this.commonAPIService.currentVcType = vcType;
 		console.log('vcType--', vcType);
 		this.currentVcType = vcType;
 		this.voucherFormGroupArray = [];
