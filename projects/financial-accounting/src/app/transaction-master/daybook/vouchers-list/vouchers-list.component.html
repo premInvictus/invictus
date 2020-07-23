@@ -21,7 +21,7 @@
 </div>
 <div class="row">
   <div class="col-12"></div>
-</div> -->
+</div> --> 
 <div *ngIf="tableDivFlag">
           <div class="row">
             <div class="col-6">
@@ -31,6 +31,9 @@
               </mat-form-field>
             </div>
             <div class="col-6 text-right">
+              <button mat-raised-button class="btn-success-blue" (click)="openFilter()">
+                Filter
+              </button> &nbsp;
               <button
               mat-button *ngIf="isExistUserAccessMenu('732')"
               class="btn-success-purple text-capitalize m-l-10"
@@ -152,3 +155,5 @@
 <app-delete-modal #deleteModalUnlock (deleteOk)="unlockGradeCard($event)"></app-delete-modal> -->
 <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteConfirm($event)">
 </app-delete-modal>
+<app-advanced-search-modal (searchOk)="searchOk($event)" (searchCancel)="searchCancel()" #searchModal>
+</app-advanced-search-modal>

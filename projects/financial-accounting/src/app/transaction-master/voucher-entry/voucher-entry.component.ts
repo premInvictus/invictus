@@ -27,7 +27,8 @@ export class VoucherEntryComponent implements OnInit {
 	fileCounter = 0;
 	totalDebit = 0;
 	totalCredit = 0;
-	currentVcType = 'Journal Voucher';
+	currentVcType = 'Journal';
+	suffix = 'Voucher';
 	accountsArray: any[] = [];
 	editMode = false;
 	currentVoucherId = '';
@@ -56,8 +57,11 @@ export class VoucherEntryComponent implements OnInit {
 			}
 		});
 		this.getGlobalSetting();
-
-		this.setVcType(this.currentVcType);
+		if(this.commonAPIService.currentVcType){
+			this.setVcType(this.commonAPIService.currentVcType);
+		} else {
+			this.setVcType(this.currentVcType);
+		}
 		//this.getOrderMaster();
 	}
 	setaccount(item, i) {
@@ -153,6 +157,7 @@ export class VoucherEntryComponent implements OnInit {
 		})
 	}
 	setVcType(vcType) {
+		this.commonAPIService.currentVcType = vcType;
 		console.log('vcType--', vcType);
 		this.currentVcType = vcType;
 		this.voucherFormGroupArray = [];
@@ -514,7 +519,9 @@ export class VoucherEntryComponent implements OnInit {
 
 	getVcName() {
 		let vcType = '';
-		const vcTypeArr = this.currentVcType.split(" ");
+		let currentVcTypeTemp = this.currentVcType+' '+this.suffix;
+		//const vcTypeArr = this.currentVcType.split(" ");
+		const vcTypeArr = currentVcTypeTemp.split(" ");
 		if (vcTypeArr.length > 0) {
 			vcTypeArr.forEach(element => {
 				vcType += element.substring(0, 1).toUpperCase();
@@ -557,7 +564,7 @@ export class VoucherEntryComponent implements OnInit {
 	}
 	getSattleJV(i) {
 		if (this.voucherFormGroupArray[i].value.vc_account_type_id) {
-			if (this.currentVcType == 'Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note') {
+			if (this.currentVcType == 'Bank Payment' || this.currentVcType == 'Cash Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note') {
 				console.log('index', i);
 				const inputJson: any = {};
 				inputJson.vc_type = 'Journal Voucher';
