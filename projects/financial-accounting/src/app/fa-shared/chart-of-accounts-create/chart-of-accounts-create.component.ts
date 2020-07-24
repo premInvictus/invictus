@@ -109,7 +109,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			this.paymentArr = result.data;
 			for (const item of result.data) {
 				this.dependancyeArr.push(
-					{id:'pm-'+item.bnk_id, name: item.bank_name}
+					{id:'pm-c-'+item.bnk_id, name: item.bank_name+" Collection", alias: item.bank_name},
+					{id:'pm-p-'+item.bnk_id, name: item.bank_name+" Payment", alias: item.bank_name}
 				)
 			}
 		}
@@ -156,14 +157,26 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		const temparr = this.accountform.value.coa_dependency_local.split('-');
 		console.log(temparr);
 		console.log(this.paymentArr);
-		if(temparr.length == 2){
+		if(temparr.length == 2 || temparr.length == 3){
 			const tempjson: any = {};
 			const temp = this.dependancyeArr.find(e => e.id == this.accountform.value.coa_dependency_local);
 			coa_dependencies: [{ dependancy_id : 5, dependency_local_id: "pm-5", dependenecy_component: "payment_mode", "dependency_name":"Corpration Bank" }]
-			if(temparr[0] == 'pm'){				
-				tempjson.dependancy_id = temparr[1];
+			if(temparr[0] == 'pm' && temparr.length === 2 ){				
+				tempjson.dependancy_id = temparr.length === 2 ? temparr[1] : temparr[2];
 				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
 				tempjson.dependenecy_component = 'payment_mode';
+				tempjson.dependency_name = temp.name;
+				return [tempjson];
+			} if(temparr[0] == 'pm' && temparr.length === 3 &&  temparr[1] === 'c'){				
+				tempjson.dependancy_id = temparr.length === 2 ? temparr[1] : temparr[2];
+				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
+				tempjson.dependenecy_component = 'payment_mode_collection';
+				tempjson.dependency_name = temp.name;
+				return [tempjson];
+			} if(temparr[0] == 'pm' && temparr.length === 3 &&  temparr[1] === 'p'){				
+				tempjson.dependancy_id = temparr.length === 2 ? temparr[1] : temparr[2];
+				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
+				tempjson.dependenecy_component = 'payment_mode_payment';
 				tempjson.dependency_name = temp.name;
 				return [tempjson];
 			} else if(temparr[0] == 'sc'){
