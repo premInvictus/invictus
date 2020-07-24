@@ -37,6 +37,8 @@ export class VoucherEntryComponent implements OnInit {
 	today = new Date();
 	vcYearlyStatus = 0;
 	acc_type_id_arr:any[] = [];
+	accountTypeArr:any=[];
+
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -49,6 +51,7 @@ export class VoucherEntryComponent implements OnInit {
 
 
 	ngOnInit() {
+		this.getAccountMaster();
 		this.route.queryParams.subscribe(value => {
 			if (value.voucher_id) {
 				this.getGlobalSetting();
@@ -64,6 +67,20 @@ export class VoucherEntryComponent implements OnInit {
 			this.setVcType(this.currentVcType);
 		}
 		//this.getOrderMaster();
+	}
+	getAccountMaster() {
+		this.faService.getAccountMaster({}).subscribe((data:any)=>{
+			if(data) {
+				for(let i=0; i<data.length;i++) {
+					if(data[i]['acc_state']==='acc_type') {
+						if((data[i].acc_id){
+							this.accountTypeArr.push(data[i].acc_id);
+						}
+						console.log('this.accountTypeArr',this.accountTypeArr);
+					}
+				}
+			}
+		});
 	}
 	setaccount(item, i) {
 		this.voucherFormGroupArray[i].patchValue({
@@ -158,11 +175,6 @@ export class VoucherEntryComponent implements OnInit {
 		})
 	}
 	setVcType(vcType) {
-		this.acc_type_id_arr = [];
-		if(vcType == 'Contra'){
-			this.acc_type_id_arr.push(13);
-		}
-		console.log('this.acc_type_id_arr',this.acc_type_id_arr);
 		this.commonAPIService.currentVcType = vcType;
 		console.log('vcType--', vcType);
 		this.currentVcType = vcType;
@@ -175,6 +187,17 @@ export class VoucherEntryComponent implements OnInit {
 
 	getAccounts(event = null) {
 		console.log('event', event);
+		this.acc_type_id_arr = [];
+		if(this.currentVcType == 'Contra'){
+			this.acc_type_id_arr.push(13);
+		} else if(this.currentVcType == 'Journal' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'){
+			this.accountTypeArr.forEach(element => {
+				if(element != 13){
+					this.acc_type_id_arr.push(element);
+				}
+			});
+		}
+		console.log('this.acc_type_id_arr',this.acc_type_id_arr);
 		if (event) {
 			console.log('key', event.keyCode);
 			if (event.keyCode != 38 && event.keyCode != 40) {
