@@ -9,17 +9,29 @@
         <div class="col-9">
           <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">journal Voucher</button> -->
           <mat-chip-list aria-label="Voucher Type">
-              <mat-chip class="pink opacity-7" [ngClass]="{'active-entry':currentVcType === 'Journal'}" (click)="setVcType('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
-              <mat-chip class="red opacity-7" [ngClass]="{'active-entry':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
-              <mat-chip class="light-blue opacity-7" [ngClass]="{'active-entry':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"  [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
-              <mat-chip class="light-blue opacity-7" [ngClass]="{'active-entry':currentVcType === 'Bank Payment'}" (click)="setVcType('Bank Payment')"  [selected]="currentVcType === 'Bank Payment'"><span class="text-center">Bank Payment</span></mat-chip>
-              <mat-chip class="dark-blue opacity-7" [ngClass]="{'active-entry':currentVcType === 'Receipt'}" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
-              <mat-chip class="orange opacity-7" [ngClass]="{'active-entry':currentVcType === 'Credit Note'}" (click)="setVcType('Credit Note')"  [selected]="currentVcType === 'Credit Note'"><span class="text-center">Credit Note</span></mat-chip>
-              <mat-chip class="orange-light opacity-7" [ngClass]="{'active-entry':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"  [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
-              <mat-chip class="gray-dark opacity-7" [ngClass]="{'active-entry':currentVcType === 'Purchase'}" (click)="setVcType('Purchase')"  [selected]="currentVcType === 'Purchase'"><span class="text-center">Purchase</span></mat-chip>
-              <mat-chip class="gray-light opacity-7" [ngClass]="{'active-entry':currentVcType === 'Sale'}" (click)="setVcType('Sale')"  [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span></mat-chip>
+              <mat-chip class="pink opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Journal'}" (click)="setVcType('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
+              <mat-chip class="red opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
+              <mat-chip class="light-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"  [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
+              <mat-chip class="light-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Bank Payment'}" (click)="setVcType('Bank Payment')"  [selected]="currentVcType === 'Bank Payment'"><span class="text-center">Bank Payment</span></mat-chip>
+              <mat-chip class="dark-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Receipt'}" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
+              <mat-chip class="orange opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Credit Note'}" (click)="setVcType('Credit Note')"  [selected]="currentVcType === 'Credit Note'"><span class="text-center">Credit Note</span></mat-chip>
+              <mat-chip class="orange-light opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"  [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
+              <mat-chip class="gray-dark opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Purchase'}" (click)="setVcType('Purchase')"  [selected]="currentVcType === 'Purchase'"><span class="text-center">Purchase</span></mat-chip>
+              <mat-chip class="gray-light opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Sale'}" (click)="setVcType('Sale')"  [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span></mat-chip>
 
             </mat-chip-list>
+            <!-- <mat-chip-list aria-label="Voucher Type">
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Journal'}" (click)="git ('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"  [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Bank Payment'}" (click)="setVcType('Bank Payment')"  [selected]="currentVcType === 'Bank Payment'"><span class="text-center">Bank Payment</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Receipt'}" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Credit Note'}" (click)="setVcType('Credit Note')"  [selected]="currentVcType === 'Credit Note'"><span class="text-center">Credit Note</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"  [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Purchase'}" (click)="setVcType('Purchase')"  [selected]="currentVcType === 'Purchase'"><span class="text-center">Purchase</span></mat-chip>
+              <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Sale'}" (click)="setVcType('Sale')"  [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span></mat-chip>
+
+            </mat-chip-list> -->
         </div>
         <!-- <div class="col-2">
           <button mat-raised-button class="btn-primary-100" (click)="displayData()">Contra</button>

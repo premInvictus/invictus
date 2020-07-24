@@ -36,6 +36,7 @@ export class VoucherEntryComponent implements OnInit {
 	orderMaster: any[] = [];
 	today = new Date();
 	vcYearlyStatus = 0;
+	acc_type_id_arr:any[] = [];
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -157,6 +158,11 @@ export class VoucherEntryComponent implements OnInit {
 		})
 	}
 	setVcType(vcType) {
+		this.acc_type_id_arr = [];
+		if(vcType == 'Contra'){
+			this.acc_type_id_arr.push(13);
+		}
+		console.log('this.acc_type_id_arr',this.acc_type_id_arr);
 		this.commonAPIService.currentVcType = vcType;
 		console.log('vcType--', vcType);
 		this.currentVcType = vcType;
@@ -176,6 +182,9 @@ export class VoucherEntryComponent implements OnInit {
 				if (event) {
 					param.coa_acc_name = event.target.value
 				}
+				if(this.acc_type_id_arr.length > 0){
+					param.acc_type_id =this.acc_type_id_arr;
+				}
 				this.faService.getAllChartsOfAccount(param).subscribe((data: any) => {
 					if (data) {
 						this.accountsArray = data;
@@ -188,6 +197,9 @@ export class VoucherEntryComponent implements OnInit {
 			let param: any = {};
 			if (event) {
 				param.coa_acc_name = event.target.value
+			}
+			if(this.acc_type_id_arr.length > 0){
+				param.acc_type_id =this.acc_type_id_arr;
 			}
 			this.faService.getAllChartsOfAccount(param).subscribe((data: any) => {
 				if (data) {

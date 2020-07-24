@@ -134,3 +134,15 @@
 .font-size-14{
     font-size: 14px;
 }
+.v-chips{
+    font-size: 16px;
+    font-weight: bold;
+}
+.v-chips:hover {
+    background-color:#4c555c !important;
+    opacity: 1 !important;
+}
+.v-chips-active{
+    background-color:#4c555c !important;
+    opacity: 1 !important;
+}
