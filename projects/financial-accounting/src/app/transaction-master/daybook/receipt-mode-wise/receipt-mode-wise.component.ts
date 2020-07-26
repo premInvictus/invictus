@@ -303,8 +303,9 @@ export class ReceiptModeWiseComponent implements OnInit {
     this.tempChartsOfAccountInvoice = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
       for (var i = 0; i < result.length; i++) {
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_collection" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
           this.chartsOfAccount.push(result[i]);
+          console.log('charts of account receipt,', this.chartsOfAccount);
         }
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_head") {
           //console.log('result--', result[i]);
@@ -345,7 +346,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     var voucherEntryArray = [];
     for (var i = 0; i < receiptHeadArr.length; i++) {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
-        if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) {
+        if ((this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']+' Collection') || (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) ) {
           if (action != 'update') {
             let vFormJson = {};
             vFormJson = {
@@ -452,7 +453,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     var voucherEntryArray = [];
     for (var i = 0; i < receiptHeadArr.length; i++) {
       for (var j = 0; j < this.chartsOfAccount.length; j++) {
-        if (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']) {
+        if ((this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name']+' Collection')  || (this.chartsOfAccount[j]['coa_dependencies'][0]['dependency_name'] === receiptHeadArr[i]['pay_name'])) {
           if (action != 'update') {
             let vFormJson = {};
             vFormJson = {
