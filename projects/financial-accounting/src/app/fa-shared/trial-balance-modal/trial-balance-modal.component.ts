@@ -60,16 +60,17 @@ export class TrialBalanceModalComponent implements OnInit {
 
   checkPartialPaymentStatus() {
     let param1: any = {};
-    param1.gs_alias = ['fa_partial_payment'];
-    this.faService.getGlobalSetting(param1).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        if (result.data && result.data[0]) {
-          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
-          this.getTotal(this.param);
-        }        
+    // param1.gs_alias = ['fa_partial_payment'];
+    // this.faService.getGlobalSetting(param1).subscribe((result: any) => {
+    //   if (result && result.status === 'ok') {
+    //     if (result.data && result.data[0]) {
+    //       this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+    //       this.getTotal(this.param);
+    //     }        
        
-      }
-    })
+    //   }
+    // });
+    this.getTotal(this.param);
   }
 
   checkBlankArray(param) {

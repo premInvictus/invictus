@@ -61,17 +61,18 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
 
   checkPartialPaymentStatus() {
     let param1: any = {};
-    param1.gs_alias = ['fa_partial_payment'];
-    this.faService.getGlobalSetting(param1).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        if (result.data && result.data[0]) {
-          this.partialPaymentStatus = Number(result.data[0]['gs_value']);
-          console.log('this.partialPaymentStatus--', this.partialPaymentStatus);
-          this.getTotal(this.param);
-        }
+    // param1.gs_alias = ['fa_partial_payment'];
+    // this.faService.getGlobalSetting(param1).subscribe((result: any) => {
+    //   if (result && result.status === 'ok') {
+    //     if (result.data && result.data[0]) {
+    //       this.partialPaymentStatus = Number(result.data[0]['gs_value']);
+    //       console.log('this.partialPaymentStatus--', this.partialPaymentStatus);
+          
+    //     }
 
-      }
-    })
+    //   }
+    // })
+    this.getTotal(this.param);
   }
 
   checkBlankArray(param) {
@@ -81,8 +82,8 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
     console.log(this.partialPaymentStatus);
     // this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0) : 0;
     // if (this.debitSideTotal != this.creditSideTotal) {
-     this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length - 1 : this.debitRow + this.debitSideBlankArr.length;
-     this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length -1 : this.creditRow +param['invoice_due_data'].length-1+ this.creditSideBlankArr.length;
+     this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length+1  : this.debitRow + this.debitSideBlankArr.length;
+     this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length+1  :  this.creditSideBlankArr.length;
     // }
     // this.debitRow = this.debitSideBlankArr.length;
     // this.creditRow = this.creditSideBlankArr.length;

@@ -54,12 +54,12 @@
                   <td width="15%" class="text-right"></td>
                 </tr>
               </ng-container>
-              <ng-container *ngIf="debitSideTotal > creditSideTotal">
+              <ng-container *ngIf="creditSideTotal > debitSideTotal ">
                 <tr>
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Income over Expenditure</b></td>
 
-                  <td  width="15%" class="text-right">{{getTwoDecimalValue(debitSideTotal-creditSideTotal) | indianCurrency}}</td>
+                  <td  width="15%" class="text-right">{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
@@ -109,12 +109,12 @@
                   <td width="15%" class="text-right"></td>
                 </tr>
               </ng-container>
-              <ng-container *ngIf="creditSideTotal > debitSideTotal">
+              <ng-container *ngIf="creditSideTotal < debitSideTotal">
                 <tr>
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Expenditure over Income</b></td>
 
-                  <td width="15%" class="text-right">{{getTwoDecimalValue(creditSideTotal-debitSideTotal) | indianCurrency}}</td>
+                  <td width="15%" class="text-right">{{getTwoDecimalValue(-(debitSideTotal)) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
