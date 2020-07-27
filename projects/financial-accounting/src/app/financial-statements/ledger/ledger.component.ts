@@ -155,25 +155,25 @@ export class LedgerComponent implements OnInit {
                 opening_balance = data.ledger_data[i]['debit_data'][0]['vc_account_type']['vc_debit'];
               }
              
-              var receipt_value = receipt_data[index]['receipt_amt'];
-              if (receipt_value > 0) {
-                var iJson:any = {
-                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
-                      "vc_credit" : receipt_value+opening_balance
+              // var receipt_value = receipt_data[index]['receipt_amt'];
+              // if (receipt_value > 0) {
+              //   var iJson:any = {
+              //     "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+              //         "vc_credit" : receipt_value+opening_balance
                                           
-                }
-                data.ledger_data[i]['debit_data'].push(iJson);
-                data.ledger_data[i]['credit_data'].push({});
-              }
-              if (receipt_value < 0) {
-                var iJson:any = {
-                  "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
-                      "vc_debit" : receipt_value+opening_balance
+              //   }
+              //   data.ledger_data[i]['debit_data'].push(iJson);
+              //   data.ledger_data[i]['credit_data'].push({});
+              // }
+              // if (receipt_value < 0) {
+              //   var iJson:any = {
+              //     "vc_account_type" :  data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+              //         "vc_debit" : receipt_value+opening_balance
                                           
-                }
-                data.ledger_data[i]['credit_data'].push(iJson);
-                data.ledger_data[i]['debit_data'].push({});
-              }
+              //   }
+              //   data.ledger_data[i]['credit_data'].push(iJson);
+              //   data.ledger_data[i]['debit_data'].push({});
+              // }
             }
             if(i===data.ledger_data.length -1 ) {
               this.ledgerArray = data;

@@ -1,5 +1,5 @@
 .ledger-head{
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -9,11 +9,11 @@
 
 table thead th {
     background: #C8D6E5;
-    height: 50px;
+    height: 20px;
 }
 
 table tbody tr {
-    height: 50px;
+    height: 20px;
 }
 
  table tbody tr:nth-child(even) {
