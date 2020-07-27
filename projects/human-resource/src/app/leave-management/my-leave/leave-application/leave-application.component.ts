@@ -39,6 +39,7 @@ export class LeaveApplicationComponent implements OnInit {
     this.buildForm();
     this.getLeaveType();
     this.empRecord = JSON.parse(localStorage.getItem('eRecord'));
+    console.log('this.empRecord',this.empRecord);
     if (this.data) {
       this.editFlag = true;
       this.showFormFlag = true;
@@ -98,6 +99,7 @@ export class LeaveApplicationComponent implements OnInit {
   submit() {
     let eRecord;
     if (this.selectedIndex === 0) {
+      console.log('this.empRecord',this.empRecord);
       const month_data: any[] = this.empRecord.emp_month_attendance_data &&
         this.empRecord.emp_month_attendance_data.month_data &&
         this.empRecord.emp_month_attendance_data.month_data.length > 0 ?
@@ -106,12 +108,13 @@ export class LeaveApplicationComponent implements OnInit {
       if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
         month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
         eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-
+        
       } else {
         eRecord = this.empRecord && this.empRecord.emp_month_attendance_data &&
           this.empRecord.emp_month_attendance_data.leave_opening_balance ?
           this.empRecord.emp_month_attendance_data.leave_opening_balance : 0;
       }
+      console.log('month_data',month_data);
     } else {
       const month_data: any[] = this.monthData &&
         this.monthData.month_data &&
@@ -129,6 +132,8 @@ export class LeaveApplicationComponent implements OnInit {
           this.monthData.leave_opening_balance : 0;
       }
     }
+    console.log('this.leaveForm',this.leaveForm);
+    console.log('eRecord',eRecord);
     if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
       (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason
       && eRecord > 0) {
