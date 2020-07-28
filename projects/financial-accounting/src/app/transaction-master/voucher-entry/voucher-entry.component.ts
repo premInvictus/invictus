@@ -73,7 +73,7 @@ export class VoucherEntryComponent implements OnInit {
 			if(data) {
 				for(let i=0; i<data.length;i++) {
 					if(data[i]['acc_state']==='acc_type') {
-						if((data[i].acc_id){
+						if((data[i].acc_id)){
 							this.accountTypeArr.push(data[i].acc_id);
 						}
 						console.log('this.accountTypeArr',this.accountTypeArr);
