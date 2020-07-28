@@ -247,7 +247,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 									if (Number(item.emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id)) {
 										const index2 = item.emp_month_attendance_data.month_data.findIndex(f => Number(f.month_id)
 											=== Number(this.searchForm.value.month_id));
+											console.log('record come from db',index2);
 										if (index2 !== -1) {
+											console.log('record come from db');
 											this.formGroupArray[j] = {
 												formGroup: this.fbuild.group({
 													emp_id: item.emp_id,
@@ -268,6 +270,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 											var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
 												emp_attendance_detail.attendance_detail.emp_lwp ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
 											var presentDays = Number(lwpDays) < 0 ? (Number(tPresent) + Number(lwpDays)) : tPresent;
+											console.log('presentDays',presentDays);
+											console.log('tPresent',tPresent);
 											element.emp_lwp = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : '';
 											if (item.emp_status === 'live') {
 												element.emp_total_attendance = presentDays && presentDays !== 0 ?
@@ -309,8 +313,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 											let la: any = '';
 											let lg: any = '';
 											if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
-												const arrFilter: any[] = item.attendanceRecords.filter(f => !this.holidayArray.includes(f.date));
+												//item.attendanceRecords.filter(f => !this.holidayArray.includes(f.date));
+												const arrFilter: any[] = item.attendanceRecords;
 												totP = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val ? val : 0), 0);
+											} else {
+												totP = no_of_days;
 											}
 											if (item.leaves && Object.keys(item.leaves).length > 0
 												&& item.leaves.constructor === Object) {
@@ -362,8 +369,11 @@ export class EmployeeAttendanceComponent implements OnInit {
 										let la: any = '';
 										let lg: any = '';
 										if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
-											const arrFilter: any[] = item.attendanceRecords.filter(f => !this.holidayArray.includes(f.date));
+											//.filter(f => !this.holidayArray.includes(f.date))
+											const arrFilter: any[] = item.attendanceRecords;
 											totP = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val ? val : 0), 0);
+										} else {
+											totP = no_of_days;
 										}
 										if (item.leaves && Object.keys(item.leaves).length > 0
 											&& item.leaves.constructor === Object) {
@@ -466,7 +476,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 											- Number(element.emp_lwp)) : Number(element.emp_total_attendance);
 									this.totalPresentArr.push(element.emp_total_attendance);
 								} else {
-									element.emp_total_attendance = Number(no_of_days) - this.holidayArray.length -
+									//this.holidayArray.length -
+									element.emp_total_attendance = Number(no_of_days) - 
 										(element.emp_lwp ?
 											Number(element.emp_lwp) : 0);
 									this.totalPresentArr.push(element.emp_total_attendance);
@@ -616,6 +627,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 											let lg: any = '';
 											if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
 												totP = item.attendanceRecords.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val ? val : 0), 0);
+											} else {
+												totP = no_of_days;
 											}
 											if (item.leaves && Object.keys(item.leaves).length > 0
 												&& item.leaves.constructor === Object) {
@@ -668,6 +681,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 										let lg: any = '';
 										if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
 											totP = item.attendanceRecords.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val ? val : 0), 0);
+										} else{
+											totP = no_of_days;
 										}
 										if (item.leaves && Object.keys(item.leaves).length > 0
 											&& item.leaves.constructor === Object) {
