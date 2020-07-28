@@ -191,7 +191,7 @@ export class SalaryComputationComponent implements OnInit {
 				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component") {
 					this.chartsOfAccount.push(result[i]);
 				}
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && ((result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_payment" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") &&  result[i]['coa_dependencies'][0]['dependency_local_id'] !== "ca-1") || result[i]['coa_dependencies'][0]['dependency_local_id'] === "ca-9")) {
 					this.paymentModeAccount.push(result[i]);
 				}
 			}
@@ -223,7 +223,7 @@ export class SalaryComputationComponent implements OnInit {
 						'calculation_value': '',
 						'config_id': '0',
 						'transfer_id': 0,
-						'pm_acc_name': 'Cash'
+						'pm_acc_name': 'Cash Payment'
 
 					}
 				);
