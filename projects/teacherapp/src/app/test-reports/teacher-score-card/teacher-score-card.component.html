@@ -9,7 +9,7 @@
     <div class="main-score-card-div" id="scorecardid">
         <div class="main-score-card-div" id="scorecardid">
             <div class="main-score-card-div" id="scorecardid">
-                <div *ngIf="scoreCardDiv">
+                <div [hidden]="!scoreCardDiv">
                     <div class="row">
                         <div class="col-lg-12 remove-col-modal-padding">
                             <div class="row row-remove-top-margin">
