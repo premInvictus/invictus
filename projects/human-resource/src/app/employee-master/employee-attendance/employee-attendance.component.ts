@@ -288,7 +288,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 												element.emp_total_attendance = presentDays && presentDays !== 0 ?
 													presentDays : no_of_days;
 											}
-											if (item.emp_status === 'left') {
+											if (item.emp_status === 'left') {							
 	
 												const month: any = item.emp_salary_detail
 													&& item.emp_salary_detail.emp_organisation_relation_detail
@@ -300,8 +300,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 													element.emp_total_attendance = presentDays;
 												}
 											}
+											let emp_total_attendance_temp
 											element.emp_present = emp_attendance_detail.attendance_detail.emp_present ? emp_attendance_detail.attendance_detail.emp_present : no_of_days,
 											element.viewFlag = emp_attendance_detail.attendance_detail.emp_total_attendance ? false : true
+											
 											this.formGroupArray[j] = {
 												formGroup: this.fbuild.group({
 													emp_id: item.emp_id,
