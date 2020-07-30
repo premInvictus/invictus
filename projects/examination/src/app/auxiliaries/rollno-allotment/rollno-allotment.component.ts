@@ -83,7 +83,7 @@ export class RollnoAllotmentComponent implements OnInit,AfterViewInit {
 		}
 	}
 	//  Get Class List function
-	getClass(isBoard) {
+	getClass(isBoard:any) {
 		this.sectionArray = [];
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
