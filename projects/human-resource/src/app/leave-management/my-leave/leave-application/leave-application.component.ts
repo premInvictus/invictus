@@ -136,13 +136,19 @@ export class LeaveApplicationComponent implements OnInit {
     console.log('eRecord',eRecord);
     if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
       (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason
-      && eRecord > 0) {
+      // && eRecord > 0
+      ) {
       if (this.halfDay) {
         this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
       }
       this.leaveForm.value['tabIndex'] = this.selectedIndex;
       this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
-      this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
+      if (this.selectedIndex === 0) {
+        this.leaveForm.value['leave_to'] = this.empRecord.emp_supervisor && this.empRecord.emp_supervisor.id ?this.empRecord.emp_supervisor.id : '';
+      } else {
+        this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
+      }
+      
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
     } else {
@@ -249,6 +255,8 @@ export class LeaveApplicationComponent implements OnInit {
     this.monthData = this.getMonthData($event.value);
   }
   getSupervisiorId(id) {
+    console.log('this.empArray',this.empArray);
+    console.log('id',id);
     const index = this.empArray.findIndex(f => Number(f.emp_id) === Number(id));
     if (index !== -1) {
       return this.empArray[index]['emp_supervisor'];
