@@ -173,12 +173,18 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	getSessionName(id) {
+	getSessionName(id, month_id) {
 		const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
+		
 		if (findex !== -1) {
 			const year = this.sessionArray[findex].ses_name;
+			console.log(month_id, year)
 			let str: string = '';
-			str = year.split('-')[0];
+			if (Number(month_id) >= 4 && Number(month_id)<=12) {
+			 	str = year.split('-')[0];
+			 } else {
+				str = year.split('-')[1]; 
+			 }
 			console.log(str.substring(str.length - 2, str.length));
 			return str.substring(str.length - 2, str.length);
 
@@ -215,7 +221,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 							Number(item.id) === Number(item.advance_details.starting_month)) {
 							const obj3: any = {};
 							obj3['srno'] = srno;
-							obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
+							obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id, item.id) + ')';
 							obj3['mon'] = item.month;
 							obj3['attendance'] = '';
 							obj3['leaves'] = 0;
@@ -240,7 +246,7 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 								Number(item.id) === Number(st.starting_month)) {
 								const obj3: any = {};
 								obj3['srno'] = srno;
-								obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id) + ')';
+								obj3['particulars'] = 'Advance Pay (' + this.getSessionName(item.session_id, item.id) + ')';
 								obj3['mon'] = item.month;
 								obj3['leaves'] = 0;
 								obj3['attendance'] = '';
@@ -262,8 +268,8 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 					}
 
 					obj['srno'] = srno;
-					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id) + ')';
-					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id);
+					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id, item.id) + ')';
+					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id, item.id);
 					obj['attendance'] = item && item.leaves && item.leaves.emp_total_attendance ?
 						item.leaves.emp_total_attendance : 0;
 					obj['leaves'] = item && item.leaves && item.leaves.emp_leave_availed ?

@@ -933,6 +933,17 @@ export class SalaryComputationComponent implements OnInit {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0);
 	}
 
+	advanceGT() {
+		//console.log(this.SALARY_COMPUTE_ELEMENT);
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b['emp_modes_data']['advance'] || 0), 0);
+	}
+
+	paymentModeGT(index) {		
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + 
+			Math.round(Number(b['emp_modes_data']['mode_data'][index]['pm_value']
+				 || 0)),0);
+	}
+
 	balanceGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.balance || 0), 0);
 	}
@@ -3315,7 +3326,12 @@ export class SalaryComputationComponent implements OnInit {
 
 	downloadPdf() {
 		this.showPdf = true;
-		const doc = new jsPDF('landscape');
+		setTimeout(()=>{
+			const doc = new jsPDF('landscape');
+
+			doc.autoTable({
+				margin: {top: 10,right:0, bottom:10, left:0},
+			})
 
 		doc.autoTable({
 			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
@@ -3327,7 +3343,7 @@ export class SalaryComputationComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'center',
-				fontSize: 12,
+				fontSize: 20		,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -3335,7 +3351,7 @@ export class SalaryComputationComponent implements OnInit {
 
 		doc.autoTable({
 			head: [[
-				new TitleCasePipe().transform('Employee Salary Computation For The Month Of '
+				new TitleCasePipe().transform('Salary Computation For The Month Of '
 					+ this.getMonthWithYear())
 			]],
 			didDrawPage: function (data) {
@@ -3346,7 +3362,7 @@ export class SalaryComputationComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'center',
-				fontSize: 10,
+				fontSize: 14,
 			},
 			useCss: true,
 			theme: 'striped'
@@ -3359,11 +3375,11 @@ export class SalaryComputationComponent implements OnInit {
 				fillColor: '#ffffff',
 				textColor: 'black',
 				halign: 'center',
-				fontSize: 9,
+				fontSize: 6,
 			},
 			useCss: true,
 			styles: {
-				fontSize: 9,
+				fontSize: 6,
 				cellWidth: 'auto',
 				textColor: 'black',
 				lineColor: '#89A8C9',
@@ -3401,15 +3417,12 @@ export class SalaryComputationComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		// doc.save('table.pdf');
 
-		// const doc = new jsPDF('landscape');
-		// doc.setFont('helvetica');
-		// doc.setFontSize(5);
-		// doc.autoTable({ html: '#book_log' });
 
 		doc.save('EmployeeSalaryCompute_' + this.searchForm.value.searchId + '_' + (new Date).getTime() + '.pdf');
 		this.showPdf = false;
+		},1000);
+		
 	}
 	getMonthWithYear() {
 		let str = '';
@@ -3422,7 +3435,7 @@ export class SalaryComputationComponent implements OnInit {
 		} else {
 			nYear = currentSessionSecond;
 		}
-		str = this.monthNames[Number(month_id) - 1].substring(0, 3) + '\'';
+		str = this.monthNames[Number(month_id) - 1] + '\'';
 		str += nYear.toString().substring(nYear.toString().length - 2);
 		return str;
 	}
