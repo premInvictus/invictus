@@ -728,6 +728,10 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/printAllCertificate', value);
 	}
+	enableAcessCertificate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/enableAcessCertificate', value);
+	}
 
 	getSlcTc(value) {
 		this.service.startLoading();
