@@ -5,6 +5,14 @@
     color: red;
 }
 
+.showPdf {
+    display:none;
+}
+
+.hidePdf {
+    display:table-cell;
+}
+
 .overflow {
     //overflow-x: scroll;
     //overflow-y: auto;
