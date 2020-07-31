@@ -74,19 +74,21 @@ export class RollnoAllotmentComponent implements OnInit,AfterViewInit {
 		this.classArray = [];
 		this.sectionArray = [];
 		if (Number(this.firstForm.value.syl_board_id) === 0) {
-			this.classArray = this.boardClassArray;
+			this.getClass('1');
+			//this.classArray = this.boardClassArray;
 			this.displayedColumns = ['sr_no', 'au_admission_no', 'au_full_name', 'au_roll_no', 'au_board_roll_no'];
 		} else {
-			this.getClass();
+			this.getClass('0');			
 			this.displayedColumns = ['sr_no', 'au_admission_no', 'au_full_name', 'au_roll_no'];
 		}
 	}
 	//  Get Class List function
-	getClass() {
+	getClass(isBoard:any) {
 		this.sectionArray = [];
 		const classParam: any = {};
 		classParam.role_id = this.currentUser.role_id;
 		classParam.login_id = this.currentUser.login_id;
+		classParam.is_board = isBoard;
 		this.smartService.getClassData(classParam)
 			.subscribe(
 				(result: any) => {

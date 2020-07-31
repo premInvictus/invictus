@@ -93,7 +93,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
   async getDependancy(){
 	
 	this.dependancyeArr.push(
-		{id:'ca-1', name: 'Cash'},
+		{id:'ca-1', name: 'Cash Collection'},
+		{id:'ca-9', name: 'Cash Payment'},
 		{id:'ca-2', name: 'Salary A/C'},
 		{id:'ca-3', name: 'Arrear'},
 		{id:'ca-4', name: 'Advance'},
@@ -103,6 +104,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-7', name: 'TDS'},
 		{id:'ca-8', name: 'Gratuity'},
 		{id:'fr-1', name: 'Fee Receivable'},
+		
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
 		if(result && result.status == 'ok') {

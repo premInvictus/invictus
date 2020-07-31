@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { SisService, CommonAPIService, SmartService, FaService } from '../../_services';
 import { forEach } from '@angular/router/src/utils/collection';
-
+import {VoucherModalComponent} from '../voucher-modal/voucher-modal.component';
 @Component({
   selector: 'app-ledger-entry-model',
   templateUrl: './ledger-entry-model.component.html',
@@ -31,6 +31,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
 		private commonAPIService: CommonAPIService,
     private faService:FaService,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -45,7 +46,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   buildForm() {
   }
   ngOnChanges() {
-    console.log(this.param);
+   // console.log(this.param);
     // this.param.forEach(element => {
       // let dtotal = 0;
       // element.debit_data.forEach(element1 => {
@@ -199,6 +200,18 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     }
 
   }
+
+  openVoucherModal(value){
+    console.log('value--', value);
+		const dialogRef = this.dialog.open(VoucherModalComponent, {
+			height: '50vh',
+			width: '100vh',
+			data: {
+				title: value.vc_type + ' voucher',
+				vc_id: value.vc_id
+			}
+		});
+	}
 
 
 }
