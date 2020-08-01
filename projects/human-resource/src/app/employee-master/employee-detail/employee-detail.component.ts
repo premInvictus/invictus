@@ -20,14 +20,19 @@ export class EmployeeDetailComponent implements OnInit {
 	reRenderTabSubscription: any;
 	employeeDataSubscripton: any;
 	employeeRecord: any = {};
+	rowRen = true;
+	emp_code_no =0 ;
 	constructor(
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
 		private sisService: SisService
-	) { }
+	) { 
+		
+	}
 
 	ngOnInit() {
 		this.reRenderFormSubscription = this.commonAPIService.reRenderForm.subscribe((data: any) => {
+			console.log('render form subs');
 			if (data && data.reRenderForm) {
 				this.tabSelectedIndex = 0;
 				this.getEmployeeNavigationRecords();
@@ -39,6 +44,7 @@ export class EmployeeDetailComponent implements OnInit {
 		});
 
 		this.reRenderTabSubscription = this.commonAPIService.renderTab.subscribe((data: any) => {
+			console.log('render tab');
 			if (data && data.tabMove && data.renderForLast) {
 				this.tabSelectedIndex = 0;
 				this.getEmployeeNavigationRecords();
@@ -51,28 +57,49 @@ export class EmployeeDetailComponent implements OnInit {
 		});
 
 		this.employeeDataSubscripton = this.commonAPIService.employeeData.subscribe((data: any) => {
+			
 			if (data && data.last_record) {
+				this.emp_code_no = data.last_record;
+				console.log('data last record1--', data);
 				this.getEmployeeDetail(data.last_record);
-			}
+			} 
 		});
+
+		
+			
+		
 
 		this.getEmployeeNavigationRecords();
 
 	}
 
 	getEmployeeNavigationRecords() {
-		this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
-			this.getEmployeeDetail(result.last_record);
-		});
+		console.log('in navigation',this.rowRen, this.emp_code_no);
+		var empId = this.commonAPIService.getSubscribedEmployee();
+		if (empId) {
+			this.getEmployeeDetail(empId);
+		} else {
+			this.commonAPIService.getEmployeeNavigationRecords({}).subscribe((result: any) => {
+				console.log('72',this.emp_code_no);
+				this.getEmployeeDetail(result.last_record);
+				
+			});
+		}
+		
 	}
 
 	getEmployeeDetail(emp_code_no) {
-		if (emp_code_no) {
+		console.log('emp_code_no rowm', emp_code_no, this.rowRen)
+		if (emp_code_no && this.rowRen) {
+			this.rowRen = false;
 			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				var finResult = result ? result : {}
 				finResult['last_record'] = emp_code_no ? emp_code_no : 0;
 				this.employeeRecord = finResult;
+				console.log('this.employee record 76', this.employeeRecord, this.rowRen);
+				
 				this.rendorForm = true;
+				
 			});
 		}
 	}

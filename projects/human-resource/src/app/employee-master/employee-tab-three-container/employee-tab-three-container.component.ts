@@ -16,6 +16,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@Input() employeeCommonDetails;
 	@Input() employeedetails;
+	optText = 'Opt';
 	addOnly = false;
 	editOnly = false;
 	deductions: any = {};
@@ -498,7 +499,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	}
 	checkValS(i, $event) {
 		if ($event.checked) {
+			
 			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = true;
+
 		} else {
 			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = false;
 		}

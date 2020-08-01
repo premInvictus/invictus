@@ -381,7 +381,7 @@
                   class="text-nowrap">
                   {{element?.gratuity | indianCurrency}}
                 </td>
-                <td [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-footer-cell *matFooterCellDef></td>
+                <td [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-footer-cell *matFooterCellDef>{{gratuityGT() | indianCurrency}}</td>
               </ng-container>
               <ng-container matColumnDef="action">
                 <th [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Action </th>

@@ -56,7 +56,7 @@ export class EmployeeCommonComponent implements OnInit {
 	enrolmentPlaceholder = 'Enrollment Id';
 	deleteMessage = 'Are you sure, you want to delete ?';
 	studentdetailsflag = false;
-	lastRecordId;
+	lastRecordId = 0;
 	categoryOneArray: any[] = [];
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('myInput') myInput: ElementRef;
@@ -79,6 +79,7 @@ export class EmployeeCommonComponent implements OnInit {
 	ngOnInit() {
 		var result = this.employeedetails;
 		this.commonAPIService.employeeData.subscribe((data: any) => {
+			console.log('data--',data);
 			if (data && data.last_record) {
 				this.login_id = data.last_record;
 				this.lastRecordId = data.last_record;
@@ -184,6 +185,7 @@ export class EmployeeCommonComponent implements OnInit {
 			this.nextB = true;
 			this.firstB = true;
 			this.lastB = true;
+			console.log('emp_code_no',emp_code_no);
 			//this.setActionControls({viewMode : true})
 			this.commonAPIService.getEmployeeDetail({ emp_code_no: Number(emp_code_no) }).subscribe((result: any) => {
 				if (result) {
@@ -383,6 +385,7 @@ export class EmployeeCommonComponent implements OnInit {
 
 	loadEmployee(event) {
 		this.viewOnly = true;
+		
 		this.commonAPIService.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 		this.lastRecordId = event.target.value;
 		this.commonAPIService.employeeData.next(

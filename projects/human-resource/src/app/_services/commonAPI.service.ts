@@ -13,6 +13,7 @@ export class CommonAPIService {
 	homeUrl: string;
 	userData: any;
 	menus: any[] = [];
+	subscribedEmployeeId:any;
 	constructor(private http: HttpClient,
 		private _notificationService: NotificationsService,
 		private _cookieService: CookieService,
@@ -492,6 +493,14 @@ export class CommonAPIService {
 	getAllSubjects(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/common/findAll', value);
+	}
+
+	getSubscribedEmployee() {
+		return this.subscribedEmployeeId;
+	}
+
+	setSubscribedEmployee(empId) {
+		this.subscribedEmployeeId = empId;
 	}
 
 }
