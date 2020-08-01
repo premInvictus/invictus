@@ -14,6 +14,18 @@ export class ErpCommonService {
 	getOccupationType() {
 		throw new Error("Method not implemented.");
 	}
+	getSlcTcTemplateSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/getSlcTcTemplateSetting', value);
+	}
+	printAllCertificate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/printAllCertificate', value);
+	}
+	checkCertAccess(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/checkCertAccess', value);
+	}
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getStudentInvoice(value) {
