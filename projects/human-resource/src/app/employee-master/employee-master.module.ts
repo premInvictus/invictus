@@ -26,6 +26,7 @@ import { EmpEnqTabTwoComponent } from './emp-enq-tab-two/emp-enq-tab-two.compone
 import { EmpEnqTabThreeComponent } from './emp-enq-tab-three/emp-enq-tab-three.component';
 import { EmpEnqTabFourComponent } from './emp-enq-tab-four/emp-enq-tab-four.component';
 import { EmpEnqTabFiveComponent } from './emp-enq-tab-five/emp-enq-tab-five.component';
+import { LeaveCreditComponent } from './employee-leave/leave-credit/leave-credit.component';
 
 const moment = _moment;
 
@@ -66,8 +67,9 @@ export const MY_FORMATS = {
 		EmpEnqTabThreeComponent,
 		EmpEnqTabFourComponent,
 		EmpEnqTabFiveComponent,
+		LeaveCreditComponent,
 	],
-	entryComponents: [PreviewDocumentComponent],
+	entryComponents: [PreviewDocumentComponent,LeaveCreditComponent],
 	providers: [{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
 	{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS }]

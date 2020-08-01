@@ -2,9 +2,8 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
-import { MatDialog } from '@angular/material';
-
+import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,MatDialog } from '@angular/material';
+import {LeaveCreditComponent} from './leave-credit/leave-credit.component';
 @Component({
 	selector: 'app-employee-leave',
 	templateUrl: './employee-leave.component.html',
@@ -29,7 +28,8 @@ export class EmployeeLeaveComponent implements OnInit {
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		private sisService: SisService
+		private sisService: SisService,
+		private dialog: MatDialog
 	) { }
 
 	ngOnInit() {
@@ -55,7 +55,7 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	getFilterEmployee(event) {
 		var tempArr = [];
-
+console.log(event.target.value);
 		if (event.target.value.length > 2) {
 			const filterVal = event.target.value;
 			this.allEmployeeData = this.tempEmpData.filter(f => {
@@ -170,6 +170,13 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	applyFilter(filterValue: string) {
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
+	}
+	openLeaveCredit(){
+		const dialogRef: any = this.dialog.open(LeaveCreditComponent, {
+			data: this.employeeData.emp_month_attendance_data,
+			height: '50%',
+			width: '40%'
+		})
 	}
 
 }
