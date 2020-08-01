@@ -49,6 +49,7 @@ export class MyLeaveComponent implements OnInit {
 	approvedArray: any[] = [];
 	finalapprovedArray: any[] = [];
 	disabledApiButton = false;
+	session_id:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -59,6 +60,7 @@ export class MyLeaveComponent implements OnInit {
 
 
 	ngOnInit() {
+		this.session_id = JSON.parse(localStorage.getItem('session'));
 		this.getEmployeeDetail();
 		this.buildForm();
 		this.getMyLeave();
@@ -382,40 +384,112 @@ export class MyLeaveComponent implements OnInit {
 			var emp_login_id = item.leave_from ? item.leave_from : '';
 			this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
 				var finResult = result ? result : []
-				this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
+				const tempR = finResult[0].emp_month_attendance_data || [];
+				console.log('tempR',tempR);
+				console.log('this.session_id',this.session_id);
+				console.log('tempR',tempR);
+				tempR.forEach(element => {
+					if(element.ses_id == this.session_id.ses_id){
+						console.log('lennngth',element.month_data.length)
+						let tempmonthdata:any[]=[];
+						element.month_data.forEach(element1 => {
+							console.log('element1',element1);
+							tempmonthdata.push(element1);
+						});
+
+						this.approvedArray.push(tempmonthdata);
+					}
+				});
+				//this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
+				console.log('this.approvedArray',this.approvedArray);
+				console.log('this.employeeArrData',employeeArrData);
+				const approvedArraytemp:any[] = this.approvedArray[0] || [];
+				console.log('approvedArraytemp',approvedArraytemp);
+				console.log('approvedArraytemp.length',approvedArraytemp.length);
 				for (const dety of employeeArrData) {
-					const findex = this.approvedArray[0].findIndex(e => Number(e.month_id) === Number(dety.month_id));
+					
+					// const findex = approvedArraytemp.findIndex(e => Number(e.month_id) == Number(dety.month_id));
+					let findex = -1;
+					console.log('dety',dety);
+					console.log('approvedArraytemp.length',approvedArraytemp.length);;
+					// for (let index = 0; index < approvedArraytemp.length; index++) {
+					// 	const e = approvedArraytemp[index];
+					// 	console.log('e.month_id',e.month_id);
+					// 	console.log('dety.month_id',dety.month_id);
+					// 	if(e.month_id == dety.month_id) {
+					// 		findex = index;
+					// 	}
+					// }
+					let ind=0;
+					approvedArraytemp.forEach(e => {
+						console.log('e.month_id',e.month_id);
+						console.log('dety.month_id',dety.month_id);
+						if(e.month_id == dety.month_id) {
+							findex = ind;
+						}
+						ind++;
+					});
+
+					console.log('findex',findex);
 					if (findex !== -1) {
-						if (this.approvedArray[0][findex].attendance_detail.emp_leave_approved) {
-							if (Number(this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
-								this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_credit_count =
-									Number(this.approvedArray[0][findex].attendance_detail.emp_leave_approved.leave_credit_count) +
+						console.log(' exist',findex);
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
+							if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
+								approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
+									Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count) +
 									Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
 							} else {
-								this.approvedArray[0][findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
+								approvedArraytemp[findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
 							}
 
 						} else {
-							this.approvedArray[0][findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
+							approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
 						}
-						if (this.approvedArray[0][findex].attendance_detail.emp_leave_granted) {
-							this.approvedArray[0][findex].attendance_detail.emp_leave_granted =
-								Number(this.approvedArray[0][findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_granted) {
+							approvedArraytemp[findex].attendance_detail.emp_leave_granted =
+								Number(approvedArraytemp[findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
 						} else {
-							this.approvedArray[0][findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+							approvedArraytemp[findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						}
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed) {
+							approvedArraytemp[findex].attendance_detail.emp_leave_availed =
+								Number(approvedArraytemp[findex].attendance_detail.emp_leave_availed) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						} else {
+							approvedArraytemp[findex].attendance_detail['emp_leave_availed'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
 						}
 					} else {
-						this.approvedArray[0].push(dety);
+						dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						approvedArraytemp.push(dety);
 					}
+				}
+				let isSessionExist = 0;
+				tempR.forEach(element => {
+					if(element.ses_id == this.session_id.ses_id){
+						element.month_data=approvedArraytemp;
+						isSessionExist = 1;
+					}
+				});
+				if(isSessionExist == 0){
+					tempR.push({
+						ses_id:this.session_id.ses_id,
+						leave_opening_balance:0,
+						month_data:approvedArraytemp
+					})
 				}
 				let approvedjson = {};
+				// approvedjson = {
+				// 	emp_id: item.leave_emp_detail.emp_id,
+				// 	emp_month_attendance_data: {
+				// 		month_data: approvedArraytemp
+				// 	}
+				// }
 				approvedjson = {
 					emp_id: item.leave_emp_detail.emp_id,
-					emp_month_attendance_data: {
-						month_data: this.approvedArray[0]
-					}
+					emp_month_attendance_data: tempR
 				}
 				console.log(item.leave_emp_detail.emp_id);
+				console.log('inputJson',inputJson);
+				console.log('approvedjson',approvedjson);
 				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 					if (result) {
 						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {

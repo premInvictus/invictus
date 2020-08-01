@@ -32,6 +32,8 @@ export class CertificatePrintingComponent implements OnInit {
   dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   selection = new SelectionModel<Element>(true, []);
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('del') del;
+  delMsg: any = 'Do you want to enable download for this student ?';
   tabledivflag = false;
   constructor(
     private commonApiService: CommonAPIService,
@@ -143,6 +145,30 @@ export class CertificatePrintingComponent implements OnInit {
           this.tabledivflag = true;
         }
       })
+    }
+  }
+  enableDis($event, value) {
+    const param: any = {};
+    param.certificate_type = this.paramForm.value.certificate_type;
+    param.class_id = this.paramForm.value.class_id,
+      param.sec_id = this.paramForm.value.sec_id,
+      param.login_id = value.au_login_id;
+    param.status = $event.checked ? '1' : '0'
+    if ($event.checked) {
+      this.delMsg = 'Do you want to enable download for this student ?'
+    } else {
+      this.delMsg = 'Do you want to disable download for this student ?';
+    }
+    this.del.openModal(param);
+  }
+  confirmChange(data) {
+    if (data) {
+      this.sisService.enableAcessCertificate(data).subscribe((res: any) => {
+        if (res && res.status === 'ok') {
+          this.commonApiService.showSuccessErrorMessage(res.data, 'success');
+          this.getAllStudent();
+        }
+      });
     }
   }
   printcertificate(item = null) {

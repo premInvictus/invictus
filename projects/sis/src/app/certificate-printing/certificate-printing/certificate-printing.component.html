@@ -54,7 +54,7 @@
                 <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
-                    <mat-select placeholder="Section" formControlName="sec_id">
+                    <mat-select placeholder="Section" formControlName="sec_id" required>
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                       </mat-option>
@@ -127,7 +127,8 @@
                         </ng-container>
                         <!-- Student Column -->
                         <ng-container matColumnDef="name">
-                          <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:40%; text-align: left !important; padding-left: 5px;">
+                          <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            style="width:40%; text-align: left !important; padding-left: 5px;">
                             Student Name
                           </th>
                           <td mat-cell *matCellDef="let item" style="text-align: left !important; padding-left: 5px">
@@ -149,7 +150,10 @@
                             Action
                           </th>
                           <td mat-cell *matCellDef="let item">
-                              <i class="fas fa-print icon-skyblue" (click)="printcertificate(item.action)"></i>
+                            <mat-slide-toggle (change)="enableDis($event, item.action)"
+                              [checked]="item.action.cerf_status && item.action.cerf_status ==='1'"></mat-slide-toggle>
+                            &nbsp;
+                            <i class="fas fa-print icon-skyblue" (click)="printcertificate(item.action)"></i>
                           </td>
                         </ng-container>
                         <tr mat-header-row class="header-normal" *matHeaderRowDef="displayedColumns"></tr>
@@ -161,7 +165,8 @@
                     <br>
                     <br>
                     <div class="col-12 text-center" style="margin-top: 10px;">
-                        <button mat-button class="btn-success-blue btn-spacer text-capitalize" (click)="printcertificate()">Print</button>
+                      <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+                        (click)="printcertificate()">Print</button>
                     </div>
                   </div>
                 </div>
@@ -175,3 +180,6 @@
     </div>
   </div>
 </div>
+<app-delete-modal (deleteOk)="confirmChange($event)" #del
+(deleteCancel)="getAllStudent()"
+  [deleteMessage]="delMsg"></app-delete-modal>

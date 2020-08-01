@@ -541,10 +541,18 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 
-					if (this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_month_attendance_data && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_month_attendance_data.month_data) {
-						for (let i = 0; i < this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_month_attendance_data.month_data.length; i++) {
-							let emp_month = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_month_attendance_data.month_data[i].month_id;
-							let emp_attendance_detail = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_month_attendance_data.month_data[i];
+					let emp_month_attendance_data:any;
+					//console.log(this.salaryComputeEmployeeData[eIndex]['relations']);
+					if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
+					this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
+						if(element.ses_id == this.session_id.ses_id){
+							emp_month_attendance_data = element;
+						}
+					}); }
+					if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+						for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+							let emp_month = emp_month_attendance_data.month_data[i].month_id;
+							let emp_attendance_detail = emp_month_attendance_data.month_data[i];
 							if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 								// console.log('yes');
 								var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
@@ -721,11 +729,18 @@ export class SalaryComputationComponent implements OnInit {
 						}
 
 					}
+					let emp_month_attendance_data:any;
+					if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
+						this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
+							if(element.ses_id == this.session_id.ses_id){
+								emp_month_attendance_data = element;
+							}
+						}); }
 
-					if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
-						for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
-							let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-							let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
+					if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+						for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+							let emp_month = emp_month_attendance_data.month_data[i].month_id;
+							let emp_attendance_detail = emp_month_attendance_data.month_data[i];
 							if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 								// console.log('yes');
 								var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
@@ -1183,11 +1198,16 @@ export class SalaryComputationComponent implements OnInit {
 			}
 
 		}
-
-		if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
-			for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
-				let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-				let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
+		let emp_month_attendance_data:any;
+		item.emp_month_attendance_data.forEach(element => {
+			if(element.ses_id == this.session_id.ses_id){
+				emp_month_attendance_data = element;
+			}
+		});
+		if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+			for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+				let emp_month = emp_month_attendance_data.month_data[i].month_id;
+				let emp_attendance_detail = emp_month_attendance_data.month_data[i];
 				if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 					// console.log('yes');
 					var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
@@ -2650,11 +2670,16 @@ export class SalaryComputationComponent implements OnInit {
 
 							}
 
-
-							if (item.emp_month_attendance_data && item.emp_month_attendance_data.month_data) {
-								for (let i = 0; i < item.emp_month_attendance_data.month_data.length; i++) {
-									let emp_month = item.emp_month_attendance_data.month_data[i].month_id;
-									let emp_attendance_detail = item.emp_month_attendance_data.month_data[i];
+							let emp_month_attendance_data:any;
+							item.emp_month_attendance_data.forEach(element => {
+								if(element.ses_id == this.session_id.ses_id){
+									emp_month_attendance_data = element;
+								}
+							});
+							if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+								for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+									let emp_month = emp_month_attendance_data.month_data[i].month_id;
+									let emp_attendance_detail = emp_month_attendance_data.month_data[i];
 									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
 										// console.log('yes');
 										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
