@@ -23,23 +23,23 @@
                 <td width="30%" class="cus-td td-r"><b>Emp Id </b></td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{values.action.details.emp_id}}
+                  {{employeeDetails?.emp_salary_compute_data?.emp_id}}
                 </td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b>Emp Name </b>
                 </td>
                 <td class="cus-td td-r">:</td>
-                <td class="cus-td td-r" align="left">{{values.action.details.emp_name}}</td>
+                <td class="cus-td td-r" align="left">{{employeeDetails?.emp_salary_compute_data?.emp_name}}</td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b>Designation </b>
                 </td>
                 <td class="cus-td td-r">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{values.action.details.emp_designation_detail && 
-                  values.action.details.emp_designation_detail.name ? 
-                  (values.action.details.emp_designation_detail.name  | titlecase): '-'}}</td>
+                  {{employeeDetails?.emp_salary_compute_data?.emp_designation_detail && 
+                  employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name ? 
+                  (employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name  | titlecase): '-'}}</td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b>Address </b>
@@ -88,8 +88,8 @@
                 <td class="cus-td td-r"><b> Pay date </b>
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
-                <td class="cus-td td-r" align="left">{{values.action.details.emp_salary_compute_date ?
-                (values.action.details.emp_salary_compute_date | date: 'd-MMM-y') : '-' }}
+                <td class="cus-td td-r" align="left">{{employeeDetails?.emp_salary_compute_data?.emp_salary_compute_date ?
+                (employeeDetails?.emp_salary_compute_data?.emp_salary_compute_date | date: 'd-MMM-y') : '-' }}
                 </td>
               </tr>
               <tr>
@@ -103,12 +103,12 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td" align="left">{{
-                employeeDetails.emp_salary_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0] && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name  ?
-                (employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_name)  : '-'
+                employeeDetails.emp_salary_compute_data && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0] && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_name  ?
+                (employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_name)  : '-'
               }}
                 </td>
               </tr>
@@ -117,12 +117,12 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">{{
-                employeeDetails.emp_salary_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0] && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail && 
-                employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no  ?
-                (employeeDetails.emp_salary_detail.emp_bank_detail[0].bnk_detail.bnk_acc_no)  : '-'
+                employeeDetails.emp_salary_compute_data && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0] && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_acc_no  ?
+                (employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_acc_no)  : '-'
               }}
                 </td>
               </tr>
@@ -131,10 +131,10 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">{{
-                employeeDetails.emp_salary_detail && 
-                employeeDetails.emp_salary_detail.emp_salary_structure &&
-              employeeDetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale 
-              ? (employeeDetails.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale |number)  : '-'  
+                employeeDetails.emp_salary_compute_data && 
+                employeeDetails.emp_salary_compute_data.emp_salary_structure &&
+              employeeDetails.emp_salary_compute_data.emp_salary_structure.emp_basic_pay_scale 
+              ? (employeeDetails.emp_salary_compute_data.emp_salary_structure.emp_basic_pay_scale |number)  : '-'  
               }}</td>
               </tr>
               <tr>
@@ -142,7 +142,7 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails.emp_salary_detail && employeeDetails.emp_salary_detail.account_docment_detail ? employeeDetails.emp_salary_detail.account_docment_detail.pan_no : '-'}}
+                  {{employeeDetails.emp_salary_compute_data && employeeDetails.emp_salary_compute_data.account_docment_detail ? employeeDetails.emp_salary_compute_data.account_docment_detail.pan_no : '-'}}
                 </td>
               </tr>
             </tbody>
@@ -166,7 +166,7 @@
                  border-bottom: 0.5px solid;" align="right"><b>Amount</b></td>
               </tr>
               <tr>
-              <tr *ngFor="let bas of values.action.details.empShacolumns">
+              <tr *ngFor="let bas of employeeDetails?.emp_salary_compute_data?.empShacolumns">
                 <td class="cus-td">{{bas.header ? bas.header : 'Basic Pay'}}
                 </td>
                 <td class="cus-td" align="right">
@@ -178,9 +178,7 @@
                   T.A
                 </td>
                 <td class="cus-td" align="right">
-                  {{values.action.details && values.action.details.emp_salary_structure
-                  && values.action.details.emp_salary_structure.td  ? 
-                  values.action.details.emp_salary_structure.td : '-'}}
+                  {{employeeDetails?.emp_salary_compute_data?.emp_modes_data.td ? employeeDetails.emp_salary_compute_data.emp_modes_data.td : '-'}}
                 </td>
               </tr>
             </tbody>
@@ -196,7 +194,7 @@
                 <td class="cus-td" style="background: #D5E9FF !important;padding: 8px;
                  border-bottom: 0.5px solid;" align="right"><b>Amount</b></td>
               </tr>
-              <tr *ngFor="let bas of values.action.details.empShdcolumns">
+              <tr *ngFor="let bas of employeeDetails?.emp_salary_compute_data?.empShdcolumns">
                 <td class="cus-td">{{bas.header}}
                 </td>
                 <td class="cus-td" align="right">
@@ -208,9 +206,9 @@
                   T. D .S
                 </td>
                 <td class="cus-td" align="right">
-                  {{values.action.details && values.action.details.emp_salary_structure
-                  && values.action.details.emp_salary_structure.tds  ? 
-                  values.action.details.emp_salary_structure.tds : '-'}}
+                  {{employeeDetails.emp_salary_compute_data && employeeDetails.emp_salary_compute_data.emp_salary_structure
+                  && employeeDetails?.emp_salary_compute_data?.emp_salary_structure.tds  ? 
+                  employeeDetails?.emp_salary_compute_data?.emp_salary_structure.tds : '-'}}
                 </td>
               </tr>
             </tbody>
@@ -231,7 +229,7 @@
                 <td class="cus-td" style="background: #FFDBC0 !important;padding: 8px;
                 border-bottom: 0px solid;"><b>Gross Salary</b></td>
                 <td class="cus-td" align="right" style="background: #FFDBC0 !important;padding: 8px;">
-                  {{getGrossSalary(values.action.details.empShacolumns, values.action.details) | number}}
+                  {{getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data,employeeDetails?.emp_salary_compute_data?.emp_modes_data.td) | number}}
                 </td>
               </tr>
             </tbody>
@@ -245,7 +243,7 @@
                   <b>Total Deductions</b>
                 </td>
                 <td class="cus-td" align="right" style="background: #FFDBC0 !important;padding: 8px;">
-                  {{getTotalDeductions(values.action.details.empShdcolumns , values.action.details, values)| number |zerodash}}
+                  {{getTotalDeductions(employeeDetails?.emp_salary_compute_data?.empShdcolumns , employeeDetails?.emp_salary_compute_data, values)| number |zerodash}}
                 </td>
               </tr>
             </tbody>
@@ -265,20 +263,20 @@
               <tr>
                 <td class="cus-td">Gross Salary</td>
                 <td class="cus-td" align="right">
-                  {{getGrossSalary(values.action.details.empShacolumns, values.action.details) | number}}</td>
+                  {{getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data) | number}}</td>
               </tr>
               <tr>
                 <td class="cus-td">Total Deductions</td>
-                <td class="cus-td" align="right">{{getTotalDeductions(values.action.details.empShdcolumns, 
-                  values.action.details, values)| number
+                <td class="cus-td" align="right">{{getTotalDeductions(employeeDetails?.emp_salary_compute_data?.empShdcolumns, 
+                  employeeDetails?.emp_salary_compute_data, values)| number
                 |zerodash}}</td>
               </tr>
               <tr>
                 <td class="cus-td">Net Salary (Payout)</td>
                 <td class="cus-td" align="right">
 
-                  {{((getGrossSalary(values.action.details.empShacolumns, values.action.details)) - 
-                  (getTotalDeductions(values.action.details.empShdcolumns, values.action.details, values))| number)}}
+                  {{((getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data)) - 
+                  (getTotalDeductions(employeeDetails?.emp_salary_compute_data?.empShdcolumns, employeeDetails?.emp_salary_compute_data, values))| number)}}
 
                 </td>
               </tr>

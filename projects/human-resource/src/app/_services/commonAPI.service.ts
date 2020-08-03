@@ -503,4 +503,9 @@ export class CommonAPIService {
 		this.subscribedEmployeeId = empId;
 	}
 
+	getEmployeeSalaryDetail(value){
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
+	}
+
 }
