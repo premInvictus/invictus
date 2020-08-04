@@ -544,34 +544,35 @@ export class SalaryComputationComponent implements OnInit {
 
 					let emp_month_attendance_data:any;
 					//console.log(this.salaryComputeEmployeeData[eIndex]['relations']);
-					if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
-					this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
-						if(element.ses_id == this.session_id.ses_id){
-							emp_month_attendance_data = element;
-						}
-					}); }
-					if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
-						for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
-							let emp_month = emp_month_attendance_data.month_data[i].month_id;
-							let emp_attendance_detail = emp_month_attendance_data.month_data[i];
-							if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
-								// console.log('yes');
-								var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
-								var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
-								var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
-									emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
-								var presentDays = totalDays;
-								emp_present_days = presentDays;
-							}
-						}
-					}
+					// if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
+					// this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
+					// 	if(element.ses_id == this.session_id.ses_id){
+					// 		emp_month_attendance_data = element;
+					// 	}
+					// }); }
+					// if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+					// 	for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+					// 		let emp_month = emp_month_attendance_data.month_data[i].month_id;
+					// 		let emp_attendance_detail = emp_month_attendance_data.month_data[i];
+					// 		if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+					// 			// console.log('yes');
+					// 			var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+					// 			var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+					// 			var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+					// 				emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+					// 			var presentDays = totalDays;
+					// 			emp_present_days = presentDays;
+					// 		}
+					// 	}
+					// }
 						var salary_payable = 0;
 						let arrearValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].arrear || 0);
 						formJson['arrear'] = arrearValue;
 						let advanceValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance || 0);
 						total_earnings = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings'] ? Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total_earnings']) : 0;
 						var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
-
+						emp_present_days = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_present_days'];
+						console.log('in present days');
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 						salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
 							((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
@@ -637,7 +638,28 @@ export class SalaryComputationComponent implements OnInit {
 							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
 							(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
 						element.balance = Number(element.emp_salary_payable) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']);
-					} else {						
+					} else {
+						let emp_month_attendance_data:any;
+							item.emp_month_attendance_data.forEach(element => {
+								if(element.ses_id == this.session_id.ses_id){
+									emp_month_attendance_data = element;
+								}
+							});
+							if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+								for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+									let emp_month = emp_month_attendance_data.month_data[i].month_id;
+									let emp_attendance_detail = emp_month_attendance_data.month_data[i];
+									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+										// console.log('yes');
+										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+										var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+											emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+										var presentDays = totalDays;
+										emp_present_days = presentDays;
+									}
+								}
+							}						
 						let advance_salary = 0;
 						var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale)) : 0;
 
@@ -730,29 +752,30 @@ export class SalaryComputationComponent implements OnInit {
 						}
 
 					}
-					let emp_month_attendance_data:any;
-					if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
-						this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
-							if(element.ses_id == this.session_id.ses_id){
-								emp_month_attendance_data = element;
-							}
-						}); }
+					// let emp_month_attendance_data:any;
+					// if(this.salaryComputeEmployeeData[eIndex] && Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
+					// 	if (this.salaryComputeEmployeeData[eIndex]) {
+					// 	this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
+					// 		if(element.ses_id == this.session_id.ses_id){
+					// 			emp_month_attendance_data = element;
+					// 		}
+					// 	}); }}
 
-					if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
-						for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
-							let emp_month = emp_month_attendance_data.month_data[i].month_id;
-							let emp_attendance_detail = emp_month_attendance_data.month_data[i];
-							if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
-								// console.log('yes');
-								var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
-								var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
-								var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
-									emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
-								var presentDays = totalDays;
-								emp_present_days = presentDays;
-							}
-						}
-					}
+					// if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+					// 	for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+					// 		let emp_month = emp_month_attendance_data.month_data[i].month_id;
+					// 		let emp_attendance_detail = emp_month_attendance_data.month_data[i];
+					// 		if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+					// 			// console.log('yes');
+					// 			var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+					// 			var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+					// 			var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+					// 				emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+					// 			var presentDays = totalDays;
+					// 			emp_present_days = presentDays;
+					// 		}
+					// 	}
+					// }
 						if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details && item.emp_salary_detail.emp_salary_structure.advance_details) {
 							const obj: any = item.emp_salary_detail.emp_salary_structure.advance_details;
 							const objArr: any[] = item.emp_salary_detail.emp_salary_structure.advance_details;
@@ -2690,21 +2713,21 @@ export class SalaryComputationComponent implements OnInit {
 									emp_month_attendance_data = element;
 								}
 							});
-							if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
-								for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
-									let emp_month = emp_month_attendance_data.month_data[i].month_id;
-									let emp_attendance_detail = emp_month_attendance_data.month_data[i];
-									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
-										// console.log('yes');
-										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
-										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
-										var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
-											emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
-										var presentDays = totalDays;
-										emp_present_days = presentDays;
-									}
-								}
-							}
+							// if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+							// 	for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+							// 		let emp_month = emp_month_attendance_data.month_data[i].month_id;
+							// 		let emp_attendance_detail = emp_month_attendance_data.month_data[i];
+							// 		if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+							// 			// console.log('yes');
+							// 			var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+							// 			var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+							// 			var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+							// 				emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+							// 			var presentDays = totalDays;
+							// 			emp_present_days = presentDays;
+							// 		}
+							// 	}
+							// }
 
 
 							var eIndex = this.salaryComputeEmployeeIds.indexOf(Number(item.emp_id));
@@ -2722,6 +2745,7 @@ export class SalaryComputationComponent implements OnInit {
 							// console.log('pos-->' + pos);
 							// console.log('editable-->' + editableStatus);
 							if (editableStatus) {
+								let emp_present_days = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_present_days'];
 								var salary_payable = 0;
 								let arrearValue = Math.round(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].arrear || 0);
 								formJson['arrear'] = arrearValue;
@@ -2730,6 +2754,7 @@ export class SalaryComputationComponent implements OnInit {
 								var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 
 								emp_present_days = emp_present_days ? emp_present_days : 0;
+								console.log('prsent days', emp_present_days);
 								salary_payable = Math.round((((Number(total_earnings)) * Number(emp_present_days)) / Number(no_of_days)) +
 									((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)) + Number(arrearValue) - Number(advanceValue));
 
@@ -2795,6 +2820,27 @@ export class SalaryComputationComponent implements OnInit {
 									(Number(total_deductions) * Number(element.emp_present_days) / Number(no_of_days)));
 								element.balance = Number(element.emp_salary_payable) - Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_total']);
 							} else {
+								let emp_month_attendance_data:any;
+							item.emp_month_attendance_data.forEach(element => {
+								if(element.ses_id == this.session_id.ses_id){
+									emp_month_attendance_data = element;
+								}
+							});
+							if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
+								for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
+									let emp_month = emp_month_attendance_data.month_data[i].month_id;
+									let emp_attendance_detail = emp_month_attendance_data.month_data[i];
+									if (Number(this.searchForm.value.month_id) === Number(emp_month)) {
+										// console.log('yes');
+										var tPresent = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_present : 0;
+										var lwpDays = emp_attendance_detail && emp_attendance_detail.attendance_detail ? emp_attendance_detail.attendance_detail.emp_lwp : 0;
+										var totalDays = emp_attendance_detail && emp_attendance_detail.attendance_detail &&
+											emp_attendance_detail.attendance_detail.emp_total_attendance ? emp_attendance_detail.attendance_detail.emp_total_attendance : 0;
+										var presentDays = totalDays;
+										emp_present_days = presentDays;
+									}
+								}
+							}
 								let advance_salary = 0;
 								if (item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.advance_details && item.emp_salary_detail.emp_salary_structure.advance_details) {
 									const obj: any = item.emp_salary_detail.emp_salary_structure.advance_details;
@@ -3045,7 +3091,7 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							}
 
-
+							console.log('el;ement--', element)
 							this.SALARY_COMPUTE_ELEMENT.push(element);
 							pos++;
 						}
