@@ -213,4 +213,15 @@ export class CommonAPIService {
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
 	}
 
+	downloadExcel(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/downloadExcel', value);
+		
+	}
+
+	uploadExcel(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/uploadExcel', value);
+	}
+
 }

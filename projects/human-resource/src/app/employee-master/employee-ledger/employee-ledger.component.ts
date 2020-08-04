@@ -270,8 +270,8 @@ export class EmployeeLedgerComponent implements OnInit, AfterViewInit {
 					obj['srno'] = srno;
 					obj['particulars'] = 'Salary Pay (' + this.getSessionName(item.session_id, item.id) + ')';
 					obj['mon'] = item.month + "' " + this.getSessionName(item.session_id, item.id);
-					obj['attendance'] = item && item.leaves && item.leaves.emp_total_attendance ?
-						item.leaves.emp_total_attendance : 0;
+					obj['attendance'] = item && item.details && item.details.emp_present_days ?
+						item.details.emp_present_days : 0;
 					obj['leaves'] = item && item.leaves && item.leaves.emp_leave_availed ?
 						Number(item.leaves.emp_leave_availed) : 0;
 					obj['netearnings'] = item && item.details &&

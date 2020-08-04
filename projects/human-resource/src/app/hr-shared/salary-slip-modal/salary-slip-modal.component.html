@@ -263,7 +263,7 @@
               <tr>
                 <td class="cus-td">Gross Salary</td>
                 <td class="cus-td" align="right">
-                  {{getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data) | number}}</td>
+                  {{getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data,employeeDetails?.emp_salary_compute_data?.emp_modes_data.td) | number}}</td>
               </tr>
               <tr>
                 <td class="cus-td">Total Deductions</td>
@@ -275,7 +275,7 @@
                 <td class="cus-td">Net Salary (Payout)</td>
                 <td class="cus-td" align="right">
 
-                  {{((getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data)) - 
+                  {{((getGrossSalary(employeeDetails?.emp_salary_compute_data?.empShacolumns, employeeDetails?.emp_salary_compute_data,employeeDetails?.emp_salary_compute_data?.emp_modes_data.td)) - 
                   (getTotalDeductions(employeeDetails?.emp_salary_compute_data?.empShdcolumns, employeeDetails?.emp_salary_compute_data, values))| number)}}
 
                 </td>
