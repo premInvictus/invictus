@@ -61,13 +61,13 @@
               <!-- <i class="fa fa-file-excel font-skyblue font-bold font-size-20" (click)="downloadExcel()"></i>&nbsp;
                 <i class="fa fa-file-pdf font-skyblue font-bold font-size-20" (click)="downloadPdf()"></i> -->
 
-              <div class="inline-flex btn-spacer text-right margin-bottom-5">
+              <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="isExistUserAccessMenu('750')">
                 <div>
                   <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
                     matTooltip="Download as Pdf" (click)="downloadPdf()" [matTooltipPosition]="'left'" />
                 </div>
               </div>
-              <div class="inline-flex btn-spacer text-right margin-bottom-5">
+              <div class="inline-flex btn-spacer text-right margin-bottom-5" *ngIf="isExistUserAccessMenu('751')">
                 <div>
                   <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
                     matTooltip="Export as excel" (click)="downloadExcel()" [matTooltipPosition]="'left'" />
@@ -381,7 +381,7 @@
                   class="text-nowrap">
                   {{element?.gratuity | indianCurrency}}
                 </td>
-                <td [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-footer-cell *matFooterCellDef></td>
+                <td [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-footer-cell *matFooterCellDef>{{gratuityGT() | indianCurrency}}</td>
               </ng-container>
               <ng-container matColumnDef="action">
                 <th [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-header-cell *matHeaderCellDef width="15%" class="text-nowrap"> Action </th>
@@ -408,10 +408,10 @@
       </div>
       <div class="row text-center" [hidden]="!(SALARY_COMPUTE_ELEMENT.length > 0)">
         <div class="col-8" *ngIf="!editFlag" style="text-align: right">
-          <button mat-raised-button class="btn-success-green-1  margin-right-15"
+          <button *ngIf="!isProcessed && isExistUserAccessMenu('752')" mat-raised-button class="btn-success-green-1  margin-right-15"
             style="color:white;background: blue !important" (click)="save()"
             [disabled]="disabledApiButton">Save</button> &nbsp;&nbsp;&nbsp;
-          <button mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
+          <button *ngIf="isExistUserAccessMenu('753')" mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
             [disabled]="disabledApiButton">Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">

@@ -24,9 +24,9 @@ export class SalarySlipModalComponent implements OnInit {
     this.getSchoolInfo();
   }
   getEmployeeDetails(emp_id) {
-    this.common.getEmployeeDetail({ emp_id: emp_id }).subscribe((res: any) => {
+    this.common.getEmployeeSalaryDetail({ emp_ids: [emp_id],month_id: this.values.action.id.toString() }).subscribe((res: any) => {
       if (res) {
-        this.employeeDetails = res;
+        this.employeeDetails = res[0];
         console.log(this.employeeDetails);
       }
     });
@@ -61,10 +61,11 @@ export class SalarySlipModalComponent implements OnInit {
       }
     });
   }
-  getGrossSalary(values: any[], value2: any) {
-    const td = value2.emp_salary_structure && value2.emp_salary_structure.td ?
-      Math.round(Number(value2.emp_salary_structure.td)) : 0;
-    return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + td;
+  getGrossSalary(values: any[], value2: any, td) {
+    // const td = value2.emp_salary_structure && value2.emp_salary_structure.td ?
+    //   Math.round(Number(value2.emp_salary_structure.td)) : 0;
+    if (values)
+      return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + td;
   }
   getTotalDeductions(values: any[], value2: any, value3) {
     let tds = 0;
@@ -72,8 +73,8 @@ export class SalarySlipModalComponent implements OnInit {
       tds = value2.emp_salary_structure && value2.emp_salary_structure.tds ?
         Math.round(Number(value2.emp_salary_structure.tds)) : 0;
     }
-
-    return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
+    if(values)
+      return (values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
   }
   closeDialog() {
     this.dialogRef.close();

@@ -38,6 +38,7 @@ export class SalaryComputationComponent implements OnInit {
 	shacolumns = [];
 	currSess: any;
 	empShacolumns = [];
+	isProcessed = false;
 	monthNames = ["January", "February", "March", "April", "May", "June",
 		"July", "August", "September", "October", "November", "December"
 	];
@@ -1076,6 +1077,10 @@ export class SalaryComputationComponent implements OnInit {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.balance || 0), 0);
 	}
 
+	gratuityGT() {
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.gratuity || 0), 0);
+	}
+
 	emptotalGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
 	}
@@ -1543,11 +1548,13 @@ export class SalaryComputationComponent implements OnInit {
 					emp_id: this.SALARY_COMPUTE_ELEMENT[i].emp_id,
 					session_id: this.session_id.ses_id,
 					emp_salary_compute_month_id: this.searchForm.value.month_id,
-					emp_salary_compute_data: inputJson
+					emp_salary_compute_data: inputJson,
+					isProcessed: true
 				});
 			}
 			finJson['emp_salary_compute_month_id'] = this.searchForm.value.month_id;
 			finJson['emp_salary_compute_data'] = inputArr;
+			//finJson['isProcessed'] = true;
 			console.log(', this.salaryHeadsArr--', this.salaryHeadsArr, this.chartsOfAccount);
 			var salaryDedArr = [];
 			for (var i = 0; i < this.salaryHeadsArr.length; i++) {
@@ -1805,19 +1812,20 @@ export class SalaryComputationComponent implements OnInit {
 				this.getVoucherTypeMaxId(paymentParticularData, 'payment');
 
 			}
+			console.log('inputArr', inputArr);
 			if (!edit) {
 				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						this.checkForFilter();
+						// this.checkForFilter();
 					});
 				});
 			} else {
 				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.checkForFilter();
+						// this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					});
 				});
@@ -1836,6 +1844,11 @@ export class SalaryComputationComponent implements OnInit {
 			this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
 				if (result) {
 					this.salaryComputeEmployeeData = result;
+					if(this.salaryComputeEmployeeData && this.salaryComputeEmployeeData.length > 0){
+						console.log('this.salaryComputeEmployeeData',this.salaryComputeEmployeeData)
+						this.isProcessed = this.salaryComputeEmployeeData[0]['isProcessed'];
+						console.log('this.isProcessed--', this.isProcessed)
+					}
 					for (var i = 0; i < result.length; i++) {
 						this.salaryComputeEmployeeIds.push(Number(result[i]['emp_salary_compute_data']['emp_id']));
 					}
@@ -2482,7 +2495,8 @@ export class SalaryComputationComponent implements OnInit {
 					emp_id: this.SALARY_COMPUTE_ELEMENT[i].emp_id,
 					session_id: this.session_id.ses_id,
 					emp_salary_compute_month_id: this.searchForm.value.month_id,
-					emp_salary_compute_data: inputJson
+					emp_salary_compute_data: inputJson,
+					isProcessed : false
 				});
 			}
 			console.log(empArr);
@@ -2491,14 +2505,14 @@ export class SalaryComputationComponent implements OnInit {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						this.checkForFilter();
+						// this.checkForFilter();
 					});
 				});
 			} else {
 				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.checkForFilter();
+						// this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					});
 				});
@@ -3616,6 +3630,11 @@ export class SalaryComputationComponent implements OnInit {
 
 	setSavedSalaryComponents() {
 
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		//console.log(mod_id,this.commonAPIService.isExistUserAccessMenu(mod_id))
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
 }
 

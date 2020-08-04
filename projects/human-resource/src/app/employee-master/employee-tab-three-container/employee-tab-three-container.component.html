@@ -373,7 +373,8 @@
                                                         <br>
                                                         <mat-checkbox (change)="checkValS(i, $event)"
                                                             [checked]="item.sc_opt" [formControlName]="'sc_opt'+i">
-                                                            Optional
+                                                            <span *ngIf="formGroupArray2[i].formGroup['value']['sc_opt'+i]">Opted</span>
+                                                            <span *ngIf="!(formGroupArray2[i].formGroup['value']['sc_opt'+i])">Opt</span>
                                                         </mat-checkbox>
                                                     </ng-container>
                                                     <ng-container *ngIf="item.sc_calculation_type === '%'">
@@ -391,7 +392,9 @@
                                                         <br>
                                                         <mat-checkbox [checked]="item.sc_opt"
                                                             (change)="checkValS(i, $event)"
-                                                            [formControlName]="'sc_opt'+i">Optional
+                                                            [formControlName]="'sc_opt'+i">{{item.sc_opt}}
+                                                            <span *ngIf="formGroupArray2[i].formGroup['value']['sc_opt'+i]">Opted</span>
+                                                            <span *ngIf="!(formGroupArray2[i].formGroup['value']['sc_opt'+i])">Opt</span>
                                                         </mat-checkbox>
                                                     </ng-container>
                                                 </form>
