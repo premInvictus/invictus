@@ -95,7 +95,7 @@ export class StudentManagementComponent implements OnInit {
 			param.sec_id = this.Filter_form.value.au_sec_id;
 		}
 		param.role_id = '4';
-		param.enrollment_type = '4';
+		param.enrollment_type = ['3','4'];
 		this.common.getMasterStudentDetail(param).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.studentdetailArray = result.data;
@@ -126,7 +126,7 @@ export class StudentManagementComponent implements OnInit {
 				}
 			}
 		);
-	}
+	}zz
 	/*getUser() {
 		this.studentdetailArray = [];
 		this.ELEMENT_DATA = [];
