@@ -1,0 +1,22 @@
+span.cert-list {
+    font-size: 18px;
+    font-weight: bold;
+}
+img.img-src {
+    width: 16%;
+    margin-bottom: 35px;
+}
+.cert-name {
+    font-size: 16px;
+    top: -17px;
+    position: relative;
+    color: #1a4261;
+}
+i.fas.fa-download.down-ic {
+    position: absolute;
+    top: -5px;
+    right: 30px;
+    font-size: 20px;
+    color: #d83838;
+    top: 12px;
+}
