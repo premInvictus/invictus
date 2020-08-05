@@ -13,23 +13,22 @@
             <mat-card-content>
                 <div class="d-flex justify-content-between">
 
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-8 col-xl-8">
                         <mat-form-field class="form-field">
                             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
                             <span matPrefix>
                                 <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
                         </mat-form-field>
                     </div>
-                    <div class="col-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
                         <div class="float-right">
-                            <a *ngIf="isExistUserAccessMenu('72')"
-                            (click)="openAccessMenuModal()">
+                            <a *ngIf="isExistUserAccessMenu('72')" (click)="openAccessMenuModal()">
                                 <button mat-raised-button class="btn-primary btn-danger">Assign Rights</button>
                             </a>
                             &nbsp;
-                            <!-- <a *ngIf="isExistUserAccessMenu('72')" routerLink="/axiom/school/setup/create-new-user">
+                            <a *ngIf="isExistUserAccessMenu('72')" routerLink="/axiom/school/setup/create-new-user">
                                 <button mat-raised-button class="btn-primary btn-success">Create User</button>
-                            </a> -->
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -65,7 +64,7 @@
                                 <!-- Action Column -->
                                 <ng-container matColumnDef="action">
                                     <th mat-header-cell *matHeaderCellDef> Action </th>
-                                    <td mat-cell *matCellDef="let item" class="tab-display-flex">
+                                    <td mat-cell *matCellDef="let item">
                                         <a [routerLink]="['../create-new-user']"
                                             [queryParams]="{login_id:item.action.au_login_id}">
                                             <i *ngIf="isExistUserAccessMenu('70')"
