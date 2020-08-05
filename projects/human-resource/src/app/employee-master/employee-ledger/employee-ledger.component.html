@@ -80,9 +80,9 @@
                     </th>
                     <td mat-cell *matCellDef="let item;let i = index" [attr.rowspan]="getRowSpan('mon',i) "
                       [style.display]="getRowSpan('mon', i) ? '' : 'none'">
-                      {{item.deductions | number | zerodash}}
+                      {{(item.deductions < 0 ? -(item.deductions): item.deductions) | number | zerodash}}
                     </td>
-                    <td mat-footer-cell *matFooterCellDef>{{totalObj.deductions | number | zerodash}}</td>
+                    <td mat-footer-cell *matFooterCellDef>{{(totalObj.deductions < 0 ? -(totalObj.deductions) : totalObj.deductions) | number | zerodash}}</td>
                   </ng-container>
                   <ng-container matColumnDef="advances">
                     <th mat-header-cell *matHeaderCellDef> Advances (<span><i class="fas fa-rupee-sign"></i></span>)
