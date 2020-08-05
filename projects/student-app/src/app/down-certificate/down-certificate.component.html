@@ -18,23 +18,34 @@
     <div class="row remove-top-margin">
       <div class="col-12 remove-col-padding-left remove-col-padding-right">
         <mat-card>
-          <div class="row">
+          <div class="row" *ngIf="certificate_type_arr.length > 0">
             <div class="col-12">
               <span class="cert-list">List of certificates</span>
             </div>
           </div>
           <br>
           <div class="row">
-            <ng-container *ngFor="let item of certificate_type_arr">
-              <div class="col-12 col-lg-3 col-md-4 col-sm-4">
-                <span>
-                  <img class="img-src"
-                    src="https://library.kissclipart.com/20181210/olq/kissclipart-certification-symbol-clipart-computer-icons-certif-dc01a7f9a2051c84.png">
-                </span>
-                <span class="cert-name">{{item.usts_alias}}</span>
-                <span>
-                  <i class="fas fa-download down-ic" (click)="certDownload(item)"></i>
-                </span>
+            <ng-container *ngIf="certificate_type_arr.length > 0">
+              <ng-container *ngFor="let item of certificate_type_arr">
+                <div class="col-12 col-lg-3 col-md-4 col-sm-4">
+                  <span>
+                    <img class="img-src"
+                      src="https://library.kissclipart.com/20181210/olq/kissclipart-certification-symbol-clipart-computer-icons-certif-dc01a7f9a2051c84.png">
+                  </span>
+                  <span class="cert-name">{{item.usts_alias}}</span>
+                  <span>
+                    <i class="fas fa-download down-ic" (click)="certDownload(item)"></i>
+                  </span>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="certificate_type_arr.length == 0">
+              <div class="col-12">
+                <div class="text-center">
+                  <app-no-data
+                    [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+                    [noDataText]="" [subText]="'No Certificate Available to Download'"></app-no-data>
+                </div>
               </div>
             </ng-container>
           </div>
