@@ -487,9 +487,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			salaryData['type' + i] = item.sc_type.type_id;
 			salaryData['sc_value' + i] = item.sc_value;
 			if (Number(item.sc_type.type_id) === 2) {
-			salaryData['sc_opt' + i] = item.sc_opt ? item.sc_opt : false
+				salaryData['sc_opt' + i] =this.checkscoptValue(item.sc_id) ? this.checkscoptValue(item.sc_id) : false
 			}
-			
+
 			this.formGroupArray2.push({
 				formGroup: this.fbuild.group(salaryData)
 			});
@@ -497,9 +497,23 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 		this.getNetSalary();
 	}
+	checkscoptValue(sc_id) {
+		if (this.employeedetails.emp_salary_detail &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads.length > 0) {
+			const arr: any[] = this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads;
+			const findex = arr.findIndex(f => Number(f.sc_id) === Number(sc_id));
+			if (findex !== -1) {
+				return arr[findex]['sc_opt'];
+			}
+		} else {
+			return false;
+		}
+	}
 	checkValS(i, $event) {
 		if ($event.checked) {
-			
+
 			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = true;
 
 		} else {
