@@ -802,20 +802,20 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				};
-				this.employeedetails.emp_month_attendance_data = {
-					ses_id: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.ses_id ?
-						this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
-					leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
-						this.salaryDetails.value.leave_opening_balance : '',
-					month_data: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.month_data &&
-						this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
-						this.employeedetails.emp_month_attendance_data.month_data : []
-				};
+				// this.employeedetails.emp_month_attendance_data = {
+				// 	ses_id: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.ses_id ?
+				// 		this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
+				// 	leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
+				// 		this.salaryDetails.value.leave_opening_balance : '',
+				// 	month_data: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.month_data &&
+				// 		this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
+				// 		this.employeedetails.emp_month_attendance_data.month_data : []
+				// };
 
 			}
-			console.log(this.salaryDetails);
+			console.log(this.employeedetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.disabledApiButton = false;
@@ -966,17 +966,17 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				};
-				this.employeedetails.emp_month_attendance_data = {
-					ses_id: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.ses_id ?
-						this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
-					leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
-						this.salaryDetails.value.leave_opening_balance : '',
-					month_data: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.month_data &&
-						this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
-						this.employeedetails.emp_month_attendance_data.month_data : []
-				};
+				// this.employeedetails.emp_month_attendance_data = {
+				// 	ses_id: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.ses_id ?
+				// 		this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
+				// 	leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
+				// 		this.salaryDetails.value.leave_opening_balance : '',
+				// 	month_data: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.month_data &&
+				// 		this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
+				// 		this.employeedetails.emp_month_attendance_data.month_data : []
+				// };
 			}
 
 			console.log('this.employeedetails', this.employeedetails);
