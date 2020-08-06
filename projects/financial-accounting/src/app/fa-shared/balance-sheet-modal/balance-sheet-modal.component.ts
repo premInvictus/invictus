@@ -104,26 +104,34 @@ export class BalanceSheetModalComponent implements OnInit {
   recursiveDebitArraylength(arr) {
 
     for (var ele in arr) {
-      if (Array.isArray(arr[ele])) {
-        console.log(this.totalDebitRowLength, arr[ele]);
+      if (Array.isArray(arr[ele])  && arr[ele].length > 0) {
+       // console.log(this.totalDebitRowLength, arr[ele]);
         this.totalDebitRowLength++;
         this.recursiveDebitArraylength(arr[ele])
-      } else {
+      } 
+      if (!(Array.isArray(arr[ele]))){
         this.totalDebitRowLength++;
+        
       }
     }
 
   }
 
   recursiveCreditArraylength(arr) {
-
+    
     for (var ele in arr) {
-      if (Array.isArray(arr[ele])) {
+      
+      if (Array.isArray(arr[ele]) && arr[ele].length > 0) {
         this.totalCreditRowLength++;
+        
         this.recursiveCreditArraylength(arr[ele])
-      } else {
+      } 
+      
+      if (!(Array.isArray(arr[ele]))){
         this.totalCreditRowLength++;
+        
       }
+      
     }
 
   }
@@ -181,7 +189,7 @@ export class BalanceSheetModalComponent implements OnInit {
     }
     creditSideTotal = creditSideTotal - (this.partialPaymentStatus ? Number(this.incomeExpenditureArray['head_total_amt']) : 0);
     debitSideTotal = debitSideTotal;
-    console.log(debitSideTotal, creditSideTotal)
+    //console.log(debitSideTotal, creditSideTotal)
     this.incomeExpenditureDeviation = debitSideTotal - creditSideTotal;
   }
 
@@ -218,7 +226,7 @@ export class BalanceSheetModalComponent implements OnInit {
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
         diffTotal = diffTotal - diff;
-        console.log(diff, i);
+        //console.log(diff, i);
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {

@@ -50,10 +50,11 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
   buildForm() {
   }
   ngOnChanges() {
-    this.checkPartialPaymentStatus();
+    
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
+    this.checkPartialPaymentStatus();
 
 
   }
@@ -82,8 +83,8 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
     console.log(this.partialPaymentStatus);
     // this.creditRow = this.partialPaymentStatus ? (param['invoice_due_data'].length > 0 ? param['invoice_due_data'].length + 1 : 0) : 0;
     // if (this.debitSideTotal != this.creditSideTotal) {
-     this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? this.debitRow + this.debitSideBlankArr.length+1  : this.debitRow + this.debitSideBlankArr.length;
-     this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? this.creditRow + this.creditSideBlankArr.length+1  :  this.creditSideBlankArr.length;
+     this.debitRow = (this.debitSideTotal < this.creditSideTotal) ? 1 + this.debitSideBlankArr.length  : this.debitRow + this.debitSideBlankArr.length;
+     this.creditRow = (this.debitSideTotal > this.creditSideTotal) ? 1 + this.creditSideBlankArr.length  :  this.creditSideBlankArr.length;
     // }
     // this.debitRow = this.debitSideBlankArr.length;
     // this.creditRow = this.creditSideBlankArr.length;
@@ -142,18 +143,18 @@ export class IncomeAndExpenditureModalComponent implements OnInit {
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff < 0) {
-        diffCTotal = diffCTotal + diff;
+        diffCTotal = diffCTotal + (-diff);
         this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
 
 
     }
-    this.creditSideTotal = this.creditSideTotal - (this.partialPaymentStatus ? Number(param['head_total_amt']) : 0);
-    this.debitSideTotal = this.debitSideTotal;
+    // this.creditSideTotal = this.creditSideTotal;
+    // this.debitSideTotal = this.debitSideTotal;
 
     console.log('debitSideTotal', this.debitSideTotal);
-    console.log('creditSideTotal', this.creditSideTotal);
+    console.log('creditSideTotal', this.creditSideTotal,this.creditSideBlankArr);
     this.checkBlankArray(this.param);
   }
 

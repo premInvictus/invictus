@@ -118,7 +118,7 @@
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                         </td>
                         <td width="15%" class="text-right">
-                          <b><span>{{getTwoDecimalValue(getDeviation(ggitem)) | indianCurrency}}</span></b></td>
+                          <b><span>{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span></b></td>
                       </tr>
                     </ng-container>
                   </ng-container>
@@ -129,7 +129,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
                       <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(getDeviation(gitem)) | indianCurrency}}</span></b></td>
+                        <b><span>{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
 
@@ -226,7 +226,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                       </td>
                       <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(getDeviation(ggitem)) | indianCurrency}}</span></b></td>
+                        <b><span>{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
                   </ng-container>
@@ -237,7 +237,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
                       <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(getDeviation(gitem)) | indianCurrency}}</span></b></td>
+                        <b><span>{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
 
