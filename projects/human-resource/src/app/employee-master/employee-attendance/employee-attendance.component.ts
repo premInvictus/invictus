@@ -211,9 +211,10 @@ export class EmployeeAttendanceComponent implements OnInit {
 								});
 								console.log('emp_month_attendance_data',emp_month_attendance_data);
 								if (emp_month_attendance_data) {
-									if (emp_month_attendance_data && (Number(emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
-										total_leave_closing_balance += (emp_month_attendance_data.leave_opening_balance ? emp_month_attendance_data.leave_opening_balance : 0);
-									}
+									// not in use
+									// if (emp_month_attendance_data && (Number(emp_month_attendance_data.ses_id) === Number(this.session_id.ses_id))) {
+									// 	total_leave_closing_balance += (emp_month_attendance_data.leave_opening_balance ? emp_month_attendance_data.leave_opening_balance : 0);
+									// }
 									if (emp_month_attendance_data.month_data) {
 										for (var i = 0; i < emp_month_attendance_data.month_data.length; i++) {
 											emp_month = emp_month_attendance_data.month_data[i].month_id;
@@ -223,11 +224,20 @@ export class EmployeeAttendanceComponent implements OnInit {
 													total_leave_closing_balance = total_leave_closing_balance + (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
 												}
 												if (parseInt(this.searchForm.value.month_id, 10) === parseInt(emp_month, 10)) {
-													curr_total_leave_closing_balance = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0) - parseFloat(emp_attendance_detail && emp_attendance_detail.emp_leave_granted ? emp_attendance_detail.emp_leave_granted : 0);
-	
-													leave_credited_count = (emp_attendance_detail && emp_attendance_detail.emp_leave_credited ? emp_attendance_detail.emp_leave_credited : 0);
-	
-													total_leave_closing_balance = Number(total_leave_closing_balance) + Number(leave_credited_count);
+													let temp_leave_closing = Object.assign(emp_attendance_detail.emp_leave_credited,{});
+													if(temp_leave_closing && emp_attendance_detail.emp_leave_availed && emp_attendance_detail.emp_leave_availed.length > 0){
+														temp_leave_closing.forEach(ele => {
+															let availedtemp = emp_attendance_detail.emp_leave_availed.find(e => e.leave_id == ele.leave_id);
+															if(availedtemp){
+																ele.leave_value = ele.leave_value - availedtemp.leave_value
+															}
+														});
+													}
+													if(temp_leave_closing){
+														emp_month_attendance_data.month_data[i].attendance_detail['emp_balance_leaves'] = emp_month_attendance_data.month_data[i].attendance_detail['emp_balance_leaves'] || [];
+														emp_month_attendance_data.month_data[i].attendance_detail['emp_balance_leaves'].push(temp_leave_closing);
+													}
+
 												}
 											}
 											emp_leave_approved = emp_month_attendance_data.month_data[i].attendance_detail && emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved ? emp_month_attendance_data.month_data[i].attendance_detail.emp_leave_approved : ''

@@ -379,7 +379,7 @@ export class SalaryComputationComponent implements OnInit {
 		let inputJson = {
 			'month_id': this.searchForm.value.month_id,
 			'emp_status': 'all',
-			from_attendance: true,
+			from_attendance: false,
 			year: this.currSess
 		};
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
@@ -730,12 +730,16 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 					let emp_month_attendance_data:any;
-					if(Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
-						this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
-							if(element.ses_id == this.session_id.ses_id){
-								emp_month_attendance_data = element;
-							}
-						}); }
+					console.log('this.salaryComputeEmployeeData',this.salaryComputeEmployeeData);
+					if(Array.isArray(this.salaryComputeEmployeeData) && this.salaryComputeEmployeeData.length > 0){
+						if(this.salaryComputeEmployeeData[eIndex] && Array.isArray(this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data)) {
+							this.salaryComputeEmployeeData[eIndex]['relations'].emp_month_attendance_data.forEach(element => {
+								if(element.ses_id == this.session_id.ses_id){
+									emp_month_attendance_data = element;
+								}
+							}); 
+						}
+					}
 
 					if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
 						for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
@@ -1805,6 +1809,8 @@ export class SalaryComputationComponent implements OnInit {
 				this.getVoucherTypeMaxId(paymentParticularData, 'payment');
 
 			}
+			console.log('inputArr',inputArr);
+			console.log('empArr',empArr);
 			if (!edit) {
 				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
@@ -1814,11 +1820,18 @@ export class SalaryComputationComponent implements OnInit {
 					});
 				});
 			} else {
-				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+				// this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+				// 	this.disabledApiButton = false;
+				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+				// 		this.checkForFilter();
+				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+				// 	});
+				// });
+				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
 					this.disabledApiButton = false;
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+						this.checkForFilter();
 					});
 				});
 			}

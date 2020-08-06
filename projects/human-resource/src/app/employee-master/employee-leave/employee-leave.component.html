@@ -32,9 +32,9 @@
 
   <div class="col-12">
 
-    <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
+    <mat-card class="margin-top-10 card-height-325" [hidden]="!empdetailFlag">
 
-      <div class="row margin-top-15 booklog" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
+      <div class="row margin-top-15 booklog" [hidden]="!empdetailFlag">
         <div class="row">
           <div class="col-12 margin-top-15">
             <div class="col-12 remove-col-padding">
@@ -58,11 +58,11 @@
                 class="font-size-14 opacity-7">
                 {{employeeData?.emp_status}}
               </span>
-              <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
+              <!-- <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
                 class="font-size-14 opacity-7">
-                {{employeeData?.emp_month_attendance_data?.leave_opening_balance}}}
-              </span>
-              <span class="font-size-14 font-bold margin-left-15 ver-line-divider" style="cursor: pointer;" (click)="openLeaveCredit()">Add leave credit </span>
+                
+              </span> -->
+              <span class="font-size-14 font-bold margin-left-15 ver-line-divider text-right" style="cursor: pointer;" (click)="openLeaveCredit()">Add leave credit </span>
             </div>
 
           </div>
@@ -72,75 +72,65 @@
           <!-- <form [formGroup]="employeeForm"> -->
 
           <div class="row">
-            <div class="col-12">
-              <!-- <div class="row ">
-                  <div class="col-10 remove-col-padding">
-                    <mat-form-field appearance="legacy lib-form">
-                      <input matInput placeholder="Search" (keyUp)="applyFilter($event.target.value)" />
-                      <mat-icon matPrefix>filter_list</mat-icon>
-                    </mat-form-field>
-                  </div>
-                </div> -->
+            <div class="col-12" *ngIf="EMPLOYEE_ELEMENT.length > 0">
               <table mat-table [dataSource]="employeedataSource" matSort class="table-80 text-center"
-                id="report_table67">
+                id="report_table67" width="100%">
+                <ng-container matColumnDef="group1">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
+                </ng-container>
+                <ng-container matColumnDef="group2">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length">Opening </th>
+                </ng-container>
+                <ng-container matColumnDef="group3">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length+1">Availed </th>
+                </ng-container>
+                <ng-container matColumnDef="group4">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length">Closing </th>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="['group1','group2','group3','group4']"></tr>
                 <ng-container matColumnDef="srno">
-                  <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="1%"> Sr. No. </th>
-                  <ng-container *matCellDef="let element">
-                    <td mat-cell *ngIf="element.srno==='Grand Total'" colspan="2">
-                      <b>{{element?.srno}}</b>
-
-                    </td>
-                    <td mat-cell *ngIf="!(element.srno==='Grand Total')">
-                      <p [innerHtml]="element.srno"> </p>
-
-                    </td>
-                  </ng-container>
-
+                  <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="5%"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.srno}}
+                  </td>
                 </ng-container>
                 <ng-container matColumnDef="month_name">
-                  <th mat-header-cell *matHeaderCellDef width="30%"> Month </th>
-                  <ng-container *matCellDef="let element">
-                    <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-left">{{element.month_name}}
-                    </td>
-                  </ng-container>
-                </ng-container>
-                <!-- <ng-container matColumnDef="leave_opening_balance">
-                  <th mat-header-cell *matHeaderCellDef  width="25%"> Opening Balance</th>
-                  <ng-container *matCellDef="let element">
-                    <td mat-cell *ngIf="!(element.srno==='Grand Total')" class="text-center">
-                      {{element.leave_opening_balance}}
-                    </td>
-                  </ng-container>
-                </ng-container> -->
-                <ng-container matColumnDef="leave_credited">
-                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Credited </th>
+                  <th mat-header-cell *matHeaderCellDef width="15%"> Month </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
-                    <p [innerHtml]="element.leave_credited"></p>
+                    {{element.month_name}}
                   </td>
                 </ng-container>
-                <ng-container matColumnDef="leave_availed">
-                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Availed </th>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_credited' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.leave_name}} </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
-                    <p [innerHtml]="element.leave_availed"></p>
+                    <ng-container *ngFor="let item of element.leave_credited;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value}}</span>
+                    </ng-container>
                   </td>
                 </ng-container>
-                <ng-container matColumnDef="leave_granted">
-                  <th mat-header-cell *matHeaderCellDef width="5%"> Leave Granted </th>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_availed' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.leave_name}} </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
-                    <p [innerHtml]="element.leave_granted"></p>
+                    <ng-container *ngFor="let item of element.leave_availed;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value}}</span>
+                    </ng-container>
                   </td>
-
                 </ng-container>
                 <ng-container matColumnDef="lwp">
                   <th mat-header-cell *matHeaderCellDef width="5%"> LWP</th>
                   <td mat-cell *matCellDef="let element">
-                    <p [innerHtml]="element.lwp"></p>
+                    {{element.lwp}}
                   </td>
                 </ng-container>
-                <ng-container matColumnDef="leave_closing_balance">
-                  <th mat-header-cell *matHeaderCellDef width="5%"> Closing Balance </th>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_closing' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.leave_name}} </th>
                   <td mat-cell *matCellDef="let element" class="text-center">
-                    <p [innerHtml]="element.leave_closing_balance"></p>
+                    <ng-container *ngFor="let item of element.leave_closing;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value}}</span>
+                    </ng-container>
                   </td>
                 </ng-container>
                 <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>

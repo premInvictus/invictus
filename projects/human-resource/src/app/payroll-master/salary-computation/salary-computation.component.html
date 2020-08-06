@@ -87,7 +87,7 @@
                 <th mat-header-cell *matHeaderCellDef [attr.colspan]="shacolumns?.length + 1"> Salary Heads </th>
               </ng-container>
               <!-- <ng-container matColumnDef="header-row-second-group">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th> 
               </ng-container> -->
               <ng-container matColumnDef="header-row-deductions-group">
                 <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Earnings </th>
@@ -184,7 +184,7 @@
                   [ngStyle]="{'background-color':element?.colorCode}"> <span
                     *ngIf="element.emp_total_earnings">{{(element?.emp_total_earnings | indianCurrency )}} </span> </td>
                 <td mat-footer-cell *matFooterCellDef class="text-center">
-                  {{footerrow?.emp_total_earnings | indianCurrency}}</td>
+                  <span *ngIf="footerrow?.emp_total_earnings">{{footerrow?.emp_total_earnings | indianCurrency}}</span></td>
               </ng-container>
 
               <ng-container matColumnDef="td">

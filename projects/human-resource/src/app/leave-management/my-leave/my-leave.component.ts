@@ -339,6 +339,8 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	approveConfirm(item) {
+		
+		console.log('item',item)
 		this.finalapprovedArray = [];
 		this.approvedArray = [];
 		var months = [
@@ -368,11 +370,10 @@ export class MyLeaveComponent implements OnInit {
 					"month_name": months[Number(current)],
 					"attendance_detail": {
 						"emp_leave_approved": {
-							"leave_id": item.leave_type.leave_type_id,
+							"leave_id": item.leave_type.leave_id,
 							"leave_name": item.leave_type.leave_name,
 							"leave_credit_count": 1
-						},
-						"emp_leave_granted": 1
+						}
 					}
 
 				}
@@ -431,6 +432,11 @@ export class MyLeaveComponent implements OnInit {
 					});
 
 					console.log('findex',findex);
+					let leave_availed_ele = {
+						leave_id:dety.attendance_detail.emp_leave_approved.leave_id,
+						leave_name:dety.attendance_detail.emp_leave_approved.leave_name,
+						leave_value:dety.attendance_detail.emp_leave_approved.leave_credit_count
+					}
 					if (findex !== -1) {
 						console.log(' exist',findex);
 						if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
@@ -445,20 +451,56 @@ export class MyLeaveComponent implements OnInit {
 						} else {
 							approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
 						}
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_granted) {
-							approvedArraytemp[findex].attendance_detail.emp_leave_granted =
-								Number(approvedArraytemp[findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted) {
+						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted =
+						// 		Number(approvedArraytemp[findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						// } else {
+						// 	approvedArraytemp[findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						// }
+						// if (approvedArraytemp[findex].attendance_detail.emp_leave_availed) {
+						// 	approvedArraytemp[findex].attendance_detail.emp_leave_availed =
+						// 		Number(approvedArraytemp[findex].attendance_detail.emp_leave_availed) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						// } else {
+						// 	approvedArraytemp[findex].attendance_detail['emp_leave_availed'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						// }
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed &&
+							approvedArraytemp[findex].attendance_detail.emp_leave_availed.length > 0) {
+								let isLeaveTypeExist = 0;;
+								approvedArraytemp[findex].attendance_detail.emp_leave_availed.forEach(element => {
+									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
+										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
+										isLeaveTypeExist = 1;
+									}
+								});
+								if(isLeaveTypeExist == 0){
+									approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
+								}
 						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						}
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed) {
-							approvedArraytemp[findex].attendance_detail.emp_leave_availed =
-								Number(approvedArraytemp[findex].attendance_detail.emp_leave_availed) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						//emp_leave_granted is not in use ********** further can be used
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
+							approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
+								let isLeaveTypeExist = 0;;
+								approvedArraytemp[findex].attendance_detail.emp_leave_granted.forEach(element => {
+									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
+										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
+										isLeaveTypeExist = 1;
+									}
+								});
+								if(isLeaveTypeExist == 0){
+									approvedArraytemp[findex].attendance_detail.emp_leave_granted.push(leave_availed_ele);
+								}
 						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						}
 					} else {
-						dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						//dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						dety.attendance_detail['emp_leave_availed'] = [];
+						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
+						dety.attendance_detail['emp_leave_granted'] = [];
+						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
+						
 						approvedArraytemp.push(dety);
 					}
 				}

@@ -17,7 +17,7 @@
       <div class="col-12 remove-col-padding">
       <mat-form-field appearance="outline" class="form-field">
         <mat-label>Month</mat-label>
-        <mat-select formControlName="month_id" placeholder="Month" >
+        <mat-select formControlName="month_id" placeholder="Month" required>
             <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                 style="font-size: 14px;">
                 {{item.fm_name}}
@@ -27,6 +27,19 @@
     </div>
   </div>
 </form>
+<ng-container *ngFor="let item of leavetypeform; let i=index;">
+  <form [formGroup]="leavetypeform[i]">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>{{item.value.leave_name}} Credit</mat-label>
+          <input type="number" formControlName="leave_value" matInput
+              placeholder="{{item.value.leave_name}} Credit" >
+      </mat-form-field>
+    </div>
+  </div>
+  </form>
+</ng-container>
 </div>
 <br>
 <div class="text-center">
