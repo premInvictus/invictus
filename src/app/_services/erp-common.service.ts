@@ -26,6 +26,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/students/checkCertAccess', value);
 	}
+	getCertificatesEnabled(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getCertificatesEnabled', value);
+	}
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getStudentInvoice(value) {
