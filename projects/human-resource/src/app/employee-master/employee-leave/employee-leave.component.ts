@@ -55,16 +55,17 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	getAllEmployee() {
 		this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
-			this.allEmployeeData = result;
-			this.tempEmpData = result;
-			this.tmpAllEmployeeData = result;
+
+			this.allEmployeeData = result.slice(0);
+			this.tempEmpData = result.slice(0);
+			this.tmpAllEmployeeData = result.slice(0);
 			this.employeeData = {};
 		});
 	}
 
 	getFilterEmployee(event) {
 		var tempArr = [];
-console.log(event.target.value);
+		console.log('event.target.value',event.target.value);
 		if (event.target.value.length > 2) {
 			const filterVal = event.target.value;
 			this.allEmployeeData = this.tempEmpData.filter(f => {
@@ -72,8 +73,9 @@ console.log(event.target.value);
 				return (f.emp_name.toLowerCase()).includes(filterVal)
 			})
 		} else {
-			this.allEmployeeData = this.tempEmpData;
+			this.allEmployeeData = this.tempEmpData.slice(0);
 		}
+		console.log('this.tempEmpData',this.tempEmpData)
 	}
 
 	// getEmployeeDetail() {
@@ -168,8 +170,8 @@ console.log(event.target.value);
 	// }
 	getEmployeeDetail() {
 		let inputJson = {};
-		this.allEmployeeData = [];
-		this.tempEmpData = [];
+		//this.allEmployeeData = [];
+		//this.tempEmpData = [];
 		if (this.searchForm.value && this.searchForm.value.emp_id && this.searchForm.value.emp_name) {
 			inputJson = {
 				emp_code_no: this.searchForm.value.emp_id

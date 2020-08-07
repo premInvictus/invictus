@@ -26,6 +26,9 @@ export class LeaveApplicationComponent implements OnInit {
   monthData: any = {};
   empRecord: any = {};
   editFlag = false;
+  employeeData:any;
+  session_id:any;   
+  leave_credit = 0;
   constructor(
     public dialogRef: MatDialogRef<LeaveApplicationComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -35,24 +38,29 @@ export class LeaveApplicationComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.session_id = JSON.parse(localStorage.getItem('session'));
+    console.log('data',this.data);
     this.getClassIVStaff();
     this.buildForm();
     this.getLeaveType();
     this.empRecord = JSON.parse(localStorage.getItem('eRecord'));
     console.log('this.empRecord',this.empRecord);
-    if (this.data) {
+    if (this.data.leave_type.leave_id) {
       this.editFlag = true;
       this.showFormFlag = true;
       this.leaveForm.patchValue({
         'leave_id': this.data.leave_id,
         'leave_start_date': this.data.leave_start_date ? this.common.dateConvertion(this.data.leave_start_date, 'yyyy-MM-dd') : '',
         'leave_end_date': this.data.leave_end_date ? this.common.dateConvertion(this.data.leave_end_date, 'yyyy-MM-dd') : '',
-        'leave_type': this.data.leave_type.leave_type_id,
+        'leave_type': this.data.leave_type.leave_id,
         'leave_half_day': this.data.leave_half_day,
         'leave_reason': this.data.leave_reason,
         'leave_attachment': this.data.leave_attachment,
         'leave_status': this.data.leave_status
       });
+      if(this.data.leave_type.leave_id){
+        this.getEmployeeDetails();
+      }
     } else {
       this.data = [];
       this.editFlag = false;
@@ -97,7 +105,7 @@ export class LeaveApplicationComponent implements OnInit {
     this.dialogRef.close({ data: true });
   }
   submit() {
-    let eRecord;
+
     if (this.selectedIndex === 0) {
       console.log('this.empRecord',this.empRecord);
       const month_data: any[] = this.empRecord.emp_month_attendance_data &&
@@ -105,15 +113,6 @@ export class LeaveApplicationComponent implements OnInit {
         this.empRecord.emp_month_attendance_data.month_data.length > 0 ?
         this.empRecord.emp_month_attendance_data.month_data : [];
       ;
-      if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-        month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-        eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-        
-      } else {
-        eRecord = this.empRecord && this.empRecord.emp_month_attendance_data &&
-          this.empRecord.emp_month_attendance_data.leave_opening_balance ?
-          this.empRecord.emp_month_attendance_data.leave_opening_balance : 0;
-      }
       console.log('month_data',month_data);
     } else {
       const month_data: any[] = this.monthData &&
@@ -122,37 +121,35 @@ export class LeaveApplicationComponent implements OnInit {
         this.monthData.month_data : [];
       ;
       
-      if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-        month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-        eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-
-      } else {
-        eRecord = this.empRecord && this.monthData &&
-          this.monthData.leave_opening_balance ?
-          this.monthData.leave_opening_balance : 0;
-      }
     }
-    console.log('this.leaveForm',this.leaveForm);
-    console.log('eRecord',eRecord);
+    console.log('this.leaveForm',this.leaveForm.value);
     if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
       (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason
-      // && eRecord > 0
+      && this.leave_credit > 0
       ) {
       if (this.halfDay) {
         this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
       }
       this.leaveForm.value['tabIndex'] = this.selectedIndex;
       this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
-      if (this.selectedIndex === 0) {
-        this.leaveForm.value['leave_to'] = this.empRecord.emp_supervisor && this.empRecord.emp_supervisor.id ?this.empRecord.emp_supervisor.id : '';
+      if (this.selectedIndex == 0) {
+        this.leaveForm.value['leave_to'] = this.empRecord.emp_supervisor && this.empRecord.emp_supervisor.id ? this.empRecord.emp_supervisor.id : '';
       } else {
         this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       }
       
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
-      this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
+      console.log('this.leaveForm.value',this.leaveForm.value);
+      let tempdays = this.leaveForm.value.leave_end_date.diff(this.leaveForm.value.leave_start_date, 'days');
+      tempdays++;
+      console.log('tempdays',tempdays);
+      if(this.leave_credit >= tempdays){
+        this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
+      }  else {
+        this.common.showSuccessErrorMessage('Insufficiant leave balance', 'error');
+      }
     } else {
-      this.common.showSuccessErrorMessage('Please Fill Required Fields or make sure leave balance exist', 'error');
+      this.common.showSuccessErrorMessage('Please Fill Required Fields or make sure leave credit exist', 'error');
     }
   }
   update() {
@@ -163,34 +160,34 @@ export class LeaveApplicationComponent implements OnInit {
         this.empRecord.emp_month_attendance_data.month_data.length > 0 ?
         this.empRecord.emp_month_attendance_data.month_data : [];
       ;
-      if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-        month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-        eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
+      // if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
+      //   month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
+      //   eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
 
-      } else {
-        eRecord = this.empRecord && this.empRecord.emp_month_attendance_data &&
-          this.empRecord.emp_month_attendance_data.leave_opening_balance ?
-          this.empRecord.emp_month_attendance_data.leave_opening_balance : 0;
-      }
+      // } else {
+      //   eRecord = this.empRecord && this.empRecord.emp_month_attendance_data &&
+      //     this.empRecord.emp_month_attendance_data.leave_opening_balance ?
+      //     this.empRecord.emp_month_attendance_data.leave_opening_balance : 0;
+      // }
     } else {
       const month_data: any[] = this.monthData &&
         this.monthData.month_data &&
         this.monthData.month_data.length > 0 ?
         this.monthData.month_data : [];
       ;
-      if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-        month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-        eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
+      // if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
+      //   month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
+      //   eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
 
-      } else {
-        eRecord = this.empRecord && this.monthData &&
-          this.monthData.leave_opening_balance ?
-          this.monthData.leave_opening_balance : 0;
-      }
+      // } else {
+      //   eRecord = this.empRecord && this.monthData &&
+      //     this.monthData.leave_opening_balance ?
+      //     this.monthData.leave_opening_balance : 0;
+      // }
     }
     if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
       (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason
-      && eRecord > 0) {
+      && this.leave_credit > 0) {
       if (this.halfDay) {
         this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
       }
@@ -198,7 +195,15 @@ export class LeaveApplicationComponent implements OnInit {
       this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
       this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
-      this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
+      let tempdays = this.leaveForm.value.leave_end_date.diff(this.leaveForm.value.leave_start_date, 'days');
+      tempdays++;
+      console.log('tempdays',tempdays);
+      if(this.leave_credit >= tempdays){
+        this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
+      }  else {
+        this.common.showSuccessErrorMessage('Insufficiant leave balance', 'error');
+      }
+      //this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
     } else {
       this.common.showSuccessErrorMessage('Please Fill Required Fields or make sure leave balance exist', 'error');
     }
@@ -272,6 +277,39 @@ export class LeaveApplicationComponent implements OnInit {
     const index = this.empArray.findIndex(f => Number(f.emp_id) === Number(id));
     if (index !== -1) {
       return this.empArray[index]['emp_name'];
+    }
+  }
+  getEmployeeDetails(){
+    let inputJson:any = {};
+    this.leave_credit = 0;
+    console.log('this.selectedIndex',this.selectedIndex);
+    if(this.selectedIndex ==0){
+      inputJson.emp_id = this.data.emp_id;
+    } else {
+      if (this.subJSON['leave_employee_id']) {
+        inputJson.emp_id   =    this.subJSON['leave_employee_id']
+      }
+    }
+    if(inputJson.emp_id) {
+      this.common.getEmployeeDetail(inputJson).subscribe((result: any) => {
+        this.employeeData = result;
+        if(this.employeeData && this.employeeData.emp_month_attendance_data)
+        this.employeeData.emp_month_attendance_data.forEach(element => {
+					if(element.ses_id == this.session_id.ses_id){
+						if(element.month_data  && element.month_data.length > 0){
+              const tempmonthdata = element.month_data[element.month_data.length-1];
+              const templeaveCredit = tempmonthdata.attendance_detail.emp_leave_credited.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              if(templeaveCredit){
+                this.leave_credit = templeaveCredit.leave_value;
+              }
+              const templeaveAvailed = tempmonthdata.attendance_detail.emp_leave_availed.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              if(templeaveAvailed){
+                this.leave_credit -= templeaveAvailed.leave_value;
+              }
+            }
+					}
+				});
+      });
     }
   }
 }

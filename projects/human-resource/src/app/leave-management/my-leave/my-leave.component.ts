@@ -46,7 +46,7 @@ export class MyLeaveComponent implements OnInit {
 	deleteMessage = 'Are you sure to Delete !';
 	approveMessage = 'Are you sure to Approve !';
 	rejectMessage = 'Are you sure to Reject !';
-	approvedArray: any[] = [];
+	approvedArray: any[] 	= [];
 	finalapprovedArray: any[] = [];
 	disabledApiButton = false;
 	session_id:any;
@@ -476,6 +476,7 @@ export class MyLeaveComponent implements OnInit {
 									approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
 								}
 						} else {
+							approvedArraytemp[findex].attendance_detail['emp_leave_availed']=[];
 							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						}
 						//emp_leave_granted is not in use ********** further can be used
@@ -532,19 +533,19 @@ export class MyLeaveComponent implements OnInit {
 				console.log(item.leave_emp_detail.emp_id);
 				console.log('inputJson',inputJson);
 				console.log('approvedjson',approvedjson);
-				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-					if (result) {
-						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
-							if (approved_result) {
-								this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-								this.showFormFlag = false;
-								this.getSubordinateLeave();
-							}
-						});
-					} else {
-						this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
-					}
-				});
+				// this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+				// 	if (result) {
+				// 		this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+				// 			if (approved_result) {
+				// 				this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
+				// 				this.showFormFlag = false;
+				// 				this.getSubordinateLeave();
+				// 			}
+				// 		});
+				// 	} else {
+				// 		this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
+				// 	}
+				// });
 			});
 		}
 
@@ -572,6 +573,9 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	editLeave(item) {
+		if(this.employeeRecord.emp_id){
+			item.emp_id = this.employeeRecord.emp_id;
+		}
 		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
 			width: '30%',
 			height: '55%',
@@ -619,18 +623,21 @@ export class MyLeaveComponent implements OnInit {
 		});
 	}
 	openLeaveApplicationForm() {
-		localStorage.setItem('eRecord', JSON.stringify(this.employeeRecord));
-		const dialogRef = this.dialog.open(LeaveApplicationComponent, {
-			width: '500px',
-			height: '500px',
-			data: ''
-		});
-		dialogRef.afterClosed().subscribe(dresult => {
-			if (dresult && dresult.data) {
-				this.submit(dresult.data, dresult.attachment);
-			}
-		});
-
+		if(this.employeeRecord.emp_id){
+			localStorage.setItem('eRecord', JSON.stringify(this.employeeRecord));
+			const dialogRef = this.dialog.open(LeaveApplicationComponent, {
+				width: '500px',
+				height: '500px',
+				data: {emp_id:this.employeeRecord.emp_id}
+			});
+			dialogRef.afterClosed().subscribe(dresult => {
+				if (dresult && dresult.data) {
+					this.submit(dresult.data, dresult.attachment);
+				}
+			});
+		} else {
+			this.common.showSuccessErrorMessage('Does not have employee id','error');
+		}
 	}
 	deleteCancel() {
 
