@@ -30,7 +30,7 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('approveModal') approveModal;
 	@ViewChild('rejectModal') rejectModal;
 	@ViewChild(MatSort) sort: MatSort;
-	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason', 'action'];
+	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason','status', 'action'];
 	MY_LEAVE_ELEMENT_DATA: MyLeaveElement[] = [];
 	myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
 
@@ -129,7 +129,7 @@ export class MyLeaveComponent implements OnInit {
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
-						status: 'Pending',
+						status: item.leave_status == 1 ? 'Approved' : 'Pending',
 						leave_reason: item.leave_reason,
 						action: item
 					};
@@ -439,30 +439,19 @@ export class MyLeaveComponent implements OnInit {
 					}
 					if (findex !== -1) {
 						console.log(' exist',findex);
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
-							if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
-								approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
-									Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count) +
-									Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
-							} else {
-								approvedArraytemp[findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
-							}
+						// if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
+						// 	if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
+						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
+						// 			Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count) +
+						// 			Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
+						// 	} else {
+						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
+						// 	}
 
-						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
-						}
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted) {
-						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted =
-						// 		Number(approvedArraytemp[findex].attendance_detail.emp_leave_granted) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
 						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_granted'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						// 	approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
 						// }
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_availed) {
-						// 	approvedArraytemp[findex].attendance_detail.emp_leave_availed =
-						// 		Number(approvedArraytemp[findex].attendance_detail.emp_leave_availed) + Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
-						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_availed'] = dety.attendance_detail.emp_leave_approved.leave_credit_count;
-						// }
+
 						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed &&
 							approvedArraytemp[findex].attendance_detail.emp_leave_availed.length > 0) {
 								let isLeaveTypeExist = 0;;
@@ -479,28 +468,42 @@ export class MyLeaveComponent implements OnInit {
 							approvedArraytemp[findex].attendance_detail['emp_leave_availed']=[];
 							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						}
-						//emp_leave_granted is not in use ********** further can be used
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
-								let isLeaveTypeExist = 0;;
-								approvedArraytemp[findex].attendance_detail.emp_leave_granted.forEach(element => {
-									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-										isLeaveTypeExist = 1;
+
+						// new code -- calculation for emp_balance_leaves
+						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
+							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
+								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
+								temp_balance_leaves.forEach(element => {
+									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_availed.findIndex(e => e.leave_id == element.leave_id);
+									if(tempind != -1){
+										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_availed[tempind].leave_value;
 									}
-								});
-								if(isLeaveTypeExist == 0){
-									approvedArraytemp[findex].attendance_detail.emp_leave_granted.push(leave_availed_ele);
-								}
-						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
+									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
+								})
 						}
+
+						//emp_leave_granted is not in use ********** further can be used
+						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
+						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
+						// 		let isLeaveTypeExist = 0;;
+						// 		approvedArraytemp[findex].attendance_detail.emp_leave_granted.forEach(element => {
+						// 			if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
+						// 				element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
+						// 				isLeaveTypeExist = 1;
+						// 			}
+						// 		});
+						// 		if(isLeaveTypeExist == 0){
+						// 			approvedArraytemp[findex].attendance_detail.emp_leave_granted.push(leave_availed_ele);
+						// 		}
+						// } else {
+						// 	approvedArraytemp[findex].attendance_detail['emp_leave_granted'].push(leave_availed_ele);
+						// }
 					} else {
 						//dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
 						dety.attendance_detail['emp_leave_availed'] = [];
 						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
-						dety.attendance_detail['emp_leave_granted'] = [];
-						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
+						// dety.attendance_detail['emp_leave_granted'] = [];
+						// dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
 						
 						approvedArraytemp.push(dety);
 					}
@@ -533,19 +536,19 @@ export class MyLeaveComponent implements OnInit {
 				console.log(item.leave_emp_detail.emp_id);
 				console.log('inputJson',inputJson);
 				console.log('approvedjson',approvedjson);
-				// this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-				// 	if (result) {
-				// 		this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
-				// 			if (approved_result) {
-				// 				this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-				// 				this.showFormFlag = false;
-				// 				this.getSubordinateLeave();
-				// 			}
-				// 		});
-				// 	} else {
-				// 		this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
-				// 	}
-				// });
+				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+					if (result) {
+						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+							if (approved_result) {
+								this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
+								this.showFormFlag = false;
+								this.getSubordinateLeave();
+							}
+						});
+					} else {
+						this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
+					}
+				});
 			});
 		}
 
