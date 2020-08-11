@@ -109,6 +109,16 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/changeSattleStatus', value);
 	}
+
+	insertMoveVoucherCodeLog(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/move-voucher-log/insertMoveVoucherLog', value);
+	}
+
+	updateMoveVoucherEntry(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/updateForMove', value);
+	}
 	
 	
 }

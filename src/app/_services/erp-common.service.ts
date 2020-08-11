@@ -704,6 +704,20 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployeeByClassSection', value);
 	}
+	getAllChartsOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/getAllChartsOfAccount', value);
+	}
+
+	getTrialBalance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/ledger/getTrialBalance', value);
+	}
+
+	updateClosingBalance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateClosingBalance', value);
+	}
 
 }
 
