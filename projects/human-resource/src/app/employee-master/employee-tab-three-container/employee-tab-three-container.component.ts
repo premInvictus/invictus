@@ -16,6 +16,7 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 	confirmValidParentMatcher = new ConfirmValidParentMatcher();
 	@Input() employeeCommonDetails;
 	@Input() employeedetails;
+	optText = 'Opt';
 	addOnly = false;
 	editOnly = false;
 	deductions: any = {};
@@ -486,9 +487,9 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 			salaryData['type' + i] = item.sc_type.type_id;
 			salaryData['sc_value' + i] = item.sc_value;
 			if (Number(item.sc_type.type_id) === 2) {
-			salaryData['sc_opt' + i] = item.sc_opt ? item.sc_opt : false
+				salaryData['sc_opt' + i] =this.checkscoptValue(item.sc_id) ? this.checkscoptValue(item.sc_id) : false
 			}
-			
+
 			this.formGroupArray2.push({
 				formGroup: this.fbuild.group(salaryData)
 			});
@@ -496,9 +497,25 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 		}
 		this.getNetSalary();
 	}
+	checkscoptValue(sc_id) {
+		if (this.employeedetails.emp_salary_detail &&
+			this.employeedetails.emp_salary_detail.emp_salary_structure
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads
+			&& this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads.length > 0) {
+			const arr: any[] = this.employeedetails.emp_salary_detail.emp_salary_structure.emp_salary_heads;
+			const findex = arr.findIndex(f => Number(f.sc_id) === Number(sc_id));
+			if (findex !== -1) {
+				return arr[findex]['sc_opt'];
+			}
+		} else {
+			return false;
+		}
+	}
 	checkValS(i, $event) {
 		if ($event.checked) {
+
 			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = true;
+
 		} else {
 			this.formGroupArray2[i].formGroup['value']['sc_opt' + i] = false;
 		}
@@ -810,10 +827,13 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				// 		this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
 				// 		this.employeedetails.emp_month_attendance_data.month_data : []
 				// };
+<<<<<<< HEAD
 				this.employeedetails.emp_month_attendance_data = this.employeedetails.emp_month_attendance_data || []
+=======
+>>>>>>> upstream/development
 
 			}
-			console.log(this.salaryDetails);
+			console.log(this.employeedetails);
 			this.commonAPIService.updateEmployee(this.employeedetails).subscribe((result: any) => {
 				if (result) {
 					this.disabledApiButton = false;
@@ -964,17 +984,17 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 					id: this.salaryDetails.value.supervisor,
 					name: this.getSupervisorName(this.salaryDetails.value.supervisor)
 				};
-				this.employeedetails.emp_month_attendance_data = {
-					ses_id: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.ses_id ?
-						this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
-					leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
-						this.salaryDetails.value.leave_opening_balance : '',
-					month_data: this.employeedetails.emp_month_attendance_data
-						&& this.employeedetails.emp_month_attendance_data.month_data &&
-						this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
-						this.employeedetails.emp_month_attendance_data.month_data : []
-				};
+				// this.employeedetails.emp_month_attendance_data = {
+				// 	ses_id: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.ses_id ?
+				// 		this.employeedetails.emp_month_attendance_data.ses_id : this.session_id.ses_id,
+				// 	leave_opening_balance: this.salaryDetails.value.leave_opening_balance ?
+				// 		this.salaryDetails.value.leave_opening_balance : '',
+				// 	month_data: this.employeedetails.emp_month_attendance_data
+				// 		&& this.employeedetails.emp_month_attendance_data.month_data &&
+				// 		this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
+				// 		this.employeedetails.emp_month_attendance_data.month_data : []
+				// };
 			}
 
 			console.log('this.employeedetails', this.employeedetails);

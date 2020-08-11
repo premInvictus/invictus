@@ -6,6 +6,8 @@
     margin-top: 5px;
     font-size: 12px;
     color: #212529a3;
+    word-break: break-word;
+    white-space: pre-line;
 }
 .trash-class{
     font-size: 20px;
@@ -20,7 +22,7 @@
 }
 span.assign-span-len {
     position: relative;
-    left: 38px;
+    left: -53%;
     font-size: 11px;
 }
 button.blue-button-assign.font-size-14.font-white {
@@ -28,7 +30,7 @@ button.blue-button-assign.font-size-14.font-white {
     border-radius: 20px;
     width: 120px;
     top: 0px;
-    left: -81px;
+    right: -80px;
     position: absolute;
 }
 @media screen and (max-width: 720px) {
@@ -37,8 +39,13 @@ button.blue-button-assign.font-size-14.font-white {
     border-radius: 20px;
     width: 120px;
     top: -36px;
-    left: -104px;
+    left: 33%;
     position: absolute;
+    }
+    span.assign-span-len {
+        position: relative;
+        left: -8%;
+        font-size: 14px;
     }
     ::-webkit-scrollbar {
         display: none !important;

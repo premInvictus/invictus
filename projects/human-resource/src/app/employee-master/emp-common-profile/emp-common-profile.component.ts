@@ -3,7 +3,7 @@ import { CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SearchViaNameComponent } from '../../hr-shared/search-via-name/search-via-name.component';
 import { MatDialog } from '@angular/material/dialog';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-emp-common-profile',
   templateUrl: './emp-common-profile.component.html',
@@ -20,6 +20,7 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   previousB: boolean;
   nextB: boolean;
   balanceLeaves: any = 0;
+  currentEmployeeCode = 0;
   firstB: boolean;
   lastB: boolean;
   defaultsrc: any;
@@ -31,7 +32,8 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
   employeeDetailsForm: FormGroup;
   constructor(private commonAPIService: CommonAPIService,
     private dialog: MatDialog,
-    private fbuild: FormBuilder) { }
+    private fbuild: FormBuilder,
+    private router: Router) { }
   ngOnInit() {
     this.buildForm();
   }
@@ -48,6 +50,7 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
     }
   }
   getEmployeeDetail(emp_code_no) {
+    this.currentEmployeeCode = emp_code_no;
     if (emp_code_no) {
       this.previousB = true;
       this.nextB = true;
@@ -103,7 +106,9 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
     }
   }
   getEmployeeDetail2(emp_code_no) {
+
     if (emp_code_no) {
+      this.currentEmployeeCode = emp_code_no;
       this.previousB = true;
       this.nextB = true;
       this.firstB = true;
@@ -220,5 +225,15 @@ export class EmpCommonProfileComponent implements OnInit, OnChanges {
         });
       }
     });
+  }
+
+  goToEmployee() {
+    console.log('currentEmployeeCode--', this.currentEmployeeCode)
+    this.commonAPIService.setSubscribedEmployee(this.currentEmployeeCode);
+    this.router.navigateByUrl('hr/school/employee/employee-details');
+  }
+
+  goToLeave() {
+    this.router.navigateByUrl('hr/school/leave-management/my-leave');
   }
 }

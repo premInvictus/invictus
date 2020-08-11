@@ -106,6 +106,8 @@ export class SetupComponent implements OnInit {
     processForms: any[] = [];
     paymentFormArray: any[] = [];
     processTypes: any[] = [];
+    sessionArray: any[] = [];
+    accountsArray: any[] = [];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
@@ -113,19 +115,39 @@ export class SetupComponent implements OnInit {
 
     ngOnInit() {
         this.ckeConfig = {
-            allowedContent: true,
-            pasteFromWordRemoveFontStyles: false,
-            contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
-            disallowedContent: 'm:omathpara',
-            height: '300',
-            width: '100%',
-            scayt_multiLanguageMod: true,
-            toolbar: [
-                // tslint:disable-next-line:max-line-length
-                ['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Videoembed', 'Bold', 'Italic', 'Underline', 'Strikethrough', 'Table', 'Templates']
-            ],
-            removeDialogTabs: 'image:advanced;image:Link'
-        };
+			allowedContent: true,
+			pasteFromWordRemoveFontStyles: false,
+			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+			disallowedContent: 'm:omathpara',
+			height: '150',
+			width: '100%',
+			// tslint:disable-next-line:max-line-length 
+			extraPlugins: 'language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
+			scayt_multiLanguageMod: true,
+			mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+			language_list: ['fr:French', 'es:Spanish', 'it:Italian', 'he:Hebrew:rtl', 'pt:Portuguese', 'de:German', 'hi:Hindi'],
+			filebrowserUploadMethod: 'form',
+			uploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+			filebrowserImageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+			filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+			filebrowserBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+			filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+			toolbar: [
+				// tslint:disable-next-line:max-line-length
+				['Font', 'FontSize', 'Subscript', 'Superscript', 'Bold', 'Italic', 'Underline', 'StrikeThrough', 'Image', 'Table',
+					// { name: 'Html5audio', items: [ 'Html5audio' ] },
+					// { name: 'Html5video', items: [ 'Html5video' ] },
+					{ name: 'UploadFile', items: ['UploadFile'] },
+					{ name: 'UploadImage', items: ['UploadImage'] },
+					{ name: 'UploadWidget', items: ['UploadWidget'] },
+					{ name: 'FileTools', items: ['FileTools'] },
+					{ name: 'Notificationsggregator', items: ['Notificationaggregator'] },
+					{ name: 'Notification', items: ['Notification'] },
+					{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
+				]
+			],
+			removeDialogTabs: 'image:advanced;image:Link;html5video:advanced;html5audio:advanced'
+		};
         for (let i = 0; i < 100; i++) {
             this.pageArray.push(i + 1);
         }
@@ -134,12 +156,100 @@ export class SetupComponent implements OnInit {
         }
         this.buildForm();
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.getSession();
         this.getGlobalSettingGroup();
         this.getClass();
         this.getDepartment();
         this.getPayGways();
         this.getBanks();
     }
+
+    getSession() {
+        this.erpCommonService.getSession().subscribe((data: any) => {
+            this.sessionArray = data.data;
+        })
+    }
+
+    getChartsOfAccount() {
+        this.erpCommonService.getAllChartsOfAccount({}).subscribe((data: any) => {
+            if (data) {
+                this.accountsArray = data;
+            } else {
+                this.accountsArray = [];
+            }
+        })
+    }
+
+    moveClosingBalance() {
+        var ses_id = this.settingForm.value.fa_closing_balance_move;
+        var matchedIndex;
+        var nextSession;
+        var nextSessionId;
+        for (var i=0; i<this.sessionArray.length;i++) {
+            if (this.sessionArray[i]['ses_id'] === ses_id) {
+                matchedIndex =i;
+                break;
+            }
+        }
+        if (this.sessionArray[matchedIndex+1]) {
+         nextSession = this.sessionArray[matchedIndex+1]['ses_name'].split("-")[0];
+         nextSessionId = this.sessionArray[matchedIndex+1]['ses_id'];
+        }
+        console.log('next_ses_id--', matchedIndex)
+        var inputJson = { monthId: 3,coa_id:[], ses_id : ses_id, moveClosingBalance: true };
+        this.erpCommonService.getTrialBalance(inputJson).subscribe((data: any) => {
+            if (data && data.ledger_data) {
+                var tempAccountData:any = [];
+                
+                for (var i=0; i<data.ledger_data.length;i++) {
+                    var fJson = {};
+                    var closing_balance = 0;
+                    closing_balance = this.getDeviation(data.ledger_data[i]);
+                    fJson = {
+                        coa_id: data.ledger_data[i]['coa_id'],
+                        "coa_opening_balance_data" : {
+                            "opening_balance" : closing_balance,
+                            "opening_balance_date" : nextSession+"-04-01",
+                            "opening_balance_month" : 4,
+                            "opening_balance_year" : nextSession,
+                            "opening_balance_type" : closing_balance >0 ? "debit" : "credit"
+                        },
+                        //nextSesId:nextSessionId
+                    };
+                    tempAccountData.push(fJson);
+                }
+                console.log('tempAccountData--', tempAccountData)
+                if (tempAccountData.length > 0) {
+                    this.erpCommonService.updateClosingBalance({bulkData: tempAccountData}).subscribe((data:any) => {
+                        if(data) {
+                            this.commonService.showSuccessErrorMessage('Session Data Moved Successfully','success');
+                        } else {
+                            this.commonService.showSuccessErrorMessage('Error While Move Session Data','error');
+                        }
+                    })
+                }
+            }
+        });
+        this.disabledApiButton = false;
+        console.log('ses_id', ses_id, this.disabledApiButton)
+    }
+
+
+  getDeviation(param) {
+    if(param) {
+      var debit_total_f = 0;
+      var credit_total_f = 0;
+      var deviation_f =0;
+      for(var i=0; i<param['debit_data'].length; i++) {
+        debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0 );
+      }
+      for(var i=0; i<param['credit_data'].length; i++) {
+        credit_total_f = credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+      }
+      deviation_f = debit_total_f - credit_total_f;
+      return deviation_f;
+    }
+  }
     enableHeaderFooter($event) {
         if (Number($event.value) === 2) {
             this.headerFooterFlag = true;
@@ -1174,17 +1284,22 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
             }
         }
-        console.log(this.settingForm.value);
-        this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
-            if (result && result.status === 'ok') {
-                this.disabledApiButton = false;
-                this.commonService.showSuccessErrorMessage(result.message, result.status);
-                this.getGlobalSetting(this.currentGsetup);
-            } else {
-                this.disabledApiButton = false;
-                this.commonService.showSuccessErrorMessage(result.message, result.status);
-            }
-        });
+        if (this.settingForm.value.fa_closing_balance_move) {
+            this.moveClosingBalance();
+        } else {
+            console.log(this.settingForm.value);
+            this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
+                if (result && result.status === 'ok') {
+                    this.disabledApiButton = false;
+                    this.commonService.showSuccessErrorMessage(result.message, result.status);
+                    this.getGlobalSetting(this.currentGsetup);
+                } else {
+                    this.disabledApiButton = false;
+                    this.commonService.showSuccessErrorMessage(result.message, result.status);
+                }
+            });
+        }
+
     }
     getBanks() {
         this.erpCommonService.getBanks({}).subscribe((res: any) => {

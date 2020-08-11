@@ -575,6 +575,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 						if(!this.employeeData[i]['emp_month_attendance_data']){
 							this.employeeData[i]['emp_month_attendance_data']=[];
 						}
+						inputJson['ses_id'] =  this.session_id.ses_id;
 						this.employeeData[i]['emp_month_attendance_data'].push(inputJson)
 					}
 					//this.employeeData[i]['emp_month_attendance_data'] = inputJson;
@@ -646,7 +647,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// });
 			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed', 'error');
 		} else {
-			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (this.EMPLOYEE_ELEMENT[index]['emp_lwp'] ? this.EMPLOYEE_ELEMENT[index]['emp_lwp'] : 0) + (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed ? this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed : '0') - (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted ? this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted : '0');
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (this.EMPLOYEE_ELEMENT[index]['emp_lwp'] ? Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']) : 0) + (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed ? Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed) : 0) - (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted ? Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted) : 0);
 			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = Number(this.EMPLOYEE_ELEMENT[index]['emp_total_attendance']) - Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
 		}
 

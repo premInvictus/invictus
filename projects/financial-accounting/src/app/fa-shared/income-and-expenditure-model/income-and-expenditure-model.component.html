@@ -59,14 +59,15 @@
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Income over Expenditure</b></td>
 
-                  <td  width="15%" class="text-right">{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</td>
+                  <td  width="15%" class="text-right">{{getTwoDecimalValue(creditSideTotal-debitSideTotal) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b><span *ngIf="!debitSideTotal">{{-creditSideTotal | indianCurrency}}</span>
-                  <span *ngIf="debitSideTotal != 0">{{getTwoDecimalValue(-debitSideTotal) | indianCurrency}}</span></b></td>
+                <td width="15%" class="text-right"><b>
+                  
+                  <span>{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span></b></td>
               </tr>
             </tbody>
           </table>
@@ -91,7 +92,7 @@
                 </tr>
               </ng-container>-->
               <ng-container *ngFor="let citem of param?.ledger_data; ">
-                <ng-container *ngIf="item?.account_display.display_section.income">
+                <ng-container *ngIf="citem?.account_display.display_section.income">
                   <tr *ngIf="getDeviation(citem) < 0">
                     <td width="20%">{{citem.coa_code}}</td>
                     <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(citem)">
@@ -114,14 +115,14 @@
                   <td width="20%">&nbsp;</td>
                   <td width="65%" class="text-left"><b>Excess of Expenditure over Income</b></td>
 
-                  <td width="15%" class="text-right">{{getTwoDecimalValue(-(debitSideTotal)) | indianCurrency}}</td>
+                  <td width="15%" class="text-right">{{getTwoDecimalValue((debitSideTotal-creditSideTotal)) | indianCurrency}}</td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"></td>
                 <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b><span *ngIf="debitSideTotal == 0">{{getTwoDecimalValue(-debitSideTotal) | indianCurrency}}</span>
-                  <span *ngIf="debitSideTotal != 0">{{getTwoDecimalValue(-debitSideTotal) | indianCurrency}}</span></b></td>
+                <td width="15%" class="text-right"><b>
+                  <span *ngIf="debitSideTotal != 0">{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span></b></td>
               </tr>
 
             </tbody>

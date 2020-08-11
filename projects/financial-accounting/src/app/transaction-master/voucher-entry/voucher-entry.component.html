@@ -3,10 +3,10 @@
     <mat-card>
 
       <div class="row">
-        <div class="col-3 remove-col-padding-left">
+        <div class="col-2 remove-col-padding-left">
           <span class="font-size-24">Vouchers</span>
         </div>
-        <div class="col-9">
+        <div class="col-10">
           <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">journal Voucher</button> -->
           <mat-chip-list aria-label="Voucher Type">
               <mat-chip class="pink opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Journal'}" (click)="setVcType('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
@@ -153,15 +153,15 @@
           </ng-container>
           <tr>
               <td colspan="2" class="custom-td text-left font-size-14">
-                  <div class="another-line-btn">
-                    <a href="javascript:void(0)" (click)="addVoucher()"><span>+ Add Another Line</span></a>
+                  <div class="another-line-btn1">
+                    &nbsp;
                   </div>
               </td>
               <td class="custom-td text-left font-size-14">Total</td>
               <td class="custom-td text-left font-size-14">&nbsp;</td>
               <td class="custom-td text-left font-size-14">{{totalDebit | indianCurrency}}</td>
               <td class="custom-td text-left font-size-14">{{totalCredit | indianCurrency}}</td>
-              <td class="custom-td text-left font-size-14">&nbsp;</td>
+              <td class="custom-td text-center font-size-14"><a href="javascript:void(0)" (click)="addVoucher()"><span>+ Add Another Line</span></a></td>
             </tr>
           </tbody>
         </table>

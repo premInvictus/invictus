@@ -14,6 +14,22 @@ export class ErpCommonService {
 	getOccupationType() {
 		throw new Error("Method not implemented.");
 	}
+	getSlcTcTemplateSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/getSlcTcTemplateSetting', value);
+	}
+	printAllCertificate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/slctc/printAllCertificate', value);
+	}
+	checkCertAccess(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/checkCertAccess', value);
+	}
+	getCertificatesEnabled(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/students/getCertificatesEnabled', value);
+	}
 
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
 	getStudentInvoice(value) {
@@ -687,6 +703,20 @@ export class ErpCommonService {
 	getAllEmployeeByClassSection(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployeeByClassSection', value);
+	}
+	getAllChartsOfAccount(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/getAllChartsOfAccount', value);
+	}
+
+	getTrialBalance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/ledger/getTrialBalance', value);
+	}
+
+	updateClosingBalance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateClosingBalance', value);
 	}
 
 }

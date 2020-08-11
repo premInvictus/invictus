@@ -41,10 +41,11 @@
                                 && control.gs_alias !== 'enquiry_registration_email_sms'
                                 && control.gs_alias !== 'payment_banks'
                                 && control.gs_alias !== 'employee_salary_slip'
-                                && control.gs_alias !== 'deduction_config'">
+                                && control.gs_alias !== 'deduction_config'
+                                ">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                   style="margin-top: 20px;">
-                                  <mat-label>{{control.gs_name | titlecase}}
+                                  <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move'">{{control.gs_name | titlecase}}
                                   </mat-label>
                                 </div>
                                 <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
@@ -107,6 +108,18 @@
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
+                                    </ng-container>
+                                    <ng-container
+                                      *ngIf="control.gs_alias == 'fa_closing_balance_move'">
+                                      <p>Move Closing Balance For Session </p>
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-select [formControlName]="control.gs_alias">
+                                          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
+                                            {{item.ses_name}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <!-- <input type="button" value="Move" (click)="moveClosingBalance()"/> -->
                                     </ng-container>
                                   </ng-container>
                                   <ng-container *ngIf="control.gs_type == 'json'">

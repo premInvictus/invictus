@@ -54,7 +54,7 @@
                 <div class="col-2">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Section</mat-label>
-                    <mat-select placeholder="Section" formControlName="sec_id" required>
+                    <mat-select placeholder="Section" formControlName="sec_id" >
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                       </mat-option>

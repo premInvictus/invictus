@@ -8,6 +8,7 @@ import { CertificatePrintingComponent } from './certificate-printing/certificate
 import { PayableBalancesComponent } from './payable-balances/payable-balances.component';
 import { ReconciliationComponent } from './reconciliation/reconciliation.component';
 import { StatutoryFillingsComponent } from './statutory-fillings/statutory-fillings.component';
+import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -18,6 +19,7 @@ import { StatutoryFillingsComponent } from './statutory-fillings/statutory-filli
     PayableBalancesComponent,
     ReconciliationComponent,
     StatutoryFillingsComponent,
+    BulkUpdatesComponent
   ],
   entryComponents: []
 })

@@ -462,7 +462,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	}
 	getTruncate(text){
-		return new TruncatetextPipe().transform(text, 80);
+		return new TruncatetextPipe().transform(text, 60);
 	}
 	markRead(item) {
 		item.msg_to[0].msg_status = [{

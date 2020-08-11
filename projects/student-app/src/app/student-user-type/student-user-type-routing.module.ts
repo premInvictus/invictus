@@ -10,6 +10,7 @@ import { MakePaymentBasedonproviderComponent } from '../student-fee/make-payment
 import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-eazypay/make-payment-via-eazypay.component';
 import { ViewStudentProfileComponent } from '../shared-module/view-student-profile/view-student-profile.component';
 import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-payment-hdfc.component';
+import { DownCertificateComponent } from '../down-certificate/down-certificate.component';
 const routes: Routes = [
 	{
 		path: '',
@@ -44,7 +45,11 @@ const routes: Routes = [
 			{
 				path: 'notice',
 				loadChildren: '../notice-board/notice-board.module#NoticeBoardModule'
-			},
+			}, 
+			{
+				path : 'certificates',
+				loadChildren : '../down-certificate/down-certificate.module#DownCertificateModule'
+			}
 		]
 	},
 	{

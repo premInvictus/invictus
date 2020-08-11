@@ -8,6 +8,7 @@ import { SisService, CommonAPIService, FaService } from '../../../_services/inde
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-modal.component';
+import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
 import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-vouchers-list',
@@ -131,7 +132,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		return totalDebit;
 	}
 	getPartyName(voucherFormGroupArray) {
-		return voucherFormGroupArray[0].vc_account_type;
+		if (voucherFormGroupArray && voucherFormGroupArray[0])
+			return voucherFormGroupArray[0].vc_account_type;
 	}
 
 	calculateCredit(voucherFormGroupArray) {
@@ -187,6 +189,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 				vc_id: value.vc_id
 			}
 		});
+		
 	}
 	toggleVoucherStatus(value) {
 		console.log(value);
@@ -230,6 +233,18 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
 	searchCancel(){
 
+	}
+
+	moveToAnotherSession(data) {
+		const dialogRef = this.dialog.open(MoveVoucherModalComponent, {
+			height: '50vh',
+			width: '100vh',
+			data: data
+		});
+		 // Create subscription
+		dialogRef.afterClosed().subscribe(() => {
+			 this.getVouchers();
+		});
 	}
 
 }

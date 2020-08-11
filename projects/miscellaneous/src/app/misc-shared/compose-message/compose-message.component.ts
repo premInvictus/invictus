@@ -824,7 +824,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 					"msg_template_id": this.messageForm.value.tpl_id,
 					"msg_receivers": this.currentReceivers,
 					"msg_subject": this.messageForm.value.messageSubject,
-					"msg_description": this.messageForm.value.messageBody,
+					"msg_description": this.commonAPIService.htmlToText(this.messageForm.value.messageBody),
 					"msg_attachment": this.attachmentArray,
 					// "status": [{ "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 					"status": { "status_name": "pending", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id },
@@ -871,7 +871,7 @@ export class ComposeMessageComponent implements OnInit, OnChanges {
 						"module": this.module ? this.module : "assignment"
 					},
 					"msg_subject": this.messageForm.value.messageSubject,
-					"msg_description": this.messageForm.value.messageBody,
+					"msg_description": this.commonAPIService.htmlToText(this.messageForm.value.messageBody),
 					"msg_attachment": this.attachmentArray,
 					"status": [{ "status_name": "sent", "created_by": this.currentUser.full_name, "login_id": this.currentUser.login_id }],
 					"msg_created_by": { "login_id": this.currentUser.login_id, "login_name": this.currentUser.full_name },
