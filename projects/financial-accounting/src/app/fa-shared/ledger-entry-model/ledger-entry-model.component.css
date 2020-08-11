@@ -9,11 +9,11 @@
 
 table thead th {
     background: #C8D6E5;
-    height: 20px;
+    height: 25px;
 }
 
 table tbody tr {
-    height: 20px;
+    height: 25px;
 }
 
  table tbody tr:nth-child(even) {

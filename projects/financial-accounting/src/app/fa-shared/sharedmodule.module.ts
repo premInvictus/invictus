@@ -44,7 +44,7 @@ import { VoucherModalComponent } from './voucher-modal/voucher-modal.component';
 import { BalanceSheetModalComponent} from './balance-sheet-modal/balance-sheet-modal.component';
 import { VoucherRefModalComponent } from './voucher-ref-modal/voucher-ref-modal.component';
 import { AdvancedSearchModalComponent } from './advanced-search-modal/advanced-search-modal.component';
-
+import { MoveVoucherModalComponent } from './move-voucher-modal/move-voucher-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -116,7 +116,8 @@ export const MY_FORMATS = {
 		IncomeAndExpenditureModalComponent,
 		BalanceSheetModalComponent,
 		VoucherRefModalComponent,
-		AdvancedSearchModalComponent
+		AdvancedSearchModalComponent,
+		MoveVoucherModalComponent
 
 	],
 	exports: [FormsModule, ReactiveFormsModule,
@@ -166,7 +167,8 @@ export const MY_FORMATS = {
 		IncomeAndExpenditureModalComponent,
 		BalanceSheetModalComponent,
 		VoucherRefModalComponent,
-		AdvancedSearchModalComponent
+		AdvancedSearchModalComponent,
+		MoveVoucherModalComponent
 
 	],
 	entryComponents: [ DeleteModalComponent, ImagecropComponent, EditRequestModalComponent,
@@ -181,7 +183,8 @@ export const MY_FORMATS = {
 		IncomeAndExpenditureModalComponent,
 		BalanceSheetModalComponent,
 		VoucherRefModalComponent,
-		AdvancedSearchModalComponent
+		AdvancedSearchModalComponent,
+		MoveVoucherModalComponent
 	],
 	providers: [
 		{
