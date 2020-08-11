@@ -228,8 +228,8 @@ export class EmployeeLeaveComponent implements OnInit {
 							leave_credited = emp_attendance_detail.emp_leave_credited
 						}
 						let leave_availed:any;
-						if (emp_attendance_detail.emp_leave_availed && emp_attendance_detail.emp_leave_availed.length > 0) {
-							leave_availed = emp_attendance_detail.emp_leave_availed
+						if (emp_attendance_detail.emp_leave_granted && emp_attendance_detail.emp_leave_granted.length > 0) {
+							leave_availed = emp_attendance_detail.emp_leave_granted
 						}
 						let leave_closing:any;
 						if (emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0) {

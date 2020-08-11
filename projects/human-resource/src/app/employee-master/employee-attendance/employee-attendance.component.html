@@ -134,7 +134,7 @@
                     <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup.value.emp_leave_form[i].emp_leave_form">
                       <mat-form-field class="form-field lib-form">
                         <input matInput
-                          formControlName="leave_availed" autocomplete="off" (change)="getLWP(element,element.srno - 1)"
+                          formControlName="leave_availed" autocomplete="off" (change)="getLWP(element,element.srno - 1,i)"
                           [readonly]="!(element.viewFlag) ? true : false" />
                       </mat-form-field>
                     </form>
@@ -146,7 +146,7 @@
                   <form [formGroup]="formGroupArray[element.srno - 1]?.formGroup.value.emp_leave_form[i].emp_leave_form">
                     <mat-form-field class="form-field lib-form">
                       <input matInput
-                        formControlName="leave_granted" autocomplete="off" (change)="getLWP(element,element.srno - 1)"
+                        formControlName="leave_granted" autocomplete="off" (change)="getLWP(element,element.srno - 1,i)"
                         [readonly]="!(element.viewFlag) ? true : false" />
                     </mat-form-field>
                   </form>
