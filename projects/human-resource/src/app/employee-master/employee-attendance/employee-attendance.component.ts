@@ -647,8 +647,14 @@ export class EmployeeAttendanceComponent implements OnInit {
 			// });
 			this.commonAPIService.showSuccessErrorMessage('You cannot grant more leave than availed', 'error');
 		} else {
-			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] = (this.EMPLOYEE_ELEMENT[index]['emp_lwp'] ? Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']) : 0) + (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed ? Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_availed) : 0) - (this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted ? Number(this.formGroupArray[index].formGroup.value.emp_leave_form[i].emp_leave_form.value.leave_granted) : 0);
-			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = Number(this.EMPLOYEE_ELEMENT[index]['emp_total_attendance']) - Number(this.EMPLOYEE_ELEMENT[index]['emp_lwp']);
+			let la=0;
+			let lg=0;
+			this.formGroupArray[index].formGroup.value.emp_leave_form.forEach(e => {
+				la+=Number(e.emp_leave_form.value.leave_availed);
+				lg+=Number(e.emp_leave_form.value.leave_granted);
+			});
+			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
+			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = element.emp_present - this.EMPLOYEE_ELEMENT[index]['emp_lwp'];
 		}
 
 	}
@@ -688,19 +694,62 @@ export class EmployeeAttendanceComponent implements OnInit {
 		let employeeArrData = [];
 		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
 			if (Number(this.EMPLOYEE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
-				inputJson = {
+
+				let emp_month_attendance_data:any
+				this.employeeData[i]['emp_month_attendance_data'].forEach(ema => {
+					if(ema.ses_id == this.session_id.ses_id){
+						emp_month_attendance_data = ema;
+					}
+				});
+
+				let emp_leave_credited:any[]=[];
+				let emp_leave_availed:any[]=[];
+				let emp_leave_granted:any[]=[];
+				let emp_balance_leaves:any[]=[];
+				this.formGroupArray[i].formGroup.value.emp_leave_form.forEach(e => {
+					const tempdataa = this.leaveTypeArray.find(f => f.leave_id == e.emp_leave_form.value.leave_id);
+					console.log('tempdata',tempdataa);
+					let tempavailed:any={};
+					let tempgranted:any={};
+					tempavailed.leave_id = tempdataa.leave_id;
+					tempavailed.leave_name = tempdataa.leave_name;
+					tempavailed.leave_value = e.emp_leave_form.value.leave_availed;
+
+					tempgranted.leave_id = tempdataa.leave_id;
+					tempgranted.leave_name = tempdataa.leave_name;
+					tempgranted.leave_value = e.emp_leave_form.value.leave_granted;
+					emp_leave_availed.push(tempavailed);
+					emp_leave_granted.push(tempgranted);				
+
+				});
+				if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
+					let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
+					
+					if (tempmonthdata.attendance_detail.emp_leave_credited &&
+						tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
+							emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
+							emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
+							emp_balance_leaves.forEach(element => {
+								const tempind = emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+								if(tempind != -1){
+									element.leave_value -= emp_leave_granted[tempind].leave_value;
+								} 
+							})
+					}
+				}
+				inputJson["month_data"] = [];
+				var monthJson = {
 					"month_id": this.searchForm.value.month_id,
 					"month_name": this.currentMonthName,
 					"attendance_detail": {
-						//"emp_present": this.formGroupArray[i].formGroup.value.emp_present,
 						"emp_present": this.EMPLOYEE_ELEMENT[i]['emp_present'],
-						"emp_leave_granted": this.formGroupArray[i].formGroup.value.emp_leave_granted,
+						"emp_leave_granted": emp_leave_granted,
 						"emp_remarks": this.formGroupArray[i].formGroup.value.emp_remarks,
-						"emp_leave_availed": this.formGroupArray[i].formGroup.value.emp_leave_availed,
+						"emp_leave_availed": emp_leave_availed,
 						"emp_lwp": this.EMPLOYEE_ELEMENT[i]['emp_lwp'],
 						"emp_total_attendance": this.EMPLOYEE_ELEMENT[i]['emp_total_attendance'],
-						"emp_balance_leaves": this.EMPLOYEE_ELEMENT[i]['emp_balance_leaves'],
-						"emp_leave_approved": this.EMPLOYEE_ELEMENT[i]['emp_leave_approved'],
+						"emp_balance_leaves": emp_balance_leaves,
+						"emp_leave_credited":emp_leave_credited
 					}
 				};
 				if (this.EMPLOYEE_ELEMENT[i]['action'] && this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data'] && this.EMPLOYEE_ELEMENT[i]['action']['emp_month_attendance_data']['month_data']) {
