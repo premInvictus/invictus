@@ -53,6 +53,7 @@ export class SetupComponent implements OnInit {
     footerforecolor: any;
     footerbackcolor: any;
     showImage = false;
+    prefixToggle = "false";
     hideIfBlankFlag = false;
     templateImage: any;
     headerFooterFlag = true;
@@ -653,6 +654,14 @@ export class SetupComponent implements OnInit {
                         temp[element.gs_alias] = this.getGs_value(element)
                     });
                     this.settingForm = this.fbuild.group(temp);
+                    if (value === 'toggle prefix before admission no') {
+                        const obj: any = JSON.parse(this.settingForm.value.add_prefix_before_admission_no);
+                        if (obj && Object.keys(obj).length > 0) {
+                            this.prefixToggle = obj.addPrefix;
+                        }
+                    } else {
+                        this.prefixToggle = "false";
+                    }
                     if (value === 'email sms formats') {
                         const processes: any[] = JSON.parse(this.settingForm.value.enquiry_registration_email_sms);
                         this.processTypes = JSON.parse(this.settingForm.value.enquiry_registration_email_sms);
@@ -810,6 +819,14 @@ export class SetupComponent implements OnInit {
             }
             //console.log(this.settingForm);
         });
+    }
+    togglePrefix($event) {
+        if ($event.checked) {
+            this.prefixToggle = "true";
+           
+        } else {
+            this.prefixToggle = "false";
+        }  
     }
     enableTDS($event) {
         if ($event.checked) {
@@ -1241,6 +1258,9 @@ export class SetupComponent implements OnInit {
         if (this.settingForm.value && this.settingForm.value.invoice_receipt_format) {
             this.formatSettings = this.printForm.value;
             this.settingForm.value.invoice_receipt_format = JSON.stringify(this.formatSettings);
+        }
+        if (this.settingForm.value && this.settingForm.value.add_prefix_before_admission_no) {
+            this.settingForm.value.add_prefix_before_admission_no = JSON.stringify({addPrefix : this.prefixToggle})
         }
         if (this.settingForm.value && this.settingForm.value.enquiry_registration_email_sms) {
             const finalDataArr: any[] = [
