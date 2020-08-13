@@ -129,6 +129,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				id: '',
 				name: '',
+				aliasname:'',
 				count: '',
 				leave_percentage: '',
 				proportionated_leave: '',
@@ -290,6 +291,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						this.CONFIG_ELEMENT_DATA.push({
 							position: pos,
 							name: item.leave_name,
+							aliasname:item.aliasname,
 							count: item.leave_count,
 							leave_percentage: item.leave_percentage,
 							leave_proportionated: item.leave_proportionated,
@@ -442,6 +444,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				id: value.leave_id,
 				name: value.leave_name,
+				aliasname:value.aliasname,
 				count: value.leave_count,
 				leave_percentage: value.leave_percentage,
 				proportionated_leave: value.leave_proportionated,
@@ -493,7 +496,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 4) {
 			this.getLeaveManagement();
-			this.displayedColumns = ['position', 'name', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
+			this.displayedColumns = ['position', 'name','aliasname', 'count', 'leave_percentage', 'leave_proportionated', 'status', 'action'];
 			this.configFlag = true;
 		}
 		else if (Number(this.configValue) === 5) {
@@ -603,6 +606,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				case '4':
 					this.setupDetails = {
 						leave_name: this.formGroupArray[value - 1].formGroup.value.name,
+						aliasname: this.formGroupArray[value - 1].formGroup.value.aliasname,
 						leave_count: this.formGroupArray[value - 1].formGroup.value.count,
 						leave_percentage: this.formGroupArray[value - 1].formGroup.value.leave_percentage,
 						leave_proportionated: this.getName(this.formGroupArray[value - 1].formGroup.value.proportionated_leave, this.proportionatedArray),
@@ -697,6 +701,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				case '4':
 					this.setupDetails = {
 						leave_name: this.formGroupArray[value - 1].formGroup.value.name,
+						aliasname: this.formGroupArray[value - 1].formGroup.value.aliasname,
 						leave_count: this.formGroupArray[value - 1].formGroup.value.count,
 						leave_percentage: this.formGroupArray[value - 1].formGroup.value.leave_percentage,
 						leave_proportionated: this.getName(this.formGroupArray[value - 1].formGroup.value.proportionated_leave, this.proportionatedArray),

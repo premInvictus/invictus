@@ -200,6 +200,16 @@
                                                                 required>
                                                             <mat-error>Please Enter Name</mat-error>
                                                         </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Alias Name</mat-label>
+                                                            <input matInput placeholder="Enter Alias Name"
+                                                                class="text-capitalize" type="text"
+                                                                formControlName="aliasname"
+                                                                [errorStateMatcher]="confirmValidParentMatcher"
+                                                                [value]="formGroupArray[configValue-1].formGroup.get('aliasname').value"
+                                                                required>
+                                                            <mat-error>Please Enter Alias Name</mat-error>
+                                                        </mat-form-field>
 
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Leave Count</mat-label>
@@ -376,7 +386,18 @@
                                                                                         *ngIf="!item.component_type">-</span>
                                                                                 </td>
                                                                             </ng-container>
-
+                                                                            <ng-container matColumnDef="aliasname">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Leave Alias
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.aliasname">{{ item.aliasname }}</span>
+                                                                                    <span *ngIf="!item.aliasname">-</span>
+                                                                                </td>
+                                                                            </ng-container>
                                                                             <ng-container matColumnDef="count">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>

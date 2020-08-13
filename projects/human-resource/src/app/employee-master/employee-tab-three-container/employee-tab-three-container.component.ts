@@ -827,10 +827,6 @@ export class EmployeeTabThreeContainerComponent implements OnInit, OnChanges {
 				// 		this.employeedetails.emp_month_attendance_data.month_data.length > 0 ?
 				// 		this.employeedetails.emp_month_attendance_data.month_data : []
 				// };
-<<<<<<< HEAD
-				this.employeedetails.emp_month_attendance_data = this.employeedetails.emp_month_attendance_data || []
-=======
->>>>>>> upstream/development
 
 			}
 			console.log(this.employeedetails);
