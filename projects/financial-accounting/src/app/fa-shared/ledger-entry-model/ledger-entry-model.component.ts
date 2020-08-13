@@ -223,8 +223,8 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   openVoucherModal(value){
     console.log('value--', value);
 		const dialogRef = this.dialog.open(VoucherModalComponent, {
-			height: '50vh',
-			width: '100vh',
+			// height: '50vh',
+			// width: '100vh',
 			data: {
 				title: value.vc_type + ' voucher',
 				vc_id: value.vc_id

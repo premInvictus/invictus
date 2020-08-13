@@ -132,15 +132,15 @@
                     
 
               <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                <input matInput type="text" class="remark-text" placeholder="Enter Invoice No"
-                  formControlName="vc_invoiceno">
+                <input matInput type="text" class="remark-text" placeholder="Enter Reference No"
+                  formControlName="vc_ref_no">
               </td>
               <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
                   <input matInput type="number" class="remark-text" placeholder="Enter Debit"
                     formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i)">
                 </td>
                 <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                    <input matInput type="number" class="remark-text" placeholder="Enter Credit"
+                    <input matInput [readonly]="!creditEnable" type="number" class="remark-text" placeholder="Enter Credit"
                       formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
