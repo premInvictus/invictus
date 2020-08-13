@@ -43,6 +43,7 @@
                                 && control.gs_alias !== 'employee_salary_slip'
                                 && control.gs_alias !== 'deduction_config'
                                 && control.gs_alias != 'financial_accounting_signature'
+                                && control.gs_alias !== 'add_prefix_before_admission_no'
                                 ">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                   style="margin-top: 20px;">
@@ -420,6 +421,28 @@
                                           </div>
                                         </form>
                                       </div>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </div>
+                              <div class="row" *ngIf="control.gs_alias === 'add_prefix_before_admission_no'">
+                                <div class="col-12">
+                                  <ng-container *ngIf="control.gs_alias == 'add_prefix_before_admission_no'">
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <div class="text-center">
+                                          <span style="font-weight: bold;
+                          font-size: 16px;
+                          text-transform: uppercase;">Toggle Prefix</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <mat-checkbox (change)="togglePrefix($event)"
+                                        [checked]="prefixToggle === 'true'">
+                                        </mat-checkbox> Add a prefix of year before admission no
+                                      </div>    
                                     </div>
                                   </ng-container>
                                 </div>
