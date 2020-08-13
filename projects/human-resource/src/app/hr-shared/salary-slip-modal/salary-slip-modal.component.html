@@ -41,7 +41,7 @@
                   employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name ? 
                   (employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name  | titlecase): '-'}}</td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="cus-td td-r"><b>Address </b>
                 </td>
                 <td class="cus-td td-r">:</td>
@@ -50,7 +50,7 @@
                   employeeDetails.emp_personal_detail.addresss_detail &&
                   employeeDetails.emp_personal_detail.addresss_detail.address? 
                   (employeeDetails.emp_personal_detail.addresss_detail.address): '-'}}</td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="cus-td td-r"><b>Mobile </b>
                 </td>
@@ -103,12 +103,12 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td" align="left">{{
-                employeeDetails.emp_salary_compute_data && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0] && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_name  ?
-                (employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_name)  : '-'
+                employeeDetails.relations && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0] && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail.bnk_name  ?
+                (employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail.bnk_name)  : '-'
               }}
                 </td>
               </tr>
@@ -117,12 +117,12 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">{{
-                employeeDetails.emp_salary_compute_data && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0] && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail && 
-                employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_acc_no  ?
-                (employeeDetails.emp_salary_compute_data.emp_bank_detail[0].bnk_detail.bnk_acc_no)  : '-'
+                employeeDetails.relations && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0] && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail && 
+                employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail.bnk_acc_no  ?
+                (employeeDetails.relations.emp_salary_detail?.emp_bank_detail[0].bnk_detail.bnk_acc_no)  : '-'
               }}
                 </td>
               </tr>
@@ -131,10 +131,10 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">{{
-                employeeDetails.emp_salary_compute_data && 
-                employeeDetails.emp_salary_compute_data.emp_salary_structure &&
-              employeeDetails.emp_salary_compute_data.emp_salary_structure.emp_basic_pay_scale 
-              ? (employeeDetails.emp_salary_compute_data.emp_salary_structure.emp_basic_pay_scale |number)  : '-'  
+                  employeeDetails.relations && employeeDetails.relations.emp_salary_detail && 
+                employeeDetails.relations.emp_salary_detail?.emp_salary_structure &&
+              employeeDetails.relations.emp_salary_detail?.emp_salary_structure.emp_basic_pay_scale 
+              ? (employeeDetails.relations.emp_salary_detail?.emp_salary_structure.emp_basic_pay_scale |number)  : '-'  
               }}</td>
               </tr>
               <tr>
@@ -142,7 +142,23 @@
                 </td>
                 <td class="cus-td td-r" width="10%">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails.emp_salary_compute_data && employeeDetails.emp_salary_compute_data.account_docment_detail ? employeeDetails.emp_salary_compute_data.account_docment_detail.pan_no : '-'}}
+                  {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.account_docment_detail ? employeeDetails.relations.emp_salary_detail?.account_docment_detail.pf_acc_no : '-'}}
+                </td>
+              </tr>
+              <tr>
+                <td class="cus-td td-r"><b> PAN NO :</b>
+                </td>
+                <td class="cus-td td-r" width="10%">:</td>
+                <td class="cus-td td-r" align="left">
+                  {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.account_docment_detail ? employeeDetails.relations.emp_salary_detail?.account_docment_detail.pan_no : '-'}}
+                </td>
+              </tr>
+              <tr>
+                <td class="cus-td td-r"><b> ESI NO :</b>
+                </td>
+                <td class="cus-td td-r" width="10%">:</td>
+                <td class="cus-td td-r" align="left">
+                  {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.account_docment_detail ? employeeDetails.relations.emp_salary_detail?.account_docment_detail.esi_ac_no : '-'}}
                 </td>
               </tr>
             </tbody>
@@ -178,7 +194,7 @@
                   T.A
                 </td>
                 <td class="cus-td" align="right">
-                  {{employeeDetails?.emp_salary_compute_data?.emp_modes_data.td ? employeeDetails.emp_salary_compute_data.emp_modes_data.td : '-'}}
+                  {{employeeDetails?.emp_salary_compute_data?.emp_modes_data.td ? employeeDetails.relations.emp_salary_detail?.emp_modes_data.td : '-'}}
                 </td>
               </tr>
             </tbody>
@@ -201,14 +217,14 @@
                   {{bas.value ? (bas.value | number) : '-'}}
                 </td>
               </tr>
-              <tr *ngIf="values.configs && values.configs.tds">
+              <tr>
                 <td class="cus-td">
                   T. D .S
                 </td>
                 <td class="cus-td" align="right">
-                  {{employeeDetails.emp_salary_compute_data && employeeDetails.emp_salary_compute_data.emp_salary_structure
+                  {{employeeDetails.relations && employeeDetails.relations.emp_salary_detail && employeeDetails.relations.emp_salary_detail?.emp_salary_structure
                   && employeeDetails?.emp_salary_compute_data?.emp_salary_structure.tds  ? 
-                  employeeDetails?.emp_salary_compute_data?.emp_salary_structure.tds : '-'}}
+                  employeeDetails.emp_salary_compute_data.emp_salary_structure.tds : '0'}}
                 </td>
               </tr>
             </tbody>

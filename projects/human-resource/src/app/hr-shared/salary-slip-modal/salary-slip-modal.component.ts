@@ -75,10 +75,10 @@ export class SalarySlipModalComponent implements OnInit {
 
   getTotalDeductions(values: any[], value2: any, value3) {
     let tds = 0;
-    if (value3.configs && value3.configs.tds) {
-      tds = value2.emp_salary_structure && value2.emp_salary_structure.tds ?
+    
+      tds = value2 && value2.emp_salary_structure && value2.emp_salary_structure.tds ?
         Math.round(Number(value2.emp_salary_structure.tds)) : 0;
-    }
+    
     if (values) {
 
       var result = Number(values.map(f => Math.round(Number(f.value))).reduce((acc, val) => acc + val)) + tds;
