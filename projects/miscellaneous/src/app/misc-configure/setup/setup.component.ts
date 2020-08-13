@@ -65,6 +65,7 @@ export class SetupComponent implements OnInit {
     showWaterImage = false;
     waterMarkImage: any = '';
     currentImage: any;
+    fasignatureForm:any=[];
     logoPosition: any[] = [{ id: '1', pos: 'Top' },
     { id: '2', pos: 'Bottom' },
     { id: '3', pos: 'Left' },
@@ -108,6 +109,7 @@ export class SetupComponent implements OnInit {
     processTypes: any[] = [];
     sessionArray: any[] = [];
     accountsArray: any[] = [];
+    showClosingSession = false;
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
@@ -230,7 +232,7 @@ export class SetupComponent implements OnInit {
                 }
             }
         });
-        this.disabledApiButton = false;
+        
         console.log('ses_id', ses_id, this.disabledApiButton)
     }
 
@@ -804,6 +806,21 @@ export class SetupComponent implements OnInit {
                             console.log(this.checkedArray);
                         }
                     }
+                    if (value === 'financial accounting') {
+                        console.log('in fa');
+                        if (this.settingForm.value.financial_accounting_signature) {
+                            let tempSignatureForm = JSON.parse(this.settingForm.value.financial_accounting_signature);
+                            for (var i=0; i<tempSignatureForm.length;i++) {
+                                var tForm = this.fbuild.group({
+                                    title: tempSignatureForm[i]['title'],
+                                    signature: tempSignatureForm[i]['signature'],
+                                    order: tempSignatureForm[i]['order']
+                                })
+                                this.fasignatureForm.push(tForm)
+                            }
+                        }
+                        
+                    }
                     console.log(this.settingForm);
                 }
                 this.formFlag = true;
@@ -940,6 +957,12 @@ export class SetupComponent implements OnInit {
 
 
         });
+        let fasignfrm = this.fbuild.group({
+            'title':'',
+            'signature':'',
+            'order':''
+        });
+        this.fasignatureForm.push(fasignfrm);
     }
     checkIfSelectedSMS(i, j, value) {
         if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
@@ -1284,10 +1307,23 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.payment_banks = JSON.stringify(finalPayArr);
             }
         }
-        if (this.settingForm.value.fa_closing_balance_move) {
+        if (this.showClosingSession) {
             this.moveClosingBalance();
-        } else {
-            console.log(this.settingForm.value);
+        } 
+
+        if (this.currentGsetup === 'financial accounting') {
+            if (this.fasignatureForm.length > 0) {
+                var tempSignatureArr = [];
+                for (var i=0; i<this.fasignatureForm.length;i++) {
+                    tempSignatureArr.push( {'title':this.fasignatureForm[i].value.title,
+                    'signature':this.fasignatureForm[i].value.signature,
+                    'order':this.fasignatureForm[i].value.order});
+                }
+                this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
+            }
+        }
+
+            console.log(this.settingForm.value, this.currentGsetup);
             this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
                 if (result && result.status === 'ok') {
                     this.disabledApiButton = false;
@@ -1298,7 +1334,7 @@ export class SetupComponent implements OnInit {
                     this.commonService.showSuccessErrorMessage(result.message, result.status);
                 }
             });
-        }
+        
 
     }
     getBanks() {
@@ -1750,5 +1786,38 @@ export class SetupComponent implements OnInit {
     deleteImageTemp2() {
         this.showTempImage2 = false;
         this.templateImage2 = 'https://www.publicdomainpictures.net/pictures/200000/t2/plain-white-background-1480544970glP.jpg';
+    }
+
+    addSignature() {
+        let fasignfrm = this.fbuild.group({
+            'title':'',
+            'signature':'',
+            'order':''
+        });
+        this.fasignatureForm.push(fasignfrm);
+    }
+
+    removeSignature(fi) {
+        console.log('fi--',fi)
+        this.fasignatureForm.splice(fi,1);
+    }
+    uploadSignatureFile($event, fi) {
+        const file: File = $event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = (e) => {
+            const fileJson = {
+                fileName: file.name,
+                imagebase64: reader.result
+            };
+            this.sisService.uploadDocuments([fileJson]).subscribe((result: any) => {
+                if (result.status === 'ok') {
+                    console.log('this.fasignatureForm[fi]--',this.fasignatureForm[fi])
+                    this.fasignatureForm[fi].get('signature').patchValue(result.data[0].file_url);
+                    console.log('this.fasignatureForm[fi]--',this.fasignatureForm[fi])
+                    //this.settingForm.get(gs_alias).patchValue(result.data[0].file_url);
+                }
+            });
+        };
+        reader.readAsDataURL(file);
     }
 }
