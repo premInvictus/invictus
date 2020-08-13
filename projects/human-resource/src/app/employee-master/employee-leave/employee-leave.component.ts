@@ -196,7 +196,10 @@ export class EmployeeLeaveComponent implements OnInit {
 				this.displayedEmployeeColumns.push('lwp');
 				this.leaveTypeArray.forEach(ele => {
 					this.displayedEmployeeColumns.push('leave_closing'+ele.leave_id);
-				});
+				});								
+				this.displayedEmployeeColumns.push('total_credited');
+				this.displayedEmployeeColumns.push('total_availed');
+				this.displayedEmployeeColumns.push('total_balance');
 			}
 			console.log('this.displayedEmployeeColumns',this.displayedEmployeeColumns);
 			element = {};
@@ -235,6 +238,24 @@ export class EmployeeLeaveComponent implements OnInit {
 						if (emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0) {
 							leave_closing = emp_attendance_detail.emp_balance_leaves
 						}
+						let total_credited=0;
+						let total_availed=0;
+						let total_balance=0;
+						if(emp_attendance_detail.emp_leave_credited && emp_attendance_detail.emp_leave_credited.length > 0){
+							emp_attendance_detail.emp_leave_credited.forEach(e => {
+								total_credited += Number(e.leave_value)
+							});
+						}
+						if(emp_attendance_detail.emp_leave_granted && emp_attendance_detail.emp_leave_granted.length > 0){
+							emp_attendance_detail.emp_leave_granted.forEach(e => {
+								total_availed += Number(e.leave_value)
+							});
+						}
+						if(emp_attendance_detail.emp_balance_leaves && emp_attendance_detail.emp_balance_leaves.length > 0){
+							emp_attendance_detail.emp_balance_leaves.forEach(e => {
+								total_balance += Number(e.leave_value)
+							});
+						}
 						element = {
 							srno: pos,
 							month_name: emp_month_attendance_data.month_data[i].month_name,
@@ -242,7 +263,10 @@ export class EmployeeLeaveComponent implements OnInit {
 							leave_availed: leave_availed,
 							// leave_granted: '',
 							lwp: '',
-							leave_closing: leave_closing
+							leave_closing: leave_closing,
+							total_credited:total_credited,
+							total_availed:total_availed,
+							total_balance:total_balance
 						};
 						// total_leave_credited = total_leave_credited + Number(leave_credited.toFixed());
 						// total_leave_availed = total_leave_availed + parseFloat(emp_attendance_detail.emp_leave_availed ? emp_attendance_detail.emp_leave_availed : 0);
@@ -329,4 +353,7 @@ export interface EmployeeElement {
 	leave_granted: any;
 	lwp: any;
 	leave_closing: any;
+	total_credited:any;
+	total_availed:any;
+	total_balance:any;
 }

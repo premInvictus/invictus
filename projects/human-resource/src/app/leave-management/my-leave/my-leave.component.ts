@@ -27,6 +27,7 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('myLeavePaginator') myLeavePaginator: MatPaginator;
 	@ViewChild('subordinateLeavePaginator') subordinateLeavePaginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
+	@ViewChild('cancelModal') cancelModal;
 	@ViewChild('approveModal') approveModal;
 	@ViewChild('rejectModal') rejectModal;
 	@ViewChild(MatSort) sort: MatSort;
@@ -44,6 +45,7 @@ export class MyLeaveComponent implements OnInit {
 	editFlag = false;
 	principal: any;
 	deleteMessage = 'Are you sure to Delete !';
+	cancelMessage = 'Are you sure to Cancel !';
 	approveMessage = 'Are you sure to Approve !';
 	rejectMessage = 'Are you sure to Reject !';
 	approvedArray: any[] 	= [];
@@ -129,7 +131,7 @@ export class MyLeaveComponent implements OnInit {
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
-						status: item.leave_status == 1 ? 'Approved' : 'Pending',
+						status: this.getLeaveStatusStr(item.leave_status),
 						leave_reason: item.leave_reason,
 						action: item
 					};
@@ -145,7 +147,28 @@ export class MyLeaveComponent implements OnInit {
 			}
 		});
 	}
-
+	getLeaveStatusStr(status){
+		let statusstr ='';
+		if(status == 0){
+			statusstr='Pending'
+		} else if(status == 1){
+			statusstr='Approved'
+		} else if(status == 2){
+			statusstr='Cancel'
+		}
+		return statusstr;
+	}
+	getLeaveStatusColor(status){
+		let statusstr ='';
+		if(status == 0){
+			statusstr='pending'
+		} else if(status == 1){
+			statusstr='approved'
+		} else if(status == 2){
+			statusstr='cancel'
+		}
+		return statusstr;
+	}
 	getSubordinateLeave() {
 		const datePipe = new DatePipe('en-in');
 		this.SUBORDINATE_LEAVE_ELEMENT_DATA = [];
@@ -332,10 +355,85 @@ export class MyLeaveComponent implements OnInit {
 	deleteLeave(item) {
 		this.deleteModal.openModal(item);
 	}
-
+	cancelLeave(item) {
+		this.cancelModal.openModal(item);
+	}
 	approveLeave(item) {
 		item.text = this.approveMessage;
 		this.approveModal.openModal(item);
+	}
+	cancelConfirm(item){
+		
+		console.log('cancelConfirm',item);
+		if(item.leave_emp_detail.emp_id && item.leave_status == 1){
+			let inputJson = {};
+			inputJson['leave_id'] = item.leave_id;
+			inputJson['leave_status'] = '2';
+			let emp_id = item.leave_emp_detail.emp_id;
+			let leave_month = new Date(item.leave_start_date).getMonth() + 1;
+			let leave_session = item.leave_session;
+			this.common.getAllEmployee({ emp_id: emp_id }).subscribe((result: any) => {
+				var finResult = result ? result : []
+				const tempR = finResult[0].emp_month_attendance_data || [];
+				let emp_month_attendance_data = tempR.find(f => f.ses_id == leave_session);
+				let attendance_detail = emp_month_attendance_data.month_data.find(f => f.month_id == leave_month);
+				if(attendance_detail) {
+					console.log('attendance_detail',attendance_detail);
+					attendance_detail.attendance_detail.emp_leave_availed.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value -= item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+						}
+					});
+					attendance_detail.attendance_detail.emp_leave_granted.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value -= item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+						}
+					});
+					attendance_detail.attendance_detail.emp_balance_leaves.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value += item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+
+							//when balance is more than credited value, handle this error
+							if(attendance_detail.attendance_detail.emp_leave_credited) {
+								attendance_detail.attendance_detail.emp_leave_credited.forEach(e1 => {
+									if(e1.leave_id == item.leave_type.leave_id) {
+										e.leave_value = e.leave_value > e1.leave_value ? e1.leave_value : e.leave_value;
+										e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+									}
+								});
+							}	
+						}
+					});
+					let approvedjson = {};
+					approvedjson = {
+						emp_id: item.leave_emp_detail.emp_id,
+						emp_month_attendance_data: tempR
+					}
+					console.log(item.leave_emp_detail.emp_id);
+					console.log('inputJson',inputJson);
+					console.log('approvedjson',approvedjson);
+					this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+						if (result) {
+							this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+								if (approved_result) {
+									this.common.showSuccessErrorMessage('Leave Request Canceled Successfully', 'success');
+									
+									this.getMyLeave();
+								}
+							});
+						} else {
+							this.common.showSuccessErrorMessage('Error While Cancel Leave Request', 'error');
+						}
+					});
+				} else {
+					this.common.showSuccessErrorMessage('Error While Cancel Leave Request', 'error');
+				}
+			});
+		}
+			
 	}
 
 	approveConfirm(item) {
