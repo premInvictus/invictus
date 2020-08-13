@@ -21,7 +21,7 @@ import {
   MatPaginatorIntl,
 } from "@angular/material";
 import {SelectionModel} from '@angular/cdk/collections'; 
-
+import * as moment from 'moment';
 @Component({
   selector: 'app-voucher-ref-modal',
   templateUrl: './voucher-ref-modal.component.html',
@@ -32,6 +32,8 @@ export class VoucherRefModalComponent implements OnInit {
   selection = new SelectionModel<Element>(true, []);
   vc_invoiceno = new FormControl()
   vc_grno = new FormControl()
+  vc_chequeno = new FormControl();
+  vc_chequedate = new FormControl();
   currentTabIndex = 2;
   dtotal = 0;
   ctotal = 0;
@@ -226,6 +228,11 @@ export class VoucherRefModalComponent implements OnInit {
       item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
       item.amount=tamount;
       item.selected=tselected;
+    } else if(this.currentTabIndex == 3) {
+      item.currentTabIndex=this.currentTabIndex;
+      item.vc_chequeno=this.vc_chequeno.value;
+      item.vc_chequedate=this.vc_chequedate.value.format("YYYY-MM-DD");
+      item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
     }
     this.dialogRef.close(item);
   }
@@ -248,6 +255,9 @@ export class VoucherRefModalComponent implements OnInit {
 			});
       
     }
+  }
+  setDate() {
+    
   }
   // isSelected(row){
   //   const findex = this.selection.selected.findIndex(e => e.vc_id = row.vc_id);

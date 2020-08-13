@@ -237,8 +237,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 
 	moveToAnotherSession(data) {
 		const dialogRef = this.dialog.open(MoveVoucherModalComponent, {
-			height: '50vh',
-			width: '100vh',
+			// height: '50vh',
+			// width: '100vh',
 			data: data
 		});
 		 // Create subscription

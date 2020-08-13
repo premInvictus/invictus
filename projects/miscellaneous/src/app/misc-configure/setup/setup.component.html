@@ -42,6 +42,7 @@
                                 && control.gs_alias !== 'payment_banks'
                                 && control.gs_alias !== 'employee_salary_slip'
                                 && control.gs_alias !== 'deduction_config'
+                                && control.gs_alias != 'financial_accounting_signature'
                                 && control.gs_alias !== 'add_prefix_before_admission_no'
                                 ">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
@@ -112,8 +113,8 @@
                                     </ng-container>
                                     <ng-container
                                       *ngIf="control.gs_alias == 'fa_closing_balance_move'">
-                                      <p>Move Closing Balance For Session </p>
-                                      <mat-form-field class="form-field" appearance="outline">
+                                      <mat-checkbox class="example-margin" (change)="showClosingSession = !showClosingSession">Move Closing Balance For Session </mat-checkbox>
+                                      <mat-form-field class="form-field" appearance="outline" *ngIf="showClosingSession">
                                         <mat-select [formControlName]="control.gs_alias">
                                           <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
                                             {{item.ses_name}}
@@ -350,6 +351,44 @@
                                   </ng-container>
                                 </div>
                               </div>
+                              <ng-container *ngIf="control.gs_alias=='financial_accounting_signature'">
+                                  <div class="col-12">
+                                    Upload Signature &nbsp;<input type="button" value="+ Add Signature" (click)="addSignature()"/>
+                                <ng-container *ngFor="let fitem of fasignatureForm;let fi=index ">
+                                 <form [formGroup]="fitem">
+                                  <div class="row">
+                                  
+                                  <div class="col-3">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <input matInput type="text" class="text-capitalize"
+                                        formControlName="title" placeholder="Signature Title">
+                                    </mat-form-field>
+                                    </div>
+                                    
+                                    <div class="col-3">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <input matInput type="text" class="text-capitalize"
+                                        formControlName="order" placeholder="Order">
+                                    </mat-form-field>
+                                  </div>
+                                  <div class="col-3" style="margin-top:-10px">
+                                      <button mat-stroked-button class="btn-outline-green">
+                                          <label for="sig_{{fi}}">Choose File
+                                            &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                                        <input style="display:none" type="file" accept="image/*"
+                                          (change)="uploadSignatureFile($event, fi)" id="sig_{{fi}}">
+                                        <img *ngIf="fitem?.value?.signature"
+                                          style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
+                                          [src]="fitem?.value?.signature">
+                                  </div>
+                                  <div class="col-1">
+                                      <input type="button" value="-" (click)="removeSignature(fi)"/>
+                                    </div>
+                                </div>
+                                  </form>
+                                  </ng-container>
+                                </div>
+                              </ng-container>
                               <div class="row" *ngIf="control.gs_alias === 'deduction_config'">
                                 <div class="col-12">
                                   <ng-container *ngIf="control.gs_alias == 'deduction_config'">
@@ -2190,6 +2229,7 @@
                                   </ng-container>
                                 </div>
                               </div>
+
                             </ng-container>
                           </form>
                           <br>
