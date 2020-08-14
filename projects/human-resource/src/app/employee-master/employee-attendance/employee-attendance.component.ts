@@ -253,6 +253,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									emp_total_attendance:no_of_days,
 									emp_status: item.emp_status ? item.emp_status : 'live',
 									viewFlag: true,
+									absentDays:0,
 									action: item,
 	
 								};
@@ -317,7 +318,8 @@ export class EmployeeAttendanceComponent implements OnInit {
 											if (item.attendanceRecords && item.attendanceRecords.length > 0) {
 												const arrFilter: any[] = item.attendanceRecords;
 												let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
-												console.log('absentDays',absentDays)
+												console.log('absentDays',absentDays);
+												element.absentDays = absentDays;
 												lwpDays = absentDays > lg ? absentDays - lg : 0
 											}
 										}
@@ -354,6 +356,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 										if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
 											const arrFilter: any[] = item.attendanceRecords;
 											let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
+											element.absentDays = absentDays;
 											lwpDays = absentDays > 0 ? absentDays : 0;
 											totP = totP- lwpDays;
 										}
@@ -388,6 +391,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 									if (item && item.attendanceRecords && item.attendanceRecords.length > 0) {
 										const arrFilter: any[] = item.attendanceRecords;
 										let absentDays = arrFilter.map(f => Number(f.attendanceStatus)).reduce((acc, val) => acc + (val == 0 ? 1 : 0), 0);
+										element.absentDays = absentDays;
 										lwpDays = absentDays > 0 ? absentDays : 0;
 										totP = totP- lwpDays;
 									}
@@ -624,7 +628,12 @@ export class EmployeeAttendanceComponent implements OnInit {
 				la+=Number(e.emp_leave_form.value.leave_availed);
 				lg+=Number(e.emp_leave_form.value.leave_granted);
 			});
-			this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
+			if(element.absentDays && element.absentDays > 0){
+				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =element.absentDays-lg;
+			} else {
+				this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
+			}
+			//this.EMPLOYEE_ELEMENT[index]['emp_lwp'] =la-lg;
 			this.EMPLOYEE_ELEMENT[index]['emp_total_attendance'] = element.emp_present - this.EMPLOYEE_ELEMENT[index]['emp_lwp'];
 		}
 
