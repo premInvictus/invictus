@@ -18,3 +18,13 @@
     text-align: center;
 }
 
+.approved{
+    color: green;
+}
+.pending{
+    color: #000000;
+}
+.cancel{
+    color: red;
+}
+

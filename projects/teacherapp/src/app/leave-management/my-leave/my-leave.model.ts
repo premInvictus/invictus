@@ -6,6 +6,7 @@ export interface MyLeaveElement {
 	status: any;
 	leave_reason: any;
 	action:any;
+	futuredateflag:any;
 }
 
 export interface SubordinateLeaveElement {

@@ -89,7 +89,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 	getLeaveType() {
 		this.commonAPIService.getLeaveManagement().subscribe((result: any) => {
 			this.leaveTypeArray = result;
-			this.displayedEmployeeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation', 'emp_balance_leaves'];
+			this.displayedEmployeeColumns = ['srno', 'emp_id', 'emp_name', 'emp_designation'];
 			this.leaveTypeArray.forEach(ele => {
 				this.displayedEmployeeColumns.push('leave_availed'+ele.leave_id);
 				this.displayedEmployeeColumns.push('leave_granted'+ele.leave_id);

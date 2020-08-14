@@ -27,8 +27,7 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('myLeavePaginator') myLeavePaginator: MatPaginator;
 	@ViewChild('subordinateLeavePaginator') subordinateLeavePaginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
-	@ViewChild('approveModal') approveModal;
-	@ViewChild('rejectModal') rejectModal;
+	@ViewChild('cancelModal') cancelModal;
 	@ViewChild(MatSort) sort: MatSort;
 	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason','status', 'action'];
 	MY_LEAVE_ELEMENT_DATA: MyLeaveElement[] = [];
@@ -44,8 +43,7 @@ export class MyLeaveComponent implements OnInit {
 	editFlag = false;
 	principal: any;
 	deleteMessage = 'Are you sure to Delete !';
-	approveMessage = 'Are you sure to Approve !';
-	rejectMessage = 'Are you sure to Reject !';
+	cancelMessage = 'Are you sure to Cancel !';
 	approvedArray: any[] 	= [];
 	finalapprovedArray: any[] = [];
 	disabledApiButton = false;
@@ -130,9 +128,10 @@ export class MyLeaveComponent implements OnInit {
 						leave_date: datePipe.transform(item.leave_start_date, 'MMMM d, y') + ' - ' + datePipe.transform(item.leave_end_date, 'MMMM d, y'),
 						leave_type: item.leave_type.leave_name,
 						leave_no_of_days: leave_request_schedule_data.length,
-						status: item.leave_status == 1 ? 'Approved' : 'Pending',
+						status: this.getLeaveStatusStr(item.leave_status),
 						leave_reason: item.leave_reason,
-						action: item
+						action: item,
+						futuredateflag:this.getFutureDateFlag(item.leave_start_date)
 					};
 					this.MY_LEAVE_ELEMENT_DATA.push(dataJson);
 					pos++;
@@ -145,6 +144,37 @@ export class MyLeaveComponent implements OnInit {
 				}
 			}
 		});
+	}
+
+	getFutureDateFlag(UserDate){
+		let ToDate = new Date();
+		if (new Date(UserDate).getTime() >= ToDate.getTime()) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	getLeaveStatusStr(status){
+		let statusstr ='';
+		if(status == 0){
+			statusstr='Pending'
+		} else if(status == 1){
+			statusstr='Approved'
+		} else if(status == 2){
+			statusstr='Cancel'
+		}
+		return statusstr;
+	}
+	getLeaveStatusColor(status){
+		let statusstr ='';
+		if(status == 0){
+			statusstr='pending'
+		} else if(status == 1){
+			statusstr='approved'
+		} else if(status == 2){
+			statusstr='cancel'
+		}
+		return statusstr;
 	}
 
 	getSubordinateLeave() {
@@ -263,7 +293,7 @@ export class MyLeaveComponent implements OnInit {
 
 	}
 
-	update(result, attachment) {
+	update(result, attachment) { 
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -330,259 +360,89 @@ export class MyLeaveComponent implements OnInit {
 		this.deleteModal.openModal(item);
 	}
 
-	approveLeave(item) {
-		item.text = this.approveMessage;
-		this.approveModal.openModal(item);
+	cancelLeave(item) {
+		this.cancelModal.openModal(item);
 	}
 
-	approveConfirm(item) {
+	cancelConfirm(item){
 		
-		console.log('item',item)
-		this.finalapprovedArray = [];
-		this.approvedArray = [];
-		var months = [
-			'', 'January', 'February', 'March', 'April', 'May',
-			'June', 'July', 'August', 'September',
-			'October', 'November', 'December'
-		];
-		let monthJson = {};
-		let employeeArrData = [];
-		let inputJson = {};
-		inputJson['leave_id'] = item.leave_id;
-		inputJson['leave_status'] = '1';
-		var current, previous;
-		for (const det of item.leave_request_schedule_data) {
-			current = new Date(det.date).getMonth() + 1;
-			if (current === previous) {
-				Object.keys(monthJson).forEach((key: any) => {
-					if (key === 'month_id' && Number(monthJson[key]) === Number(current)) {
-						monthJson['attendance_detail'].emp_leave_approved.leave_credit_count = Number(monthJson['attendance_detail'].emp_leave_approved.leave_credit_count) + 1;
-						monthJson['attendance_detail'].emp_leave_granted = Number(monthJson['attendance_detail'].emp_leave_granted) + 1;
-					}
-				});
-
-			} else {
-				monthJson = {
-					"month_id": current,
-					"month_name": months[Number(current)],
-					"attendance_detail": {
-						"emp_leave_approved": {
-							"leave_id": item.leave_type.leave_id,
-							"leave_name": item.leave_type.leave_name,
-							"leave_credit_count": 1
-						}
-					}
-
-				}
-				employeeArrData.push(monthJson);
-				previous = current;
-			}
-		}
-		if (employeeArrData.length > 0) {
-			var emp_login_id = item.leave_from ? item.leave_from : '';
-			this.erpCommonService.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
+		console.log('cancelConfirm',item);
+		if(item.leave_emp_detail.emp_id && item.leave_status == 1){
+			let inputJson = {};
+			inputJson['leave_id'] = item.leave_id;
+			inputJson['leave_status'] = '2';
+			let emp_id = item.leave_emp_detail.emp_id;
+			let leave_month = new Date(item.leave_start_date).getMonth() + 1;
+			let leave_session = item.leave_session;
+			this.erpCommonService.getAllEmployee({ emp_id: emp_id }).subscribe((result: any) => {
 				var finResult = result ? result : []
 				const tempR = finResult[0].emp_month_attendance_data || [];
-				console.log('tempR',tempR);
-				console.log('this.session_id',this.session_id);
-				console.log('tempR',tempR);
-				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						console.log('lennngth',element.month_data.length)
-						let tempmonthdata:any[]=[];
-						element.month_data.forEach(element1 => {
-							console.log('element1',element1);
-							tempmonthdata.push(element1);
-						});
-
-						this.approvedArray.push(tempmonthdata);
-					}
-				});
-				//this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
-				console.log('this.approvedArray',this.approvedArray);
-				console.log('this.employeeArrData',employeeArrData);
-				const approvedArraytemp:any[] = this.approvedArray[0] || [];
-				console.log('approvedArraytemp',approvedArraytemp);
-				console.log('approvedArraytemp.length',approvedArraytemp.length);
-				for (const dety of employeeArrData) {
-					
-					// const findex = approvedArraytemp.findIndex(e => Number(e.month_id) == Number(dety.month_id));
-					let findex = -1;
-					console.log('dety',dety);
-					console.log('approvedArraytemp.length',approvedArraytemp.length);;
-					// for (let index = 0; index < approvedArraytemp.length; index++) {
-					// 	const e = approvedArraytemp[index];
-					// 	console.log('e.month_id',e.month_id);
-					// 	console.log('dety.month_id',dety.month_id);
-					// 	if(e.month_id == dety.month_id) {
-					// 		findex = index;
-					// 	}
-					// }
-					let ind=0;
-					approvedArraytemp.forEach(e => {
-						console.log('e.month_id',e.month_id);
-						console.log('dety.month_id',dety.month_id);
-						if(e.month_id == dety.month_id) {
-							findex = ind;
+				let emp_month_attendance_data = tempR.find(f => f.ses_id == leave_session);
+				let attendance_detail = emp_month_attendance_data.month_data.find(f => f.month_id == leave_month);
+				if(attendance_detail) {
+					console.log('attendance_detail',attendance_detail);
+					attendance_detail.attendance_detail.emp_leave_availed.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value -= item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
 						}
-						ind++;
 					});
+					attendance_detail.attendance_detail.emp_leave_granted.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value -= item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
+						}
+					});
+					attendance_detail.attendance_detail.emp_balance_leaves.forEach(e => {
+						if(e.leave_id == item.leave_type.leave_id) {
+							e.leave_value += item.leave_request_schedule_data.length;
+							e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
 
-					console.log('findex',findex);
-					let leave_availed_ele = {
-						leave_id:dety.attendance_detail.emp_leave_approved.leave_id,
-						leave_name:dety.attendance_detail.emp_leave_approved.leave_name,
-						leave_value:dety.attendance_detail.emp_leave_approved.leave_credit_count
-					}
-					if (findex !== -1) {
-						console.log(' exist',findex);
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
-						// 	if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
-						// 			Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count) +
-						// 			Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
-						// 	} else {
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
-						// 	}
-
-						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
-						// }
-
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_availed.length > 0) {
-								let isLeaveTypeExist = 0;;
-								approvedArraytemp[findex].attendance_detail.emp_leave_availed.forEach(element => {
-									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-										isLeaveTypeExist = 1;
+							//when balance is more than credited value, handle this error
+							if(attendance_detail.attendance_detail.emp_leave_credited) {
+								attendance_detail.attendance_detail.emp_leave_credited.forEach(e1 => {
+									if(e1.leave_id == item.leave_type.leave_id) {
+										e.leave_value = e.leave_value > e1.leave_value ? e1.leave_value : e.leave_value;
+										e.leave_value= e.leave_value <= 0 ? '' : e.leave_value;
 									}
 								});
-								if(isLeaveTypeExist == 0){
-									approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
+							}	
+						}
+					});
+					let approvedjson = {};
+					approvedjson = {
+						emp_id: item.leave_emp_detail.emp_id,
+						emp_month_attendance_data: tempR
+					}
+					console.log(item.leave_emp_detail.emp_id);
+					console.log('inputJson',inputJson);
+					console.log('approvedjson',approvedjson);
+					this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+						if (result) {
+							this.erpCommonService.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+								if (approved_result) {
+									this.common.showSuccessErrorMessage('Leave Request Canceled Successfully', 'success');
+									
+									this.getMyLeave();
 								}
+							});
 						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed']=[];
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
+							this.common.showSuccessErrorMessage('Error While Cancel Leave Request', 'error');
 						}
-
-						//emp_leave_granted is not in use ********** further can be used
-						approvedArraytemp[findex].attendance_detail['emp_leave_granted']=approvedArraytemp[findex].attendance_detail.emp_leave_availed;
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
-						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
-						// 		let isLeaveTypeExist = 0;;
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_granted.forEach(element => {
-						// 			if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-						// 				element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-						// 				isLeaveTypeExist = 1;
-						// 			}
-						// 		});
-						// 		if(isLeaveTypeExist == 0){
-						// 			approvedArraytemp[findex].attendance_detail.emp_leave_granted.push(leave_availed_ele);
-						// 		}
-						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-						// }
-
-						// new code -- calculation for emp_balance_leaves
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
-						}
-					} else {
-						//dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
-						dety.attendance_detail['emp_leave_availed'] = [];
-						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
-						dety.attendance_detail['emp_leave_granted'] = [];
-						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
-						}
-						
-						approvedArraytemp.push(dety);
-					}
+					});
+				} else {
+					this.common.showSuccessErrorMessage('Error While Cancel Leave Request', 'error');
 				}
-				let isSessionExist = 0;
-				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						element.month_data=approvedArraytemp;
-						isSessionExist = 1;
-					}
-				});
-				if(isSessionExist == 0){
-					tempR.push({
-						ses_id:this.session_id.ses_id,
-						leave_opening_balance:0,
-						month_data:approvedArraytemp
-					})
-				}
-				let approvedjson = {};
-				// approvedjson = {
-				// 	emp_id: item.leave_emp_detail.emp_id,
-				// 	emp_month_attendance_data: {
-				// 		month_data: approvedArraytemp
-				// 	}
-				// }
-				approvedjson = {
-					emp_id: item.leave_emp_detail.emp_id,
-					emp_month_attendance_data: tempR
-				}
-				console.log(item.leave_emp_detail.emp_id);
-				console.log('inputJson',inputJson);
-				console.log('approvedjson',approvedjson);
-				this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-					if (result) {
-						this.erpCommonService.updateEmployee(approvedjson).subscribe((approved_result: any) => {
-							if (approved_result) {
-								this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-								this.showFormFlag = false;
-								this.getSubordinateLeave();
-							}
-						});
-					} else {
-						this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
-					}
-				});
 			});
 		}
-
+			
 	}
 
-	rejectLeave(item) {
-		item.text = this.rejectMessage;
-		this.rejectModal.openModal(item);
-
+	approveConfirm(item) {		
+		console.log('item',item)
 	}
 
 	rejectConfirm(item) {
-		let inputJson = {};
-		inputJson['leave_id'] = item.leave_id;
-		inputJson['leave_status'] = '2';
-		this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			if (result) {
-				this.common.showSuccessErrorMessage('Leave Request Reject Successfully', 'success');
-				this.showFormFlag = false;
-				this.getSubordinateLeave();
-			} else {
-				this.common.showSuccessErrorMessage('Error While Reject Leave Request', 'error');
-			}
-		});
 	}
 
 	editLeave(item) {

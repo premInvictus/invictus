@@ -133,7 +133,8 @@ export class MyLeaveComponent implements OnInit {
 						leave_no_of_days: leave_request_schedule_data.length,
 						status: this.getLeaveStatusStr(item.leave_status),
 						leave_reason: item.leave_reason,
-						action: item
+						action: item,
+						futuredateflag:this.getFutureDateFlag(item.leave_start_date)
 					};
 					this.MY_LEAVE_ELEMENT_DATA.push(dataJson);
 					pos++;
@@ -146,6 +147,14 @@ export class MyLeaveComponent implements OnInit {
 				}
 			}
 		});
+	}
+	getFutureDateFlag(UserDate){
+		let ToDate = new Date();
+		if (new Date(UserDate).getTime() >= ToDate.getTime()) {
+			return true;
+		}else {
+			return false;
+		}
 	}
 	getLeaveStatusStr(status){
 		let statusstr ='';
