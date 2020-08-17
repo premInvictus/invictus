@@ -45,8 +45,8 @@ export class MyLeaveComponent implements OnInit {
 	editFlag = false;
 	principal: any;
 	deleteMessage = 'Are you sure to Delete !';
-	cancelMessage = 'Are you sure to Cancel !';
-	approveMessage = 'Are you sure to Approve !';
+	cancelMessage = 'Are you sure to Cancel ';
+	approveMessage = 'Are you sure to Approve ';
 	rejectMessage = 'Are you sure to Reject !';
 	approvedArray: any[] 	= [];
 	finalapprovedArray: any[] = [];
@@ -247,7 +247,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	submit(result, attachment) {
-
+		console.log('result',result);
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -255,10 +255,10 @@ export class MyLeaveComponent implements OnInit {
 		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
-		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
+		inputJson['leave_to'] = result.tabIndex == 0 ? (
 			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
 			(result.leave_to ? result.leave_to : this.principal);
-		inputJson['leave_from'] = result.tabIndex && result.tabIndex !== 1 ?
+		inputJson['leave_from'] = result.tabIndex == 0 ?
 			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
 			('');
 		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
@@ -270,7 +270,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =
-			result.tabIndex === 0 ?
+			result.tabIndex == 0 ?
 				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
 				: result.leave_emp_detail;
 		inputJson['leave_status'] = 0;
@@ -281,6 +281,7 @@ export class MyLeaveComponent implements OnInit {
 			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
+		console.log('inputJson',inputJson);
 
 		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
@@ -305,10 +306,10 @@ export class MyLeaveComponent implements OnInit {
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
 		inputJson['leave_id'] = result.leave_id;
-		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
+		inputJson['leave_to'] = result.tabIndex == 0 ? (
 			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
 			(result.leave_to ? result.leave_to : this.principal);
-		inputJson['leave_from'] = result.tabIndex && result.tabIndex !== 1 ?
+		inputJson['leave_from'] = result.tabIndex == 0 ?
 			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
 			('');
 		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
@@ -320,7 +321,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =
-			result.tabIndex === 0 ?
+			result.tabIndex == 0 ?
 				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
 				: result.leave_emp_detail;
 		inputJson['leave_status'] = result.leave_status;
@@ -537,13 +538,17 @@ export class MyLeaveComponent implements OnInit {
 						}
 						ind++;
 					});
-
+					if(item.leave_half_day) {
+						dety.attendance_detail.emp_leave_approved.leave_credit_count = 0.5;					
+					}
 					console.log('findex',findex);
 					let leave_availed_ele = {
 						leave_id:dety.attendance_detail.emp_leave_approved.leave_id,
 						leave_name:dety.attendance_detail.emp_leave_approved.leave_name,
 						leave_value:dety.attendance_detail.emp_leave_approved.leave_credit_count
 					}
+					
+					console.log('leave_half_day',leave_availed_ele);
 					if (findex !== -1) {
 						console.log(' exist',findex);
 						// if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {

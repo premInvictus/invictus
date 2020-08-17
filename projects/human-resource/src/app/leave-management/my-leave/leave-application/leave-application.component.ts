@@ -137,12 +137,13 @@ export class LeaveApplicationComponent implements OnInit {
       } else {
         this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       }
-      this.leaveForm.value['leave_from'] = this.currentUser.login_id;
+      
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       console.log('this.leaveForm.value',this.leaveForm.value);
       let tempdays = this.leaveForm.value.leave_end_date.diff(this.leaveForm.value.leave_start_date, 'days');
       tempdays++;
       console.log('tempdays',tempdays);
+      
       if(this.leave_credit >= tempdays){
         this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
       }  else {
