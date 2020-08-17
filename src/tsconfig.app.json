@@ -125,7 +125,8 @@
     "../projects/financial-accounting/src/app/fa-configure/fa-configure.module.ts",
     "../projects/financial-accounting/src/app/fa-reports/reports.module.ts",
     "../projects/financial-accounting/src/app/financial-statements/finanacial-statements.module.ts",
-    "../projects/financial-accounting/src/app/transaction-master/transaction-master.module.ts"
+    "../projects/financial-accounting/src/app/transaction-master/transaction-master.module.ts",
+    "../projects/teacherapp/src/app/leave-management/leave-management.module.ts",
 
   ]
 }

@@ -60,7 +60,7 @@
                 </div>
                 <br>
                 <br>
-                <div class="row">
+                <div class="row" *ngIf="examDetail.es_test_taker_report == 1">
                   <div class="col-lg-12 remove-col-modal-padding">
                     <div class="row">
                       <div class="col-lg-4 fin-tab-col-33">
@@ -189,7 +189,7 @@
                   </div>
                 </div>
                 <br>
-                <div class="row">
+                <div class="row" *ngIf="examDetail.es_test_taker_report == 1">
                   <div class="col-lg-12">
                     <div class="row">
                       <div class="col-lg-6 fin-tab-col-50">
