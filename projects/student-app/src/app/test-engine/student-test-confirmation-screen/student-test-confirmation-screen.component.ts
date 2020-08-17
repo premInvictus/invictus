@@ -26,9 +26,19 @@ export class StudentTestConfirmationScreenComponent implements OnInit {
 	}
 	checkExamEnd() {
 		const this_ = this;
-		this.xInterval = setInterval(function () {
-			this_.getTestResultFlag();
-		}, 4000);
+		this.qelementService.getScheduledExam({ es_id: this.es_id }).subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.examDetail = result.data[0];
+					if(this.examDetail.es_test_taker_report != 1){
+						this.router.navigate(['../../test-summary', this.es_id], {relativeTo: this.route});
+					} else {
+						this.xInterval = setInterval(function () {
+							this_.getTestResultFlag();
+						}, 4000);
+					}
+				}
+			});
 	}
 
 	getTestResultFlag() {
