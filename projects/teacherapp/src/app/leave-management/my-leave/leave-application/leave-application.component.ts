@@ -1,7 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonAPIService, SisService } from '../../../_services/index';
+import { SisService } from '../../../_services/index';
+import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -34,18 +35,19 @@ export class LeaveApplicationComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data,
     private fbuild: FormBuilder,
     private common: CommonAPIService,
+    private erpCommonService:ErpCommonService,
     private sisService: SisService,
   ) { }
 
   ngOnInit() {
     this.session_id = JSON.parse(localStorage.getItem('session'));
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     console.log('data',this.data);
-    this.getClassIVStaff();
     this.buildForm();
     this.getLeaveType();
     this.empRecord = JSON.parse(localStorage.getItem('eRecord'));
     console.log('this.empRecord',this.empRecord);
-    if (this.data.leave_type.leave_id) {
+    if(this.data.leave_type && this.data.leave_type.leave_id) {
       this.editFlag = true;
       this.showFormFlag = true;
       this.leaveForm.patchValue({
@@ -62,7 +64,7 @@ export class LeaveApplicationComponent implements OnInit {
         this.getEmployeeDetails();
       }
     } else {
-      this.data = [];
+      //this.data = [];
       this.editFlag = false;
       this.showFormFlag = false;
     }
@@ -93,7 +95,7 @@ export class LeaveApplicationComponent implements OnInit {
     });
   }
   getLeaveType() {
-    this.common.getLeaveManagement().subscribe((result: any) => {
+    this.erpCommonService.getLeaveManagement().subscribe((result: any) => {
       this.leaveTypeArray = result;
     });
   }
@@ -131,19 +133,19 @@ export class LeaveApplicationComponent implements OnInit {
         this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
       }
       this.leaveForm.value['tabIndex'] = this.selectedIndex;
-      this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
+      this.leaveForm.value['leave_employee_id'] = this.data.emp_id;
       if (this.selectedIndex == 0) {
         this.leaveForm.value['leave_to'] = this.empRecord.emp_supervisor && this.empRecord.emp_supervisor.id ? this.empRecord.emp_supervisor.id : '';
       } else {
         this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       }
-      
+      console.log('this.currentUser',this.currentUser);
+      this.leaveForm.value['leave_from'] = this.currentUser.login_id;
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       console.log('this.leaveForm.value',this.leaveForm.value);
       let tempdays = this.leaveForm.value.leave_end_date.diff(this.leaveForm.value.leave_start_date, 'days');
       tempdays++;
       console.log('tempdays',tempdays);
-      
       if(this.leave_credit >= tempdays){
         this.dialogRef.close({ data: this.leaveForm.value, attachment: this.attachmentArray });
       }  else {
@@ -161,30 +163,12 @@ export class LeaveApplicationComponent implements OnInit {
         this.empRecord.emp_month_attendance_data.month_data.length > 0 ?
         this.empRecord.emp_month_attendance_data.month_data : [];
       ;
-      // if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-      //   month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-      //   eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-
-      // } else {
-      //   eRecord = this.empRecord && this.empRecord.emp_month_attendance_data &&
-      //     this.empRecord.emp_month_attendance_data.leave_opening_balance ?
-      //     this.empRecord.emp_month_attendance_data.leave_opening_balance : 0;
-      // }
     } else {
       const month_data: any[] = this.monthData &&
         this.monthData.month_data &&
         this.monthData.month_data.length > 0 ?
         this.monthData.month_data : [];
       ;
-      // if (month_data && month_data[month_data.length - 1] && month_data[month_data.length - 1]['attendance_detail'] &&
-      //   month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'] >= 0) {
-      //   eRecord = month_data[month_data.length - 1]['attendance_detail']['emp_balance_leaves'];
-
-      // } else {
-      //   eRecord = this.empRecord && this.monthData &&
-      //     this.monthData.leave_opening_balance ?
-      //     this.monthData.leave_opening_balance : 0;
-      // }
     }
     if (this.leaveForm.value.leave_type && this.leaveForm.value.leave_start_date &&
       (!this.halfDay ? this.leaveForm.value.leave_end_date : true) && this.leaveForm.value.leave_reason
@@ -193,7 +177,7 @@ export class LeaveApplicationComponent implements OnInit {
         this.leaveForm.value.leave_end_date = this.leaveForm.value.leave_start_date;
       }
       this.leaveForm.value['tabIndex'] = this.selectedIndex;
-      this.leaveForm.value['leave_employee_id'] = this.subJSON['leave_employee_id'];
+      this.leaveForm.value['leave_employee_id'] = this.data.emp_id;
       this.leaveForm.value['leave_to'] = this.subJSON['leave_to'];
       this.leaveForm.value['leave_emp_detail'] = this.subJSON['leave_emp_detail'];
       let tempdays = this.leaveForm.value.leave_end_date.diff(this.leaveForm.value.leave_start_date, 'days');
@@ -216,22 +200,6 @@ export class LeaveApplicationComponent implements OnInit {
       this.uploadImage(file.name, fileReader.result);
     };
     fileReader.readAsDataURL(file);
-  }
-  getClassIVStaff() {
-    this.common.getFilterData(
-      { "generalFilters": { "emp_department_detail.dpt_id": "", "emp_category_detail.cat_id": [3], "emp_status": ["live"] } }
-    ).subscribe((res: any) => {
-      if (res && res.status === 'ok') {
-        for (const item of res.data) {
-          this.empArray.push({
-            emp_id: item.emp_id,
-            emp_name: item.emp_name,
-            emp_supervisor: item.emp_supervisor && item.emp_supervisor.id ? item.emp_supervisor.id : '',
-            emp_month_attendance_data : item.emp_month_attendance_data ? item.emp_month_attendance_data : ''
-          })
-        }
-      }
-    });
   }
   uploadImage(fileName, au_profileimage) {
     this.sisService.uploadDocuments([
@@ -284,15 +252,11 @@ export class LeaveApplicationComponent implements OnInit {
     let inputJson:any = {};
     this.leave_credit = 0;
     console.log('this.selectedIndex',this.selectedIndex);
-    if(this.selectedIndex ==0){
-      inputJson.emp_id = this.data.emp_id;
-    } else {
-      if (this.subJSON['leave_employee_id']) {
-        inputJson.emp_id   =    this.subJSON['leave_employee_id']
-      }
-    }
+    inputJson.emp_id = this.data.emp_id;
+    console.log('this.data',this.data);
+    console.log('inputJson.emp_id',inputJson.emp_id);
     if(inputJson.emp_id) {
-      this.common.getEmployeeDetail(inputJson).subscribe((result: any) => {
+      this.erpCommonService.getEmployeeDetail(inputJson).subscribe((result: any) => {
         this.employeeData = result;
         if(this.employeeData && this.employeeData.emp_month_attendance_data)
         this.employeeData.emp_month_attendance_data.forEach(element => {

@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ErpCommonService } from 'src/app/_services';
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
-import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
+//import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import { CommonAPIService, SisService } from '../../_services/index';
+import { CommonAPIService, ErpCommonService } from 'src/app/_services';
 import { DatePipe } from '@angular/common';
-import { PreviewDocumentComponent } from './../../hr-shared/preview-document/preview-document.component';
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MyLeaveElement, SubordinateLeaveElement } from './my-leave.model';
 import { LeaveApplicationComponent } from './leave-application/leave-application.component';
 import { Key } from 'protractor';
+import { SisService, AxiomService, SmartService } from '../../_services';
 
 @Component({
 	selector: 'app-my-leave',
@@ -28,8 +28,6 @@ export class MyLeaveComponent implements OnInit {
 	@ViewChild('subordinateLeavePaginator') subordinateLeavePaginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('cancelModal') cancelModal;
-	@ViewChild('approveModal') approveModal;
-	@ViewChild('rejectModal') rejectModal;
 	@ViewChild(MatSort) sort: MatSort;
 	myLeaveDisplayedColumns: string[] = ['srno', 'leave_date', 'leave_type', 'leave_no_of_days', 'leave_reason','status', 'action'];
 	MY_LEAVE_ELEMENT_DATA: MyLeaveElement[] = [];
@@ -45,9 +43,7 @@ export class MyLeaveComponent implements OnInit {
 	editFlag = false;
 	principal: any;
 	deleteMessage = 'Are you sure to Delete !';
-	cancelMessage = 'Are you sure to Cancel ';
-	approveMessage = 'Are you sure to Approve ';
-	rejectMessage = 'Are you sure to Reject !';
+	cancelMessage = 'Are you sure to Cancel !';
 	approvedArray: any[] 	= [];
 	finalapprovedArray: any[] = [];
 	disabledApiButton = false;
@@ -55,6 +51,7 @@ export class MyLeaveComponent implements OnInit {
 	constructor(
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
+		private erpCommonService:ErpCommonService,
 		private sisService: SisService,
 		public dialog: MatDialog) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -92,7 +89,7 @@ export class MyLeaveComponent implements OnInit {
 				"emp_designation_detail.des_id": [1]
 			}
 		};
-		this.common.getFilterData(filterJSON).subscribe((result: any) => {
+		this.erpCommonService.getFilterData(filterJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.principal = result.data[0].emp_login_id;
 			}
@@ -101,14 +98,14 @@ export class MyLeaveComponent implements OnInit {
 
 	getEmployeeDetail() {
 		var emp_login_id = this.currentUser ? this.currentUser.login_id : '';
-		this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
+		this.erpCommonService.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
 			var finResult = result ? result : []
 			this.employeeRecord = finResult[0];
 		});
 	}
 
 	getLeaveType() {
-		this.common.getLeaveManagement().subscribe((result: any) => {
+		this.erpCommonService.getLeaveManagement().subscribe((result: any) => {
 			this.leaveTypeArray = result;
 		});
 	}
@@ -117,9 +114,9 @@ export class MyLeaveComponent implements OnInit {
 		const datePipe = new DatePipe('en-in');
 		this.MY_LEAVE_ELEMENT_DATA = [];
 		this.myLeaveDataSource = new MatTableDataSource<MyLeaveElement>(this.MY_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({
+		this.erpCommonService.getEmployeeLeaveData({
 			'leave_from': this.currentUser ? this.currentUser.login_id : '',
-			'role_id' : this.currentUser.role_id,
+			'leave_role' : this.currentUser.role_id,
 			'leave_status': ''
 		}).subscribe((result: any) => {
 			if (result) {
@@ -148,6 +145,7 @@ export class MyLeaveComponent implements OnInit {
 			}
 		});
 	}
+
 	getFutureDateFlag(UserDate){
 		let ToDate = new Date();
 		if (new Date(UserDate).getTime() >= ToDate.getTime()) {
@@ -178,11 +176,12 @@ export class MyLeaveComponent implements OnInit {
 		}
 		return statusstr;
 	}
+
 	getSubordinateLeave() {
 		const datePipe = new DatePipe('en-in');
 		this.SUBORDINATE_LEAVE_ELEMENT_DATA = [];
 		this.subordinateLeaveDataSource = new MatTableDataSource<SubordinateLeaveElement>(this.SUBORDINATE_LEAVE_ELEMENT_DATA);
-		this.common.getEmployeeLeaveData({ 'leave_to': this.currentUser ? this.currentUser.login_id : '', 'leave_status': '0' }).subscribe((result: any) => {
+		this.erpCommonService.getEmployeeLeaveData({ 'leave_to': this.currentUser ? this.currentUser.login_id : '', 'leave_status': '0' }).subscribe((result: any) => {
 			if (result) {
 				let pos = 1;
 				for (const item of result) {
@@ -247,7 +246,7 @@ export class MyLeaveComponent implements OnInit {
 	}
 
 	submit(result, attachment) {
-		console.log('result',result);
+
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -255,12 +254,10 @@ export class MyLeaveComponent implements OnInit {
 		var endDate = datePipe.transform(result.leave_end_date, 'yyyy-MM-dd');
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
-		inputJson['leave_to'] = result.tabIndex == 0 ? (
+		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
 			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
 			(result.leave_to ? result.leave_to : this.principal);
-		inputJson['leave_from'] = result.tabIndex == 0 ?
-			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
-			('');
+		inputJson['leave_from'] = this.currentUser.login_id;
 		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
 			inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
@@ -270,7 +267,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =
-			result.tabIndex == 0 ?
+			result.tabIndex === 0 ?
 				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
 				: result.leave_emp_detail;
 		inputJson['leave_status'] = 0;
@@ -281,9 +278,8 @@ export class MyLeaveComponent implements OnInit {
 			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
-		console.log('inputJson',inputJson);
 
-		this.common.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
+		this.erpCommonService.insertEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
 				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
@@ -297,7 +293,7 @@ export class MyLeaveComponent implements OnInit {
 
 	}
 
-	update(result, attachment) {
+	update(result, attachment) { 
 		this.disabledApiButton = true;
 		const datePipe = new DatePipe('en-in');
 		var inputJson = {};
@@ -306,12 +302,10 @@ export class MyLeaveComponent implements OnInit {
 		var leaveRequestScheduleData = [];
 		var diffDay = this.getDaysDiff(result);
 		inputJson['leave_id'] = result.leave_id;
-		inputJson['leave_to'] = result.tabIndex == 0 ? (
+		inputJson['leave_to'] = result.tabIndex && result.tabIndex !== 1 ? (
 			this.employeeRecord.emp_supervisor ? this.employeeRecord.emp_supervisor.id : this.principal) :
 			(result.leave_to ? result.leave_to : this.principal);
-		inputJson['leave_from'] = result.tabIndex == 0 ?
-			(this.currentUser && this.currentUser.login_id ? this.currentUser.login_id : '') :
-			('');
+		inputJson['leave_from'] = this.currentUser.login_id;
 		inputJson['leave_employee_id'] = result.leave_employee_id ? result.leave_employee_id : '',
 			inputJson['leave_start_date'] = startDate;
 		inputJson['leave_end_date'] = endDate;
@@ -321,7 +315,7 @@ export class MyLeaveComponent implements OnInit {
 		inputJson['leave_attachment'] = attachment;
 		inputJson['leave_request_schedule_data'] = [];
 		inputJson['leave_emp_detail'] =
-			result.tabIndex == 0 ?
+			result.tabIndex === 0 ?
 				(this.employeeRecord ? { 'emp_id': this.employeeRecord['emp_id'], 'emp_name': this.employeeRecord['emp_name'] } : {})
 				: result.leave_emp_detail;
 		inputJson['leave_status'] = result.leave_status;
@@ -332,7 +326,7 @@ export class MyLeaveComponent implements OnInit {
 			newStartDate.setDate(newStartDate.getDate() + 1);
 		}
 		inputJson['leave_request_schedule_data'] = leaveRequestScheduleData;
-		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+		this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result && result.status === "ok") {
 				this.disabledApiButton = false;
 				this.common.showSuccessErrorMessage('Leave Request Submitted Successfully', 'success');
@@ -349,7 +343,7 @@ export class MyLeaveComponent implements OnInit {
 		let inputJson = {};
 		inputJson['leave_id'] = item.leave_id;
 		inputJson['leave_status'] = '5';
-		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+		this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 			if (result) {
 				this.common.showSuccessErrorMessage('Leave Request Delete Successfully', 'success');
 				this.showFormFlag = false;
@@ -365,13 +359,11 @@ export class MyLeaveComponent implements OnInit {
 	deleteLeave(item) {
 		this.deleteModal.openModal(item);
 	}
+
 	cancelLeave(item) {
 		this.cancelModal.openModal(item);
 	}
-	approveLeave(item) {
-		item.text = this.approveMessage;
-		this.approveModal.openModal(item);
-	}
+
 	cancelConfirm(item){
 		
 		console.log('cancelConfirm',item);
@@ -382,7 +374,7 @@ export class MyLeaveComponent implements OnInit {
 			let emp_id = item.leave_emp_detail.emp_id;
 			let leave_month = new Date(item.leave_start_date).getMonth() + 1;
 			let leave_session = item.leave_session;
-			this.common.getAllEmployee({ emp_id: emp_id }).subscribe((result: any) => {
+			this.erpCommonService.getAllEmployee({ emp_id: emp_id }).subscribe((result: any) => {
 				var finResult = result ? result : []
 				const tempR = finResult[0].emp_month_attendance_data || [];
 				let emp_month_attendance_data = tempR.find(f => f.ses_id == leave_session);
@@ -425,9 +417,9 @@ export class MyLeaveComponent implements OnInit {
 					console.log(item.leave_emp_detail.emp_id);
 					console.log('inputJson',inputJson);
 					console.log('approvedjson',approvedjson);
-					this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
+					this.erpCommonService.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
 						if (result) {
-							this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
+							this.erpCommonService.updateEmployee(approvedjson).subscribe((approved_result: any) => {
 								if (approved_result) {
 									this.common.showSuccessErrorMessage('Leave Request Canceled Successfully', 'success');
 									
@@ -446,258 +438,11 @@ export class MyLeaveComponent implements OnInit {
 			
 	}
 
-	approveConfirm(item) {
-		
+	approveConfirm(item) {		
 		console.log('item',item)
-		this.finalapprovedArray = [];
-		this.approvedArray = [];
-		var months = [
-			'', 'January', 'February', 'March', 'April', 'May',
-			'June', 'July', 'August', 'September',
-			'October', 'November', 'December'
-		];
-		let monthJson = {};
-		let employeeArrData = [];
-		let inputJson = {};
-		inputJson['leave_id'] = item.leave_id;
-		inputJson['leave_status'] = '1';
-		var current, previous;
-		for (const det of item.leave_request_schedule_data) {
-			current = new Date(det.date).getMonth() + 1;
-			if (current === previous) {
-				Object.keys(monthJson).forEach((key: any) => {
-					if (key === 'month_id' && Number(monthJson[key]) === Number(current)) {
-						monthJson['attendance_detail'].emp_leave_approved.leave_credit_count = Number(monthJson['attendance_detail'].emp_leave_approved.leave_credit_count) + 1;
-						monthJson['attendance_detail'].emp_leave_granted = Number(monthJson['attendance_detail'].emp_leave_granted) + 1;
-					}
-				});
-
-			} else {
-				monthJson = {
-					"month_id": current,
-					"month_name": months[Number(current)],
-					"attendance_detail": {
-						"emp_leave_approved": {
-							"leave_id": item.leave_type.leave_id,
-							"leave_name": item.leave_type.leave_name,
-							"leave_credit_count": 1
-						}
-					}
-
-				}
-				employeeArrData.push(monthJson);
-				previous = current;
-			}
-		}
-		if (employeeArrData.length > 0) {
-			var emp_login_id = item.leave_from ? item.leave_from : '';
-			this.common.getAllEmployee({ emp_login_id: emp_login_id }).subscribe((result: any) => {
-				var finResult = result ? result : []
-				const tempR = finResult[0].emp_month_attendance_data || [];
-				console.log('tempR',tempR);
-				console.log('this.session_id',this.session_id);
-				console.log('tempR',tempR);
-				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						console.log('lennngth',element.month_data.length)
-						let tempmonthdata:any[]=[];
-						element.month_data.forEach(element1 => {
-							console.log('element1',element1);
-							tempmonthdata.push(element1);
-						});
-
-						this.approvedArray.push(tempmonthdata);
-					}
-				});
-				//this.approvedArray.push(finResult[0].emp_month_attendance_data.month_data);
-				console.log('this.approvedArray',this.approvedArray);
-				console.log('this.employeeArrData',employeeArrData);
-				const approvedArraytemp:any[] = this.approvedArray[0] || [];
-				console.log('approvedArraytemp',approvedArraytemp);
-				console.log('approvedArraytemp.length',approvedArraytemp.length);
-				for (const dety of employeeArrData) {
-					
-					// const findex = approvedArraytemp.findIndex(e => Number(e.month_id) == Number(dety.month_id));
-					let findex = -1;
-					console.log('dety',dety);
-					console.log('approvedArraytemp.length',approvedArraytemp.length);;
-					// for (let index = 0; index < approvedArraytemp.length; index++) {
-					// 	const e = approvedArraytemp[index];
-					// 	console.log('e.month_id',e.month_id);
-					// 	console.log('dety.month_id',dety.month_id);
-					// 	if(e.month_id == dety.month_id) {
-					// 		findex = index;
-					// 	}
-					// }
-					let ind=0;
-					approvedArraytemp.forEach(e => {
-						console.log('e.month_id',e.month_id);
-						console.log('dety.month_id',dety.month_id);
-						if(e.month_id == dety.month_id) {
-							findex = ind;
-						}
-						ind++;
-					});
-					if(item.leave_half_day) {
-						dety.attendance_detail.emp_leave_approved.leave_credit_count = 0.5;					
-					}
-					console.log('findex',findex);
-					let leave_availed_ele = {
-						leave_id:dety.attendance_detail.emp_leave_approved.leave_id,
-						leave_name:dety.attendance_detail.emp_leave_approved.leave_name,
-						leave_value:dety.attendance_detail.emp_leave_approved.leave_credit_count
-					}
-					
-					console.log('leave_half_day',leave_availed_ele);
-					if (findex !== -1) {
-						console.log(' exist',findex);
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_approved) {
-						// 	if (Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_id) === Number(dety.attendance_detail.emp_leave_approved.leave_id)) {
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count =
-						// 			Number(approvedArraytemp[findex].attendance_detail.emp_leave_approved.leave_credit_count) +
-						// 			Number(dety.attendance_detail.emp_leave_approved.leave_credit_count);
-						// 	} else {
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_approved.push(dety.attendance_detail.emp_leave_approved);
-						// 	}
-
-						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_approved'] = dety.attendance_detail.emp_leave_approved;
-						// }
-
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_availed &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_availed.length > 0) {
-								let isLeaveTypeExist = 0;;
-								approvedArraytemp[findex].attendance_detail.emp_leave_availed.forEach(element => {
-									if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-										element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-										isLeaveTypeExist = 1;
-									}
-								});
-								if(isLeaveTypeExist == 0){
-									approvedArraytemp[findex].attendance_detail.emp_leave_availed.push(leave_availed_ele);
-								}
-						} else {
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed']=[];
-							approvedArraytemp[findex].attendance_detail['emp_leave_availed'].push(leave_availed_ele);
-						}
-
-						//emp_leave_granted is not in use ********** further can be used
-						approvedArraytemp[findex].attendance_detail['emp_leave_granted']=approvedArraytemp[findex].attendance_detail.emp_leave_availed;
-						// if (approvedArraytemp[findex].attendance_detail.emp_leave_granted &&
-						// 	approvedArraytemp[findex].attendance_detail.emp_leave_granted.length > 0) {
-						// 		let isLeaveTypeExist = 0;;
-						// 		approvedArraytemp[findex].attendance_detail.emp_leave_granted.forEach(element => {
-						// 			if(element.leave_id == dety.attendance_detail.emp_leave_approved.leave_id){
-						// 				element.leave_value += dety.attendance_detail.emp_leave_approved.leave_credit_count;
-						// 				isLeaveTypeExist = 1;
-						// 			}
-						// 		});
-						// 		if(isLeaveTypeExist == 0){
-						// 			approvedArraytemp[findex].attendance_detail.emp_leave_granted.push(leave_availed_ele);
-						// 		}
-						// } else {
-						// 	approvedArraytemp[findex].attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-						// }
-
-						// new code -- calculation for emp_balance_leaves
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
-						}
-					} else {
-						//dety.attendance_detail.emp_leave_availed = dety.attendance_detail.emp_leave_approved.leave_credit_count;
-						dety.attendance_detail['emp_leave_availed'] = [];
-						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
-						dety.attendance_detail['emp_leave_granted'] = [];
-						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
-								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
-									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
-									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
-								})
-						}
-						
-						approvedArraytemp.push(dety);
-					}
-				}
-				let isSessionExist = 0;
-				tempR.forEach(element => {
-					if(element.ses_id == this.session_id.ses_id){
-						element.month_data=approvedArraytemp;
-						isSessionExist = 1;
-					}
-				});
-				if(isSessionExist == 0){
-					tempR.push({
-						ses_id:this.session_id.ses_id,
-						leave_opening_balance:0,
-						month_data:approvedArraytemp
-					})
-				}
-				let approvedjson = {};
-				// approvedjson = {
-				// 	emp_id: item.leave_emp_detail.emp_id,
-				// 	emp_month_attendance_data: {
-				// 		month_data: approvedArraytemp
-				// 	}
-				// }
-				approvedjson = {
-					emp_id: item.leave_emp_detail.emp_id,
-					emp_month_attendance_data: tempR
-				}
-				console.log(item.leave_emp_detail.emp_id);
-				console.log('inputJson',inputJson);
-				console.log('approvedjson',approvedjson);
-				this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-					if (result) {
-						this.common.updateEmployee(approvedjson).subscribe((approved_result: any) => {
-							if (approved_result) {
-								this.common.showSuccessErrorMessage('Leave Request Approved Successfully', 'success');
-								this.showFormFlag = false;
-								this.getSubordinateLeave();
-							}
-						});
-					} else {
-						this.common.showSuccessErrorMessage('Error While Approve Leave Request', 'error');
-					}
-				});
-			});
-		}
-
-	}
-
-	rejectLeave(item) {
-		item.text = this.rejectMessage;
-		this.rejectModal.openModal(item);
-
 	}
 
 	rejectConfirm(item) {
-		let inputJson = {};
-		inputJson['leave_id'] = item.leave_id;
-		inputJson['leave_status'] = '2';
-		this.common.updateEmployeeLeaveData(inputJson).subscribe((result: any) => {
-			if (result) {
-				this.common.showSuccessErrorMessage('Leave Request Reject Successfully', 'success');
-				this.showFormFlag = false;
-				this.getSubordinateLeave();
-			} else {
-				this.common.showSuccessErrorMessage('Error While Reject Leave Request', 'error');
-			}
-		});
 	}
 
 	editLeave(item) {

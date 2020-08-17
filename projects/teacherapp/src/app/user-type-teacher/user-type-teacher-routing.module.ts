@@ -63,6 +63,10 @@ const routes: Routes = [
 			{ path: 'grade-master', loadChildren: 'projects/teacherapp/src/app/grade-master/grade-master.module#GradeMasterModule' },
 			{ path: 'communication', loadChildren: 'projects/teacherapp/src/app/teacher-messages/teacher-messages.module#TeacherMessagesModule' },
 			{ path: 'notification', component: NotificationPageComponent },
+			{
+				path: 'leave-management',
+				loadChildren: 'projects/teacherapp/src/app/leave-management/leave-management.module#LeaveManagementModule'
+			},
 		]
 	},
 ];
