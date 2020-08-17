@@ -718,6 +718,36 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateClosingBalance', value);
 	}
+	getAllEmployee(value) { 
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
+	}
+	getFilterData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/getFilterData', value);
+	}
+	getLeaveManagement() {
+		return this.http.get(environment.apiHRUrl + '/leave-management/getLeaveManagement');
+	}
+	getEmployeeLeaveData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/get', value);
+	}
+
+	insertEmployeeLeaveData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/insert', value);
+	}
+
+	updateEmployeeLeaveData(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee-leave-management/update', value);
+	}
+	updateEmployee(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiHRUrl + '/employee/update', value);
+	}
+	
 
 }
 
