@@ -1347,6 +1347,7 @@ export class SetupComponent implements OnInit {
             this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
                 if (result && result.status === 'ok') {
                     this.disabledApiButton = false;
+                    this.fasignatureForm = [];
                     this.commonService.showSuccessErrorMessage(result.message, result.status);
                     this.getGlobalSetting(this.currentGsetup);
                 } else {
