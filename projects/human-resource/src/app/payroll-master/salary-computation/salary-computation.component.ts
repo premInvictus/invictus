@@ -190,10 +190,10 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			for (var i = 0; i < result.length; i++) {
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component") {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash"))) {
 					this.chartsOfAccount.push(result[i]);
 				}
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && ((result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_payment" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") &&  (result[i]['coa_dependencies'][0]['dependency_local_id'] !== "ca-1") || result[i]['coa_dependencies'][0]['dependency_local_id'] === "ca-9"))) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && ((result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_payment" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") || result[i]['coa_dependencies'][0]['dependency_local_id'] === "ca-9")  &&  (result[i]['coa_dependencies'][0]['dependency_local_id'] !== "ca-1"))) {
 					this.paymentModeAccount.push(result[i]);
 				}
 			}
@@ -1432,14 +1432,15 @@ export class SalaryComputationComponent implements OnInit {
 
 	getVcName(vcData, voucherEntryArray, vcType1) {
 		console.log('jcalling getVCname');
-		let vcType = (vcType1 === 'jv') ? 'JV' : 'P';
-		// const vcTypeArr = vcType.split(" ");
-		// if (vcTypeArr.length > 0) {
-		// 	vcTypeArr.forEach(element => {
-		// 		vcType += element.substring(0, 1).toUpperCase();
-		// 	});
-		// }
-		//vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
+		//let vcType = (vcType1 === 'jv') ? 'JV' : 'P';
+		let tempVcType ='';
+		let vcTypeArr = vcType1.split(" ");
+		if (vcTypeArr.length > 0) {
+			vcTypeArr.forEach(element => {
+				tempVcType += element.substring(0, 1).toUpperCase();
+			});
+		}
+		let vcType = vcType1;
 		let currentSessionFirst = this.sessionName.split('-')[0];
 		let currentSessionSecond = this.sessionName.split('-')[1];
 		var nYear: any = '';
@@ -1459,14 +1460,14 @@ export class SalaryComputationComponent implements OnInit {
 		let vcMonth = monthNames[Number(month_id) - 1].substring(0, 3);
 		let vcYear = nYear;
 		let vcNumber = vcData.vc_code;
-		this.vcData = { vc_code: vcData.vc_code, vc_name: vcType + '/' + vcDay + '/' + vcMonth + '/' + vcYear + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
+		this.vcData = { vc_code: vcData.vc_code, vc_name: tempVcType + '/' + vcDay + '/' + vcMonth + '/' + vcYear + '/' + ((vcNumber.toString()).padStart(4, '0')), vc_date: nYear + '-' + (month_id).padStart(2, '0') + '-' + no_of_days, vc_month: monthNames[Number(month_id)] };
 		// console.log(voucherEntryArray, 'test');
 
 		console.log('vcData', vcData);
 		if (this.vcData) {
 			var fJson = {
 				vc_id: null,
-				vc_type: (vcType1 === 'jv') ? 'Journal Voucher' : 'Payment',
+				vc_type: vcType1,
 				vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
 				vc_date: this.vcData.vc_date,
 				vc_narrations: 'Salary Computation of Month ' + vcMonth,
@@ -1493,7 +1494,7 @@ export class SalaryComputationComponent implements OnInit {
 
 	getVoucherTypeMaxId(voucherEntryArray, vcType) {
 		let param: any = {};
-		param.vc_type = vcType == 'jv' ? this.currentVcType : 'Payment';
+		param.vc_type = vcType;
 		param.vc_date = this.currentYear + '-' + this.searchForm.value.month_id + '-01';
 		let flag = 0;
 		let result: any;
@@ -1612,7 +1613,7 @@ export class SalaryComputationComponent implements OnInit {
 			if (this.chartsOfAccount.length > 0) {
 				var voucherEntryArray = [];
 				var stTotal = 0;
-				console.log('this.chart', salaryDedArr);
+				console.log('this.chart', this.chartsOfAccount);
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 					// console.log(this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name']);
 					// if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary A/C') {
@@ -1636,6 +1637,7 @@ export class SalaryComputationComponent implements OnInit {
 					// 	}
 
 					// }
+					console.log('tetst--',this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'])
 					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
 						console.log('injd')
 						var salary_pay_total = 0;
@@ -1780,7 +1782,7 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 				}
-				this.getVoucherTypeMaxId(voucherEntryArray, 'jv');
+				this.getVoucherTypeMaxId(voucherEntryArray, 'Journal Voucher');
 
 			}
 
@@ -1795,24 +1797,46 @@ export class SalaryComputationComponent implements OnInit {
 
 			if (this.paymentModeAccount.length > 0) {
 				var paymentParticularData = [];
-
+				var cashPaymentParticularData = [];
 
 
 				// console.log('finJson salarycompute data==', finJson['emp_salary_compute_data'])
 				console.log('paymentModeAccount--',this.paymentModeAccount)
 				console.log('finJson',finJson['emp_salary_compute_data'])
 				var spTotal = 0;
+				var cpTotal = 0;
 				for (var i = 0; i < this.paymentModeAccount.length; i++) {
 					var amt_total = 0;
+					var cash_total = 0;
 					// console.log('dependancey_name===', this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])
 					for (var j = 0; j < finJson['emp_salary_compute_data'].length; j++) {
 						console.log(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']);
 						if (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data'] && finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length > 0) {
 							for (var k = 0; k < finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'].length; k++) {
 								// console.log(finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'], finJson['emp_salary_compute_data'][j]['emp_modes_data']['mode_data'][k]['pm_acc_name'] , this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
-								if ((finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name']+" Payment" == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])  || (finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name']+" Payment" == "Cash Paayment"))  {
+								if ((finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name']+" Payment" == this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name'])  )  {
 									amt_total = amt_total + Number(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
 									 console.log('amt_total--', amt_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+								}
+
+								if ((finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_acc_name']+" Payment" == "Cash Payment"))  {
+									cash_total = cash_total + Number(finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] ? finJson['emp_salary_compute_data'][j]['emp_salary_compute_data']['emp_modes_data']['mode_data'][k]['pm_value'] : 0);
+									cpTotal = cash_total;
+									 console.log('cash_total--', cash_total, this.paymentModeAccount[i]['coa_dependencies'][0]['dependency_name']);
+
+									 let vFormJson = {};
+									 vFormJson = {
+										vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
+										vc_account_type_id: this.paymentModeAccount[i]['coa_id'],
+										vc_particulars: this.paymentModeAccount[i]['coa_acc_name'] + 'salary distribution',
+										vc_grno: '',
+										vc_invoiceno: '',
+										vc_debit: '',
+										vc_credit: cash_total
+									};
+									spTotal = spTotal + cash_total;
+									cashPaymentParticularData.push(vFormJson);
+
 								}
 
 							}
@@ -1820,6 +1844,7 @@ export class SalaryComputationComponent implements OnInit {
 					}
 
 					let vFormJson = {};
+					console.log('opo--', this.paymentModeAccount[i]['coa_acc_name'])
 					if (this.paymentModeAccount[i]['coa_acc_name'] != 'Outstanding Salary A/c') {
 						vFormJson = {
 							vc_account_type: this.paymentModeAccount[i]['coa_acc_name'],
@@ -1837,7 +1862,7 @@ export class SalaryComputationComponent implements OnInit {
 				}
 				for (let i = 0; i < this.chartsOfAccount.length; i++) {
 
-					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable') {
+					if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'Salary Payable' && spTotal > 0) {
 						console.log('injd')
 
 
@@ -1853,10 +1878,15 @@ export class SalaryComputationComponent implements OnInit {
 						};
 						paymentParticularData.push(vFormJson);
 
+						cashPaymentParticularData.push(vFormJson);
+
 
 					}
 				}
-				this.getVoucherTypeMaxId(paymentParticularData, 'payment');
+				if (cpTotal > 0) {
+					this.getVoucherTypeMaxId(cashPaymentParticularData, 'Cash Payment');
+				}
+				this.getVoucherTypeMaxId(paymentParticularData, 'Bank Payment');
 
 			}
 			console.log('inputArr',inputArr);
