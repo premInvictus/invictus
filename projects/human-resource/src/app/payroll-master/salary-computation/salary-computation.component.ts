@@ -3455,7 +3455,7 @@ export class SalaryComputationComponent implements OnInit {
 		for (let j = 0; j < this.shdcolumns.length; j++) {
 			worksheet.getCell(this.alphabetJSON[k2 + j + 1] + gtRow).value =
 				this.SALARY_COMPUTE_ELEMENT.
-					map(f => Math.round(Number(f.empShdcolumns[j]['value']) * Number(f.emp_present_days) / this.nod)).reduce((acc, val) => acc + val);
+					map(f => Math.round(Number(f.empShdcolumns[j]['value']))).reduce((acc, val) => acc + val);
 			l2++;
 		}
 		worksheet.getCell(this.alphabetJSON[l2 + 1] + gtRow).value =
@@ -3513,7 +3513,7 @@ export class SalaryComputationComponent implements OnInit {
 			let l = k;
 			for (let j = 0; j < this.shdcolumns.length; j++) {
 				worksheet.getCell(this.alphabetJSON[k + j + 1] + this.length).value =
-					this.twoDecimalwithRound(Number(item.empShdcolumns[j]['value']) * Number(item.emp_present_days) / Number(this.nod));
+					this.twoDecimalwithRound(Number(item.empShdcolumns[j]['value']));
 				l++;
 			}
 			worksheet.getCell(this.alphabetJSON[l + 1] + this.length).value = this.twoDecimalwithRound(item.emp_modes_data.tds);
