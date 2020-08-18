@@ -237,11 +237,11 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.login_id = currentUser.login_id;
 		this.getScheduledExam();
-		this.viewMarkObtained();
-		this.correctQuestion();
-		this.incorrectQuestion();
-		this.skipQuestion();
-		this.viewReportTimeTaken();
+		// this.viewMarkObtained();
+		// this.correctQuestion();
+		// this.incorrectQuestion();
+		// this.skipQuestion();
+		// this.viewReportTimeTaken();
 		// jquery dependancy exist so currently commented
 		// $('body').addClass(this.bodyClasses);
 	}
@@ -270,6 +270,13 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 							this.onlyObjectiveFlag = false;
 						} else {
 							this.onlyObjectiveFlag = true;
+						}
+						if(this.examDetail.es_test_taker_report == 1){
+							this.viewMarkObtained();
+							this.correctQuestion();
+							this.incorrectQuestion();
+							this.skipQuestion();
+							this.viewReportTimeTaken();
 						}
 					}
 				}

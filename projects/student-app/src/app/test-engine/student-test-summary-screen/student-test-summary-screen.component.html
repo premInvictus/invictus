@@ -28,7 +28,7 @@
               <div *ngIf="!onlyObjectiveFlag">
                 <div class="row">
                   <div class="col-lg-12">
-                    <span class="congrats-message">Congragulations!
+                    <span class="congrats-message-test">Congragulations!
                       <span>
                         <img class="congrats-icon" src="/assets/images/congrats.gif">
                       </span>
@@ -42,10 +42,25 @@
                   </div>
                 </div>
               </div>
-              <div *ngIf="getTestSummaryDivStatus()">
+              <div class="row" *ngIf="(examDetail.es_test_taker_report != 1) && onlyObjectiveFlag">
+                <div class="col-lg-12">
+                  <span class="congrats-message-test">Congratulations!
+                    <span>
+                      <img class="congrats-icon" src="/assets/images/congrats.gif">
+                    </span>
+                    <br>
+                    <span>
+                      You have successfully submitted your test.
+                      <br>
+                      {{examDetail.es_message}}
+                    </span>
+                  </span>
+                </div>
+              </div>
+              <div *ngIf="getTestSummaryDivStatus() && (examDetail.es_test_taker_report == 1)">
                 <div class="row">
                   <div class="col-lg-12">
-                    <span class="congrats-message">Congratulations!
+                    <span class="congrats-message-test">Congratulations!
                       <span>
                         <img class="congrats-icon" src="/assets/images/congrats.gif">
                       </span>
@@ -60,7 +75,7 @@
                 </div>
                 <br>
                 <br>
-                <div class="row" *ngIf="examDetail.es_test_taker_report == 1">
+                <div class="row">
                   <div class="col-lg-12 remove-col-modal-padding">
                     <div class="row">
                       <div class="col-lg-4 fin-tab-col-33">
@@ -189,7 +204,7 @@
                   </div>
                 </div>
                 <br>
-                <div class="row" *ngIf="examDetail.es_test_taker_report == 1">
+                <div class="row">
                   <div class="col-lg-12">
                     <div class="row">
                       <div class="col-lg-6 fin-tab-col-50">
@@ -311,7 +326,7 @@
               <br>
               <div class="row">
                 <div class="col-lg-12">
-                  <button mat-button class="reset-button" (click)="closeResult()"> Close Result</button>
+                  <button mat-button class="reset-button" (click)="closeResult()"> Close</button>
                 </div>
               </div>
             </div>
@@ -367,7 +382,7 @@
             <br>
             <div class="row">
               <div class="col-12">
-                <button mat-button class="reset-button-mobb" (click)="closeResult()"> Close Result</button>
+                <button mat-button class="reset-button-mobb" (click)="closeResult()"> Close</button>
               </div>
             </div>
             <br>
@@ -612,7 +627,7 @@
             <br>
             <div class="row">
               <div class="col-12">
-                <button mat-button class="reset-button-mobb" (click)="closeResult()"> Close Result</button>
+                <button mat-button class="reset-button-mobb" (click)="closeResult()"> Close</button>
               </div>
             </div>
           </div>
