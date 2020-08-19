@@ -58,11 +58,17 @@ canvas{
     height: 120px;
 }
 
-.congrats-message {
+/* .congrats-message {
     font-style: italic;
     color: #04CDE4;
     font-size: 14px;
     font-weight: 500;
+} */
+.congrats-message-test {
+    font-style: italic !important;
+    color: green !important;
+    font-size: 18px !important;
+    font-weight: 500 !important;
 }
 
 .congrats-icon {
