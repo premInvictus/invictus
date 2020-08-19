@@ -75,7 +75,7 @@
       <div class="landscape-style5" style="position: relative;">
          <ngx-barcode bc-element-type="img" [bc-value]="'000' + studentDetails.emp_id" bc-format="CODE128"
             bc-background="transparent"></ngx-barcode>
-         <span class="empid-bar-code-span-ls">Emp Id: {{'000' + studentDetails.emp_id}}</span>
+         <span class="empid-bar-code-span-ls">Emp Id: {{'000' + studentDetails.emp_code_no}}</span>
       </div>
       <!-- <img [src]="idCardConfig.ps_watermark_image ? 
 idCardConfig.ps_watermark_image: ''" class="watermark-image"> -->
@@ -122,7 +122,7 @@ idCardConfig.ps_watermark_image: ''" class="watermark-image"> -->
                         </tr>
                         <tr>
                            <td width="100%" align="center">
-                              <span style="font-size: 10px;"><b>Emp Id: {{'000' + studentDetails.emp_id}}</b></span>
+                              <span style="font-size: 10px;"><b>Emp Id: {{'000' + studentDetails.emp_code_no}}</b></span>
                               <div class="potrait-style5">
                                  <ngx-barcode bc-element-type="img" [bc-value]="'000' + studentDetails.emp_id"
                                     bc-format="CODE128" bc-background="transparent"></ngx-barcode>
