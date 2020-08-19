@@ -58,6 +58,24 @@
                                     <br>
                                 </div>
                             </mat-tab>
+                            <mat-tab>
+                                <ng-template mat-tab-label>
+                                    <div class="tab-show-on-click" (click)="setDivId(8)">
+                                        <span>Subjectwise Score Card</span>
+                                    </div>
+                                </ng-template>
+                                <div *ngSwitchCase="8">
+
+                                    <div class="row">
+                                        <div class="col-lg-12 remove-col-modal-padding">
+                                            <div class="report-tab-content">
+                                                <app-subjectwise-score-card></app-subjectwise-score-card>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                            </mat-tab>
 
                             <mat-tab>
                                 <ng-template mat-tab-label>

@@ -499,7 +499,9 @@ export class JeeMainsComponent implements OnInit {
 					}
 				}
 			} else {
-				this.router.navigate(['/login']);
+				if(this.examDetail.es_stop_examination == 1){
+					this.router.navigate(['/login']);
+				}
 			}
 		}
 	}

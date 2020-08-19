@@ -18,6 +18,7 @@ import { LoadingModule } from 'ngx-loading';
 import { GaugeModule } from 'angular-gauge';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { TooltipModule } from 'ngx-bootstrap';
+import { SubjectwiseScoreCardComponent } from './subjectwise-score-card/subjectwise-score-card.component';
 
 @NgModule({
 	imports: [
@@ -38,6 +39,7 @@ import { TooltipModule } from 'ngx-bootstrap';
 		TeacherResponseDistributionComponent, TeacherReportQuesReviewComponent,
 		TeacherTestReportComponent, TeacherReportAnalysisComponent,
 		IndividualStudentReportComponent,
+		SubjectwiseScoreCardComponent,
 	]
 })
 export class TestReportsModule { }
