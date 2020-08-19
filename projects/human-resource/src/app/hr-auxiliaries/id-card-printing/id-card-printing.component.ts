@@ -112,7 +112,7 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 	getCode() {
 		this.studentDetailsArray = [];
 		if (this.barCodePrintForm.value.emp_id) {
-		  let inputJson = { 'filters': [{ 'filter_type': 'emp_id', 'filter_value': this.barCodePrintForm.value.emp_id, 'type': 'text' }]};
+		  let inputJson = { 'filters': [{ 'filter_type': 'emp_code_no', 'filter_value': this.barCodePrintForm.value.emp_id, 'type': 'text' }]};
 		  this.commonApiService.getFilterData(inputJson).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				for (const item of res.data) {
