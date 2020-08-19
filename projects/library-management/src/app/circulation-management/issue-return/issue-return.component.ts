@@ -204,11 +204,12 @@ export class IssueReturnComponent implements OnInit {
 				});
 			} else if (au_role_id === '3') {
 				// tslint:disable-next-line: max-line-length
-				this.erpCommonService.getEmployeeDetail({ emp_id: Number(this.searchForm.value.searchId),emp_login_id: { $ne: '' } }).subscribe((result: any) => {
+				this.erpCommonService.getEmployeeDetail({ emp_code_no: Number(this.searchForm.value.searchId),emp_login_id: { $ne: '' } }).subscribe((result: any) => {
 					if (result) {
 						console.log('result--', result);
 						var resultJson = {
-							emp_id : result.emp_id,							
+							emp_id : result.emp_id,
+							emp_code_no: result.emp_code_no,							
 							au_login_id: result.emp_login_id,							
 							au_role_id: 3,
 							au_full_name: result.emp_name,
