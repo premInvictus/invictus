@@ -480,28 +480,27 @@ export class JeeMainsComponent implements OnInit {
 			}
 		}
 		if (keyFlag) {
-			if (this.restrictedKeysCount < 4) {
-				if (confirm('Are you sure you want to exit test') === true) {
-					this.router.navigate(['/login']);
-				} else {
-					if (this.socketService.checkSocketConnection()) {
-						if (this.currentUser) {
-							const userDetail = {
-								examId: this.examDetail.es_id,
-								userId: this.currentUser.login_id,
-								paperId: this.examDetail.es_qp_id,
-								schoolId: this.currentUser.Prefix,
-								userType: this.currentUser.role_id
-							};
-							userDetail['action'] = appConfig.testOngoingCode;
-							this.socketService.sendUserTestActionDetail(userDetail);
-						}
+			if (this.restrictedKeysCount < 4) {				
+				alert("You have entered restricted key");
+				if (this.socketService.checkSocketConnection()) {
+					if (this.currentUser) {
+						const userDetail = {
+							examId: this.examDetail.es_id,
+							userId: this.currentUser.login_id,
+							paperId: this.examDetail.es_qp_id,
+							schoolId: this.currentUser.Prefix,
+							userType: this.currentUser.role_id
+						};
+						userDetail['action'] = appConfig.testOngoingCode;
+						this.socketService.sendUserTestActionDetail(userDetail);
 					}
 				}
 			} else {
 				if(this.examDetail.es_stop_examination == 1){
 					this.router.navigate(['/login']);
-				}
+				} else {
+					alert("You have entered restricted key");
+				}				
 			}
 		}
 	}

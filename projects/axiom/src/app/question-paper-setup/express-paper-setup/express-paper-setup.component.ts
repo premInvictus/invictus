@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Inject, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Inject, AfterViewChecked, OnDestroy } from '@angular/core';
 import { MatPaginator, MatTableDataSource, MatSort, MatTabGroup } from '@angular/material';
 import { QbankService } from '../../questionbank/service/qbank.service';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { HtmlToTextService, NotificationService, BreadCrumbService } from '../../_services/index';
+import { HtmlToTextService, NotificationService } from '../../_services/index';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+//import { BsModalService } from 'ngx-bootstrap/modal';
 import { Element, QUESTIONElement, ReviewElement, ESSAYQUESTIONElement } from './express-paper-setup.model';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Observable } from 'rxjs';
 import { AddInstructionComponent } from '../../shared-module/add-instruction/add-instruction.component';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-import { style, state, animate, transition, trigger } from '@angular/animations';
-import { Http } from '@angular/http';
+import { MatDialog, MatDialogRef } from '@angular/material';
+//import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+import { style, animate, transition, trigger } from '@angular/animations';
+//import { Http } from '@angular/http';
 import {tabJSON} from './express-tab-data';
 @Component({
 	selector: 'app-express-paper-setup',
@@ -31,7 +30,7 @@ import {tabJSON} from './express-tab-data';
 		])
 	]
 })
-export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterViewChecked,OnDestroy {
 
 	express_form_one: FormGroup;
 	express_form_two: FormGroup;
@@ -197,6 +196,61 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			this.dataSource.data.forEach(row => this.selection.select(row));
 	}
 
+	ngOnDestroy(){
+		this.express_form_one=null;
+		this.express_form_two=null;
+		this.instruction_form=null;
+		this.classArray=null;
+		this.sectionArray=null;
+		this.subjectArray=null;
+		this.topicArray=null;
+		this.subtopicArray=null;
+		this.templates=null;
+		this.stitems=null;
+		this.templateArray=null;
+		this.instructionArray=null;
+		this.filtersArray=null;
+		this.selectedQuestionIndex=null;
+		this.answerReview=null;
+		this.selectedSubArray =null;
+		this.currentSelectedSubTab=null;
+		this.templateStarray=null;
+		this.qstfilterArray =null;
+		this.tabkeyvalue = null;
+		this.allTabSelectedQuestion=null;
+		this.arrayTabSelectedQuestion =null;
+		this.allTabQuestions=null;
+		this.arrayTabQuestions =null;
+		this.finalQuestionArray=null;
+		this.reviewQuestionArray=null;
+		this.selectedQuestionIndexArray=null;
+		this.questionsArray=null;
+		this.papermarksArray=null;
+		this.noquestion=null;
+		this.papertimeArray=null;
+		this.ELEMENT_DATA=null;
+		this.QUESTION_ELEMENT_DATA=null;
+		this.ESSAYQUESTION_ELEMENT_DATA=null;
+		this.REVIEW_ELEMENT_DATA=null;
+		this.questionDatasource =null;
+		this.essayquestionDatasource =null;
+		this.dataSource =null;
+		this.reviewdatasource=null;
+		this.selection=null;
+		this.tabs=null;
+		this.dialogRef=null;
+		this.validInstruction=null;
+
+		this.fbuild=null;
+		this.qbankService=null;
+		this.qelementService=null;
+		this.route=null;
+		this.router=null;
+		this.htt=null;
+		this.notif=null;
+		this.dialog=null;
+	}
+
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator2;
 		this.dataSource.sort = this.sort2;
@@ -232,15 +286,11 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		private fbuild: FormBuilder,
 		private qbankService: QbankService,
 		private qelementService: QelementService,
-		private fb: FormBuilder,
 		private route: ActivatedRoute,
 		private router: Router,
 		private htt: HtmlToTextService,
 		private notif: NotificationService,
-		public dialog: MatDialog,
-		private breadCrumbService: BreadCrumbService,
-
-
+		public dialog: MatDialog
 	) {
 		this.tabs = tabJSON.express;
 	}
@@ -348,7 +398,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	buildForm() {
-		this.express_form_one = this.fb.group({
+		this.express_form_one = this.fbuild.group({
 			qp_qm_id: '',
 			qp_name: '',
 			qp_class_id: '',
@@ -363,7 +413,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			filters: [],
 			qlist: []
 		});
-		this.express_form_two = this.fb.group({
+		this.express_form_two = this.fbuild.group({
 			qp_ssub_id: '',
 			qp_topic_id: '',
 			qp_st_id: ''
