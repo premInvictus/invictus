@@ -239,6 +239,20 @@ export class ReportService {
 				this.loaderService.startLoading();
 				return this._http.post(environment.apiAxiomUrl + '/report/testReportOverview', param);
 		}
+
+		testReportOverviewSubject(value) {
+			const param: any = {};
+
+			if (value.es_id) {
+					param.es_id = value.es_id;
+			}
+			if (value.qus_id) {
+					param.qus_id = value.qus_id;
+			}
+			this.loaderService.startLoading();
+			return this._http.post(environment.apiAxiomUrl + '/report/testReportOverviewSubject', param);
+		}
+		
 		classHighest(value) {
 				const param: any = {};
 
