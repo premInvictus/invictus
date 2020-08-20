@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject,Input,OnChanges } from '@angular/core';
+import { Component, OnInit, Inject,Input,OnChanges,ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { SisService, CommonAPIService, SmartService, FaService } from '../../_services';
@@ -6,7 +6,8 @@ import { forEach } from '@angular/router/src/utils/collection';
 import {VoucherModalComponent} from '../voucher-modal/voucher-modal.component';
 import * as Excel from 'exceljs/dist/exceljs';
 import * as XLSX from 'xlsx';
-const jspdf = require('jspdf');
+// const jspdf = require('jspdf');
+const jsPDF = require('jspdf');
 import html2canvas from 'html2canvas';
 import 'jspdf-autotable';
 import { TitleCasePipe, DatePipe } from '@angular/common';
@@ -37,7 +38,11 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
 	];
   @Input() param: any;
   closingDate:any;
+  showExcel= false;
   partialPaymentStatus = 1;
+  @ViewChildren('tablecmp') tablecmp:QueryList<ElementRef>;
+  @ViewChildren('tablecmp1') tablecmp1:QueryList<ElementRef>;
+  @ViewChildren('dummydiv') dummydiv:QueryList<ElementRef>;
   constructor(
     public dialogRef: MatDialogRef<LedgerEntryModelComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -241,121 +246,135 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
 					}
 				});
   }
-  downloadPdf() {
-    var data = document.getElementById('ledger_log');  
-    html2canvas(data).then(canvas => {  
-      // Few necessary setting options  
-      var imgWidth = 260;   
-      var pageHeight = 295;    
-      var imgHeight = (canvas.height * imgWidth / canvas.width);  
-      var heightLeft = imgHeight;  
+  // downloadPdf() {
+  //   var data = document.getElementById('tablepdf');  
+  //   html2canvas(data).then(canvas => {  
+  //     // Few necessary setting options  
+  //     var imgWidth = 260;   
+  //     var pageHeight = 295;    
+  //     var imgHeight = (canvas.height * imgWidth / canvas.width);  
+  //     var heightLeft = imgHeight;  
   
-      const contentDataURL = canvas.toDataURL('image/png')  
-      let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF  
-      var position = 0;  
-      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)  
-      pdf.save('MYPdf.pdf'); // Generated PDF   
-    });  
+  //     const contentDataURL = canvas.toDataURL('image/png')  
+  //     let pdf = new jspdf('p', 'mm', 'a4'); // A4 size page of PDF  
+  //     var position = 0;  
+  //     pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight)  
+  //     pdf.save('MYPdf.pdf'); // Generated PDF   
+  //   });  
+  // }
+
+  downloadExcel(index) {
+    this.showExcel= true;
+    this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp.toArray()[0].nativeElement);
+    this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp1.toArray()[0].nativeElement);
+    
+    
+    const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(this.dummydiv.toArray()[0].nativeElement);
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    
+    /* save to file */
+    XLSX.writeFile(wb, 'SheetJS.xlsx');
+    this.showExcel= false;
   }
   
-  // downloadPdf() {
-	// 	this.showPdf = true;
-	// 	const doc = new jsPDF('landscape');
+  downloadPdf(accountName) {
+		this.showPdf = true;
+		const doc = new jsPDF('landscape');
 
-	// 	doc.autoTable({
-	// 		head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-	// 		didDrawPage: function (data) {
-	// 			doc.setFont('Roboto');
-	// 		},
-	// 		headerStyles: {
-	// 			fontStyle: 'bold',
-	// 			fillColor: '#ffffff',
-	// 			textColor: 'black',
-	// 			halign: 'center',
-	// 			fontSize: 12,
-	// 		},
-	// 		useCss: true,
-	// 		theme: 'striped'
-	// 	});
+		doc.autoTable({
+			head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 12,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
 
-	// 	doc.autoTable({
-	// 		head: [[
-	// 			new TitleCasePipe().transform('Ledger For The Month Of '
-	// 			)
-	// 		]],
-	// 		didDrawPage: function (data) {
-	// 			doc.setFont('Roboto');
-	// 		},
-	// 		headerStyles: {
-	// 			fontStyle: 'bold',
-	// 			fillColor: '#ffffff',
-	// 			textColor: 'black',
-	// 			halign: 'center',
-	// 			fontSize: 10,
-	// 		},
-	// 		useCss: true,
-	// 		theme: 'striped'
-	// 	});
+		doc.autoTable({
+			head: [[
+				new TitleCasePipe().transform(accountName)
+			]],
+			didDrawPage: function (data) {
+				doc.setFont('Roboto');
+			},
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 10,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
 
-	// 	doc.autoTable({
-	// 		html: '.ledger_log',
-	// 		headerStyles: {
-	// 			fontStyle: 'normal',
-	// 			fillColor: '#ffffff',
-	// 			textColor: 'black',
-	// 			halign: 'center',
-	// 			fontSize: 9,
-	// 		},
-	// 		useCss: true,
-	// 		styles: {
-	// 			fontSize: 9,
-	// 			cellWidth: 'auto',
-	// 			textColor: 'black',
-	// 			lineColor: '#89A8C9',
-	// 		},
-	// 		theme: 'grid'
-	// 	});
+		doc.autoTable({
+			html: '#tablepdf',
+			headerStyles: {
+				fontStyle: 'normal',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'center',
+				fontSize: 9,
+			},
+			useCss: true,
+			styles: {
+				fontSize: 9,
+				cellWidth: 'auto',
+				textColor: 'black',
+				lineColor: '#89A8C9',
+			},
+			theme: 'grid'
+		});
 
-	// 	// doc.autoTable({
-	// 	// 	head: [['Report Generated By : ' + this.currentUser.full_name]],
-	// 	// 	didDrawPage: function (data) {
-	// 	// 		doc.setFont('Roboto');
-	// 	// 	},
-	// 	// 	headerStyles: {
-	// 	// 		fontStyle: 'bold',
-	// 	// 		fillColor: '#ffffff',
-	// 	// 		textColor: 'black',
-	// 	// 		halign: 'left',
-	// 	// 		fontSize: 10,
-	// 	// 	},
-	// 	// 	useCss: true,
-	// 	// 	theme: 'striped'
-	// 	// });
-	// 	doc.autoTable({
-	// 		// head: [['No. of Records : ' + this.employeeData.length]],
-	// 		// didDrawPage: function (data) {
-	// 		// 	doc.setFont('Roboto');
-	// 		// },
-	// 		headerStyles: {
-	// 			fontStyle: 'bold',
-	// 			fillColor: '#ffffff',
-	// 			textColor: 'black',
-	// 			halign: 'left',
-	// 			fontSize: 10,
-	// 		},
-	// 		useCss: true,
-	// 		theme: 'striped'
-	// 	});
-	// 	// doc.save('table.pdf');
+		// doc.autoTable({
+		// 	head: [['Report Generated By : ' + this.currentUser.full_name]],
+		// 	didDrawPage: function (data) {
+		// 		doc.setFont('Roboto');
+		// 	},
+		// 	headerStyles: {
+		// 		fontStyle: 'bold',
+		// 		fillColor: '#ffffff',
+		// 		textColor: 'black',
+		// 		halign: 'left',
+		// 		fontSize: 10,
+		// 	},
+		// 	useCss: true,
+		// 	theme: 'striped'
+		// });
+		doc.autoTable({
+			// head: [['No. of Records : ' + this.employeeData.length]],
+			// didDrawPage: function (data) {
+			// 	doc.setFont('Roboto');
+			// },
+			headerStyles: {
+				fontStyle: 'bold',
+				fillColor: '#ffffff',
+				textColor: 'black',
+				halign: 'left',
+				fontSize: 10,
+			},
+			useCss: true,
+			theme: 'striped'
+		});
+		// doc.save('table.pdf');
 
-	// 	// const doc = new jsPDF('landscape');
-	// 	// doc.setFont('helvetica');
-	// 	// doc.setFontSize(5);
-	// 	// doc.autoTable({ html: '#book_log' });
+		// const doc = new jsPDF('landscape');
+		// doc.setFont('helvetica');
+		// doc.setFontSize(5);
+		// doc.autoTable({ html: '#book_log' });
 
-	// 	doc.save('FinancialLedgerCompute_' +(new Date).getTime() + '.pdf');
-	// 	this.showPdf = false;
-  // }
+		doc.save('FinancialLedgerCompute_' +(new Date).getTime() + '.pdf');
+		this.showPdf = false;
+  }
   
 
   getMonthWithYear() {
