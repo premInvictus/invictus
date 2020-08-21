@@ -164,7 +164,7 @@
                                            <!--Score Column-->subjectArray
                                            <ng-container *ngFor="let sub of subjectArray" [matColumnDef]="'sub'+sub.qus_sub_id">
                                             <th *matHeaderCellDef mat-sort-header><b>{{sub.sub_name}}</b></th>
-                                            <td *matCellDef="let item">{{getSubjectScore(item.loginid,sub.qus_sub_id)}}</td>
+                                            <td *matCellDef="let item">{{getSubjectScore(item.login_id,sub.qus_sub_id)}}</td>
                                           </ng-container>
                                         <!--Percentage Column-->
                                           <!--Score Column-->

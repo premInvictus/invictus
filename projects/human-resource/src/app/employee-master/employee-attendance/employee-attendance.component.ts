@@ -490,7 +490,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				if (emp_month_attendance_data && emp_month_attendance_data['month_data'] && emp_month_attendance_data['month_data'].length > 0) {
 					let tempmonthdata = emp_month_attendance_data['month_data'].find(f => f.month_id == this.searchForm.value.month_id);
 					
-					if (tempmonthdata.attendance_detail.emp_leave_credited &&
+					if (tempmonthdata && tempmonthdata.attendance_detail.emp_leave_credited &&
 						tempmonthdata.attendance_detail.emp_leave_credited.length > 0) {
 							emp_leave_credited = tempmonthdata.attendance_detail.emp_leave_credited;
 							emp_balance_leaves = JSON.parse(JSON.stringify(tempmonthdata.attendance_detail.emp_leave_credited));
@@ -561,13 +561,13 @@ export class EmployeeAttendanceComponent implements OnInit {
 			});
 			console.log('filterArr',filterArr);
 			this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
-				if (result && result.status === 'ok') {
+				if (result) {
 					this.getEmployeeDetail();
 					this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 				} else {
 					this.getEmployeeDetail();
-					this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-					//this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
+					//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 				}
 			});
 
@@ -694,15 +694,15 @@ export class EmployeeAttendanceComponent implements OnInit {
 		}
 		console.log('filterArr',filterArr);
 		this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
+			if (result) {
 				this.disabledApiButton = false;
 				this.getEmployeeDetail();
 				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 			} else {
 				this.disabledApiButton = false;
 				this.getEmployeeDetail();
-				this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-				//this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
+				//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 			}
 		});
 	}

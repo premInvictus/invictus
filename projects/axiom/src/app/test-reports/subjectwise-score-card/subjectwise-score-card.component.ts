@@ -190,7 +190,10 @@ export class SubjectwiseScoreCardComponent implements OnInit {
 		popupWin.document.close();
   }
   getSubjectScore(login_id,qus_sub_id) {
-    const temp = this.subject_reportArray.find(e => e.eva_login_id == login_id && e.qus_sub_id == qus_sub_id);
+	console.log('login_id',login_id);
+	console.log('qus_sub_id',qus_sub_id);
+	const temp = this.subject_reportArray.find(e => e.eva_login_id == login_id && e.qus_sub_id == qus_sub_id);
+	console.log('getSubjectScore',temp);
     if(temp){
       return temp.score
     }
@@ -237,7 +240,8 @@ export class SubjectwiseScoreCardComponent implements OnInit {
 							skip: item.skip,
 							score: item.score,
 							percentage: '',
-							cutoff: ''
+							cutoff: '',
+							login_id:item.eva_login_id
 						});
 						ind++;
 					}
@@ -433,4 +437,5 @@ export interface ReportElement {
 	skip: any;
 	score: number;
 	loginid: any;
+	login_id:any
 }
