@@ -1825,7 +1825,7 @@ export class SalaryComputationComponent implements OnInit {
 										vc_debit: '',
 										vc_credit: cash_total
 									};
-									spTotal = spTotal + cash_total;
+									//spTotal = spTotal + cash_total;
 									cashPaymentParticularData.push(vFormJson);
 
 								}
@@ -1869,12 +1869,36 @@ export class SalaryComputationComponent implements OnInit {
 						};
 						paymentParticularData.push(vFormJson);
 
-						cashPaymentParticularData.push(vFormJson);
+						let vFormJson1 = {};
+						vFormJson1 = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary payable',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: cpTotal,
+							vc_credit: 0
+						};
+
+						cashPaymentParticularData.push(vFormJson1);
 
 
 					}
 				}
 				if (cpTotal > 0) {
+					let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.chartsOfAccount[i]['coa_acc_name'],
+							vc_account_type_id: this.chartsOfAccount[i]['coa_id'],
+							vc_particulars: 'salary payable',
+							vc_grno: '',
+							vc_invoiceno: '',
+							vc_debit: cpTotal,
+							vc_credit: 0
+						};
+						paymentParticularData.push(vFormJson);
+
+						cashPaymentParticularData.push(vFormJson);
 					this.getVoucherTypeMaxId(cashPaymentParticularData, 'Cash Payment');
 				}
 				this.getVoucherTypeMaxId(paymentParticularData, 'Bank Payment');

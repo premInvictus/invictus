@@ -6,13 +6,27 @@
             <span class="font-size-24">Chart Of Accounts</span>
           </div>
           <div class="col-6 remove-col-padding-right text-right">
-            <button *ngIf="isExistUserAccessMenu('731')" style="background-color: #bdc2c9 !important;"
+            <!-- <button *ngIf="isExistUserAccessMenu('731')" style="background-color: #bdc2c9 !important;"
               mat-button
               class="btn-success-purple text-capitalize m-l-10"
               (click)="openDialog()"
             >
               Bulk Uplaod
-            </button>&nbsp;&nbsp;
+            </button>&nbsp;&nbsp; -->
+            <!-- <button  style="background-color: #bdc2c9 !important;"
+              mat-button
+              class="btn-success-purple text-capitalize m-l-10"
+              (click)="openDialog()"
+            >
+              Bulk Uplaod
+            </button> -->
+            <button ngIf="isExistUserAccessMenu('726')"  style="background-color: #1e88e5 !important;"
+              mat-button
+              class="btn-success-purple text-capitalize m-l-10"
+              (click)="openCreateModal()"
+            >
+              Create New
+            </button>
             <!-- <button *ngIf="isExistUserAccessMenu('726')" style="background-color: #1e88e5 !important;"
               mat-button
               class="btn-success-purple text-capitalize m-l-10"
@@ -20,13 +34,6 @@
             >
               Create New
             </button> -->
-            <button *ngIf="isExistUserAccessMenu('726')" style="background-color: #1e88e5 !important;"
-              mat-button
-              class="btn-success-purple text-capitalize m-l-10"
-              (click)="openCreateModal()"
-            >
-              Create New
-            </button>
           </div>
         </div>
       </mat-card>
