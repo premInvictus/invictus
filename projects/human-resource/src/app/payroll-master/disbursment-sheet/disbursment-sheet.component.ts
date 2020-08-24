@@ -311,8 +311,11 @@ export class DisbursmentSheetComponent implements OnInit {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0);
 	}
 	paymentmodeGT(index) {
-		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + (
-			Math.round(Number(b.emp_modes_data.mode_data[index]['pm_value'])) || 0), 0);
+		// return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + (
+		// 	Math.round(Number(b.emp_modes_data.mode_data[index]['pm_value'])) || 0), 0);
+		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a +
+			(b['emp_modes_data']['mode_data'][index] ? Math.round(Number(b['emp_modes_data']['mode_data'][index]['pm_value']
+				|| 0)) : 0), 0);
 	}
 	totalGT() {
 		return this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total || 0), 0);
