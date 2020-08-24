@@ -559,6 +559,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.notif.stopLoading();
 				}
 			};
+		} else {
+			this.notif.stopLoading();
 		}
 		document.getElementById('isbn_id').blur();
 	}
@@ -718,6 +720,8 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					this.disableApiCall = false;
 				}
 			});
+		} else {
+			this.disableApiCall = false;
 		}
 	}
 	fetchData(event?: PageEvent) {
