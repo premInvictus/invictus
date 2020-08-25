@@ -380,9 +380,11 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		this.qelementService.getQuestionPaper({ qp_id: qp_id, qp_qm_id: qp_qm_id, qp_status: qp_status }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
-					const sub_arr = this.templateArray[0].tp_sub_id.replace(' ','').split(',');
-					const st_arr = this.templateArray[0].tp_st_id.replace(' ','').split(',');
+					
 					this.templateArray = result.data;
+
+					const sub_arr = this.templateArray[0].tp_sub_id.replace(/ /g,'').split(',');
+					const st_arr = this.templateArray[0].tp_st_id.replace(/ /g,'').split(',');
 					this.express_form_one.controls.qp_name.setValue(this.templateArray[0].qp_name);
 					this.express_form_one.controls.qp_class_id.setValue(this.templateArray[0].qp_class_id);
 					this.getSectionsByClass();
@@ -390,9 +392,14 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					this.express_form_one.controls.qp_sec_id.setValue(this.templateArray[0].qp_sec_id);
 					this.express_form_one.controls.qp_sub_id.setValue(sub_arr);
 					//this.getTopicByClassSubject();
-					this.express_form_one.controls.qp_qcount.setValue(this.templateArray[0].tp_qus_count);
-					this.express_form_one.controls.qp_marks.setValue(this.templateArray[0].tp_marks);
-					this.express_form_one.controls.qp_time_alloted.setValue(this.templateArray[0].tp_time_alloted);
+					//this.setSelectedSubject();
+					this.express_form_one.controls.qp_qcount.setValue(Number(this.templateArray[0].tp_qus_count));
+					this.express_form_one.controls.qp_marks.setValue(Number(this.templateArray[0].tp_marks));
+					this.express_form_one.controls.qp_time_alloted.setValue(Number(this.templateArray[0].tp_time_alloted));
+					this.express_form_one.controls.tp_ti_id.setValue(this.templateArray[0].tp_ti_id);
+					this.instruction_form.patchValue(
+						{'ti_id': this.templateArray[0].tp_ti_id}
+					);
 					this.templates = this.templateArray[0].filter;
 					this.editTemplateFlag = true;
 					this.leftmarks = 0;
@@ -503,13 +510,12 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	getSubjectsByClass(): void {
-
+		this.subjectArray = [];
 		this.qelementService.getSubjectsByClass(this.express_form_one.value.qp_class_id).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
-				} else {
-					this.subjectArray = [];
+					this.setSelectedSubject();
 				}
 			}
 		);
@@ -588,6 +594,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	async updateQuestionList(stlist) {
+		console.log('stlist',stlist);
 		this.templateStarray=[];
 		this.ELEMENT_DATA = [];
 		this.templateStarray.push(stlist);
@@ -613,6 +620,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 							action: template, 
 							subid: (this.templateStarray[this.templateStarray.length - 1][i]).toString()
 						});
+						console.log('template',template);
 						this.templates.push(template);
 						this.stitems.push((this.templateStarray[this.templateStarray.length - 1][i]).toString());
 						this.filtersArray.push({
