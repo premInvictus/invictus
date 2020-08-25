@@ -181,7 +181,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	@ViewChild(MatSort) sort4: MatSort;
 	@ViewChild('staticTabs') staticTabs: MatTabGroup;
 	validInstruction: any;
-
+	qp_id:any;
+	updateExamFlag:any
 
 	isAllSelected() {
 		const numSelected = this.selection.selected.length;
@@ -368,6 +369,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	getQueryParams() {
 		if (this.route.snapshot.queryParamMap.get('qp_id')) {
 			const qp_id = this.route.snapshot.queryParamMap.get('qp_id');
+			this.qp_id = this.route.snapshot.queryParamMap.get('qp_id');
 			this.getQuestionPaper(qp_id);
 		}
 	}
@@ -378,20 +380,23 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		this.qelementService.getQuestionPaper({ qp_id: qp_id, qp_qm_id: qp_qm_id, qp_status: qp_status }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
+					const sub_arr = this.templateArray[0].tp_sub_id.replace(' ','').split(',');
+					const st_arr = this.templateArray[0].tp_st_id.replace(' ','').split(',');
 					this.templateArray = result.data;
 					this.express_form_one.controls.qp_name.setValue(this.templateArray[0].qp_name);
 					this.express_form_one.controls.qp_class_id.setValue(this.templateArray[0].qp_class_id);
 					this.getSectionsByClass();
 					this.getSubjectsByClass();
 					this.express_form_one.controls.qp_sec_id.setValue(this.templateArray[0].qp_sec_id);
-					this.express_form_one.controls.qp_sub_id.setValue(this.templateArray[0].qp_sub_id);
-					this.getTopicByClassSubject();
-					this.express_form_one.controls.qp_qcount.setValue(this.templateArray[0].qp_qcount);
+					this.express_form_one.controls.qp_sub_id.setValue(sub_arr);
+					//this.getTopicByClassSubject();
+					this.express_form_one.controls.qp_qcount.setValue(this.templateArray[0].tp_qus_count);
 					this.express_form_one.controls.qp_marks.setValue(this.templateArray[0].tp_marks);
 					this.express_form_one.controls.qp_time_alloted.setValue(this.templateArray[0].tp_time_alloted);
 					this.templates = this.templateArray[0].filter;
 					this.editTemplateFlag = true;
 					this.leftmarks = 0;
+					this.updateQuestionList(st_arr);
 				}
 			}
 		);
@@ -411,7 +416,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			qp_time_alloted: '',
 			tp_ti_id: '',
 			filters: [],
-			qlist: []
+			qlist: [],
+			subtopiclist:''
 		});
 		this.express_form_two = this.fbuild.group({
 			qp_ssub_id: '',
@@ -581,7 +587,50 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		};
 	}
 
+	async updateQuestionList(stlist) {
+		this.templateStarray=[];
+		this.ELEMENT_DATA = [];
+		this.templateStarray.push(stlist);
+		this.showTopicSubTopicTable = true;
+		this.noRecordDiv = false;
+		setTimeout(() => this.dataSource.paginator = this.paginator2);
+		this.qpmarks = this.express_form_one.controls.qp_marks.value;
+		for (let i = 0; i < this.templateStarray[this.templateStarray.length - 1].length; i++) {
+			const template: any = {};
+			await this.qelementService.getSubtopicNameById((this.templateStarray[this.templateStarray.length - 1][i]).toString()).toPromise()
+			.then(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						template.qp_topic_id = result.data[0].topic_id;
+						template.qp_st_id = result.data[0].st_id;
+						template.qp_sub_id = result.data[0].sub_id;
+						template.topic_name = result.data[0].topic_name;
+						template.st_name = result.data[0].st_name;
+						this.ELEMENT_DATA.push({
+							position: this.startIndex, 
+							topic: template.topic_name, 
+							subtopic: template.st_name,
+							action: template, 
+							subid: (this.templateStarray[this.templateStarray.length - 1][i]).toString()
+						});
+						this.templates.push(template);
+						this.stitems.push((this.templateStarray[this.templateStarray.length - 1][i]).toString());
+						this.filtersArray.push({
+							qf_topic_id: template.qp_topic_id,
+							qf_st_id: (this.templateStarray[this.templateStarray.length - 1][i]).toString()
+						});
+						this.startIndex++;
+					}
+				}
+			);			
+		}
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		this.dataSource.paginator = this.paginator2;
+		this.sort2.sortChange.subscribe(() => this.paginator2.pageIndex = 0);
+		this.dataSource.sort = this.sort2;
 
+		console.log('this.stitems',this.stitems);
+	}
 	addQuestionList() {
 		this.showTopicSubTopicTable = true;
 		this.noRecordDiv = false;
@@ -659,7 +708,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			}
 		}
 
-
+		console.log('this.stitems',this.stitems);
 	}
 
 	getSubTopic() { }
@@ -2253,7 +2302,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				this.express_form_one.patchValue({
 					'qp_qm_id': '3',
 					'qlist': paperquestion,
-					'filters': this.qstfilterArray
+					'filters': this.qstfilterArray,
+					'subtopiclist':this.stitems
 				});
 				console.log(this.express_form_one.value);
 				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
