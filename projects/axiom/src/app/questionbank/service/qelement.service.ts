@@ -170,6 +170,9 @@ export class QelementService {
 	addExpressQuestionPaper(value) {
 		return this._http.post(environment.apiAxiomUrl + '/questionpaper/addExpressQuestionPaper', value);
 	}
+	updateExpressQuestionPaper(value) {
+		return this._http.post(environment.apiAxiomUrl + '/questionpaper/updateExpressQuestionPaper', value);
+	}
 
 	updateQuestionPaper(value) {
 		return this._http.put(environment.apiAxiomUrl + `/questionpaper/updateQuestionPaper`, value);
