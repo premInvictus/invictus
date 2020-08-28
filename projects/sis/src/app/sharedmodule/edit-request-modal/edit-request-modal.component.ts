@@ -66,6 +66,7 @@ export class EditRequestModalComponent implements OnInit {
 	}
 
 	confirm() {
+		console.log('this.inputData.reqParam',this.inputData.reqParam)
 		if (!this.editForm.valid) {
 			this.commomService.showSuccessErrorMessage('Please fill required fields', 'error');
 		} else {
