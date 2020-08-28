@@ -20,7 +20,13 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 	documentsArray: any[] = [];
 	finalDocumentArray: any[] = [];
 	currentFileChangeEvent: any;
+	login_id; any;
+	verifyArray: any[] = [];
+	currentUser: any;
+	documentArray: any[] = [];
+	imageArray: any[] = [];
 	multipleFileArray: any[] = [];
+	fileApiData:any[] = [];
 	counter: any = 0;
 	@Input() addOnly = false;
 	@Input() viewOnly = false;
@@ -28,11 +34,7 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 	@Input() documentFormData: any;
 	@Input() docContext: any;
 	@Input() configSetting: any;
-	login_id; any;
-	verifyArray: any[] = [];
-	currentUser: any;
-	documentArray: any[] = [];
-	imageArray: any[] = [];
+	
 	constructor(
 		private fbuild: FormBuilder,
 		private sisService: SisService,
@@ -101,12 +103,15 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 			if (this.counter === this.currentFileChangeEvent.target.files.length) {
 				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
 					if (result) {
+						// this.fileApiData = result;
+						
 						for (const item of result.data) {
 							const findex = this.finalDocumentArray.findIndex(f =>
 								f.ed_login_id === item.login_id && f.ed_docreq_id === doc_req_id);
 							const findex2 = this.imageArray.findIndex(f =>
 								f.imgName === item.file_url && f.ed_docreq_id === doc_req_id);
-							if (findex === -1) {
+							console.log('this.finalDocumentArray', this.finalDocumentArray, findex)
+								if (findex === -1) {
 								this.finalDocumentArray.push({
 									ed_login_id: this.docContext,
 									ed_docreq_id: doc_req_id,
@@ -114,6 +119,14 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 									ed_link: item.file_url,
 									ed_is_verify: 'N'
 								});
+								this.fileApiData.push({
+									ed_login_id: this.docContext,
+									ed_docreq_id: doc_req_id,
+									ed_name: item.file_name,
+									ed_link: item.file_url,
+									ed_is_verify: 'N'
+								})
+								console.log('this.finalDocumentArray', this.finalDocumentArray, findex)
 							} else {
 								this.finalDocumentArray.splice(findex, 1);
 							}
@@ -125,6 +138,7 @@ export class DocumentsThemeTwoComponent implements OnInit, OnChanges {
 							} else {
 								this.imageArray.splice(findex2, 1);
 							}
+							console.log('this.finalDocumentArray', this.finalDocumentArray, findex)
 						}
 					}
 				});

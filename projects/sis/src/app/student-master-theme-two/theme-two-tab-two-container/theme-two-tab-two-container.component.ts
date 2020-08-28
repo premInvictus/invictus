@@ -20,12 +20,14 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	viewOnly = true;
 	editOnly = false;
 	datalist: any[] = [];
+	currentUserLoginId = '';
 	disabledApiCall = false;
 	educationDetails: any[] = [];
 	educationDetailsNew: any[] = [];
 	awardsDetails: any[] = [];
 	awardsDetailsNew: any[] = [];
 	documentDetails: any[] = [];
+	docDetailNew:any[] = [];
 	login_id: any;
 	saveFlag = false;
 	editRequestFlag = false;
@@ -34,6 +36,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	finalSibReqArray: any[];
 	finalSibReqArray2: any[];
 	finalSibReqArray3: any[] = [];
+	finalSibReqArray4:any[] = [];
 	finalArray: any[];
 	parentId;
 	editableStatus = '0';
@@ -165,6 +168,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 		this.documentDetails = [];
 		this.awardsDetails = [];
 		this.awardsDetailsNew = [];
+		//this.currentUserLoginId = login_id;
 		this.sisService.getAdditionalDetails({ au_login_id: login_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.educationDetails = result.data[0].educationDetails;
@@ -244,17 +248,22 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 	checkFormChangedValue() {
 		this.awardsDetailsNew = [];
 		this.educationDetailsNew = [];
+		this.docDetailNew = [];
 		this.finalSibReqArray = [];
 		this.finalSibReqArray2 = [];
 		this.finalSibReqArray3 = [];
 		this.finalArray = [];
 		let param: any = {};
+		this.currentUserLoginId = this.context.studentdetails.studentdetailsform.value.au_login_id;
 		this.sisService.getAdditionalDetails({
 			au_login_id: this.context.studentdetails.studentdetailsform.value.au_login_id
 		}).subscribe((result: any) => {
 			if (result.status === 'ok') {
+				this.currentUserLoginId = result.data[0].au_login_id;
+				console.log('changed resul;t',result, this.doc)
 				this.educationDetailsNew = result.data[0].educationDetails;
 				this.awardsDetailsNew = result.data[0].awardsDetails;
+				this.docDetailNew = result.data[0].documentDetails;
 				const datepipe = new DatePipe('en-US');
 				let i = 0;
 				for (const item of this.edu.previousEducations) {
@@ -319,7 +328,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 					}
 				}
 				if (this.finalSibReqArray.length > 0 && this.finalArray.length > 0) {
-					param.req_login_id = this.login_id;
+					param.req_login_id = this.currentUserLoginId;
 					param.req_process_type = this.context.processType;
 					param.req_tab_id = '6';
 					param.req_priority = '';
@@ -386,7 +395,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 					}
 				}
 				if (this.finalSibReqArray2.length > 0) {
-					param2.req_login_id = this.login_id;
+					param2.req_login_id = this.currentUserLoginId;
 					param2.req_process_type = this.context.processType;
 					param2.req_tab_id = '7';
 					param2.req_priority = '';
@@ -442,7 +451,7 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 					}
 				}
 				if (this.finalSibReqArray3.length > 0 && sibReqArray3.length > 0) {
-					param3.req_login_id = this.login_id;
+					param3.req_login_id = this.currentUserLoginId;
 					param3.req_process_type = this.context.processType;
 					param3.req_tab_id = '4';
 					param3.req_priority = '';
@@ -455,8 +464,71 @@ export class ThemeTwoTabTwoContainerComponent extends DynamicComponent implement
 				} else {
 					param3 = {};
 				}
+
+				let param4:any = {};
+				const sibReqArray4:any[] = [];
+				console.log('this.doc.fileApiData--',this.doc.fileApiData);
+				for(var ij=0; ij<this.doc.fileApiData.length;ij++) {
+				Object.keys(this.doc.fileApiData[ij]).forEach((key:any) => {
+					if (key == 'ed_docreq_id') {
+					sibReqArray4.push({
+						rff_where_id: 'ed_docreq_id',
+						rff_where_value: this.doc.fileApiData[ij]['ed_docreq_id'],
+						rff_field_name: key,
+						rff_new_field_value: this.doc.fileApiData[ij]['ed_docreq_id'],
+						rff_old_field_value: '',
+					});	}
+					if (key == 'ed_is_verify') {
+						sibReqArray4.push({
+							rff_where_id: 'ed_is_verify',
+							rff_where_value: 0,
+							rff_field_name: key,
+							rff_new_field_value: this.doc.fileApiData[ij]['ed_is_verify'],
+							rff_old_field_value:'',
+					});	}
+					if (key == 'ed_link') {
+						sibReqArray4.push({
+							rff_where_id: 'ed_link',
+							rff_where_value: 0,
+							rff_field_name: key,
+							rff_new_field_value: this.doc.fileApiData[ij]['ed_link'],
+							rff_old_field_value: '',
+					});	}
+					if (key == 'ed_name') {
+						sibReqArray4.push({
+							rff_where_id: 'ed_name',
+							rff_where_value: 0,
+							rff_field_name: key,
+							rff_new_field_value: this.doc.fileApiData[ij]['ed_name'],
+							rff_old_field_value: '',
+					});	}				
+				})}
+				console.log('sibReqArray4', sibReqArray4);
+				this.finalSibReqArray4.push({ item: sibReqArray4 });
+				for (const sib of this.finalSibReqArray4) {
+					for (const titem of sib.item) {
+						this.finalArray.push(titem);
+					}
+				}
+				if (this.finalSibReqArray4.length > 0 && sibReqArray4.length > 0) {
+					param4.req_login_id = this.currentUserLoginId;
+					param4.req_process_type = this.context.processType;
+					param4.req_tab_id = '8';
+					param4.req_priority = '';
+					param4.req_remarks = '';
+					param4.req_reason = '';
+					param4.req_date = datepipe.transform(new Date, 'yyyy-MM-dd');
+					param4.req_param = [];
+					this.params.push(param4);
+					this.datalist.push(this.finalArray);
+				} else {
+					param4 = {};
+				}
+				console.log('this.data;list', this.datalist, '/this.params', this.params)
+				this.openEditDialog({data: this.datalist, reqParam: this.params})
 			}
 		});
+		
 		this.common.reRenderForm.next({ viewMode: true, editMode: false, deleteMode: false, addMode: false });
 	}
 	dateConversion(value, format) {
