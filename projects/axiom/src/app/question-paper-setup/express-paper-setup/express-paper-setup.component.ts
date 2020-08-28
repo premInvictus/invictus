@@ -2406,6 +2406,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					'filters': this.qstfilterArray,	
 					'subtopiclist':this.stitems
 				});
+				this.express_form_one.value.qp_status = '0';
 				this.express_form_one.value.qp_id = this.qp_id;
 				this.express_form_one.value.qp_tp_id =  this.templateArray[0].qp_tp_id;
 				this.express_form_one.value.tp_tt_id =  this.templateArray[0].tp_tt_id;
@@ -2470,8 +2471,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					'filters': this.qstfilterArray,
 					'subtopiclist':this.stitems
 				});
-				console.log(this.express_form_one.value);
 				this.express_form_one.value.qp_status = '2';
+				console.log(this.express_form_one.value);				
 				if(this.qp_id){
 					this.express_form_one.value.qp_id = this.qp_id;
 				}
@@ -2532,6 +2533,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					'filters': this.qstfilterArray,
 					'subtopiclist':this.stitems
 				});
+				this.express_form_one.value.qp_status = '0';
 				console.log(this.express_form_one.value);
 				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
 					(result: any) => {
