@@ -37,7 +37,7 @@ export class QuesPaperReviewComponent implements OnInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
-	displayedColumns = ['position', 'name', 'class', 'subject', 'marks', 'reasons', 'action'];
+	displayedColumns = ['position', 'name', 'class', 'subject', 'marks', 'reasons', 'status', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 	constructor(
@@ -154,6 +154,7 @@ export class QuesPaperReviewComponent implements OnInit {
 								subject: t.sub_name,
 								marks: t.tp_marks,
 								reasons: reasons,
+								status: t.qp_status == '0' ? 'review' : 'draf',
 								action: t
 							});
 							ind++;

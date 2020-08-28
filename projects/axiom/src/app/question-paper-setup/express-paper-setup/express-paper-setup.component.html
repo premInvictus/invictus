@@ -894,11 +894,11 @@
                      </mat-paginator>
                      <br>
                      <div class="text-right">
-                        <button *ngIf="!updatePaperFlag" mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                        <button [disabled]="disabledApiButton" *ngIf="!updatePaperFlag" mat-raised-button class="submit-button" matTooltip="Build Question paper"
                            placement="bottom" (click)="addExpressQuestionPaper()">Submit</button>
                         <button *ngIf="updatePaperFlag" mat-raised-button class="submit-button" matTooltip="Build Question paper"
                            placement="bottom" (click)="updateExpressQuestionPaper()">Update</button>
-                        <button mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                        <button [disabled]="disabledApiButton" mat-raised-button class="submit-button" matTooltip="Build Question paper"
                            placement="bottom" (click)="saveDraftExpressQuestionPaper()">Save As Draft</button>
                         <button mat-raised-button class="reset-button" matTooltip="Are you sure you want to reset?"
                            placement="top" (click)="reset()">Reset</button>

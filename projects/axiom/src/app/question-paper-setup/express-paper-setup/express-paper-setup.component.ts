@@ -185,7 +185,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	validInstruction: any;
 	qp_id:any;
 	updatePaperFlag = false;
-
+	disabledApiButton=false;
 	isAllSelected() {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.dataSource.data.length;
@@ -392,7 +392,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					this.express_form_one.controls.qp_class_id.setValue(this.templateArray[0].qp_class_id);
 					this.getSectionsByClass();
 					this.getSubjectsByClass();
-					this.express_form_one.controls.qp_sec_id.setValue(this.templateArray[0].qp_sec_id);
+					const sectiontemp = this.templateArray[0].qp_sec_id ? this.templateArray[0].qp_sec_id : 'all'
+					this.express_form_one.controls.qp_sec_id.setValue(sectiontemp);
 					this.express_form_one.controls.qp_sub_id.setValue(sub_arr);
 					//this.getTopicByClassSubject();
 					//this.setSelectedSubject();
@@ -407,100 +408,100 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					this.editTemplateFlag = true;
 					this.leftmarks = 0;
 					this.updateQuestionList(st_arr);
-					const updateSubset = new Set();
-					const updateQstset= new Set();
-					if(this.templateArray[0].qlist.length >0){
-						this.templateArray[0].qlist.forEach(element => {
-							updateSubset.add(element.topic_sub_id);
-							updateQstset.add(element.qus_qst_id);
-						});
+					// const updateSubset = new Set();
+					// const updateQstset= new Set();
+					// if(this.templateArray[0].qlist.length >0){
+					// 	this.templateArray[0].qlist.forEach(element => {
+					// 		updateSubset.add(element.topic_sub_id);
+					// 		updateQstset.add(element.qus_qst_id);
+					// 	});
 						
-					}
-					sub_arr.forEach(sub => {
-						this.arrayTabSelectedQuestion.push({
-							mcq: [],
-							mcqmr: [],
-							matrix: [],
-							mtf: [],
-							tf: [],
-							single: [],
-							double: [],
-							matrix45: [],
-							identify: [],
-							oneline: [],
-							fill: [],
-							short: [],
-							veryshort: [],
-							long: [],
-							verylong: [],
-							essay: []
-						});
-						this.arrayTabQuestions.push({
-							mcq: [],
-							mcqmr: [],
-							matrix: [],
-							mtf: [],
-							tf: [],
-							single: [],
-							double: [],
-							matrix45: [],
-							identify: [],
-							oneline: [],
-							fill: [],
-							short: [],
-							veryshort: [],
-							long: [],
-							verylong: [],
-							essay: []
-						});
-					});
-					let subcount=0;
-					const qstmapping:any={
-						'1':'mcq',
-						'2':'mcqmr',
-						'3':'matrix',
-						'4':'mtf',
-						'5':'tf',
-						'6':'single',
-						'7':'double',
-						'8':'matrix45',
-						'9':'identify',
-						'10':'oneline',
-						'11':'fill',
-						'12':'short',
-						'13':'veryshort',
-						'14':'long',
-						'15':'verylong',
-						'16':'essay'
-					};
-					console.log('this.arrayTabQuestions',this.arrayTabQuestions);
-					const updateQstlist =Array.from(updateQstset);
-					console.log('updateQstlist',updateQstlist);
-					this.totalSelectedQuestion = this.templateArray[0].qlist.length;
-					for (let index = 0; index < sub_arr.length; index++) {
-						updateQstlist.forEach((qst:any) => {
-							const param: any = this.setParam(Number(qst));
-							console.log('param',param);
-							param.st_id=st_arr;
-							param.sub_id=sub_arr[index];
-							this.qelementService.getQuestionsInTemplate(param).subscribe(
-								(result: any) => {
-									if (result && result.status === 'ok') {
-										this.questionsArray = result.data;
-										this.arrayTabQuestions[index][qstmapping[qst]] = result.data;
-										this.templateArray[0].qlist.forEach(qus => {
-											if(qus.qus_qst_id == qst && sub_arr[index] == qus.topic_sub_id) {
-												const findex=result.data.findIndex(f => f.qus_id == qus.qpq_qus_id);
-												this.arrayTabSelectedQuestion[index][qstmapping[qst]].push(findex);
-											}
-										});
-										console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
+					// }
+					// sub_arr.forEach(sub => {
+					// 	this.arrayTabSelectedQuestion.push({
+					// 		mcq: [],
+					// 		mcqmr: [],
+					// 		matrix: [],
+					// 		mtf: [],
+					// 		tf: [],
+					// 		single: [],
+					// 		double: [],
+					// 		matrix45: [],
+					// 		identify: [],
+					// 		oneline: [],
+					// 		fill: [],
+					// 		short: [],
+					// 		veryshort: [],
+					// 		long: [],
+					// 		verylong: [],
+					// 		essay: []
+					// 	});
+					// 	this.arrayTabQuestions.push({
+					// 		mcq: [],
+					// 		mcqmr: [],
+					// 		matrix: [],
+					// 		mtf: [],
+					// 		tf: [],
+					// 		single: [],
+					// 		double: [],
+					// 		matrix45: [],
+					// 		identify: [],
+					// 		oneline: [],
+					// 		fill: [],
+					// 		short: [],
+					// 		veryshort: [],
+					// 		long: [],
+					// 		verylong: [],
+					// 		essay: []
+					// 	});
+					// });
+					// let subcount=0;
+					// const qstmapping:any={
+					// 	'1':'mcq',
+					// 	'2':'mcqmr',
+					// 	'3':'matrix',
+					// 	'4':'mtf',
+					// 	'5':'tf',
+					// 	'6':'single',
+					// 	'7':'double',
+					// 	'8':'matrix45',
+					// 	'9':'identify',
+					// 	'10':'oneline',
+					// 	'11':'fill',
+					// 	'12':'short',
+					// 	'13':'veryshort',
+					// 	'14':'long',
+					// 	'15':'verylong',
+					// 	'16':'essay'
+					// };
+					// console.log('this.arrayTabQuestions',this.arrayTabQuestions);
+					// const updateQstlist =Array.from(updateQstset);
+					// console.log('updateQstlist',updateQstlist);
+					// this.totalSelectedQuestion = this.templateArray[0].qlist.length;
+					// for (let index = 0; index < sub_arr.length; index++) {
+					// 	updateQstlist.forEach((qst:any) => {
+					// 		const param: any = this.setParam(Number(qst));
+					// 		console.log('param',param);
+					// 		param.st_id=st_arr;
+					// 		param.sub_id=sub_arr[index];
+					// 		this.qelementService.getQuestionsInTemplate(param).subscribe(
+					// 			(result: any) => {
+					// 				if (result && result.status === 'ok') {
+					// 					this.questionsArray = result.data;
+					// 					this.arrayTabQuestions[index][qstmapping[qst]] = result.data;
+					// 					this.templateArray[0].qlist.forEach(qus => {
+					// 						if(qus.qus_qst_id == qst && sub_arr[index] == qus.topic_sub_id) {
+					// 							const findex=result.data.findIndex(f => f.qus_id == qus.qpq_qus_id);
+					// 							this.arrayTabSelectedQuestion[index][qstmapping[qst]].push(findex);
+					// 						}
+					// 					});
+					// 					console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
 										
-									}
-								}
-							);
-						});
-					};
+					// 				}
+					// 			}
+					// 		);
+					// 	});
+					// };
 				}
 			}
 		);
@@ -1806,10 +1807,11 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	deleteQuestionList(deletei: number) {
+		console.log('this.templateStarray[this.templateStarray.length - 1]',this.templateStarray[this.templateStarray.length - 1]);
 		if (!this.questionReviewDiv) {
 			let k = 0;
 			for (const item of this.templateStarray[this.templateStarray.length - 1]) {
-				if (item === this.ELEMENT_DATA[deletei].subid) {
+				if (item === this.ELEMENT_DATA[deletei].subid && this.express_form_two.controls.qp_st_id.value) {
 					const selectedIndex = this.express_form_two.controls.qp_st_id.value && this.express_form_two.controls.qp_st_id.value.indexOf(item);
 					if (selectedIndex > -1) {
 						const newToppingsValue = this.express_form_two.controls.qp_st_id.value.slice();
@@ -1992,46 +1994,104 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			this.selectQuestionDiv = true;
 			this.currentSelectedSubIndex = 0;
 			this.currentSelectedSubTab = this.selectedSubArray[this.currentSelectedSubIndex];
-			if(this.arrayTabSelectedQuestion.length == 0){
-				this.selectedSubArray.forEach(element => {
-					this.arrayTabSelectedQuestion.push({
-						mcq: [],
-						mcqmr: [],
-						matrix: [],
-						mtf: [],
-						tf: [],
-						single: [],
-						double: [],
-						matrix45: [],
-						identify: [],
-						oneline: [],
-						fill: [],
-						short: [],
-						veryshort: [],
-						long: [],
-						verylong: [],
-						essay: []
-					});
-					this.arrayTabQuestions.push({
-						mcq: [],
-						mcqmr: [],
-						matrix: [],
-						mtf: [],
-						tf: [],
-						single: [],
-						double: [],
-						matrix45: [],
-						identify: [],
-						oneline: [],
-						fill: [],
-						short: [],
-						veryshort: [],
-						long: [],
-						verylong: [],
-						essay: []
-					});
+			this.selectedSubArray.forEach(element => {
+				this.arrayTabSelectedQuestion.push({
+					mcq: [],
+					mcqmr: [],
+					matrix: [],
+					mtf: [],
+					tf: [],
+					single: [],
+					double: [],
+					matrix45: [],
+					identify: [],
+					oneline: [],
+					fill: [],
+					short: [],
+					veryshort: [],
+					long: [],
+					verylong: [],
+					essay: []
 				});
+				this.arrayTabQuestions.push({
+					mcq: [],
+					mcqmr: [],
+					matrix: [],
+					mtf: [],
+					tf: [],
+					single: [],
+					double: [],
+					matrix45: [],
+					identify: [],
+					oneline: [],
+					fill: [],
+					short: [],
+					veryshort: [],
+					long: [],
+					verylong: [],
+					essay: []
+				});
+			});
+			if(this.qp_id){
+				let subcount=0;
+				const qstmapping:any={
+					'1':'mcq',
+					'2':'mcqmr',
+					'3':'matrix',
+					'4':'mtf',
+					'5':'tf',
+					'6':'single',
+					'7':'double',
+					'8':'matrix45',
+					'9':'identify',
+					'10':'oneline',
+					'11':'fill',
+					'12':'short',
+					'13':'veryshort',
+					'14':'long',
+					'15':'verylong',
+					'16':'essay'
+				};
+				const updateQstset= new Set();
+				if(this.templateArray[0].qlist.length >0){
+					this.templateArray[0].qlist.forEach(element => {
+						updateQstset.add(element.qus_qst_id);
+					});
+					
+				}				
+				const updateQstlist =Array.from(updateQstset);
+				console.log('updateQstlist',updateQstlist);
+				this.totalSelectedQuestion = 0;
+				for (let index = 0; index < this.selectedSubArray.length; index++) {
+					updateQstlist.forEach((qst:any) => {
+						const param: any = this.setParam(Number(qst));
+						console.log('param',param);
+						param.st_id=this.stitems;
+						param.sub_id=this.selectedSubArray[index].sub_id;
+						this.qelementService.getQuestionsInTemplate(param).subscribe(
+							(result: any) => {
+								if (result && result.status === 'ok') {
+									this.questionsArray = result.data;
+									this.arrayTabQuestions[index][qstmapping[qst]] = result.data;
+									this.templateArray[0].qlist.forEach(qus => {
+										if(qus.qus_qst_id == qst && this.selectedSubArray[index].sub_id == qus.topic_sub_id) {
+											const findex=result.data.findIndex(f => f.qus_id == qus.qpq_qus_id);
+											if(findex != -1){
+												this.arrayTabSelectedQuestion[index][qstmapping[qst]].push(findex);
+												this.totalSelectedQuestion++;
+											}
+											
+										}
+									});
+									console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
+									
+								}
+							}
+						);
+					});
+				};
 			}
+			
 			
 			this.getMcqQuestion();
 		} else if (this.templates.length > 0 && !this.instruction_form.value.ti_id) {
@@ -2476,6 +2536,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				if(this.qp_id){
 					this.express_form_one.value.qp_id = this.qp_id;
 				}
+				this.disabledApiButton = true;
 				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -2484,7 +2545,9 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 								this.router.navigate(['../'], { relativeTo: this.route });
 							}, 2000);
 						}
+						this.disabledApiButton = false;
 					}
+					
 				);
 			} else {
 				// tslint:disable-next-line:max-line-length
@@ -2535,6 +2598,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				});
 				this.express_form_one.value.qp_status = '0';
 				console.log(this.express_form_one.value);
+				this.disabledApiButton = true;
 				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -2543,7 +2607,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 								this.router.navigate(['../'], { relativeTo: this.route });
 							}, 2000);
 						}
-					}
+						this.disabledApiButton = false;
+					}					
 				);
 			} else {
 				// tslint:disable-next-line:max-line-length
