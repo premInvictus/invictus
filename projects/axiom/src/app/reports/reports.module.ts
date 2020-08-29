@@ -14,6 +14,7 @@ import { TooltipModule } from 'ngx-bootstrap';
 import { SharedModule } from '../shared-module/share-module.module';
 import { ViewAllExamsComponent } from './admin/view-all-exams/view-all-exams.component';
 import { TableRendererComponent } from './admin/view-all-exams/table-renderer/table-renderer.component';
+import { TopicwiseReportOverviewComponent } from './topicwise-report-overview/topicwise-report-overview.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -29,7 +30,7 @@ import { TableRendererComponent } from './admin/view-all-exams/table-renderer/ta
 	],
 	// tslint:disable-next-line:max-line-length
 	declarations: [ReportsComponent,
-		ViewAllExamsComponent, TableRendererComponent],
+		ViewAllExamsComponent, TableRendererComponent, TopicwiseReportOverviewComponent],
 	providers: [ReportService, NotificationsService]
 })
 export class ReportsModule { }

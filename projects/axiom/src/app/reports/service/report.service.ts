@@ -362,4 +362,8 @@ export class ReportService {
 				}
 				return this._http.post(environment.apiAxiomUrl + '/report/getBookmark', param);
 		}
+		topicWiseReportOverview(value) {
+			this.loaderService.startLoading();
+			return this._http.post(environment.apiAxiomUrl + '/report/topicWiseReportOverview', value);
+		}
 }

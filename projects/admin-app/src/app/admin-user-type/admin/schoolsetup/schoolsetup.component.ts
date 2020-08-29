@@ -79,6 +79,7 @@ export class SchoolsetupComponent implements OnInit {
 		'contact',
 		'email',
 		'manager',
+		'status',
 		'action'
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -711,5 +712,20 @@ export class SchoolsetupComponent implements OnInit {
 		if (findIndex !== -1) {
 			return this.cityCountryArray[findIndex].cit_id;
 		}
+	}
+	toggleLodStatus(value: any) {
+		console.log(value);
+		if (value.school_status == '1') {
+			value.school_status = '0';
+		} else {
+			value.school_status = '1';
+		}
+		this.adminService.editSchoolstatus(value).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getSchoolDetails(this);
+				}
+			}
+		);
 	}
 }
