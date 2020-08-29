@@ -153,11 +153,36 @@ export class SharedModule {
 			script.type = 'text/x-mathjax-config';
 			script[('innerHTML')] =
 				'MathJax.Hub.Config({\n' +
-				' tex2jax: { inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']] }\n' +
-				'});';
+				' tex2jax: {inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']] }\n' +
+				'});\n'+
+				'MathJax.Hub.Queue(function () {\n'+
+					'var math = document.getElementById("hide_page");\n'+
+					'if (math) {\n'+
+					'console.log("loading-----")\n'+
+					'}\n'+
+				'});'
+				
 			script.type = 'text/javascript';
 			script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML';
 			document.getElementsByTagName('head')[0].appendChild(script);
 		}
+		// 'MathJax.Hub.Config({\n'+
+		// 		'extensions: ["tex2jax.js"],\n'+
+		// 		'jax: ["input/TeX", "output/HTML-CSS"],\n'+
+		// 		'tex2jax: {\n'+
+		// 		'inlineMath: [[\'$\',\'$\'], [\'\\\\(\',\'\\\\)\']] }'+
+		// 		'processEscapes: true\n'+
+		// 		'},\n'+
+		// 		'"HTML-CSS": { fonts: ["TeX"] }\n'+
+		// 		'});';
+
+		// 'MathJax.Hub.Queue(function () {\n'+
+		// 	'var math = document.getElementById("rescale");\n'+
+		// 	'var w = math.offsetWidth, W = math.parentNode.offsetWidth-40;\n'
+		// 	'if (w > W) {\n'+
+		// 	  'math.style.fontSize = (95*W/w)+"%";\n'+
+		// 	  'MathJax.Hub.getAllJax(math)[0].Rerender();\n'+
+		// 	'}\n'+
+		//   '});'
 	}
 }

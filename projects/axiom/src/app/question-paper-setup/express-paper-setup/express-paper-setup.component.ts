@@ -14,6 +14,8 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { style, animate, transition, trigger } from '@angular/animations';
 //import { Http } from '@angular/http';
 import {tabJSON} from './express-tab-data';
+import { p } from '@angular/core/src/render3';
+import { isFirstDayOfMonth } from 'date-fns';
 @Component({
 	selector: 'app-express-paper-setup',
 	templateUrl: './express-paper-setup.component.html',
@@ -181,8 +183,9 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	@ViewChild(MatSort) sort4: MatSort;
 	@ViewChild('staticTabs') staticTabs: MatTabGroup;
 	validInstruction: any;
-
-
+	qp_id:any;
+	updatePaperFlag = false;
+	disabledApiButton=false;
 	isAllSelected() {
 		const numSelected = this.selection.selected.length;
 		const numRows = this.dataSource.data.length;
@@ -368,30 +371,137 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	getQueryParams() {
 		if (this.route.snapshot.queryParamMap.get('qp_id')) {
 			const qp_id = this.route.snapshot.queryParamMap.get('qp_id');
+			this.qp_id = this.route.snapshot.queryParamMap.get('qp_id');
 			this.getQuestionPaper(qp_id);
 		}
 	}
 
 	getQuestionPaper(qp_id) {
 		const qp_qm_id = '3';
-		const qp_status = '0';
-		this.qelementService.getQuestionPaper({ qp_id: qp_id, qp_qm_id: qp_qm_id, qp_status: qp_status }).subscribe(
+		//const qp_status = '0';
+		this.updatePaperFlag = true;
+		this.qelementService.getQuestionPaper({ qp_id: qp_id, qp_qm_id: qp_qm_id}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
+					
 					this.templateArray = result.data;
+
+					const sub_arr = this.templateArray[0].tp_sub_id.replace(/ /g,'').split(',');
+					const st_arr = this.templateArray[0].tp_st_id.replace(/ /g,'').split(',');
 					this.express_form_one.controls.qp_name.setValue(this.templateArray[0].qp_name);
 					this.express_form_one.controls.qp_class_id.setValue(this.templateArray[0].qp_class_id);
 					this.getSectionsByClass();
 					this.getSubjectsByClass();
-					this.express_form_one.controls.qp_sec_id.setValue(this.templateArray[0].qp_sec_id);
-					this.express_form_one.controls.qp_sub_id.setValue(this.templateArray[0].qp_sub_id);
-					this.getTopicByClassSubject();
-					this.express_form_one.controls.qp_qcount.setValue(this.templateArray[0].qp_qcount);
-					this.express_form_one.controls.qp_marks.setValue(this.templateArray[0].tp_marks);
-					this.express_form_one.controls.qp_time_alloted.setValue(this.templateArray[0].tp_time_alloted);
+					const sectiontemp = this.templateArray[0].qp_sec_id ? this.templateArray[0].qp_sec_id : 'all'
+					this.express_form_one.controls.qp_sec_id.setValue(sectiontemp);
+					this.express_form_one.controls.qp_sub_id.setValue(sub_arr);
+					//this.getTopicByClassSubject();
+					//this.setSelectedSubject();
+					this.express_form_one.controls.qp_qcount.setValue(Number(this.templateArray[0].tp_qus_count));
+					this.express_form_one.controls.qp_marks.setValue(Number(this.templateArray[0].tp_marks));
+					this.express_form_one.controls.qp_time_alloted.setValue(Number(this.templateArray[0].tp_time_alloted));
+					this.express_form_one.controls.tp_ti_id.setValue(this.templateArray[0].tp_ti_id);
+					this.instruction_form.patchValue(
+						{'ti_id': this.templateArray[0].tp_ti_id}
+					);
 					this.templates = this.templateArray[0].filter;
 					this.editTemplateFlag = true;
 					this.leftmarks = 0;
+					this.updateQuestionList(st_arr);
+					// const updateSubset = new Set();
+					// const updateQstset= new Set();
+					// if(this.templateArray[0].qlist.length >0){
+					// 	this.templateArray[0].qlist.forEach(element => {
+					// 		updateSubset.add(element.topic_sub_id);
+					// 		updateQstset.add(element.qus_qst_id);
+					// 	});
+						
+					// }
+					// sub_arr.forEach(sub => {
+					// 	this.arrayTabSelectedQuestion.push({
+					// 		mcq: [],
+					// 		mcqmr: [],
+					// 		matrix: [],
+					// 		mtf: [],
+					// 		tf: [],
+					// 		single: [],
+					// 		double: [],
+					// 		matrix45: [],
+					// 		identify: [],
+					// 		oneline: [],
+					// 		fill: [],
+					// 		short: [],
+					// 		veryshort: [],
+					// 		long: [],
+					// 		verylong: [],
+					// 		essay: []
+					// 	});
+					// 	this.arrayTabQuestions.push({
+					// 		mcq: [],
+					// 		mcqmr: [],
+					// 		matrix: [],
+					// 		mtf: [],
+					// 		tf: [],
+					// 		single: [],
+					// 		double: [],
+					// 		matrix45: [],
+					// 		identify: [],
+					// 		oneline: [],
+					// 		fill: [],
+					// 		short: [],
+					// 		veryshort: [],
+					// 		long: [],
+					// 		verylong: [],
+					// 		essay: []
+					// 	});
+					// });
+					// let subcount=0;
+					// const qstmapping:any={
+					// 	'1':'mcq',
+					// 	'2':'mcqmr',
+					// 	'3':'matrix',
+					// 	'4':'mtf',
+					// 	'5':'tf',
+					// 	'6':'single',
+					// 	'7':'double',
+					// 	'8':'matrix45',
+					// 	'9':'identify',
+					// 	'10':'oneline',
+					// 	'11':'fill',
+					// 	'12':'short',
+					// 	'13':'veryshort',
+					// 	'14':'long',
+					// 	'15':'verylong',
+					// 	'16':'essay'
+					// };
+					// console.log('this.arrayTabQuestions',this.arrayTabQuestions);
+					// const updateQstlist =Array.from(updateQstset);
+					// console.log('updateQstlist',updateQstlist);
+					// this.totalSelectedQuestion = this.templateArray[0].qlist.length;
+					// for (let index = 0; index < sub_arr.length; index++) {
+					// 	updateQstlist.forEach((qst:any) => {
+					// 		const param: any = this.setParam(Number(qst));
+					// 		console.log('param',param);
+					// 		param.st_id=st_arr;
+					// 		param.sub_id=sub_arr[index];
+					// 		this.qelementService.getQuestionsInTemplate(param).subscribe(
+					// 			(result: any) => {
+					// 				if (result && result.status === 'ok') {
+					// 					this.questionsArray = result.data;
+					// 					this.arrayTabQuestions[index][qstmapping[qst]] = result.data;
+					// 					this.templateArray[0].qlist.forEach(qus => {
+					// 						if(qus.qus_qst_id == qst && sub_arr[index] == qus.topic_sub_id) {
+					// 							const findex=result.data.findIndex(f => f.qus_id == qus.qpq_qus_id);
+					// 							this.arrayTabSelectedQuestion[index][qstmapping[qst]].push(findex);
+					// 						}
+					// 					});
+					// 					console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
+										
+					// 				}
+					// 			}
+					// 		);
+					// 	});
+					// };
 				}
 			}
 		);
@@ -411,7 +521,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			qp_time_alloted: '',
 			tp_ti_id: '',
 			filters: [],
-			qlist: []
+			qlist: [],
+			subtopiclist:''
 		});
 		this.express_form_two = this.fbuild.group({
 			qp_ssub_id: '',
@@ -497,13 +608,12 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	getSubjectsByClass(): void {
-
+		this.subjectArray = [];
 		this.qelementService.getSubjectsByClass(this.express_form_one.value.qp_class_id).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
-				} else {
-					this.subjectArray = [];
+					this.setSelectedSubject();
 				}
 			}
 		);
@@ -581,7 +691,52 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		};
 	}
 
+	async updateQuestionList(stlist) {
+		console.log('stlist',stlist);
+		this.templateStarray=[];
+		this.ELEMENT_DATA = [];
+		this.templateStarray.push(stlist);
+		this.showTopicSubTopicTable = true;
+		this.noRecordDiv = false;
+		setTimeout(() => this.dataSource.paginator = this.paginator2);
+		this.qpmarks = this.express_form_one.controls.qp_marks.value;
+		for (let i = 0; i < this.templateStarray[this.templateStarray.length - 1].length; i++) {
+			const template: any = {};
+			await this.qelementService.getSubtopicNameById((this.templateStarray[this.templateStarray.length - 1][i]).toString()).toPromise()
+			.then(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						template.qp_topic_id = result.data[0].topic_id;
+						template.qp_st_id = result.data[0].st_id;
+						template.qp_sub_id = result.data[0].sub_id;
+						template.topic_name = result.data[0].topic_name;
+						template.st_name = result.data[0].st_name;
+						this.ELEMENT_DATA.push({
+							position: this.startIndex, 
+							topic: template.topic_name, 
+							subtopic: template.st_name,
+							action: template, 
+							subid: (this.templateStarray[this.templateStarray.length - 1][i]).toString()
+						});
+						console.log('template',template);
+						this.templates.push(template);
+						this.stitems.push((this.templateStarray[this.templateStarray.length - 1][i]).toString());
+						this.filtersArray.push({
+							qf_topic_id: template.qp_topic_id,
+							qf_st_id: (this.templateStarray[this.templateStarray.length - 1][i]).toString()
+						});
+						this.startIndex++;
+					}
+				}
+			);			
+		}
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		this.dataSource.paginator = this.paginator2;
+		this.sort2.sortChange.subscribe(() => this.paginator2.pageIndex = 0);
+		this.dataSource.sort = this.sort2;
 
+		console.log('this.stitems',this.stitems);
+	}
 	addQuestionList() {
 		this.showTopicSubTopicTable = true;
 		this.noRecordDiv = false;
@@ -659,7 +814,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			}
 		}
 
-
+		console.log('this.stitems',this.stitems);
 	}
 
 	getSubTopic() { }
@@ -1652,10 +1807,11 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	deleteQuestionList(deletei: number) {
+		console.log('this.templateStarray[this.templateStarray.length - 1]',this.templateStarray[this.templateStarray.length - 1]);
 		if (!this.questionReviewDiv) {
 			let k = 0;
 			for (const item of this.templateStarray[this.templateStarray.length - 1]) {
-				if (item === this.ELEMENT_DATA[deletei].subid) {
+				if (item === this.ELEMENT_DATA[deletei].subid && this.express_form_two.controls.qp_st_id.value) {
 					const selectedIndex = this.express_form_two.controls.qp_st_id.value && this.express_form_two.controls.qp_st_id.value.indexOf(item);
 					if (selectedIndex > -1) {
 						const newToppingsValue = this.express_form_two.controls.qp_st_id.value.slice();
@@ -1838,7 +1994,6 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			this.selectQuestionDiv = true;
 			this.currentSelectedSubIndex = 0;
 			this.currentSelectedSubTab = this.selectedSubArray[this.currentSelectedSubIndex];
-
 			this.selectedSubArray.forEach(element => {
 				this.arrayTabSelectedQuestion.push({
 					mcq: [],
@@ -1877,6 +2032,67 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 					essay: []
 				});
 			});
+			if(this.qp_id){
+				let subcount=0;
+				const qstmapping:any={
+					'1':'mcq',
+					'2':'mcqmr',
+					'3':'matrix',
+					'4':'mtf',
+					'5':'tf',
+					'6':'single',
+					'7':'double',
+					'8':'matrix45',
+					'9':'identify',
+					'10':'oneline',
+					'11':'fill',
+					'12':'short',
+					'13':'veryshort',
+					'14':'long',
+					'15':'verylong',
+					'16':'essay'
+				};
+				const updateQstset= new Set();
+				if(this.templateArray[0].qlist.length >0){
+					this.templateArray[0].qlist.forEach(element => {
+						updateQstset.add(element.qus_qst_id);
+					});
+					
+				}				
+				const updateQstlist =Array.from(updateQstset);
+				console.log('updateQstlist',updateQstlist);
+				this.totalSelectedQuestion = 0;
+				for (let index = 0; index < this.selectedSubArray.length; index++) {
+					updateQstlist.forEach((qst:any) => {
+						const param: any = this.setParam(Number(qst));
+						console.log('param',param);
+						param.st_id=this.stitems;
+						param.sub_id=this.selectedSubArray[index].sub_id;
+						this.qelementService.getQuestionsInTemplate(param).subscribe(
+							(result: any) => {
+								if (result && result.status === 'ok') {
+									this.questionsArray = result.data;
+									this.arrayTabQuestions[index][qstmapping[qst]] = result.data;
+									this.templateArray[0].qlist.forEach(qus => {
+										if(qus.qus_qst_id == qst && this.selectedSubArray[index].sub_id == qus.topic_sub_id) {
+											const findex=result.data.findIndex(f => f.qus_id == qus.qpq_qus_id);
+											if(findex != -1){
+												this.arrayTabSelectedQuestion[index][qstmapping[qst]].push(findex);
+												this.totalSelectedQuestion++;
+											}
+											
+										}
+									});
+									console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
+									
+								}
+							}
+						);
+					});
+				};
+			}
+			
+			
 			this.getMcqQuestion();
 		} else if (this.templates.length > 0 && !this.instruction_form.value.ti_id) {
 			this.parameterDiv = true;
@@ -2208,9 +2424,9 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		this.questionReviewDiv = false;
 		this.selectQuestionDiv = true;
 	}
-
-	addExpressQuestionPaper() {
-		if (this.express_form_one.valid) {
+	updateExpressQuestionPaper() {
+		//this.express_form_one.valid
+		if (true) {
 			let sum = 0;
 			let allQuestionHasMarks = true;
 			for (const item of this.REVIEW_ELEMENT_DATA) {
@@ -2220,13 +2436,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				sum = sum + Number(item.marks);
 			}
 			this.total = Number(sum);
-			// tslint:disable-next-line:max-line-length
 			if ((allQuestionHasMarks && this.REVIEW_ELEMENT_DATA.length === Number(this.express_form_one.value.qp_qcount) && this.total === this.express_form_one.value.qp_marks)) {
-				/* things.thing = things.thing.filter((thing, index, self) =>
-          index === self.findIndex((t) => (
-            t.place === thing.place && t.name === thing.name
-          ))
-        ) */
 				this.filtersArray = this.filtersArray.filter((item, index, self) =>
 					index === self.findIndex((t) => (
 						t.qf_st_id === item.qf_st_id && t.qf_topic_id === item.qf_topic_id
@@ -2253,9 +2463,142 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				this.express_form_one.patchValue({
 					'qp_qm_id': '3',
 					'qlist': paperquestion,
-					'filters': this.qstfilterArray
+					'filters': this.qstfilterArray,	
+					'subtopiclist':this.stitems
 				});
+				this.express_form_one.value.qp_status = '0';
+				this.express_form_one.value.qp_id = this.qp_id;
+				this.express_form_one.value.qp_tp_id =  this.templateArray[0].qp_tp_id;
+				this.express_form_one.value.tp_tt_id =  this.templateArray[0].tp_tt_id;
 				console.log(this.express_form_one.value);
+				this.qelementService.updateExpressQuestionPaper(this.express_form_one.value).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.notif.showSuccessErrorMessage('Question paper updated successfully', 'success');
+							setTimeout(() => {
+								this.router.navigate(['../'], { relativeTo: this.route });
+							}, 2000);
+						}
+					}
+				);
+				this.updatePaperFlag = false;
+			} else {
+				// tslint:disable-next-line:max-line-length
+				this.notif.showSuccessErrorMessage('Please match the review question length and total marks <br> with the total no of questions <br>selected at the beginning', 'error');
+			}
+		}
+	}
+	saveDraftExpressQuestionPaper() {
+		console.log('this.express_form_one.valid',this.express_form_one.valid);
+		console.log('this.express_form_one.value',this.express_form_one.value);
+		if (this.express_form_one.valid) {
+			let sum = 0;
+			let allQuestionHasMarks = true;
+			for (const item of this.REVIEW_ELEMENT_DATA) {
+				if (Number(item.marks) < 1) {
+					allQuestionHasMarks = false;
+				}
+				sum = sum + Number(item.marks);
+			}
+			this.total = Number(sum);
+			if ((allQuestionHasMarks )) {
+				this.filtersArray = this.filtersArray.filter((item, index, self) =>
+					index === self.findIndex((t) => (
+						t.qf_st_id === item.qf_st_id && t.qf_topic_id === item.qf_topic_id
+					))
+				);
+				console.log('finalQuestionArray', this.finalQuestionArray);
+				console.log('this.REVIEW_ELEMENT_DATA', this.REVIEW_ELEMENT_DATA);
+				const paperquestion: any[] = [];
+				this.REVIEW_ELEMENT_DATA.forEach(item => {
+					const ind = this.finalQuestionArray.findIndex(element => element.qpq_qus_id === item.action.qpq_qus_id);
+					if (ind !== -1) {
+						paperquestion.push({
+							qpq_qus_position: item.position,
+							qpq_marks: item.marks,
+							qpq_negative_marks: item.negativeMarks,
+							qpq_qus_id: this.finalQuestionArray[ind].qpq_qus_id,
+							qpq_qt_id: this.finalQuestionArray[ind].qpq_qt_id,
+							qpq_qst_id: this.finalQuestionArray[ind].qpq_qst_id,
+							qpq_topic_id: this.finalQuestionArray[ind].qpq_topic_id,
+							qpq_st_id: this.finalQuestionArray[ind].qpq_st_id
+						});
+					}
+				});
+				this.express_form_one.patchValue({
+					'qp_qm_id': '3',
+					'qlist': paperquestion,
+					'filters': this.qstfilterArray,
+					'subtopiclist':this.stitems
+				});
+				this.express_form_one.value.qp_status = '2';
+				console.log(this.express_form_one.value);				
+				if(this.qp_id){
+					this.express_form_one.value.qp_id = this.qp_id;
+				}
+				this.disabledApiButton = true;
+				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							this.notif.showSuccessErrorMessage('Question paper saved successfully', 'success');
+							setTimeout(() => {
+								this.router.navigate(['../'], { relativeTo: this.route });
+							}, 2000);
+						}
+						this.disabledApiButton = false;
+					}
+					
+				);
+			} else {
+				// tslint:disable-next-line:max-line-length
+				this.notif.showSuccessErrorMessage('Please match the review question length and total marks <br> with the total no of questions <br>selected at the beginning', 'error');
+			}
+		}
+	}
+	addExpressQuestionPaper() {
+		if (this.express_form_one.valid) {
+			let sum = 0;
+			let allQuestionHasMarks = true;
+			for (const item of this.REVIEW_ELEMENT_DATA) {
+				if (Number(item.marks) < 1) {
+					allQuestionHasMarks = false;
+				}
+				sum = sum + Number(item.marks);
+			}
+			this.total = Number(sum);
+			if ((allQuestionHasMarks && this.REVIEW_ELEMENT_DATA.length === Number(this.express_form_one.value.qp_qcount) && this.total === this.express_form_one.value.qp_marks)) {
+				this.filtersArray = this.filtersArray.filter((item, index, self) =>
+					index === self.findIndex((t) => (
+						t.qf_st_id === item.qf_st_id && t.qf_topic_id === item.qf_topic_id
+					))
+				);
+				console.log('finalQuestionArray', this.finalQuestionArray);
+				console.log('this.REVIEW_ELEMENT_DATA', this.REVIEW_ELEMENT_DATA);
+				const paperquestion: any[] = [];
+				this.REVIEW_ELEMENT_DATA.forEach(item => {
+					const ind = this.finalQuestionArray.findIndex(element => element.qpq_qus_id === item.action.qpq_qus_id);
+					if (ind !== -1) {
+						paperquestion.push({
+							qpq_qus_position: item.position,
+							qpq_marks: item.marks,
+							qpq_negative_marks: item.negativeMarks,
+							qpq_qus_id: this.finalQuestionArray[ind].qpq_qus_id,
+							qpq_qt_id: this.finalQuestionArray[ind].qpq_qt_id,
+							qpq_qst_id: this.finalQuestionArray[ind].qpq_qst_id,
+							qpq_topic_id: this.finalQuestionArray[ind].qpq_topic_id,
+							qpq_st_id: this.finalQuestionArray[ind].qpq_st_id
+						});
+					}
+				});
+				this.express_form_one.patchValue({
+					'qp_qm_id': '3',
+					'qlist': paperquestion,
+					'filters': this.qstfilterArray,
+					'subtopiclist':this.stitems
+				});
+				this.express_form_one.value.qp_status = '0';
+				console.log(this.express_form_one.value);
+				this.disabledApiButton = true;
 				this.qelementService.addExpressQuestionPaper(this.express_form_one.value).subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -2264,7 +2607,8 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 								this.router.navigate(['../'], { relativeTo: this.route });
 							}, 2000);
 						}
-					}
+						this.disabledApiButton = false;
+					}					
 				);
 			} else {
 				// tslint:disable-next-line:max-line-length

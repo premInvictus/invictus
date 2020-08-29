@@ -79,10 +79,14 @@
                                         <div [innerHTML]="item.reasons"></div>
                                     </td>
                                 </ng-container>
+                                <ng-container matColumnDef="status">
+                                    <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+                                    <td mat-cell *matCellDef="let item"> {{item.status | titlecase}} </td>
+                                </ng-container>
                                 <ng-container matColumnDef="action">
                                     <th mat-header-cell *matHeaderCellDef> Action </th>
                                     <td mat-cell *matCellDef="let item">
-                                        <i *ngIf="isExistUserAccessMenu('52')" class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip" data-placement="top" matTooltip="Publish" aria-hidden="true" (click)="publishQuestionPaper(item.action.qp_id)"></i>                                        &nbsp;
+                                        <i *ngIf="isExistUserAccessMenu('52') && item.action.qp_status == '0'" class="far fa-thumbs-up table-publish-icon" data-toggle="tooltip" data-placement="top" matTooltip="Publish" aria-hidden="true" (click)="publishQuestionPaper(item.action.qp_id)"></i> &nbsp;
                                         <a *ngIf="isExistUserAccessMenu('53')" href="javascript:void(0)" data-toggle="modal" data-target="#viewQuesPaper" (click)="openDialog(item.action)">
                                             <i class="far fa-edit table-edit-icon" data-toggle="tooltip" data-placement="top" matTooltip="Edit" aria-hidden="true"></i>
                                         </a>&nbsp;

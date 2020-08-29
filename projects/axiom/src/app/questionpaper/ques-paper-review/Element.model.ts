@@ -6,5 +6,6 @@ export interface Element {
 		subject: string;
 		marks: string;
 		reasons: string;
+		status:string;
 		action: any;
 }

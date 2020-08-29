@@ -8,6 +8,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Element } from './Element.model';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { QuesPaperReviewViewComponent } from './ques-paper-review-view/ques-paper-review-view.component';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 @Component({
 	selector: 'app-ques-paper-review',
@@ -36,7 +37,7 @@ export class QuesPaperReviewComponent implements OnInit {
 	@ViewChild(MatPaginator) paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('deleteModalRef') deleteModalRef;
-	displayedColumns = ['position', 'name', 'class', 'subject', 'marks', 'reasons', 'action'];
+	displayedColumns = ['position', 'name', 'class', 'subject', 'marks', 'reasons', 'status', 'action'];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 	constructor(
@@ -46,7 +47,9 @@ export class QuesPaperReviewComponent implements OnInit {
 		private userAccessMenuService: UserAccessMenuService,
 		private notif: NotificationService,
 		private breadCrumbService: BreadCrumbService,
-		public dialog: MatDialog
+		public dialog: MatDialog,
+		public router:Router,
+		public route:ActivatedRoute
 	) { }
 
 	ngOnInit() {
@@ -56,16 +59,21 @@ export class QuesPaperReviewComponent implements OnInit {
 	}
 
 	openDialog(item): void {
-		const dialogRef = this.dialog.open(QuesPaperReviewViewComponent, {
-			width: '850px',
-			height: '90vh',
-			data: {
-				item: item
-			}
-		});
-
-		dialogRef.afterClosed().subscribe(result => {
-		});
+		console.log('item',item);
+		if(item.qp_qm_id == 3){
+			this.router.navigate(['../../question_paper_setup/express_paper_setup'], { queryParams: { qp_id: item.qp_id }, relativeTo: this.route });
+		} else {
+			const dialogRef = this.dialog.open(QuesPaperReviewViewComponent, {
+				width: '850px',
+				height: '90vh',
+				data: {
+					item: item
+				}
+			});
+	
+			dialogRef.afterClosed().subscribe(result => {
+			});
+		}
 	}
 
 	applyFilter(filterValue: string) {
@@ -115,7 +123,7 @@ export class QuesPaperReviewComponent implements OnInit {
 		const param: any = {};
 		param.class_id = this.parameterform.value.qp_class_id;
 		param.sub_id = this.parameterform.value.qp_sub_id;
-		param.qp_status = '0';
+		param.qp_status = ['0','2'];
 		if (this.parameterform.valid) {
 			this.qelementService.getQuestionPaper(param).subscribe(
 				(result: any) => {
@@ -146,6 +154,7 @@ export class QuesPaperReviewComponent implements OnInit {
 								subject: t.sub_name,
 								marks: t.tp_marks,
 								reasons: reasons,
+								status: t.qp_status == '0' ? 'review' : 'draf',
 								action: t
 							});
 							ind++;

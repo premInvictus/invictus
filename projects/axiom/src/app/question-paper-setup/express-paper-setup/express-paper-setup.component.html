@@ -79,7 +79,7 @@
                                                 <mat-form-field class="form-field" appearance="outline">
                                                    <mat-label>Section</mat-label>
                                                    <mat-select formControlName="qp_sec_id" id="section"
-                                                      placeholder="Section" required>
+                                                      placeholder="Section">
                                                       <mat-option value="all">All</mat-option>
                                                       <mat-option *ngFor="let item of sectionArray"
                                                          [value]="item.sec_id">
@@ -570,7 +570,7 @@
                                     <!-- Position Column -->
                                     <ng-container matColumnDef="position">
                                        <th class="express-sq-position" *matHeaderCellDef mat-sort-header>S
-                                          No. </th>
+                                          No. asdf a</th>
                                        <td class="express-sq-position" *matCellDef="let item"> Q-{{item.position}}
                                        </td>
                                     </ng-container>
@@ -894,8 +894,12 @@
                      </mat-paginator>
                      <br>
                      <div class="text-right">
-                        <button mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                        <button [disabled]="disabledApiButton" *ngIf="!updatePaperFlag" mat-raised-button class="submit-button" matTooltip="Build Question paper"
                            placement="bottom" (click)="addExpressQuestionPaper()">Submit</button>
+                        <button *ngIf="updatePaperFlag" mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                           placement="bottom" (click)="updateExpressQuestionPaper()">Update</button>
+                        <button [disabled]="disabledApiButton" mat-raised-button class="submit-button" matTooltip="Build Question paper"
+                           placement="bottom" (click)="saveDraftExpressQuestionPaper()">Save As Draft</button>
                         <button mat-raised-button class="reset-button" matTooltip="Are you sure you want to reset?"
                            placement="top" (click)="reset()">Reset</button>
                      </div>

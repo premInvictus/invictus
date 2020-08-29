@@ -44,7 +44,7 @@
                 </div>
             </div>
             <hr>
-            <div class="row">
+            <div class="row" id="hide_page" >
                 <div class="col-lg-12">
                     <h6>General Instructions </h6>
                     <ol>
@@ -61,17 +61,17 @@
                                     <table class=" table question-table question-paper-table" style="border:none" cellspacing="0">
                                         <tbody>
                                             <ng-container *ngFor="let qitem of item.qlist;let i=index">
-                                                <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)">
+                                                <tr *ngIf="belongToSub(qitem.qus_sub_id,subQuestions.sub_id)" style="white-space:nowrap;">
                                                     <th class="qus_position" scope="row" valign="top" width="20">
                                                         {{getQusPosFromCurrentQP(qitem.qus_id)}}. </th>
-                                                    <td class="ques_name" valign="top">
+                                                    <td class="ques_name" valign="top" style="white-space:nowrap;">
                                                         <label class="imgclassQpList" [MathJax]="qitem.qus_name"></label>
                                                         <table *ngIf="(qitem.qus_qst_id == 1) || (qitem.qus_qst_id == 2) || (qitem.qus_qst_id == 3)" width="50%">
                                                             <tr *ngFor="let option of qitem.options;let i=index">
                                                                 <td style="width:30px" class="option_width"><label [innerHTML]="'('+optionHA[i]+')'"></label></td>
                                                                 <td style="text-align: left"><label class="imgClassExpress" [MathJax]="option.qopt_options"></label></td>
                                                             </tr>
-                                                            <tr *ngFor="let option of qitem.options;let i=index">
+                                                            <tr *ngFor="let option of qitem.options;let i=index" style="white-space:nowrap;">
                                                                 <td style="width:100px" class="option_width" *ngIf="getCorrectAnswer(option.qopt_answer)">
                                                                     <b>Answer <span [innerHTML]="optionHA[i]"></span>:</b> </td>
                                                                 <td style="text-align: left" *ngIf="getCorrectAnswer(option.qopt_answer)"> <label class="imgClassExpress" [MathJax]="option.qopt_options"></label></td>
@@ -84,7 +84,7 @@
                                                                 <td class="option_width"><label [innerHTML]="'('+optionmatchHA[i]+')'"></label></td>
                                                                 <td><label [MathJax]="option.qopt_options_match"></label></td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr style="white-space:nowrap;">
                                                                 <td><b>Answer:</b></td>
                                                                 <td *ngFor="let option of qitem.options;let k=index">
                                                                     {{optionHA[k]}} - {{option.qopt_answer}}
