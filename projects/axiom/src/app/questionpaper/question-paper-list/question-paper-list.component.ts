@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { UserAccessMenuService, NotificationService, BreadCrumbService, HtmlToTextService } from '../../_services/index';
 import { appConfig } from '../../app.config';
 import { Element } from './question-paper-list.model';
+import { saveAs } from 'file-saver';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { forEach } from '@angular/router/src/utils/collection';
 @Component({
@@ -471,13 +472,15 @@ export class QuestionPaperListComponent implements OnInit {
 
 	printStudentCopy() {
 		const printModal2 = document.getElementById('printModal2');
-		const popupWin = window.open('', '_blank', 'width=900,height=500');
-		popupWin.document.open();
-		// tslint:disable-next-line:max-line-length
-		popupWin.document.write(
+
+		const html =
 			`<html>
 		<style>
-		
+		iframe{
+			background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
+			background-size:100% 100%
+		} 
+		button { display:none; } 
 		@media print{
 		button { display:none; }  
 		iframe{
@@ -496,6 +499,7 @@ export class QuestionPaperListComponent implements OnInit {
 		table{margin:0px; padding:0px;}
 		label{width:100% !important;margin:0px !important;}
 		.general-inc{font-size:15px; font-weight:bold;}
+		.text-center{text-align:center;}
 		.text-center h5{text-align:center; margin:0;}
 		.max_marks,.time_allowed{width:25% !important;}
 		body{-webkit-print-color-adjust: exact; !important}
@@ -504,17 +508,29 @@ export class QuestionPaperListComponent implements OnInit {
 		mrow.MJX-TeXAtom-ORD{display:none !important}
 		} 
 		</style>
-		<body onload="window.print()">'
+		<body>'
 		${printModal2.innerHTML}  
-		<script type="text/x-mathjax-config">
-		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-		</script>
-		<script type="text/javascript" async
-		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
-		</script>
 		</body>
-		</html>`);
-		popupWin.document.close();
+		<script type="text/x-mathjax-config">
+		MathJax.Hub.Config({
+			TeX: {extensions: ["mhchem.js"]},
+			tex2jax: {
+			inlineMath: [['$','$'], ['\\(','\\)']],
+			displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+			processEscapes: true
+			}
+		});
+	  </script>														
+<script type="text/javascript" async
+src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+</script>
+		</html>`;
+		this.qelementService.printQuestionPaperPDF({ pdf: html }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+			}
+		});
 	}
 	htmlToText(html) {
 		return this.htt.htmlToText(html);
