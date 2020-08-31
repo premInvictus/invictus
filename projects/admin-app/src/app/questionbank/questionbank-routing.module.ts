@@ -7,6 +7,7 @@ import { ReviewsComponent } from './reviews/reviews.component';
 import { ReviewoComponent } from './reviewo/reviewo.component';
 import { ReviewEssayComponent } from './review-essay/review-essay.component';
 import { DbsyncComponent } from './dbsync/dbsync.component';
+import { TopicwiseReportOverviewComponent } from './topicwise-report-overview/topicwise-report-overview.component';
 
 const routes: Routes = [
 	{
@@ -16,7 +17,8 @@ const routes: Routes = [
 			{ path: 'view_questions', component: ViewqComponent },
 			{ path: 'review_subjective', component: ReviewsComponent },
 			{ path: 'review_objective', component: ReviewoComponent },
-			{ path: 'review_essay', component: ReviewEssayComponent }
+			{ path: 'review_essay', component: ReviewEssayComponent },
+			{ path: 'topicwise-report-overview', component: TopicwiseReportOverviewComponent}
 		]
 	}
 ];

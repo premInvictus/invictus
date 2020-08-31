@@ -33,6 +33,7 @@ import { ReviewEssayComponent } from './review-essay/review-essay.component';
 import { EditEssayComponent } from './review-essay/edit-essay/edit-essay.component';
 import { DbsyncComponent } from './dbsync/dbsync.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
+import { TopicwiseReportOverviewComponent } from './topicwise-report-overview/topicwise-report-overview.component';
 declare var CKEDITOR: any;
 @NgModule({
 	imports: [
@@ -60,7 +61,7 @@ declare var CKEDITOR: any;
 	entryComponents: [EditSubjectiveDialog, ReviewsComponent, EditobjectiveComponent, ReviewoComponent, EssayDialogsComponent, QuestionPaperDialogComponent, EditEssayComponent],
 
 	// tslint:disable-next-line:max-line-length
-	declarations: [ReviewqComponent, ViewqComponent, ReviewsComponent, ReviewoComponent, PrintDirective, EditSubjectiveDialog, ReviewEssayComponent, DbsyncComponent],
+	declarations: [ReviewqComponent, ViewqComponent, ReviewsComponent, ReviewoComponent, PrintDirective, EditSubjectiveDialog, ReviewEssayComponent, DbsyncComponent, TopicwiseReportOverviewComponent],
 
 	// tslint:disable-next-line:max-line-length
 	providers: [QbankService, QelementService, AuthGuard, NotificationsService, { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' }]

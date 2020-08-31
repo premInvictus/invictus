@@ -1,9 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from '../../questionbank/service/qelement.service';
-import { ReportService } from '../../reports/service/report.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatSort, Sort, MatPaginator } from '@angular/material';
-import { CommonAPIService, SmartService } from '../../_services/index';
+import { CommonAPIService } from 'src/app/_services/index';
 import { createTemplateData } from '@angular/core/src/view/refs';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
@@ -79,13 +78,11 @@ export class TopicwiseReportOverviewComponent implements OnInit {
 		44: 'AR',
 
   };
-  norecord = 0;
+  norecord=0;
 	constructor(
 		private qelementService: QelementService,
 		private route: ActivatedRoute,
-		private reportService: ReportService,
 		private common: CommonAPIService,
-		private smartService: SmartService
 	) { }
 
 	ngOnInit() {
@@ -98,7 +95,7 @@ export class TopicwiseReportOverviewComponent implements OnInit {
 	topicWiseReportOverview() {
     this.ELEMENT_DATA=[];
     this.dataSource = new MatTableDataSource<ReportElement>(this.ELEMENT_DATA);
-		this.reportService.topicWiseReportOverview({}).subscribe(
+		this.qelementService.topicWiseReportOverview({}).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
           this.reportArray = result.data;
@@ -122,7 +119,8 @@ export class TopicwiseReportOverviewComponent implements OnInit {
           this.dataSource.sort = this.sort;
           this.tableCollection = false
 				} else {
-          this.norecord=1;
+          this.common.showSuccessErrorMessage('No record found','error');
+          this.norecord = 1;
         }
 			}
 		);
