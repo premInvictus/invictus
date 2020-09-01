@@ -83,7 +83,17 @@ export class StudentDashboardComponent implements OnInit {
 	currentAssignmentIndex: number;
 	assignmentPre = true;
 	assignmentNext = true;
+
+	msgArray: any[] = [];
+	currentmsg: any;
+	currentmsgIndex: number;
+	msgPre = true;
+	msgNext = true;
+
 	noData = false;
+	studentdetails:any;
+	defaultsrc='';
+	class_sec:any;
 
 	constructor(
 		private reportService: ReportService,
@@ -138,12 +148,32 @@ export class StudentDashboardComponent implements OnInit {
 					console.log('userDetail', this.userDetail);
 					this.erpCommonService.getStudentInformation({login_id: currentUser.login_id, enrollment_type: '4'}).subscribe((resutl1: any) => {
 						if(resutl1 && resutl1.status === 'ok') {
+							this.studentdetails = resutl1.data[0];
 							this.className = resutl1.data[0].class_name;
 							this.secName = resutl1.data[0].sec_name;
 							this.dob = resutl1.data[0].au_dob;
 							this.phoneNumber = resutl1.data[0].au_mobile;
 							this.currentUser['class_id'] = resutl1.data[0] && resutl1.data[0]['class_id'] ? resutl1.data[0]['class_id'] : '';
 							localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
+							const gender =this.studentdetails.au_gender;
+							if (gender === 'M') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+							} else if (gender === 'F') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+							} else {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+							}
+							this.defaultsrc = this.studentdetails.au_profileimage
+								? this.studentdetails.au_profileimage
+								: this.defaultsrc;
+
+							const class_name = this.studentdetails.class_name;
+							const section_name = this.studentdetails.sec_name;
+							if (section_name !== ' ') {
+								this.class_sec = class_name + ' - ' + section_name;
+							} else {
+								this.class_sec = class_name;
+							}
 						}
 					})
 					this.getOverallPerformance();
@@ -176,6 +206,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.getHighestPercentageByStudentInAllExams();
 					this.getPercentageByStudentInAllExams();
 					this.getStudentRankInAllExams();
+					this.getMessages();
 				}
 			}
 		);
@@ -210,6 +241,26 @@ export class StudentDashboardComponent implements OnInit {
 		}
 
 
+	}
+	getMessages() {
+		this.msgArray = [];
+		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
+		var inputJson = { 'status.status_name' : 'approved','$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
+		console.log('inputJson--', inputJson);
+		// this.erpCommonService.getMessage(inputJson);
+		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				//this.msgArray = result.data;
+				let i =0;
+				for (const item of result.data) {
+					if (i < 10) {
+						this.msgArray.push(item);
+					}
+					i++;
+				}
+				this.msgNavigate(0);
+			}
+		});
 	}
 	getSmartToAxiom() {
 		const param: any = {};
@@ -347,17 +398,18 @@ export class StudentDashboardComponent implements OnInit {
 		const param: any = {};
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
-		param.sub_id = this.sub_id;
-		param.from = this.commonAPIService.dateConvertion(this.todaysDate);
-		param.to = this.commonAPIService.dateConvertion(this.todaysDate);
-		param.withDate = true;
+		//param.sub_id = this.sub_id;
+		// param.from = this.commonAPIService.dateConvertion(this.todaysDate);
+		// param.to = this.commonAPIService.dateConvertion(this.todaysDate);
+		// param.withDate = true;
 		param.as_status = ['1'];
-		this.erpCommonService.getAssignment({
-			class_id: this.userDetail.au_class_id, 
-			sec_id: this.userDetail.au_sec_id,
-			sub_id: this.sub_id,
-			as_status: [1]
-		}).subscribe((result: any) => {
+		// {
+		// 	class_id: this.userDetail.au_class_id, 
+		// 	sec_id: this.userDetail.au_sec_id,
+		// 	sub_id: this.sub_id,
+		// 	as_status: [1]
+		// }
+		this.erpCommonService.getAssignment(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.assignmentArray = result.data;
 				this.assignmentNavigate(0);
@@ -381,6 +433,24 @@ export class StudentDashboardComponent implements OnInit {
 		} else {
 			this.assignmentPre = false;
 			this.assignmentNext = false;
+		}
+
+	}
+	msgNavigate(index) {
+		this.currentmsgIndex = index;
+		this.currentmsg = this.msgArray[this.currentmsgIndex];
+		if (this.msgArray.length === 1 || this.msgArray.length === 0) {
+			this.msgPre = true;
+			this.msgNext = true;
+		} else if (this.currentmsgIndex === this.msgArray.length - 1) {
+			this.msgNext = true;
+			this.msgPre = false;
+		} else if (this.currentmsgIndex === 0) {
+			this.msgNext = false;
+			this.msgPre = true;
+		} else {
+			this.msgPre = false;
+			this.msgNext = false;
 		}
 
 	}

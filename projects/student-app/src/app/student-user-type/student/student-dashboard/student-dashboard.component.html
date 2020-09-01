@@ -6,18 +6,108 @@
 					<div class="col-6 margin-top-10">
 						<h1 class="remove-bottom-margin font-size-24">Dashboard</h1>
 					</div>
-					<div class="col-6 text-right">
+					<!-- <div class="col-6 text-right">
 						<span class="font-size-20 font-bold font-skyblue">{{currentHour()}},</span> <span
 							class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
 						<br>
 						<span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}
-							<!-- 13<sup>th</sup> April 2018 --></span>
-					</div>
+						</span>
+					</div> -->
 				</div>
 			</mat-card>
 		</div>
 	</div>
-
+	<div class="row margin-top-10">
+		<div class="col-6 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-6">
+							<span class="font-size-20 font-bold">Profile</span>
+						</div>
+						<div class="col-6">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+							</div>
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<div class="row">
+						<div class="col-4">
+							<div class="row margin-top-20">
+							  <div class="col-12 text-center">
+								<img style="border-radius:50%"
+								  [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=150&w=150'"
+								  onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=150&w=150'" />
+							  </div>
+							</div>
+						</div>
+						<div class="col-8">
+							<table cellpadding="3">
+								<tr>
+									<td width="40%">Name</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{studentdetails?.au_full_name}}</td>
+								</tr>
+								<tr>
+									<td width="40%">Class & Section</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{class_sec}}</td>
+								</tr>
+								<tr>
+									<td width="40%">Admission No</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{studentdetails?.em_admission_no}}</td>
+								</tr>
+								<tr>
+									<td width="40%">Date Of Birth</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{studentdetails?.upd_dob | date:'d-MMM-y'}}</td>
+								</tr>
+								<tr>
+									<td width="40%">House</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{studentdetails.hou_house_name ? (studentdetails.hou_house_name | capitalize) : '-'}}</td>
+								</tr>
+								<tr>
+									<td width="40%">Bus Stop</td>
+									<td width="3%">:</td>
+									<td width="57%" class="text-bold">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : '-'}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<div class="col-6 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-6">
+							<span class="font-size-20 font-bold">Profile</span>
+						</div>
+						<div class="col-6">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+							</div>
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<div class="row">
+						<div class="col-4">
+						</div>
+						<div class="col-8">
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
 	<div class="row margin-top-10">
 		<div class="col-12">
 			<mat-card>
@@ -62,124 +152,6 @@
 	</div>
 
 	<div class="row margin-top-10">
-		<div class="col-4 remove-right-padding">
-			<mat-card class="height-296 height-263">
-				<mat-card-title>
-					<div class="row row-remove-top-margin">
-						<div class="col-10">
-							<span class="font-size-20 font-bold">Assignments</span>
-						</div>
-						<div class="col-2">
-							<select class="select-css" [(ngModel)]="sub_id" (change)="getAssignment()">
-								<option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
-								</option>
-							</select>
-						</div>
-					</div>
-				</mat-card-title>
-				<hr class="border-bottom-grey">
-				<mat-card-content>
-					<ng-container *ngIf="assignmentArray.length > 0">
-						<div class="row">
-							<div class="col-10">
-								<span
-									class="font-size-20 font-medium font-skyblue">{{currentAssignment?.sub_name}}</span>
-							</div>
-							<div class="col-2">
-								<button *ngIf="currentAssignment && currentAssignment.as_attachment.length > 0"
-									mat-button class="float-btn-blue font-size-14 font-white"
-									(click)="previewDocuments(currentAssignment?.as_attachment)">
-									+{{currentAssignment?.as_attachment.length}}
-								</button>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-12">
-								<span class="font-size-16 font-medium">{{currentAssignment?.topic_name}}</span>
-								<div class="font-size-15 margin-top-10"
-									[innerHTML]="currentAssignment?.as_assignment_desc"></div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-8 remove-right-padding">
-								<span class="font-size-15">Assigned On :</span><span class="font-medium font-size-15">
-									{{currentAssignment?.as_entry_date| date:'d-MMM-y'}}</span>
-							</div>
-
-							<div class="col-4 remove-col-modal-padding text-center">
-								<span><button mat-button class="side" [disabled]="assignmentPre"
-										(click)="assignmentNavigate(currentAssignmentIndex-1)">
-										<i class="fas fa-chevron-left cursor-pointer"></i>
-									</button>
-									<button mat-button class="side" [disabled]="assignmentNext"
-										(click)="assignmentNavigate(currentAssignmentIndex+1)">
-										<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
-									</button></span>
-							</div>
-
-						</div>
-					</ng-container>
-					<ng-container *ngIf="assignmentArray.length == 0">
-						<div class="text-center">
-							<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
-								height="150px">
-							<br>
-							<span class="font-size-20 font-bold font-color-brown">
-								No Record Found
-							</span>
-						</div>
-					</ng-container>
-				</mat-card-content>
-			</mat-card>
-		</div>
-		<div class="col-4 remove-right-padding">
-			<mat-card class="height-296 height-263">
-				<mat-card-title>
-					<div class="row row-remove-top-margin">
-						<div class="col-10">
-							<span class="font-size-20 font-bold">Photo Gallery</span>
-						</div>
-						<div class="col-2 ">
-							<div class="float-right">
-								<span class="font-size-12 font-skyblue font-bold cursor-pointer">View All</span>
-							</div>
-
-						</div>
-					</div>
-				</mat-card-title>
-				<hr class="border-bottom-grey">
-				<mat-card-content>
-					<div class="row">
-						<div class="col-1 remove-col-modal-padding">
-							<div class="arrow-navigator">
-								<i class="fas fa-chevron-left cursor-pointer"></i>
-							</div>
-						</div>
-						<div class="col-10">
-							<div class="text-center">
-								<div class="image-thumb-box inline-flex">
-
-								</div>
-								<div class="image-thumb-box inline-flex margin-left-15">
-
-								</div>
-								<div class="image-thumb-box inline-flex margin-left-15">
-
-								</div>
-							</div>
-						</div>
-
-						<div class="col-1 remove-col-modal-padding">
-							<div class="arrow-navigator">
-								<i class="fas fa-chevron-right cursor-pointer"></i>
-							</div>
-
-						</div>
-					</div>
-
-				</mat-card-content>
-			</mat-card>
-		</div>
 		<div class="col-4">
 			<mat-card class="height-296 height-263">
 				<mat-card-title>
@@ -267,6 +239,201 @@
 				</ng-container>
 			</mat-card>
 		</div>
+		<div class="col-4 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-6">
+							<span class="font-size-20 font-bold">Communications</span>
+						</div>
+						<div class="col-6">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+							</div>
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<ng-container *ngIf="msgArray.length > 0">
+						<div class="row">
+							<div class="col-10">
+								<span
+									class="font-size-20 font-medium font-skyblue">{{currentmsg?.msg_subject}}</span>
+							</div>
+							<div class="col-2">
+								<button *ngIf="currentmsg && currentmsg.msg_attachment.length > 0"
+									mat-button class="float-btn-blue font-size-14 font-white"
+									(click)="previewDocuments(currentmsg?.msg_attachment)">
+									
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								
+								<div class="font-size-15 margin-top-10"
+									[innerHTML]="currentmsg?.msg_description"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-8 remove-right-padding">
+								<span class="font-size-15">Event Date :</span><span class="font-medium font-size-15">
+									{{currentmsg?.msg_date| date:'d-MMM-y'}}</span><br>
+								<span class="font-size-15">Updated Date :</span><span class="font-medium font-size-15">
+									{{currentmsg?.msg_updated_date| date:'d-MMM-y'}}</span>
+							</div>
+
+							<div class="col-4 remove-col-modal-padding text-center">
+								<span><button mat-button class="side" [disabled]="msgPre"
+										(click)="msgNavigate(currentmsgIndex-1)">
+										<i class="fas fa-chevron-left cursor-pointer"></i>
+									</button>
+									<button mat-button class="side" [disabled]="msgNext"
+										(click)="msgNavigate(currentmsgIndex+1)">
+										<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+									</button></span>
+							</div>
+
+						</div>
+					</ng-container>
+					<ng-container *ngIf="msgArray.length == 0">
+						<div class="text-center">
+							<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+								height="150px">
+							<br>
+							<span class="font-size-20 font-bold font-color-brown">
+								No Record Found
+							</span>
+						</div>
+					</ng-container>
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<div class="col-4 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-6">
+							<span class="font-size-20 font-bold">Assignments</span>
+						</div>
+						<div class="col-6">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+							</div>
+						</div>
+						<!-- <div class="col-2">
+							<select class="select-css" [(ngModel)]="sub_id" (change)="getAssignment()">
+								<option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name}}
+								</option>
+							</select>
+						</div> -->
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<ng-container *ngIf="assignmentArray.length > 0">
+						<div class="row">
+							<div class="col-10">
+								<span
+									class="font-size-20 font-medium font-skyblue">{{currentAssignment?.sub_name}}</span>
+							</div>
+							<div class="col-2">
+								<button *ngIf="currentAssignment && currentAssignment.as_attachment.length > 0"
+									mat-button class="float-btn-blue font-size-14 font-white"
+									(click)="previewDocuments(currentAssignment?.as_attachment)">
+									+{{currentAssignment?.as_attachment.length}}
+								</button>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-12">
+								<span class="font-size-16 font-medium">{{currentAssignment?.topic_name}}</span>
+								<div class="font-size-15 margin-top-10"
+									[innerHTML]="currentAssignment?.as_assignment_desc"></div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-8 remove-right-padding">
+								<span class="font-size-15">Assigned On :</span><span class="font-medium font-size-15">
+									{{currentAssignment?.as_entry_date| date:'d-MMM-y'}}</span>
+							</div>
+
+							<div class="col-4 remove-col-modal-padding text-center">
+								<span><button mat-button class="side" [disabled]="assignmentPre"
+										(click)="assignmentNavigate(currentAssignmentIndex-1)">
+										<i class="fas fa-chevron-left cursor-pointer"></i>
+									</button>
+									<button mat-button class="side" [disabled]="assignmentNext"
+										(click)="assignmentNavigate(currentAssignmentIndex+1)">
+										<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+									</button></span>
+							</div>
+
+						</div>
+					</ng-container>
+					<ng-container *ngIf="assignmentArray.length == 0">
+						<div class="text-center">
+							<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+								height="150px">
+							<br>
+							<span class="font-size-20 font-bold font-color-brown">
+								No Record Found
+							</span>
+						</div>
+					</ng-container>
+				</mat-card-content>
+			</mat-card>
+		</div>
+		<!-- <div class="col-4 remove-right-padding">
+			<mat-card class="height-296 height-263">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-10">
+							<span class="font-size-20 font-bold">Photo Gallery</span>
+						</div>
+						<div class="col-2 ">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer">View All</span>
+							</div>
+
+						</div>
+					</div>
+				</mat-card-title>
+				<hr class="border-bottom-grey">
+				<mat-card-content>
+					<div class="row">
+						<div class="col-1 remove-col-modal-padding">
+							<div class="arrow-navigator">
+								<i class="fas fa-chevron-left cursor-pointer"></i>
+							</div>
+						</div>
+						<div class="col-10">
+							<div class="text-center">
+								<div class="image-thumb-box inline-flex">
+
+								</div>
+								<div class="image-thumb-box inline-flex margin-left-15">
+
+								</div>
+								<div class="image-thumb-box inline-flex margin-left-15">
+
+								</div>
+							</div>
+						</div>
+
+						<div class="col-1 remove-col-modal-padding">
+							<div class="arrow-navigator">
+								<i class="fas fa-chevron-right cursor-pointer"></i>
+							</div>
+
+						</div>
+					</div>
+
+				</mat-card-content>
+			</mat-card>
+		</div> -->
+		
 	</div>
 </div>
 <div id="small-screen">
