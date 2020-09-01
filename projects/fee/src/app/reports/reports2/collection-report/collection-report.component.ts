@@ -603,8 +603,8 @@ export class CollectionReportComponent implements OnInit {
 														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0);
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
-											obj['total'] = obj['total']+(repoArray[Number(keys)]['defaulter_inv_group_amount']
-											? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+											obj['total'] = obj['total']+(repoArray[Number(keys)]['additional_amt']
+											? Number(repoArray[Number(keys)]['additional_amt']) : 0);
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
@@ -713,6 +713,7 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+						obj3['total']=obj3['total']+obj3['additional_amt'];
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
@@ -2233,8 +2234,8 @@ export class CollectionReportComponent implements OnInit {
 											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
-												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
@@ -2250,6 +2251,7 @@ export class CollectionReportComponent implements OnInit {
 							i++;
 							this.dataset.push(obj);
 						});
+						
 						this.columnDefinitions.push(
 							{
 								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
@@ -2320,7 +2322,7 @@ export class CollectionReportComponent implements OnInit {
 						obj3['inv_opening_balance'] =
 							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
 						obj3['invoice_fine_amount'] =
-							new IndianCurrency().transform(this.dataset.map(t => t.invoice_fine_amount).reduce((acc, val) => acc + val, 0));
+							new IndianCurrency().transform(this.dataset.map(t => t.inv_fine_amount).reduce((acc, val) => acc + val, 0));
 						Object.keys(feeHead).forEach((key: any) => {
 							Object.keys(feeHead[key]).forEach(key2 => {
 								Object.keys(this.dataset).forEach(key3 => {
@@ -2426,7 +2428,9 @@ export class CollectionReportComponent implements OnInit {
 			if (value > 0) {
 				return new IndianCurrency().transform(value);
 			} else {
-				return '-' + new IndianCurrency().transform(-value);
+				if (value && value != '-') {
+					return '-' + new IndianCurrency().transform(-value);
+				}
 			}
 
 		}
