@@ -531,7 +531,7 @@ export class CollectionReportComponent implements OnInit {
 										cssClass: 'receipt_collection_report'
 									},
 									{
-										id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
+										id: 'inv_opening_balance', name: 'Opening Balance / Previous Balance (₹)', field: 'inv_opening_balance',
 										filterable: true,
 										cssClass: 'amount-report-fee',
 										filterSearchType: FieldType.number,
@@ -593,6 +593,8 @@ export class CollectionReportComponent implements OnInit {
 											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['inv_opening_balance'] = obj['inv_opening_balance'] + (repoArray[Number(keys)]['defaulter_inv_group_amount']
+											? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 											obj['additional_amt'] = Number(repoArray[Number(keys)]['invoice_amount']
@@ -601,6 +603,8 @@ export class CollectionReportComponent implements OnInit {
 														? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0);
 											obj['total'] = repoArray[Number(keys)]['invoice_amount']
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+											obj['total'] = obj['total']+(repoArray[Number(keys)]['defaulter_inv_group_amount']
+											? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
 												repoArray[Number(keys)]['pay_name'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
@@ -888,6 +892,15 @@ export class CollectionReportComponent implements OnInit {
 						width: 15,
 						sortable: true,
 						filterable: true,
+						grouping: {
+							getter: 'payment_mode',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
 					},
 					{
 						id: 'bank_name',
@@ -896,6 +909,15 @@ export class CollectionReportComponent implements OnInit {
 						width: 15,
 						sortable: true,
 						filterable: true,
+						grouping: {
+							getter: 'bank_name',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
 
 					},
 					{
@@ -949,8 +971,8 @@ export class CollectionReportComponent implements OnInit {
 								obj['transaction_id'] = repoArray[Number(index)]['ftr_cheque_no'] ?
 									(repoArray[Number(index)]['ftr_cheque_no']) : 0;
 							} else {
-							obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] ?
-								(repoArray[Number(index)]['ftr_transaction_id']) : 0;
+							obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] > 0 ?
+								(repoArray[Number(index)]['ftr_transaction_id']) : '-';
 
 							}
 
