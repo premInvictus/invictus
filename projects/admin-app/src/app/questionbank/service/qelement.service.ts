@@ -827,9 +827,12 @@ export class QelementService {
 		const param: any = {};
 		if (value.ess_id) {
 			param.ess_id = value.ess_id;
-			return this._http.delete(environment.apiAxiomUrl + `/essay/deleteEssay/${param.ess_id}`)
-;
+			return this._http.delete(environment.apiAxiomUrl + `/essay/deleteEssay/${param.ess_id}`);
 		}
+	}
+	topicWiseReportOverview(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiAxiomUrl + '/report/topicWiseReportOverview', value);
 	}
 }
 

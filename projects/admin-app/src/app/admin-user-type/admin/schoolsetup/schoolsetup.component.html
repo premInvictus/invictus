@@ -132,6 +132,15 @@
                            <td *matCellDef="let item"> {{item.manager}} </td>
                         </ng-container>
                         <!-- Action Column -->
+                        <ng-container matColumnDef="status">
+                           <th *matHeaderCellDef mat-sort-header>Status</th>
+                           <td *matCellDef="let item"> 
+                              <mat-slide-toggle class="system-info-toggle-btn"
+                                    [checked]="item.action.school_status == '1'"
+                                   (click)="toggleLodStatus(item.action)">
+                               </mat-slide-toggle>
+                               </td>
+                       </ng-container>
                         <ng-container matColumnDef="action">
                            <th *matHeaderCellDef> Action </th>
                            <td *matCellDef="let item">

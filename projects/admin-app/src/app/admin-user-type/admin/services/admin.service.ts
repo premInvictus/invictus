@@ -203,4 +203,7 @@ export class AdminService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiSisUrl + '/documents/uploadDocuments', value);
 	}
+	editSchoolstatus(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/updateSchoolstatus', value);
+	}
 }

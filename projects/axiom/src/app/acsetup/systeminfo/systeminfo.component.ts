@@ -626,7 +626,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arrayBoard = result.data;
 					let ind = 1;
 					for (const t of that.arrayBoard) {
-						that.BOARD_ELEMENT_DATA.push({ position: ind, name: t.board_name, alias: t.board_alias, action: t });
+						that.BOARD_ELEMENT_DATA.push({ position: t.board_id, name: t.board_name, alias: t.board_alias, action: t });
 						ind++;
 						that.boarddataSource = new MatTableDataSource<BoardElement>(that.BOARD_ELEMENT_DATA);
 						that.boarddataSource.paginator = that.paginator;
@@ -659,7 +659,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arraySection = result.data;
 					let ind = 1;
 					for (const t of that.arraySection) {
-						that.SECTION_ELEMENT_DATA.push({ position: ind, name: t.sec_name, action: t });
+						that.SECTION_ELEMENT_DATA.push({ position: t.sec_id, name: t.sec_name, action: t });
 						ind++;
 						that.sectiondataSource = new MatTableDataSource<SectionElement>(that.SECTION_ELEMENT_DATA);
 						that.sectiondataSource.paginator = that.paginator;
@@ -692,7 +692,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arraySubject = result.data;
 					let ind = 1;
 					for (const t of that.arraySubject) {
-						that.SUBJECT_ELEMENT_DATA.push({ position: ind, board: t.board_name, name: t.sub_name, action: t });
+						that.SUBJECT_ELEMENT_DATA.push({ position: t.sub_id, board: t.board_name, name: t.sub_name, action: t });
 						ind++;
 						that.subjectdataSource = new MatTableDataSource<SubjectElement>(that.SUBJECT_ELEMENT_DATA);
 						that.subjectdataSource.paginator = that.paginator;
@@ -737,7 +737,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 							subName = subName + sub.sub_name + ',';
 						}
 						// tslint:disable-next-line:max-line-length
-						that.CLASS_ELEMENT_DATA.push({ position: ind, name: t.class_name, section: secName, board: t.board_name, subject: subName, action: t });
+						that.CLASS_ELEMENT_DATA.push({ position: t.class_id, name: t.class_name, section: secName, board: t.board_name, subject: subName, action: t });
 						ind++;
 						that.classdataSource = new MatTableDataSource<ClassElement>(that.CLASS_ELEMENT_DATA);
 						that.classdataSource.paginator = that.paginator;
@@ -773,7 +773,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					let ind = 1;
 					for (const t of that.arrayTopic) {
 						that.TOPIC_ELEMENT_DATA.push({
-							position: ind, board: t.board_name,
+							position: t.topic_id, board: t.board_name,
 							class: t.class_name, subject: t.sub_name, name: t.topic_name, action: t
 						});
 						ind++;
@@ -809,7 +809,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					let ind = 1;
 					for (const t of that.arraySubtopic) {
 						that.SUBTOPIC_ELEMENT_DATA.push({
-							position: ind, board: t.board_name,
+							position: t.st_id, board: t.board_name,
 							class: t.class_name, subject: t.sub_name, topic: t.topic_name, name: t.st_name, action: t
 						});
 						ind++;
@@ -832,7 +832,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arrayQsubtype = result.data;
 					let ind = 1;
 					for (const t of that.arrayQsubtype) {
-						that.QUESTIONSUBTYPE_ELEMENT_DATA.push({ position: ind, name: t.qst_name, action: t });
+						that.QUESTIONSUBTYPE_ELEMENT_DATA.push({ position: t.qst_id, name: t.qst_name, action: t });
 						ind++;
 						that.quessubtypedataSource = new MatTableDataSource<QuestionSubTypeElement>(that.QUESTIONSUBTYPE_ELEMENT_DATA);
 						that.quessubtypedataSource.paginator = that.paginator;
@@ -860,7 +860,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 						for (const qst of t.qst_id) {
 							quesSubName = quesSubName + qst.qst_name + ', ';
 						}
-						that.QUESTIONTYPE_ELEMENT_DATA.push({ position: ind, name: t.qt_name, quessubtype: quesSubName, action: t });
+						that.QUESTIONTYPE_ELEMENT_DATA.push({ position: t.qt_id, name: t.qt_name, quessubtype: quesSubName, action: t });
 						ind++;
 						that.questypedataSource = new MatTableDataSource<QuestionTypeElement>(that.QUESTIONTYPE_ELEMENT_DATA);
 						that.questypedataSource.paginator = that.paginator;
@@ -881,7 +881,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arraySkill = result.data;
 					let ind = 1;
 					for (const t of that.arraySkill) {
-						that.SKILLTYPE_ELEMENT_DATA.push({ position: ind, name: t.skill_name, action: t });
+						that.SKILLTYPE_ELEMENT_DATA.push({ position: t.skill_id, name: t.skill_name, action: t });
 						ind++;
 						that.skilltypedataSource = new MatTableDataSource<SkillTypeElement>(that.SKILLTYPE_ELEMENT_DATA);
 						that.skilltypedataSource.paginator = that.paginator;
@@ -902,7 +902,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					that.arrayLod = result.data;
 					let ind = 1;
 					for (const t of that.arrayLod) {
-						that.LOD_ELEMENT_DATA.push({ position: ind, name: t.dl_name, action: t });
+						that.LOD_ELEMENT_DATA.push({ position: t.dl_id, name: t.dl_name, action: t });
 						ind++;
 						that.loddataSource = new MatTableDataSource<LODElement>(that.LOD_ELEMENT_DATA);
 						that.loddataSource.paginator = that.paginator;
