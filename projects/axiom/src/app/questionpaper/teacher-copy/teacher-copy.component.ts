@@ -265,17 +265,17 @@ export class TeacherCopyComponent implements OnInit {
 			<script type="text/x-mathjax-config">
 			setTimeout(function(){
 				MathJax.Hub.Config({
-					CommonHTML: {
-						minScaleAdjust: 100,
-					},
+				
 					
 					tex2jax: {
 					inlineMath: [['$','$'], ['\\(','\\)']],
 					displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
 					processEscapes: true,
-					}
+					
+					},
+					messageStyle: "none"
 				});
-			}, 25000);
+			}, 2000);
 			</script>
 			<script type="text/javascript" async
 			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
