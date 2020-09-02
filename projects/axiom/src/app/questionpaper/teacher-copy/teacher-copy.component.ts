@@ -4,7 +4,7 @@ import { HtmlToTextService } from '../../_services/htmltotext.service';
 import { ActivatedRoute } from '@angular/router';
 import { appConfig } from '../../app.config';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
-
+import { saveAs } from 'file-saver';
 @Component({
 	selector: 'app-teacher-copy',
 	templateUrl: './teacher-copy.component.html',
@@ -258,42 +258,66 @@ export class TeacherCopyComponent implements OnInit {
 
 	printTeacherCopy() {
 		const printModal2 = document.getElementById('printModal2');
-		const popupWin = window.open('', '_blank', 'width=900,height=500');
-		popupWin.document.open();
-		// tslint:disable-next-line:max-line-length
-		popupWin.document.write(`<html>
+
+		const html =
+			`<html>
+			<head>
+			<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+			</script>
+			<script type="text/javascript" async
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+			</script>
 		<style>
-		@media print{
-		button { display:none; } 
-		iframe{background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
-		background-size:100% 100%} 
-		.my_passage{font-size:14px !important} 
-
-
-		.qst_name_head{text-align:center;font-size:15px; font-weight:bold}
-		.qp_name_head{text-align:center;font-size:15px;}
+		
+	 
+	
+		button { display:none; }  
+		
+		.ques-paper-logo {
+			margin-bottom: 10px;
+			border-radius: 50%;
+			width: 65px;
+			height: 65px;
+		}
+		.qst_name_head{text-align:center;font-size:18px; font-weight:bold}
+		.qp_name_head{text-align:center;font-size:22px;}
+		.qp_name{font-size:20px;}
 		.logo{text-align:center;}
 		.qus_position{width:2% !important}
+		
 		.ques_name{width:85% !important;}
 		.moveTd{width:13% !important;font-weight:bold;}
 		.imgClassExpress p img{height:100px;width:auto;margin-bottom:10px} 
 		.imgclassQpList p img {height:100px;margin-bottom:10px} 
-		table{margin:0px; padding:0px;}
+		table{margin:0px; padding:0px;	font-size: 20px;}
 		label{width:100% !important;margin:0px !important;}
-		.general-inc{font-size:15px; font-weight:bold;}
-		.text-center h5{text-align:center; margin:0;}
+		.general-inc{font-size:20px; font-weight:bold;}
+		.text-center{text-align:center !important;}
+		.text-center h5{text-align:center; margin:0; font-size: 20px;}
 		.max_marks,.time_allowed{width:25% !important;}
 		body{-webkit-print-color-adjust: exact; !important}
 		.modifyWidth{width:92.5% !important} 
+		.ques-paper-table {
+			font-size: 20px;
+		}
 		.MJX_Assistive_MathML{display:none !important}
 		mrow.MJX-TeXAtom-ORD{display:none !important}
+		
+	
 		</style>
-		<body onload="window.print()">
-		${printModal2.innerHTML}
+		</head>
+		<body>'
+		${printModal2.innerHTML}  
 		</body>
-		</html>
-		`);
-		popupWin.document.close();
+	
+		</html>`;
+		this.qelementService.printQuestionPaperPDF({ pdf: html }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+			}
+		});
 	}
 
 	getCorrectAnswer(answer) {
