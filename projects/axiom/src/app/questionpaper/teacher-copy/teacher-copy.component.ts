@@ -262,6 +262,8 @@ export class TeacherCopyComponent implements OnInit {
 		const html =
 			`<html>
 			<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<script type="text/x-mathjax-config">
 			setTimeout(function(){
 				MathJax.Hub.Config({
