@@ -268,14 +268,14 @@ export class TeacherCopyComponent implements OnInit {
 					CommonHTML: {
 						minScaleAdjust: 100,
 					},
-					TeX: {extensions: ["tex2jax.js"]},
+					
 					tex2jax: {
 					inlineMath: [['$','$'], ['\\(','\\)']],
 					displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
 					processEscapes: true,
 					}
 				});
-			}, 40000);
+			}, 25000);
 			</script>
 			<script type="text/javascript" async
 			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
