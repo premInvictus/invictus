@@ -263,7 +263,19 @@ export class TeacherCopyComponent implements OnInit {
 			`<html>
 			<head>
 			<script type="text/x-mathjax-config">
-			MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+			setTimeout(function(){
+				MathJax.Hub.Config({
+					CommonHTML: {
+						minScaleAdjust: 100,
+					},
+					TeX: {extensions: ["tex2jax.js"]},
+					tex2jax: {
+					inlineMath: [['$','$'], ['\\(','\\)']],
+					displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+					processEscapes: true,
+					}
+				});
+			}, 40000);
 			</script>
 			<script type="text/javascript" async
 			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
@@ -280,26 +292,27 @@ export class TeacherCopyComponent implements OnInit {
 			width: 65px;
 			height: 65px;
 		}
-		.qst_name_head{text-align:center;font-size:18px; font-weight:bold}
-		.qp_name_head{text-align:center;font-size:22px;}
-		.qp_name{font-size:20px;}
+		p {word-break:break-word;white-space:pre-line;margin-bottom:5px}
+		.qst_name_head{text-align:center;font-size:14px; font-weight:bold}
+		.qp_name_head{text-align:center;font-size:14px;}
+		.qp_name{font-size:14px;}
 		.logo{text-align:center;}
 		.qus_position{width:2% !important}
 		
 		.ques_name{width:85% !important;}
 		.moveTd{width:13% !important;font-weight:bold;}
-		.imgClassExpress p img{height:100px;width:auto;margin-bottom:10px} 
+		.imgClassExpress p img{height:100px;width:auto; margin-bottom:10px} 
 		.imgclassQpList p img {height:100px;margin-bottom:10px} 
-		table{margin:0px; padding:0px;	font-size: 20px;}
+		table{margin:0px; padding:0px;	font-size: 14px;}
 		label{width:100% !important;margin:0px !important;}
-		.general-inc{font-size:20px; font-weight:bold;}
+		.general-inc{font-size:14px; font-weight:bold;}
 		.text-center{text-align:center !important;}
-		.text-center h5{text-align:center; margin:0; font-size: 20px;}
+		.text-center h5{text-align:center; margin:0; font-size: 14px;}
 		.max_marks,.time_allowed{width:25% !important;}
 		body{-webkit-print-color-adjust: exact; !important}
-		.modifyWidth{width:92.5% !important} 
+		.modifyWidth{width:80% !important} 
 		.ques-paper-table {
-			font-size: 20px;
+			font-size: 14px;
 		}
 		.MJX_Assistive_MathML{display:none !important}
 		mrow.MJX-TeXAtom-ORD{display:none !important}
@@ -312,7 +325,8 @@ export class TeacherCopyComponent implements OnInit {
 		</body>
 	
 		</html>`;
-		this.qelementService.printQuestionPaperPDF({ pdf: html }).subscribe((result: any) => {
+		const finalHTML = html.replace('<p>&nbsp;</p>', '');
+		this.qelementService.printQuestionPaperPDF({ pdf: finalHTML }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				const length = result.data.split('/').length;
 				saveAs(result.data, result.data.split('/')[length - 1]);
