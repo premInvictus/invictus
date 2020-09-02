@@ -69,12 +69,12 @@
 								<tr>
 									<td width="40%">House</td>
 									<td width="3%">:</td>
-									<td width="57%" class="text-bold">{{studentdetails.hou_house_name ? (studentdetails.hou_house_name | capitalize) : '-'}}</td>
+									<td width="57%" class="text-bold">{{studentdetails?.hou_house_name ? (studentdetails?.hou_house_name | capitalize) : '-'}}</td>
 								</tr>
 								<tr>
 									<td width="40%">Bus Stop</td>
 									<td width="3%">:</td>
-									<td width="57%" class="text-bold">{{studentdetails.ead_bus_route ? (studentdetails.ead_bus_route | capitalize) : '-'}}</td>
+									<td width="57%" class="text-bold">{{studentdetails?.ead_bus_route ? (studentdetails?.ead_bus_route | capitalize) : '-'}}</td>
 								</tr>
 							</table>
 						</div>
@@ -87,7 +87,7 @@
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6">
-							<span class="font-size-20 font-bold">Profile</span>
+							<span class="font-size-20 font-bold">Attendance</span>
 						</div>
 						<div class="col-6">
 							<div class="float-right">
@@ -100,8 +100,47 @@
 				<mat-card-content>
 					<div class="row">
 						<div class="col-4">
+							<!-- <app-common-dynamic-chart *ngIf="feeprojectiondonutchartflag"
+								[options]="feeprojectiondonutchart">
+							</app-common-dynamic-chart> -->
 						</div>
 						<div class="col-8">
+							<div class="row">
+								<div class="col-12">
+									<app-common-dynamic-chart *ngIf="sessionAttendancechartflag"
+										[options]="sessionAttendancechart">
+									</app-common-dynamic-chart>
+									<div class="attendance-bottom" *ngIf="sessionAttendancechartflag">
+										<span class="session-left session-color">Presents: {{sessionAttendance?.totalpresentday}} Days</span>
+										<span class="session-right">Total: {{sessionAttendance?.totalworkingdays}} Days</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-12">
+									<app-common-dynamic-chart *ngIf="monthAttendancechartflag"
+										[options]="monthAttendancechart">
+									</app-common-dynamic-chart>
+									<div class="attendance-bottom" *ngIf="monthAttendancechartflag">
+										<span class="session-left month-color">Presents: {{monthAttendance?.totalpresentday}} Days</span>
+										<span class="session-right">Total: {{monthAttendance?.totalworkingdays}} Days</span>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-6">
+									<div class="legend-box legend-paymentgateway"
+										style="display: inline-block">
+									</div>
+									<span class="font-size-14 middle-align">&nbsp;Current Session</span>
+								</div>
+								<div class="col-6">
+									<div class="legend-box legend-paymentgateway"
+										style="display: inline-block">
+									</div>
+									<span class="font-size-14 middle-align">&nbsp;Current Month</span>
+								</div>
+							</div>
 						</div>
 					</div>
 				</mat-card-content>

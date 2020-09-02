@@ -94,6 +94,55 @@ export class StudentDashboardComponent implements OnInit {
 	studentdetails:any;
 	defaultsrc='';
 	class_sec:any;
+	sessionArray:any[]=[];
+	session:any;
+	sessionName:string='';
+	sessionAttendance:any;
+	monthAttendance:any;
+	feeprojectiondonutchartflag=true;
+	feeprojectiondonutchart:any={
+		chart: {
+			type: 'pie',
+			height: '100px',
+			options3d: {
+				enabled: false,
+				alpha: 45
+			},
+			innerSize: '%'
+		},
+		title: {
+			text: '<b>58%</b>',
+			align: 'center',
+			verticalAlign: 'middle',
+			y: 25
+		},
+		plotOptions: {
+			pie: {
+				innerSize: 100,
+				depth: 45,
+				dataLabels: {
+					enabled: false
+				},
+				colors: [
+					'#FED330',
+					'#45AAF2',
+				],
+			}
+		},
+		series: [{
+			name: 'Attendance',
+			data: [
+				['Present', 58],
+				['Absent', 42],
+			]
+		}]
+	};
+	sessionAttendancechartflag=false;
+	sessionAttendancechart:any={};
+	monthAttendancechartflag=false;
+	monthAttendancechart:any={};
+
+	
 
 	constructor(
 		private reportService: ReportService,
@@ -140,6 +189,7 @@ export class StudentDashboardComponent implements OnInit {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
 		this.login_id = currentUser.login_id;
 		this.qelementService.getUser({ login_id: currentUser.login_id, role_id: '4' }).subscribe(
 			(result: any) => {
@@ -207,6 +257,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.getPercentageByStudentInAllExams();
 					this.getStudentRankInAllExams();
 					this.getMessages();
+					this.getSession();
 				}
 			}
 		);
@@ -241,6 +292,262 @@ export class StudentDashboardComponent implements OnInit {
 		}
 
 
+	}
+	formatDate() {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+	
+		if (month.length < 2) 
+			month = '0' + month;
+		if (day.length < 2) 
+			day = '0' + day;
+	
+		return [year, month, day].join('-');
+	}
+	startformatDate() {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			year = d.getFullYear();
+	
+		if (month.length < 2) 
+			month = '0' + month;
+	
+		return [year, month, '01'].join('-');
+	}
+	getSession(){
+		this.erpCommonService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						if (this.session) {
+							this.sessionName = this.sessionArray[this.session.ses_id];
+							
+							this.getStudentDashboardAttendance();
+						}
+
+					}
+				});
+	}
+	async getStudentDashboardAttendance(){
+		const sessionNameArr = this.sessionName.split('-');
+		const param:any={};
+		param.from = sessionNameArr[0]+'-04-01';
+		param.to = this.formatDate();
+		param.au_login_id = this.userDetail.au_login_id;
+		await this.erpCommonService.getStudentDashboardAttendance(param).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				this.sessionAttendance = result.data;
+			}
+		});
+		const param1:any={};
+		param1.from = this.startformatDate();
+		param1.to = this.formatDate();
+		param1.au_login_id = this.userDetail.au_login_id;
+		await this.erpCommonService.getStudentDashboardAttendance(param1).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				this.monthAttendance = result.data;
+			}
+		});
+		//this.FeeReceiptReportCalculation(this.sessionAttendance);
+		this.sessionChart(this.sessionAttendance);
+		this.monthChart(this.monthAttendance);
+	}
+	monthChart(data){
+		this.monthAttendancechartflag=true;
+		this.monthAttendancechart={
+			title: {
+				text: '',
+				align: 'right',
+				margin: 0,
+			  },
+			  chart: {					
+				renderTo: 'container',
+				type: 'bar',
+				height: 70,
+			  },
+			  credits: false,
+			  tooltip: false,
+			  legend: false,
+			  navigation: {
+				buttonOptions: {
+				  enabled: false
+				}
+			  },
+			  xAxis: {
+				visible: false,
+			  },
+			  yAxis: {
+				visible: false,
+				min: 0,
+				max: 100,
+			  },
+			  series: [{
+				data: [100],
+				grouping: false,
+				animation: false,
+				enableMouseTracking: false,
+				showInLegend: false,
+				color: '#ddd',
+				pointWidth: 25,
+				borderWidth: 0,
+				borderRadiusTopLeft: '50%',
+				borderRadiusTopRight: '50%',
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				dataLabels: {
+				  className: 'highlight',
+				  format: '',
+				  enabled: true,
+				  align: 'right',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }, {
+				enableMouseTracking: false,
+				data: [data.attendenceInPercent],
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				color: '#004899',
+				borderWidth: 0,
+				pointWidth: 25,
+				animation: {
+				  duration: 250,
+				},
+				dataLabels: {
+				  enabled: true,
+				  inside: true,
+				  align: 'left',
+				  format: '{point.y}%',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }]
+		};
+	}
+	sessionChart(data){
+		this.sessionAttendancechartflag=true;
+		this.sessionAttendancechart={
+			title: {
+				text: '',
+				align: 'right',
+				margin: 0,
+			  },
+			  chart: {					
+				renderTo: 'container',
+				type: 'bar',
+				height: 70,
+			  },
+			  credits: false,
+			  tooltip: false,
+			  legend: false,
+			  navigation: {
+				buttonOptions: {
+				  enabled: false
+				}
+			  },
+			  xAxis: {
+				visible: false,
+			  },
+			  yAxis: {
+				visible: false,
+				min: 0,
+				max: 100,
+			  },
+			  series: [{
+				data: [100],
+				grouping: false,
+				animation: false,
+				enableMouseTracking: false,
+				showInLegend: false,
+				color: '#ddd',
+				pointWidth: 25,
+				borderWidth: 0,
+				borderRadiusTopLeft: '50%',
+				borderRadiusTopRight: '50%',
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				dataLabels: {
+				  className: 'highlight',
+				  format: '',
+				  enabled: true,
+				  align: 'right',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }, {
+				enableMouseTracking: false,
+				data: [data.attendenceInPercent],
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				color: '#3c9211',
+				borderWidth: 0,
+				pointWidth: 25,
+				animation: {
+				  duration: 250,
+				},
+				dataLabels: {
+				  enabled: true,
+				  inside: true,
+				  align: 'left',
+				  format: '{point.y}%',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }]
+		};
+	}
+	FeeReceiptReportCalculation(data) {
+		this.feeprojectiondonutchartflag = true;
+		this.feeprojectiondonutchart = {
+			chart: {
+				type: 'pie',
+				height: '150px',
+				options3d: {
+					enabled: false,
+					alpha: 45
+				},
+				innerSize: '%'
+			},
+			title: {
+				text: '<b>'+data.attendenceInPercent+'%<b>',
+				align: 'center',
+				verticalAlign: 'middle',
+				y: 25
+			},
+			plotOptions: {
+				pie: {
+					innerSize: 200,
+					depth: 45,
+					dataLabels: {
+						enabled: false
+					},
+					colors: [
+						'#26DE81',
+						'#fea502'
+					],
+				}
+			},
+			series: [{
+				name: 'Attendance',
+				data: [
+					['Present', 58],
+					['Absent', 42],
+				]
+			}]
+		};
 	}
 	getMessages() {
 		this.msgArray = [];
