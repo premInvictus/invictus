@@ -10,6 +10,8 @@ import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
 
+
+
 @Component({
 	selector: 'app-student-dashboard',
 	templateUrl: './student-dashboard.component.html',
@@ -99,44 +101,8 @@ export class StudentDashboardComponent implements OnInit {
 	sessionName:string='';
 	sessionAttendance:any;
 	monthAttendance:any;
-	feeprojectiondonutchartflag=true;
-	feeprojectiondonutchart:any={
-		chart: {
-			type: 'pie',
-			height: '100px',
-			options3d: {
-				enabled: false,
-				alpha: 45
-			},
-			innerSize: '%'
-		},
-		title: {
-			text: '<b>58%</b>',
-			align: 'center',
-			verticalAlign: 'middle',
-			y: 25
-		},
-		plotOptions: {
-			pie: {
-				innerSize: 100,
-				depth: 45,
-				dataLabels: {
-					enabled: false
-				},
-				colors: [
-					'#FED330',
-					'#45AAF2',
-				],
-			}
-		},
-		series: [{
-			name: 'Attendance',
-			data: [
-				['Present', 58],
-				['Absent', 42],
-			]
-		}]
-	};
+	gaugeOptionsflag=false;
+	gaugeOptions:any;
 	sessionAttendancechartflag=false;
 	sessionAttendancechart:any={};
 	monthAttendancechartflag=false;
@@ -356,7 +322,84 @@ export class StudentDashboardComponent implements OnInit {
 		//this.FeeReceiptReportCalculation(this.sessionAttendance);
 		this.sessionChart(this.sessionAttendance);
 		this.monthChart(this.monthAttendance);
+		this.HighChartOption(this.sessionAttendance);
 	}
+	HighChartOption(data) {
+		this.gaugeOptionsflag = true;
+		this.gaugeOptions = {
+			chart: {
+			  type: 'solidgauge',
+			  height: 200,
+			  width: 200,
+			  events: {
+				render: ''
+			  }
+			},
+		
+			title: {
+			  text: '',
+			  style: {
+				fontSize: '10px'
+			  }
+			},
+		
+			tooltip: {
+			  borderWidth: 0,
+			  backgroundColor: 'none',
+			  shadow: false,
+			  style: {
+				fontSize: '14px'
+			  },
+			  pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
+			  positioner: function (labelWidth) {
+				return {
+				  x: (this.chart.chartWidth - labelWidth) / 40,
+				  y: (this.chart.plotHeight / 2) - 117
+				};
+			  }
+			},
+		
+			pane: {
+			  startAngle: 0,
+			  endAngle: 360,
+			  background: [{ // Track for Highest
+				outerRadius: '100%',
+				innerRadius: '80%',
+				backgroundColor: '#E5E5E5',
+				borderWidth: 0
+			  }]
+			},
+		
+			yAxis: {
+			  min: 0,
+			  max: 100,
+			  lineWidth: 0,
+			  tickPositions: []
+			},
+		
+			plotOptions: {
+			  solidgauge: {
+				cursor: 'pointer',
+				dataLabels: {
+				  enabled: false
+				},
+				linecap: '',
+				stickyTracking: false,
+			  }
+			},
+		
+			series: [{
+			  name: 'Attendance',
+			  data: [{
+				color: '#4DB848',
+				radius: '100%',
+				innerRadius: '80%',
+				y: data.attendenceInPercent
+			  }],
+			 
+			}]
+		  };
+	  }
 	monthChart(data){
 		this.monthAttendancechartflag=true;
 		this.monthAttendancechart={
@@ -368,7 +411,7 @@ export class StudentDashboardComponent implements OnInit {
 			  chart: {					
 				renderTo: 'container',
 				type: 'bar',
-				height: 70,
+				height: 60,
 			  },
 			  credits: false,
 			  tooltip: false,
@@ -444,7 +487,7 @@ export class StudentDashboardComponent implements OnInit {
 			  chart: {					
 				renderTo: 'container',
 				type: 'bar',
-				height: 70,
+				height: 60,
 			  },
 			  credits: false,
 			  tooltip: false,
@@ -507,46 +550,6 @@ export class StudentDashboardComponent implements OnInit {
 				  }
 				}
 			  }]
-		};
-	}
-	FeeReceiptReportCalculation(data) {
-		this.feeprojectiondonutchartflag = true;
-		this.feeprojectiondonutchart = {
-			chart: {
-				type: 'pie',
-				height: '150px',
-				options3d: {
-					enabled: false,
-					alpha: 45
-				},
-				innerSize: '%'
-			},
-			title: {
-				text: '<b>'+data.attendenceInPercent+'%<b>',
-				align: 'center',
-				verticalAlign: 'middle',
-				y: 25
-			},
-			plotOptions: {
-				pie: {
-					innerSize: 200,
-					depth: 45,
-					dataLabels: {
-						enabled: false
-					},
-					colors: [
-						'#26DE81',
-						'#fea502'
-					],
-				}
-			},
-			series: [{
-				name: 'Attendance',
-				data: [
-					['Present', 58],
-					['Absent', 42],
-				]
-			}]
 		};
 	}
 	getMessages() {

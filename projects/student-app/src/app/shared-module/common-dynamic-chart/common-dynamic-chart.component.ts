@@ -1,5 +1,13 @@
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
 import {chart} from 'highcharts';
+import * as Highcharts from 'highcharts';
+declare var require: any;
+require('highcharts/highcharts-more')(Highcharts);
+require('highcharts/modules/solid-gauge')(Highcharts);
+require('highcharts/modules/heatmap')(Highcharts);
+require('highcharts/modules/treemap')(Highcharts);
+require('highcharts/modules/funnel')(Highcharts);
+require('highcharts-grouped-categories')(Highcharts);
 
 @Component({
 	selector: 'app-common-dynamic-chart',
