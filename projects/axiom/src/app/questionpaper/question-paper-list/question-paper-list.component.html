@@ -241,7 +241,7 @@
                             <div class="col-lg-12">
                                 <h6 class="general-inc">General Instructions</h6>
                                 <ol>
-                                    <li class="qp_name">{{viewCurrentQP.ti_instruction}}</li>
+                                    <li class="qp_name"><div [innerHTML]="viewCurrentQP.ti_description"></div></li>
                                 </ol>
                                 <div class="row row-remove-top-margin" *ngFor="let subQuestions of subjectArrayInCurrentPaperDetails">
                                     <div class="col-lg-12 text-center">
