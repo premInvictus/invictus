@@ -9,9 +9,7 @@ import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
-
-
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 	selector: 'app-student-dashboard',
 	templateUrl: './student-dashboard.component.html',
@@ -118,7 +116,9 @@ export class StudentDashboardComponent implements OnInit {
 		private userAccessMenuService: UserAccessMenuService,
 		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
-		private commonAPIService: CommonAPIService
+		private commonAPIService: CommonAPIService,
+		private router:Router,
+		private route:ActivatedRoute
 
 	) { }
 
@@ -381,8 +381,10 @@ export class StudentDashboardComponent implements OnInit {
 			  solidgauge: {
 				cursor: 'pointer',
 				dataLabels: {
-				  enabled: false
-				},
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
 				linecap: '',
 				stickyTracking: false,
 			  }
@@ -396,7 +398,11 @@ export class StudentDashboardComponent implements OnInit {
 				innerRadius: '80%',
 				y: data.attendenceInPercent
 			  }],
-			 
+			  dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ('black') + '">{y}%</span><br/>' +
+                       '<span style="font-size:12px;color:silver"></span></div>'
+            },
 			}]
 		  };
 	  }
@@ -1086,6 +1092,13 @@ export class StudentDashboardComponent implements OnInit {
 		if (currentHour == 0 || currentHour < 12) return "Good Morning"
 		else if (currentHour <= 19) return "Good Afternon"
 		else return "Good Evening"
+	}
+	viewmore(linkktype){
+		if(linkktype=='communication'){
+			this.router.navigate(['./notice/notice-board'], { relativeTo: this.route });
+		} else if(linkktype=='assignment'){
+			this.router.navigate(['./academics/assignment'], { relativeTo: this.route });
+		}
 	}
 
 }
