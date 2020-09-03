@@ -104,13 +104,14 @@
           <p *ngIf="showParentName" class="id_card_student_contact_info remove-paragraph-bottom-padding"><b>
               {{  studentDetails && studentDetails.father_honorific === '1' ? 'Mr.' :
                          studentDetails && studentDetails.father_honorific === '2' ? 'Mrs.' :
-                         studentDetails && studentDetails.father_honorific === '3' ? 'Miss.' :
+                         studentDetails && studentDetails.father_ === '3' ? 'Miss.' :
                          studentDetails && studentDetails.father_honorific === '4' ? 'Ms.' :
-                         studentDetails && studentDetails.father_honorific === '5' ? 'Mx.' :
+                         studentDetails && studentDetails.father_ === '5' ? 'Mx.' :
                          studentDetails && studentDetails.father_honorific === '6' ? 'Sir.' :
                          studentDetails && studentDetails.father_honorific === '7' ? 'Dr.' :
                          studentDetails && studentDetails.father_honorific === '8' ? 'Lady' : 
                          studentDetails && studentDetails.father_honorific === '9' ? 'Late' : ''
+                         studentDetails && studentDetails.father_honorific === '10' ? 'Md.' : ''
                          }}
               {{studentDetails.father_name}}</b>
           </p>
@@ -134,6 +135,7 @@
                          studentDetails && studentDetails.mother_honorific === '7' ? 'Dr.' :
                          studentDetails && studentDetails.mother_honorific === '8' ? 'Lady' : 
                          studentDetails && studentDetails.mother_honorific === '9' ? 'Late' : ''
+                         studentDetails && studentDetails.mother_honorific === '10' ? 'Md.' : ''
                          }}
               {{studentDetails.mother_name}}</b>
           </p>
@@ -158,6 +160,7 @@
                       studentDetails && studentDetails.guardian_honorific === '7' ? 'Dr.' :
                       studentDetails && studentDetails.guardian_honorific === '8' ? 'Lady' : 
                       studentDetails && studentDetails.guardian_honorific === '9' ? 'Late' : ''
+                      studentDetails && studentDetails.guardian_honorific === '10' ? 'Md.' : ''
                       }}
               {{studentDetails.guardian_name}}</b>
           </p>
