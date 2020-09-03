@@ -9,7 +9,7 @@ import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
-
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 	selector: 'app-student-dashboard',
 	templateUrl: './student-dashboard.component.html',
@@ -83,7 +83,30 @@ export class StudentDashboardComponent implements OnInit {
 	currentAssignmentIndex: number;
 	assignmentPre = true;
 	assignmentNext = true;
+
+	msgArray: any[] = [];
+	currentmsg: any;
+	currentmsgIndex: number;
+	msgPre = true;
+	msgNext = true;
+
 	noData = false;
+	studentdetails:any;
+	defaultsrc='';
+	class_sec:any;
+	sessionArray:any[]=[];
+	session:any;
+	sessionName:string='';
+	sessionAttendance:any;
+	monthAttendance:any;
+	gaugeOptionsflag=false;
+	gaugeOptions:any;
+	sessionAttendancechartflag=false;
+	sessionAttendancechart:any={};
+	monthAttendancechartflag=false;
+	monthAttendancechart:any={};
+
+	
 
 	constructor(
 		private reportService: ReportService,
@@ -93,7 +116,9 @@ export class StudentDashboardComponent implements OnInit {
 		private userAccessMenuService: UserAccessMenuService,
 		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
-		private commonAPIService: CommonAPIService
+		private commonAPIService: CommonAPIService,
+		private router:Router,
+		private route:ActivatedRoute
 
 	) { }
 
@@ -130,6 +155,7 @@ export class StudentDashboardComponent implements OnInit {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		this.session = JSON.parse(localStorage.getItem('session'));
 		this.login_id = currentUser.login_id;
 		this.qelementService.getUser({ login_id: currentUser.login_id, role_id: '4' }).subscribe(
 			(result: any) => {
@@ -138,12 +164,32 @@ export class StudentDashboardComponent implements OnInit {
 					console.log('userDetail', this.userDetail);
 					this.erpCommonService.getStudentInformation({login_id: currentUser.login_id, enrollment_type: '4'}).subscribe((resutl1: any) => {
 						if(resutl1 && resutl1.status === 'ok') {
+							this.studentdetails = resutl1.data[0];
 							this.className = resutl1.data[0].class_name;
 							this.secName = resutl1.data[0].sec_name;
 							this.dob = resutl1.data[0].au_dob;
 							this.phoneNumber = resutl1.data[0].au_mobile;
 							this.currentUser['class_id'] = resutl1.data[0] && resutl1.data[0]['class_id'] ? resutl1.data[0]['class_id'] : '';
 							localStorage.setItem('currentUser', JSON.stringify(this.currentUser))
+							const gender =this.studentdetails.au_gender;
+							if (gender === 'M') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+							} else if (gender === 'F') {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+							} else {
+								this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+							}
+							this.defaultsrc = this.studentdetails.au_profileimage
+								? this.studentdetails.au_profileimage
+								: this.defaultsrc;
+
+							const class_name = this.studentdetails.class_name;
+							const section_name = this.studentdetails.sec_name;
+							if (section_name !== ' ') {
+								this.class_sec = class_name + ' - ' + section_name;
+							} else {
+								this.class_sec = class_name;
+							}
 						}
 					})
 					this.getOverallPerformance();
@@ -176,6 +222,8 @@ export class StudentDashboardComponent implements OnInit {
 					this.getHighestPercentageByStudentInAllExams();
 					this.getPercentageByStudentInAllExams();
 					this.getStudentRankInAllExams();
+					this.getMessages();
+					this.getSession();
 				}
 			}
 		);
@@ -210,6 +258,325 @@ export class StudentDashboardComponent implements OnInit {
 		}
 
 
+	}
+	formatDate() {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			day = '' + d.getDate(),
+			year = d.getFullYear();
+	
+		if (month.length < 2) 
+			month = '0' + month;
+		if (day.length < 2) 
+			day = '0' + day;
+	
+		return [year, month, day].join('-');
+	}
+	startformatDate() {
+		var d = new Date(),
+			month = '' + (d.getMonth() + 1),
+			year = d.getFullYear();
+	
+		if (month.length < 2) 
+			month = '0' + month;
+	
+		return [year, month, '01'].join('-');
+	}
+	getSession(){
+		this.erpCommonService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						if (this.session) {
+							this.sessionName = this.sessionArray[this.session.ses_id];
+							
+							this.getStudentDashboardAttendance();
+						}
+
+					}
+				});
+	}
+	async getStudentDashboardAttendance(){
+		const sessionNameArr = this.sessionName.split('-');
+		const param:any={};
+		param.from = sessionNameArr[0]+'-04-01';
+		param.to = this.formatDate();
+		param.au_login_id = this.userDetail.au_login_id;
+		await this.erpCommonService.getStudentDashboardAttendance(param).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				this.sessionAttendance = result.data;
+			}
+		});
+		const param1:any={};
+		param1.from = this.startformatDate();
+		param1.to = this.formatDate();
+		param1.au_login_id = this.userDetail.au_login_id;
+		await this.erpCommonService.getStudentDashboardAttendance(param1).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				this.monthAttendance = result.data;
+			}
+		});
+		//this.FeeReceiptReportCalculation(this.sessionAttendance);
+		this.sessionChart(this.sessionAttendance);
+		this.monthChart(this.monthAttendance);
+		this.HighChartOption(this.sessionAttendance);
+	}
+	HighChartOption(data) {
+		this.gaugeOptionsflag = true;
+		this.gaugeOptions = {
+			chart: {
+			  type: 'solidgauge',
+			  height: 200,
+			  width: 200,
+			  events: {
+				render: ''
+			  }
+			},
+		
+			title: {
+			  text: '',
+			  style: {
+				fontSize: '10px'
+			  }
+			},
+		
+			tooltip: {
+			  borderWidth: 0,
+			  backgroundColor: 'none',
+			  shadow: false,
+			  style: {
+				fontSize: '14px'
+			  },
+			  pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
+			  positioner: function (labelWidth) {
+				return {
+				  x: (this.chart.chartWidth - labelWidth) / 40,
+				  y: (this.chart.plotHeight / 2) - 117
+				};
+			  }
+			},
+		
+			pane: {
+			  startAngle: 0,
+			  endAngle: 360,
+			  background: [{ // Track for Highest
+				outerRadius: '100%',
+				innerRadius: '80%',
+				backgroundColor: '#E5E5E5',
+				borderWidth: 0
+			  }]
+			},
+		
+			yAxis: {
+			  min: 0,
+			  max: 100,
+			  lineWidth: 0,
+			  tickPositions: []
+			},
+		
+			plotOptions: {
+			  solidgauge: {
+				cursor: 'pointer',
+				dataLabels: {
+                    y: 5,
+                    borderWidth: 0,
+                    useHTML: true
+                },
+				linecap: '',
+				stickyTracking: false,
+			  }
+			},
+		
+			series: [{
+			  name: 'Attendance',
+			  data: [{
+				color: '#4DB848',
+				radius: '100%',
+				innerRadius: '80%',
+				y: data.attendenceInPercent
+			  }],
+			  dataLabels: {
+                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+                    ('black') + '">{y}%</span><br/>' +
+                       '<span style="font-size:12px;color:silver"></span></div>'
+            },
+			}]
+		  };
+	  }
+	monthChart(data){
+		this.monthAttendancechartflag=true;
+		this.monthAttendancechart={
+			title: {
+				text: '',
+				align: 'right',
+				margin: 0,
+			  },
+			  chart: {					
+				renderTo: 'container',
+				type: 'bar',
+				height: 60,
+			  },
+			  credits: false,
+			  tooltip: false,
+			  legend: false,
+			  navigation: {
+				buttonOptions: {
+				  enabled: false
+				}
+			  },
+			  xAxis: {
+				visible: false,
+			  },
+			  yAxis: {
+				visible: false,
+				min: 0,
+				max: 100,
+			  },
+			  series: [{
+				data: [100],
+				grouping: false,
+				animation: false,
+				enableMouseTracking: false,
+				showInLegend: false,
+				color: '#ddd',
+				pointWidth: 25,
+				borderWidth: 0,
+				borderRadiusTopLeft: '50%',
+				borderRadiusTopRight: '50%',
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				dataLabels: {
+				  className: 'highlight',
+				  format: '',
+				  enabled: true,
+				  align: 'right',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }, {
+				enableMouseTracking: false,
+				data: [data.attendenceInPercent],
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				color: '#004899',
+				borderWidth: 0,
+				pointWidth: 25,
+				animation: {
+				  duration: 250,
+				},
+				dataLabels: {
+				  enabled: true,
+				  inside: true,
+				  align: 'left',
+				  format: '{point.y}%',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }]
+		};
+	}
+	sessionChart(data){
+		this.sessionAttendancechartflag=true;
+		this.sessionAttendancechart={
+			title: {
+				text: '',
+				align: 'right',
+				margin: 0,
+			  },
+			  chart: {					
+				renderTo: 'container',
+				type: 'bar',
+				height: 60,
+			  },
+			  credits: false,
+			  tooltip: false,
+			  legend: false,
+			  navigation: {
+				buttonOptions: {
+				  enabled: false
+				}
+			  },
+			  xAxis: {
+				visible: false,
+			  },
+			  yAxis: {
+				visible: false,
+				min: 0,
+				max: 100,
+			  },
+			  series: [{
+				data: [100],
+				grouping: false,
+				animation: false,
+				enableMouseTracking: false,
+				showInLegend: false,
+				color: '#ddd',
+				pointWidth: 25,
+				borderWidth: 0,
+				borderRadiusTopLeft: '50%',
+				borderRadiusTopRight: '50%',
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				dataLabels: {
+				  className: 'highlight',
+				  format: '',
+				  enabled: true,
+				  align: 'right',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }, {
+				enableMouseTracking: false,
+				data: [data.attendenceInPercent],
+				borderRadiusBottomLeft: '50%',
+				borderRadiusBottomRight: '50%',
+				color: '#3c9211',
+				borderWidth: 0,
+				pointWidth: 25,
+				animation: {
+				  duration: 250,
+				},
+				dataLabels: {
+				  enabled: true,
+				  inside: true,
+				  align: 'left',
+				  format: '{point.y}%',
+				  style: {
+					color: 'white',
+					textOutline: false,
+				  }
+				}
+			  }]
+		};
+	}
+	getMessages() {
+		this.msgArray = [];
+		//var inputJson = {'msg_to.login_id': this.currentUser && this.currentUser['login_id']};
+		var inputJson = { 'status.status_name' : 'approved','$or': [{ 'msg_to.login_id': this.currentUser && this.currentUser['login_id'] }, { 'msg_thread.msg_to.login_id': this.currentUser && this.currentUser['login_id'] }] };
+		console.log('inputJson--', inputJson);
+		// this.erpCommonService.getMessage(inputJson);
+		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				//this.msgArray = result.data;
+				let i =0;
+				for (const item of result.data) {
+					if (i < 10) {
+						this.msgArray.push(item);
+					}
+					i++;
+				}
+				this.msgNavigate(0);
+			}
+		});
 	}
 	getSmartToAxiom() {
 		const param: any = {};
@@ -347,17 +714,18 @@ export class StudentDashboardComponent implements OnInit {
 		const param: any = {};
 		param.class_id = this.userDetail.au_class_id;
 		param.sec_id = this.userDetail.au_sec_id;
-		param.sub_id = this.sub_id;
-		param.from = this.commonAPIService.dateConvertion(this.todaysDate);
-		param.to = this.commonAPIService.dateConvertion(this.todaysDate);
-		param.withDate = true;
+		//param.sub_id = this.sub_id;
+		// param.from = this.commonAPIService.dateConvertion(this.todaysDate);
+		// param.to = this.commonAPIService.dateConvertion(this.todaysDate);
+		// param.withDate = true;
 		param.as_status = ['1'];
-		this.erpCommonService.getAssignment({
-			class_id: this.userDetail.au_class_id, 
-			sec_id: this.userDetail.au_sec_id,
-			sub_id: this.sub_id,
-			as_status: [1]
-		}).subscribe((result: any) => {
+		// {
+		// 	class_id: this.userDetail.au_class_id, 
+		// 	sec_id: this.userDetail.au_sec_id,
+		// 	sub_id: this.sub_id,
+		// 	as_status: [1]
+		// }
+		this.erpCommonService.getAssignment(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.assignmentArray = result.data;
 				this.assignmentNavigate(0);
@@ -381,6 +749,24 @@ export class StudentDashboardComponent implements OnInit {
 		} else {
 			this.assignmentPre = false;
 			this.assignmentNext = false;
+		}
+
+	}
+	msgNavigate(index) {
+		this.currentmsgIndex = index;
+		this.currentmsg = this.msgArray[this.currentmsgIndex];
+		if (this.msgArray.length === 1 || this.msgArray.length === 0) {
+			this.msgPre = true;
+			this.msgNext = true;
+		} else if (this.currentmsgIndex === this.msgArray.length - 1) {
+			this.msgNext = true;
+			this.msgPre = false;
+		} else if (this.currentmsgIndex === 0) {
+			this.msgNext = false;
+			this.msgPre = true;
+		} else {
+			this.msgPre = false;
+			this.msgNext = false;
 		}
 
 	}
@@ -706,6 +1092,13 @@ export class StudentDashboardComponent implements OnInit {
 		if (currentHour == 0 || currentHour < 12) return "Good Morning"
 		else if (currentHour <= 19) return "Good Afternon"
 		else return "Good Evening"
+	}
+	viewmore(linkktype){
+		if(linkktype=='communication'){
+			this.router.navigate(['./notice/notice-board'], { relativeTo: this.route });
+		} else if(linkktype=='assignment'){
+			this.router.navigate(['./academics/assignment'], { relativeTo: this.route });
+		}
 	}
 
 }

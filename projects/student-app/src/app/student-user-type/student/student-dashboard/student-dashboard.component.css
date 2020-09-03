@@ -1,6 +1,32 @@
 .img-student {
     width: 150px;
 }
+.text-bold{
+    font-weight: bold;
+}
+.attendance-bottom{
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: -4px;
+}
+.session-left{
+    float: left;
+}
+.session-right{
+    float: right;
+}
+.session-color{
+    color: #3c9211;
+}
+.month-color{
+    color: #004899;
+}
+.session-bgcolor{
+    background-color: #3c9211;
+}
+.month-bgcolor{
+    background-color: #004899;
+}
 .stud-id-first-name {
     font-size: 20px !important;
 }

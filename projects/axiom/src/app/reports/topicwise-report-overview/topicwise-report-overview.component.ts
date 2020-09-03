@@ -3,7 +3,7 @@ import { QelementService } from '../../questionbank/service/qelement.service';
 import { ReportService } from '../../reports/service/report.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatSort, Sort, MatPaginator } from '@angular/material';
-import { CommonAPIService, SmartService } from '../../_services/index';
+import { CommonAPIService, SmartService, NotificationService } from '../../_services/index';
 import { createTemplateData } from '@angular/core/src/view/refs';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
@@ -85,7 +85,8 @@ export class TopicwiseReportOverviewComponent implements OnInit {
 		private route: ActivatedRoute,
 		private reportService: ReportService,
 		private common: CommonAPIService,
-		private smartService: SmartService
+    private smartService: SmartService,
+    private notif:NotificationService
 	) { }
 
 	ngOnInit() {
@@ -122,6 +123,7 @@ export class TopicwiseReportOverviewComponent implements OnInit {
           this.dataSource.sort = this.sort;
           this.tableCollection = false
 				} else {
+          this.notif.showSuccessErrorMessage('No record found','error');
           this.norecord=1;
         }
 			}

@@ -747,6 +747,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/employee/update', value);
 	}
+	getStudentDashboardAttendance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getStudentDashboardAttendance', value);
+	}
 	
 
 }
