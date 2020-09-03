@@ -1122,6 +1122,8 @@ export class StudentDetailsReportComponent implements OnInit, AfterViewInit {
 			honorific = 'Lady';
 		}  else if (value === '9') {
 			honorific = 'Late';
+		} else if (value === '10') {
+			honorific = 'Md.';
 		}
 
 		return honorific;
