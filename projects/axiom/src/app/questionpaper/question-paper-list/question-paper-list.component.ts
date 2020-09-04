@@ -7,6 +7,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { UserAccessMenuService, NotificationService, BreadCrumbService, HtmlToTextService } from '../../_services/index';
 import { appConfig } from '../../app.config';
 import { Element } from './question-paper-list.model';
+import { saveAs } from 'file-saver';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 import { forEach } from '@angular/router/src/utils/collection';
 @Component({
@@ -471,50 +472,82 @@ export class QuestionPaperListComponent implements OnInit {
 
 	printStudentCopy() {
 		const printModal2 = document.getElementById('printModal2');
-		const popupWin = window.open('', '_blank', 'width=900,height=500');
-		popupWin.document.open();
-		// tslint:disable-next-line:max-line-length
-		popupWin.document.write(
+
+		const html =
 			`<html>
+			<head>
+			<meta charset="utf-8">
+			<meta name="viewport" content="width=device-width, initial-scale=1">
+			<script type="text/x-mathjax-config">
+			setTimeout(function(){
+				MathJax.Hub.Config({
+				
+					
+					tex2jax: {
+					inlineMath: [['$','$'], ['\\(','\\)']],
+					displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+					processEscapes: true,
+					
+					},
+					messageStyle: "none"
+				});
+			}, 2000);
+			</script>
+			<script type="text/javascript" async
+			src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
+			</script>
 		<style>
 		
-		@media print{
+	 
+	
 		button { display:none; }  
-		iframe{
-			background-image:url("https://www.c-comsat.com/wp-content/uploads/youtube_play_button.jpg");
-			background-size:100% 100%
-		} 
-		.ques-paper-logo{width:45px;height:45px;} 
-		.qst_name_head{text-align:center;font-size:15px; font-weight:bold}
-		.qp_name_head{text-align:center;font-size:15px;}
+		
+		.ques-paper-logo {
+			margin-bottom: 10px;
+			border-radius: 50%;
+			width: 65px;
+			height: 65px;
+		}
+		p {word-break:break-word;white-space:pre-line;margin-bottom:5px}
+		.qst_name_head{text-align:center;font-size:14px; font-weight:bold}
+		.qp_name_head{text-align:center;font-size:14px;}
+		.qp_name{font-size:14px;}
 		.logo{text-align:center;}
 		.qus_position{width:2% !important}
+		
 		.ques_name{width:85% !important;}
 		.moveTd{width:13% !important;font-weight:bold;}
-		.imgClassExpress p img{height:100px;width:auto;margin-bottom:10px} 
+		.imgClassExpress p img{height:100px;width:auto; margin-bottom:10px} 
 		.imgclassQpList p img {height:100px;margin-bottom:10px} 
-		table{margin:0px; padding:0px;}
+		table{margin:0px; padding:0px;	font-size: 14px;}
 		label{width:100% !important;margin:0px !important;}
-		.general-inc{font-size:15px; font-weight:bold;}
-		.text-center h5{text-align:center; margin:0;}
+		.general-inc{font-size:14px; font-weight:bold;}
+		.text-center{text-align:center !important;}
+		.text-center h5{text-align:center; margin:0; font-size: 14px;}
 		.max_marks,.time_allowed{width:25% !important;}
 		body{-webkit-print-color-adjust: exact; !important}
-		.modifyWidth{width:92.5% !important} 
+		.modifyWidth{width:80% !important} 
+		.ques-paper-table {
+			font-size: 14px;
+		}
 		.MJX_Assistive_MathML{display:none !important}
 		mrow.MJX-TeXAtom-ORD{display:none !important}
-		} 
+		
+	
 		</style>
-		<body onload="window.print()">'
+		</head>
+		<body>'
 		${printModal2.innerHTML}  
-		<script type="text/x-mathjax-config">
-		MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
-		</script>
-		<script type="text/javascript" async
-		src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML">
-		</script>
 		</body>
-		</html>`);
-		popupWin.document.close();
+	
+		</html>`;
+		const finalHTML = html.replace('<p>&nbsp;</p>', '');
+		this.qelementService.printQuestionPaperPDF({ pdf: finalHTML }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+			}
+		});
 	}
 	htmlToText(html) {
 		return this.htt.htmlToText(html);

@@ -163,6 +163,11 @@ export class QelementService {
 	addQuestionPaper(value) {
 		return this._http.post(environment.apiAxiomUrl + '/questionpaper/addQuestionPaper', value);
 	}
+
+	printQuestionPaperPDF(value) {
+		return this._http.post(environment.apiAxiomUrl + '/questionpaper/printQuestionPaperPDF', value);
+	}
+
 	getJeeQuestionPaper(value) {
 		return this._http.post(environment.apiAxiomUrl + '/assessment/getJeeQuestionPaper', value);
 	}
