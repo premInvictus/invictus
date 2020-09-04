@@ -312,7 +312,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 											emp_remarks: emp_attendance_detail.attendance_detail.emp_remarks ? emp_attendance_detail.attendance_detail.emp_remarks : ''
 										});
 										if(emp_attendance_detail && emp_attendance_detail.attendance_detail &&
-											emp_attendance_detail.attendance_detail.emp_lwp) {
+											emp_attendance_detail.attendance_detail.emp_lwp > -1) {
+												console.log('calling db lwpDays',emp_attendance_detail.attendance_detail.emp_lwp);
+
 												lwpDays = emp_attendance_detail.attendance_detail.emp_lwp
 										} else {
 											if (item.attendanceRecords && item.attendanceRecords.length > 0) {
@@ -326,9 +328,12 @@ export class EmployeeAttendanceComponent implements OnInit {
 										element.emp_lwp = lwpDays;
 										var presentDays = no_of_days;
 										if(emp_attendance_detail && emp_attendance_detail.attendance_detail &&
-											emp_attendance_detail.attendance_detail.emp_total_attendance) {
+											emp_attendance_detail.attendance_detail.emp_total_attendance > -1) {
+												console.log('calling db emp_total_attendance',emp_attendance_detail.attendance_detail.emp_total_attendance);
 												presentDays = emp_attendance_detail.attendance_detail.emp_total_attendance;
 										} else {
+											console.log('calling else emp_total_attendance',emp_attendance_detail.attendance_detail.emp_total_attendance);
+
 											presentDays = Number(presentDays) - Number(lwpDays);
 
 											if(item.emp_salary_detail.emp_organisation_relation_detail.doj){
