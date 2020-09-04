@@ -200,4 +200,7 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingGroup', value);
 	}
+	resetAdmitCode(value) {
+		return this.http.post(environment.apiSisUrl + '/users/resetAdmitCode', value);
+	}
 }
