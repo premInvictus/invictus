@@ -1343,6 +1343,13 @@ export class SetupComponent implements OnInit {
             }
         }
 
+            if(this.settingForm.value && this.settingForm.value.admit_code_reset === '1') {
+                this.sisService.resetAdmitCode({}).subscribe((data:any)=>{
+
+
+                })
+            }
+
             console.log(this.settingForm.value, this.currentGsetup);
             this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
                 if (result && result.status === 'ok') {
