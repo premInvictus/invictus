@@ -1,8 +1,11 @@
 import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
+import { SisService} from 'projects/sis/src/app//_services';
 import { ActivatedRoute } from '@angular/router';
 import { isNumber, isNull } from 'util';
+import { NotificationService } from 'projects/axiom/src/app/_services';
+
 
 import * as Highcharts from 'highcharts';
 declare var require: any;
@@ -11,6 +14,9 @@ require('highcharts/modules/solid-gauge')(Highcharts);
 require('highcharts/modules/heatmap')(Highcharts);
 require('highcharts/modules/treemap')(Highcharts);
 require('highcharts/modules/funnel')(Highcharts);
+
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -222,10 +228,22 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 			}
 		]
 	};
+
+	//upload attachemnt
+	multipleFileArray: any[] = [];
+	imageArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	counter: any = 0;
+	currentFileChangeEvent: any;
+	currentImage: any;
+	currentUser: any = {};
 	constructor(
 		private qelementService: QelementService,
 		private route: ActivatedRoute,
-		private reportService: ReportService
+		private reportService: ReportService,
+		private sisService:SisService,
+		public dialog: MatDialog,
+		private notif:NotificationService
 	) {
 		this.percentageValue = function (value: number): string {
 			return `${Math.round(value)} / ${this['max']}`;
@@ -264,7 +282,9 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
+						
 						this.examDetail = result.data[0];
+						console.log('this.examDetail',this.examDetail)
 						this.examDetailFlag = true;
 						if (this.examDetail.es_qt_status === '1') {
 							this.onlyObjectiveFlag = false;
@@ -386,5 +406,101 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 
 	closeResult() {
 		close();
+	}
+
+	//upload attachemnt
+	fileChangeEvent(fileInput) {
+		this.multipleFileArray = [];
+		this.currentFileChangeEvent = fileInput;
+		const files = fileInput.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop(files[i]);
+		}
+	}
+
+	IterateFileLoop(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'classworkupdate'
+			};
+			this.multipleFileArray.push(fileJson);
+			if (this.multipleFileArray.length === this.currentFileChangeEvent.target.files.length) {
+				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						for (const item of result.data) {
+							console.log('item', item);
+							this.imageArray.push({
+								file_name: item.file_name,
+								file_url: item.file_url
+							});
+						}
+						console.log('image array', this.imageArray);
+						this.notif.showSuccessErrorMessage('documents added successfully', 'success');
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
+	}
+	deleteFile(index) {
+		this.imageArray.splice(index, 1);
+	}
+
+	resetAttachment() {
+		this.imageArray = [];
+	}
+
+	submitAttachment() {
+		if(this.imageArray.length > 0){
+			const docArray:any[]=[];
+			this.imageArray.forEach(element => {
+				docArray.push(element.file_url);
+			});
+			const param:any={};
+			param.es_id = this.es_id;
+			param.login_id = this.login_id;
+			param.eva_documents = docArray;
+			this.qelementService.uploadExamDocuments(param).subscribe((result: any) => {
+				if(result && result.status == 'ok'){
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			});
+		} else {
+			this.notif.showSuccessErrorMessage('Please add documents', 'error');
+		}
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
+		}
+	}
+	previewDocuments(attachmentArray) {
+		const attArr: any[] = [];
+		if (attachmentArray && attachmentArray.length > 0) {
+			attachmentArray.forEach(element => {
+				attArr.push({
+					file_url: element.file_url
+				});
+			});
+			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+				height: '80%',
+				width: '1000px',
+				data: {
+					index: '',
+					images: attArr
+				}
+			});
+		}
 	}
 }

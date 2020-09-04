@@ -5,6 +5,10 @@
     width: 150px;
 }
 
+.p-10{
+    padding: 10px;
+}
+
 canvas{
     width: 164px;
 }
