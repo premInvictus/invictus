@@ -2361,7 +2361,7 @@ export class CollectionReportComponent implements OnInit {
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
-					'report_type': value.report_type,
+					'report_type': 'cumulativeheadwise',
 					'feeHeadId': value.fee_value,
 					'from_date': value.from_date,
 					'to_date': value.from_date,
