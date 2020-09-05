@@ -7,6 +7,9 @@ input[type=checkbox], input[type=radio]{
   border-style: solid;
   border-radius: 50%;
 }
+.p-10{
+  padding: 8px;
+}
 .question-test-button {
   height: 450px !important;
   overflow: auto !important;

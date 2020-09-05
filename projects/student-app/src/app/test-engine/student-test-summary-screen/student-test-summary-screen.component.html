@@ -35,45 +35,9 @@
                       <br>
                       <span>
                         This question paper contains subjective question which needs to be manually evaluated.<br>
-                        Please
-                        upload documents to be evaluated.
+                        
                       </span>
                     </span>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-12 text-center">
-                    <input type="file" multiple="true" (change)="fileChangeEvent($event)" id="addattachment"
-                      style="display: none">
-                    <label class="cursor-pointer btn-primary-100 assignment-btn p-10" style="width: 200px !important;" for="addattachment">Add Documents</label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-2"></div>
-                  <ng-container *ngFor="let img of imageArray;let i = index">
-                    <div class="col-1 col-doc-img-3">
-                      <div class="remove-col-padding">
-                        <div style="float:right;">
-                          <button mat-button class="upload-document-delete-btn" (click)="deleteFile(i)">
-                            <mat-icon class="btn-upload-icon">delete</mat-icon>
-                          </button>
-                        </div>
-                        <div class="inline-flex ">
-                          <!-- <img  class="btn-doc-upload-preview margin-left-10" src="https://via.placeholder.com/150"  > -->
-                          <img class="btn-doc-upload-preview margin-left-10" [src]="getuploadurl(img.file_url)" (click)="previewDocuments(imageArray)"><br>
-                        </div>
-                        <br>
-                      </div>
-                    </div>
-                  </ng-container>
-                  <div class="col-2"></div>
-                </div>
-                <div class="row margin-top-20" style="margin-bottom: 20px;">
-                  <div class="col-12 text-center">
-                    <button  mat-raised-button class="btn-success-green" (click)="submitAttachment()"
-                      >Submit</button>
-                    <button mat-raised-button class="btn-reset margin-left-10"
-                      (click)="resetAttachment()">Reset</button>
                   </div>
                 </div>
               </div>
