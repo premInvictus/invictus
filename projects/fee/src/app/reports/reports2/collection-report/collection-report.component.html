@@ -29,9 +29,9 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
-        <div *ngIf="(filterFlag && reportFilterForm.value.report_type !== 'mfr') || (reportFilterForm.value.report_type == 'summary')" class="col-2">
+        <div *ngIf="(filterFlag && reportFilterForm.value.report_type !== 'mfr' &&  reportFilterForm.value.report_type !== 'dailyheadwise') || (reportFilterForm.value.report_type == 'summary')" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
-                <mat-label>To Date</mat-label>
+                <mat-label>To Date </mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
                 (blur)="getToDate($event.target.value)"/>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>

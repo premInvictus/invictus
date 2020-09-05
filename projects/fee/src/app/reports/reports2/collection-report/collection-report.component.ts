@@ -4,6 +4,8 @@ import {
 	FieldType,
 	Filters,
 	Formatters,
+	Sorters,
+	SortDirectionNumber,
 	DelimiterType,
 	FileType
 } from 'angular-slickgrid';
@@ -162,6 +164,9 @@ export class CollectionReportComponent implements OnInit {
 		}
 		if (this.common.isExistUserAccessMenu('655')) {
 			this.reportTypeArray.push({ report_type: 'cumulativeheadwise', report_name: 'Cumulative Head Wise' });
+		}
+		if (this.common.isExistUserAccessMenu('655')) {
+			this.reportTypeArray.push({ report_type: 'dailyheadwise', report_name: 'Daily Collection Report' });
 		}
 		this.reportType = 'headwise';
 		if (this.sessionName) {
@@ -2352,6 +2357,392 @@ export class CollectionReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
+			} else if (this.reportType === "dailyheadwise") {
+				const collectionJSON: any = {
+					'admission_no': '',
+					'studentName': '',
+					'report_type': value.report_type,
+					'feeHeadId': value.fee_value,
+					'from_date': value.from_date,
+					'to_date': value.from_date,
+					'pageSize': '10',
+					'pageIndex': '0',
+					'filterReportBy': 'collection',
+					'login_id': value.login_id,
+					'orderBy': value.orderBy,
+					'downloadAll': true
+				};
+				this.feeService.getHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let i = 0;
+						let j = 0;
+						const feeHead: any[] = [];
+						Object.keys(repoArray).forEach((keys: any) => {
+							const obj: any = {};
+							if (Number(keys) === 0) {
+								this.columnDefinitions = [
+									{
+										id: 'srno',
+										name: 'SNo.',
+										field: 'srno',
+										sortable: true,
+										width: 2
+									},
+									{
+										id: 'stu_admission_no',
+										name: 'Enrollment No.',
+										field: 'stu_admission_no',
+										filterable: true,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										sortable: true,
+										width: 90,
+										grouping: {
+											getter: 'stu_admission_no',
+											formatter: (g) => {
+												return `${g.value} <span style="color:green"> (${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									},
+									{
+										id: 'stu_full_name',
+										name: 'Student Name',
+										field: 'stu_full_name',
+										filterable: true,
+										sortable: true,
+										width: 180,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'stu_full_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									},
+									{
+										id: 'stu_class_name',
+										name: 'Class-Section',
+										field: 'stu_class_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'stu_class_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
+										id: 'tag_name',
+										name: 'Tag',
+										field: 'tag_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'tag_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
+										id: 'ses_name',
+										name: 'Session',
+										field: 'ses_name',
+										sortable: true,
+										filterable: true,
+										width: 60,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'ses_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									// {
+									// 	id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date',
+									// 	sortable: true,
+									// 	filterable: true,
+									// 	width: 120,
+									// 	formatter: this.checkDateFormatter,
+									// 	filterSearchType: FieldType.dateIso,
+									// 	filter: { model: Filters.compoundDate },
+									// 	grouping: {
+									// 		getter: 'invoice_created_date',
+									// 		formatter: (g) => {
+									// 			if (g.value !== '-' && g.value !== '' && g.value !== '<b>Grand Total</b>') {
+									// 				return `${new DatePipe('en-in').transform(g.value, 'd-MMM-y')}  <span style="color:green">(${g.count})</span>`;
+									// 			} else {
+									// 				return `${''}`;
+									// 			}
+									// 		},
+									// 		aggregators: this.aggregatearray,
+									// 		aggregateCollapsed: true,
+									// 		collapsed: false
+									// 	},
+									// 	groupTotalsFormatter: this.srnTotalsFormatter,
+									// },
+									{
+										id: 'fp_name',
+										name: 'Fee Period',
+										field: 'fp_name',
+										sortable: true,
+										filterable: true,
+										width: 100,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'fp_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false,
+										},
+									},
+									{
+										id: 'receipt_no',
+										name: 'Reciept No.',
+										field: 'receipt_no',
+										sortable: true,
+										width: 70,
+										filterable: true,
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										formatter: this.checkReceiptFormatter,
+										cssClass: 'receipt_collection_report'
+									},
+									{
+										id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
+										filterable: true,
+										cssClass: 'amount-report-fee',
+										filterSearchType: FieldType.number,
+										filter: { model: Filters.compoundInputNumber },
+										sortable: true,
+										formatter: this.checkFeeFormatter,
+										groupTotalsFormatter: this.sumTotalsFormatter
+									}];
+							}
+							if (repoArray[Number(keys)]['fee_head_data'] && repoArray[Number(keys)]['fee_head_data'].length > 0) {
+								let k = 0;
+								let tot = 0;
+								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
+									Object.keys(titem).forEach((key2: any) => {
+										if (key2 === 'fh_name' && Number(keys) === 0) {
+											const feeObj: any = {};
+											this.columnDefinitions.push({
+												id: 'fh_name' + j,
+												name: new CapitalizePipe().transform(titem[key2]) + ' (₹)',
+												field: 'fh_name' + j,
+												cssClass: 'amount-report-fee',
+												sortable: true,
+												filterable: true,
+												filterSearchType: FieldType.number,
+												filter: { model: Filters.compoundInput },
+												formatter: this.checkFeeFormatter,
+												groupTotalsFormatter: this.sumTotalsFormatter
+											});
+											feeObj['fh_name' + j] = '';
+											feeHead.push(feeObj);
+											this.feeHeadJSON.push(feeObj);
+											this.aggregatearray.push(new Aggregators.Sum('fh_name' + j));
+											j++;
+										}
+										if (key2 === 'fh_name') {
+											obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+												repoArray[Number(keys)]['rpt_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											obj['ses_name'] = repoArray[Number(keys)]['ses_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['ses_name']) : '-';
+											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+											}
+											obj['receipt_id'] = repoArray[Number(keys)]['rpt_id'] ?
+												repoArray[Number(keys)]['rpt_id'] : '-';
+											obj['invoice_created_date'] = repoArray[Number(keys)]['ftr_transaction_date'];
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+												repoArray[Number(keys)]['fp_name'] : '-';
+											obj['receipt_no'] = repoArray[Number(keys)]['receipt_no'] ?
+												repoArray[Number(keys)]['receipt_no'] : '-';
+											obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
+											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['inv_fine_amount']
+												? Number(repoArray[Number(keys)]['inv_fine_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
+											obj['receipt_mode_name'] = repoArray[Number(keys)]['pay_name'] ?
+												repoArray[Number(keys)]['pay_name'] : '-';
+											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
+												repoArray[Number(keys)]['tb_name'] : '-';
+											obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
+												repoArray[Number(keys)]['ftr_transaction_id'] : '-';
+
+											k++;
+										}
+									});
+								}
+							}
+							i++;
+							this.dataset.push(obj);
+
+						});
+						console.log('this.dataset', this.dataset)
+						this.columnDefinitions.push(
+							{
+								id: 'invoice_fine_amount', name: 'Fine Amount (₹)', field: 'invoice_fine_amount',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkFeeFormatter,
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
+								id: 'total', name: 'Total (₹)', field: 'total',
+								filterable: true,
+								filterSearchType: FieldType.number,
+								filter: { model: Filters.compoundInputNumber },
+								sortable: true,
+								formatter: this.checkTotalFormatter,
+								cssClass: 'amount-report-fee',
+								groupTotalsFormatter: this.sumTotalsFormatter
+							},
+							{
+								id: 'receipt_mode_name', name: 'Mode', field: 'receipt_mode_name', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								grouping: {
+									getter: 'receipt_mode_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'tb_name', name: 'Bank Name', field: 'tb_name', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								grouping: {
+									getter: 'tb_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'transaction_id', name: 'Transaction ID', field: 'transaction_id', sortable: true, filterable: true,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								width: 100,
+								grouping: {
+									getter: 'transaction_id',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							}
+						);
+						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
+						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
+						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
+						this.aggregatearray.push(new Aggregators.Sum('total'));
+						this.aggregatearray.push(new Aggregators.Sum('srno'));
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['invoice_created_date'] = 'Grand Total';
+						obj3['stu_admission_no'] = '';
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['receipt_id'] = '';
+						obj3['fp_name'] = '';
+						obj3['receipt_no'] = '';
+						obj3['inv_opening_balance'] =
+							new IndianCurrency().transform(this.dataset.map(t => t.inv_opening_balance).reduce((acc, val) => acc + val, 0));
+						obj3['invoice_fine_amount'] =
+							new IndianCurrency().transform(this.dataset.map(t => t.inv_fine_amount).reduce((acc, val) => acc + val, 0));
+						Object.keys(feeHead).forEach((key: any) => {
+							Object.keys(feeHead[key]).forEach(key2 => {
+								Object.keys(this.dataset).forEach(key3 => {
+									Object.keys(this.dataset[key3]).forEach(key4 => {
+										if (key4 === key2) {
+											obj3[key2] = new IndianCurrency().transform(this.dataset.map(t => t[key2]).reduce((acc, val) => acc + val, 0));
+										}
+									});
+								});
+							});
+						});
+						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
+						obj3['receipt_mode_name'] = '';
+						obj3['tb_name'] = '';
+						this.totalRow = obj3;
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+						
+						setTimeout(() => this.groupByPaymentMode(), 2);
+						setTimeout(() => this.groupByBankName(), 2);
+					} else {
+						this.tableFlag = true;
+					}
+				});
 			}
 		} else {
 			this.common.showSuccessErrorMessage('Please choose report type', 'error');
@@ -2643,7 +3034,7 @@ export class CollectionReportComponent implements OnInit {
 		// }
 		if ($event.value) {
 			this.displyRep.emit({ report_index: 1, report_id: $event.value, report_name: this.getReportName($event.value) });
-			if ($event.value === 'headwise' || $event.value === 'cumulativeheadwise') {
+			if ($event.value === 'headwise' || $event.value === 'cumulativeheadwise' || $event.value === 'dailyheadwise') {
 				this.filterFlag = true;
 				this.valueLabel = 'Fee Heads';
 				this.getFeeHeads();
@@ -3947,5 +4338,40 @@ export class CollectionReportComponent implements OnInit {
 				}
 			}
 		}
+	}
+
+	groupByPaymentMode() {
+		this.dataviewObj.setGrouping({
+			getter: 'receipt_mode_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('receipt_mode_name');
+	}
+	groupByBankName() {
+		this.dataviewObj.setGrouping({
+			getter: 'tb_name',
+			formatter: (g) => {
+				return `<b>${g.value}</b><span style="color:green"> (${g.count})</span>`;
+			},
+			comparer: (a, b) => {
+				// (optional) comparer is helpful to sort the grouped data
+				// code below will sort the grouped value in ascending order
+				return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+			},
+			aggregators: this.aggregatearray,
+			aggregateCollapsed: true,
+			collapsed: false,
+		});
+		this.draggableGroupingPlugin.setDroppedGroups('tb_name');
 	}
 }
