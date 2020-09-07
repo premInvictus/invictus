@@ -55,6 +55,9 @@ color: #ffffff;
 #small-screen {
     display: none;
 }
+.min-h-320{
+    min-height: 320px;
+}
 @media screen and (max-width: 720px) {
     ::-webkit-scrollbar {
         display: none !important;
