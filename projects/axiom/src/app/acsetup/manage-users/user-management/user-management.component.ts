@@ -19,6 +19,7 @@ export class UserManagementComponent implements OnInit {
 	) { }
 
 	currentUser: any[];
+	currentLoginUser:any;
 	userdetailArray: any[] = [];
 	public role_id: any;
 	homeUrl: string;
@@ -33,6 +34,8 @@ export class UserManagementComponent implements OnInit {
 
 	ngOnInit() {
 		this.homeUrl = this.breadCrumbService.getUrl();
+		this.currentLoginUser = JSON.parse(localStorage.getItem('currentUser'))['login_id'];
+		//console.log('this.currentLoginUser', this.currentLoginUser)
 		this.getUser();
 	}
 
@@ -53,14 +56,31 @@ export class UserManagementComponent implements OnInit {
 					this.userdetailArray = result.data;
 					let ind = 1;
 					for (const t of this.userdetailArray) {
-						this.ELEMENT_DATA.push({
-							position: ind,
-							userId: t.au_username,
-							name: t.au_full_name,
-							status: t.au_status === '1' ? true : false,
-							action: t
-						});
-						ind++;
+						
+						if (t.au_login_id === this.currentLoginUser) {
+							
+							if (t.au_user_access_flag) {
+								
+								this.ELEMENT_DATA.push({
+									position: ind,
+									userId: t.au_username,
+									name: t.au_full_name,
+									status: t.au_status === '1' ? true : false,
+									action: t
+								});
+								ind++;
+							}
+						} else {
+							this.ELEMENT_DATA.push({
+								position: ind,
+								userId: t.au_username,
+								name: t.au_full_name,
+								status: t.au_status === '1' ? true : false,
+								action: t
+							});
+							ind++;
+						}
+						
 					}
 					this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 					this.dataSource.paginator = this.paginator;
@@ -125,5 +145,9 @@ export class UserManagementComponent implements OnInit {
 			height: '65vh',
 			width: '60vh'
 		})
+	}
+
+	checkUserAccessFlag() {
+
 	}
 }

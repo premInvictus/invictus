@@ -149,7 +149,9 @@
                                     aria-hidden="true" (click)="editNewSchoolForm(item.action)"></i></a>&nbsp;<a><i
                                     class="fa fa-trash fa-delete fa-lg" style="cursor: pointer;" aria-hidden="true"
                                     (click)="deleteNewSchool(item.action.school_id)">
-                                 </i>
+                                 </i> | 
+                                 <a href="javascript:void(0)" (click)="manageSchoolUser(item)">Manage User Access</a>
+
                               </a>
                            </td>
                         </ng-container>
@@ -449,3 +451,4 @@
       </div>
    </div>
 </div>
+<!-- <app-admin-user-access-model [modelMessage]="Manage" (modelOk)="submitAdminUserAccess($event)" (modelCancel)="cancelAdminUserAccess($event)"></app-admin-user-access-model> -->
