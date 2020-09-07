@@ -206,4 +206,14 @@ export class AdminService {
 	editSchoolstatus(value) {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/updateSchoolstatus', value);
 	}
+
+	getSchoolAdminUsers(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/getSchoolAdminUsers', value);
+	}
+
+	setAdminUserAccessFlag(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiSisUrl + '/users/setAdminUserAccessFlag', value);
+	}
 }

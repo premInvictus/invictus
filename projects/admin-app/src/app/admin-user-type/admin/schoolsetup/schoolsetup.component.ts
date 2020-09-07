@@ -4,10 +4,10 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { AcsetupService } from '../../../acsetup/service/acsetup.service';
 import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
 import { appConfig } from 'projects/axiom/src/app/app.config';
-import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
+import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { Element } from './school.model';
 import { QelementService } from '../../../questionbank/service/qelement.service';
-
+import { AdminUserAccessModalComponent } from '../../../shared-module/admin-user-access-model/admin-user-access-model.component';
 @Component({
 	selector: 'app-schoolsetup',
 	templateUrl: './schoolsetup.component.html',
@@ -89,7 +89,8 @@ export class SchoolsetupComponent implements OnInit {
 		private acsetupService: AcsetupService,
 		private fb: FormBuilder,
 		private notif: NotificationService,
-		private qlementService: QelementService
+		private qlementService: QelementService,
+		private dialog: MatDialog   
 	) { }
 
 	applyFilter(filterValue: string) {
@@ -727,5 +728,23 @@ export class SchoolsetupComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	manageSchoolUser(item) {
+		console.log('item--',item);
+		this.adminService.getSchoolAdminUsers(item).subscribe((result:any) => {
+			const dialogRef = this.dialog.open(AdminUserAccessModalComponent, {
+				height: '520px',
+				width: '800px',
+				data: {
+			title: 'Manage Admin User Access',
+	        apiData:{result, schoolprefix:item.schoolprefix}   
+		  }
+			});
+			dialogRef.afterClosed().subscribe(dresult => {
+				console.log(dresult);
+				//this.getAccounts();
+			});
+		})
 	}
 }

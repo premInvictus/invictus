@@ -39,7 +39,9 @@ import { EditobjectiveComponent } from '../questionbank/reviewo/editobjective/ed
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AdminUserAccessModalComponent } from './admin-user-access-model/admin-user-access-model.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+
 @NgModule({
 	imports: [
 		CommonModule,
@@ -86,7 +88,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EssayDialogsComponent,
 		EditobjectiveComponent,
 		EditEssayComponent,
-		QuestionPaperDialogComponent
+		QuestionPaperDialogComponent,
+		AdminUserAccessModalComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -122,9 +125,10 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EssayDialogsComponent,
 		EditobjectiveComponent,
 		EditEssayComponent,
-		QuestionPaperDialogComponent
+		QuestionPaperDialogComponent,
+		AdminUserAccessModalComponent
 	],
-	entryComponents: [DeleteModalComponent]
+	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent]
 })
 export class SharedModuleModule {
 	constructor() {
