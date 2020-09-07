@@ -1283,7 +1283,7 @@ export class SalaryComputationComponent implements OnInit {
 				((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_total_earnings'] = Math.round((Number(empBasicPay) + total_earnings));
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_payable'] = emp_present_days ? salary_payable : 0
-			emp_present_days = emp_present_days ? emp_present_days : 0;
+			this.SALARY_COMPUTE_ELEMENT[index]['emp_present_days'] = emp_present_days ? emp_present_days : 0;
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_structure'] = item.emp_salary_detail.emp_salary_structure;
 			this.SALARY_COMPUTE_ELEMENT[index]['empShacolumns'] = this.empShacolumns;
 			this.SALARY_COMPUTE_ELEMENT[index]['empShdcolumns'] = this.empShdcolumns;

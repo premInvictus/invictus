@@ -19,7 +19,7 @@
 	</div>
 	<div class="row margin-top-10">
 		<div class="col-6 remove-right-padding">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6">
@@ -83,7 +83,7 @@
 			</mat-card>
 		</div>
 		<div class="col-6 remove-right-padding">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6" style="display: inline-grid;">
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				</mat-card-title>
-				<mat-card-content>
+				<mat-card-content style="word-break: break-all;">
 					<div class="row">
 						<div class="col-4">
 							<app-common-dynamic-chart *ngIf="gaugeOptionsflag"
@@ -191,7 +191,7 @@
 
 	<div class="row margin-top-10">
 		<div class="col-4">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-5">
@@ -214,7 +214,7 @@
 					</div>
 				</mat-card-title>
 				<hr class="border-bottom-grey">
-				<mat-card-content *ngIf="currentExam">
+				<mat-card-content *ngIf="currentExam" style="word-break: break-all;">
 					<div class="row">
 						<div class="col-10">
 							<span class="font-size-20 font-medium font-skyblue">{{currentExam?.qp_name}}</span>
@@ -278,7 +278,7 @@
 			</mat-card>
 		</div>
 		<div class="col-4 remove-right-padding">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6">
@@ -292,7 +292,7 @@
 					</div>
 				</mat-card-title>
 				<hr class="border-bottom-grey">
-				<mat-card-content>
+				<mat-card-content style="word-break: break-all;">
 					<ng-container *ngIf="msgArray.length > 0">
 						<div class="row">
 							<div class="col-10">
@@ -349,7 +349,7 @@
 			</mat-card>
 		</div>
 		<div class="col-4 remove-right-padding">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320 ">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6">
@@ -369,7 +369,7 @@
 					</div>
 				</mat-card-title>
 				<hr class="border-bottom-grey">
-				<mat-card-content>
+				<mat-card-content style="word-break: break-all;">
 					<ng-container *ngIf="assignmentArray.length > 0">
 						<div class="row">
 							<div class="col-10">
@@ -424,7 +424,7 @@
 			</mat-card>
 		</div>
 		<!-- <div class="col-4 remove-right-padding">
-			<mat-card class="height-296 height-263">
+			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-10">
