@@ -727,10 +727,10 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		if (this.currentQA.answerStatus === '') {
 			this.currentQA.answerStatus = '2';
 		}
-		if(this.currentQA.qus_qt_id == 1){
-			console.log('subjective question, call saveSubjectiveWithoutAnswer');
-			this.saveSubjectiveWithoutAnswer();
-		}
+		// if(this.currentQA.qus_qt_id == 1){
+		// 	console.log('subjective question, call saveSubjectiveWithoutAnswer');
+		// 	this.saveSubjectiveWithoutAnswer();
+		// }
 		this.getBookMarkStatus();
 		if (this.currentQA.qus_ess_id !== '' && this.currentQA.qus_ess_id != null) {
 			this.qelementService.getEssay({ ess_id: this.currentQA.qus_ess_id }).subscribe(
@@ -1161,9 +1161,10 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		const answer: any[] = [];
 		if (Number(this.currentQA.qus_qst_id) > 5 && Number(this.currentQA.qus_qst_id) < 13) {
 			const subjectivePA = { evd_qus_answer: this.subjectiveInputAnswer };
-			if (subjectivePA.evd_qus_answer !== '' && subjectivePA.evd_qus_answer) {
-				answer.push(subjectivePA);
-			}
+			// if (subjectivePA.evd_qus_answer !== '' && subjectivePA.evd_qus_answer) {
+			// 	answer.push(subjectivePA);
+			// }
+			answer.push(subjectivePA);
 		} else if (Number(this.currentQA.qus_qst_id) === 1) {
 
 			if (this.mcqValue !== '') {
