@@ -189,7 +189,10 @@ export class ExamsetupComponent implements OnInit {
 								if (result.data.length > 0) {
 									for (const qus of result.data) {
 										if (Number(qus.qus_qst_id) > 5 && Number(qus.qus_qst_id) < 13) {
-											this.Exam_setup_Form.controls.es_qt_status.setValue('1');
+											//this.Exam_setup_Form.controls.es_qt_status.setValue('1');
+											this.Exam_setup_Form.patchValue({
+												es_qt_status:'1'
+											});
 											break;
 										}
 									}

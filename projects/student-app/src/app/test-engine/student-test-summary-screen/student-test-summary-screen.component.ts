@@ -3,6 +3,8 @@ import { QelementService } from 'projects/axiom/src/app/questionbank/service/qel
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
 import { ActivatedRoute } from '@angular/router';
 import { isNumber, isNull } from 'util';
+import { NotificationService } from 'projects/axiom/src/app/_services';
+
 
 import * as Highcharts from 'highcharts';
 declare var require: any;
@@ -11,6 +13,9 @@ require('highcharts/modules/solid-gauge')(Highcharts);
 require('highcharts/modules/heatmap')(Highcharts);
 require('highcharts/modules/treemap')(Highcharts);
 require('highcharts/modules/funnel')(Highcharts);
+
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -222,10 +227,14 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 			}
 		]
 	};
+
+	currentUser: any = {};
 	constructor(
 		private qelementService: QelementService,
 		private route: ActivatedRoute,
-		private reportService: ReportService
+		private reportService: ReportService,
+		public dialog: MatDialog,
+		private notif:NotificationService
 	) {
 		this.percentageValue = function (value: number): string {
 			return `${Math.round(value)} / ${this['max']}`;
@@ -264,7 +273,9 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 			.subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					if (result.data.length > 0) {
+						
 						this.examDetail = result.data[0];
+						console.log('this.examDetail',this.examDetail)
 						this.examDetailFlag = true;
 						if (this.examDetail.es_qt_status === '1') {
 							this.onlyObjectiveFlag = false;
@@ -387,4 +398,6 @@ export class StudentTestSummaryScreenComponent implements OnInit {
 	closeResult() {
 		close();
 	}
+
+	
 }

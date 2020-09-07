@@ -110,7 +110,7 @@
                         <div [innerHTML]="item.status"></div>
                       </mat-cell>
                     </ng-container>
-                    <ng-container matColumnDef="action">
+                    <!-- <ng-container matColumnDef="action">
                       <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
                       <mat-cell *matCellDef="let item">
                         <a [routerLink]="['../../view_student_test_report',this.es_id,item.action.eva_login_id]">
@@ -121,6 +121,20 @@
                           <i class="fa fa-search fa-lg" data-toggle="tooltip" data-placement="top" title="Evaluate Test"
                             aria-hidden="true"></i>
                         </a>
+                      </mat-cell>;
+                    </ng-container> -->
+                    <ng-container matColumnDef="action">
+                      <mat-header-cell *matHeaderCellDef> Action </mat-header-cell>
+                      <mat-cell *matCellDef="let item">
+                        <a [routerLink]="['../../view_student_test_report',this.es_id,item.action.eva_login_id]">
+                          <i class="fas fa-eye fa-lg p-l-10" data-toggle="tooltip" data-placement="top" title="View Test"
+                            aria-hidden="true"></i>
+                        </a>
+                        <a [routerLink]="['../../studentanswerreview',item.action.eva_id,es_id]">
+                          <i class="fa fa-search fa-lg p-l-10" data-toggle="tooltip" data-placement="top" title="Evaluate Test"
+                            aria-hidden="true"></i>
+                        </a>
+                        <i *ngIf="item.action.eva_documents" class="fas fa-arrow-down p-l-10" title="Download Documents" (click)="downloadDocuments(item.action.eva_documents)"></i>
                       </mat-cell>;
                     </ng-container>
                     <mat-header-row class="top_header" *matHeaderRowDef="displayedColumns"></mat-header-row>

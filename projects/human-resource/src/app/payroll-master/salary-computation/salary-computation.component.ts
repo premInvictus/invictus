@@ -504,6 +504,7 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							});
 						}
+						console.log('emp_month_attendance_data',emp_month_attendance_data)
 						if (emp_month_attendance_data && emp_month_attendance_data.month_data) {
 							for (let i = 0; i < emp_month_attendance_data.month_data.length; i++) {
 								let emp_month = emp_month_attendance_data.month_data[i].month_id;

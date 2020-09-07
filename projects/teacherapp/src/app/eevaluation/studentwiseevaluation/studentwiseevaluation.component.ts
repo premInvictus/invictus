@@ -2,7 +2,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { QelementService } from '../../questionbank/service/qelement.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { Element } from './studentwiseevaluationElement.model';
+import { Element } from './studentwiseevaluationElement.model'; 
+import { saveAs } from 'file-saver';
 
 @Component({
 	selector: 'app-studentwiseevaluation',
@@ -87,6 +88,17 @@ export class StudentwiseevaluationComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	downloadDocuments(urls:string) {
+		if(urls.length > 0){
+			const urlArr:any[]=urls.split(',');
+			urlArr.forEach(url => {
+				const length = url.split('/').length;
+				saveAs(url, url.split('/')[length - 1]);
+			});
+			
+		}		
 	}
 }
 

@@ -668,6 +668,10 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/evaluation/addExamAttendance', value);
 	}
+	uploadExamDocuments(value) {
+		this.loaderService.startLoading();
+		return this._http.post(environment.apiAxiomUrl + '/evaluation/uploadExamDocuments', value);
+	}
 	updateStartTime(value) {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/evaluation/updateStartTime', value);

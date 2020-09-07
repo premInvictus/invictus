@@ -8,6 +8,10 @@ import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from '@angular/material/dial
 import { OngoingTestInstructionComponent } from '../../shared-module/ongoing-test-instruction/ongoing-test-instruction.component';
 import { NotificationService, SocketService } from 'projects/axiom/src/app/_services/index';
 import { Event } from 'projects/axiom/src/app/_models/event';
+
+import { PreviewDocumentComponent } from '../../shared-module/preview-document/preview-document.component';
+import { SisService} from 'projects/sis/src/app/_services';
+
 export class PendingRequest {
 	url: string;
 	data: any;
@@ -151,6 +155,15 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	dialogRef: MatDialogRef<OngoingTestInstructionComponent>;
 	networkErrorCounter = 0;
 	socketExtendTime = 0;
+
+
+	//upload attachemnt
+	multipleFileArray: any[] = [];
+	imageArray: any[] = [];
+	finalDocumentArray: any[] = [];
+	counter: any = 0;
+	currentFileChangeEvent: any;
+	currentImage: any;
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
@@ -159,7 +172,8 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		private fb: FormBuilder,
 		private notif: NotificationService,
 		private dialog: MatDialog,
-		private socketService: SocketService
+		private socketService: SocketService,
+		private sisService:SisService,
 	) { }
 
 	ngOnDestroy() {
@@ -641,6 +655,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	}
 
 	loadCurrentQ(cqai) {
+		
 		const curenttime = new Date().getTime();
 		this.previousQAIndex = this.currentQAIndex;
 		this.questionsArray[this.previousQAIndex].timespent = this.questionsArray[this.previousQAIndex].timespent + (curenttime - this.stime);
@@ -707,10 +722,15 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		this.subjectiveInputAnswer = '';
 		this.subjectiveAnswer.id = null;
 		this.currentQA = this.questionsArray[this.currentQAIndex];
-		console.log(this.currentQA);
+		//console.log(this.currentQA);
+		console.log('loadCurrentQ',this.questionsArray[this.currentQAIndex])
 		if (this.currentQA.answerStatus === '') {
 			this.currentQA.answerStatus = '2';
 		}
+		// if(this.currentQA.qus_qt_id == 1){
+		// 	console.log('subjective question, call saveSubjectiveWithoutAnswer');
+		// 	this.saveSubjectiveWithoutAnswer();
+		// }
 		this.getBookMarkStatus();
 		if (this.currentQA.qus_ess_id !== '' && this.currentQA.qus_ess_id != null) {
 			this.qelementService.getEssay({ ess_id: this.currentQA.qus_ess_id }).subscribe(
@@ -1122,13 +1142,29 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		this.setQusToLS();
 	}
 
+	saveSubjectiveWithoutAnswer(){
+		const answer: any[] = [];
+		if (Number(this.currentQA.qus_qst_id) > 5 && Number(this.currentQA.qus_qst_id) < 13) {
+			const subjectivePA = { evd_qus_answer: '' };
+			answer.push(subjectivePA);
+		}
+		this.qelementService.studentInputAnswer({
+			evd_eva_id: this.eva_id, evd_qus_id: this.currentQA.qus_id, es_id: this.es_id,
+			evd_qst_id: this.currentQA.qus_qst_id, evd_qt_id: this.currentQA.qus_qt_id, answer: answer, evd_status: '1'
+		}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+			}
+		});
+	}
+
 	saveAndNext(back = false) {
 		const answer: any[] = [];
 		if (Number(this.currentQA.qus_qst_id) > 5 && Number(this.currentQA.qus_qst_id) < 13) {
 			const subjectivePA = { evd_qus_answer: this.subjectiveInputAnswer };
-			if (subjectivePA.evd_qus_answer !== '' && subjectivePA.evd_qus_answer) {
-				answer.push(subjectivePA);
-			}
+			// if (subjectivePA.evd_qus_answer !== '' && subjectivePA.evd_qus_answer) {
+			// 	answer.push(subjectivePA);
+			// }
+			answer.push(subjectivePA);
 		} else if (Number(this.currentQA.qus_qst_id) === 1) {
 
 			if (this.mcqValue !== '') {
@@ -1414,6 +1450,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		} else {
 			eva_status = '1';
 		}
+		this.submitAttachment();
 		this.getQusFromLS(this.eva_id).then(questions => {
 			if (this.examDetail.es_exam_type === '2') {
 				this.qelementService.studentFinalSubmit({
@@ -1700,6 +1737,102 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		this.dialogRef.afterClosed();
 	}
 	// End
+
+	//upload attachemnt
+	fileChangeEvent(fileInput) {
+		this.multipleFileArray = [];
+		this.currentFileChangeEvent = fileInput;
+		const files = fileInput.target.files;
+		for (let i = 0; i < files.length; i++) {
+			this.IterateFileLoop(files[i]);
+		}
+	}
+
+	IterateFileLoop(files) {
+		const reader = new FileReader();
+		reader.onloadend = (e) => {
+			this.currentImage = reader.result;
+			const fileJson = {
+				fileName: files.name,
+				imagebase64: this.currentImage,
+				module: 'classworkupdate'
+			};
+			this.multipleFileArray.push(fileJson);
+			if (this.multipleFileArray.length === this.currentFileChangeEvent.target.files.length) {
+				this.sisService.uploadDocuments(this.multipleFileArray).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						for (const item of result.data) {
+							console.log('item', item);
+							this.imageArray.push({
+								file_name: item.file_name,
+								file_url: item.file_url
+							});
+						}
+						console.log('image array', this.imageArray);
+						this.notif.showSuccessErrorMessage('documents added successfully', 'success');
+					}
+				});
+			}
+		};
+		reader.readAsDataURL(files);
+	}
+	deleteFile(index) {
+		this.imageArray.splice(index, 1);
+	}
+
+	resetAttachment() {
+		this.imageArray = [];
+	}
+
+	submitAttachment() {
+		if(this.imageArray.length > 0){
+			const docArray:any[]=[];
+			this.imageArray.forEach(element => {
+				docArray.push(element.file_url);
+			});
+			const param:any={};
+			param.es_id = this.es_id;
+			param.login_id =this.currentUser.login_id ;
+			param.eva_documents = docArray;
+			this.qelementService.uploadExamDocuments(param).subscribe((result: any) => {
+				if(result && result.status == 'ok'){
+					this.notif.showSuccessErrorMessage(result.data, 'success');
+				} else {
+					this.notif.showSuccessErrorMessage(result.data, 'error');
+				}
+			});
+		} else {
+			this.notif.showSuccessErrorMessage('Please add documents', 'error');
+		}
+	}
+	getuploadurl(fileurl: string) {
+		const filetype = fileurl.substr(fileurl.lastIndexOf('.') + 1);
+		if (filetype === 'pdf') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-pdf.png';
+		} else if (filetype === 'doc' || filetype === 'docx') {
+			return 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/exam/icon-word.png';
+		} else {
+			return fileurl;
+		}
+	}
+	previewDocuments(attachmentArray) {
+		const attArr: any[] = [];
+		if (attachmentArray && attachmentArray.length > 0) {
+			attachmentArray.forEach(element => {
+				attArr.push({
+					file_url: element.file_url
+				});
+			});
+			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+				height: '80%',
+				width: '1000px',
+				data: {
+					index: '',
+					images: attArr
+				}
+			});
+		}
+	}
 }
 
 
@@ -1775,5 +1908,4 @@ export class QuestionNoOnGoingModalComponent implements OnInit {
 			return '#06b7e8';
 		}
 	}
-
 }
