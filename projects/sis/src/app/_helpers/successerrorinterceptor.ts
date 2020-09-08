@@ -22,6 +22,15 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const session = JSON.parse(localStorage.getItem('session'));
 		const cookieData = this.service.getCokkieData();
+		if (localStorage.getItem('currentUser') && JSON.parse(localStorage.getItem('currentUser'))['device_details']) {
+		const deviceType = JSON.parse(JSON.parse(localStorage.getItem('currentUser'))['device_details']);
+		if (deviceType && deviceType.length > 0) {
+			for (var i=0; i<deviceType.length;i++) {
+				if (deviceType[i]['last_login'] ==="true") {
+					request = request.clone({ headers: request.headers.set('DeviceType', deviceType[i]['type']) });
+				}
+			}
+		} }
 
 		if (cookieData) {
 			if (cookieData['PF']) {
