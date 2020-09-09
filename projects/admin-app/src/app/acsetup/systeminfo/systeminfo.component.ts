@@ -5,7 +5,7 @@ import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BreadCrumbService, NotificationService, UserAccessMenuService, CommonAPIService } from 'projects/axiom/src/app/_services/index';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import { BoardElement, SubjectElement, ClassElement, TopicElement,
+import { BoardElement, SubjectElement, ServiceElement, ClassElement, TopicElement,
 	SubTopicElement, SectionElement, QuestionTypeElement, QuestionSubTypeElement, SkillTypeElement, LODElement } from './system.model';
 
 @Component({
@@ -19,6 +19,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	private formBoard: FormGroup;
 	private formSection: FormGroup;
 	private formSubject: FormGroup;
+	private formService: FormGroup;
 	private formClass: FormGroup;
 	private formTopic: FormGroup;
 	private formSubtopic: FormGroup;
@@ -29,6 +30,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	modalRef: BsModalRef;
 	currentsec: any[];
 	subjectArray: any[] = [];
+	serviceArray: any[] = [];
 	private editFlag = false;
 	private arrayBoard: any[] = [];
 	private arraySection: any[] = [];
@@ -48,6 +50,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	BOARD_ELEMENT_DATA: BoardElement[] = [];
 	SECTION_ELEMENT_DATA: SectionElement[] = [];
 	SUBJECT_ELEMENT_DATA: SubjectElement[] = [];
+	SERVICE_ELEMENT_DATA: ServiceElement[] = [];
 	CLASS_ELEMENT_DATA: ClassElement[] = [];
 	TOPIC_ELEMENT_DATA: TopicElement[] = [];
 	SUBTOPIC_ELEMENT_DATA: SubTopicElement[] = [];
@@ -60,6 +63,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	boarddisplayedColumns = ['position', 'name', 'alias', 'action', 'modify'];
 	sectiondisplayedColumns = ['position', 'name', 'action', 'modify'];
 	subjectdisplayedColumns = ['position', 'board', 'name', 'action', 'modify'];
+	servicedisplayedColumns = ['position', 'service_name', 'service_charge', 'action', 'modify'];
 	classdisplayedColumns = ['position', 'name', 'section', 'board', 'subject', 'action', 'modify'];
 	topicdisplayedColumns = ['position', 'board', 'class', 'subject', 'name', 'action', 'modify'];
 	subtopicdisplayedColumns = ['position', 'board', 'class', 'subject', 'topic', 'name', 'action', 'modify'];
@@ -71,6 +75,7 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 	boarddataSource = new MatTableDataSource<BoardElement>(this.BOARD_ELEMENT_DATA);
 	sectiondataSource = new MatTableDataSource<SectionElement>(this.SECTION_ELEMENT_DATA);
 	subjectdataSource = new MatTableDataSource<SubjectElement>(this.SUBJECT_ELEMENT_DATA);
+	servicedataSource = new MatTableDataSource<ServiceElement>(this.SERVICE_ELEMENT_DATA);
 	classdataSource = new MatTableDataSource<ClassElement>(this.CLASS_ELEMENT_DATA);
 	topicdataSource = new MatTableDataSource<TopicElement>(this.TOPIC_ELEMENT_DATA);
 	subtopicdataSource = new MatTableDataSource<SubTopicElement>(this.SUBTOPIC_ELEMENT_DATA);
@@ -101,6 +106,8 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.sectiondataSource.sort = this.sort;
 		this.subjectdataSource.paginator = this.paginator;
 		this.subjectdataSource.sort = this.sort;
+		this.servicedataSource.paginator = this.paginator;
+		this.servicedataSource.sort = this.sort;
 		this.classdataSource.paginator = this.paginator;
 		this.classdataSource.sort = this.sort;
 		this.topicdataSource.paginator = this.paginator;
@@ -127,6 +134,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				break;
 			case 'subject':
 				this.deleteEntry(data, 'deleteSubject', this.getSubjectAll);
+				break;
+			case 'service':
+				this.deleteEntry(data, 'deleteService', this.getServiceAll);
 				break;
 			case 'class':
 				this.deleteEntry(data, 'deleteClass', this.getClassAll);
@@ -166,6 +176,9 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 				break;
 			case 'subject':
 				this.subjectdataSource.filter = filterValue;
+				break;
+			case 'service':
+				this.servicedataSource.filter = filterValue;
 				break;
 			case 'class':
 				this.classdataSource.filter = filterValue;
@@ -213,6 +226,12 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			sub_id: '',
 			sub_name: '',
 			sub_status: ''
+		});
+		this.formService = this.fbuild.group({
+			service_id: '',
+			service_name: '',
+			service_charge: '',
+			status: ''
 		});
 		this.formClass = this.fbuild.group({
 			board_id: '',
@@ -277,6 +296,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			this.getSubjectAll(this);
 			this.getSubject();
 			this.formSubject.reset();
+		} else if (this.valueSystemInfo === 11) {
+			this.getServiceAll(this);
+			//this.getService();
+			this.formService.reset();
 		} else if (this.valueSystemInfo === 4) {
 			this.formClass.reset();
 			this.getClassAll(this);
@@ -398,6 +421,42 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 					);
 			} else {
 				this.notif.showSuccessErrorMessage('Subject already exist.', 'error');
+			}
+		}
+	}
+	addService() {
+		/*Adding Form Validation for Service dropdown*/
+		if (!this.formService.value.service_name) {
+			this.notif.showSuccessErrorMessage('Service name is required', 'error');
+		}
+		// if (!this.formService.value.board_id) {
+		// 	this.notif.showSuccessErrorMessage('Board name is required', 'error');
+		// }
+		if (this.formService.valid) {
+			const findex = this.serviceArray.findIndex(f => (f.service_name).toLowerCase() === (this.formService.value.sub_name).toLowerCase());
+			if (findex === -1) {
+				this.acsetupService.addService(this.formService.value)
+					.subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								//this.getService();
+								this.getServiceAll(this);
+								// this.acsetupService.exportService(
+								// 	{
+								// 		board_id: this.formService.value.board_id,
+								// 		sub_name: this.formService.value.sub_name,
+
+								// 	}).subscribe((result2: any) => {
+								// 		if (result2 && result2.status === 'ok') {
+								// 			this.notif.showSuccessErrorMessage(result2.data, 'success');
+								// 			this.formService.controls.sub_name.setValue('');
+								// 		}
+								// 	});
+							}
+						}
+					);
+			} else {
+				this.notif.showSuccessErrorMessage('Service already exist.', 'error');
 			}
 		}
 	}
@@ -703,6 +762,37 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		);
 	}
 
+	// Get list of subject of active or inactive
+	getServiceAll(that) {
+		that.arrayService = [];
+		that.SERVICE_ELEMENT_DATA = [];
+		that.acsetupService.getService({}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					that.arrayService = result.data;
+					let ind = 1;
+					for (const t of that.arrayService) {
+						that.SERVICE_ELEMENT_DATA.push({ position: ind, service_name: t.service_name , service_charge: t.service_charge, action: t });
+						ind++;
+						that.servicedataSource = new MatTableDataSource<ServiceElement>(that.SERVICE_ELEMENT_DATA);
+						that.servicedataSource.paginator = that.paginator;
+						that.sort.sortChange.subscribe(() => that.paginator.pageIndex = 0);
+						that.servicedataSource.sort = that.sort;
+					}
+				}
+			}
+		);
+	}
+// Get list of subject of active
+	getService() {
+		this.acsetupService.getService({status:'1'}).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.serviceArray = result.data;
+				}
+			}
+		);
+	}
 	// Get list of subject of active
 	getSubject() {
 		this.acsetupService.getSubject().subscribe(
@@ -924,6 +1014,10 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 		this.editFlag = true;
 		this.formSubject.patchValue({board_id: value.board_id, sub_id: value.sub_id, sub_name: value.sub_name, sub_status: value.sub_status});
 	}
+	formeditService(value: any) {
+		this.editFlag = true;
+		this.formService.patchValue({service_id: value.service_id, service_name: value.service_name, service_charge: value.service_charge, status: value.status});
+	}
 
 	getIdArray(value: any) {
 		const idArray = [];
@@ -1062,6 +1156,28 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			);
 			this.editFlag = false;
 			this.formSubject.controls.sub_name.setValue('');
+		}
+	}
+	editService(value: any) {
+		/*Adding Form Validation for Service dropdown*/
+		if (!this.formService.value.service_name) {
+			this.notif.showSuccessErrorMessage('Service name is required', 'error');
+		}
+		/* Form Validation Ends */
+		if (this.formService.valid) {
+			this.acsetupService.editService(value).subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.getServiceAll(this);
+						this.notif.showSuccessErrorMessage(result.data, 'success');
+					}
+				}
+			);
+			this.editFlag = false;
+			this.formService.patchValue({
+				service_name:'',
+				service_charge:''
+			});
 		}
 	}
 
@@ -1265,6 +1381,20 @@ export class SysteminfoComponent implements OnInit, AfterViewInit {
 			(result: any) => {
 				if (result && result.status === 'ok') {
 					this.getSubjectAll(this);
+				}
+			}
+		);
+	}
+	toggleServiceStatus(value: any) {
+		if (value.status === '1') {
+			value.status = '0';
+		} else {
+			value.status = '1';
+		}
+		this.acsetupService.editService(value).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.getServiceAll(this);
 				}
 			}
 		);

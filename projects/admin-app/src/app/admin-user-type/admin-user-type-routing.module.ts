@@ -47,7 +47,12 @@ const routes: Routes = [
 			{ path: 'create_new_user', component: CreateNewUserComponent },
 			{ path: 'manage-access/:id', component: ManageAccessComponent },
 			{ path: 'create-new-school', component: CreateNewSchoolComponent },
-			{ path: 'user-credential', component: UserCredentialComponent }
+			{ path: 'user-credential', component: UserCredentialComponent },
+			{
+				path: 'billing',
+				loadChildren:
+					'projects/admin-app/src/app/billing/billing.module#BillingModule'
+			},
 		]
 	}
 ];
