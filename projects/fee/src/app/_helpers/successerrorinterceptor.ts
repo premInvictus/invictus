@@ -6,14 +6,14 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError, retry } from 'rxjs/operators';
-import { CommonAPIService, ProcesstypeService } from '../_services/index';
+import { CommonAPIService } from '../_services/index';
 import { environment } from '../../environments/environment';
 import {CookieService} from 'ngx-cookie';
 import {Router} from '@angular/router';
 @Injectable()
 export class SuccessErrorInterceptor implements HttpInterceptor {
 	constructor(private service: CommonAPIService,
-		private processtypeService: ProcesstypeService,
+		
 		private router: Router,
 		private cookieService: CookieService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -23,6 +23,15 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const session = JSON.parse(localStorage.getItem('session'));
 		const cookieData = this.service.getCokkieData();
+		if (localStorage.getItem('currentUser') && JSON.parse(localStorage.getItem('currentUser'))['device_details']) {
+		const deviceType = JSON.parse(JSON.parse(localStorage.getItem('currentUser')));
+		if (deviceType && deviceType.length > 0) {
+			for (var i=0; i<deviceType.length;i++) {
+				if (deviceType[i]['last_login'] ==="true") {
+					request = request.clone({ headers: request.headers.set('DeviceType', deviceType[i]['type']) });
+				}
+			}
+		}}
 		if (cookieData) {
 			if (cookieData['PF']) {
 				request = request.clone({ headers: request.headers.set('Prefix', cookieData['PF']) });
@@ -33,9 +42,9 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 			if (session) {
 				request = request.clone({ headers: request.headers.set('Sessionid', session.ses_id) });
 			}
-			if (this.processtypeService.getProcesstype()) {
-				request = request.clone({ headers: request.headers.set('Processtype', this.processtypeService.getProcesstype()) });
-			}
+			// if (this.processtypeService.getProcesstype()) {
+			// 	request = request.clone({ headers: request.headers.set('Processtype', this.processtypeService.getProcesstype()) });
+			// }
 		}
 		return next.handle(request).pipe(
 			map((event: HttpEvent<any>) => {
