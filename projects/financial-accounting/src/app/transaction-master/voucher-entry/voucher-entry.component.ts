@@ -715,7 +715,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (this.currentVcType == 'Bank Payment' || this.currentVcType == 'Cash Payment' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note') {
 				console.log('index', i);
 				const inputJson: any = {};
-				inputJson.vc_type = 'Journal';
+				inputJson.vc_type = 'Journal Voucher';
 				inputJson.vc_sattle_status = 1;
 				inputJson.vc_state = 'publish';
 				inputJson.coa_id = this.voucherFormGroupArray[i].value.vc_account_type_id;
