@@ -187,7 +187,7 @@ export class BalanceSheetModalComponent implements OnInit {
 
 
     }
-    creditSideTotal = creditSideTotal - (this.partialPaymentStatus ? Number(this.incomeExpenditureArray['head_total_amt']) : 0);
+    creditSideTotal = creditSideTotal;
     debitSideTotal = debitSideTotal;
     //console.log(debitSideTotal, creditSideTotal)
     this.incomeExpenditureDeviation = debitSideTotal - creditSideTotal;
@@ -221,7 +221,9 @@ export class BalanceSheetModalComponent implements OnInit {
           //console.log('debitTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
         }
       }
-
+      //console.log('this.creditTotal', this.creditTotal);
+      if (this.debitTotal == 5880) {
+      console.log('this.debitTotal', this.debitTotal, this.param['ledger_data'][i]); }
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
@@ -241,11 +243,11 @@ export class BalanceSheetModalComponent implements OnInit {
 
     }
 
-    this.creditSideTotal = this.creditSideTotal + (Number(this.param['head_total_amt']) - Number(this.param['total_receipt_amt']));
+    this.creditSideTotal = this.creditSideTotal;
     if (this.creditSideTotal < 0) {
       this.creditSideTotal = -this.creditSideTotal;
     }
-    this.debitSideTotal = this.debitSideTotal + this.incomeExpenditureDeviation;
+    this.debitSideTotal = this.debitSideTotal;
     if (this.debitSideTotal < 0) {
       this.debitSideTotal = -this.debitSideTotal;
     }
