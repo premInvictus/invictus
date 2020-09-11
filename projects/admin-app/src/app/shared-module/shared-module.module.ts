@@ -41,6 +41,7 @@ import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AdminUserAccessModalComponent } from './admin-user-access-model/admin-user-access-model.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 
 @NgModule({
 	imports: [
@@ -89,7 +90,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EditobjectiveComponent,
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
-		AdminUserAccessModalComponent
+		AdminUserAccessModalComponent,
+		IndianCurrency,TruncatetextPipe
 	],
 	exports: [
 		MatProgressBarModule,
@@ -126,7 +128,8 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EditobjectiveComponent,
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
-		AdminUserAccessModalComponent
+		AdminUserAccessModalComponent,
+		IndianCurrency,TruncatetextPipe
 	],
 	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent]
 })

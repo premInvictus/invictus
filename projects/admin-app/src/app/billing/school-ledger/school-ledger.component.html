@@ -1,3 +1,107 @@
-<p>
-  school-ledger works!
-</p>
+<div>
+  <div class="row">
+     <div class="col-12">
+        <mat-card>
+           <mat-card-title>
+            <div class="row">
+              <div class="col-6">
+                <h1 class="remove-bottom-margin font-size-24">School Details</h1>
+               </div>
+               <div class="col-6 remove-col-padding-right text-right">
+                <button mat-button class="btn-success-green" 
+                  (click)="createInvoice(null,false)" >Create Invoice</button>
+               </div>
+             </div>              
+           </mat-card-title>
+        </mat-card>
+     </div>
+  </div>
+  <div class="row">
+     <div class="col-12">
+        <mat-card>
+           <mat-card-content>
+            <div class="row">
+              <div class="col-2 text-center">
+                <img style="border-radius:50%"
+                  [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + schooldetails?.school_logo + '&h=80&w=80'">
+                
+              </div>
+              <div class="col-1 smart-col-3">
+                <div class="fee-vertical-line-divider"></div>
+              </div>
+              <div class="col-9 fee-col-80 remove-col-padding">
+                <div class="row remove-top-margin">
+                  <div class="col-3 remove-col-padding">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">School Name: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_name | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">Email </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_email | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">Contact: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_phone}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-1 smart-col-3">
+                    <div class="vertical-line-divider"></div>
+                  </div>
+                  <div class="col-3 remove-col-padding">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">School Address: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_address | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">City </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_city | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">Pin: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.si_pincode}}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-1 smart-col-3">
+                    <div class="vertical-line-divider"></div>
+                  </div>
+                  <div class="col-3 remove-col-padding">
+                    <div class="row remove-top-margin">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">School Website: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_website | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">Affiliation No </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_afflication_no | titlecase}}</span>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-12">
+                        <span class="font-size-16 font-light">Board: </span><span
+                          class="font-size-16 font-regular">{{schooldetails?.school_board}}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+           </mat-card-content>
+        </mat-card>
+     </div>
+  </div>
+</div>

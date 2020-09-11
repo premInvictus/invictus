@@ -4,7 +4,7 @@ import { SchoolListingComponent } from './school-listing/school-listing.componen
 import { SchoolLedgerComponent } from './school-ledger/school-ledger.component';
 
 const routes: Routes = [
-  { path: 'school-listing', component: SchoolListingComponent },
+  { path: '', component: SchoolListingComponent },
 	{ path: 'school-ledger', component: SchoolLedgerComponent },
 ];
 

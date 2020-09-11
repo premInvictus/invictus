@@ -1,3 +1,108 @@
-<p>
-  school-listing works!
-</p>
+<div *ngIf="schoolSetupDiv">
+   <div class="row">
+      <div class="col-12">
+         <mat-card>
+            <mat-card-title>
+               <h1 class="remove-bottom-margin font-size-24">School Listing</h1>
+            </mat-card-title>
+         </mat-card>
+      </div>
+   </div>
+   <div class="row">
+      <div class="col-12">
+         <mat-card>
+            <mat-card-content>
+               <div class="row">
+                  <div class="col-12 pd_left pd_right">
+                     <div class="col-2">
+                        <mat-form-field class="form-field">
+                           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+                           <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
+                           </span>
+                        </mat-form-field>
+                     </div>
+                  </div>
+                  <div class="col-12">
+                     <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="position">
+                           <th *matHeaderCellDef mat-sort-header> No. </th>
+                           <td *matCellDef="let item"> {{item.position}} </td>
+                        </ng-container>
+                        <!-- Template Name Column -->
+                        <ng-container matColumnDef="logo">
+                           <th *matHeaderCellDef mat-sort-header> Logo</th>
+                           <td *matCellDef="let item"><img [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + 
+                              item.logo + '&h32&w=32'" alt=""></td>
+                        </ng-container>
+                        <!-- Teacher Column -->
+                        <ng-container matColumnDef="schoolname">
+                           <th *matHeaderCellDef mat-sort-header>School Name </th>
+                           <td *matCellDef="let item" class="text-left"> {{item.schoolname}} </td>
+                        </ng-container>
+                        <!-- designation Column -->
+                        <ng-container matColumnDef="schoolprefix">
+                           <th *matHeaderCellDef mat-sort-header> Prefix </th>
+                           <td *matCellDef="let item"> {{item.schoolprefix}}</td>
+                        </ng-container>
+                        <!--Mobile Column -->
+                        <ng-container matColumnDef="board">
+                           <th *matHeaderCellDef mat-sort-header>Board</th>
+                           <td *matCellDef="let item"> {{item.board}} </td>
+                        </ng-container>
+                        <!-- Email Column -->
+                        <ng-container matColumnDef="affiliation">
+                           <th *matHeaderCellDef mat-sort-header>Affiliation</th>
+                           <td *matCellDef="let item"> {{item.affiliation}} </td>
+                        </ng-container>
+                        <!--status-->
+                        <ng-container matColumnDef="address">
+                           <th *matHeaderCellDef mat-sort-header>Address</th>
+                           <td *matCellDef="let item"> {{item.address}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="pin">
+                           <th *matHeaderCellDef mat-sort-header>Pincode</th>
+                           <td *matCellDef="let item"> {{item.pin}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="contact">
+                           <th *matHeaderCellDef mat-sort-header>Contact</th>
+                           <td *matCellDef="let item"> {{item.contact}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="city">
+                           <th *matHeaderCellDef mat-sort-header>City</th>
+                           <td *matCellDef="let item"> {{item.city}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="email">
+                           <th *matHeaderCellDef mat-sort-header>Email</th>
+                           <td *matCellDef="let item"> {{item.email}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="manager">
+                           <th *matHeaderCellDef mat-sort-header>Manager</th>
+                           <td *matCellDef="let item"> {{item.manager}} </td>
+                        </ng-container>
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="status">
+                           <th *matHeaderCellDef mat-sort-header>Status</th>
+                           <td *matCellDef="let item"> 
+                               </td>
+                       </ng-container>
+                        <ng-container matColumnDef="action">
+                           <th *matHeaderCellDef> Action </th>
+                           <td *matCellDef="let item">
+                            <i class="fa fa-pencil-square-o fa-eye fa-lg" style="cursor: pointer;"
+                            aria-hidden="true" (click)="viewDetaills(item.action)"></i>
+                           </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                     </table>
+                     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
+                        [showFirstLastButtons]="true">
+                     </mat-paginator>
+                  </div>
+               </div>
+            </mat-card-content>
+         </mat-card>
+      </div>
+   </div>
+</div>
