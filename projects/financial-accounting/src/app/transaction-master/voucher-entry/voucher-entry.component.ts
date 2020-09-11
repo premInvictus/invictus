@@ -465,6 +465,98 @@ export class VoucherEntryComponent implements OnInit {
 
 	}
 
+	saveAndPublishAndPrint() {
+		console.log('this.voucherForm', this.voucherForm);
+		console.log('this.voucherForm', this.voucherFormGroupArray);
+		console.log(this.totalCredit, this.totalDebit);
+		this.voucherEntryArray = [];
+		if (this.validateVoucher()) {
+			if (this.voucherForm.valid) {
+				if (this.totalDebit == this.totalCredit) {
+					for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
+						let vFormJson = {};
+						vFormJson = {
+							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
+							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
+							vc_particulars: this.voucherFormGroupArray[i].value.vc_particulars,
+							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
+							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
+							selected: this.voucherFormGroupArray[i].value.selected,
+							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
+							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
+							vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
+							vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
+						};
+						this.voucherEntryArray.push(vFormJson);
+					}
+					let tempdate: any;
+					if (!moment.isMoment(this.voucherForm.value.vc_date)) {
+						tempdate = moment(this.voucherForm.value.vc_date);
+					} else {
+						tempdate = (this.voucherForm.value.vc_date);
+					}
+					var inputJson = {
+						vc_id: this.editMode ? this.currentVoucherId : null,
+						vc_type: this.currentVcType,
+						vc_number: { vc_code: this.voucherForm.value.vc_number, vc_name: this.getVcName() },
+						vc_date: tempdate.format("YYYY-MM-DD"),
+						vc_narrations: this.voucherForm.value.vc_narrations,
+						vc_attachments: this.attachmentArray,
+						vc_particulars_data: this.voucherEntryArray,
+						vc_state: 'publish',
+						vc_sattle_status: 1
+					}
+
+					if (this.currentVoucherId) {
+						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.printvoucher(data);
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});
+					} else {
+						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
+							if (data) {
+								this.printvoucher(data);
+								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+								this.cancel();
+							} else {
+								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+							}
+						});
+					}
+
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Total of Debit and Credit should be same for publish', 'error');
+				}
+			} else {
+				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
+			}
+		} else {
+			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
+		}
+
+	}
+
+	printvoucher(value){
+		console.log(value);
+		const param: any = {};
+		if(value.vc_id) {
+			param.vc_id = value.vc_id;
+		}
+		this.faService.printvoucher(param).subscribe((result: any) => {
+			if (result && result.status == 'ok') {
+			  console.log(result.data);
+			  this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+				const length = result.data.fileUrl.split('/').length;
+				saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+			}
+		  });
+	}
+
 	fileChangeEvent(fileInput) {
 		this.multipleFileArray = [];
 		this.fileCounter = 0;
