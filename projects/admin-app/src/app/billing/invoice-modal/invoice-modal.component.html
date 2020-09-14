@@ -12,20 +12,10 @@
 <form [formGroup]="invoiceCreationForm" novalidate>
 <div class="row">
   <div class="col-12 remove-col-padding">
-    <!-- <div class="inline-flex margin-left-15">
-      <mat-form-field appearance="outline" class="form-field">
-        <mat-label>Invoice type</mat-label>
-        <mat-select placeholder="Invoice Type" formControlName="inv_calm_id">
-          <mat-option>Please Select</mat-option>
-          <mat-option *ngFor="let item of invoiceType" [value]="item.calm_id">{{item.calm_name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div> -->
     <div class="inline-flex margin-left-15">
       <mat-form-field appearance="outline" class="form-field-220">
         <mat-label>Fee Period</mat-label>
-        <mat-select placeholder="Fee Period" multiple formControlName="inv_fm_id" required>
+        <mat-select placeholder="Fee Period" multiple formControlName="billing_month" required>
           <mat-option *ngFor="let item of monthArray" [value]="item.id">{{item.name}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -33,7 +23,7 @@
     <div class="inline-flex margin-left-15">
       <mat-form-field appearance="outline" class="form-field-220">
         <mat-label>Invoice Date</mat-label>
-        <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="inv_invoice_date"
+        <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="billing_date"
           required>
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
@@ -42,7 +32,7 @@
     <div class="inline-flex margin-left-15">
       <mat-form-field appearance="outline" class="form-field-220">
         <mat-label>Due Date</mat-label>
-        <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="inv_due_date"
+        <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="billing_duedate"
           required>
         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
         <mat-datepicker #picker1></mat-datepicker>
@@ -74,7 +64,7 @@
           
         <td class="custom-td text-center font-size-14">{{i+1}}</td>
         <td class="custom-td text-left font-size-14" style="padding:10px;">
-          <mat-select placeholder="Service Name" formControlName="service_name" required>
+          <mat-select placeholder="Service Name" formControlName="service_id" required>
             <mat-option *ngFor="let item of arrayService" [value]="item.service_id">{{item.service_name}}</mat-option>
           </mat-select>
         </td>

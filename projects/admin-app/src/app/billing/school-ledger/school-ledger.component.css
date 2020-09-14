@@ -4,6 +4,17 @@
 .pointer {
     cursor: pointer;
 }
+.p-l-10{
+    padding-left: 10px;
+}
+.fa-edit {
+    color: #0069d9;
+  }
+  
+  .fa-delete {
+    color: #dc3545;
+  }
+  
 .make-pay-btn {
     color: #fff !important;
     background-color: #053b73 !important;

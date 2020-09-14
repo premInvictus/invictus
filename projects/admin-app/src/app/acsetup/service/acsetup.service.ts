@@ -392,4 +392,24 @@ export class AcsetupService {
 				return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
 
 		}
+		insertBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/insertBilling', value);
+
+		}
+		getBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/getBilling', value);
+
+		}
+		changeBillingStatus(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/changeBillingStatus', value);
+
+		}
+		updateBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/updateBilling', value);
+
+		}
 }
