@@ -8,6 +8,7 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 import { Element } from './school.model';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { AdminUserAccessModalComponent } from '../../../shared-module/admin-user-access-model/admin-user-access-model.component';
+import { SupportLoginModalComponent } from '../../../shared-module/support-login-model/support-login-model.component';
 @Component({
 	selector: 'app-schoolsetup',
 	templateUrl: './schoolsetup.component.html',
@@ -746,5 +747,34 @@ export class SchoolsetupComponent implements OnInit {
 				//this.getAccounts();
 			});
 		})
+	}
+
+	loginForSupportUser(item) {
+		var role_id = 2;
+		var prefix = item.schoolprefix, usertype='admin';
+		if (usertype == 'admin') {
+			role_id = 2;
+		} else if (usertype == 'teacher') {
+			role_id = 3;
+		} else if (usertype == 'student') {
+			role_id = 4;
+		}
+		const hostName = 'https://login.invictusdigisoft.com/login?s='+role_id+'-'+prefix;
+		var left = (screen.width / 2) - (800 / 2);
+		var top = (screen.height / 2) - (800 / 2);
+		window.open( hostName, 'Staff', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+			top + ',' + 'left=' + left);
+	// 	const dialogRef = this.dialog.open(SupportLoginModalComponent, {
+	// 		height: '520px',
+	// 		width: '800px',
+	// 		data: {
+	// 	title: 'Manage Admin User Access',
+	// 	apiData:{data:item, schoolprefix:item.schoolprefix}   
+	//   }
+	// 	});
+	// 	dialogRef.afterClosed().subscribe(dresult => {
+	// 		console.log(dresult);
+	// 		//this.getAccounts();
+	// 	});
 	}
 }
