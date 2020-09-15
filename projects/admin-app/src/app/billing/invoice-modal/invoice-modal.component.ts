@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild,Inject } from '@angular/core';
-import { MatDialogRef, MatDialog ,MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MatDialog ,MAT_DIALOG_DATA, throwMatDialogContentAlreadyAttachedError} from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { AdminService } from '../../admin-user-type/admin/services/admin.service';
@@ -43,8 +43,27 @@ export class InvoiceModalComponent implements OnInit {
 
   ngOnInit() {
     console.log('data',this.data);
+    this.voucherFormGroupArray = [];
     this.buildForm();
     this.getServiceAll();
+    if(this.data.edit && this.data.item){
+      this.invoiceCreationForm.patchValue({
+        billing_id: this.data.item.billing_id,
+        billing_school_id: this.data.item.billing_school_id,
+        billing_month: this.data.item.billing_month.split(','),
+        billing_date: this.data.item.billing_date,
+        billing_duedate: this.data.item.billing_duedate,
+      });
+      this.data.item.billing_item.forEach(element => {
+        this.paramForm = this.fb.group({
+          service_id: element.bi_service_id,
+          service_charge: element.bi_service_charge,
+          naration: element.bi_naration,
+        });
+        this.voucherFormGroupArray.push(this.paramForm);
+      });
+      this.calculateDebitTotal();
+    }
   }
   buildForm() {
 		this.invoiceCreationForm = this.fb.group({
@@ -114,15 +133,30 @@ export class InvoiceModalComponent implements OnInit {
       param.billing_duedate = billing_duedate.format("YYYY-MM-DD");
       param.billing_date = billing_date.format("YYYY-MM-DD");
       param.billing_item = billing_item;
-      this.acsetupService.insertBilling(param).subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            this.notif.showSuccessErrorMessage(result.data,'success');
-          } else {
-            this.notif.showSuccessErrorMessage(result.data,'error');
+      if(this.data.edit && this.data.item){
+        this.acsetupService.updateBilling(param).subscribe(
+          (result: any) => {
+            if (result && result.status === 'ok') {
+              this.notif.showSuccessErrorMessage(result.data,'success');
+              this.closeDialog({status:'ok'})
+            } else {
+              this.notif.showSuccessErrorMessage(result.data,'error');
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.acsetupService.insertBilling(param).subscribe(
+          (result: any) => {
+            if (result && result.status === 'ok') {
+              this.notif.showSuccessErrorMessage(result.data,'success');
+              this.closeDialog({status:'ok'})
+            } else {
+              this.notif.showSuccessErrorMessage(result.data,'error');
+            }
+          }
+        );
+      }
+      
     } else{
       this.notif.showSuccessErrorMessage('Please fill all required field','error');
     }
@@ -136,8 +170,13 @@ export class InvoiceModalComponent implements OnInit {
   cancelInvoice(){
     
   }
-  closeDialog(){
-    this.dialogRef.close();
+  closeDialog(value=null){
+    if(value){
+      this.dialogRef.close(value);
+    } else {
+      this.dialogRef.close();
+    }
+    
   }
 
 }
