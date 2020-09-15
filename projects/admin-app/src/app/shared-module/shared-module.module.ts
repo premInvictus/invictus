@@ -42,6 +42,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AdminUserAccessModalComponent } from './admin-user-access-model/admin-user-access-model.component';
 import { SupportLoginModalComponent } from './support-login-model/support-login-model.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
+import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 
 @NgModule({
 	imports: [
@@ -91,7 +92,11 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
+<<<<<<< HEAD
 		SupportLoginModalComponent
+=======
+		IndianCurrency,TruncatetextPipe
+>>>>>>> upstream/development
 	],
 	exports: [
 		MatProgressBarModule,
@@ -129,7 +134,11 @@ import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.mo
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
+<<<<<<< HEAD
 		SupportLoginModalComponent
+=======
+		IndianCurrency,TruncatetextPipe
+>>>>>>> upstream/development
 	],
 	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent,SupportLoginModalComponent]
 })

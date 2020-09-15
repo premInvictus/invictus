@@ -16,6 +16,12 @@ export class BoardElement {
     position: number;
     action: any;
   }
+  export class ServiceElement {
+    service_name: string;
+    service_charge: string;
+    position: number;
+    action: any;
+  }
   
   export class ClassElement {
     name: string;

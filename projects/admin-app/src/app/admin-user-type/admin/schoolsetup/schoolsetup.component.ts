@@ -85,6 +85,7 @@ export class SchoolsetupComponent implements OnInit {
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+	invictusUserData:any[] = [];
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -102,7 +103,7 @@ export class SchoolsetupComponent implements OnInit {
 	ngOnInit() {
 		this.getSchoolDetails(this);
 		this.buildForm();
-		this.buildForm();
+		this.getInvictusUser();
 		this.getBoard();
 		this.getCountry();
 		this.getState();
@@ -776,5 +777,15 @@ export class SchoolsetupComponent implements OnInit {
 	// 		console.log(dresult);
 	// 		//this.getAccounts();
 	// 	});
+	}
+
+	getInvictusUser() {
+		this.invictusUserData = [];
+		this.adminService.getAllUsers().subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				this.invictusUserData = data.data;
+				console.log('this.invictusUserData--', this.invictusUserData);
+			}
+		})
 	}
 }

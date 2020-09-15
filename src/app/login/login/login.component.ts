@@ -140,12 +140,16 @@ export class LoginComponent implements OnInit {
 		// this.model.password = 'support@123';
 		// this.model.rememberme = 1;
 
+		// if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
+		// 	childWindow = window;
+		// }
 		if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
 			childWindow = window;
 		}
+		
 		console.log('window--',childWindow)
 		
-		this.model.username = prefix+'-'+role+'-0000';
+		this.model.username = 'support';
 		this.model.password = '654321';
 		this.model.rememberme = 1;
 		this.model.loginsource = 'support';

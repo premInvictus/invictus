@@ -24,6 +24,11 @@ export class AcsetupService {
 				return this.http.post(environment.apiAxiomUrl + '/setup/exportSubject', value);
 
 		}
+		exportService(value) {
+				this.loaderService.startLoading();
+				return this.http.post(environment.apiAxiomUrl + '/setup/exportService', value);
+
+		}
 		exportTopic(value) {
 				this.loaderService.startLoading();
 				return this.http.post(environment.apiAxiomUrl + '/setup/exportTopic', value);
@@ -48,6 +53,11 @@ export class AcsetupService {
 		addSubject(value: any) {
 				this.loaderService.startLoading();
 				return this.http.post(environment.apiAxiomUrl + '/setup/subject', value);
+
+		}
+		addService(value: any) {
+				this.loaderService.startLoading();
+				return this.http.post(environment.apiAxiomUrl + '/setup/insertService', value);
 
 		}
 
@@ -113,6 +123,11 @@ export class AcsetupService {
 		getSubjectAll() {
 				this.loaderService.startLoading();
 				return this.http.get(environment.apiAxiomUrl + '/setup/subject');
+
+		}
+		getService(value) {
+				this.loaderService.startLoading();
+				return this.http.post(environment.apiAxiomUrl + '/setup/getService', value);
 
 		}
 		getClass() {
@@ -236,6 +251,11 @@ export class AcsetupService {
 				return this.http.put(environment.apiAxiomUrl + `/setup/subject/${value.sub_id}`, value);
 
 		}
+		editService(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/setup/updateService', value);
+
+	}
 		editClass(value: any) {
 				this.loaderService.startLoading();
 				return this.http.put(environment.apiAxiomUrl + `/setup/classes/${value.class_id}`, value);
@@ -290,6 +310,13 @@ export class AcsetupService {
 		deleteSubject(delval: any) {
 				this.loaderService.startLoading();
 				return this.http.delete(environment.apiAxiomUrl + `/setup/subject/${delval.sub_id}`);
+
+
+		}
+		deleteService(delval: any) {
+			delval.status = '5';
+				this.loaderService.startLoading();
+				return this.http.post(environment.apiAxiomUrl + '/setup/updateService', delval);
 
 
 		}
@@ -363,6 +390,26 @@ export class AcsetupService {
 				}
 				this.loaderService.startLoading();
 				return this.http.post(environment.apiAxiomUrl + '/setupdetail/getTopicByBoardClassSubject', param);
+
+		}
+		insertBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/insertBilling', value);
+
+		}
+		getBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/getBilling', value);
+
+		}
+		changeBillingStatus(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/changeBillingStatus', value);
+
+		}
+		updateBilling(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/updateBilling', value);
 
 		}
 }
