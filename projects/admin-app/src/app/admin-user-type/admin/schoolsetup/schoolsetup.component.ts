@@ -429,7 +429,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_manager',
-				this.newSchoolForm.value.school_manager
+				JSON.stringify(this.newSchoolForm.value.school_manager)
 			);
 			newSchoolFormData.append(
 				'school_theme',
@@ -554,12 +554,13 @@ export class SchoolsetupComponent implements OnInit {
 			school_hindi_font: value.school_hindi_font,
 			school_prefix: value.school_prefix,
 			school_total_students: value.school_total_students,
-			school_manager: value.school_manager,
+			school_manager: value.school_manager ? JSON.parse(value.school_manager) : [],
 			school_theme: value.school_theme,
 			school_session_start_month: Number(value.session_start_month),
 			school_session_end_month: Number(value.session_end_month),
 			school_fee_period: value.school_fee_period
 		});
+		console.log('this.newSchoolForm--',this.newSchoolForm)
 	}
 	editNewSchool() {
 		if (this.newSchoolForm.valid) {
@@ -630,7 +631,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_manager',
-				this.newSchoolForm.value.school_manager
+				JSON.stringify(this.newSchoolForm.value.school_manager)
 			);
 			newSchoolFormData.append(
 				'school_theme',
@@ -652,6 +653,7 @@ export class SchoolsetupComponent implements OnInit {
 				'si_pincode',
 				this.newSchoolForm.value.si_pincode
 			);
+			console.log('newSchoolFormData--', newSchoolFormData, this.newSchoolForm)
 			this.adminService.editSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -750,34 +752,7 @@ export class SchoolsetupComponent implements OnInit {
 		})
 	}
 
-	loginForSupportUser(item) {
-		var role_id = 2;
-		var prefix = item.schoolprefix, usertype='admin';
-		if (usertype == 'admin') {
-			role_id = 2;
-		} else if (usertype == 'teacher') {
-			role_id = 3;
-		} else if (usertype == 'student') {
-			role_id = 4;
-		}
-		const hostName = 'https://login.invictusdigisoft.com/login?s='+role_id+'-'+prefix;
-		var left = (screen.width / 2) - (800 / 2);
-		var top = (screen.height / 2) - (800 / 2);
-		window.open( hostName, 'Staff', 'height=800,width=800,dialog=yes,resizable=no, top=' +
-			top + ',' + 'left=' + left);
-	// 	const dialogRef = this.dialog.open(SupportLoginModalComponent, {
-	// 		height: '520px',
-	// 		width: '800px',
-	// 		data: {
-	// 	title: 'Manage Admin User Access',
-	// 	apiData:{data:item, schoolprefix:item.schoolprefix}   
-	//   }
-	// 	});
-	// 	dialogRef.afterClosed().subscribe(dresult => {
-	// 		console.log(dresult);
-	// 		//this.getAccounts();
-	// 	});
-	}
+	
 
 	getInvictusUser() {
 		this.invictusUserData = [];

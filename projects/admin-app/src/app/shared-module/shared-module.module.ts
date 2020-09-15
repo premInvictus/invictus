@@ -92,11 +92,8 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
-<<<<<<< HEAD
-		SupportLoginModalComponent
-=======
+		SupportLoginModalComponent,
 		IndianCurrency,TruncatetextPipe
->>>>>>> upstream/development
 	],
 	exports: [
 		MatProgressBarModule,
@@ -134,11 +131,8 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
-<<<<<<< HEAD
-		SupportLoginModalComponent
-=======
+		SupportLoginModalComponent,
 		IndianCurrency,TruncatetextPipe
->>>>>>> upstream/development
 	],
 	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent,SupportLoginModalComponent]
 })
