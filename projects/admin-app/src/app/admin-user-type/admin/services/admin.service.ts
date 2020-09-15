@@ -14,6 +14,9 @@ export class AdminService {
 	getSchoolDetails() {
 		return this.http.get(environment.apiAxiomUrl + '/dashboard/getSchool');
 	}
+	getSchools(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getSchools', value);
+	}
 	getProjectList(value) {
 		const param: any = {};
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getProjectList', param);
@@ -215,5 +218,9 @@ export class AdminService {
 	setAdminUserAccessFlag(value) {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/setAdminUserAccessFlag', value);
+	} 
+	getFeeMonths(value) {
+		this.loaderService.startLoading();
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
 	}
 }

@@ -1,0 +1,110 @@
+<div class="row remove-modal-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="dialog-title-container ">
+      <span class="font-size-24 font-white">{{data.title}}</span>
+      <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+        cancel
+      </i>
+    </div>
+  </div>
+</div>
+<hr><hr>    
+<form [formGroup]="invoiceCreationForm" novalidate>
+<div class="row">
+  <div class="col-12 remove-col-padding">
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Fee Period</mat-label>
+        <mat-select placeholder="Fee Period" multiple formControlName="billing_month" required>
+          <mat-option *ngFor="let item of monthArray" [value]="item.id">{{item.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Invoice Date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Invoice Date" formControlName="billing_date"
+          required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Due Date</mat-label>
+        <input matInput [matDatepicker]="picker1" placeholder="Due Date" formControlName="billing_duedate"
+          required>
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+</form>
+<div class="row">
+  <div class="col-12">
+  <table class="custom-table">
+    <thead>
+      <tr class="custom-tr">
+        <th rowspan="2" class="custom-th text-center" width="10%">Sr. No.
+        </th>
+        <th rowspan="2" class="custom-th text-center" width="15%">Service Name </th>
+        <th rowspan="2" class="custom-th text-center" width="10%">
+          <i class="fas fa-rupee-sign font-size-14"></i>Service Charge</th>
+        <th rowspan="2" class="custom-th text-center" width="10%">
+          Naration</th>
+        <th rowspan="2" class="custom-th text-center" width="10%">
+          Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let vform of voucherFormGroupArray; let i = index">
+          
+      <tr [formGroup]="vform">
+          
+        <td class="custom-td text-center font-size-14">{{i+1}}</td>
+        <td class="custom-td text-left font-size-14" style="padding:10px;">
+          <mat-select placeholder="Service Name" formControlName="service_id" required>
+            <mat-option *ngFor="let item of arrayService" [value]="item.service_id">{{item.service_name}}</mat-option>
+          </mat-select>
+        </td>
+        <td class="custom-td text-left font-size-14" style="padding:10px;">
+          <input matInput type="number" class="remark-text" placeholder="Service Charge"
+            formControlName="service_charge" (blur)="calculateDebitTotal()">
+        </td>
+        <td class="custom-td text-left font-size-14" style="padding:10px;">
+          <input matInput type="text" class="remark-text" placeholder="Naration" required
+            formControlName="naration">
+        </td>
+       
+        <td class="custom-td text-center font-size-14" style="padding:10px;"> 
+          <a href="javascript:void(0)" (click)="deleteVoucherEntry()"><i class="fa fa-trash red-trash"></i></a>
+        </td>
+              
+      </tr>
+      
+    </ng-container>
+    <tr>
+        <td colspan="2" class="custom-td text-center font-size-14">Total</td>
+        <td style="padding:10px;" class="custom-td text-left font-size-14">{{totalDebit | indianCurrency}}</td>
+        <td class="custom-td text-left font-size-14">&nbsp;</td>
+        <td class="custom-td text-center font-size-14"><a href="javascript:void(0)" (click)="addVoucher()"><span>+ Add Another Line</span></a></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+</div>
+<div class="row">
+  <div class="col-12 text-center">
+    <div class="margin-top-25">
+      <button *ngIf="!edit" mat-raised-button class="btn-primary btn-180 btn-success"
+        (click)="submitInvoice()">Submit</button>
+      <button *ngIf="!edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+      (click)="resetInvoice()">Reset</button>
+      <button *ngIf="edit" mat-raised-button class="btn-primary btn-180 btn-success"
+        (click)="updateInvoice()">Update</button>
+      <button *ngIf="edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+        (click)="cancelInvoice()">Cancel</button>
+    </div>
+  </div>
+</div>

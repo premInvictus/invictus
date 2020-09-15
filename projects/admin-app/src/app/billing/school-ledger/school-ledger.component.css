@@ -1,0 +1,76 @@
+[hidden] {
+    display: none !important;
+  }
+.pointer {
+    cursor: pointer;
+}
+.p-l-10{
+    padding-left: 10px;
+}
+.fa-edit {
+    color: #0069d9;
+  }
+  
+  .fa-delete {
+    color: #dc3545;
+  }
+  
+.make-pay-btn {
+    color: #fff !important;
+    background-color: #053b73 !important;
+    text-transform: uppercase;
+    font-size: 13px;
+  
+}
+.make-pay-btn:hover {
+    color: #053b73 !important;
+    background-color:white !important;
+    border: 2px solid #053b73 !important;
+    text-transform: uppercase;
+    font-size: 13px;
+  
+}
+.print-invoice-btn {
+    color: white !important;
+    background-color: #a1245f !important;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+.print-invoice-btn:hover {
+    color: #a1245f !important;
+    background-color: white  !important;
+    border: 2px solid #a1245f !important;
+    text-transform: uppercase;
+    font-size: 13px;
+}
+.fa-rupee-sign{
+    font-size: 12px!important;
+}
+.mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
+}
+.cdk-column-feehead {
+    width: 50%!important;
+}
+@media only screen and (max-width: 1024px) {
+    .cdk-column-feehead {
+        width:45%!important;
+    }
+    .cdk-column-netpay {
+        width:11%!important;
+    }
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+.close-btn {
+    cursor: pointer!important;
+}
+.form-field-60 {
+    max-width: 60px !important;
+}
