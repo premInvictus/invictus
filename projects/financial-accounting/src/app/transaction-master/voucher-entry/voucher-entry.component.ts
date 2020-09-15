@@ -199,13 +199,17 @@ export class VoucherEntryComponent implements OnInit {
 	getAccounts(event = null) {
 		console.log('event', event, this.accountTypeArr);
 		this.acc_type_id_arr = [];
-		if(this.currentVcType == 'Contra'){
+		if(this.currentVcType == 'Contra' ){
 			this.acc_type_id_arr.push(13);
-		} else if(this.currentVcType == 'Journal' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note' || this.currentVcType == 'Cash Payment' || this.currentVcType == 'Bank Payment' || this.currentVcType == 'Purchase' ||  this.currentVcType == 'Sale' || this.currentVcType == 'Receipt'){
+		} else if(this.currentVcType == 'Journal' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'  || this.currentVcType == 'Purchase' ||  this.currentVcType == 'Sale' || this.currentVcType == 'Receipt'){
 			this.accountTypeArr.forEach(element => {
 				if(element != 13){
 					this.acc_type_id_arr.push(element);
 				}
+			});
+		} else if ( this.currentVcType == 'Cash Payment' || this.currentVcType == 'Bank Payment') {
+			this.accountTypeArr.forEach(element => {
+					this.acc_type_id_arr.push(element);
 			});
 		}
 		console.log('this.acc_type_id_arr',this.acc_type_id_arr);

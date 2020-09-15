@@ -148,7 +148,7 @@ export class SchoolListingComponent implements OnInit {
 						this.invictusUserData = data.data[i];
 					}
 				}
-				console.log('this.invictusUserData--', this.invictusUserData);
+				//console.log('this.invictusUserData--', this.invictusUserData);
 			}
 		})
 	}
