@@ -1,0 +1,23 @@
+/* .modal-delete-content-box {
+    box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12);
+    display: block;
+    padding: 10px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    overflow: auto;
+    outline: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 20px;
+}
+
+.modal-content {
+    width: 850px !important;
+} */
+
+.role-btn {
+    background:#007d9e;
+    width:200px;
+    height:100px;
+    color:#fff;
+}

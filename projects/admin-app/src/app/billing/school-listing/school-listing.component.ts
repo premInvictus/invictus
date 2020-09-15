@@ -5,12 +5,12 @@ import { AcsetupService } from '../../acsetup/service/acsetup.service';
 import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
 import { appConfig } from 'projects/axiom/src/app/app.config';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
-import {Router,ActivatedRoute} from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Element } from './school.model';
 @Component({
-  selector: 'app-school-listing',
-  templateUrl: './school-listing.component.html',
-  styleUrls: ['./school-listing.component.css']
+	selector: 'app-school-listing',
+	templateUrl: './school-listing.component.html',
+	styleUrls: ['./school-listing.component.css']
 })
 export class SchoolListingComponent implements OnInit {
 	schoolSetupDiv = true;
@@ -40,13 +40,14 @@ export class SchoolListingComponent implements OnInit {
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+	invictusUserData:any;
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
 		private fb: FormBuilder,
 		private notif: NotificationService,
-    private router: Router,
-    private route:ActivatedRoute   
+		private router: Router,
+		private route: ActivatedRoute
 	) { }
 
 	applyFilter(filterValue: string) {
@@ -55,15 +56,16 @@ export class SchoolListingComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.getSchoolDetails();		
+		this.getInvictusUser();
+		this.getSchoolDetails();
 	}
 
 
-	
+
 	getSchoolDetails() {
 		this.schooldetailsArray = [];
-    this.ELEMENT_DATA = [];
-    this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+		this.ELEMENT_DATA = [];
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 		this.adminService.getSchoolDetails().subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.schooldetailsArray = result.data;
@@ -103,8 +105,68 @@ export class SchoolListingComponent implements OnInit {
 			return 'red';
 		}
 	}
-	viewDetaills(value){
-    console.log(value);
-    this.router.navigate(['./school-ledger'], {queryParams: {school_id: value.school_id}, relativeTo: this.route});
-  }
+	viewDetaills(value) {
+		console.log(value);
+		this.router.navigate(['./school-ledger'], { queryParams: { school_id: value.school_id }, relativeTo: this.route });
+	}
+	loginForSupportUser(item) {
+		var role_id = 2;
+		var prefix = item.schoolprefix, usertype = 'admin';
+		if (usertype == 'admin') {
+			role_id = 2;
+		} else if (usertype == 'teacher') {
+			role_id = 3;
+		} else if (usertype == 'student') {
+			role_id = 4;
+		}
+		const hostName = 'https://login.invictusdigisoft.com/login?s=' + role_id + '-' + prefix;
+		var left = (screen.width / 2) - (800 / 2);
+		var top = (screen.height / 2) - (800 / 2);
+		window.open(hostName, 'Staff', 'height=800,width=800,dialog=yes,resizable=no, top=' +
+			top + ',' + 'left=' + left);
+		// 	const dialogRef = this.dialog.open(SupportLoginModalComponent, {
+		// 		height: '520px',
+		// 		width: '800px',
+		// 		data: {
+		// 	title: 'Manage Admin User Access',
+		// 	apiData:{data:item, schoolprefix:item.schoolprefix}   
+		//   }
+		// 	});
+		// 	dialogRef.afterClosed().subscribe(dresult => {
+		// 		console.log(dresult);
+		// 		//this.getAccounts();
+		// 	});
+	}
+
+	getInvictusUser() {
+		this.invictusUserData = [];
+		this.adminService.getAllUsers().subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				let currentUser = JSON.parse(localStorage.getItem('currentUser'))['login_id'];
+				for (var i=0; i<data.data.length;i++) {
+					if(data.data[i]['au_login_id'] == currentUser) {
+						this.invictusUserData = data.data[i];
+					}
+				}
+				//console.log('this.invictusUserData--', this.invictusUserData);
+			}
+		})
+	}
+
+	checkForLoginAccess(item) {
+		
+		if (item && item.school_manager) {
+			var managerData = JSON.parse(item.school_manager);
+			if (managerData.indexOf(this.invictusUserData.au_login_id) > -1) {
+				return true;
+			}
+		}
+	}
+
+
+
+
+
+
+
 }

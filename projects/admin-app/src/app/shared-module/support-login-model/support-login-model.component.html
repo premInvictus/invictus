@@ -1,0 +1,23 @@
+<div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Support Staff Login</span><span
+            class="float-right margin-top-5"><i (click)="closeDialog()"
+              class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+          <input class="role-btn" type="button" value="Login as Admin" (click)="loginSupportStaff('admin')"/>
+      </div>
+      <div class="col-4">
+          <input class="role-btn" type="button" value="Login as Teacher" (click)="loginSupportStaff('teacher')"/>
+      </div>
+      <div class="col-4">
+          <input class="role-btn" type="button" value="Login as Student"  (click)="loginSupportStaff('student')"/>
+      </div>
+       
+    </div>
+</div>

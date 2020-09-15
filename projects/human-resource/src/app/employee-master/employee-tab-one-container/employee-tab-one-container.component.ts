@@ -51,7 +51,9 @@ export class EmployeeTabOneContainerComponent implements OnInit, OnChanges {
 		{ hon_id: "5", hon_name: 'Mx.' },
 		{ hon_id: "6", hon_name: 'Sir.' },
 		{ hon_id: "7", hon_name: 'Dr.' },
-		{ hon_id: "8", hon_name: 'Lady.' }
+		{ hon_id: "8", hon_name: 'Lady.' },
+		{ hon_id: "9", hon_name: 'Late' },
+    	{ hon_id: "10", hon_name: 'Md.' }
 
 	];
 	departmentArray;

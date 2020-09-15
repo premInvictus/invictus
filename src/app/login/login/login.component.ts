@@ -42,7 +42,8 @@ export class LoginComponent implements OnInit {
 	userSaveData: any;
 	webDeviceToken: any = {};
 	private OTPstatus: any = {};
-
+	supportLogin:any;
+	showLogin=true;
 	/*Forgot passwrd Ends*/
 
 	constructor(
@@ -69,9 +70,16 @@ export class LoginComponent implements OnInit {
 		// get return url from route parameters or default to '/'
 		this.messagingService.requestPermission();
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
-		this.buildForm();
-		this.checkLoginStatus();
-		this.active_resend_otp();
+		this.supportLogin= this.route.snapshot.queryParams['s'];
+		if(this.supportLogin) {
+			this.showLogin =  false;
+			this.checkForSupportLogin();
+		} else {
+			this.buildForm();
+			this.checkLoginStatus();
+			this.active_resend_otp();
+		}
+		
 	}
 	checkLoginStatus() {
 		const cookieData = this.getCookie('userData');
@@ -124,6 +132,137 @@ export class LoginComponent implements OnInit {
 		this.forgotPassword = false;
 	}
 
+	checkForSupportLogin() {
+		var prefix = this.supportLogin.split("-")[1];
+		var role = this.supportLogin.split("-")[0];
+		var childWindow:any;
+		// this.model.username = 'xavier-2-0000';
+		// this.model.password = 'support@123';
+		// this.model.rememberme = 1;
+
+		// if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
+		// 	childWindow = window;
+		// }
+		if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
+			childWindow = window;
+		}
+		
+		console.log('window--',childWindow)
+		
+		this.model.username = 'support';
+		this.model.password = '654321';
+		this.model.rememberme = 1;
+		this.model.loginsource = 'support';
+
+		this.loaderService.setUserPrefix(prefix)
+		
+		this._cookieService.put('username', this.model.username);
+		this._cookieService.put('password', this.model.password);
+		this._cookieService.put('remember', this.model.rememberme);
+		
+		this.webDeviceToken = '';
+		
+		console.log('this.model--', this.model)
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', this.model.loginsource)
+			.subscribe(
+				(result: any) => {
+					console.log('result--', result);
+					if (result.status === 'ok' && result.data) {
+						childWindow.localStorage.setItem('loginSource', 'support');
+						this.loaderService.stopLoading();
+						const user = result.data;
+						if (result.data.userSaveStateData) {
+							this.userSaveData = JSON.parse(result.data.userSaveStateData);
+						}
+						const tempJson = {
+							CID: user.clientKey,
+							AN: user.token,
+							UR: user.role_id,
+							LN: user.login_id,
+							PF: user.Prefix
+						};
+						// user.Prefix = this.model.username.split('-')[0];
+						// user.username = this.model.username;
+						if (user) {
+							childWindow.localStorage.setItem('currentUser', JSON.stringify(user));
+							this._cookieService.put('userData', JSON.stringify(tempJson));
+						}
+						if (this._cookieService.get('userData')) {
+							this.notif.getSession().subscribe((result3: any) => {
+								console.log('result3', result3);
+								if (result3 && result3.status === 'ok') {
+									this.sessionArray = result3.data;
+									this.notif.getSchool().subscribe((result2: any) => {
+										if (result2.status === 'ok') {
+											this.schoolInfo = result2.data[0];
+											if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
+												Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
+												const currentSession =
+													(Number(this.currentDate.getFullYear()) + '-' + Number(this.currentDate.getFullYear() + 1)).toString();
+												const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+												if (findex !== -1) {
+													const sessionParam: any = {};
+													sessionParam.ses_id = this.sessionArray[findex].ses_id;
+													childWindow.localStorage.setItem('session', JSON.stringify(sessionParam));
+												}
+											} else {
+												const currentSession =
+													(Number(this.currentDate.getFullYear() - 1) + '-' + Number(this.currentDate.getFullYear())).toString();
+												const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+												if (findex !== -1) {
+													const sessionParam: any = {};
+													sessionParam.ses_id = this.sessionArray[findex].ses_id;
+													childWindow.localStorage.setItem('session', JSON.stringify(sessionParam));
+												}
+											}
+											let returnUrl: any;
+											if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
+												childWindow.localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
+												returnUrl = '/axiom';
+											} else {
+												returnUrl = this.userSaveData.pro_url;
+												childWindow.localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
+											}
+											if (this.userSaveData && this.userSaveData.ses_id) {
+												const sessionParam: any = {};
+												sessionParam.ses_id = this.userSaveData.ses_id;
+												childWindow.localStorage.setItem('session', JSON.stringify(sessionParam));
+											}
+											console.log('role if', JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id, returnUrl)
+											
+											if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '1') {
+												this.returnUrl = '/admin';
+											} else if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '2') {
+												this.returnUrl = returnUrl + '/school';
+											} else if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '3') {
+												this.returnUrl = '/teacher';
+											} else if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '4') {
+												this.returnUrl = '/student';
+											} else if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '5') {
+												this.returnUrl = returnUrl + '/parent';
+											}
+											this.router.navigate([this.returnUrl]);
+										}
+									});
+								}
+							});
+						}
+					} else {
+						this.loaderService.stopLoading();
+						if (result.status === 'error' && result.data === 'token not matched') {
+							this.notif.showSuccessErrorMessage('Token Expired, Please enter a valid username and password', 'error');
+						} else {
+							this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
+						}
+
+						this.router.navigate(['/login']);
+					}
+				},
+				error => {
+					this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
+				});	
+	}
+
 	login(event) {
 		if (Number(event.keyCode) === 13) {
 			event.stopPropagation();
@@ -135,7 +274,7 @@ export class LoginComponent implements OnInit {
 		if (localStorage.getItem("web-token")) {
 		this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 		}
-		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web')
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','')
 			.subscribe(
 				(result: any) => {
 					if (result.status === 'ok' && result.data) {

@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 export class AuthenticationService {
 	constructor(private http: HttpClient, private loaderService: CommonAPIService) { }
 
-	login(username: string, password: any, device_id: any, type: any) {
+	login(username: string, password: any, device_id: any, type: any, loginSource:any) {
 		this.loaderService.startLoading();
 		let prefixOptions;
 		if (username.match(/-/g)) {
@@ -15,13 +15,27 @@ export class AuthenticationService {
 				'Prefix': userParam[0]
 			};
 		}
+
+
+
 		const headers = new HttpHeaders(prefixOptions);
-		// tslint:disable-next-line:max-line-length
-		if (this.loaderService.getUserPrefix()) {
-			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type });
+		console.log('loginSource--', loginSource,prefixOptions );
+		if (loginSource=='support') {
+			let hOptions = {
+				'Prefix': username.split('-')[0],
+				'LoginSource' : 'support'
+			};
+			let pheaders = new HttpHeaders(hOptions);
+			return this.http.post(environment.apiSisUrl + '/users/supportAuthenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
 		} else {
-			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: headers });
+			// tslint:disable-next-line:max-line-length
+			if (this.loaderService.getUserPrefix()) {
+				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type });
+			} else {
+				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: headers });
+			}
 		}
+		
 	}
 
 	logout() {

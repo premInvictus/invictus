@@ -23,6 +23,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		private processtypeExamService: ProcesstypeExamService) { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const session = JSON.parse(localStorage.getItem('session'));
+		const loginSource = localStorage.getItem('loginSource');
 		if (localStorage.getItem('currentUser') && JSON.parse(localStorage.getItem('currentUser'))['device_details']) {
 		const deviceType = JSON.parse(JSON.parse(localStorage.getItem('currentUser'))['device_details']);
 		console.log('deviceType', deviceType)
@@ -33,6 +34,9 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 				}
 			}
 		}}
+		if (loginSource && loginSource == 'support') {
+			request = request.clone({ headers: request.headers.set('LoginSource', 'support') });
+		}
 		const cookieData: any = this.service.getCokkieData();
 		
 

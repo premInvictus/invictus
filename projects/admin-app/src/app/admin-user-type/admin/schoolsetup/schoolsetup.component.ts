@@ -8,6 +8,7 @@ import { MatPaginator, MatTableDataSource, MatSort, MatDialog } from '@angular/m
 import { Element } from './school.model';
 import { QelementService } from '../../../questionbank/service/qelement.service';
 import { AdminUserAccessModalComponent } from '../../../shared-module/admin-user-access-model/admin-user-access-model.component';
+import { SupportLoginModalComponent } from '../../../shared-module/support-login-model/support-login-model.component';
 @Component({
 	selector: 'app-schoolsetup',
 	templateUrl: './schoolsetup.component.html',
@@ -84,6 +85,7 @@ export class SchoolsetupComponent implements OnInit {
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+	invictusUserData:any[] = [];
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -101,7 +103,7 @@ export class SchoolsetupComponent implements OnInit {
 	ngOnInit() {
 		this.getSchoolDetails(this);
 		this.buildForm();
-		this.buildForm();
+		this.getInvictusUser();
 		this.getBoard();
 		this.getCountry();
 		this.getState();
@@ -427,7 +429,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_manager',
-				this.newSchoolForm.value.school_manager
+				JSON.stringify(this.newSchoolForm.value.school_manager)
 			);
 			newSchoolFormData.append(
 				'school_theme',
@@ -552,12 +554,13 @@ export class SchoolsetupComponent implements OnInit {
 			school_hindi_font: value.school_hindi_font,
 			school_prefix: value.school_prefix,
 			school_total_students: value.school_total_students,
-			school_manager: value.school_manager,
+			school_manager: value.school_manager ? JSON.parse(value.school_manager) : [],
 			school_theme: value.school_theme,
 			school_session_start_month: Number(value.session_start_month),
 			school_session_end_month: Number(value.session_end_month),
 			school_fee_period: value.school_fee_period
 		});
+		console.log('this.newSchoolForm--',this.newSchoolForm)
 	}
 	editNewSchool() {
 		if (this.newSchoolForm.valid) {
@@ -628,7 +631,7 @@ export class SchoolsetupComponent implements OnInit {
 			);
 			newSchoolFormData.append(
 				'school_manager',
-				this.newSchoolForm.value.school_manager
+				JSON.stringify(this.newSchoolForm.value.school_manager)
 			);
 			newSchoolFormData.append(
 				'school_theme',
@@ -650,6 +653,7 @@ export class SchoolsetupComponent implements OnInit {
 				'si_pincode',
 				this.newSchoolForm.value.si_pincode
 			);
+			console.log('newSchoolFormData--', newSchoolFormData, this.newSchoolForm)
 			this.adminService.editSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -745,6 +749,18 @@ export class SchoolsetupComponent implements OnInit {
 				console.log(dresult);
 				//this.getAccounts();
 			});
+		})
+	}
+
+	
+
+	getInvictusUser() {
+		this.invictusUserData = [];
+		this.adminService.getAllUsers().subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				this.invictusUserData = data.data;
+				console.log('this.invictusUserData--', this.invictusUserData);
+			}
 		})
 	}
 }

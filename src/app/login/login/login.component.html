@@ -1,4 +1,4 @@
-﻿<div class="waveWrapper waveAnimation">
+﻿<div class="waveWrapper waveAnimation" *ngIf="showLogin">
   <div class="waveWrapperInner bgTop">
     <div class="wave waveTop" style="background-image: url(' https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/wave-top.png')"></div>
   </div>
@@ -11,8 +11,8 @@
     </div>
   </div>
 </div>
-
-<div class="row">
+<div >
+<div class="row"  *ngIf="showLogin">
   <div class="col-lg-12">
     <div class="row main-login-content-area">
       <mat-card class="main-login-card" *ngIf="loginCard">
@@ -307,7 +307,7 @@
 
   </div>
 </div>
-<div class="row">
+<div class="row" *ngIf="showLogin">
   <div class="col-lg-12">
     <div class="row below-login-content-area remove-row--margin-top">
       <div class="row remove-row--margin-top">
@@ -322,4 +322,5 @@
 
     </div>
   </div>
+</div>
 </div>

@@ -40,6 +40,7 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 import { EditEssayComponent } from '../questionbank/review-essay/edit-essay/edit-essay.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AdminUserAccessModalComponent } from './admin-user-access-model/admin-user-access-model.component';
+import { SupportLoginModalComponent } from './support-login-model/support-login-model.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 
@@ -91,6 +92,7 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
+		SupportLoginModalComponent,
 		IndianCurrency,TruncatetextPipe
 	],
 	exports: [
@@ -129,9 +131,10 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		EditEssayComponent,
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
+		SupportLoginModalComponent,
 		IndianCurrency,TruncatetextPipe
 	],
-	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent]
+	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent,SupportLoginModalComponent]
 })
 export class SharedModuleModule {
 	constructor() {
