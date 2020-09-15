@@ -145,7 +145,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.voucherForm.patchValue({
 					vc_number: data.vc_number.vc_code,
 					vc_date: data.vc_date,
-					vc_narrations: data.vc_narrations
+					vc_narrations: data.vc_narrations.trim()
 				});
 				this.attachmentArray = data.vc_attachments;
 				for (let i = 0; i < data.vc_particulars_data.length; i++) {
@@ -355,14 +355,17 @@ export class VoucherEntryComponent implements OnInit {
 						vc_type: this.currentVcType,
 						vc_number: { vc_code: this.voucherForm.value.vc_number, vc_name: this.getVcName() },
 						vc_date: tempdate.format("YYYY-MM-DD"),
-						vc_narrations: this.voucherForm.value.vc_narrations,
+						vc_narrations: this.voucherForm.value.vc_narrations.trim(),
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
 						vc_state: 'draft',
 						vc_sattle_status: 1
 					}
 
-					if (this.currentVoucherId) {
+					if (this.currentVoucherId ) {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -370,8 +373,11 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					} else {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -379,7 +385,7 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					}
 				} else {
 					this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
@@ -430,7 +436,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_type: this.currentVcType,
 						vc_number: { vc_code: this.voucherForm.value.vc_number, vc_name: this.getVcName() },
 						vc_date: tempdate.format("YYYY-MM-DD"),
-						vc_narrations: this.voucherForm.value.vc_narrations,
+						vc_narrations: this.voucherForm.value.vc_narrations.trim(),
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
 						vc_state: 'publish',
@@ -438,6 +444,9 @@ export class VoucherEntryComponent implements OnInit {
 					}
 
 					if (this.currentVoucherId) {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -445,8 +454,11 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					} else {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -454,7 +466,7 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					}
 
 				} else {
@@ -504,7 +516,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_type: this.currentVcType,
 						vc_number: { vc_code: this.voucherForm.value.vc_number, vc_name: this.getVcName() },
 						vc_date: tempdate.format("YYYY-MM-DD"),
-						vc_narrations: this.voucherForm.value.vc_narrations,
+						vc_narrations: this.voucherForm.value.vc_narrations.trim(),
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
 						vc_state: 'publish',
@@ -512,6 +524,9 @@ export class VoucherEntryComponent implements OnInit {
 					}
 
 					if (this.currentVoucherId) {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.updateVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
@@ -520,8 +535,11 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					} else {
+						if (this.voucherForm.value.vc_narrations.trim() === "") {
+							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
+						} else {
 						this.faService.insertVoucherEntry(inputJson).subscribe((data: any) => {
 							if (data) {
 								this.printvoucher(data);
@@ -530,7 +548,7 @@ export class VoucherEntryComponent implements OnInit {
 							} else {
 								this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
 							}
-						});
+						});}
 					}
 
 				} else {
@@ -743,7 +761,8 @@ export class VoucherEntryComponent implements OnInit {
 								selected: result.selected,
 								vc_chequeno: result.vc_chequeno,
 								vc_chequedate: result.vc_chequedate,
-								vc_ref_no: (result.selection ? " Invoivce No - " +result.selection+" | " : "")+( result.currentTabIndex ? " GR No - " +result.currentTabIndex+" | " : "")+(result.selected ? " JV - "+result.selected+" | " : "")+(result.vc_chequeno ? "Cheque No -  "+result.vc_chequeno+" | " : "")+(result.vc_chequedate ? " Cheque Date - "+result.vc_chequedate : "")
+								vc_ref_no: (result.selection ? " Invoice No - " +result.selection+" | " : "")+( result.currentTabIndex ? " GR No - " +result.currentTabIndex+" | " : "")+(result.vc_chequeno ? "Cheque No -  "+result.vc_chequeno+" | " : "")+(result.vc_chequedate ? " Cheque Date - "+result.vc_chequedate : ""),
+								vc_particulars: result.particularsDetails
 							});
 							this.calculateDebitTotal();
 						}
