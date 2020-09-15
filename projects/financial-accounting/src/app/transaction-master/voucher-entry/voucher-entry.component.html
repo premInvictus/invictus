@@ -140,7 +140,8 @@
                     formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i)">
                 </td>
                 <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                    <input matInput [readonly]="!creditEnable" type="number" class="remark-text" placeholder="Enter Credit"
+                  <!-- [readonly]="!creditEnable" -->
+                    <input matInput type="number" class="remark-text" placeholder="Enter Credit"
                       formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">

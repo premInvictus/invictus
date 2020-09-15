@@ -117,6 +117,7 @@ export class VoucherRefModalComponent implements OnInit {
   getSattleJV(){
     this.ELEMENT_DATA = [];
     this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+    console.log('this.data.param--',this.data.param)
     this.faService.getSattleJV(this.data.param).subscribe((data:any)=>{
       if(data) {
         console.log(data);
@@ -125,8 +126,9 @@ export class VoucherRefModalComponent implements OnInit {
             vc_id:item.vc_id,
             vc_code:item.vc_number.vc_name,
             vc_date:item.vc_date,
-            vc_amount:this.getAmt(item.vc_particulars_data),
-            vc_amount_type:''
+            vc_amount:this.getAmt(item.vc_particulars_data, item),
+            vc_amount_type:'',
+            va_particulars_detail: this.getParticularsDetail(item.vc_particulars_data, item)
           })
         }
         this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -181,12 +183,24 @@ export class VoucherRefModalComponent implements OnInit {
 			});	
 		}
 	}
-  getAmt(value){
+  getAmt(value, item){
     let amt = 0;
     for(const item of value){
-      amt += Number(item.vc_debit)
+      if(item.vc_account_type_id === this.data.param.coa_id) {
+      amt += Number(item.vc_credit)}
     }
     return amt;
+  }
+
+  getParticularsDetail(value, item) {
+    let pstr = '';
+
+    for(const item of value){
+      if(item.vc_account_type_id === this.data.param.coa_id) {
+        pstr = item.vc_particulars;
+      }
+    }
+    return pstr;
   }
   refsubmit() {
     console.log(this.selection);
@@ -201,12 +215,14 @@ export class VoucherRefModalComponent implements OnInit {
       item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
     } else if(this.currentTabIndex == 2 && this.selection.selected.length > 0){
       const tselection = this.selection.selected.map(e => e.vc_code);
+      const tParticulars  =this.selection.selected.map(e => e.va_particulars_detail);
       if(this.sattleJVList.length > 0){
         this.sattleJVList.forEach(element => {
           // const ti = this.selection.selected.findIndex(e => e.vc_id == element.vc_id);
           // if(ti == -1) {            
           // }
-          tselection.push(element.vc_code)
+          tselection.push(element.vc_code);
+          tParticulars.push(element.vc_particulars_detail);
           
         });
       }
@@ -225,8 +241,10 @@ export class VoucherRefModalComponent implements OnInit {
 
       item.currentTabIndex=this.currentTabIndex;
       item.selection=tselection
+      item.particularsDetails= tParticulars;
       item.update=this.data.refData&&this.data.refData.update ? this.data.refData.update : false;
       item.amount=tamount;
+      item.particularsDetails=tParticulars;
       item.selected=tselected;
     } else if(this.currentTabIndex == 3) {
       item.currentTabIndex=this.currentTabIndex;
