@@ -9,6 +9,7 @@ import {Router,ActivatedRoute} from '@angular/router';
 import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component';
 import { Element } from './school.model';
 import { saveAs } from 'file-saver';
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'app-school-ledger',
@@ -17,6 +18,13 @@ import { saveAs } from 'file-saver';
 })
 export class SchoolLedgerComponent implements OnInit {
   @ViewChild('deleteModalRef') deleteModalRef;
+  selection = new SelectionModel<Element>(true, []);
+  actionFlag: any = {
+	deleteinvoice: false,
+	edit: false,
+	print: false,
+	pay: false,
+};
   school_id:any;
   schooldetails:any;
   schooldetailsArray: any[] = [];
@@ -26,13 +34,17 @@ export class SchoolLedgerComponent implements OnInit {
 	@ViewChild(MatSort)
 	sort: MatSort;
 	displayedColumns = [
-		'position',
+		'select',
 		'billing_invoiceid',
+		'billing_ses',
 		'billing_date',
 		'billing_duedate',
 		'billing_month',
 		'billing_amount',
-		'action'
+		'receipt_no',
+		'receipt_date',
+		'receipt_amount'
+		//'action'
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   constructor(
@@ -56,10 +68,12 @@ export class SchoolLedgerComponent implements OnInit {
 		filterValue = filterValue.trim().toLowerCase();
 		this.dataSource.filter = filterValue;
   }
-  editBilling(data){
+  editBilling(){
+	let data:any=this.fetchSelection()[0];
 	this.createInvoice(data,true,this.school_id);
   }
-  deleteBilling (data){
+  deleteBilling (){
+	let data:any=this.fetchSelection()[0];
     this.deleteModalRef.openDeleteModal(data);
   }
   deleteComOk(data){
@@ -77,7 +91,63 @@ export class SchoolLedgerComponent implements OnInit {
   viewDetaills(value){
     
   }
+  isAllSelected() {
+	const numSelected = this.selection.selected.length;
+	const numRows = this.dataSource.data.length;
+	return numSelected === numRows;
+	}
+
+	masterToggle() {
+		this.isAllSelected() ?
+			this.selection.clear() :
+			this.dataSource.data.forEach(row => {
+				/* if (row.selectionDisable === false) {
+					this.selection.select(row);
+				} */
+				this.selection.select(row);
+			});
+	}							
+
+	checkboxLabel(row?: Element): string {
+		if (!row) {
+			return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
+		}
+		return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
+	}
+	manipulateAction(row) {
+		this.selection.toggle(row);
+		let tempactionFlag: any
+		tempactionFlag = {
+			deleteinvoice: true,
+			edit: true,
+			print: true,
+			pay: true,
+		};		
+		if (this.selection.selected.length > 0) {
+			this.selection.selected.forEach(item => {
+				tempactionFlag.deleteinvoice = tempactionFlag.deleteinvoice && item.eachActionFlag.deleteinvoice && this.selection.selected.length === 1;
+				tempactionFlag.edit = tempactionFlag.edit && item.eachActionFlag.edit && this.selection.selected.length === 1;
+				tempactionFlag.print = tempactionFlag.print && item.eachActionFlag.print && this.selection.selected.length === 1;
+				tempactionFlag.pay = (tempactionFlag.pay && item.eachActionFlag.pay && this.selection.selected.length === 1);
+				
+				this.actionFlag = tempactionFlag;
+			});
+		} else {
+			this.resetActionFlag();
+		}
+	}
+	
+	resetActionFlag() {
+		this.actionFlag = {
+			deleteinvoice: false,
+			edit: false,
+			print: false,
+			pay: false,
+		};
+	}
   getBilling(){
+	this.ELEMENT_DATA=[];
+	this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const param:any={};
     param.billing_school_id=this.school_id;
     param.status='1';
@@ -86,6 +156,12 @@ export class SchoolLedgerComponent implements OnInit {
 				this.schooldetailsArray = result.data;
 				let ind = 1;
 				for (const t of this.schooldetailsArray) {
+					const tempactionFlag: any = {
+						deleteinvoice: true,
+						edit: true,
+						print: true,
+						pay: true,
+					};
 					this.ELEMENT_DATA.push({
 						position: ind,
 						billing_invoiceid: t.billing_invoiceid,
@@ -94,13 +170,18 @@ export class SchoolLedgerComponent implements OnInit {
 						billing_month: t.billing_month_str,
 						billing_amount: t.billing_amount,
 						action: t,
+						eachActionFlag: tempactionFlag,
+						receipt_no:'',
+						receipt_date:'',
+						receipt_amount:'',
+						billing_ses:t.ses_name
 					});
 					ind++;
 				}
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 				this.dataSource.paginator = this.paginator;
-				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-				this.dataSource.sort = this.sort;
+				// this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+				// this.dataSource.sort = this.sort;
 			} else {
 				this.notif.showSuccessErrorMessage('No records found', 'error');
 			}
@@ -117,14 +198,18 @@ export class SchoolLedgerComponent implements OnInit {
 		});
   }
   createInvoice(item, edit,school_id): void {
+	  let title = 'Create Invoice';
+	  if(edit){
+		  title = 'Update Invoice';
+	  }
 		const dialogRef = this.dialog.open(InvoiceModalComponent, {
 			width: '80%',
 			data: {
-        title:'Create Invoice',
+				title:title,
 				item: item,
-        edit: edit,
-        school_id:school_id
-			},
+				edit: edit,
+				school_id:school_id
+				},
 			hasBackdrop: true
 		});
 
@@ -134,7 +219,8 @@ export class SchoolLedgerComponent implements OnInit {
 			}
 		});
 	}
-	printBilling(value){
+	printBilling(){
+		let value:any=this.fetchSelection()[0];
 		const param:any={};
 		param.billing_id = value.billing_id;
 		this.acsetupService.printBilling(param).subscribe((result: any) => {
@@ -146,6 +232,15 @@ export class SchoolLedgerComponent implements OnInit {
 				window.open(result.data, '_blank');
 			}
 		});
+	}
+	fetchSelection() {
+		const inv_id_arr = [];
+		this.selection.selected.forEach(element => {
+			if (element.action) {
+				inv_id_arr.push(element.action);
+			}
+		});
+		return inv_id_arr;
 	}
 
 }

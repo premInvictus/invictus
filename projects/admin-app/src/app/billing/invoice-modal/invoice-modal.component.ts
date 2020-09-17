@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { AdminService } from '../../admin-user-type/admin/services/admin.service';
 import { AcsetupService } from '../../acsetup/service/acsetup.service';
 import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
+import { CommonAPIService } from 'src/app/_services/index';
 import * as moment from 'moment';
 @Component({
   selector: 'app-invoice-modal',
@@ -16,6 +17,7 @@ export class InvoiceModalComponent implements OnInit {
   paramForm: FormGroup;
   voucherFormGroupArray: any[] = [];
   feePeriod:any[]=[];
+  sessionArray:any[]=[];
   totalDebit=0;
   arrayService:any[]=[];
   monthArray: any[] = [
@@ -38,7 +40,8 @@ export class InvoiceModalComponent implements OnInit {
     private fb:FormBuilder,
     private adminService:AdminService,
     private acsetupService:AcsetupService,
-    private notif:NotificationService
+    private notif:NotificationService,
+    private common:CommonAPIService
   ) { }
 
   ngOnInit() {
@@ -46,6 +49,7 @@ export class InvoiceModalComponent implements OnInit {
     this.voucherFormGroupArray = [];
     this.buildForm();
     this.getServiceAll();
+    this.getSession();
     if(this.data.edit && this.data.item){
       this.invoiceCreationForm.patchValue({
         billing_id: this.data.item.billing_id,
@@ -53,6 +57,7 @@ export class InvoiceModalComponent implements OnInit {
         billing_month: this.data.item.billing_month.split(','),
         billing_date: this.data.item.billing_date,
         billing_duedate: this.data.item.billing_duedate,
+        billing_ses:this.data.item.billing_ses
       });
       this.data.item.billing_item.forEach(element => {
         this.paramForm = this.fb.group({
@@ -71,12 +76,24 @@ export class InvoiceModalComponent implements OnInit {
 			billing_school_id: this.data.school_id,
 			billing_month: [],
 			billing_date: '',
-			billing_duedate: '',
+      billing_duedate: '',
+      billing_ses:''
     });
     if(!this.data.edit){
       this.addVoucher();
     }
   }
+  getSession() {
+		this.common.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+        this.sessionArray = result2.data;
+        if(!this.data.edit)
+        this.invoiceCreationForm.patchValue({
+          billing_ses:this.sessionArray[this.sessionArray.length-1].ses_id
+        })
+			}
+		});
+	}
   addVoucher() {
 		this.paramForm = this.fb.group({
 			service_id: '',

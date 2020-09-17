@@ -1,3 +1,94 @@
+.table-fee-ledger { 
+    height: 500px;
+    overflow: hidden;
+}
+.table-fee-ledger-child {
+    overflow-y: scroll;
+    height: 100%
+}
+
+.pointer {
+    cursor: pointer;
+}
+.fa-rupee-sign{
+    font-size: 12px;
+}
+.mat-column-srno {
+    width: 3% !important;
+    flex: 0 0 8% !important;
+}
+.cdk-column-feehead {
+    width: 65%!important;
+}
+td.mat-cell {
+    border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+tr.mat-footer-row {
+    font-weight: bold;
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+td.mat-footer-cell {
+    border: 1px solid #89A8C9 !important;
+    border-collapse: collapse;
+}
+
+.btn-unconsolidate {
+    background: #004261;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.btn-receiptMod {
+    background: #004261;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+.btn-delete-rec {
+    background: #ff5a5a;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.btn-edit-inv{
+    background: #6c757d;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 0 5px;
+    height: 32px;
+    font-size: 13px;
+    line-height: 32px !important;
+}
+
+.mat-row, .mat-header-row {  
+    min-width: 2800px;  
+    width: 100%;  
+ }  
+ .table-100{
+    width: 140% !important;
+ }
+ .view-less {
+    font-size: 13px;
+    padding:1px;
+    cursor: pointer;
+    margin-right: 1px;
+ }
 [hidden] {
     display: none !important;
   }

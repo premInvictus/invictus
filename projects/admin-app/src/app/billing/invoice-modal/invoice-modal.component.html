@@ -14,6 +14,14 @@
   <div class="col-12 remove-col-padding">
     <div class="inline-flex margin-left-15">
       <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Fee Session </mat-label>
+        <mat-select placeholder="Fee Session" formControlName="billing_ses" required>
+          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">{{item.ses_name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
         <mat-label>Fee Period</mat-label>
         <mat-select placeholder="Fee Period" multiple formControlName="billing_month" required>
           <mat-option *ngFor="let item of monthArray" [value]="item.id">{{item.name}}</mat-option>
