@@ -70,7 +70,7 @@
         <div class="col-4 text-right">
             <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="vc_date" (dateChange)="setDate();getVoucherTypeMaxId()" [value]="today" required>
+                <input matInput [matDatepicker]="picker" formControlName="vc_date" (dateChange)="getVoucherTypeMaxId()" [value]="today" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -168,13 +168,29 @@
         </table>
         <br>
         <div class="row margin-top-25">
+            <div *ngIf="currentVcType == 'Bank Payment'">
+                <div class="col-12 text-left">
+                  <div class="row">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Cheque No</mat-label>
+                    <input matInput placeholder="Cheque No" formControlName="vc_chequeno">
+                  </mat-form-field>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Choose a date</mat-label>
+                    <input matInput [matDatepicker]="picker1" formControlName="vc_chequedate" (dateChange)="setDate();" [value]="today">
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                  </mat-form-field>
+                </div>
+                </div>
+                </div>
             <div class="col-4 text-left">
                 <mat-form-field appearance="outline" style="width:440px">
                     <mat-label>Narrations</mat-label>
                     <textarea matInput placeholder="Enter Narrations" formControlName="vc_narrations" cols="200" rows="6" required></textarea>
                   </mat-form-field>
             </div>
-            <div class="col-8">
+            <div class="col-4">
                         <div class="notification-aatachment-btn-sis">
                             <label for="attachment"><i
                                     class="fas fa-cloud-upload-alt upload-icon-bulk color-blue" style="font-size:24px !important;"></i><br />Choose

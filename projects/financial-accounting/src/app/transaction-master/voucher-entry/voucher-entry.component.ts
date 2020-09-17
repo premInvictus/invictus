@@ -145,7 +145,9 @@ export class VoucherEntryComponent implements OnInit {
 				this.voucherForm.patchValue({
 					vc_number: data.vc_number.vc_code,
 					vc_date: data.vc_date,
-					vc_narrations: data.vc_narrations.trim()
+					vc_narrations: data.vc_narrations.trim(),
+					vc_chequeno: data.vc_chequeno,
+					vc_chequedate: data.vc_chequedate,
 				});
 				this.attachmentArray = data.vc_attachments;
 				for (let i = 0; i < data.vc_particulars_data.length; i++) {
@@ -158,8 +160,7 @@ export class VoucherEntryComponent implements OnInit {
 						selected: data.vc_particulars_data[i]['selected'],
 						vc_debit: data.vc_particulars_data[i]['vc_debit'],
 						vc_credit: data.vc_particulars_data[i]['vc_credit'],
-						vc_chequeno: data.vc_particulars_data[i]['vc_chequeno'],
-					vc_chequedate: data.vc_particulars_data[i]['vc_chequedate'],
+					
 					vc_ref_no: (data.vc_particulars_data[i]['vc_invoiceno'] ? " Invoivce No - " +data.vc_particulars_data[i]['vc_invoiceno']+" | " : "")+( data.vc_particulars_data[i]['vc_grno'] ? " GR No - " +data.vc_particulars_data[i]['vc_grno']+" | " : "")+(data.vc_particulars_data[i]['selected'] ? " JV - "+data.vc_particulars_data[i]['selected']+" | " : "")+(data.vc_particulars_data[i]['vc_chequeno'] ? "Cheque No -  "+data.vc_particulars_data[i]['vc_chequeno']+" | " : "")+(data.vc_particulars_data[i]['vc_chequedate'] ? " Cheque Date - "+data.vc_particulars_data[i]['vc_chequedate'] : "")
 					});
 					this.voucherFormGroupArray.push(paramjson);
@@ -171,8 +172,8 @@ export class VoucherEntryComponent implements OnInit {
 					selection: data.vc_particulars_data[0].vc_invoiceno,
 					amount: data.vc_particulars_data[0].vc_debit,
 					selected: data.vc_particulars_data[0].selected,
-					vc_chequeno: data.vc_particulars_data[0].vc_chequeno,
-					vc_chequedate: data.vc_particulars_data[0].vc_chequedate,
+					// vc_chequeno: data.vc_particulars_data[0].vc_chequeno,
+					// vc_chequedate: data.vc_particulars_data[0].vc_chequedate,
 					update: this.editMode
 				}
 			} else {
@@ -259,7 +260,9 @@ export class VoucherEntryComponent implements OnInit {
 		this.voucherForm = this.fbuild.group({
 			vc_number: '',
 			vc_date: moment(),
-			vc_narrations: ''
+			vc_narrations: '',
+			vc_chequeno:'',
+			vc_chequedate:''
 		});
 		if (!(this.editMode)) {
 			this.paramForm = this.fbuild.group({
@@ -271,8 +274,6 @@ export class VoucherEntryComponent implements OnInit {
 				selected: '',
 				vc_debit: '',
 				vc_credit: '',
-				vc_chequeno:'',
-				vc_chequedate:'',
 				vc_ref_no:''
 			});
 			this.voucherFormGroupArray.push(this.paramForm);
@@ -294,8 +295,6 @@ export class VoucherEntryComponent implements OnInit {
 			selected: '',
 			vc_debit: '',
 			vc_credit: '',
-			vc_chequeno:'',
-			vc_chequedate:'',
 			vc_ref_no:''
 		});
 		this.voucherFormGroupArray.push(this.paramForm);
@@ -336,8 +335,8 @@ export class VoucherEntryComponent implements OnInit {
 							selected: this.voucherFormGroupArray[i].value.selected,
 							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
-							vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
-							vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
+							// vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
+							// vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
 						};
 						this.voucherEntryArray.push(vFormJson);
 					}
@@ -350,6 +349,13 @@ export class VoucherEntryComponent implements OnInit {
 					} else {
 						tempdate = (this.voucherForm.value.vc_date);
 					}
+
+					let tempChequeDate: any;
+					if (!moment.isMoment(this.voucherForm.value.vc_chequedate)) {
+						tempChequeDate = moment(this.voucherForm.value.vc_chequedate);
+					} else {
+						tempChequeDate = (this.voucherForm.value.vc_chequedate);
+					}
 					var inputJson = {
 						vc_id: this.editMode ? this.currentVoucherId : null,
 						vc_type: this.currentVcType,
@@ -358,6 +364,8 @@ export class VoucherEntryComponent implements OnInit {
 						vc_narrations: this.voucherForm.value.vc_narrations.trim(),
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
+						vc_chequedate: tempChequeDate.format("YYYY-MM-DD"),
+						vc_chequeno: this.voucherForm.value.vc_chequeno,
 						vc_state: 'draft',
 						vc_sattle_status: 1
 					}
@@ -420,8 +428,8 @@ export class VoucherEntryComponent implements OnInit {
 							selected: this.voucherFormGroupArray[i].value.selected,
 							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
-							vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
-							vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
+							// vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
+							// vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
 						};
 						this.voucherEntryArray.push(vFormJson);
 					}
@@ -430,6 +438,13 @@ export class VoucherEntryComponent implements OnInit {
 						tempdate = moment(this.voucherForm.value.vc_date);
 					} else {
 						tempdate = (this.voucherForm.value.vc_date);
+					}
+
+					let tempChequeDate: any;
+					if (!moment.isMoment(this.voucherForm.value.vc_chequedate)) {
+						tempChequeDate = moment(this.voucherForm.value.vc_chequedate);
+					} else {
+						tempChequeDate = (this.voucherForm.value.vc_chequedate);
 					}
 					var inputJson = {
 						vc_id: this.editMode ? this.currentVoucherId : null,
@@ -440,7 +455,9 @@ export class VoucherEntryComponent implements OnInit {
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
 						vc_state: 'publish',
-						vc_sattle_status: 1
+						vc_sattle_status: 1,
+						vc_chequedate: tempChequeDate.format("YYYY-MM-DD"),
+						vc_chequeno: this.voucherForm.value.vc_chequeno,
 					}
 
 					if (this.currentVoucherId) {
@@ -500,8 +517,8 @@ export class VoucherEntryComponent implements OnInit {
 							selected: this.voucherFormGroupArray[i].value.selected,
 							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
 							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
-							vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
-							vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
+							// vc_chequeno: this.voucherFormGroupArray[i].value.vc_chequeno,
+							// vc_chequedate:this.voucherFormGroupArray[i].value.vc_chequedate
 						};
 						this.voucherEntryArray.push(vFormJson);
 					}
@@ -510,6 +527,13 @@ export class VoucherEntryComponent implements OnInit {
 						tempdate = moment(this.voucherForm.value.vc_date);
 					} else {
 						tempdate = (this.voucherForm.value.vc_date);
+					}
+
+					let tempChequeDate: any;
+					if (!moment.isMoment(this.voucherForm.value.vc_chequedate)) {
+						tempChequeDate = moment(this.voucherForm.value.vc_chequedate);
+					} else {
+						tempChequeDate = (this.voucherForm.value.vc_chequedate);
 					}
 					var inputJson = {
 						vc_id: this.editMode ? this.currentVoucherId : null,
@@ -520,7 +544,9 @@ export class VoucherEntryComponent implements OnInit {
 						vc_attachments: this.attachmentArray,
 						vc_particulars_data: this.voucherEntryArray,
 						vc_state: 'publish',
-						vc_sattle_status: 1
+						vc_sattle_status: 1,
+						vc_chequedate: tempChequeDate.format("YYYY-MM-DD"),
+						vc_chequeno: this.voucherForm.value.vc_chequeno,
 					}
 
 					if (this.currentVoucherId) {
@@ -717,6 +743,13 @@ export class VoucherEntryComponent implements OnInit {
 	}
 	setDate() {
 		console.log('imgArray--', this.voucherForm.value.vc_date);
+		let tempDate:any;
+		if (!moment.isMoment(this.voucherForm.value.vc_chequedate)) {
+			tempDate = moment(this.voucherForm.value.vc_chequedate);
+		} else {
+			tempDate = this.voucherForm.value.vc_chequedate;
+		}
+		return tempDate.format('YYYY-MM-DD');
 
 	}
 	listVoucherRoute() {
@@ -759,8 +792,8 @@ export class VoucherEntryComponent implements OnInit {
 								vc_grno: result.currentTabIndex,
 								vc_debit: result.amount,
 								selected: result.selected,
-								vc_chequeno: result.vc_chequeno,
-								vc_chequedate: result.vc_chequedate,
+								// vc_chequeno: result.vc_chequeno,
+								// vc_chequedate: result.vc_chequedate,
 								vc_ref_no: (result.selection ? " Invoice No - " +result.selection+" | " : "")+( result.currentTabIndex ? " GR No - " +result.currentTabIndex+" | " : "")+(result.vc_chequeno ? "Cheque No -  "+result.vc_chequeno+" | " : "")+(result.vc_chequedate ? " Cheque Date - "+result.vc_chequedate : ""),
 								vc_particulars: result.particularsDetails
 							});
