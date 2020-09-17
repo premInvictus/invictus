@@ -73,6 +73,12 @@
       </tr>
     </table>
   </div>
+  <div class="col-12 m-t-10" *ngIf="voucherData.vc_type=='Bank Payment'">
+      <b>Cheque No. :</b> {{voucherData.vc_chequeno | titlecase}}
+    </div>
+    <div class="col-12 m-t-10" *ngIf="voucherData.vc_type=='Bank Payment'">
+        <b>Cheque Date :</b> {{voucherData.vc_chequedate | titlecase}}
+      </div>
   <div class="col-12 m-t-10">
     <b>Narations :</b> {{voucherData.vc_narrations | titlecase}}
   </div>
