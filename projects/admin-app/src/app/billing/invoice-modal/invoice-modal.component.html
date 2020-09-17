@@ -97,14 +97,28 @@
 <div class="row">
   <div class="col-12 text-center">
     <div class="margin-top-25">
-      <button *ngIf="!edit" mat-raised-button class="btn-primary btn-180 btn-success"
+      <button *ngIf="!data.edit" mat-raised-button class="btn-primary btn-180 btn-success"
         (click)="submitInvoice()">Submit</button>
-      <button *ngIf="!edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+      <button *ngIf="!data.edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
       (click)="resetInvoice()">Reset</button>
-      <button *ngIf="edit" mat-raised-button class="btn-primary btn-180 btn-success"
-        (click)="updateInvoice()">Update</button>
-      <button *ngIf="edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
+      <button *ngIf="data.edit" mat-raised-button class="btn-primary btn-180 btn-success"
+        (click)="submitInvoice()">Update</button>
+      <button *ngIf="data.edit" mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
         (click)="cancelInvoice()">Cancel</button>
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

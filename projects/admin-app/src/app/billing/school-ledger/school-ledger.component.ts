@@ -8,6 +8,7 @@ import { MatPaginator, MatTableDataSource, MatSort,MatDialog } from '@angular/ma
 import {Router,ActivatedRoute} from '@angular/router';
 import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component';
 import { Element } from './school.model';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-school-ledger',
@@ -55,8 +56,8 @@ export class SchoolLedgerComponent implements OnInit {
 		filterValue = filterValue.trim().toLowerCase();
 		this.dataSource.filter = filterValue;
   }
-  editBilling(value){
-
+  editBilling(data){
+	this.createInvoice(data,true,this.school_id);
   }
   deleteBilling (data){
     this.deleteModalRef.openDeleteModal(data);
@@ -90,7 +91,7 @@ export class SchoolLedgerComponent implements OnInit {
 						billing_invoiceid: t.billing_invoiceid,
 						billing_date: t.billing_date,
 						billing_duedate: t.billing_duedate,
-						billing_month: t.billing_month,
+						billing_month: t.billing_month_str,
 						billing_amount: t.billing_amount,
 						action: t,
 					});
@@ -128,6 +129,22 @@ export class SchoolLedgerComponent implements OnInit {
 		});
 
 		dialogRef.afterClosed().subscribe(result => {
+			if (result && result.status == 'ok') {
+				this.getBilling();
+			}
+		});
+	}
+	printBilling(value){
+		const param:any={};
+		param.billing_id = value.billing_id;
+		this.acsetupService.printBilling(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				console.log('result', result.data);
+				// this.familyDetailArr = result.data;
+				const length = result.data.split('/').length;
+				saveAs(result.data, result.data.split('/')[length - 1]);
+				window.open(result.data, '_blank');
+			}
 		});
 	}
 
