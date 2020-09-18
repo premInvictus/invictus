@@ -27,15 +27,15 @@ export class SchoolListingComponent implements OnInit {
 		'position',
 		'logo',
 		'schoolname',
-		'schoolprefix',
-		'board',
-		'affiliation',
+		//'schoolprefix',
+		//'board',
+		//'affiliation',
 		'address',
 		'city',
-		'pin',
+		//'pin',
 		'contact',
-		'email',
-		'manager',
+		//'email',
+		//'manager',
 		'action'
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);

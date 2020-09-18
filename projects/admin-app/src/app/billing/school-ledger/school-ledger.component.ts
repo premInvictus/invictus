@@ -7,6 +7,7 @@ import { appConfig } from 'projects/axiom/src/app/app.config';
 import { MatPaginator, MatTableDataSource, MatSort,MatDialog } from '@angular/material';
 import {Router,ActivatedRoute} from '@angular/router';
 import { InvoiceModalComponent } from '../invoice-modal/invoice-modal.component';
+import { ReceiptModalComponent } from '../receipt-modal/receipt-modal.component';
 import { Element } from './school.model';
 import { saveAs } from 'file-saver';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -75,6 +76,23 @@ export class SchoolLedgerComponent implements OnInit {
   deleteBilling (){
 	let data:any=this.fetchSelection()[0];
     this.deleteModalRef.openDeleteModal(data);
+  }
+  payBilling (){
+	let data:any=this.fetchSelection()[0];
+    const dialogRef = this.dialog.open(ReceiptModalComponent, {
+		width: '80%',
+		data: {
+			title:'Payment',
+			item: data,
+			},
+		hasBackdrop: true
+	});
+
+	dialogRef.afterClosed().subscribe(result => {
+		if (result && result.status == 'ok') {
+			this.getBilling();
+		}
+	});
   }
   deleteComOk(data){
     const param:any={};
@@ -162,6 +180,11 @@ export class SchoolLedgerComponent implements OnInit {
 						print: true,
 						pay: true,
 					};
+					if(t.br_id){
+						tempactionFlag.deleteinvoice = false;
+						tempactionFlag.edit = false;
+						tempactionFlag.pay = false;
+					}
 					this.ELEMENT_DATA.push({
 						position: ind,
 						billing_invoiceid: t.billing_invoiceid,
@@ -171,9 +194,9 @@ export class SchoolLedgerComponent implements OnInit {
 						billing_amount: t.billing_amount,
 						action: t,
 						eachActionFlag: tempactionFlag,
-						receipt_no:'',
-						receipt_date:'',
-						receipt_amount:'',
+						receipt_no:t.br_id ? 'RPT-'+t.br_id : '',
+						receipt_date:t.br_date,
+						receipt_amount:t.br_amount,
 						billing_ses:t.ses_name
 					});
 					ind++;

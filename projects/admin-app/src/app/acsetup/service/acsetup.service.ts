@@ -417,4 +417,9 @@ export class AcsetupService {
 			return this.http.post(environment.apiAxiomUrl + '/billing/printBilling', value);
 
 		}
+		insertReceipt(value: any) {
+			this.loaderService.startLoading();
+			return this.http.post(environment.apiAxiomUrl + '/billing/insertReceipt', value);
+
+		}
 }

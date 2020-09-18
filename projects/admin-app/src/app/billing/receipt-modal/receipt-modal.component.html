@@ -1,0 +1,55 @@
+<div class="row remove-modal-margin">
+  <div class="col-12 remove-col-padding">
+    <div class="dialog-title-container ">
+      <span class="font-size-24 font-white">{{data.title}}</span>
+      <i class="material-icons font-size-24 float-right font-white margin-top-10" (click)="closeDialog()">
+        cancel
+      </i>
+    </div>
+  </div>
+</div>
+<hr><hr>    
+<form [formGroup]="invoiceCreationForm" novalidate>
+<div class="row">
+  <div class="col-12 remove-col-padding">
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Receipt Date</mat-label>
+        <input matInput [matDatepicker]="picker" placeholder="Receipt Date" formControlName="br_date"
+          required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <div class="inline-flex margin-left-15">
+      <mat-form-field appearance="outline" class="form-field-220">
+        <mat-label>Amount</mat-label>
+        <input matInput placeholder="Amount" formControlName="br_amount"
+          required>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+</form>
+<div class="row">
+  <div class="col-12 text-center">
+    <div class="margin-top-25">
+      <button mat-raised-button class="btn-primary btn-180 btn-success"
+        (click)="submitInvoice()">Submit</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
