@@ -99,8 +99,9 @@ export class SchoolLedgerComponent implements OnInit {
     param.billing_id=data.billing_id;
     param.status = '5';
     this.acsetupService.changeBillingStatus(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-        this.notif.showSuccessErrorMessage(result.data, 'success');
+		if (result && result.status === 'ok') {
+		this.notif.showSuccessErrorMessage(result.data, 'success');
+		this.getBilling();
       } else {
         this.notif.showSuccessErrorMessage(result.data, 'error');
       }
@@ -164,6 +165,8 @@ export class SchoolLedgerComponent implements OnInit {
 		};
 	}
   getBilling(){
+	this.selection.clear();
+	this.resetActionFlag();
 	this.ELEMENT_DATA=[];
 	this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const param:any={};
