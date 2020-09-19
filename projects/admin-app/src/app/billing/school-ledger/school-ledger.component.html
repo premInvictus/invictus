@@ -86,7 +86,7 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                        <span class="font-size-16 font-light">billing_month No </span><span
+                        <span class="font-size-16 font-light">Affiliation No </span><span
                           class="font-size-16 font-regular">{{schooldetails?.school_afflication_no | titlecase}}</span>
                       </div>
                     </div>
@@ -105,75 +105,116 @@
      </div>
   </div>
   <div class="row">
-    <div class="col-12">
-       <mat-card>
-          <mat-card-content>
-             <div class="row">
-                <div class="col-12 pd_left pd_right">
-                   <div class="col-2">
-                      <mat-form-field class="form-field">
-                         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
-                         <span matPrefix><i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp;
-                         </span>
-                      </mat-form-field>
-                   </div>
-                </div>
-                <div class="col-12">
-                   <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center">
-                      <!-- Position Column -->
-                      <ng-container matColumnDef="position">
-                         <th *matHeaderCellDef mat-sort-header> No. </th>
-                         <td *matCellDef="let item"> {{item.position}} </td>
-                      </ng-container>
-                      <!-- Teacher Column -->
-                      <ng-container matColumnDef="billing_invoiceid">
-                         <th *matHeaderCellDef mat-sort-header>Invoice No </th>
-                         <td *matCellDef="let item"> {{item.billing_invoiceid}} </td>
-                      </ng-container>
-                      <!-- designation Column -->
-                      <ng-container matColumnDef="billing_date">
-                         <th *matHeaderCellDef mat-sort-header> Date </th>
-                         <td *matCellDef="let item"> {{item.billing_date | date : 'd-MMM-y'}}</td>
-                      </ng-container>
-                      <!--Mobile Column -->
-                      <ng-container matColumnDef="billing_duedate">
-                         <th *matHeaderCellDef mat-sort-header>Due Date</th>
-                         <td *matCellDef="let item"> {{item.billing_duedate | date : 'd-MMM-y'}} </td>
-                      </ng-container>
-                      <!-- Email Column -->
-                      <ng-container matColumnDef="billing_month">
-                         <th *matHeaderCellDef mat-sort-header>Period</th>
-                         <td *matCellDef="let item"> {{item.billing_month}} </td>
-                      </ng-container>
-                      <!--status-->
-                      <ng-container matColumnDef="billing_amount">
-                         <th *matHeaderCellDef mat-sort-header>Amount</th>
-                         <td *matCellDef="let item"> {{item.billing_amount}} </td>
-                      </ng-container>
-                      <ng-container matColumnDef="action">
-                         <th *matHeaderCellDef> Action </th>
-                         <td *matCellDef="let item">
-                          <i class="fa fa-pencil-square-o fa-edit fa-lg" style="cursor: pointer;"
-                          aria-hidden="true" (click)="editBilling(item.action)"></i>
-                          <i class="fa fa-trash fa-delete fa-lg p-l-10" style="cursor: pointer;" aria-hidden="true"
-                                    (click)="deleteBilling(item.action)">
-                                 </i> 
-                          <i class="fa fa-pencil-square-o fa-print fa-lg p-l-10" style="cursor: pointer;"
-                          aria-hidden="true" (click)="printBilling(item.action)"></i>
-                         </td>
-                      </ng-container>
-                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                   </table>
-                   <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]"
-                      [showFirstLastButtons]="true">
-                   </mat-paginator>
-                </div>
-             </div>
-          </mat-card-content>
-       </mat-card>
+    <div class="col-12 ">
+      <mat-card class="card-top-title__container card-height-677 card-height-795">
+        <!-- <div class="row margin-bottom-10">
+          <div class="col-6 remove-col-padding-left">
+          </div>
+        </div> -->
+        <div style="margin-top:15px !important" class="col-12 text-right">
+          <button *ngIf="actionFlag.print" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="printBilling()">Print</button>
+          <button *ngIf="actionFlag.pay" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
+            (click)="payBilling()">Payment</button>
+          <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-edit-inv btn-spacer"
+            (click)="editBilling()">Edit</button>
+          <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
+            (click)="deleteBilling()">Delete</button>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div>
+              <div class="table-overflow">
+                <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+                    <!-- Position Column -->
+                    <ng-container matColumnDef="select">
+                      <th width="5%" mat-header-cell *matHeaderCellDef>
+                        <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
+                          [checked]="selection.hasValue() && isAllSelected()"
+                          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                        </mat-checkbox> -->
+                      </th>
+  
+                      <td mat-cell *matCellDef="let row; let i=index">
+                        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
+                          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                        </mat-checkbox>
+                      </td>
+                    </ng-container>
+                    <!-- Teacher Column -->
+                    <ng-container matColumnDef="billing_invoiceid">
+                       <th width="10%" mat-header-cell *matHeaderCellDef >Invoice No </th>
+                       <td mat-cell *matCellDef="let item"> {{item.billing_invoiceid}} </td>
+                    </ng-container>
+                     <!-- designation Column -->
+                     <ng-container matColumnDef="billing_ses">
+                      <th width="10%" mat-header-cell *matHeaderCellDef > Session </th>
+                      <td mat-cell *matCellDef="let item"> {{item.billing_ses}}</td>
+                   </ng-container>
+                    <!-- designation Column -->
+                    <ng-container matColumnDef="billing_date">
+                       <th width="10%" mat-header-cell *matHeaderCellDef > Date </th>
+                       <td mat-cell *matCellDef="let item"> {{item.billing_date | date : 'd-MMM-y'}}</td>
+                    </ng-container>
+                    <!--Mobile Column -->
+                    <ng-container matColumnDef="billing_duedate">
+                       <th width="10%" mat-header-cell *matHeaderCellDef >Due Date</th>
+                       <td mat-cell *matCellDef="let item"> {{item.billing_duedate | date : 'd-MMM-y'}} </td>
+                    </ng-container>
+                    <!-- Email Column -->
+                    <ng-container matColumnDef="billing_month">
+                       <th width="10%" mat-header-cell *matHeaderCellDef >Period</th>
+                       <td mat-cell *matCellDef="let item"> {{item.billing_month}} </td>
+                    </ng-container>
+                    <!--status-->
+                    <ng-container matColumnDef="billing_amount">
+                       <th width="10%" mat-header-cell *matHeaderCellDef >Amount (<span><i
+                        class="fas fa-rupee-sign"></i></span>)</th>
+                       <td mat-cell *matCellDef="let item"> {{item.billing_amount | indianCurrency}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="receipt_no">
+                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt No</th>
+                      <td mat-cell *matCellDef="let item"> {{item.receipt_no}} </td>
+                   </ng-container>
+                    <!-- designation Column -->
+                    <ng-container matColumnDef="receipt_date">
+                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Date </th>
+                      <td mat-cell *matCellDef="let item"> {{item.receipt_date | date : 'd-MMM-y'}}</td>
+                   </ng-container>
+                   <!--status-->
+                   <ng-container matColumnDef="receipt_amount">
+                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                        class="fas fa-rupee-sign"></i></span>)</th>
+                      <td mat-cell *matCellDef="let item"> {{item.receipt_amount | indianCurrency}} </td>
+                   </ng-container>
+                    <!-- <ng-container matColumnDef="action">
+                       <th mat-header-cell *matHeaderCellDef> Action </th>
+                       <td mat-cell *matCellDef="let item">
+                        <i class="fa fa-pencil-square-o fa-edit fa-lg" style="cursor: pointer;"
+                        aria-hidden="true" (click)="editBilling(item.action)"></i>
+                        <i class="fa fa-trash fa-delete fa-lg p-l-10" style="cursor: pointer;" aria-hidden="true"
+                                  (click)="deleteBilling(item.action)">
+                               </i> 
+                        <i class="fa fa-pencil-square-o fa-print fa-lg p-l-10" style="cursor: pointer;"
+                        aria-hidden="true" (click)="printBilling(item.action)"></i>
+                       </td>
+                    </ng-container> -->
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <table class="table-100 text-center" style="margin-top:5px;">
+                  <tr *ngIf="ELEMENT_DATA.length == 0">
+                    <td>No Record Found</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </mat-card>
     </div>
- </div>
+  </div>
 </div>
 <app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteComOk($event)"
     (deleteCancel)="deleteComCancel()">

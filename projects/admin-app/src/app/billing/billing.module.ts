@@ -7,6 +7,7 @@ import { BillingRoutingModule } from './billing-routing.module';
 import { SchoolListingComponent } from './school-listing/school-listing.component';
 import { SchoolLedgerComponent } from './school-ledger/school-ledger.component';
 import { InvoiceModalComponent } from './invoice-modal/invoice-modal.component';
+import { ReceiptModalComponent } from './receipt-modal/receipt-modal.component';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { InvoiceModalComponent } from './invoice-modal/invoice-modal.component';
     ReactiveFormsModule,
     FormsModule
   ],
-  declarations: [SchoolListingComponent, SchoolLedgerComponent, InvoiceModalComponent],
-  entryComponents:[InvoiceModalComponent]
+  declarations: [SchoolListingComponent, SchoolLedgerComponent, InvoiceModalComponent, ReceiptModalComponent],
+  entryComponents:[InvoiceModalComponent,ReceiptModalComponent]
 })
 export class BillingModule { }

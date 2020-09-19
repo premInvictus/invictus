@@ -11,12 +11,12 @@
         <img alt="invictus" class="axiom-invictus-logo margin-right-50" src="../../../assets/images/resvgiconsforfeemodule/company_logo.svg">
         </span>
         </a>
-        <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch" mat-button>
+        <!-- <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch" mat-button>
         <img class="header-school-branch" src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span class="header-icon-spacer">{{schoolInfo.school_name}}</span></button>
 
         <mat-menu #schoolbranch="matMenu">
            <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i><span>{{schoolInfo?.school_name}}</span> </button>
-        </mat-menu>
+        </mat-menu> -->
         <div class="header-menu-divider"></div>
         <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="academicyear" mat-button>
               <img class="header-academic-year" src="../../../assets/images/resvgiconsforfeemodule/academic year.svg"><span class="header-icon-spacer">{{getSessionName(session?.ses_id)}}</span></button>
@@ -78,7 +78,7 @@
         </a>
      </nav>
      <nav class="axiom-navbar axiom-navbar-show-small">
-        <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="schoolbranch">
+        <!-- <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="schoolbranch">
            <mat-menu #schoolbranch="matMenu" *ngIf="currentUser?.role_id != 1">
               <button mat-menu-item class="profile-submenu"><i class="fas fa-school"></i>{{schoolInfo}}</button>
            </mat-menu>
@@ -87,7 +87,7 @@
            </mat-menu>
            <span class="mat-button-wrapper">
            <i class="fas fa-graduation-cap top-nav-icon"></i>{{schoolInfo?.school_name}}</span>
-        </a>
+        </a> -->
         <a class="axiom-navbar-link mat-button" mat-button tabindex="0" aria-label="false" [matMenuTriggerFor]="academicyear">
            <mat-menu #academicyear="matMenu">
                <button *ngFor="let item of sessionArray" mat-menu-item class="profile-submenu" (click)="setSession(item?.ses_id)">
