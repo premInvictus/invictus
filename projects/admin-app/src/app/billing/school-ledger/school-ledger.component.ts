@@ -50,9 +50,8 @@ export class SchoolLedgerComponent implements OnInit {
 		'br_bnk_id',
 		'br_branch',
 		'br_cheque_date',
-		'br_remark',
 		'br_transaction_id',
-		//'action'
+		'br_remark',
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   constructor(
@@ -208,9 +207,9 @@ export class SchoolLedgerComponent implements OnInit {
 						receipt_date:t.br_date,
 						receipt_amount:t.br_amount,
 						billing_ses:t.ses_name,
-						br_pay_id:t.br_pay_id,
+						br_pay_id:t.pay_name																,
 						br_cheque_no:t.br_cheque_no,
-						br_bnk_id:t.br_bnk_id,
+						br_bnk_id:t.tb_name,
 						br_branch:t.br_branch,
 						br_cheque_date:t.br_cheque_date,
 						br_remark:t.br_remark,

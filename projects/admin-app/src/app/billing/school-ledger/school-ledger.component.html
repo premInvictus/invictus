@@ -128,7 +128,7 @@
                 <table mat-table [dataSource]="dataSource" class="table-100 text-center">
                     <!-- Position Column -->
                     <ng-container matColumnDef="select">
-                      <th width="5%" mat-header-cell *matHeaderCellDef>
+                      <th width="3%" mat-header-cell *matHeaderCellDef>
                         <!-- <mat-checkbox (change)="$event ? masterToggle() : null"
                           [checked]="selection.hasValue() && isAllSelected()"
                           [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
@@ -143,97 +143,78 @@
                     </ng-container>
                     <!-- Teacher Column -->
                     <ng-container matColumnDef="billing_invoiceid">
-                       <th width="10%" mat-header-cell *matHeaderCellDef >Invoice No </th>
+                       <th width="5%" mat-header-cell *matHeaderCellDef >Invoice No </th>
                        <td mat-cell *matCellDef="let item"> {{item.billing_invoiceid}} </td>
                     </ng-container>
                      <!-- designation Column -->
                      <ng-container matColumnDef="billing_ses">
-                      <th width="10%" mat-header-cell *matHeaderCellDef > Session </th>
+                      <th width="5%" mat-header-cell *matHeaderCellDef > Session </th>
                       <td mat-cell *matCellDef="let item"> {{item.billing_ses}}</td>
                    </ng-container>
                     <!-- designation Column -->
                     <ng-container matColumnDef="billing_date">
-                       <th width="10%" mat-header-cell *matHeaderCellDef > Date </th>
+                       <th width="5%" mat-header-cell *matHeaderCellDef > Date </th>
                        <td mat-cell *matCellDef="let item"> {{item.billing_date | date : 'd-MMM-y'}}</td>
                     </ng-container>
                     <!--Mobile Column -->
                     <ng-container matColumnDef="billing_duedate">
-                       <th width="10%" mat-header-cell *matHeaderCellDef >Due Date</th>
+                       <th width="5%" mat-header-cell *matHeaderCellDef >Due Date</th>
                        <td mat-cell *matCellDef="let item"> {{item.billing_duedate | date : 'd-MMM-y'}} </td>
                     </ng-container>
                     <!-- Email Column -->
                     <ng-container matColumnDef="billing_month">
-                       <th width="10%" mat-header-cell *matHeaderCellDef >Period</th>
+                       <th width="6%" mat-header-cell *matHeaderCellDef >Period</th>
                        <td mat-cell *matCellDef="let item"> {{item.billing_month}} </td>
                     </ng-container>
                     <!--status-->
                     <ng-container matColumnDef="billing_amount">
-                       <th width="10%" mat-header-cell *matHeaderCellDef >Amount (<span><i
+                       <th width="5%" mat-header-cell *matHeaderCellDef >Amount (<span><i
                         class="fas fa-rupee-sign"></i></span>)</th>
                        <td mat-cell *matCellDef="let item"> {{item.billing_amount | indianCurrency}} </td>
                     </ng-container>
                     <ng-container matColumnDef="receipt_no">
-                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt No</th>
+                      <th width="5%" mat-header-cell *matHeaderCellDef >Receipt No</th>
                       <td mat-cell *matCellDef="let item"> {{item.receipt_no}} </td>
                    </ng-container>
                     <!-- designation Column -->
                     <ng-container matColumnDef="receipt_date">
-                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Date </th>
+                      <th width="5%" mat-header-cell *matHeaderCellDef >Receipt Date </th>
                       <td mat-cell *matCellDef="let item"> {{item.receipt_date | date : 'd-MMM-y'}}</td>
                    </ng-container>
                    <!--status-->
                    <ng-container matColumnDef="receipt_amount">
-                      <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                      <th width="5%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
                         class="fas fa-rupee-sign"></i></span>)</th>
                       <td mat-cell *matCellDef="let item"> {{item.receipt_amount | indianCurrency}} </td>
                    </ng-container>
                     <ng-container matColumnDef="br_pay_id">
-                    <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                      class="fas fa-rupee-sign"></i></span>)</th>
-                    <td mat-cell *matCellDef="let item"> {{item.br_pay_id}} </td>
+                    <th width="5%" mat-header-cell *matHeaderCellDef >Payment Mode</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_pay_id | titlecase}} </td>
                     </ng-container>
-                  <ng-container matColumnDef="br_cheque_no">
-                  <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                    class="fas fa-rupee-sign"></i></span>)</th>
-                  <td mat-cell *matCellDef="let item"> {{item.br_cheque_no}} </td>
+                    <ng-container matColumnDef="br_cheque_no">
+                    <th width="5%" mat-header-cell *matHeaderCellDef >Cheque no</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_cheque_no}} </td>
+                    </ng-container>
+                    <ng-container matColumnDef="br_bnk_id">
+                    <th width="6%" mat-header-cell *matHeaderCellDef >Bank Name</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_bnk_id}} </td>
+                    </ng-container>
+                  <ng-container matColumnDef="br_branch">
+                  <th width="5%" mat-header-cell *matHeaderCellDef >Receipt Amount</th>
+                  <td mat-cell *matCellDef="let item"> {{item.br_branch}} </td>
                   </ng-container>
-                  <ng-container matColumnDef="br_bnk_id">
-                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                  class="fas fa-rupee-sign"></i></span>)</th>
-                <td mat-cell *matCellDef="let item"> {{item.br_bnk_id}} </td>
-                </ng-container>
-                <ng-container matColumnDef="br_branch">
-              <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let item"> {{item.br_branch}} </td>
-              </ng-container>
-              <ng-container matColumnDef="br_cheque_date">
-              <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                class="fas fa-rupee-sign"></i></span>)</th>
-              <td mat-cell *matCellDef="let item"> {{item.br_cheque_date}} </td>
-              </ng-container>
-              <ng-container matColumnDef="br_transaction_id">
-                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                  class="fas fa-rupee-sign"></i></span>)</th>
-                <td mat-cell *matCellDef="let item"> {{item.br_transaction_id}} </td>
-              </ng-container>
-              <ng-container matColumnDef="br_remark">
-                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
-                  class="fas fa-rupee-sign"></i></span>)</th>
-                <td mat-cell *matCellDef="let item"> {{item.br_remark}} </td>
-              </ng-container>
-                    <!-- <ng-container matColumnDef="action">
-                       <th mat-header-cell *matHeaderCellDef> Action </th>
-                       <td mat-cell *matCellDef="let item">
-                        <i class="fa fa-pencil-square-o fa-edit fa-lg" style="cursor: pointer;"
-                        aria-hidden="true" (click)="editBilling(item.action)"></i>
-                        <i class="fa fa-trash fa-delete fa-lg p-l-10" style="cursor: pointer;" aria-hidden="true"
-                                  (click)="deleteBilling(item.action)">
-                               </i> 
-                        <i class="fa fa-pencil-square-o fa-print fa-lg p-l-10" style="cursor: pointer;"
-                        aria-hidden="true" (click)="printBilling(item.action)"></i>
-                       </td>
-                    </ng-container> -->
+                  <ng-container matColumnDef="br_cheque_date">
+                  <th width="5%" mat-header-cell *matHeaderCellDef >Branch</th>
+                  <td mat-cell *matCellDef="let item"> {{item.br_cheque_date | date : 'd-MMM-y'}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="br_transaction_id">
+                    <th width="6%" mat-header-cell *matHeaderCellDef >Transaction Details</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_transaction_id}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="br_remark">
+                    <th width="10%" mat-header-cell *matHeaderCellDef >Remark</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_remark}} </td>
+                  </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
                 </table>
