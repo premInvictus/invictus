@@ -19,7 +19,15 @@ export class SalarySlipModalComponent implements OnInit {
     private erp: ErpCommonService) { }
 
   ngOnInit() {
+    console.log('this.data',this.data);
     this.values = this.data.values;
+    // if(this.values.action.leaves && this.values.action.leaves.emp_leave_availed){
+    //   let emp_leave_availed = 0;
+    //   this.values.action.leaves.emp_leave_availed.forEach(element => {
+    //     emp_leave_availed += element.leave_value;
+    //   });
+    //   this.values.action.leaves.emp_leave_availed = emp_leave_availed;
+    // }
     console.log(this.values);
     this.getSchoolInfo();
   }
@@ -27,7 +35,7 @@ export class SalarySlipModalComponent implements OnInit {
     this.common.getEmployeeSalaryDetail({ emp_ids: [emp_id], month_id: this.values.action.id.toString() }).subscribe((res: any) => {
       if (res) {
         this.employeeDetails = res[0];
-        console.log(this.employeeDetails);
+        console.log('this.employeeDetails',this.employeeDetails);
       }
     });
   }

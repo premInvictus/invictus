@@ -187,6 +187,41 @@
                         class="fas fa-rupee-sign"></i></span>)</th>
                       <td mat-cell *matCellDef="let item"> {{item.receipt_amount | indianCurrency}} </td>
                    </ng-container>
+                    <ng-container matColumnDef="br_pay_id">
+                    <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                      class="fas fa-rupee-sign"></i></span>)</th>
+                    <td mat-cell *matCellDef="let item"> {{item.br_pay_id}} </td>
+                    </ng-container>
+                  <ng-container matColumnDef="br_cheque_no">
+                  <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                    class="fas fa-rupee-sign"></i></span>)</th>
+                  <td mat-cell *matCellDef="let item"> {{item.br_cheque_no}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="br_bnk_id">
+                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                  class="fas fa-rupee-sign"></i></span>)</th>
+                <td mat-cell *matCellDef="let item"> {{item.br_bnk_id}} </td>
+                </ng-container>
+                <ng-container matColumnDef="br_branch">
+              <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+              <td mat-cell *matCellDef="let item"> {{item.br_branch}} </td>
+              </ng-container>
+              <ng-container matColumnDef="br_cheque_date">
+              <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+              <td mat-cell *matCellDef="let item"> {{item.br_cheque_date}} </td>
+              </ng-container>
+              <ng-container matColumnDef="br_transaction_id">
+                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                  class="fas fa-rupee-sign"></i></span>)</th>
+                <td mat-cell *matCellDef="let item"> {{item.br_transaction_id}} </td>
+              </ng-container>
+              <ng-container matColumnDef="br_remark">
+                <th width="10%" mat-header-cell *matHeaderCellDef >Receipt Amount (<span><i
+                  class="fas fa-rupee-sign"></i></span>)</th>
+                <td mat-cell *matCellDef="let item"> {{item.br_remark}} </td>
+              </ng-container>
                     <!-- <ng-container matColumnDef="action">
                        <th mat-header-cell *matHeaderCellDef> Action </th>
                        <td mat-cell *matCellDef="let item">

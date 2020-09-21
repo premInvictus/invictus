@@ -11,6 +11,13 @@ export interface Element {
 	receipt_date:any;
 	receipt_amount:any;
 	billing_ses:any;
+	br_pay_id:any
+	br_cheque_no:any
+	br_bnk_id:any
+	br_branch:any
+	br_cheque_date:any
+	br_remark:any
+	br_transaction_id:any
 }
 
 

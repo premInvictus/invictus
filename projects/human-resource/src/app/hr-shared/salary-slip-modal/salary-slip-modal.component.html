@@ -37,9 +37,9 @@
                 </td>
                 <td class="cus-td td-r">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails?.emp_salary_compute_data?.emp_designation_detail && 
-                  employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name ? 
-                  (employeeDetails?.emp_salary_compute_data?.emp_designation_detail.name  | titlecase): '-'}}</td>
+                  {{employeeDetails?.relations?.emp_designation_detail && 
+                  employeeDetails?.relations?.emp_designation_detail.des_name ? 
+                  (employeeDetails?.relations?.emp_designation_detail.des_name  | titlecase): '-'}}</td>
               </tr>
               <!-- <tr>
                 <td class="cus-td td-r"><b>Address </b>
@@ -56,20 +56,20 @@
                 </td>
                 <td class="cus-td td-r">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails.emp_personal_detail && 
-                  employeeDetails.emp_personal_detail.contact_detail
-                  && employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no ? 
-                  (employeeDetails.emp_personal_detail.contact_detail.primary_mobile_no): '-'}}</td>
+                  {{employeeDetails.relations.emp_personal_detail && 
+                  employeeDetails.relations.emp_personal_detail.contact_detail
+                  && employeeDetails.relations.emp_personal_detail.contact_detail.primary_mobile_no ? 
+                  (employeeDetails.relations.emp_personal_detail.contact_detail.primary_mobile_no): '-'}}</td>
               </tr>
               <tr>
                 <td class="cus-td td-r"><b>Email </b>
                 </td>
                 <td class="cus-td td-r">:</td>
                 <td class="cus-td td-r" align="left">
-                  {{employeeDetails.emp_personal_detail && 
-                  employeeDetails.emp_personal_detail.contact_detail
-                  && employeeDetails.emp_personal_detail.contact_detail.email_id ? 
-                  (employeeDetails.emp_personal_detail.contact_detail.email_id): '-'}}</td>
+                  {{employeeDetails.relations.emp_personal_detail && 
+                  employeeDetails.relations.emp_personal_detail.contact_detail
+                  && employeeDetails.relations.emp_personal_detail.contact_detail.email_id ? 
+                  (employeeDetails.relations.emp_personal_detail.contact_detail.email_id): '-'}}</td>
               </tr>
             </tbody>
           </table>
