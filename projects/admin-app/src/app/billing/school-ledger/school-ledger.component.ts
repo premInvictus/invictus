@@ -44,8 +44,14 @@ export class SchoolLedgerComponent implements OnInit {
 		'billing_amount',
 		'receipt_no',
 		'receipt_date',
-		'receipt_amount'
-		//'action'
+		'receipt_amount',
+		'br_pay_id',
+		'br_cheque_no',
+		'br_bnk_id',
+		'br_branch',
+		'br_cheque_date',
+		'br_transaction_id',
+		'br_remark',
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
   constructor(
@@ -99,8 +105,9 @@ export class SchoolLedgerComponent implements OnInit {
     param.billing_id=data.billing_id;
     param.status = '5';
     this.acsetupService.changeBillingStatus(param).subscribe((result: any) => {
-			if (result && result.status === 'ok') {
-        this.notif.showSuccessErrorMessage(result.data, 'success');
+		if (result && result.status === 'ok') {
+		this.notif.showSuccessErrorMessage(result.data, 'success');
+		this.getBilling();
       } else {
         this.notif.showSuccessErrorMessage(result.data, 'error');
       }
@@ -164,6 +171,8 @@ export class SchoolLedgerComponent implements OnInit {
 		};
 	}
   getBilling(){
+	this.selection.clear();
+	this.resetActionFlag();
 	this.ELEMENT_DATA=[];
 	this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const param:any={};
@@ -197,7 +206,14 @@ export class SchoolLedgerComponent implements OnInit {
 						receipt_no:t.br_id ? 'RPT-'+t.br_id : '',
 						receipt_date:t.br_date,
 						receipt_amount:t.br_amount,
-						billing_ses:t.ses_name
+						billing_ses:t.ses_name,
+						br_pay_id:t.pay_name																,
+						br_cheque_no:t.br_cheque_no,
+						br_bnk_id:t.tb_name,
+						br_branch:t.br_branch,
+						br_cheque_date:t.br_cheque_date,
+						br_remark:t.br_remark,
+						br_transaction_id:t.br_transaction_id,
 					});
 					ind++;
 				}

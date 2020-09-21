@@ -20,6 +20,8 @@ export class ReceiptModalComponent implements OnInit {
   feePeriod:any[]=[];
   sessionArray:any[]=[];
   totalDebit=0;
+  payModes: any[] = [];
+  allBanks:any[]=[];
   constructor(
     public dialogRef: MatDialogRef<ReceiptModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -33,14 +35,38 @@ export class ReceiptModalComponent implements OnInit {
   ngOnInit() {
     console.log('data',this.data);
     this.buildForm();
+    this.getPayModes();
+    this.getAllBanks();
     this.getSession();
   }
   buildForm() {
 		this.invoiceCreationForm = this.fb.group({
       'br_date':'',
-      'br_amount':this.data.item.billing_amount
+      'br_amount':this.data.item.billing_amount,
+      'br_pay_id':'',
+      'br_cheque_no':'',
+      'br_bnk_id':'',
+      'br_branch':'',
+      'br_cheque_date':'',
+      'br_remark':'',
+      'br_transaction_id':'',
     });
   }
+  getAllBanks() {
+		this.allBanks = [];
+		this.acsetupService.getBanksAll({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.allBanks = result.data;
+			}
+		});
+  }
+  getPayModes() {
+		this.acsetupService.getPaymentMode({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.payModes = result.data;
+			}
+		});
+	}
   getSession() {
 		this.common.getSession().subscribe((result2: any) => {
 			if (result2.status === 'ok') {
@@ -62,9 +88,20 @@ export class ReceiptModalComponent implements OnInit {
       } else {
         br_date = (this.invoiceCreationForm.value.br_date);
       }
+      
+      
       param = this.invoiceCreationForm.value;
       param.br_date = br_date.format("YYYY-MM-DD");
       param.br_billing_id = this.data.item.billing_id;
+      let br_cheque_date: any;
+      if(this.invoiceCreationForm.value.br_cheque_date){
+        if (!moment.isMoment(this.invoiceCreationForm.value.br_cheque_date)) {
+          br_cheque_date = moment(this.invoiceCreationForm.value.br_cheque_date);
+        } else {
+          br_cheque_date = (this.invoiceCreationForm.value.br_cheque_date);
+        }
+        param.br_cheque_date = br_cheque_date.format("YYYY-MM-DD");
+      }
       this.acsetupService.insertReceipt(param).subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {

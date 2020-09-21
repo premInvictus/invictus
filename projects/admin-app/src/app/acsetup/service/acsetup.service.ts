@@ -60,7 +60,13 @@ export class AcsetupService {
 				return this.http.post(environment.apiAxiomUrl + '/setup/insertService', value);
 
 		}
-
+		getBanksAll(value) {
+			this.loaderService.startLoading();
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getAllBank');
+		}
+		getPaymentMode(value) {
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getPaymentMode');
+		}
 		addClass(value: any) {
 				this.loaderService.startLoading();
 				return this.http.post(environment.apiAxiomUrl + '/setup/classes', value);
