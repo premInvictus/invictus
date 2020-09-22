@@ -18,6 +18,9 @@ export interface Element {
 	br_cheque_date:any
 	br_remark:any
 	br_transaction_id:any
+	taxable_amount:any;
+	gst_amount:any;
+	tds_amount:any;
 }
 
 

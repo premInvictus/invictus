@@ -2,7 +2,7 @@ import { Component, OnInit ,ViewChild} from '@angular/core';
 import { AdminService } from '../../admin-user-type/admin/services/admin.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AcsetupService } from '../../acsetup/service/acsetup.service';
-import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
+import { NotificationService,UserAccessMenuService } from 'projects/axiom/src/app/_services/index';
 import { appConfig } from 'projects/axiom/src/app/app.config';
 import { MatPaginator, MatTableDataSource, MatSort,MatDialog } from '@angular/material';
 import {Router,ActivatedRoute} from '@angular/router';
@@ -41,6 +41,9 @@ export class SchoolLedgerComponent implements OnInit {
 		'billing_date',
 		'billing_duedate',
 		'billing_month',
+		'taxable_amount',
+		'gst_amount',
+		'tds_amount',
 		'billing_amount',
 		'receipt_no',
 		'receipt_date',
@@ -54,6 +57,10 @@ export class SchoolLedgerComponent implements OnInit {
 		'br_remark',
 	];
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+	total_billing_amount = 0;
+	total_taxable_amount=0;
+	total_gst_amount=0;
+	total_tds_amount=0;
   constructor(
     private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -61,7 +68,8 @@ export class SchoolLedgerComponent implements OnInit {
 		private notif: NotificationService,
     private router: Router,
     private route:ActivatedRoute ,
-    private dialog:MatDialog
+	private dialog:MatDialog,
+	private userAccessMenuService: UserAccessMenuService,
   ) { }
 
   ngOnInit() {
@@ -170,6 +178,12 @@ export class SchoolLedgerComponent implements OnInit {
 			pay: false,
 		};
 	}
+	back(){
+			this.router.navigate(['../../billing'], {relativeTo:this.route});
+	}
+	isExistUserAccessMenu(mod_id) {
+		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
+	}
   getBilling(){
 	this.selection.clear();
 	this.resetActionFlag();
@@ -183,6 +197,10 @@ export class SchoolLedgerComponent implements OnInit {
 				this.schooldetailsArray = result.data;
 				let ind = 1;
 				for (const t of this.schooldetailsArray) {
+					this.total_billing_amount += t.payable_amount;
+					this.total_taxable_amount += t.taxable_amount;
+					this.total_gst_amount += t.gst_amount;
+					this.total_tds_amount += t.tds_amount;
 					const tempactionFlag: any = {
 						deleteinvoice: true,
 						edit: true,
@@ -200,7 +218,7 @@ export class SchoolLedgerComponent implements OnInit {
 						billing_date: t.billing_date,
 						billing_duedate: t.billing_duedate,
 						billing_month: t.billing_month_str,
-						billing_amount: t.billing_amount,
+						billing_amount: t.payable_amount,
 						action: t,
 						eachActionFlag: tempactionFlag,
 						receipt_no:t.br_id ? 'RPT-'+t.br_id : '',
@@ -214,6 +232,9 @@ export class SchoolLedgerComponent implements OnInit {
 						br_cheque_date:t.br_cheque_date,
 						br_remark:t.br_remark,
 						br_transaction_id:t.br_transaction_id,
+						taxable_amount:t.taxable_amount,
+						gst_amount:t.gst_amount,
+						tds_amount:t.tds_amount,
 					});
 					ind++;
 				}

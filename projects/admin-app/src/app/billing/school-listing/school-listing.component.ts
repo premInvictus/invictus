@@ -71,22 +71,25 @@ export class SchoolListingComponent implements OnInit {
 				this.schooldetailsArray = result.data;
 				let ind = 1;
 				for (const t of this.schooldetailsArray) {
-					this.ELEMENT_DATA.push({
-						position: ind,
-						logo: t.school_logo,
-						schoolname: t.school_name,
-						schoolprefix: t.school_prefix,
-						board: t.school_board,
-						affiliation: t.school_afflication_no,
-						address: t.school_address,
-						pin: t.si_pincode,
-						contact: t.school_phone,
-						city: t.school_city,
-						email: t.school_email,
-						manager: t.school_website,
-						action: t,
-					});
-					ind++;
+					if(this.checkForLoginAccess(t)) {
+						this.ELEMENT_DATA.push({
+							position: ind,
+							logo: t.school_logo,
+							schoolname: t.school_name,
+							schoolprefix: t.school_prefix,
+							board: t.school_board,
+							affiliation: t.school_afflication_no,
+							address: t.school_address,
+							pin: t.si_pincode,
+							contact: t.school_phone,
+							city: t.school_city,
+							email: t.school_email,
+							manager: t.school_website,
+							action: t,
+						});
+						ind++;
+					}
+					
 				}
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 				this.dataSource.paginator = this.paginator;
@@ -155,11 +158,16 @@ export class SchoolListingComponent implements OnInit {
 
 	checkForLoginAccess(item) {
 		
-		if (item && item.school_manager) {
-			var managerData = JSON.parse(item.school_manager);
-			if (managerData.indexOf(this.invictusUserData.au_login_id) > -1) {
-				return true;
+		if (item && item.school_manager  && item.school_manager != 'undefined'  && item.school_manager != 0) {
+			if(item.school_manager){
+				var managerData = JSON.parse(item.school_manager);
+				if (managerData.indexOf(this.invictusUserData.au_login_id) > -1) {
+					return true;
+				}
+			} else {
+				return false;
 			}
+			
 		}
 	}
 
