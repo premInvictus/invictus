@@ -428,4 +428,8 @@ export class AcsetupService {
 			return this.http.post(environment.apiAxiomUrl + '/billing/insertReceipt', value);
 
 		}
+		getFeeMonths(value) {
+			this.loaderService.startLoading();
+			return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+		}
 }

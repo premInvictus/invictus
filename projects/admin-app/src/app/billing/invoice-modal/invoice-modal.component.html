@@ -24,7 +24,9 @@
       <mat-form-field appearance="outline" class="form-field-220">
         <mat-label>Fee Period</mat-label>
         <mat-select placeholder="Fee Period" multiple formControlName="billing_month" required>
-          <mat-option *ngFor="let item of monthArray" [value]="item.id">{{item.name}}</mat-option>
+          <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id">
+              {{item.fm_name}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
     </div>

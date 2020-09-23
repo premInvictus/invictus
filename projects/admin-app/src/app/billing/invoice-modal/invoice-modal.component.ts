@@ -20,20 +20,7 @@ export class InvoiceModalComponent implements OnInit {
   sessionArray:any[]=[];
   totalDebit=0;
   arrayService:any[]=[];
-  monthArray: any[] = [
-    {id:'1',name:'Jan'},
-    {id:'2',name:'Feb'},
-    {id:'3',name:'Mar'},
-    {id:'4',name:'Apr'},
-    {id:'5',name:'May'},
-    {id:'6',name:'Jun'},
-    {id:'7',name:'Jul'},
-    {id:'8',name:'Aug'},
-    {id:'9',name:'Sep'},
-    {id:'10',name:'Oct'},
-    {id:'111',name:'Nov'},
-    {id:'12',name:'Dec'},
-  ];
+  feeMonthArray:any=[];
   constructor(
     public dialogRef: MatDialogRef<InvoiceModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -50,6 +37,7 @@ export class InvoiceModalComponent implements OnInit {
     this.buildForm();
     this.getServiceAll();
     this.getSession();
+    this.getFeeMonths();
     if(this.data.edit && this.data.item){
       this.invoiceCreationForm.patchValue({
         billing_id: this.data.item.billing_id,
@@ -195,5 +183,18 @@ export class InvoiceModalComponent implements OnInit {
     }
     
   }
+  getFeeMonths() {
+		this.feeMonthArray = [];
+		this.acsetupService.getFeeMonths({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+        console.log(result.data);
+        result.data.forEach(element => {
+          element.fm_id = Number(element.fm_id);
+          this.feeMonthArray.push(element);
+        });
+				console.log('this.feeMonthArray',this.feeMonthArray);
+			}
+		});
+	}
 
 }
