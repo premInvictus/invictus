@@ -55,6 +55,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
+		{ id: "3", name: 'slab' },
 	];
 	proportionatedArray = [
 		{ id: "1", name: 'Yes' },
@@ -100,6 +101,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: '',
 				name: '',
 				calculation_type: '',
+				
 				value: '',
 				status: '',
 				type: ''
@@ -110,6 +112,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: '',
 				name: '',
 				calculation_type: '',
+				calculation_option:'',
 				order: '',
 				status: '',
 				type: '',
@@ -230,6 +233,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							type: item.sc_type.type_name,
 							optional : item.sc_type.optional ?  item.sc_type.optional : '',
 							upper_value : item.sc_type.upper_value ?  item.sc_type.upper_value : '',
+							calculation_option : item.calculation_option ?  item.calculation_option : '',
 							calculation_type: item.sc_calculation_type,
 							status: item.sc_status,
 							action: item
@@ -420,6 +424,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				value: value.sc_value,
 				calculation_type: value.sc_calculation_type,
 				status: value.sc_status,
+				calculation_option:value.calculation_option,
 				upper_value: value.sc_type && value.sc_type.upper_value ? value.sc_type.upper_value : '',
 				optional: value.sc_type.type_id === '2' && value.sc_type.optional ? value.sc_type.optional : false
 			});
@@ -487,7 +492,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		} else if (Number(this.configValue) === 2) {
 			this.getSalaryComponent();
 			this.displayedColumns = 
-				['position', 'name', 'calculation_type', 'type', 'value', 'order', 'optional', 'upper_value', 'status', 'action'];
+				['position', 'name', 'calculation_type', 'type', 'value', 'order', 'optional', 'upper_value','calculation_option', 'status', 'action'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSalaryComponent();
@@ -592,6 +597,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
+						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
@@ -683,6 +689,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_value: this.formGroupArray[value - 1].formGroup.value.value,
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
+						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
 						sc_id: this.formGroupArray[value - 1].formGroup.value.id
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
