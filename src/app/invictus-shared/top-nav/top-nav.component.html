@@ -17,7 +17,7 @@
                         src="../../../assets/images/resvgiconsforfeemodule/company_logo.svg">
                 </span>
             </a>
-            <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch"
+            <button [hidden]="(currentUser.role_id === '1')" class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="schoolbranch"
                 mat-button>
                 <img class="header-school-branch"
                     src="../../../assets/images/resvgiconsforfeemodule/school_branch.svg"><span style="color: #fff;"
@@ -45,7 +45,7 @@
                 </button>
             </mat-menu>
             <div class="header-menu-divider"></div>
-            <button class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="academicyear"
+            <button [hidden]="(currentUser.role_id === '1')" class="axiom-navbar-hide-small axiom-icon-button mat-button" [matMenuTriggerFor]="academicyear"
                 mat-button>
                 <img class="header-academic-year"
                     src="../../../assets/images/resvgiconsforfeemodule/academic year.svg"><span

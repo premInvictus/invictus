@@ -12,6 +12,7 @@ export class AdminService {
 	) { }
 
 	getSchoolDetails() {
+		this.loaderService.startLoading();
 		return this.http.get(environment.apiAxiomUrl + '/dashboard/getSchool');
 	}
 	getSchools(value) {

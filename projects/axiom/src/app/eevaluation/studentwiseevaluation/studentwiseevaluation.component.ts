@@ -77,7 +77,7 @@ export class StudentwiseevaluationComponent implements OnInit {
 										statusArray[ind - 1] = statusArray[ind - 1] + '<i class="fas fa-times text-danger"></i>&nbsp;<span class="text-danger"><b>Not Evaluated</b><span>';
 									}
 									// tslint:disable-next-line:max-line-length
-									this.ELEMENT_DATA.push({ position: ind, admission: eitem.eva_login_id, name: eitem.au_full_name, evaluate: this.evaluate, marks: eitem.qpmarks, status: statusArray[ind - 1], action: eitem });
+									this.ELEMENT_DATA.push({ position: ind, admission: eitem.au_admission_no, name: eitem.au_full_name, evaluate: this.evaluate, marks: eitem.qpmarks, status: statusArray[ind - 1], action: eitem });
 									ind++;
 									this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 									this.dataSource.paginator = this.paginator;

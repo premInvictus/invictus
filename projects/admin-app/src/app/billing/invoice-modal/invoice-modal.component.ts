@@ -1,10 +1,11 @@
 import { Component, OnInit, Output, EventEmitter, ViewChild,Inject } from '@angular/core';
-import { MatDialogRef, MatDialog ,MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MatDialog ,MAT_DIALOG_DATA, throwMatDialogContentAlreadyAttachedError} from '@angular/material';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { AdminService } from '../../admin-user-type/admin/services/admin.service';
 import { AcsetupService } from '../../acsetup/service/acsetup.service';
 import { NotificationService } from 'projects/axiom/src/app/_services/notification.service';
+import { CommonAPIService } from 'src/app/_services/index';
 import * as moment from 'moment';
 @Component({
   selector: 'app-invoice-modal',
@@ -16,35 +17,46 @@ export class InvoiceModalComponent implements OnInit {
   paramForm: FormGroup;
   voucherFormGroupArray: any[] = [];
   feePeriod:any[]=[];
+  sessionArray:any[]=[];
   totalDebit=0;
   arrayService:any[]=[];
-  monthArray: any[] = [
-    {id:'1',name:'Jan'},
-    {id:'2',name:'Feb'},
-    {id:'3',name:'Mar'},
-    {id:'4',name:'Apr'},
-    {id:'5',name:'May'},
-    {id:'6',name:'Jun'},
-    {id:'7',name:'Jul'},
-    {id:'8',name:'Aug'},
-    {id:'9',name:'Sep'},
-    {id:'10',name:'Oct'},
-    {id:'111',name:'Nov'},
-    {id:'12',name:'Dec'},
-  ];
+  feeMonthArray:any=[];
   constructor(
     public dialogRef: MatDialogRef<InvoiceModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
     private fb:FormBuilder,
     private adminService:AdminService,
     private acsetupService:AcsetupService,
-    private notif:NotificationService
+    private notif:NotificationService,
+    private common:CommonAPIService
   ) { }
 
   ngOnInit() {
     console.log('data',this.data);
+    this.voucherFormGroupArray = [];
     this.buildForm();
     this.getServiceAll();
+    this.getSession();
+    this.getFeeMonths();
+    if(this.data.edit && this.data.item){
+      this.invoiceCreationForm.patchValue({
+        billing_id: this.data.item.billing_id,
+        billing_school_id: this.data.item.billing_school_id,
+        billing_month: this.data.item.billing_month.split(','),
+        billing_date: this.data.item.billing_date,
+        billing_duedate: this.data.item.billing_duedate,
+        billing_ses:this.data.item.billing_ses
+      });
+      this.data.item.billing_item.forEach(element => {
+        this.paramForm = this.fb.group({
+          service_id: element.bi_service_id,
+          service_charge: element.bi_service_charge,
+          naration: element.bi_naration,
+        });
+        this.voucherFormGroupArray.push(this.paramForm);
+      });
+      this.calculateDebitTotal();
+    }
   }
   buildForm() {
 		this.invoiceCreationForm = this.fb.group({
@@ -52,12 +64,24 @@ export class InvoiceModalComponent implements OnInit {
 			billing_school_id: this.data.school_id,
 			billing_month: [],
 			billing_date: '',
-			billing_duedate: '',
+      billing_duedate: '',
+      billing_ses:''
     });
     if(!this.data.edit){
       this.addVoucher();
     }
   }
+  getSession() {
+		this.common.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+        this.sessionArray = result2.data;
+        if(!this.data.edit)
+        this.invoiceCreationForm.patchValue({
+          billing_ses:this.sessionArray[this.sessionArray.length-1].ses_id
+        })
+			}
+		});
+	}
   addVoucher() {
 		this.paramForm = this.fb.group({
 			service_id: '',
@@ -114,15 +138,30 @@ export class InvoiceModalComponent implements OnInit {
       param.billing_duedate = billing_duedate.format("YYYY-MM-DD");
       param.billing_date = billing_date.format("YYYY-MM-DD");
       param.billing_item = billing_item;
-      this.acsetupService.insertBilling(param).subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            this.notif.showSuccessErrorMessage(result.data,'success');
-          } else {
-            this.notif.showSuccessErrorMessage(result.data,'error');
+      if(this.data.edit && this.data.item){
+        this.acsetupService.updateBilling(param).subscribe(
+          (result: any) => {
+            if (result && result.status === 'ok') {
+              this.notif.showSuccessErrorMessage(result.data,'success');
+              this.closeDialog({status:'ok'})
+            } else {
+              this.notif.showSuccessErrorMessage(result.data,'error');
+            }
           }
-        }
-      );
+        );
+      } else {
+        this.acsetupService.insertBilling(param).subscribe(
+          (result: any) => {
+            if (result && result.status === 'ok') {
+              this.notif.showSuccessErrorMessage(result.data,'success');
+              this.closeDialog({status:'ok'})
+            } else {
+              this.notif.showSuccessErrorMessage(result.data,'error');
+            }
+          }
+        );
+      }
+      
     } else{
       this.notif.showSuccessErrorMessage('Please fill all required field','error');
     }
@@ -136,8 +175,26 @@ export class InvoiceModalComponent implements OnInit {
   cancelInvoice(){
     
   }
-  closeDialog(){
-    this.dialogRef.close();
+  closeDialog(value=null){
+    if(value){
+      this.dialogRef.close(value);
+    } else {
+      this.dialogRef.close();
+    }
+    
   }
+  getFeeMonths() {
+		this.feeMonthArray = [];
+		this.acsetupService.getFeeMonths({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+        console.log(result.data);
+        result.data.forEach(element => {
+          element.fm_id = Number(element.fm_id);
+          this.feeMonthArray.push(element);
+        });
+				console.log('this.feeMonthArray',this.feeMonthArray);
+			}
+		});
+	}
 
 }
