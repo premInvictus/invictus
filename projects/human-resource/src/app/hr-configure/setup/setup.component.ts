@@ -45,6 +45,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	calculationFlag = false;
 	multipleDropdownName: any;
 	disabledApiButton = false;
+	slabvalueFormGroupArray: any[] = [];
 	congigArray = [
 		{ id: "1", name: 'Master' },
 		{ id: "2", name: 'Salary Component' },
@@ -55,7 +56,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
 		{ id: "2", name: '%' },
-		{ id: "3", name: 'slab' },
+		{ id: "3", name: 'Slab' },
 	];
 	proportionatedArray = [
 		{ id: "1", name: 'Yes' },
@@ -233,6 +234,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							type: item.sc_type.type_name,
 							optional : item.sc_type.optional ?  item.sc_type.optional : '',
 							upper_value : item.sc_type.upper_value ?  item.sc_type.upper_value : '',
+							slabvalue:item.sc_calculation_type == 'Slab' ? item.slabvalue : '',
 							calculation_option : item.calculation_option ?  item.calculation_option : '',
 							calculation_type: item.sc_calculation_type,
 							status: item.sc_status,
@@ -409,7 +411,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			});
 		} else if (Number(this.configValue) === 2) {
 			this.setupUpdateFlag = true;
-			if (value.sc_calculation_type === '%') {
+			if (value.sc_calculation_type === 'Slab') {
+				value.sc_calculation_type = '3';
+				if(value.slabvalue.length > 0){
+					this.slabvalueFormGroupArray = [];
+					value.slabvalue.forEach(element => {
+						this.addSlab(element);
+					});
+				}
+			} else if (value.sc_calculation_type === '%') {
 				value.sc_calculation_type = '2';
 				this.calculationFlag = true;
 			} else {
@@ -491,8 +501,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 2) {
 			this.getSalaryComponent();
+			this.addSlab();
 			this.displayedColumns = 
-				['position', 'name', 'calculation_type', 'type', 'value', 'order', 'optional', 'upper_value','calculation_option', 'status', 'action'];
+				['position', 'name', 'calculation_type', 'type', 'value','slabvalue', 'order', 'optional', 'upper_value','calculation_option', 'status', 'action'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 3) {
 			this.getSalaryComponent();
@@ -511,6 +522,40 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['position', 'name', 'leave_credit_count', 'status', 'action'];
 			this.configFlag = true;
 		}
+	}
+
+
+
+
+
+
+
+
+	addSlab(value=''){
+		if(this.slabvalueFormGroupArray.length == 0){
+			this.slabvalueFormGroupArray.push(
+				{
+					formGroup: this.fbuild.group({
+						value: value
+					})
+				}
+			);
+		} else {
+			if(this.slabvalueFormGroupArray[this.slabvalueFormGroupArray.length-1].formGroup.get('value').value){
+				this.slabvalueFormGroupArray.push(
+					{
+						formGroup: this.fbuild.group({
+							value: value
+						})
+					}
+				);
+			}
+		}
+		
+		//console.log('this.slabvalueFormGroupArray',this.slabvalueFormGroupArray);
+	}
+	deleteSlab(i){
+		this.slabvalueFormGroupArray.splice(i,1);
 	}
 	getDepartmentLeave() {
 		this.dptFormGroupArray = [];
@@ -583,6 +628,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.addEntry(this.setupDetails, 'insertMaster', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
 				case '2':
+					let slabvalueArr:any[] = [];
+					if(this.slabvalueFormGroupArray.length > 0){
+						this.slabvalueFormGroupArray.forEach(element => {
+							if(element.formGroup.get('value').value){
+								slabvalueArr.push(element.formGroup.get('value').value);
+							}
+						});
+					}
+					
 					this.setupDetails = {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
@@ -598,6 +652,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
 						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
+						slabvalue:slabvalueArr
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					break;
@@ -674,6 +729,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.setupUpdateFlag = false;
 					break;
 				case '2':
+					let slabvalueArr:any[] = [];
+					if(this.slabvalueFormGroupArray.length > 0){
+						this.slabvalueFormGroupArray.forEach(element => {
+							if(element.formGroup.get('value').value){
+								slabvalueArr.push(element.formGroup.get('value').value);
+							}
+						});
+					}
+					
 					this.setupDetails = {
 						sc_name: this.formGroupArray[value - 1].formGroup.value.name,
 						sc_type: {
@@ -690,7 +754,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
 						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
-						sc_id: this.formGroupArray[value - 1].formGroup.value.id
+						sc_id: this.formGroupArray[value - 1].formGroup.value.id,
+						slabvalue:slabvalueArr
 					};
 					this.updateEntry(this.setupDetails, 'updateSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
 					this.setupUpdateFlag = false;
