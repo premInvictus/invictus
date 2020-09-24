@@ -223,4 +223,7 @@ export class AdminService {
 		this.loaderService.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
 	}
+	getAllSchoolGroups(value) {
+		return this.http.get(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
 }

@@ -80,5 +80,39 @@ export class CommonAPIService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/getAdmmitCodeVerification', value);
 	}
+	getAllSchoolGroups(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
+
+	assignSchoolGroupToUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/assignSchoolGroupToUser',value);
+	}
+
+	getSchoolUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getSchoolUser',value);
+	}
+
+	createSchoolUserMapping(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/createSchoolUserMapping',value);
+	}
+
+	getMappedSchoolWithUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
+
+	}
+
+	revokeAccessToAssignSchool(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/revokeAccessToAssignSchool',value);
+	}
+
+
+
+	enableAccessToAssignSchool(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/enableAccessToAssignSchool',value);
+	}
+
+	updateSchoolAccessPermission(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/updateSchoolAccessPermission',value);
+	}
 
 }

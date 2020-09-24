@@ -817,6 +817,7 @@ export class SetupComponent implements OnInit {
                     }
                     if (value === 'financial accounting') {
                         console.log('in fa');
+                        this.fasignatureForm =[];
                         if (this.settingForm.value.financial_accounting_signature) {
                             let tempSignatureForm = JSON.parse(this.settingForm.value.financial_accounting_signature);
                             for (var i=0; i<tempSignatureForm.length;i++) {

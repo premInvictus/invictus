@@ -91,7 +91,7 @@
                            <td *matCellDef="let item">
                             <i class="fa fa-pencil-square-o fa-eye fa-lg" style="cursor: pointer;"
                             aria-hidden="true" (click)="viewDetaills(item.action)"></i>  
-                            <span *ngIf="checkForLoginAccess(item?.action)"> | <a href="javascript:void(0)" (click)="loginForSupportUser(item)">login</a></span>
+                            <span> | <a href="javascript:void(0)" (click)="loginForSupportUser(item)">login</a></span>
                            </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

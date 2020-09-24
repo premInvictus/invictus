@@ -71,6 +71,7 @@ export class SchoolListingComponent implements OnInit {
 				this.schooldetailsArray = result.data;
 				let ind = 1;
 				for (const t of this.schooldetailsArray) {
+					if(this.checkForLoginAccess(t)) {
 					this.ELEMENT_DATA.push({
 						position: ind,
 						logo: t.school_logo,
@@ -86,7 +87,7 @@ export class SchoolListingComponent implements OnInit {
 						manager: t.school_website,
 						action: t,
 					});
-					ind++;
+					ind++;}
 				}
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 				this.dataSource.paginator = this.paginator;
