@@ -12,7 +12,7 @@
   <div class="col-12 m-b-10">
     <div class="row">
       <div class="col-3">
-        <b>Voucher Code</b> : {{voucherData.vc_number.vc_name}}
+        <b>Voucher No.</b> : {{voucherData.vc_number.vc_name}}
       </div>
       <div class="col-3">
         <b>GR No</b> : {{getGrno()}}
@@ -36,49 +36,66 @@
 
       <!-- Name Column -->
       <ng-container matColumnDef="account">
-        <th mat-header-cell *matHeaderCellDef width="25%"> Account </th>
-        <td mat-cell *matCellDef="let element;let i = index" class="p-lr-5" [ngClass]="{'t-r':element.credit > 0,'text-left': element.debit > 0}"> {{element.account | titlecase}}</td>
+        <th mat-header-cell *matHeaderCellDef width="25%"> <b>Account </b></th>
+        <td mat-cell *matCellDef="let element;let i = index"  class="p-lr-5" [ngClass]="{'t-r':element.credit > 0,'text-left': element.debit > 0}"> {{element.account | titlecase}}</td>
       </ng-container>
 
       <!-- Name Column -->
       <ng-container matColumnDef="particular">
-        <th mat-header-cell *matHeaderCellDef width="25%"> Particulars </th>
-        <td mat-cell *matCellDef="let element" class="text-left"> {{element.particular | titlecase}} </td>
+        <th mat-header-cell *matHeaderCellDef width="25%"> <b>Particulars</b> </th>
+        <td mat-cell *matCellDef="let element" class="text-left" > <span *ngIf="element.particular=='Total'"><b>{{element.particular}}</b></span> 
+          <span *ngIf="element.particular!='Total'">{{element.particular}}</span></td>
       </ng-container>
 
       <!-- Weight Column -->
       <ng-container matColumnDef="account_code">
-        <th mat-header-cell *matHeaderCellDef width="10%"> Acount Code </th>
+        <th mat-header-cell *matHeaderCellDef width="10%"> <b>Acount Code</b> </th>
         <td mat-cell *matCellDef="let element" class="text-center"> {{element.account_code}} </td>
       </ng-container>
 
       <!-- Weight Column -->
       <ng-container matColumnDef="invoiceno">
-        <th mat-header-cell *matHeaderCellDef width="10%"> Invoice No </th>
+        <th mat-header-cell *matHeaderCellDef width="10%"> <b>Invoice No </b></th>
         <td mat-cell *matCellDef="let element" class="text-left"> {{element.invoiceno}} </td>
       </ng-container>
 
       <!-- Symbol Column -->
       <ng-container matColumnDef="debit">
-        <th mat-header-cell *matHeaderCellDef width="10%"> Debit </th>
-        <td mat-cell *matCellDef="let element"> {{element.debit | indianCurrency}} </td>
+        <th mat-header-cell *matHeaderCellDef width="10%"> <b>Debit </b></th>
+        <td mat-cell *matCellDef="let element"> <b>{{element.debit | indianCurrency}}</b> </td>
       </ng-container>
       <!-- Symbol Column -->
       <ng-container matColumnDef="credit"width="10%" >
-          <th mat-header-cell *matHeaderCellDef> Credit </th>
-          <td mat-cell *matCellDef="let element"> {{element.credit | indianCurrency}} </td>
+          <th mat-header-cell *matHeaderCellDef><b> Credit </b></th>
+          <td mat-cell *matCellDef="let element"> <b>{{element.credit | indianCurrency}} </b></td>
         </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;">
       </tr>
     </table>
   </div>
-  <div class="col-12 m-t-10" *ngIf="voucherData.vc_type=='Bank Payment'">
-      <b>Cheque No. :</b> {{voucherData.vc_chequeno | titlecase}}
+
+  <div class="col-12">
+    <div class="row">
+<div class="col-6" style="margin-left:0;padding:0" *ngIf="voucherData.vc_type=='Bank Payment'">
+  <b>Mode of Payment :</b> {{voucherData.vc_mode_of_payment | titlecase}}
+</div>
+<div class="col-6" *ngIf="voucherData.vc_type=='Bank Payment'">
+    <b>Bank Name :</b> {{voucherData.vc_bank_name | titlecase | date: 'd-MMM-yyyy'}}
+  </div>
+</div>
+</div>
+  
+    <div class="col-12">
+        <div class="row">
+  <div class="col-6" style="margin-left:0;padding:0" *ngIf="voucherData.vc_type=='Bank Payment'">
+      <b>Instrument No. :</b> {{voucherData.vc_instrumentno | titlecase}}
     </div>
-    <div class="col-12 m-t-10" *ngIf="voucherData.vc_type=='Bank Payment'">
-        <b>Cheque Date :</b> {{voucherData.vc_chequedate | titlecase}}
+    <div class="col-6" *ngIf="voucherData.vc_type=='Bank Payment'">
+        <b>Instrument Date :</b> {{voucherData.vc_instrumentdate | titlecase | date: 'd-MMM-yyyy'}}
       </div>
+    </div>
+    </div>
   <div class="col-12 m-t-10">
     <b>Narations :</b> {{voucherData.vc_narrations | titlecase}}
   </div>
