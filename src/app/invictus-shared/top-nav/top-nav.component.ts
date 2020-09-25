@@ -16,6 +16,7 @@ import { TruncatetextPipe } from '../../_pipes/truncatetext.pipe'
 import { AngularFireMessaging } from '@angular/fire/messaging';
 import { mergeMap } from 'rxjs/operators';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AuthenticationService } from './../../login/login/authentication.service';
 @Component({
 	selector: 'app-top-nav',
 	templateUrl: './top-nav.component.html',
@@ -62,7 +63,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	private _mobileQueryListener: () => void;
 	innerHeight: any;
 	resultArray: any[] = [];
-
+	schoolGroupData:any[]=[];
+	model:any = {};
+	webDeviceToken: any = {};
+	userSaveData: any;
+	returnUrl: string;
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
 		private angularFireMessaging: AngularFireMessaging,
@@ -74,7 +79,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private notif: NotificationService,
 		private loader: LoaderService,
 		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
-		private route: ActivatedRoute) {
+		private route: ActivatedRoute, private  authenticationService:AuthenticationService) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
 		this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -94,6 +99,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
+		
 		this.getSession();
 		this.getProjectList();
 		const wrapperMenu = document.querySelector('.wrapper-menu');
@@ -250,6 +256,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.schoolInfo = result.data[0];
+				this.getGroupedSchool();
 			}
 		});
 	}
@@ -581,4 +588,165 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
 	}
+
+	getGroupedSchool() {
+		console.log('this.schoolInfo', this.schoolInfo)
+		this.schoolGroupData = [];
+		this.commonAPIService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.commonAPIService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						this.schoolGroupData  = [];
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolGroupData.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolGroupData);
+					}
+				})
+			}
+		})
+	}
+
+	switchToSchool(sPrefix) {
+		console.log('sPrefix,',sPrefix, this.schoolInfo.school_prefix);
+		if (this.schoolInfo.school_prefix !== sPrefix) {
+		let inputJson = {
+			login_id:this.currentUser.login_id,
+			group_name: this.schoolGroupData && this.schoolGroupData[0] ? this.schoolGroupData[0]['si_group']:'',
+			switchprefix:sPrefix
+		};
+		this.commonAPIService.getMappedSchoolWithUser(inputJson).subscribe((result:any)=> {
+			console.log('mapped school with ser', result);
+			if(result && result.status == 'ok' && result.data && result.data.length > 0) {
+				this.model.username = result.data[0]['au_username'];
+				this.model.password = result.data[0]['au_password'];
+				this.model.rememberme = 1;
+				
+				this._cookieService.put('username', this.model.username);
+				this._cookieService.put('password', this.model.password);
+				this._cookieService.put('remember', this.model.rememberme);
+				if (localStorage.getItem("web-token")) {
+				this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+				}
+
+				this.commonAPIService.setUserPrefix(this.model.username.split("-")[0]);
+				this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','branch-change')
+				.subscribe(
+					(result: any) => {
+						if (result.status === 'ok' && result.data) {
+							this.commonAPIService.stopLoading();
+							const user = result.data;
+							if (result.data.userSaveStateData) {
+								this.userSaveData = JSON.parse(result.data.userSaveStateData);
+							}
+							const tempJson = {
+								CID: user.clientKey,
+								AN: user.token,
+								UR: user.role_id,
+								LN: user.login_id,
+								PF: user.Prefix
+							};
+							// user.Prefix = this.model.username.split('-')[0];
+							// user.username = this.model.username;
+							if (user) {
+								localStorage.setItem('currentUser', JSON.stringify(user));
+								this._cookieService.put('userData', JSON.stringify(tempJson));
+							}
+							if (this._cookieService.get('userData')) {
+								this.commonAPIService.getSession().subscribe((result3: any) => {
+									if (result3 && result3.status === 'ok') {
+										this.sessionArray = result3.data;
+										this.commonAPIService.getSchool().subscribe((result2: any) => {
+											if (result2.status === 'ok') {
+												this.schoolInfo = result2.data[0];
+												if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
+													Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
+													const currentSession =
+														(Number(this.currentDate.getFullYear()) + '-' + Number(this.currentDate.getFullYear() + 1)).toString();
+													const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+													if (findex !== -1) {
+														const sessionParam: any = {};
+														sessionParam.ses_id = this.sessionArray[findex].ses_id;
+														localStorage.setItem('session', JSON.stringify(sessionParam));
+													}
+												} else {
+													const currentSession =
+														(Number(this.currentDate.getFullYear() - 1) + '-' + Number(this.currentDate.getFullYear())).toString();
+													const findex = this.sessionArray.findIndex(f => f.ses_name === currentSession);
+													if (findex !== -1) {
+														const sessionParam: any = {};
+														sessionParam.ses_id = this.sessionArray[findex].ses_id;
+														localStorage.setItem('session', JSON.stringify(sessionParam));
+													}
+												}
+												let returnUrl: any;
+												if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
+													localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
+													returnUrl = '/axiom';
+												} else {
+													returnUrl = this.userSaveData.pro_url;
+													localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
+												}
+												if (this.userSaveData && this.userSaveData.ses_id) {
+													const sessionParam: any = {};
+													sessionParam.ses_id = this.userSaveData.ses_id;
+													localStorage.setItem('session', JSON.stringify(sessionParam));
+												}
+												if (JSON.parse(localStorage.getItem('currentUser')).role_id === '1') {
+													this.returnUrl = '/admin';
+												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '2') {
+													this.returnUrl = returnUrl + '/school';
+												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '3') {
+													this.returnUrl = '/teacher';
+												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '4') {
+													this.returnUrl = '/student';
+												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
+													this.returnUrl = returnUrl + '/parent';
+												}
+												this.router.navigate([this.returnUrl]);
+											}
+										});
+									}
+								});
+							}
+						} else {
+							this.commonAPIService.stopLoading();
+							if (result.status === 'error' && result.data === 'token not matched') {
+								this.notif.showSuccessErrorMessage('Token Expired, Please enter a valid username and password', 'error');
+							} else {
+								this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
+							}
+
+							this.router.navigate(['/login']);
+						}
+					},
+					error => {
+						this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
+					});
+
+			} else {
+				this.notif.showSuccessErrorMessage("You don't have permission to access this school", 'error');
+			}
+		});
+	}
+			
+				
+	}
+
 }

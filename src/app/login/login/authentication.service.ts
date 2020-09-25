@@ -27,6 +27,14 @@ export class AuthenticationService {
 			};
 			let pheaders = new HttpHeaders(hOptions);
 			return this.http.post(environment.apiSisUrl + '/users/supportAuthenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
+		} else if (loginSource=='branch-change') {
+			let hOptions = {
+				'Prefix': username.split('-')[0],
+				'LoginSource' : 'branch-change'
+			};
+			console.log('hOptions--', hOptions)
+			let pheaders = new HttpHeaders(hOptions);
+			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
 		} else {
 			// tslint:disable-next-line:max-line-length
 			if (this.loaderService.getUserPrefix()) {

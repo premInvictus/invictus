@@ -86,6 +86,7 @@ export class SchoolsetupComponent implements OnInit {
 	dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	invictusUserData:any[] = [];
+	schoolGroupData:any[]= [];
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -104,6 +105,7 @@ export class SchoolsetupComponent implements OnInit {
 		this.getSchoolDetails(this);
 		this.buildForm();
 		this.getInvictusUser();
+		this.getSchoolGroups();
 		this.getBoard();
 		this.getCountry();
 		this.getState();
@@ -145,7 +147,9 @@ export class SchoolsetupComponent implements OnInit {
 			school_theme: '',
 			school_session_start_month: '',
 			school_session_end_month: '',
-			school_fee_period: ''
+			school_fee_period: '',
+			school_group:'',
+			school_group_text:''
 		});
 	}
 	getFeePeriods() {
@@ -451,6 +455,10 @@ export class SchoolsetupComponent implements OnInit {
 				'si_pincode',
 				this.newSchoolForm.value.si_pincode
 			);
+			newSchoolFormData.append(
+				'school_group',
+				(this.newSchoolForm.value.school_group_text ? this.newSchoolForm.value.school_group_text : this.newSchoolForm.value.school_group )
+			);
 			this.adminService.addSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -524,10 +532,13 @@ export class SchoolsetupComponent implements OnInit {
 			school_theme: '',
 			school_session_start_month: '',
 			school_session_end_month: '',
-			school_fee_period: ''
+			school_fee_period: '',
+			school_group:'',
+			school_group_text:''
 		});
 	}
 	editNewSchoolForm(value: any) {
+		console.log('value--', value)
 		this.createNewSchoolDiv = true;
 		this.schoolSetupDiv = false;
 		this.editNewSchoolActive = true;
@@ -558,7 +569,9 @@ export class SchoolsetupComponent implements OnInit {
 			school_theme: value.school_theme,
 			school_session_start_month: Number(value.session_start_month),
 			school_session_end_month: Number(value.session_end_month),
-			school_fee_period: value.school_fee_period
+			school_fee_period: value.school_fee_period,
+			school_group: value.si_group,
+			school_group_text: value.si_group
 		});
 		console.log('this.newSchoolForm--',this.newSchoolForm)
 	}
@@ -652,6 +665,10 @@ export class SchoolsetupComponent implements OnInit {
 			newSchoolFormData.append(
 				'si_pincode',
 				this.newSchoolForm.value.si_pincode
+			);
+			newSchoolFormData.append(
+				'school_group',
+				(this.newSchoolForm.value.school_group_text ? this.newSchoolForm.value.school_group_text : this.newSchoolForm.value.school_group )
 			);
 			console.log('newSchoolFormData--', newSchoolFormData, this.newSchoolForm)
 			this.adminService.editSchool(newSchoolFormData).subscribe(
@@ -760,6 +777,17 @@ export class SchoolsetupComponent implements OnInit {
 			if (data && data.status == 'ok') {
 				this.invictusUserData = data.data;
 				console.log('this.invictusUserData--', this.invictusUserData);
+			}
+		})
+	}
+
+	getSchoolGroups() {
+		
+		this.schoolGroupData = [];
+		this.adminService.getAllSchoolGroups({}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				this.schoolGroupData = data.data;
+				console.log('this.schoolGroupData--', this.schoolGroupData);
 			}
 		})
 	}
