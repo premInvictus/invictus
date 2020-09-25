@@ -70,3 +70,14 @@ button.btn-neutral.btn-upl.mat-raised-button {
   position: absolute;
   top: 28px;
 }
+
+.delete-signature {
+  background: #ff0000;
+    color: #fff;
+    /* width: 20px; */
+    padding: 5px;
+    position: absolute;
+    right: 20px;
+    top: -10px;
+    border-radius: 50%;
+}

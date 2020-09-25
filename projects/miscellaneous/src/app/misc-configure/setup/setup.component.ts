@@ -137,7 +137,7 @@ export class SetupComponent implements OnInit {
 			filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
 			toolbar: [
 				// tslint:disable-next-line:max-line-length
-				['Font', 'FontSize', 'Subscript', 'Superscript', 'Bold', 'Italic', 'Underline', 'StrikeThrough', 'Image', 'Table',
+				['Source','Font', 'FontSize', 'Subscript', 'Superscript', 'Bold', 'Italic', 'Underline', 'StrikeThrough', 'Image', 'Table',
 					// { name: 'Html5audio', items: [ 'Html5audio' ] },
 					// { name: 'Html5video', items: [ 'Html5video' ] },
 					{ name: 'UploadFile', items: ['UploadFile'] },
@@ -1829,6 +1829,12 @@ export class SetupComponent implements OnInit {
     removeSignature(fi) {
         console.log('fi--',fi)
         this.fasignatureForm.splice(fi,1);
+    }
+
+    deleteSignatureImage(fitem,fi) {
+        console.log('fitem',fitem, fi);
+        console.log('fitem1',this.fasignatureForm[fi]);
+        this.fasignatureForm[fi]['value']['signature'] = '';
     }
     uploadSignatureFile($event, fi) {
         const file: File = $event.target.files[0];
