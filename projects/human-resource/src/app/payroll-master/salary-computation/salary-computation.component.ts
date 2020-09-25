@@ -937,7 +937,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_status: item.emp_status ? item.emp_status : 'live',
 							isEditable: editableStatus,
 							colorCode: '',
-							balance: Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0,
+							balance: Number(emp_present_days ? salary_payable : 0) - 0,
 							action: item
 						};
 						element.emp_total_earnings = Math.round(element.emp_total_earnings + element.emp_modes_data.td);
@@ -947,7 +947,7 @@ export class SalaryComputationComponent implements OnInit {
 						element.emp_salary_payable = Math.round(Number(element.emp_total_earnings)
 							- Number(element.emp_modes_data.tds) - Number(element.emp_modes_data.advance) + Number(element.emp_modes_data.arrear) +
 							Number(total_deductions));
-						element.balance = Number(element.emp_present_days ? Math.round(Number(empBasicPay) + element.emp_salary_payable) : 0) - 0;
+						element.balance = Number(element.emp_present_days ? Math.round(element.emp_salary_payable) : 0) - 0;
 						if (element) {
 							var deduction = 0;
 							let empPaymentModeDetail: any[] = [];
