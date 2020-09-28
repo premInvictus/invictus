@@ -9,18 +9,36 @@
         <div class="col-10">
           <!-- <button mat-raised-button class="btn-primary-100" (click)="displayData()">journal Voucher</button> -->
           <mat-chip-list aria-label="Voucher Type">
-              <mat-chip class="pink opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Journal'}" (click)="setVcType('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
-              <mat-chip class="red opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
-              <mat-chip class="light-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"  [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
-              <mat-chip class="light-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Bank Payment'}" (click)="setVcType('Bank Payment')"  [selected]="currentVcType === 'Bank Payment'"><span class="text-center">Bank Payment</span></mat-chip>
-              <mat-chip class="dark-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Receipt'}" (click)="setVcType('Receipt')"  [selected]="currentVcType === 'Receipt'"><span class="text-center">Receipt</span></mat-chip>
-              <mat-chip class="orange opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Credit Note'}" (click)="setVcType('Credit Note')"  [selected]="currentVcType === 'Credit Note'"><span class="text-center">Credit Note</span></mat-chip>
-              <mat-chip class="orange-light opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"  [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
-              <mat-chip class="gray-dark opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Purchase'}" (click)="setVcType('Purchase')"  [selected]="currentVcType === 'Purchase'"><span class="text-center">Purchase</span></mat-chip>
-              <mat-chip class="gray-light opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Sale'}" (click)="setVcType('Sale')"  [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span></mat-chip>
+            <mat-chip class="pink opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Journal'}"
+              (click)="setVcType('Journal')" [selected]="currentVcType === 'Journal'"><span
+                class="text-center">Journal</span></mat-chip>
+            <mat-chip class="red opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Contra'}"
+              (click)="setVcType('Contra')" [selected]="currentVcType === 'Contra'"><span
+                class="text-center">Contra</span></mat-chip>
+            <mat-chip class="light-blue opacity-7 v-chips"
+              [ngClass]="{'v-chips-active':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"
+              [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
+            <mat-chip class="light-blue opacity-7 v-chips"
+              [ngClass]="{'v-chips-active':currentVcType === 'Bank Payment'}" (click)="setVcType('Bank Payment')"
+              [selected]="currentVcType === 'Bank Payment'"><span class="text-center">Bank Payment</span></mat-chip>
+            <mat-chip class="dark-blue opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Receipt'}"
+              (click)="setVcType('Receipt')" [selected]="currentVcType === 'Receipt'"><span
+                class="text-center">Receipt</span></mat-chip>
+            <mat-chip class="orange opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Credit Note'}"
+              (click)="setVcType('Credit Note')" [selected]="currentVcType === 'Credit Note'"><span
+                class="text-center">Credit Note</span></mat-chip>
+            <mat-chip class="orange-light opacity-7 v-chips"
+              [ngClass]="{'v-chips-active':currentVcType === 'Debit Note'}" (click)="setVcType('Debit Note')"
+              [selected]="currentVcType === 'Debit Note'"><span class="text-center">Debit Note</span></mat-chip>
+            <mat-chip class="gray-dark opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Purchase'}"
+              (click)="setVcType('Purchase')" [selected]="currentVcType === 'Purchase'"><span
+                class="text-center">Purchase</span></mat-chip>
+            <mat-chip class="gray-light opacity-7 v-chips" [ngClass]="{'v-chips-active':currentVcType === 'Sale'}"
+              (click)="setVcType('Sale')" [selected]="currentVcType === 'Sale'"><span class="text-center">Sale</span>
+            </mat-chip>
 
-            </mat-chip-list>
-            <!-- <mat-chip-list aria-label="Voucher Type">
+          </mat-chip-list>
+          <!-- <mat-chip-list aria-label="Voucher Type">
               <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Journal'}" (click)="git ('Journal')" [selected]="currentVcType === 'Journal'"><span class="text-center">Journal</span></mat-chip>
               <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Contra'}" (click)="setVcType('Contra')"  [selected]="currentVcType === 'Contra'"><span class="text-center">Contra</span></mat-chip>
               <mat-chip class="gray-dark font-size-16 opacity-7" [ngClass]="{'active-entry':currentVcType === 'Cash Payment'}" (click)="setVcType('Cash Payment')"  [selected]="currentVcType === 'Cash Payment'"><span class="text-center">Cash Payment</span></mat-chip>
@@ -50,77 +68,83 @@
   </div>
 </div>
 <div class="row">
-  
+
   <div class="col-12">
     <mat-card>
-        <form [formGroup]="voucherForm">
-      <div class="voucher-date-number">
+      <form [formGroup]="voucherForm">
+        <div class="voucher-date-number">
           <div class="row">
-        <div class="col-4 text-left">
-          <mat-form-field appearance="outline">
-              <mat-label>Voucher Number</mat-label>
-              <input matInput placeholder="Enter Voucher Number" formControlName="vc_number" required>
-              
-            </mat-form-field>
-            <i class="fas fa-cog" style="font-size:24px; margin-left:-30px;color:darkblue"></i>
-        </div>
-        <div class="col-4 text-center" style="font-size:20px;">
-          <b><span>{{currentVcType+' '+suffix | titlecase}}</span></b>
-        </div>
-        <div class="col-4 text-right">
-            <mat-form-field appearance="outline">
+            <div class="col-4 text-left">
+              <mat-form-field appearance="outline">
+                <mat-label>Voucher Number</mat-label>
+                <input matInput placeholder="Enter Voucher Number" formControlName="vc_number" required>
+
+              </mat-form-field>
+              <i class="fas fa-cog" style="font-size:24px; margin-left:-30px;color:darkblue"></i>
+            </div>
+            <div class="col-4 text-center" style="font-size:20px;">
+              <b><span>{{currentVcType+' '+suffix | titlecase}}</span></b>
+            </div>
+            <div class="col-4 text-right">
+              <mat-form-field appearance="outline">
                 <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker" formControlName="vc_date" (dateChange)="getVoucherTypeMaxId()" [value]="today" required>
+                <input matInput [matDatepicker]="picker" formControlName="vc_date" (dateChange)="getVoucherTypeMaxId()"
+                  [value]="today" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
+            </div>
           </div>
-          </div>
-      </div>
-      <div class="text-center center-mr">
-        <table class="custom-table">
-          <thead>
-            <tr class="custom-tr">
-              <th rowspan="2" class="custom-th text-center" width="10%">Sr. No.
-              </th>
-              <th rowspan="2" class="custom-th text-center" width="15%">Account </th>
-              <th rowspan="2" class="custom-th text-center" width="25%">Particulars </th>
-              <!-- <th rowspan="2" class="custom-th text-center" width="10%">
+        </div>
+        <div class="text-center center-mr">
+          <table class="custom-table">
+            <thead>
+              <tr class="custom-tr">
+                <th rowspan="2" class="custom-th text-center" width="10%">Sr. No.
+                </th>
+                <th rowspan="2" class="custom-th text-center" width="15%">Account </th>
+                <th rowspan="2" class="custom-th text-center" width="25%">Particulars </th>
+                <!-- <th rowspan="2" class="custom-th text-center" width="10%">
                 GR No</th> -->
-              <th rowspan="2" class="custom-th text-center" width="10%">
-                Ref</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">
-                <i class="fas fa-rupee-sign font-size-14"></i>Debit</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">
-                <i class="fas fa-rupee-sign font-size-14"></i>Credit</th>
-              <th rowspan="2" class="custom-th text-center" width="10%">
-                Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <ng-container *ngFor="let vform of voucherFormGroupArray; let i = index">
-                
-            <tr [formGroup]="vform" [ngStyle]="{'background-color':'green'}">
-                
-              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-center font-size-14">{{i+1}}</td>
-              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account" aria-label="State"
-                        [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)" required>
-                <mat-autocomplete #auto="matAutocomplete">
-                  <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name" (onSelectionChange)="setaccount(aitem,i)">
-                    {{aitem.coa_acc_name | titlecase}}
-                  </mat-option>
-                </mat-autocomplete>
-                <!-- <mat-select formControlName="vc_account_type_id" required>
+                <th rowspan="2" class="custom-th text-center" width="10%">
+                  Ref</th>
+                <th rowspan="2" class="custom-th text-center" width="10%">
+                  <i class="fas fa-rupee-sign font-size-14"></i>Debit</th>
+                <th rowspan="2" class="custom-th text-center" width="10%">
+                  <i class="fas fa-rupee-sign font-size-14"></i>Credit</th>
+                <th rowspan="2" class="custom-th text-center" width="10%">
+                  Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let vform of voucherFormGroupArray; let i = index">
+
+                <tr [formGroup]="vform" [ngStyle]="{'background-color':'green'}">
+
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-center font-size-14">{{i+1}}
+                  </td>
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
+                    style="padding:10px;">
+                    <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account"
+                      aria-label="State" [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)"
+                      required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name"
+                        (onSelectionChange)="setaccount(aitem,i)">
+                        {{aitem.coa_acc_name | titlecase}}
+                      </mat-option>
+                    </mat-autocomplete>
+                    <!-- <mat-select formControlName="vc_account_type_id" required>
                   <mat-option value="">Please Select Account</mat-option>
                   <mat-option *ngFor="let aitem of accountsArray" value="{{aitem?.coa_id}}">{{aitem?.coa_acc_name}}</mat-option>
                 </mat-select> -->
-              </td>
-              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                <input matInput type="text" class="remark-text" placeholder="Enter Particulars" required
-                  formControlName="vc_particulars">
-              </td>
-              <!-- <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
+                  </td>
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
+                    style="padding:10px;">
+                    <input matInput type="text" class="remark-text" placeholder="Enter Particulars" required
+                      formControlName="vc_particulars">
+                  </td>
+                  <!-- <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
                 <input matInput type="text" class="remark-text" placeholder="Enter GR No"
                 [matAutocomplete]="auto1" formControlName="vc_grno" (keyup)="getOrderMaster($event)">
                   <mat-autocomplete #auto1="matAutocomplete">
@@ -129,109 +153,139 @@
                     </mat-option>
                   </mat-autocomplete>
               </td> -->
-                    
 
-              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                <input matInput type="text" class="remark-text" placeholder="Enter Reference No"
-                  formControlName="vc_ref_no">
-              </td>
-              <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                  <input matInput type="number" class="remark-text" placeholder="Enter Debit"
-                    formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i)">
-                </td>
-                <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14" style="padding:10px;">
-                  <!-- [readonly]="!creditEnable" -->
+
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
+                    style="padding:10px;">
+                    <input matInput type="text" class="remark-text" placeholder="Enter Reference No"
+                      formControlName="vc_ref_no">
+                  </td>
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
+                    style="padding:10px;">
+                    <input matInput type="number" class="remark-text" placeholder="Enter Debit"
+                      formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i)">
+                  </td>
+                  <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
+                    style="padding:10px;">
+                    <!-- [readonly]="!creditEnable" -->
                     <input matInput type="number" class="remark-text" placeholder="Enter Credit"
                       formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
-                     <a href="javascript:void(0)" (click)="getSattleJV(i)"><i class="fa fa-plus-circle gray-add"></i></a> | 
-                     <a href="javascript:void(0)" (click)="deleteVoucherEntry()"><i class="fa fa-trash red-trash"></i></a>
-                    </td>
-                    
-            </tr>
-            
-          </ng-container>
-          <tr>
-              <td colspan="2" class="custom-td text-left font-size-14">
+                    <a href="javascript:void(0)" (click)="getSattleJV(i)"><i class="fa fa-plus-circle gray-add"></i></a>
+                    |
+                    <a href="javascript:void(0)" (click)="deleteVoucherEntry()"><i
+                        class="fa fa-trash red-trash"></i></a>
+                  </td>
+
+                </tr>
+
+              </ng-container>
+              <tr>
+                <td colspan="2" class="custom-td text-left font-size-14">
                   <div class="another-line-btn1">
                     &nbsp;
                   </div>
-              </td>
-              <td class="custom-td text-left font-size-14">Total</td>
-              <td class="custom-td text-left font-size-14">&nbsp;</td>
-              <td class="custom-td text-left font-size-14">{{totalDebit | indianCurrency}}</td>
-              <td class="custom-td text-left font-size-14">{{totalCredit | indianCurrency}}</td>
-              <td class="custom-td text-center font-size-14"><a href="javascript:void(0)" (click)="addVoucher()"><span>+ Add Another Line</span></a></td>
-            </tr>
-          </tbody>
-        </table>
-        <br>
-        <div class="row margin-top-25">
-            <div *ngIf="currentVcType == 'Bank Payment'">
-                <div class="col-12 text-left">
-                  <div class="row">
-                  <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Cheque No</mat-label>
-                    <input matInput placeholder="Cheque No" formControlName="vc_chequeno">
+                </td>
+                <td class="custom-td text-left font-size-14">Total</td>
+                <td class="custom-td text-left font-size-14">&nbsp;</td>
+                <td class="custom-td text-left font-size-14">{{totalDebit | indianCurrency}}</td>
+                <td class="custom-td text-left font-size-14">{{totalCredit | indianCurrency}}</td>
+                <td class="custom-td text-center font-size-14"><a href="javascript:void(0)"
+                    (click)="addVoucher()"><span>+ Add Another Line</span></a></td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <div class="row margin-top-25">
+            
+              <div class="col-4 text-left" *ngIf="currentVcType == 'Bank Payment'">
+                <div class="row">
+
+
+                  <mat-form-field class="form-field" appearancee="outline">
+                    <mat-label>Mode of Payment</mat-label>
+                    <mat-select  formControlName="vc_mode_of_payment">
+                      <mat-option value="Bank-NEFT/RTGS">Bank-NEFT/RTGS</mat-option>
+                      <mat-option value="Cheque">Cheque</mat-option>
+                      <mat-option value="DD">DD</mat-option>
+                      <mat-option value="Bank Transfer">Bank Transfer</mat-option>
+                    </mat-select>
                   </mat-form-field>
                   <mat-form-field class="form-field" appearance="outline">
-                    <mat-label>Choose a date</mat-label>
-                    <input matInput [matDatepicker]="picker1" formControlName="vc_chequedate" (dateChange)="setDate();" [value]="today">
+                    <mat-label>Bank Name</mat-label>
+                    <input matInput placeholder="Cheque No" formControlName="vc_bank_name">
+                  </mat-form-field>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Instrument Date</mat-label>
+                    <input matInput [matDatepicker]="picker1" formControlName="vc_instrumentdate" (dateChange)="setDate();"
+                      [value]="today">
                     <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                     <mat-datepicker #picker1></mat-datepicker>
                   </mat-form-field>
-                </div>
-                </div>
-                </div>
-            <div class="col-4 text-left">
-                <mat-form-field appearance="outline" style="width:440px">
-                    <mat-label>Narrations</mat-label>
-                    <textarea matInput placeholder="Enter Narrations" formControlName="vc_narrations" cols="200" rows="6" required></textarea>
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>Instrument No</mat-label>
+                    <input matInput placeholder="Instrument No" formControlName="vc_instrumentno">
                   </mat-form-field>
+                </div>
+              </div>
+            <div class="col-4 text-left">
+              <mat-form-field appearance="outline" style="width:440px">
+                <mat-label>Narrations</mat-label>
+                <textarea matInput placeholder="Enter Narrations" formControlName="vc_narrations" cols="200" rows="6"
+                  required></textarea>
+              </mat-form-field>
             </div>
             <div class="col-4">
-                        <div class="notification-aatachment-btn-sis">
-                            <label for="attachment"><i
-                                    class="fas fa-cloud-upload-alt upload-icon-bulk color-blue" style="font-size:24px !important;"></i><br />Choose
-                                File</label>
-                            <input style="display: none;" id="attachment" type="file" multiple name="upload"
-                                (change)="fileChangeEvent($event)">
-                        </div>
+              <div class="notification-aatachment-btn-sis">
+                <label for="attachment"><i class="fas fa-cloud-upload-alt upload-icon-bulk color-blue"
+                    style="font-size:24px !important;"></i><br />Choose
+                  File</label>
+                <input style="display: none;" id="attachment" type="file" multiple name="upload"
+                  (change)="fileChangeEvent($event)">
+              </div>
 
-                        <ul class="preview-attachment-base" style="display:flex">
-                            <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
-                                <img [src]="getuploadurl(item.imgUrl)"
-                                    (click)="previewImage(attachmentArray, i)" height="145px" width="150px">
-                                <!-- <img *ngIf="!checkThumbnail(item.imgName)"
+              <ul class="preview-attachment-base" style="display:flex">
+                <li *ngFor="let item of attachmentArray; let i=index;" class="preview-attachment">
+                  <img [src]="getuploadurl(item.imgUrl)" (click)="previewImage(attachmentArray, i)" height="145px"
+                    width="150px">
+                  <!-- <img *ngIf="!checkThumbnail(item.imgName)"
                                     src="https://icons-for-free.com/free-icons/png/512/2109135.png"
                                     (click)="previewImage(attachmentArray, i)" height="145px" width="150px"> -->
-                            </li>
-                        </ul>
+                </li>
+              </ul>
             </div>
-        </div>
-        <div class="row margin-top-25">
-          <div class="col-12 text-center">
-            <button *ngIf="(!editMode) && isExistUserAccessMenu('736')" mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
+          </div>
+          <div class="row margin-top-25">
+            <div class="col-12 text-center">
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('736')" mat-button style="background-color: #89A8C9"
+                (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
 
-            <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
-              Publish</button>
-
-              <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish & Print</button>
-
-              <button *ngIf="editMode && isExistUserAccessMenu('738')" mat-button style="background-color: #89A8C9" (click)="$event.stopPropagation(); saveAsDraft();">Update as Draft</button>
-
-            <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Update &
-              Publish</button>
-            
-              <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish  &
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button
+                class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
                 Publish</button>
-            <button mat-button class="btn-danger btn-spacer" (click)="$event.stopPropagation(); listVoucherRoute(); ">Cancel</button>
 
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button
+                class="btn-success-green btn-spacer"
+                (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish & Print</button>
+
+              <button *ngIf="editMode && isExistUserAccessMenu('738')" mat-button style="background-color: #89A8C9"
+                (click)="$event.stopPropagation(); saveAsDraft();">Update as Draft</button>
+
+              <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer"
+                (click)="$event.stopPropagation(); saveAndPublish(); ">Update &
+                Publish</button>
+
+              <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer"
+                (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish &
+                Publish</button>
+              <button mat-button class="btn-danger btn-spacer"
+                (click)="$event.stopPropagation(); listVoucherRoute(); ">Cancel</button>
+
+            </div>
           </div>
         </div>
-      </div>
-    </form>
+      </form>
     </mat-card>
   </div>
 

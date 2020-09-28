@@ -182,8 +182,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
 	openVoucherModal(value){
 		const dialogRef = this.dialog.open(VoucherModalComponent, {
-			height: '50vh',
-			width: '100vh',
+			height: '100vh',
+			width: '200vh',
 			data: {
 				title: value.vc_type + ' voucher',
 				vc_id: value.vc_id

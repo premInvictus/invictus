@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { TreeviewItem, TreeviewConfig } from 'ngx-treeview';
 import { BreadCrumbService } from '../../../../_services/breadcrumb.service';
 import { QelementService } from '../../../../questionbank/service/qelement.service';
-import { UserAccessMenuService, NotificationService, TreeviewService } from '../../../../_services/index';
+import { UserAccessMenuService, NotificationService, TreeviewService, CommonAPIService } from '../../../../_services/index';
 @Component({
 	selector: 'app-manage-access-user',
 	templateUrl: './manage-access-user.component.html',
@@ -28,6 +28,7 @@ export class ManageAccessUserComponent implements OnInit {
 	homeUrl: string;
 	ModuleForm: FormGroup;
 	ClassModuleForm: FormGroup;
+	schoolAssignForm:FormGroup;
 	moduleDivFlag = false;
 	manageAccessDiv = false;
 	isApp = false;
@@ -36,6 +37,7 @@ export class ManageAccessUserComponent implements OnInit {
 	projectListArray: any[] = [];
 	resultProjectListArray: any[] = [];
 	userAssignClass: any[] = [];
+	sessionArray:any[] = [];
 	config = TreeviewConfig.create({
 		hasAllCheckBox: true,
 		hasFilter: true,
@@ -47,6 +49,12 @@ export class ManageAccessUserComponent implements OnInit {
 		{ id: 'web', name: 'Desktop' },
 		{ id: 'app', name: 'Mobile' }
 	];
+	schoolGroupData:any[] = [];
+	showNewSchoolUser = false;
+	schoolUseArray:any[] = [];
+	mappedSchoolUserArray:any[] = [];
+	editNewUserFlag = false;
+	currentMappedSchoolData:any= {};
 	constructor(
 		private adminService: AdminService,
 		private fbuild: FormBuilder,
@@ -55,17 +63,20 @@ export class ManageAccessUserComponent implements OnInit {
 		private breadCrumbService: BreadCrumbService,
 		private userAccessMenuService: UserAccessMenuService,
 		private notif: NotificationService,
-		private treeviewService: TreeviewService
+		private treeviewService: TreeviewService,
+		private commonAPIService: CommonAPIService
 	) { }
 	ngOnInit() {
 		this.login_id = this.route.snapshot.params['id'];
 		this.getAssignedModuleList();
 		this.getUser();
 		this.getClass();
+		this.getSession();
 		this.buildForm();
 		this.getProjectList();
 		this.getUserProjectList();
 		this.getUserAssignClass();
+		
 		this.homeUrl = this.breadCrumbService.getUrl();
 
 	}
@@ -94,6 +105,13 @@ export class ManageAccessUserComponent implements OnInit {
 			login_id: '',
 
 		});
+		this.schoolAssignForm  = this.fbuild.group({
+			schoolList:'',
+			projectList:'',
+			sessionList:'',
+			interfaceList:'',
+			mapUser:''
+		})
 	}
 	isExistUserAccessMenu(mod_id) {
 		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
@@ -137,6 +155,9 @@ export class ManageAccessUserComponent implements OnInit {
 				if (result && result.status === 'ok') {
 					this.userDetails = result.data[0];
 					this.manageAccessDiv = true;
+					
+					this.getGroupedSchool();
+					
 				}
 			});
 	}
@@ -487,6 +508,164 @@ export class ManageAccessUserComponent implements OnInit {
 		} else {
 			return false;
 		}
+	}
+
+	getGroupedSchool() {
+		console.log('this.userDetails2', this.userDetails, {si_school_prefix: this.userDetails.au_si_prefix});
+		this.schoolGroupData = [];
+		this.commonAPIService.getAllSchoolGroups({si_school_prefix: this.userDetails.au_si_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				this.schoolGroupData = data.data;
+				console.log('this.schoolGroupData12--', this.schoolGroupData);
+				this.getMappedSchoolWithUser();
+			}
+		})
+	}
+
+	getSession() {
+		this.commonAPIService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.sessionArray= result.data;
+					}
+				});
+	}
+
+	saveSchoolAccessPermission() {
+		
+		console.log('this.schoolAssignForm', this.schoolAssignForm, this.finalAssignedModules)
+		if (!this.editNewUserFlag) {
+			let inputJson = {
+				schoolList: this.schoolAssignForm.value.schoolList, 
+				projectList: { pro_id: this.schoolAssignForm.value.projectList },
+				sessionList: { ses_id: this.schoolAssignForm.value.sessionList },
+				interfaceList : {interface_id: this.schoolAssignForm.value.interfaceList},
+				 
+				current_school_group: this.schoolGroupData[0].si_group,
+				current_user_data: this.userDetails
+			}
+			this.commonAPIService.assignSchoolGroupToUser(inputJson).subscribe((result:any) => {
+				if (result && result.status == 'ok') {
+					this.getMappedSchoolWithUser();
+					this.notif.showSuccessErrorMessage('User Created Successfully', 'success');
+				} else {
+					this.notif.showSuccessErrorMessage('Error While Creating User', 'error');
+				}
+				
+
+
+			});
+		}
+		 
+	}
+
+	updateSchoolAccessPermission() {
+		let tempProjectList = [];
+		if (this.schoolAssignForm.value.projectList && this.schoolAssignForm.value.projectList.length > 0) {
+			for(var i=0; i<this.projectsArray.length;i++) {
+				if (this.schoolAssignForm.value.projectList.indexOf(this.projectsArray[i]['pro_id']) > -1) {
+					tempProjectList.push(this.projectsArray[i]);
+				}
+			}
+		}
+		let inputJson = {
+			school_prefix: this.currentMappedSchoolData.au_si_prefix, 
+			projectList: tempProjectList,
+			sessionList: { ses_id: this.schoolAssignForm.value.sessionList },
+			moduleList : this.finalAssignedModules,
+			interfaceList : {interface_id: this.schoolAssignForm.value.interfaceList},			 
+			mapped_school_group: this.schoolGroupData[0].si_group,
+			mapped_user_data: this.currentMappedSchoolData,
+			current_user_data : this.userDetails
+		}
+		
+		this.commonAPIService.updateSchoolAccessPermission(inputJson).subscribe((result:any) => {
+			if (result && result.status == "ok") {
+				this.notif.showSuccessErrorMessage('User Permissions Updated Successfully', 'success');
+			} else {
+				this.notif.showSuccessErrorMessage('Error While Update User Permission', 'error');
+			}
+		});
+		console.log('inputJson', inputJson, 'this.finalAssignedModules', this.finalAssignedModules);
+	}
+
+	createSchoolUserMapping() {
+		let inputJson = {
+			"sgm_ref_from_login_id" : this.userDetails.au_login_id,
+			"sgm_username":this.userDetails.au_username,
+			"sgm_si_prefix":this.schoolAssignForm.value.schoolList,
+			"sgm_si_group_name":this.schoolGroupData[0].si_group,
+			"sgm_ref_to_login_id":this.schoolAssignForm.value.mapUser,
+			"sgm_mapped_status":'1'
+		}
+		this.commonAPIService.createSchoolUserMapping(inputJson).subscribe((result:any)=>{
+			this.getMappedSchoolWithUser();
+			this.notif.showSuccessErrorMessage('Mapping Done Successfully ', 'success');
+		});
+	}
+
+	getSchoolUser() {
+		this.commonAPIService.getSchoolUser({})
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						this.schoolUseArray= result.data;
+					}
+				});
+	}
+
+	getMappedSchoolWithUser() {
+		let inputJson = {
+			login_id:this.userDetails.au_login_id,
+			group_name: this.schoolGroupData[0]['si_group'],
+			prefix:this.userDetails.au_si_prefix
+		};
+		console.log('inputJson--', inputJson)
+		this.commonAPIService.getMappedSchoolWithUser(inputJson).subscribe((result:any)=> {
+			console.log('result--', result);
+			this.mappedSchoolUserArray = result.user_data ? result.user_data  : [];
+		});
+	}
+
+	manageSchoolUserAccess(item) {
+		this.currentMappedSchoolData = item;
+		this.editNewUserFlag = true;
+		this.showNewSchoolUser = true;
+
+	}
+	revokeAccessToAssignSchool(item) {
+		let inputJson = {
+			sgm_ref_from_login_id: this.userDetails.au_login_id,
+			sgm_si_prefix: item.au_si_prefix,
+			sgm_si_group_name:this.schoolGroupData[0]['si_group'],
+			sgm_ref_to_login_id:item.au_login_id
+		}
+		this.commonAPIService.revokeAccessToAssignSchool(inputJson).subscribe((result:any)=>{
+			this.notif.showSuccessErrorMessage('Revoke Access Successfully', 'success');
+			this.getMappedSchoolWithUser();
+			//location.reload();
+		});
+	}
+
+	enableAccessToAssignSchool(item) {
+		let inputJson = {
+			sgm_ref_from_login_id: this.userDetails.au_login_id,
+			sgm_si_prefix: item.au_si_prefix,
+			sgm_si_group_name:this.schoolGroupData[0]['si_group'],
+			sgm_ref_to_login_id:item.au_login_id
+		}
+		this.commonAPIService.enableAccessToAssignSchool(inputJson).subscribe((result:any)=>{
+			this.notif.showSuccessErrorMessage('Enable Access Successfully', 'success');
+			this.getMappedSchoolWithUser();
+			//location.reload();
+		});
+	}
+
+	toggleCreateUser(event) {
+		this.showNewSchoolUser=!this.showNewSchoolUser;
+		this.editNewUserFlag = !this.editNewUserFlag;
+		this.currentMappedSchoolData = {};
 	}
 
 }

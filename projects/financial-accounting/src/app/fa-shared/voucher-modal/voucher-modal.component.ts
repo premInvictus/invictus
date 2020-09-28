@@ -79,7 +79,7 @@ export class VoucherModalComponent implements OnInit {
               srno: pos,
               account: item.vc_account_type,
               particular: item.vc_particulars,
-              account_code: item.coa_details.coa_code,
+              account_code: item.coa_details ? item.coa_details.coa_code : '',
               invoiceno: item.vc_invoiceno,
               debit: item.vc_debit,
               credit: item.vc_credit
