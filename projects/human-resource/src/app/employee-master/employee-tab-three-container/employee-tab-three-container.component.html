@@ -422,11 +422,9 @@
                                                     <ng-container *ngIf="item.sc_calculation_type === 'Slab'">
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>{{item.sc_name}}</mat-label>
-                                                            <!-- <input type="number" matInput placeholder="{{item.sc_name}}"
-                                                                [formControlName]="'sc_value'+i"
-                                                                [value]="getDynamicValue(item.sc_value,salaryDetails.value.basic_pay)"
-                                                                readonly> -->
+                                                           
                                                             <mat-select [formControlName]="'sc_value'+i" required placeholder="{{item.sc_name}}"
+                                                                (selectionChange)="getNetSalary()"    
                                                                 [disabled]="viewOnly"
                                                                 [errorStateMatcher]="confirmValidParentMatcher">
                                                                 <mat-option value="">Please select</mat-option>
@@ -438,6 +436,13 @@
                                                                 This field is required
                                                             </mat-error>
                                                         </mat-form-field>
+                                                        <br>
+                                                        <mat-checkbox [checked]="item.sc_opt"
+                                                            (change)="checkValS(i, $event)"
+                                                            [formControlName]="'sc_opt'+i">{{item.sc_opt}}
+                                                            <span *ngIf="formGroupArray2[i].formGroup['value']['sc_opt'+i]">Opted</span>
+                                                            <span *ngIf="!(formGroupArray2[i].formGroup['value']['sc_opt'+i])">Opt</span>
+                                                        </mat-checkbox>
                                                     </ng-container>
                                                 </form>
                                             </ng-container>
