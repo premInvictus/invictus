@@ -271,7 +271,7 @@ export class LoginComponent implements OnInit {
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
-		this.loaderService.setUserPrefix(this.model.username.split("-")[0])
+		//this.loaderService.setUserPrefix(this.model.username.split("-")[0])
 		if (localStorage.getItem("web-token")) {
 		this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 		}

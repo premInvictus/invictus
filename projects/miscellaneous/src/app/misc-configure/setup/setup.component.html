@@ -356,7 +356,7 @@
                                     Upload Signature &nbsp;<input type="button" value="+ Add Signature" (click)="addSignature()"/>
                                 <ng-container *ngFor="let fitem of fasignatureForm;let fi=index ">
                                  <form [formGroup]="fitem">
-                                  <div class="row">
+                                  <div class="row" style="padding:15px 0">
                                   
                                   <div class="col-3">
                                     <mat-form-field class="form-field" appearance="outline">
@@ -372,14 +372,19 @@
                                     </mat-form-field>
                                   </div>
                                   <div class="col-3" style="margin-top:-10px">
+                                      <div>
                                       <button mat-stroked-button class="btn-outline-green">
                                           <label for="sig_{{fi}}">Choose File
                                             &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
                                         <input style="display:none" type="file" accept="image/*"
                                           (change)="uploadSignatureFile($event, fi)" id="sig_{{fi}}">
-                                        <img *ngIf="fitem?.value?.signature"
+                                        
+                                          <img *ngIf="fitem?.value?.signature"
                                           style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
-                                          [src]="fitem?.value?.signature">
+                                          [src]="fitem?.value?.signature"/>
+                                          <span *ngIf="fitem?.value?.signature"><a href="javascript:void(0)" class="delete-signature" (click)="deleteSignatureImage(fitem,fi)">X</a></span>
+                                        </div>
+                                        
                                   </div>
                                   <div class="col-1">
                                       <input type="button" value="-" (click)="removeSignature(fi)"/>

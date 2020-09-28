@@ -78,10 +78,14 @@
   <div class="col-12">
     <div class="row">
 <div class="col-6" style="margin-left:0;padding:0" *ngIf="voucherData.vc_type=='Bank Payment'">
-  <b>Mode of Payment :</b> {{voucherData.vc_mode_of_payment | titlecase}}
+  <b>Mode of Payment :</b> 
+  <span *ngIf="voucherData.vc_mode_of_payment">{{voucherData.vc_mode_of_payment | titlecase}}</span>
+  <span *ngIf="!voucherData.vc_mode_of_payment" class="text-center">&nbsp;&nbsp;-</span>
 </div>
 <div class="col-6" *ngIf="voucherData.vc_type=='Bank Payment'">
-    <b>Bank Name :</b> {{voucherData.vc_bank_name | titlecase | date: 'd-MMM-yyyy'}}
+    <b>Bank Name :</b> 
+    <span *ngIf="voucherData.vc_bank_name">{{voucherData.vc_bank_name | titlecase}}</span>
+    <span *ngIf="!voucherData.vc_bank_name" class="text-center">&nbsp;&nbsp;-</span>
   </div>
 </div>
 </div>
@@ -89,10 +93,13 @@
     <div class="col-12">
         <div class="row">
   <div class="col-6" style="margin-left:0;padding:0" *ngIf="voucherData.vc_type=='Bank Payment'">
-      <b>Instrument No. :</b> {{voucherData.vc_instrumentno | titlecase}}
+      <b>Instrument No. :</b> <span *ngIf="voucherData.vc_instrumentno">{{voucherData.vc_instrumentno | titlecase}}</span>
+      <span *ngIf="!voucherData.vc_instrumentno" class="text-center">&nbsp;&nbsp;-</span>
     </div>
     <div class="col-6" *ngIf="voucherData.vc_type=='Bank Payment'">
-        <b>Instrument Date :</b> {{voucherData.vc_instrumentdate | titlecase | date: 'd-MMM-yyyy'}}
+        <b>Instrument Date :</b> 
+        <span *ngIf="voucherData.vc_instrumentdate">{{voucherData.vc_instrumentdate | titlecase | date: 'd-MMM-yyyy'}}</span>
+        <span *ngIf="!voucherData.vc_instrumentdate" class="text-center">&nbsp;&nbsp;-</span>
       </div>
     </div>
     </div>
