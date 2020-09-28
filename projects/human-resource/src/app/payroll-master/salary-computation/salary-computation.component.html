@@ -80,7 +80,7 @@
             <table mat-table [dataSource]="salaryComputeDataSource" matSort class="table-100 text-center"
               class="booklog" id="salary_compute_log">
               <ng-container matColumnDef="header-row-first-group">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="6">General Details </th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="7">General Details </th>
               </ng-container>
 
               <ng-container matColumnDef="header-row-salary-heads-group">
@@ -93,7 +93,7 @@
                 <th mat-header-cell *matHeaderCellDef [attr.colspan]="shdcolumns?.length"> Earnings </th>
               </ng-container>
               <ng-container matColumnDef="header-row-three-group">
-                <th mat-header-cell *matHeaderCellDef [attr.colspan]="6"> Deductions </th>
+                <th mat-header-cell *matHeaderCellDef [attr.colspan]="4"> Deductions </th>
               </ng-container>
               <ng-container matColumnDef="header-row-modes-group" >
                 <th [ngClass]="!showPdf ? 'hidePdf' : 'showPdf'" mat-header-cell *matHeaderCellDef [attr.colspan]="paymentModeArray.length+1"> Modes </th>
@@ -411,8 +411,8 @@
           <button *ngIf="!isProcessed && isExistUserAccessMenu('752')" mat-raised-button class="btn-success-green-1  margin-right-15"
             style="color:white;background: blue !important" (click)="save()"
             [disabled]="disabledApiButton">Save</button> &nbsp;&nbsp;&nbsp;
-          <button *ngIf="isExistUserAccessMenu('753')" mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
-            [disabled]="disabledApiButton">Confirm and
+          <button  mat-raised-button class="btn-success-green-1 margin-right-15" (click)="confirm()"
+            >Confirm and
             Process</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
             Reset

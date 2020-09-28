@@ -118,6 +118,31 @@
                                                                 [value]="formGroupArray[configValue-1].formGroup.get('value').value | capitalize">
                                                             <mat-error>Please Enter % Value</mat-error>
                                                         </mat-form-field>
+                                                        <ng-container *ngIf="formGroupArray[configValue-1].formGroup.get('calculation_type').value == 3">
+                                                            <ng-container *ngFor="let slabform of slabvalueFormGroupArray;let i=index">
+                                                                <form [formGroup]="slabform.formGroup">
+                                                                    <div class="row" style="margin-left: -10px !important;">
+                                                                        <div class="col-11">
+                                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                                <mat-label>Slab Value</mat-label>
+                                                                                <input matInput placeholder="Enter Slab Value"
+                                                                                    class="text-capitalize" type="text"
+                                                                                    formControlName="value"
+                                                                                    [errorStateMatcher]="confirmValidParentMatcher"
+                                                                                    >
+                                                                                <mat-error>Please Enter % Value</mat-error>
+                                                                            </mat-form-field>
+                                                                        </div>
+                                                                        <div class="col-1" style="padding-top: 20px;">
+                                                                            <i class="fa fa-plus" aria-hidden="true" (click)="addSlab()"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    
+                                                                    
+                                                                </form>
+                                                            </ng-container>
+                                                        </ng-container>
+                                                        
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Format</mat-label>
                                                             <mat-select placeholder="Format" formControlName="type">
@@ -150,7 +175,7 @@
                                                             <mat-error>Please Enter Order</mat-error>
                                                         </mat-form-field>
                                                         <mat-radio-group formControlName="calculation_option">
-                                                            <mat-radio-button value="prodata">Prodata</mat-radio-button>
+                                                            <mat-radio-button value="prodata">Prorata</mat-radio-button>
                                                             <mat-radio-button value="fixed">Fixed</mat-radio-button>
                                                         </mat-radio-group>
                                                         <ng-container
@@ -368,7 +393,7 @@
                                                                                 matColumnDef="calculation_option">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
-                                                                                    Calculation oprion
+                                                                                    Calculation Option
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
@@ -376,6 +401,20 @@
                                                                                         *ngIf="item.calculation_option">{{ item.calculation_option | titlecase}}</span>
                                                                                     <span
                                                                                         *ngIf="!item.calculation_option">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container *ngIf="configValue === '2'"
+                                                                                matColumnDef="slabvalue">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Slab Value
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.slabvalue">{{ item.slabvalue}}</span>
+                                                                                    <span
+                                                                                        *ngIf="!item.slabvalue">-</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue === '2'"
