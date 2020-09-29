@@ -656,7 +656,8 @@ export class SetupComponent implements OnInit {
                         temp[element.gs_alias] = this.getGs_value(element)
                     });
                     this.settingForm = this.fbuild.group(temp);
-                    if (value === 'toggle prefix before admission no') {
+                    console.log('this.settingForm', this.settingForm)
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.add_prefix_before_admission_no) {
                         const obj: any = JSON.parse(this.settingForm.value.add_prefix_before_admission_no);
                         if (obj && Object.keys(obj).length > 0) {
                             this.prefixToggle = obj.addPrefix;
@@ -664,7 +665,7 @@ export class SetupComponent implements OnInit {
                     } else {
                         this.prefixToggle = "false";
                     }
-                    if (value === 'email sms formats') {
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.enquiry_registration_email_sms) {
                         const processes: any[] = JSON.parse(this.settingForm.value.enquiry_registration_email_sms);
                         this.processTypes = JSON.parse(this.settingForm.value.enquiry_registration_email_sms);
                         if (processes.length > 0) {
@@ -696,33 +697,33 @@ export class SetupComponent implements OnInit {
                             this.assignEmailSmsFormats();
                         }
                     }
-                    if (value === 'identity cards') {
-                        if (this.settingForm.value.idcard_printsetup) {
-                            const cardSettings: any[] = JSON.parse(this.settingForm.value.idcard_printsetup);
-                            this.idCardSettings = JSON.parse(this.settingForm.value.idcard_printsetup);
-                            if (cardSettings.length > 0) {
-                                const findex = cardSettings.findIndex(f => f.type === 'student');
-                                if (findex !== -1) {
-                                    if (Object.keys(cardSettings[findex].details).length > 0) {
-                                        console.log(cardSettings[findex].details);
-                                        this.checkStudentIdCardData(cardSettings[findex].details);
-                                    }
+                    
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.idcard_printsetup) {
+                        const cardSettings: any[] = JSON.parse(this.settingForm.value.idcard_printsetup);
+                        this.idCardSettings = JSON.parse(this.settingForm.value.idcard_printsetup);
+                        if (cardSettings.length > 0) {
+                            const findex = cardSettings.findIndex(f => f.type === 'student');
+                            if (findex !== -1) {
+                                if (Object.keys(cardSettings[findex].details).length > 0) {
+                                    console.log(cardSettings[findex].details);
+                                    this.checkStudentIdCardData(cardSettings[findex].details);
                                 }
-                                const findex2 = cardSettings.findIndex(f => f.type === 'employee');
-                                if (findex2 !== -1) {
-                                    if (Object.keys(cardSettings[findex2].details).length > 0) {
-                                        this.checkEmployeeIdCardData(cardSettings[findex2].details);
-                                    }
-                                }
-                            } else {
-                                this.idCardSettings = [
-                                    { type: 'student', details: {} },
-                                    { type: 'employee', details: {} },
-                                ];
                             }
+                            const findex2 = cardSettings.findIndex(f => f.type === 'employee');
+                            if (findex2 !== -1) {
+                                if (Object.keys(cardSettings[findex2].details).length > 0) {
+                                    this.checkEmployeeIdCardData(cardSettings[findex2].details);
+                                }
+                            }
+                        } else {
+                            this.idCardSettings = [
+                                { type: 'student', details: {} },
+                                { type: 'employee', details: {} },
+                            ];
                         }
                     }
-                    if (value === 'employee salary slip') {
+                    
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.employee_salary_slip) {
                         const payJson: any = JSON.parse(this.settingForm.value.employee_salary_slip);
                         if (Object.keys(payJson).length > 0) {
                             this.payForm.patchValue({
@@ -734,7 +735,7 @@ export class SetupComponent implements OnInit {
                             });
                         }
                     }
-                    if (value === 'flagged deductions') {
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.deduction_config) {
                         const deduction: any = JSON.parse(this.settingForm.value.deduction_config);
                         if (Object.keys(deduction).length > 0) {
                             this.flaggedForm.patchValue({
@@ -748,7 +749,7 @@ export class SetupComponent implements OnInit {
                             });
                         }
                     }
-                    if (value === 'fees formats') {
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.invoice_receipt_format) {
                         if (Object.keys(this.settingForm.value.invoice_receipt_format).length > 0) {
                             const formatS = JSON.parse(this.settingForm.value.invoice_receipt_format);
                             this.formatSettings = JSON.parse(this.settingForm.value.invoice_receipt_format);
@@ -789,7 +790,7 @@ export class SetupComponent implements OnInit {
                             this.formatSettings = {};
                         }
                     }
-                    if (value === 'payment checkout configuration') {
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.payment_banks) {
                         let paymentArr: any[] = [];
                         paymentArr = JSON.parse(this.settingForm.value.payment_banks);
                         if (paymentArr && paymentArr.length > 0) {
@@ -815,7 +816,7 @@ export class SetupComponent implements OnInit {
                             console.log(this.checkedArray);
                         }
                     }
-                    if (value === 'financial accounting') {
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.financial_accounting_signature) {
                         console.log('in fa');
                         this.fasignatureForm =[];
                         if (this.settingForm.value.financial_accounting_signature) {

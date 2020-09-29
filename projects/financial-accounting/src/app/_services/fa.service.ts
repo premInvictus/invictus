@@ -119,6 +119,15 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/updateForMove', value);
 	}
+
+	getGlobalSettingReplace(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
+	}
+	updateGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
+	}
 	
 	
 }

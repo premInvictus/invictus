@@ -12,7 +12,7 @@ import { IncomeDueComponent } from './daybook/income-due/income-due.component';
 import { ReceiptModeWiseComponent } from './daybook/receipt-mode-wise/receipt-mode-wise.component';
 import { TotalFeeReceivableComponent } from './daybook/total-fee-receivable/total-fee-receivable.component';
 import { VouchersListComponent } from './daybook/vouchers-list/vouchers-list.component';
-
+import { VoucherPrintSetupComponent } from './voucher-print-setup/voucher-print-setup.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -28,8 +28,9 @@ import { VouchersListComponent } from './daybook/vouchers-list/vouchers-list.com
     IncomeDueComponent,
     ReceiptModeWiseComponent,
     TotalFeeReceivableComponent,
-    VouchersListComponent
+    VouchersListComponent,
+    VoucherPrintSetupComponent
   ],
-  entryComponents: []
+  entryComponents: [VoucherPrintSetupComponent]
 })
 export class TransactionMasterModule { }

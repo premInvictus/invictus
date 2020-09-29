@@ -35,6 +35,14 @@
                 Filter
               </button> &nbsp;
               <button
+              mat-button 
+              class="btn-success-blue text-capitalize m-l-10"
+              (click)="printVoucherSetting()"
+            >
+              Print Voucher Settings
+            </button>
+            &nbsp;
+              <button
               mat-button *ngIf="isExistUserAccessMenu('732')"
               class="btn-success-purple text-capitalize m-l-10"
               (click)="createVoucher()"
