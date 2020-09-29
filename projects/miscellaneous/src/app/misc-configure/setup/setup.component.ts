@@ -875,7 +875,8 @@ export class SetupComponent implements OnInit {
         });
         this.flaggedForm = this.fbuild.group({
             tds: false,
-            gratuity: false
+            gratuity: false,
+            updateSalaryStructureToEmployee:''
         });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
@@ -1332,6 +1333,15 @@ export class SetupComponent implements OnInit {
         if (this.showClosingSession) {
             this.moveClosingBalance();
         } 
+        if(this.flaggedForm.value.updateSalaryStructureToEmployee == true){
+            this.erpCommonService.updateSalaryStructureToEmployee({}).subscribe((result: any) => {
+                if (result) {
+                    this.commonService.showSuccessErrorMessage('Update Salary Structure To Employee Successpully', 'success');
+                } else {
+                    this.commonService.showSuccessErrorMessage('Erro to update','error');
+                }
+            });
+        }
 
         if (this.currentGsetup === 'financial accounting') {
             if (this.fasignatureForm.length > 0) {

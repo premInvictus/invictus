@@ -281,5 +281,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.get(environment.apiHRUrl + '/communication/getSMSBalance', value);
 	}
+	updateSalaryStructureToEmployee(value) {
+		this.loader.startLoading();
+		return this.http.get(environment.apiHRUrl + '/salary-compute/updateSalaryStructureToEmployee', value);
+	}
 
 }

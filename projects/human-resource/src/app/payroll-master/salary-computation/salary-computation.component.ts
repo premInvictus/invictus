@@ -677,13 +677,13 @@ export class SalaryComputationComponent implements OnInit {
 								}
 							}
 						}
-						var prodataBasicPay = Math.round(empBasicPay * (emp_present_days/no_of_days));
+						var prorataBasicPay = Math.round(empBasicPay * (emp_present_days/no_of_days));
 						for (var i = 0; i < this.shacolumns.length; i++) {
 							if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 								var value = 0;
 
 								if (this.shacolumns[i]['header'] === 'Basic Pay') {
-									this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: prodataBasicPay };
+									this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: prorataBasicPay };
 								} else {
 									this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 								}
@@ -707,7 +707,7 @@ export class SalaryComputationComponent implements OnInit {
 												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'slab') {
 													value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 												}
-												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prodata') {
+												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prorata') {
 													value=Math.round(value*emp_present_days/no_of_days);
 												}
 												this.empShacolumns[i]['value'] = Math.round(value);
@@ -754,7 +754,7 @@ export class SalaryComputationComponent implements OnInit {
 												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'slab') {
 													value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 												}
-												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prodata') {
+												if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prorata') {
 													value=Math.round(value*emp_present_days/no_of_days);
 												}
 												
@@ -896,7 +896,7 @@ export class SalaryComputationComponent implements OnInit {
 						emp_present_days = emp_present_days ? emp_present_days : 0;
 
 						//total_earnings = total_earnings
-						salary_payable = Math.round(Number(prodataBasicPay) + Number(total_earnings) +	Number(total_deductions));
+						salary_payable = Math.round(Number(prorataBasicPay) + Number(total_earnings) +	Number(total_deductions));
 						console.log('salary_payable',total_earnings,total_deductions, salary_payable);
 						element = {
 							srno: pos,
@@ -915,7 +915,7 @@ export class SalaryComputationComponent implements OnInit {
 							emp_allowances: '',
 							empShacolumns: this.empShacolumns,
 							empShdcolumns: this.empShdcolumns,
-							emp_total_earnings: Math.round((Number(prodataBasicPay) + total_earnings)),
+							emp_total_earnings: Math.round((Number(prorataBasicPay) + total_earnings)),
 							emp_total_deductions: Math.round(total_deductions),
 							emp_deductions: item.emp_salary_detail.emp_salary_structure ? item.emp_salary_detail.emp_salary_structure.emp_deduction_detail : [],
 							emp_present_days: emp_present_days,
@@ -1164,13 +1164,13 @@ export class SalaryComputationComponent implements OnInit {
 			}
 			var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 			var empBasicPay = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale ? Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_basic_pay_scale)) : 0;
-			var prodataBasicPay = Math.round(empBasicPay * (emp_present_days/no_of_days));
+			var prorataBasicPay = Math.round(empBasicPay * (emp_present_days/no_of_days));
 			for (let i = 0; i < this.shacolumns.length; i++) {
 				if (Number(this.shacolumns[i]['data']['sc_type']['type_id']) === 1) {
 					let value = 0;
 
 					if (this.shacolumns[i]['header'] === 'Basic Pay') {
-						this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: prodataBasicPay };
+						this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: prorataBasicPay };
 					} else {
 						this.empShacolumns[i] = { columnDef: this.shacolumns[i]['data']['sc_name'], header: this.shacolumns[i]['data']['sc_name'], value: 0 };
 					}
@@ -1194,7 +1194,7 @@ export class SalaryComputationComponent implements OnInit {
 									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'slab') {
 										value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 									}
-									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prodata') {
+									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prorata') {
 										value=Math.round(value*emp_present_days/no_of_days);
 									}
 									this.empShacolumns[i]['value'] = Math.round(value);
@@ -1239,7 +1239,7 @@ export class SalaryComputationComponent implements OnInit {
 									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_calculation_type']).toLowerCase() === 'slab') {
 										value = Math.round(Number(item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['sc_value']));
 									}
-									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prodata') {
+									if ((item.emp_salary_detail.emp_salary_structure.emp_salary_heads[j]['calculation_option']) === 'prorata') {
 										value=Math.round(value*emp_present_days/no_of_days);
 									}
 									
@@ -1289,8 +1289,8 @@ export class SalaryComputationComponent implements OnInit {
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_pay_mode'] = item.emp_salary_detail.emp_salary_structure && item.emp_salary_detail.emp_salary_structure.emp_pay_mode ? item.emp_salary_detail.emp_salary_structure.emp_pay_mode.pm_name : [];
 			// salary_payable = Math.round((((Number(empBasicPay) + total_earnings) * Number(emp_present_days)) / Number(no_of_days)) +
 			// 	((Number(total_deductions) * Number(emp_present_days)) / Number(no_of_days)));
-			salary_payable = Math.round(Number(prodataBasicPay) + Number(total_earnings) +	Number(total_deductions));
-			this.SALARY_COMPUTE_ELEMENT[index]['emp_total_earnings'] = Math.round((Number(prodataBasicPay) + total_earnings));
+			salary_payable = Math.round(Number(prorataBasicPay) + Number(total_earnings) +	Number(total_deductions));
+			this.SALARY_COMPUTE_ELEMENT[index]['emp_total_earnings'] = Math.round((Number(prorataBasicPay) + total_earnings));
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_payable'] = emp_present_days ? salary_payable : 0
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_present_days'] = emp_present_days ? emp_present_days : 0;
 			this.SALARY_COMPUTE_ELEMENT[index]['emp_salary_structure'] = item.emp_salary_detail.emp_salary_structure;
