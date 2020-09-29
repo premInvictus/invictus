@@ -3,8 +3,8 @@ import { FormBuilder, FormGroupDirective, FormControl, NgForm, FormGroup } from 
 import { MatTableDataSource, MatPaginator, MatSort, ErrorStateMatcher } from '@angular/material';
 import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
-import { ErpCommonService, CommonAPIService } from 'src/app/_services';
-import { SisService } from '../../_services/index';
+import { ErpCommonService } from 'src/app/_services';
+import { SisService,CommonAPIService } from '../../_services/index';
 @Component({
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',

@@ -507,5 +507,9 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
 	}
+	updateSalaryStructureToEmployee(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/salary-compute/updateSalaryStructureToEmployee', value);
+	}
 
 }
