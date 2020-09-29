@@ -10,6 +10,7 @@ import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl 
 import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-modal.component';
 import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
 import { saveAs } from 'file-saver';
+import { VoucherPrintSetupComponent } from '../../voucher-print-setup/voucher-print-setup.component';
 @Component({
   selector: 'app-vouchers-list',
   templateUrl: './vouchers-list.component.html',
@@ -245,6 +246,20 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		dialogRef.afterClosed().subscribe(() => {
 			 this.getVouchers();
 		});
+	}
+
+	printVoucherSetting() {
+		
+			const dialogRef = this.dialog.open(VoucherPrintSetupComponent, {
+			  width: '45%',
+			  height: '65%',
+			  data: ''
+			});
+		
+			dialogRef.afterClosed().subscribe(result => {
+			  console.log('The dialog was closed');
+			});
+		  
 	}
 
 }
