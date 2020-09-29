@@ -154,7 +154,7 @@
                                                             </mat-select>
                                                         </mat-form-field>
                                                         <mat-form-field class="form-field" appearance="outline"
-                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
+                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type == '2' && formGroupArray[configValue-1].formGroup.value.calculation_type == '2'">
                                                             <mat-label>Upper Value</mat-label>
                                                             <input matInput placeholder="Enter Upper Value"
                                                                 class="text-capitalize" type="number"
@@ -178,12 +178,14 @@
                                                             <mat-radio-button value="prodata">Prorata</mat-radio-button>
                                                             <mat-radio-button value="fixed">Fixed</mat-radio-button>
                                                         </mat-radio-group>
-                                                        <ng-container
-                                                            *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
-                                                            Check if optional ? <mat-slide-toggle
+                                                        <!-- <ng-container *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
+                                                            <br>
+                                                            Check if optional ? 
+                                                            <mat-slide-toggle
                                                                 [checked]="formGroupArray[configValue-1].formGroup.value.optional"
-                                                                (change)="setMandatory($event)"></mat-slide-toggle>
-                                                        </ng-container>
+                                                                (change)="setMandatory($event)">
+                                                            </mat-slide-toggle>
+                                                        </ng-container> -->
                                                     </div>
                                                 </div>
                                             </form>
