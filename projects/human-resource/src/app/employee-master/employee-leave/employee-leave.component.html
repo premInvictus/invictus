@@ -13,7 +13,7 @@
               <mat-label>Employee Name</mat-label>
               <input matInput [placeholder]="'Enter Employee Name'" formControlName="emp_id" autocomplete="off" (change)="getEmployeeData()" />
             </mat-form-field> -->
-            <mat-form-field class="form-field" appearance="outline">
+            <!-- <mat-form-field class="form-field" appearance="outline">
               <mat-label>Employee Name</mat-label>
               <input matInput placeholder="Enter Employee Name" formControlName="emp_name" required
                 [matAutocomplete]="auto" (keyup)="getFilterEmployee($event)" />
@@ -21,6 +21,17 @@
                 <mat-option *ngFor="let item of allEmployeeData" [value]="item.emp_code_no"
                   (onSelectionChange)="setEmployeeId(item)">
                   <small>{{item.emp_name | capitalize}}( {{item.emp_code_no}} )</small>
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field> -->
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Employee Name</mat-label>
+              <input matInput placeholder="Enter Employee Name" formControlName="emp_name" required
+                [matAutocomplete]="auto" (keyup)="getFilterEmployee1($event.target.value)"/>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="setEmployeeId1($event)">
+                <mat-option *ngFor="let option of filteredOptions | async" [value]="option.emp_code_no"
+                  >
+                  <small>{{option.emp_name | capitalize}}( {{option.emp_code_no}} )</small>
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
