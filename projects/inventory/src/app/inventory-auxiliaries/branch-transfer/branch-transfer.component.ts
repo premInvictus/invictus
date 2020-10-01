@@ -51,6 +51,7 @@ export class BranchTransferComponent implements OnInit {
   BRANCH_TRANSFER_DATA: any[] = [];
   schoolInfo: any = {};
   locations: any[] = [];
+  schoolGroupData:any[] = [];
   datasource = new MatTableDataSource<any>(this.BRANCH_TRANSFER_DATA);
   disabledApiButton = false;
   ngOnInit() {
@@ -65,6 +66,7 @@ export class BranchTransferComponent implements OnInit {
       if (res && res.status === 'ok') {
         this.schoolInfo = res.data[0];
         console.log(this.schoolInfo);
+        this.getGroupedSchool();
       }
     });
   }
@@ -511,15 +513,15 @@ export class BranchTransferComponent implements OnInit {
     }
   }
   getBranchName(id) {
-    const findex = this.branchArray.findIndex(f => Number(f.br_id) === Number(id));
+    const findex = this.schoolGroupData.findIndex(f => Number(f.si_id) === Number(id));
     if (findex !== -1) {
-      return this.branchArray[findex].br_name;
+      return this.schoolGroupData[findex].si_school_name;
     }
   }
   getBranchPrefix(id) {
-    const findex = this.branchArray.findIndex(f => Number(f.br_id) === Number(id));
+    const findex = this.schoolGroupData.findIndex(f => Number(f.si_id) === Number(id));
     if (findex !== -1) {
-      return this.branchArray[findex].br_prefix;
+      return this.schoolGroupData[findex].si_school_prefix;
     }
   }
   generatePass(val) {
@@ -559,5 +561,39 @@ export class BranchTransferComponent implements OnInit {
     this.deleteModal.closeDialog();
     this.deleteFlag = false;
   }
+
+  getGroupedSchool() {
+		console.log('this.schoolInfo', this.schoolInfo)
+		this.schoolGroupData = [];
+		this.sisService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.sisService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						this.schoolGroupData  = [];
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolGroupData.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolGroupData);
+					}
+				})
+			}
+		})
+	}
 
 }

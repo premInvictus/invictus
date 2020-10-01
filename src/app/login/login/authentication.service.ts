@@ -37,6 +37,7 @@ export class AuthenticationService {
 			return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type }, { headers: pheaders });
 		} else {
 			// tslint:disable-next-line:max-line-length
+			console.log('this.loaderService.getUserPrefix()',this.loaderService.getUserPrefix());
 			if (this.loaderService.getUserPrefix()) {
 				return this.http.post(environment.apiSisUrl + '/users/authenticate', { username: username, password: password, device_id: device_id, type: type });
 			} else {

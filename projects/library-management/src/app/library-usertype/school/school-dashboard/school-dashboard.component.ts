@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AdvancedSearchModalComponent } from '../../../library-shared/advanced-search-modal/advanced-search-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 @Component({
   selector: 'app-school-dashboard',
   templateUrl: './school-dashboard.component.html',
@@ -28,13 +29,21 @@ export class SchoolDashboardComponent implements OnInit {
   @ViewChild('bookDet')bookDet;
   constructor(private fbuild: FormBuilder, private common: CommonAPIService,
     private erpCommonService: ErpCommonService, public dialog: MatDialog, private route: ActivatedRoute,
-		private router: Router,) { }
+		private router: Router,private branchChangeService: BranchChangeService) { }
 
   ngOnInit() {
     this.buildForm();
     this.getReservoirData();
     this.getIssueBookData();
     this.getDueReservoir();
+    this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+        this.buildForm();
+        this.getReservoirData();
+        this.getIssueBookData();
+        this.getDueReservoir();
+      }
+    });
   }
 
   openSearchDialog = (data) => { this.searchModal.openModal(data); }

@@ -200,6 +200,7 @@ export class AppComponent implements OnInit {
 							if (result.status === 'ok') {
 								this.deleteToken();
 								localStorage.clear();
+								this.loaderService.setUserPrefix('');
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
 								routeStore.login_id = '';

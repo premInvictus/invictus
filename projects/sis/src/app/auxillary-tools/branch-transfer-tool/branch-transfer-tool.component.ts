@@ -49,6 +49,9 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	session; any = {};
 	prev: any;
 	next: any;
+	schoolGroupData:any[] = [];
+	schoolInfo:any;
+	currentUser:any;
 	orderByArray: any[] = [{ order_by: 'sec_id', order_by_name: 'Section' }];
 	@ViewChild('sortP') sortP: MatSort;
 	@ViewChild('deleteModal') deleteModal;
@@ -57,13 +60,17 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 	constructor(private commonApiService: CommonAPIService,
 		private sisService: SisService,
 		private SmartService: SmartService,
-		private fbuild: FormBuilder) { }
+		private fbuild: FormBuilder) { 
+
+		}
 
 	ngOnInit() {
 		this.session = JSON.parse(localStorage.getItem('session'));
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.buildForm();
 		this.getClass();
 		// this.getSession();
+		this.getSchool();
 		this.getBranch();
 		// this.sessionPromote = this.currentDate.getFullYear() - 1 + '-' + (this.currentDate.getFullYear().toString()).substring(2, 4);
 		// this.sessionDemote = this.currentDate.getFullYear() + '-' + ((this.currentDate.getFullYear() + 1).toString()).substring(2, 4);
@@ -339,6 +346,49 @@ export class BranchTransferToolComponent implements OnInit, AfterViewInit {
 		} else {
 			this.promoteStudentInBulk();
 		}
+	}
+
+	getSchool() {
+		this.sisService.getSchool().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.schoolInfo = result2.data[0];
+				this.getGroupedSchool();
+			}
+		});
+	}
+
+	getGroupedSchool() {
+		console.log('this.schoolInfo', this.schoolInfo)
+		this.schoolGroupData = [];
+		this.sisService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.sisService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						this.schoolGroupData  = [];
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolGroupData.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolGroupData);
+					}
+				})
+			}
+		})
 	}
 
 }

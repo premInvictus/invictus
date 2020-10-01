@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 @Component({
 	selector: 'app-student-dashboard',
 	templateUrl: './student-dashboard.component.html',
@@ -118,7 +119,8 @@ export class StudentDashboardComponent implements OnInit {
 		public dialog: MatDialog,
 		private commonAPIService: CommonAPIService,
 		private router:Router,
-		private route:ActivatedRoute
+		private route:ActivatedRoute,
+		private branchChangeService: BranchChangeService
 
 	) { }
 
@@ -153,6 +155,16 @@ export class StudentDashboardComponent implements OnInit {
 	};
 
 	ngOnInit() {
+		this.setStudentDashboard();
+
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.setStudentDashboard();
+			}
+		});
+	}
+
+	setStudentDashboard() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -257,8 +269,6 @@ export class StudentDashboardComponent implements OnInit {
 		} else {
 			this.lastName = '';
 		}
-
-
 	}
 	formatDate() {
 		var d = new Date(),

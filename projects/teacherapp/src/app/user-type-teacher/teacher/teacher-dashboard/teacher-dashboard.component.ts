@@ -8,7 +8,7 @@ import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
 import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
@@ -147,10 +147,20 @@ export class TeacherDashboardComponent implements OnInit {
 		private erpCommonService: ErpCommonService,
 		public dialog: MatDialog,
 		private commonAPIService: CommonAPIService,
-		private fb: FormBuilder
+		private fb: FormBuilder,
+		private branchChangeService: BranchChangeService
 	) { }
 
 	ngOnInit() {
+		this.setTeacherDashboard();
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.setTeacherDashboard();
+			}
+		});
+	}
+
+	setTeacherDashboard() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		for (let i = 0; i < this.currentUser.full_name.length; i++) {
 			if (this.currentUser.full_name[i] === ' ') {
@@ -188,6 +198,7 @@ export class TeacherDashboardComponent implements OnInit {
 			}
 		);
 	}
+
 	getDashboardReport() {
 		this.qtptData = {};
 		this.adminService.getDashboardReport(

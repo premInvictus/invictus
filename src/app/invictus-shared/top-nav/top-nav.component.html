@@ -26,10 +26,11 @@
             <mat-menu #schoolbranch="matMenu">
                 <button style="color: #fff !important;" mat-menu-item class="profile-submenu" (click)="switchToSchool(schoolInfo?.school_prefix)"><i
                         class="fas fa-school"></i>&nbsp; <span>{{schoolInfo?.school_name}}</span> </button>
-                <div *ngFor="let item of schoolGroupData">
-                        <button style="color: #fff !important;" mat-menu-item class="profile-submenu" (click)="switchToSchool(item?.si_school_prefix)"><i
+                <div *ngIf="currentUser.role_id === '2'">
+                        <div *ngFor="let item of schoolGroupData">
+                        <button *ngIf="item?.si_school_name !== schoolInfo?.school_name" style="color: #fff !important;" mat-menu-item class="profile-submenu" (click)="switchToSchool(item?.si_school_prefix)"><i
                             class="fas fa-school"></i>&nbsp; <span>{{item?.si_school_name}}</span> </button>
-                </div>
+                </div></div>
             </mat-menu>
             <div [hidden]="!(currentUser.role_id === '2')" class="header-menu-divider"></div>
             <button style="color:#fff" [hidden]="!(currentUser.role_id === '2')"

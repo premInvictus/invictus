@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { SisService, CommonAPIService, ProcesstypeService } from '../../../_services/index';
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 @Component({
 	selector: 'app-school-dashboard',
 	templateUrl: './school-dashboard.component.html',
@@ -19,7 +20,8 @@ export class SchoolDashboardComponent implements OnInit {
 
 	constructor(private sisService: SisService,
 		private common: CommonAPIService,
-		private processtypeService: ProcesstypeService) { }
+		private processtypeService: ProcesstypeService,
+		private branchChangeService: BranchChangeService) { }
 
 	ngOnInit() {
 		this.getSchool();
@@ -27,6 +29,15 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getStudentClassWiseDashboard();
 		this.getStudentBirthdayDashboard();
 		this.getMessageNotification();
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.getSchool();
+				this.getProcessCardData();
+				this.getStudentClassWiseDashboard();
+				this.getStudentBirthdayDashboard();
+				this.getMessageNotification();
+			}
+		});
 	}
 	classBGChartCalculation(xcategories, boy, girl) {
 		this.classBGChartFlag = true;

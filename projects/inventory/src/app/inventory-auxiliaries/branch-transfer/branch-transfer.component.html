@@ -241,7 +241,7 @@
                 <mat-label>Branch Name</mat-label>
                 <mat-select placeholder="Branch Name" formControlName="intended_use" [disabled]="editBranchtransfer"
                   required>
-                  <mat-option *ngFor="let item of branchArray" [value]="item.br_id">{{item.br_name}}</mat-option>
+                  <mat-option *ngFor="let item of schoolGroupData" [value]="item.si_id">{{item.si_school_name}}</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>

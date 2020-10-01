@@ -25,6 +25,9 @@ export class UserAccessMenuService {
 		if (value.mor_type) {
 			param.mor_type = value.mor_type
 		}
+		if(value.mapped_prefix) {
+			param.mapped_prefix = value.mapped_prefix;
+		}
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessMenu', param);
 	}
 	isExistUserAccessMenu(mod_id) {

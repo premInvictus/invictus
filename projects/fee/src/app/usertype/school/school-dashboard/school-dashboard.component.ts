@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonAPIService, FeeService } from '../../../_services';
 import { DecimalPipe } from '@angular/common';
 import { IndianCurrency } from '../../../_pipes';
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 @Component({
 	selector: 'app-school-dashboard',
 	templateUrl: './school-dashboard.component.html',
@@ -46,7 +47,8 @@ export class SchoolDashboardComponent implements OnInit {
 	};
 	constructor(
 		private common: CommonAPIService,
-		private feeService: FeeService
+		private feeService: FeeService,
+		private branchChangeService: BranchChangeService
 	) { }
 
 	ngOnInit() {
@@ -58,6 +60,18 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getFeeOutstanding();
 		this.getClassWiseFeeOutstanding();
 		this.getFeeMonths();
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.currentMonth = ('0' + ((new Date()).getMonth() + 1)).slice(-2);
+				this.months = this.currentMonth;
+				this.getSchool();
+				this.getFeeProjectionReport();
+				this.getFeeReceiptReport();
+				this.getFeeOutstanding();
+				this.getClassWiseFeeOutstanding();
+				this.getFeeMonths();
+			}
+		});
 	}
 	getFeeOutstanding() {
 		this.feeService.getFeeOutstanding({ projectionType: 'yearly' }).subscribe((result: any) => {

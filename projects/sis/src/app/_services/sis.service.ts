@@ -1104,4 +1104,11 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
 	}
+	getAllSchoolGroups(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
+
+	getMappedSchoolWithUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
+	}
 }

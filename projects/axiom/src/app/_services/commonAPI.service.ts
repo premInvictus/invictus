@@ -112,6 +112,7 @@ export class CommonAPIService {
 	}
 
 	updateSchoolAccessPermission(value) {
+		this.loaderService.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/updateSchoolAccessPermission',value);
 	}
 

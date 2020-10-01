@@ -12,7 +12,7 @@ import { AuthenticationService } from './login/login/authentication.service';
 import { CommonAPIService } from './_services/commonAPI.service';
 import { AuthGuard } from './_guards/index';
 import { ApiPrefixInterceptor, SuccessErrorInterceptor } from './_helpers';
-import { UserAccessMenuService, MessagingService } from './_services';
+import { UserAccessMenuService, MessagingService, BranchChangeService } from './_services';
 import { LOCALE_ID, Injector, APP_INITIALIZER } from '@angular/core';
 import { LOCATION_INITIALIZED } from "@angular/common";
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -55,7 +55,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 	],
 	providers: [
 		AuthenticationService, CommonAPIService, AuthGuard, UserAccessMenuService, TranslateService,
-		MessagingService,
+		MessagingService, BranchChangeService,
 		{ provide: HTTP_INTERCEPTORS, useClass: ApiPrefixInterceptor, multi: true },
 		{ provide: HTTP_INTERCEPTORS, useClass: SuccessErrorInterceptor, multi: true }],
 	bootstrap: [AppComponent],
