@@ -14,7 +14,7 @@ export class DaybookComponent implements OnInit {
 	currentTabIndex = 3;
 	feeMonthArray = [];
 	paramform: FormGroup;
-	
+	adjustmentStatus = 0;
 	
 	constructor(
 		private fbuild: FormBuilder,
@@ -27,6 +27,7 @@ export class DaybookComponent implements OnInit {
 	ngOnInit(){
 		this.buildForm();
 		this.getFeeMonths();
+		this.getGlobalSetting();
 		this.route.queryParams.subscribe(param => {
 			console.log(param);
 		})
@@ -39,8 +40,21 @@ export class DaybookComponent implements OnInit {
 	setIndex(event) {
 		console.log(event);
 		this.currentTabIndex = event;
-	  }
-	  getFeeMonths() {
+	}
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['fee_invoice_includes_adjustments'];
+		this.faService.getGlobalSetting(param).subscribe((result: any) => {
+
+			if (result && result.status === 'ok') {
+				if (result.data && result.data[0]) {
+					this.adjustmentStatus = result.data[0]['gs_value'] == '1'? 1 : 0 ;
+				}
+
+			}
+		})
+	}
+	getFeeMonths() {
 		this.feeMonthArray = [];
 		this.faService.getFeeMonths({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

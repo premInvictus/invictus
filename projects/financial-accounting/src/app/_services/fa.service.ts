@@ -128,6 +128,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
 	}
+	getAdjustmentDayBook(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
+	}
 	
 	
 }

@@ -12,11 +12,11 @@ import * as moment from 'moment';
 
 
 @Component({
-  selector: 'app-income-due',
-  templateUrl: './income-due.component.html',
-  styleUrls: ['./income-due.component.scss']
+  selector: 'app-adjustment',
+  templateUrl: './adjustment.component.html',
+  styleUrls: ['./adjustment.component.scss']
 })
-export class IncomeDueComponent implements OnInit, OnChanges {
+export class AdjustmentComponent implements OnInit, OnChanges {
 
   @Input() param: any;
   tableDivFlag = false;
@@ -39,9 +39,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   voucherDate: any;
   currentVoucherData: any;
   vcYearlyStatus   = 0;
-  feeReceivableAccountId = 0;
-  feeReceivableAccountName = 'Fee Receivable';
-  adjustmentStatus = 0;
+  feeAdjustableAccountId = 0;
+  feeAdjustableAccountName = 'Fee Adjustment';
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -58,7 +57,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     if (this.param.month) {
       this.getGlobalSetting();
       this.getChartsOfAccount();
-      this.getInvoiceDayBook();
+      this.getAdjustmentDayBook();
       this.getSession();
     }
   }
@@ -68,27 +67,18 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       this.getGlobalSetting();
       this.getChartsOfAccount();
       this.getSession();
-      this.getInvoiceDayBook();
+      this.getAdjustmentDayBook();
     }
 
   }
   getGlobalSetting() {
 		let param: any = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status', 'fee_invoice_includes_adjustments'];
+		param.gs_alias = ['fa_voucher_code_format_yearly_status'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result.data && result.data[0]) {
-          for (var i=0; i< result.data.length;i++) {
-            if (result.data[i]['gs_alias'] === 'fa_voucher_code_format_yearly_status') {
-              this.vcYearlyStatus = Number(result.data[i]['gs_value']);
-            } 
-            if (result.data[i]['gs_alias'] === 'fee_invoice_includes_adjustments') {
-              this.adjustmentStatus = result.data[i]['gs_value'] == '1' ? 1 : 0 ;
-            }
-          }
-					
-          console.log('this.vcYearlyStatus', this.vcYearlyStatus);
-          console.log('this.adjustmentStatus', this.adjustmentStatus)
+					this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+					console.log('this.vcYearlyStatus', this.vcYearlyStatus)
 				}
 
 			}
@@ -106,17 +96,16 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       }
     })
   }
-  getInvoiceDayBook() {
+  getAdjustmentDayBook() {
     this.headtoatl = 0;
     this.contoatl = 0;
     this.displayedColumns = [];
     this.ELEMENT_DATA = [];
     this.apiInvoiceData = [];
     this.apiReceiptData = [];
-    this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
+    this.faService.getAdjustmentDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month),vc_process: 'automatic/adjustment' }).subscribe((data: any) => {
       if (data && data.invoice_due_data.length > 0) {
         this.apiInvoiceData = data.invoice_due_data;
-        console.log('data.invoice_due_data--',data.invoice_due_data)
         this.apiReceiptData = data.receipt_data;
         const tempData: any = data.invoice_due_data;
         const tempHeader: any[] = [];
@@ -153,19 +142,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
               this.displayedColumns.forEach(ee => {
                 tempvalue.value.forEach(element => {
                   if (element.fh_id == ee.id) {
-                    let tempvaluehead = 0;
-                    if (this.adjustmentStatus) {
-                      tempvaluehead = (element.head_amt ? Number(element.head_amt) : 0) + Number(element.concession_at) + Number(element.adjustment_amt);
-                    } else {
-                      tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
-                    }
-                    
+                    let tempvaluehead = element.head_amt ? Number(element.head_amt) : 0;
                     let tempvaluecon = Number(element.concession_at) + Number(element.adjustment_amt);
                     this.headtoatl += tempvaluehead;
                     this.contoatl += tempvaluecon;
-                    tempelement['id_' + ee.id] = tempvaluehead;
+                    tempelement['id_' + ee.id] = tempvaluecon;
                     this.con_adj_details['id_' + ee.id] += tempvaluecon;
-                    this.eachheadtotal_details['id_' + ee.id] += tempvaluehead;
+                    this.eachheadtotal_details['id_' + ee.id] += tempvaluecon;
                   }
                 });
 
@@ -226,11 +209,11 @@ export class IncomeDueComponent implements OnInit, OnChanges {
           console.log('result--', result[i]);
           this.chartsOfAccount.push(result[i]);
         }
-        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_receivable") {
+        if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0]['dependenecy_component'] === "fee_invoice_includes_adjustments") {
           console.log('result--', result[i]);
           //this.chartsOfAccount.push(result[i]);
-          this.feeReceivableAccountId = result[i]['coa_id'];
-          this.feeReceivableAccountName = result[i]['coa_acc_name'];
+          this.feeAdjustableAccountId = result[i]['coa_id'];
+          this.feeAdjustableAccountName = result[i]['coa_acc_name'];
         }
         
       }
@@ -268,9 +251,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
               vc_grno: '',
               vc_invoiceno: '',
               vc_debit: 0,
-              vc_credit: invoiceHeadArr[i]['total_amt']
+              vc_credit: invoiceHeadArr[i]['adjustment_amt']+invoiceHeadArr[i]['concession_at']
             };
-            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+            feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['adjustment_amt']+invoiceHeadArr[i]['concession_at'])
             voucherEntryArray.push(vFormJson);
           } else {
             var mathchedFlag = 0;
@@ -302,13 +285,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                 vc_grno: '',
                 vc_invoiceno: '',
                 vc_debit:  0,
-                vc_credit: invoiceHeadArr[i]['total_amt']
+                vc_credit: (invoiceHeadArr[i]['adjustment_amt']+invoiceHeadArr[i]['concession_at'])
               };
-              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['total_amt'])
+              feeReceivableAmt = feeReceivableAmt + ( invoiceHeadArr[i]['adjustment_amt']+invoiceHeadArr[i]['concession_at'])
               voucherEntryArray.push(vFormJson);
             } else {
               totalPrevHeadAmt = accountDebitSum - accountCreditSum;
-              deviation = invoiceHeadArr[i]['total_amt'] - totalPrevHeadAmt;
+              deviation = (invoiceHeadArr[i]['adjustment_amt']+invoiceHeadArr[i]['concession_at']) - totalPrevHeadAmt;
               feeReceivableAmt = feeReceivableAmt + deviation;
               if (deviation < 0 ) {
                 let vFormJson = {};
@@ -343,9 +326,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     }
     if (voucherEntryArray.length > 0  && action != 'update') {
       let vFormJson = {
-        vc_account_type: this.feeReceivableAccountName,
-        vc_account_type_id: this.feeReceivableAccountId,
-        vc_particulars: 'Fee Receivable',
+        vc_account_type: this.feeAdjustableAccountName,
+        vc_account_type_id: this.feeAdjustableAccountId,
+        vc_particulars: 'Fee Adjustment',
         vc_grno: '',
         vc_invoiceno: '',
         vc_debit: feeReceivableAmt,
@@ -357,9 +340,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     if (voucherEntryArray.length > 0  && action == 'update') {
       
       let vFormJson = {
-        vc_account_type: this.feeReceivableAccountName,
-        vc_account_type_id: this.feeReceivableAccountId,
-        vc_particulars: 'Fee Receivable',
+        vc_account_type: this.feeAdjustableAccountName,
+        vc_account_type_id: this.feeAdjustableAccountId,
+        vc_particulars: 'Fee Adjustment',
         vc_grno: '',
         vc_invoiceno: '',
         vc_debit: feeReceivableAmt,
@@ -433,18 +416,18 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_type: 'Journal Voucher',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: this.voucherDate,
-        vc_narrations: 'Invoice Due of Date ' + this.voucherDate,
+        vc_narrations: 'Invoice Adjustment Date ' + this.voucherDate,
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
         vc_state: 'draft',
-        vc_process: 'automatic/invoice'
+        vc_process: 'automatic/adjustment'
       }
 
       console.log('fJson--', fJson)
       if (!this.currentVoucherData.vc_id) {
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
-            this.getInvoiceDayBook();
+            this.getAdjustmentDayBook();
             this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
 
 
@@ -456,7 +439,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
-            this.getInvoiceDayBook();
+            this.getAdjustmentDayBook();
             this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
 
 

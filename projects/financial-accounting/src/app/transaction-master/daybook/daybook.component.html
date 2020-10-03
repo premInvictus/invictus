@@ -38,6 +38,11 @@
                         <app-receipt-mode-wise [param]="this.paramform.value"></app-receipt-mode-wise>
                     </ng-template>
                 </mat-tab>
+                <mat-tab label="Fee Adjustment" *ngIf="adjustmentStatus">
+                  <ng-template matTabContent>
+                      <app-adjustment [param]="this.paramform.value"></app-adjustment>
+                  </ng-template>
+              </mat-tab>
                 <!-- <mat-tab label="Total Fee Receivable">
                   <ng-template matTabContent>
                       <app-total-fee-receivable [param]="this.paramform.value"></app-total-fee-receivable>
