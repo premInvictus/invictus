@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SisService, CommonAPIService } from '../../_services/index';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder,FormControl } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl,MatDialog } from '@angular/material';
 import {LeaveCreditComponent} from './leave-credit/leave-credit.component';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {of} from 'rxjs'
 @Component({
 	selector: 'app-employee-leave',
 	templateUrl: './employee-leave.component.html',
@@ -26,6 +29,9 @@ export class EmployeeLeaveComponent implements OnInit {
 	leaveTypeArray:any[] = [];
 	//'leave_opening_balance',
 	displayedEmployeeColumns: string[] = ['srno', 'month_name', 'leave_credited', 'leave_availed', 'leave_granted', 'lwp', 'leave_closing_balance'];
+	options: any[] = [];
+	  filteredOptions: Observable<any[]>;
+	  myControl = new FormControl();
 	constructor(
 		private fbuild: FormBuilder,
 		private route: ActivatedRoute,
@@ -40,6 +46,7 @@ export class EmployeeLeaveComponent implements OnInit {
 		this.buildForm();
 		this.getAllEmployee();
 	}
+	
 	getLeaveType() {
 		this.commonAPIService.getLeaveManagement().subscribe((result: any) => {
 		  this.leaveTypeArray = result;
@@ -60,16 +67,32 @@ export class EmployeeLeaveComponent implements OnInit {
 			this.tempEmpData = result.slice(0);
 			this.tmpAllEmployeeData = result.slice(0);
 			this.employeeData = {};
+			this.options = JSON.parse(JSON.stringify(result));
+			console.log('this.options',this.options);
+			this.getFilterEmployee1('');
 		});
 	}
-
+	private _filter(value: string): string[] {
+		console.log('_filter value',value);
+		const filterValue = value.toLowerCase();
+	
+		return this.options.filter(option => option.emp_name.toLowerCase().includes(filterValue));
+	}
+	getFilterEmployee1(event){
+		// this.filteredOptions = this.searchForm.controls.emp_name.valueChanges
+		// 	.pipe(
+		// 		startWith(''),
+		// 		map(value => this._filter(value))
+		// 	);
+			this.filteredOptions = of(this._filter(event));
+	}
 	getFilterEmployee(event) {
 		var tempArr = [];
 		console.log('event.target.value',event.target.value);
-		if (event.target.value.length > 2) {
+		if (event.target.value.length > 0) {
 			const filterVal = event.target.value;
 			this.allEmployeeData = this.tempEmpData.filter(f => {
-				console.log(f);
+				//console.log(f);
 				return (f.emp_name.toLowerCase()).includes(filterVal)
 			})
 		} else {
@@ -314,11 +337,22 @@ export class EmployeeLeaveComponent implements OnInit {
 
 	setEmployeeId(empDetails) {
 		console.log('empDetails', empDetails);
-		this.searchForm.patchValue({
+		this.searchForm.setValue({
 			emp_id: empDetails.emp_code_no,
 			emp_name: empDetails.emp_name,
 		});
 		this.allEmployeeData = this.tmpAllEmployeeData;
+		this.getEmployeeDetail();
+	}
+	setEmployeeId1(event) {
+		let tempvalue = event.option.value;
+		console.log('tempid',tempvalue);
+		let empDetails = this.options.find(e => e.emp_code_no == tempvalue)
+		console.log('empDetails', empDetails);
+		this.searchForm.setValue({
+			emp_id: empDetails.emp_code_no,
+			emp_name: empDetails.emp_name,
+		});
 		this.getEmployeeDetail();
 	}
 
