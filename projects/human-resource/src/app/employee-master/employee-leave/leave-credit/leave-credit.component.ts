@@ -122,6 +122,10 @@ export class LeaveCreditComponent implements OnInit {
           this.common.showSuccessErrorMessage('Leave Credited Successfully', 'success');
           this.dialogRef.close({status:true});
         }
+      },
+      (errorResponse:any) => {
+        console.log('error',errorResponse);
+        this.common.showSuccessErrorMessage(errorResponse.error.message, errorResponse.error.status);
       });
     }
   }
