@@ -17,14 +17,15 @@
         <div class="row">
             <div class="col-lg-12">
                <div class="white-box-content-title">
-                 {{data.examDetail.ti_instruction}}
+                  <div style="word-break: break-word;" [innerHTML]="data.examDetail.ti_instruction"></div>
+                 
                </div>
             </div>
          </div>
          <hr>
          <div class="row">
            <div class="col-lg-12">
-             {{data.examDetail.ti_description}}
+            <div style="word-break: break-word;" [MathJax]="data.examDetail.ti_description"></div>
            </div>
          </div>
     </mat-tab>
