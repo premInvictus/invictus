@@ -25,7 +25,7 @@
                               </div>
                               <hr>
                               <!-- Tab panes -->
-                              <mat-tab-group>
+                              <mat-tab-group (selectedTabChange)="onTabChanged($event);">
                                  <mat-tab>
                                     <ng-template mat-tab-label>
                                        <div>
@@ -344,15 +344,15 @@
                                        <div class="row">
                                           <div class="col-lg-12">
                                              <br>
-                                             <h6 class="text-center font-16">Manage School Wise Permissions</h6>
+                                             <h6 class="text-center font-16">Assign School and Manage Permissions</h6>
                                              <br>
                                           </div>
                                           <div class="col-lg-12">
                                              <form [formGroup]="schoolAssignForm" novalidate>
-                                                <div class="row">
+                                                <div class="row" *ngIf="!editNewUserFlag">
                                                    <div class="col-12">
                                                       <mat-checkbox [(ngModel)]="showNewSchoolUser"
-                                                         (click)="toggleCreateUser($event)">Do you want to create new
+                                                         (change)="showNewUser($event)" [checked]="showNewSchoolUser">Do you want to create new
                                                          User</mat-checkbox>
                                                    </div>
                                                 </div>
@@ -371,15 +371,15 @@
                                                       </div>
 
 
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                      <div class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques">
 
                                                          <button *ngIf="!editNewUserFlag" mat-raised-button
-                                                            class="btn-primary  btn-success"
+                                                            class="btn-primary  btn-success "
                                                             (click)="saveSchoolAccessPermission()"> Create</button>
                                                          <!-- <button *ngIf="editNewUserFlag" mat-raised-button class="btn-primary  btn-success" (click)="saveSchoolAccessPermission()">   Update</button> -->
                                                       </div>
 
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                      <div class="col-lg-2 map-10 fin-tab-col-25 col-mobile-view-add-ques">
                                                          <button mat-raised-button class="btn-primary  btn-danger"
                                                             (click)="toggleCreateUser($event)"> Cancel</button>
                                                       </div>
@@ -388,21 +388,21 @@
 
                                                 </div>
                                                 <div class="row" *ngIf="editNewUserFlag">
-                                   <span><b>{{currentMappedSchoolData?.au_full_name}} ( {{currentMappedSchoolData?.si_school_prefix}} ) </b></span>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
-                                                      >
+                                                   <span class="user-info"><b>{{currentMappedSchoolData?.au_full_name}}
+                                                         ( {{currentMappedSchoolData?.si_school_prefix}} ) </b></span>
+                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Project</mat-label>
                                                          <mat-select id="exampleSelect1" placeholder="Project"
                                                             formControlName="projectList" multiple
-                                                            (selectionChange)="getModuleList($event)">
+                                                            (selectionChange)="getMappedModuleList($event)">
                                                             <mat-option *ngFor="let pitem of projectsArray"
                                                                value="{{pitem?.pro_id}}">{{pitem?.pro_name}}
                                                             </mat-option>
                                                          </mat-select>
                                                       </mat-form-field>
                                                    </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
+                                                   <!-- <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
                                                       >
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Session</mat-label>
@@ -415,15 +415,14 @@
 
                                                          </mat-select>
                                                       </mat-form-field>
-                                                   </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques"
-                                                      >
+                                                   </div> -->
+                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
                                                       <mat-form-field class="form-field" appearance="outline">
                                                          <mat-label>Interface</mat-label>
                                                          <mat-select formControlName="interfaceList"
                                                             placeholder="Interface" [value]="typeVal"
-                                                           >
-                                                            <mat-option value="">Select Interface</mat-option>
+                                                            (selectionChange)="getMappedModuleList($event)">
+
                                                             <mat-option *ngFor="let item of typeArray"
                                                                [value]="item.id">
                                                                {{item.name}}
@@ -431,22 +430,60 @@
                                                          </mat-select>
                                                       </mat-form-field>
                                                    </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                   <div class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10">
 
 
-                                                      <button  mat-raised-button
-                                                         class="btn-primary  btn-success"
-                                                         (click)="updateSchoolAccessPermission()"> Update</button>
+                                                      <button mat-raised-button class="btn-primary  btn-success"
+                                                         (click)="updateSchoolAccessPermission()"> Update </button>
+                                                   </div> &nbsp;&nbsp;
+                                                   <div class="col-lg-1 fin-tab-col-25 col-mobile-view-add-ques map-10">
+                                                      <button mat-raised-button class="btn-primary  btn-danger"
+                                                         (click)="toggleCreateUser($event)"> Cancel</button>
                                                    </div>
-                                                   <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <button mat-raised-button class="btn-primary  btn-danger"
-                                                            (click)="toggleCreateUser($event)"> Cancel</button>
-                                                      </div>
                                                 </div>
                                                 <br>
-                                                <div class="row" *ngIf="editNewUserFlag && moduleArray.length > 0">
-                                                   <div
-                                                      class="col-lg-12 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
+                                                <br>
+                                                <div *ngIf="!showNewSchoolUser">
+                                                   <div class="row">
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Schools</mat-label>
+                                                            <mat-select formControlName="schoolList" id="exampleSelect1"
+                                                               placeholder="School" (selectionChange)="getSchoolUser()">
+                                                               <mat-option *ngFor="let sitem of schoolGroupData"
+                                                                  value="{{sitem?.si_school_prefix}}">
+                                                                  {{sitem?.si_school_name}}</mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
+                                                         <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Map User</mat-label>
+                                                            <mat-select formControlName="mapUser" id="exampleSelect1"
+                                                               placeholder="Map User">
+                                                               <mat-option *ngFor="let sitem of schoolUseArray"
+                                                                  value="{{sitem?.au_login_id}}">{{sitem?.au_full_name}}
+                                                                  ({{sitem?.au_username}})</mat-option>
+                                                            </mat-select>
+                                                         </mat-form-field>
+                                                      </div>
+                                                   </div>
+
+                                                </div>
+                                                <div class="row" *ngIf="!showNewSchoolUser">
+                                                   <div class="col-lg-12">
+                                                      <!-- <a [routerLink]="['../../user-management']"> -->
+                                                      <button mat-raised-button class="btn-primary btn-success"
+                                                         (click)="createSchoolUserMapping()">Submit</button>
+                                                      <!-- </a> -->
+                                                      <button mat-raised-button
+                                                         class="btn-danger btn-spacer">Reset</button>
+                                                   </div>
+                                                </div>
+
+                                                <div class="row">
+                                                   <div *ngIf="editNewUserFlag && moduleArray.length > 0"
+                                                      class="col-lg-3 col-apple-10 apple-screen-paramter-content-div col-mobile-view-add-ques">
                                                       <div>
                                                          <div>
                                                             <div class="col-apple-10">
@@ -519,98 +556,73 @@
                                                          </div>
                                                       </div>
                                                    </div>
+                                                   <div
+                                                      [ngClass]="editNewUserFlag && moduleArray.length > 0 ? 'col-9' : 'col-12'">
+                                                      <br /><br /><br />
+                                                      <h3 style="text-align:center;text-transform: capitalize"
+                                                         *ngIf="mappedSchoolUserArray?.length > 0">You are Mapped With
+                                                         Below Schools <span
+                                                            *ngIf="schoolGroupData && schoolGroupData[0]">(
+                                                            <b>Group : <span style="text-transform: uppercase;">
+                                                                  {{schoolGroupData[0]['si_group'] }} </span></b>
+                                                            )</span></h3><br />
+                                                      <div *ngIf="mappedSchoolUserArray?.length > 0">
+                                                         <table
+                                                            class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+                                                            <thead>
+                                                               <th>Sr. No.</th>
+                                                               <th>School Name</th>
+                                                               <th>School Prefix</th>
+                                                               <th>Name / Login</th>
+                                                               <th>Action</th>
+                                                            </thead>
+                                                            <tbody>
+                                                               <tr
+                                                                  *ngFor="let sitem of mappedSchoolUserArray; let i=index;">
+                                                                  <td>{{i+1}}</td>
+                                                                  <td>{{sitem?.si_school_name}}</td>
+                                                                  <td>{{sitem?.si_school_prefix}}</td>
+                                                                  <td>{{sitem?.au_full_name}} / {{sitem?.au_username}}
+                                                                  </td>
+                                                                  <td>
+                                                                     <a *ngIf="sitem?.sgm_mapped_status==='1'"
+                                                                        href="javascript:void(0)"
+                                                                        (click)="manageSchoolUserAccess(sitem)">Manage
+                                                                        Access
+                                                                        & Privildeges | </a>
+                                                                     <a *ngIf="sitem?.sgm_mapped_status==='1'"
+                                                                        href="javascript:void(0)"
+                                                                        (click)="revokeAccessToAssignSchool(sitem)">Revoke
+                                                                        Access to Assign School</a>
+                                                                     <a *ngIf="sitem?.sgm_mapped_status==='0'"
+                                                                        href="javascript:void(0)"
+                                                                        (click)="enableAccessToAssignSchool(sitem)">Enable
+                                                                        Access to Assign School</a>
+                                                                  </td>
+                                                               </tr>
+                                                            </tbody>
+                                                         </table>
+                                                      </div>
+
+
+
+                                                      <!-- <div *ngIf="mappedSchoolUserArray?.length == 0">
+                                                            <div clas="text-center">No Data Available</div>
+                                                         </div> -->
+
+                                                   </div>
                                                 </div>
-                                                <div class="row" *ngIf="moduleArray.length == 0">
+                                                <!-- <div class="row" *ngIf="moduleArray.length == 0">
                                                    <div class="col-12">
                                                       <span>No Records Found</span>
                                                    </div>
-                                                </div>
-                                                <div *ngIf="!showNewSchoolUser">
-                                                   <div class="row">
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Schools</mat-label>
-                                                            <mat-select formControlName="schoolList" id="exampleSelect1"
-                                                               placeholder="School" (selectionChange)="getSchoolUser()">
-                                                               <mat-option *ngFor="let sitem of schoolGroupData"
-                                                                  value="{{sitem?.si_school_prefix}}">
-                                                                  {{sitem?.si_school_name}}</mat-option>
-                                                            </mat-select>
-                                                         </mat-form-field>
-                                                      </div>
-                                                      <div class="col-lg-2 fin-tab-col-25 col-mobile-view-add-ques">
-                                                         <mat-form-field class="form-field" appearance="outline">
-                                                            <mat-label>Map User</mat-label>
-                                                            <mat-select formControlName="mapUser" id="exampleSelect1"
-                                                               placeholder="Map User">
-                                                               <mat-option *ngFor="let sitem of schoolUseArray"
-                                                                  value="{{sitem?.au_login_id}}">{{sitem?.au_full_name}}
-                                                                  ({{sitem?.au_username}})</mat-option>
-                                                            </mat-select>
-                                                         </mat-form-field>
-                                                      </div>
-                                                   </div>
+                                                </div> -->
 
-                                                </div>
                                              </form>
-                                             <div>
-                                                <h3>Mapped With Schools, in Group of Schools <span
-                                                      *ngIf="schoolGroupData && schoolGroupData[0]">(
-                                                      <b>{{schoolGroupData[0]['si_group'] }}</b> )</span></h3>
-                                                <div *ngIf="mappedSchoolUserArray?.length > 0">
-                                                   <table
-                                                      class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
-                                                      <thead>
-                                                         <th>Sr. No.</th>
-                                                         <th>School Name</th>
-                                                         <th>School Prefix</th>
-                                                         <th>Name / Login</th>
-                                                         <th>Action</th>
-                                                      </thead>
-                                                      <tbody>
-                                                         <tr *ngFor="let sitem of mappedSchoolUserArray; let i=index;">
-                                                            <td>{{i+1}}</td>
-                                                            <td>{{sitem?.si_school_name}}</td>
-                                                            <td>{{sitem?.si_school_prefix}}</td>
-                                                            <td>{{sitem?.au_full_name}} / {{sitem?.au_username}}</td>
-                                                            <td>
-                                                               <a *ngIf="sitem?.sgm_mapped_status==='1'"
-                                                                  href="javascript:void(0)"
-                                                                  (click)="manageSchoolUserAccess(sitem)">Manage Access
-                                                                  & Privildeges | </a>
-                                                               <a *ngIf="sitem?.sgm_mapped_status==='1'"
-                                                                  href="javascript:void(0)"
-                                                                  (click)="revokeAccessToAssignSchool(sitem)">Revoke
-                                                                  Access to Assign School</a>
-                                                               <a *ngIf="sitem?.sgm_mapped_status==='0'"
-                                                                  href="javascript:void(0)"
-                                                                  (click)="enableAccessToAssignSchool(sitem)">Enable
-                                                                  Access to Assign School</a>
-                                                            </td>
-                                                         </tr>
-                                                      </tbody>
-                                                   </table>
-                                                </div>
 
-
-
-                                                <div *ngIf="mappedSchoolUserArray?.length == 0">
-                                                   <div clas="text-center">No Data Available</div>
-                                                </div>
-
-                                             </div>
                                           </div>
                                        </div>
-                                       <br>
-                                       <div class="row" *ngIf="!showNewSchoolUser">
-                                          <div class="col-lg-12">
-                                             <!-- <a [routerLink]="['../../user-management']"> -->
-                                             <button mat-raised-button class="btn-primary btn-success"
-                                                (click)="createSchoolUserMapping()">Submit</button>
-                                             <!-- </a> -->
-                                             <button mat-raised-button class="btn-danger btn-spacer">Reset</button>
-                                          </div>
-                                       </div>
+
                                     </div>
                                  </mat-tab>
                               </mat-tab-group>

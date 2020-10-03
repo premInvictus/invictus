@@ -224,5 +224,9 @@ export class AdminService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAssignClass', value);
 	}
+	getMappedUserProject(value) {
+		this.loaderService.startLoading();
+		return this.http.post(environment.apiAxiomUrl + '/users/getMappedUserProject', value);
+	}
 	
 }

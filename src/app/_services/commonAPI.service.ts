@@ -29,6 +29,7 @@ export class CommonAPIService {
 	renderTab = new Subject();
 	messageSub = new Subject();
 	unsubscribePayAPI = new Subject();
+	branchSwitchSubject = new Subject();
 	userPrefix: any = '';
 	familyData: any;
 	familyNumber: any;

@@ -81,8 +81,8 @@
                     <mat-select placeholder="To Branch" formControlName="br_id"
                       (selectionChange)="getBranchClassAndSession($event)" required>
                       <mat-option value="">Please Select</mat-option>
-                      <mat-option *ngFor="let item of branchArray" [value]="item.br_prefix">{{item.br_name}},
-                        {{item.br_address}}
+                      <mat-option *ngFor="let item of schoolGroupData" [value]="item.si_school_prefix">{{item.si_school_name}},
+                        {{item.si_school_address}}
                       </mat-option>
                     </mat-select>
                   </mat-form-field>

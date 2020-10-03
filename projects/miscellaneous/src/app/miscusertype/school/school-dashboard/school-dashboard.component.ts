@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonAPIService } from 'src/app/_services';
 import { Router, ActivatedRoute } from '@angular/router';
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 
 @Component({
   selector: 'app-school-dashboard',
@@ -10,7 +11,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class SchoolDashboardComponent implements OnInit {
   notif: any;
   constructor(private router: Router, private commonAPIService: CommonAPIService,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,private branchChangeService: BranchChangeService) { }
 
   ngOnInit() {
     if (this.commonAPIService.getNotif()) {
@@ -20,6 +21,11 @@ export class SchoolDashboardComponent implements OnInit {
       }
       this.commonAPIService.resetNotif();
     }
+
+    this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+      }
+    });
   }
   viewFileSystem() {
     this.router.navigate(['misc/school/fms/school-records']);

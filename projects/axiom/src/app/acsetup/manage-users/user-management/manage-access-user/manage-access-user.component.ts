@@ -409,10 +409,166 @@ export class ManageAccessUserComponent implements OnInit {
 						}
 						this.moduleDivFlag = true;
 						this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+						console.log('this.moduleItems', this.moduleItems, this.finalAssignedModules)
 					}
 				});
 		}
 
+	}
+
+	getMappedModuleList($event) {
+		const pro_id = this.schoolAssignForm.value.projectList;
+		this.moduleItems = [];
+		this.finalAssignedModules = [];
+		this.moduleArray = [];
+		this.moduleDivFlag = false;
+		if (pro_id) {
+			if (this.schoolAssignForm.value.interfaceList === 'app') {
+				this.getMappedUserAccessMenu();
+				this.getMappedAssignedModuleList2('1');
+			} else {
+				this.getMappedUserAccessMenu();
+				this.adminService.getModuleList({ role_id: 2, pro_id: pro_id, mor_type: (this.schoolAssignForm.value.interfaceList ? this.schoolAssignForm.value.interfaceList : 'web' )  }).subscribe(
+					(result: any) => {
+						if (result && result.status === 'ok') {
+							for (const item of result.data) {
+								item['display'] = 'block';
+								if (item.submenu_level_1 && item.submenu_level_1.length > 0) {
+									for (const submenu of item.submenu_level_1) {
+										submenu['display'] = 'block';
+										if (submenu.submenu_level_2 && submenu.submenu_level_2.length > 0) {
+											for (const submenu2 of submenu.submenu_level_2) {
+												submenu2['display'] = 'block';
+											}
+
+										}
+									}
+								}
+								this.moduleArray.push(item);
+							}
+							console.log('this.schoolAssignForm.value.pro_id',this.schoolAssignForm.value.project);
+							for (const item of this.assignedModuleArray) {
+								console.log('item.mod_pro_id--',item.mod_pro_id)
+								if (this.schoolAssignForm && this.schoolAssignForm.value &&  this.schoolAssignForm.value.projectList && this.schoolAssignForm.value.projectList.indexOf(item.mod_pro_id) > -1) {
+									const index = this.finalAssignedModules.indexOf(item.mod_id);
+									if (index === -1) {
+										this.finalAssignedModules.push(item.mod_id);
+									}
+									if (item.submenu_level_1 && item.submenu_level_2.length > 0) {
+										for (const submenu of item.submenu_level_1) {
+											const index2 = this.finalAssignedModules.indexOf(submenu.mod_id);
+											if (index2 === -1) {
+												this.finalAssignedModules.push(submenu.mod_id);
+											}
+											if (submenu.submenu_level_2 && submenu.submenu_level_2.length > 0) {
+												for (const submenu2 of submenu.submenu_level_2) {
+													const index3 = this.finalAssignedModules.indexOf(submenu2.mod_id);
+													if (index3 === -1) {
+														this.finalAssignedModules.push(submenu2.mod_id);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+							// this.moduleDivFlag = true;
+							this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+							
+						}
+					});
+			}
+		}
+
+	}
+	getMappedAssignedModuleList2(pro_id) {
+		this.assignedModuleArray = [];
+		this.moduleArray = [];
+		this.finalAssignedModules = [];
+		this.moduleItems = [];
+		let inputJson = { mapped_prefix: this.currentMappedSchoolData.si_school_prefix,login_id: this.login_id, role_id: '2', mor_type: 'app' };
+		console.log('inputJson--', inputJson);
+		this.userAccessMenuService.getUserAccessMenu(inputJson).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.assignedModuleArray = result.data;
+					for (const item of this.assignedModuleArray) {
+						if (item.mod_pro_id === '1') {
+							const index = this.finalAssignedModules.indexOf(item.mod_id);
+							if (index === -1) {
+								this.finalAssignedModules.push(item.mod_id);
+							}
+							if (item.submenu_level_1 && item.submenu_level_2.length > 0) {
+								for (const submenu of item.submenu_level_1) {
+									const index2 = this.finalAssignedModules.indexOf(submenu.mod_id);
+									if (index2 === -1) {
+										this.finalAssignedModules.push(submenu.mod_id);
+									}
+									if (submenu.submenu_level_2 && submenu.submenu_level_2.length > 0) {
+										for (const submenu2 of submenu.submenu_level_2) {
+											const index3 = this.finalAssignedModules.indexOf(submenu2.mod_id);
+											if (index3 === -1) {
+												this.finalAssignedModules.push(submenu2.mod_id);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					this.moduleItems = [];
+					this.moduleDivFlag = true;
+					this.adminService.getModuleList({ role_id: 2, pro_id: pro_id, mor_type: 'app' }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								for (const item of result.data) {
+									item['display'] = 'block';
+									if (item.submenu_level_1 && item.submenu_level_1.length > 0) {
+										for (const submenu of item.submenu_level_1) {
+											submenu['display'] = 'block';
+											if (submenu.submenu_level_2 && submenu.submenu_level_2.length > 0) {
+												for (const submenu2 of submenu.submenu_level_2) {
+													submenu2['display'] = 'block';
+												}
+		
+											}
+										}
+									}
+									this.moduleArray.push(item);
+								}
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+							}
+						});
+					if (this.assignedModuleArray.length > 0) {
+						this.submitButton = false;
+					}
+				} else {
+					this.moduleItems = [];
+					this.moduleDivFlag = true;
+					this.adminService.getModuleList({ role_id: 2, pro_id: pro_id, mor_type: 'app' }).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								for (const item of result.data) {
+									item['display'] = 'block';
+									if (item.submenu_level_1 && item.submenu_level_1.length > 0) {
+										for (const submenu of item.submenu_level_1) {
+											submenu['display'] = 'block';
+											if (submenu.submenu_level_2 && submenu.submenu_level_2.length > 0) {
+												for (const submenu2 of submenu.submenu_level_2) {
+													submenu2['display'] = 'block';
+												}
+		
+											}
+										}
+									}
+									this.moduleArray.push(item);
+								}
+								this.moduleItems = this.treeviewService.getItemData('menu', this.assignedModuleArray, this.moduleArray);
+							}
+						});
+				}
+			}
+		);
 	}
 	toggleTopMenu(index) {
 		this.moduleArray[index].display = this.moduleArray[index].display === 'block' ? 'none' : 'block'
@@ -548,6 +704,7 @@ export class ManageAccessUserComponent implements OnInit {
 			this.commonAPIService.assignSchoolGroupToUser(inputJson).subscribe((result:any) => {
 				if (result && result.status == 'ok') {
 					this.getMappedSchoolWithUser();
+					this.toggleCreateUser('');
 					this.notif.showSuccessErrorMessage('User Created Successfully', 'success');
 				} else {
 					this.notif.showSuccessErrorMessage('Error While Creating User', 'error');
@@ -606,7 +763,7 @@ export class ManageAccessUserComponent implements OnInit {
 	}
 
 	getSchoolUser() {
-		this.commonAPIService.getSchoolUser({})
+		this.commonAPIService.getSchoolUser({prefix:this.schoolAssignForm.value.schoolList})
 			.subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -632,7 +789,45 @@ export class ManageAccessUserComponent implements OnInit {
 		this.currentMappedSchoolData = item;
 		this.editNewUserFlag = true;
 		this.showNewSchoolUser = true;
+		this.adminService.getMappedUserProject({ au_login_id: item.au_login_id, prefix: item.au_si_prefix }).subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					var tempProjectArr = [];
+					//this.resultProjectListArray = JSON.parse(result.data[0].au_project_mapped);
+					//this.projectListArray = JSON.parse(result.data[0].au_project_mapped);
+					for(var i=0; i<JSON.parse(result.data[0].au_project_mapped).length;i++) {
+						tempProjectArr.push(JSON.parse(result.data[0].au_project_mapped)[i]['pro_id']);
+					}
+					this.schoolAssignForm.patchValue({
+						projectList :tempProjectArr,
+						interfaceList: 'web'
+					});
+					this.assignedModuleArray = [];
+					this.moduleArray = [];
+					this.finalAssignedModules = [];
+					this.moduleItems = [];
+					console.log('item', item);
+					
+					this.getMappedUserAccessMenu();
+					this.getMappedModuleList({value:tempProjectArr, mor_type:'web', role_id:'2'});
+					console.log('this.schoolAssignForm', this.schoolAssignForm)
+				}
+			});
 
+	}
+
+	getMappedUserAccessMenu() {
+		let inputJson = { mapped_prefix:this.currentMappedSchoolData.si_school_prefix,  login_id:this.currentMappedSchoolData.au_login_id, role_id: '2', mor_type: (this.schoolAssignForm.value.interfaceList ? this.schoolAssignForm.value.interfaceList : 'web') };
+					console.log('inputJson--', inputJson);
+					this.userAccessMenuService.getUserAccessMenu(inputJson).subscribe(
+						(result: any) => {
+							if (result && result.status === 'ok') {
+								this.assignedModuleArray = result.data;
+								// this.getMappedModuleList({value:tempProjectArr, mor_type:'web', role_id:'2'});
+								
+							}
+						}
+					);
 	}
 	revokeAccessToAssignSchool(item) {
 		let inputJson = {
@@ -663,9 +858,23 @@ export class ManageAccessUserComponent implements OnInit {
 	}
 
 	toggleCreateUser(event) {
-		this.showNewSchoolUser=!this.showNewSchoolUser;
-		this.editNewUserFlag = !this.editNewUserFlag;
+		this.showNewSchoolUser=false;
+		this.editNewUserFlag = false;
 		this.currentMappedSchoolData = {};
+		this.moduleArray =[];
+	}
+
+	showNewUser($event) {
+		this.showNewSchoolUser=true;
+		this.editNewUserFlag = false;
+		this.currentMappedSchoolData = {};
+		this.moduleArray =[];
+	}
+
+	onTabChanged(event) {
+		// this.currentTab = event.index;
+		// console.log('this.currentTab--', this.currentTab);
+		this.moduleArray =[];
 	}
 
 }

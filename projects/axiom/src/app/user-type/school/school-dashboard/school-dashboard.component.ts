@@ -6,7 +6,7 @@ import * as Highcharts from 'highcharts';
 import { MatTableDataSource } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CommonAPIService, UserAccessMenuService, NotificationService } from '../../../_services';
-
+import { BranchChangeService } from 'src/app/_services/branchChange.service';
 export interface PeriodicElement {
 	exam: number;
 	student: any;
@@ -153,7 +153,8 @@ export class SchoolDashboardComponent implements OnInit {
 		private adminService: AdminService,
 		private common: CommonAPIService,
 		private notif: NotificationService,
-		private userAccessMenuService: UserAccessMenuService) { }
+		private userAccessMenuService: UserAccessMenuService,
+		private branchChangeService: BranchChangeService) { }
 
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -164,6 +165,19 @@ export class SchoolDashboardComponent implements OnInit {
 		this.getDashboardDetails();
 		this.getClassLeaderBoardData();
 		this.getStudentLeaderBoard();
+
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+				this.session = JSON.parse(localStorage.getItem('session'));
+				this.getPastScheduledExams();
+				this.getComingScheduledExams();
+				this.getSchool();
+				this.getDashboardDetails();
+				this.getClassLeaderBoardData();
+				this.getStudentLeaderBoard();
+			}
+		});
 	}
 	getComingScheduledExams() {
 		this.comingExamArray = [];

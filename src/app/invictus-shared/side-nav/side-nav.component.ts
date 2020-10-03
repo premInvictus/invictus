@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
-import { UserAccessMenuService } from '../../_services/index';
+import { UserAccessMenuService, BranchChangeService } from '../../_services/index';
 import { AccordionConfig } from 'ngx-bootstrap/accordion';
 import { Router } from '@angular/router';
 export function getAccordionConfig(): AccordionConfig {
@@ -24,7 +24,7 @@ export class SideNavComponent implements OnInit, OnChanges {
 	submenuLengthArray: any[] = [];
 	showSubmenuArray: any[] = [];
 	@Input() projectId: any = '1';
-	constructor(private userAccessMenuService: UserAccessMenuService, private router: Router) { }
+	constructor(private userAccessMenuService: UserAccessMenuService, private branchChangeService:BranchChangeService,private router: Router) { }
 	ngOnChanges() {
 		this.getUserAccessMenu(this.projectId);
 	}
@@ -34,6 +34,16 @@ export class SideNavComponent implements OnInit, OnChanges {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.user_role_id = this.currentUser.role_id;
 		this.getUserAccessMenu(this.projectId);
+
+		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
+			if(data) {
+				this.upperMenu = '<i class=\'fas fa-users\'></i>';
+				this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+				this.user_role_id = this.currentUser.role_id;
+				this.getUserAccessMenu(this.projectId);
+				this.moveToDashboard();
+			}
+		})
 	}
 
 	moveToDashboard() {
@@ -134,6 +144,8 @@ export class SideNavComponent implements OnInit, OnChanges {
 					} else {
 						this.menuSubmenuArray = [];
 					}
+					console.log(this.menuSubmenuArray, 'sub menu array');
+					console.log(this.userAccessMenuArray, 'user menu')
 				}
 			);
 		} else if (Number(this.currentUser.role_id) === 3) {

@@ -101,4 +101,11 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/siSetup/gender');
 	}
+	getAllSchoolGroups(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
+
+	getMappedSchoolWithUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
+	}
 }

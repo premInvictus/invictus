@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import { UserTypeService } from 'projects/fee/src/app/usertype/usertype.service';
 import { SisService } from 'projects/fee/src/app/_services';
 import { NotificationService } from 'projects/axiom/src/app/_services/index';
-import { CommonAPIService } from '../../_services/index';
+import { CommonAPIService,UserAccessMenuService, BranchChangeService } from '../../_services/index';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { LoaderService } from 'projects/fee/src/app/_services/loader.service';
@@ -70,6 +70,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	returnUrl: string;
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
+		private userAccessMenuService:UserAccessMenuService,
 		private angularFireMessaging: AngularFireMessaging,
 		private sisService: SisService,
 		private router: Router,
@@ -78,7 +79,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		private userTypeService: UserTypeService,
 		private notif: NotificationService,
 		private loader: LoaderService,
-		private commonAPIService: CommonAPIService, private _cookieService: CookieService,
+		private commonAPIService: CommonAPIService, private _cookieService: CookieService, private branchChangeService:BranchChangeService,
 		private route: ActivatedRoute, private  authenticationService:AuthenticationService) {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.mobileQuery = media.matchMedia('(max-width: 600px)');
@@ -251,6 +252,23 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 			}
 		});
 
+	}
+
+	setMappedSession(ses_id) {
+		console.log('ses_id', ses_id);
+		localStorage.removeItem('session');
+		this.session = {};
+		this.session.ses_id = ses_id;
+		localStorage.setItem('session', JSON.stringify(this.session));
+		const saveStateJSON = {
+			pro_url: this.proUrl ? this.proUrl : '',
+			ses_id: ses_id
+		};
+		this.sisService.saveUserLastState({ user_default_data: JSON.stringify(saveStateJSON) }).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				
+			}
+		});
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((result: any) => {
@@ -433,6 +451,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 								routeStore.adm_no = '';
 								routeStore.login_id = '';
 								this._cookieService.removeAll();
+								this.commonAPIService.setUserPrefix('');
 								this.router.navigate(['/login']);
 							} else {
 								this.notif.showSuccessErrorMessage('Error While Logout', 'error');
@@ -645,7 +664,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 				}
 
-				this.commonAPIService.setUserPrefix(this.model.username.split("-")[0]);
+				this.commonAPIService.setUserPrefix(result.data[0]['au_si_prefix']);
 				this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','branch-change')
 				.subscribe(
 					(result: any) => {
@@ -654,6 +673,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 							const user = result.data;
 							if (result.data.userSaveStateData) {
 								this.userSaveData = JSON.parse(result.data.userSaveStateData);
+								console.log('this.userSaveData 657',result.data)
 							}
 							const tempJson = {
 								CID: user.clientKey,
@@ -696,6 +716,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 													}
 												}
 												let returnUrl: any;
+												console.log('this.userSaveData', this.userSaveData);
 												if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
 													localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
 													returnUrl = '/axiom';
@@ -703,6 +724,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 													returnUrl = this.userSaveData.pro_url;
 													localStorage.setItem('project', JSON.stringify({ pro_url: this.userSaveData.pro_url }));
 												}
+												// this.goToProject(this.userSaveData.pro_url,this.userSaveData.pro_status,this.userSaveData.pro_id);
+												this.getGroupedSchool();
+												this.getProjectList();
+
 												if (this.userSaveData && this.userSaveData.ses_id) {
 													const sessionParam: any = {};
 													sessionParam.ses_id = this.userSaveData.ses_id;
@@ -719,7 +744,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 												} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
 													this.returnUrl = returnUrl + '/parent';
 												}
+												this.setMappedSession(this.userSaveData.ses_id);
 												this.router.navigate([this.returnUrl]);
+												this.branchChangeService.branchSwitchSubject.next(true);
 											}
 										});
 									}
@@ -747,6 +774,127 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 			
 				
+	}
+
+	getUserAccessMenu() {
+		// this is used to render side nav as per project id
+		this.userAccessMenuArray = [];
+		this.menuSubmenuArray = [];
+		if (Number(this.currentUser.role_id) === 1) {
+			const param: any = {};
+			param.login_id = this.currentUser.login_id;
+			param.role_id = this.currentUser.role_id;
+			param.pro_id = '1';
+				this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+				(result: any) =>  {
+						if (result.status === 'ok') {
+							this.userAccessMenuService.setUserAccessMenu(result.data);
+							this.userAccessMenuArray = result.data;
+							const morStatusEnabledArray: any[] = [];
+							for (const item of this.userAccessMenuArray) {
+								if (item.mor_status === '1') {
+								morStatusEnabledArray.push(item);
+								}
+							}
+							for (const level0 of morStatusEnabledArray) {
+								let menu: any = {};
+								if (level0.mod_level === '0') {
+									menu = level0;
+									menu.submenu = [];
+									for (const level1 of morStatusEnabledArray) {
+										if (level1.mod_parent_id === level0.mod_id) {
+											menu.submenu.push(level1);
+										}
+									}
+									this.menuSubmenuArray.push(menu);
+								}
+							}
+						}
+					});
+			} else if (Number(this.currentUser.role_id) === 2) {
+			const param: any = {};
+			param.login_id = this.currentUser.login_id;
+			param.role_id = this.currentUser.role_id;
+			param.pro_id = '1';
+			this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+			(result: any) =>  {
+					if (result.status === 'ok') {
+						this.userAccessMenuService.setUserAccessMenu(result.data);
+						this.userAccessMenuArray = result.data;
+						for (const level0 of this.userAccessMenuArray) {
+							let menu: any = {};
+							if (level0.mod_level === '0') {
+								menu = level0;
+								menu.submenu = [];
+								for (const level1 of this.userAccessMenuArray) {
+									if (level1.mod_parent_id === level0.mod_id) {
+										menu.submenu.push(level1);
+									}
+								}
+								this.menuSubmenuArray.push(menu);
+							}
+						}
+						}
+				}
+			);
+		} else if (Number(this.currentUser.role_id) === 3) {
+			const param: any = {};
+			param.login_id = this.currentUser.login_id;
+			param.role_id = this.currentUser.role_id;
+			param.pro_id = '1';
+		this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+		(result: any) =>  {
+				if (result.status === 'ok') {
+					this.userAccessMenuService.setUserAccessMenu(result.data);
+					this.userAccessMenuArray = result.data;
+					for (const level0 of this.userAccessMenuArray) {
+						let menu: any = {};
+						if (level0.mod_level === '0') {
+							menu = level0;
+							menu.submenu = [];
+							for (const level1 of this.userAccessMenuArray) {
+								if (level1.mod_parent_id === level0.mod_id) {
+									menu.submenu.push(level1);
+								}
+							}
+							this.menuSubmenuArray.push(menu);
+						}
+					}
+					}
+			}
+		);
+	} else if (Number(this.currentUser.role_id) === 4) {
+		const studentMenuArray: any[] = [];
+		const param: any = {};
+		param.role_id = this.currentUser.role_id;
+	this.userAccessMenuService.getUserAccessMenu(param).subscribe(
+	(result: any) =>  {
+			if (result.status === 'ok') {
+				this.userAccessMenuService.setUserAccessMenu(result.data);
+				this.userAccessMenuArray = result.data;
+				for (const level0 of this.userAccessMenuArray) {
+					const findex = studentMenuArray.findIndex(f => Number(f.menu_mod_id) === Number(level0.menu_mod_id));
+					if (findex === -1) {
+						studentMenuArray.push(level0);
+					}
+				}
+				for (const level0 of studentMenuArray) {
+				let menu: any = {};
+				if (level0.mod_level === '0') {
+					menu = level0;
+					menu.submenu = [];
+					for (const level1 of this.userAccessMenuArray) {
+						if (level1.mod_parent_id === level0.mod_id) {
+							menu.submenu.push(level1);
+						}
+					}
+					this.menuSubmenuArray.push(menu);
+				}
+			}
+				}
+		}
+	);
+	}
 	}
 
 }
