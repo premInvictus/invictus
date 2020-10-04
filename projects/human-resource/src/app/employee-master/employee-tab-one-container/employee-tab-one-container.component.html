@@ -53,7 +53,7 @@
                 [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
-                <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="getCityPerId(item)"
+                <mat-option (onSelectionChange)="getCityPerId(item)" (keyup.enter)="$event.stopPropagation();getCityPerId(item)"
                   (click)="getCityPerId(item)" *ngFor="let item of cityCountryArray" [value]="item.cit_id">
                   {{item.cit_name}} -
                   {{item.sta_name}} - {{item.cou_name}}</mat-option>
@@ -100,7 +100,7 @@
                 [readonly]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher" [matAutocomplete]="autoGroup"
                 (keyup)="filterCityStateCountry($event)">
               <mat-autocomplete #autoGroup="matAutocomplete">
-                <mat-option (onSelectionChange)="getCityResId(item)" (click)="getCityResId(item)"
+                <mat-option (onSelectionChange)="getCityResId(item)" (click)="$event.stopPropagation();getCityResId(item)"
                   *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
                   {{item.sta_name}} - {{item.cou_name}}</mat-option>
               </mat-autocomplete>

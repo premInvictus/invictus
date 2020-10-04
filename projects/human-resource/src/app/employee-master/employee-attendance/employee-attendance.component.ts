@@ -574,6 +574,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 					//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 				}
+			},
+			(errorResponse:any) => {
+				this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 			});
 
 			}
@@ -709,6 +712,9 @@ export class EmployeeAttendanceComponent implements OnInit {
 				//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
 				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee Attendance', 'success');
 			}
+		},
+		(errorResponse:any) => {
+			this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 		});
 	}
 

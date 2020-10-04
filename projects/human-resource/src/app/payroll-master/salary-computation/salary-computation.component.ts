@@ -1922,6 +1922,9 @@ export class SalaryComputationComponent implements OnInit {
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 						// this.checkForFilter();
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 					});
 				});
 			} else {
@@ -1938,6 +1941,9 @@ export class SalaryComputationComponent implements OnInit {
 						// this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 						this.checkForFilter();
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 					});
 				});
 			}
@@ -2617,6 +2623,9 @@ export class SalaryComputationComponent implements OnInit {
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 						// this.checkForFilter();
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 					});
 				});
 			} else {
@@ -2625,6 +2634,9 @@ export class SalaryComputationComponent implements OnInit {
 					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
 						// this.checkForFilter();
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
 					});
 				});
 			}
