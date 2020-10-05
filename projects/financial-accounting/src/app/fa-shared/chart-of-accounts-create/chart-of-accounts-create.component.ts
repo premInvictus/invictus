@@ -104,6 +104,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		{id:'ca-7', name: 'TDS'},
 		{id:'ca-8', name: 'Gratuity'},
 		{id:'fr-1', name: 'Fee Receivable'},
+		{id:'adj-1', name: 'Fee Adjustment'},
 		
 	);
 	await this.faService.getBanks({}).toPromise().then((result: any) => {
@@ -203,6 +204,12 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 				tempjson.dependancy_id = temparr[1];
 				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
 				tempjson.dependenecy_component = 'fee_receivable';
+				tempjson.dependency_name = temp.name;
+				return [tempjson];
+			} else if(temparr[0] == 'adj'){
+				tempjson.dependancy_id = temparr[1];
+				tempjson.dependency_local_id = this.accountform.value.coa_dependency_local;
+				tempjson.dependenecy_component = 'fee_invoice_includes_adjustments';
 				tempjson.dependency_name = temp.name;
 				return [tempjson];
 			} 
