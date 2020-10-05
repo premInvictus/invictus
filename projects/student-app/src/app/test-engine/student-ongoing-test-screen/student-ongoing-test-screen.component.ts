@@ -336,7 +336,14 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 															// load the 1st question as soon as the exam starts
 															this.currentQA = this.questionsArray[this.currentQAIndex];
 															localStorage.setItem('currentExamQus',
-																JSON.stringify({ eva_id: this.eva_id, eva_id_qus: this.questionsArray }));
+																JSON.stringify(
+																	{ 
+																		eva_id: this.evalutionDetail.eva_id, 
+																		es_id:this.evalutionDetail.eva_es_id,
+																		login_id:this.evalutionDetail.eva_login_id,
+																		eva_id_qus: this.questionsArray 
+																	}
+																	));
 															localStorage.setItem('currentExamSub',
 																JSON.stringify({ eva_id: this.eva_id, eva_id_sub: this.subjectArrayOfQP }));
 															this.loadCurrentQ(0);
@@ -402,7 +409,13 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamQus')) {
 				const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-				if (currentExamQus.eva_id === eva_id) {
+				// if (currentExamQus.eva_id === eva_id) {
+				// 	if (currentExamQus.eva_id_qus) {
+				// 		resolve(currentExamQus.eva_id_qus);
+				// 	}
+				// 	resolve([]);
+				// }
+				if (currentExamQus.eva_id === this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}
@@ -414,7 +427,14 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	}
 	setQusToLS() {
 		return new Promise(resolve => {
-			localStorage.setItem('currentExamQus', JSON.stringify({ eva_id: this.eva_id, eva_id_qus: this.questionsArray }));
+			localStorage.setItem('currentExamQus', JSON.stringify(
+				{ 
+					eva_id: this.evalutionDetail.eva_id, 
+					es_id:this.evalutionDetail.eva_es_id,
+					login_id:this.evalutionDetail.eva_login_id,
+					eva_id_qus: this.questionsArray 
+				}
+				));
 			resolve();
 		});
 	}
@@ -1752,8 +1772,10 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		const reader = new FileReader();
 		reader.onloadend = (e) => {
 			this.currentImage = reader.result;
+			//this.userDetails.au_full_name.replace(/ /g,"_")+'-'+this.userDetails.au_admission_no+'-'+this.es_id+files.name.split('.').pop()
 			const fileJson = {
-				fileName: files.name,
+				fileName: this.userDetails.au_full_name.replace(/ /g,"_")+'-'+this.userDetails.au_admission_no+'-'+this.es_id+'.'+files.name.split('.').pop(),
+				rename:true,
 				imagebase64: this.currentImage,
 				module: 'classworkupdate'
 			};
