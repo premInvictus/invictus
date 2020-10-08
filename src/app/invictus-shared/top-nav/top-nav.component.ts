@@ -446,7 +446,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 						(result: any) => {
 							if (result.status === 'ok') {
 								this.deleteToken();
+								const prefix = (JSON.parse(localStorage.getItem('Prefix')).pre);
 								localStorage.clear();
+								localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
+								this.commonAPIService.setUserPrefix(prefix);
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
 								routeStore.login_id = '';
