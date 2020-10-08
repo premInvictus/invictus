@@ -128,17 +128,17 @@ export class StudentInstructionScreenComponent implements OnInit {
 				.subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.examDetail = result.data[0];
-						if (localStorage.getItem('currentExamQus')) {
-							const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-							if (currentExamQus.es_id == this.examDetail.es_id && currentExamQus.login_id == this.currentUser.login_id) {
+						// if (localStorage.getItem('currentExamQus')) {
+						// 	const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
+						// 	if (currentExamQus.es_id == this.examDetail.es_id && currentExamQus.login_id == this.currentUser.login_id) {
 								
-							} else {
-								console.log('remove localstorage currentExamQus');
-								localStorage.removeItem('currentExamQus');
-								localStorage.removeItem('currentExamSub');
-								localStorage.removeItem('currentExam');
-							}
-						}
+						// 	} else {
+						// 		console.log('remove localstorage currentExamQus');
+						// 		localStorage.removeItem('currentExamQus');
+						// 		localStorage.removeItem('currentExamSub');
+						// 		localStorage.removeItem('currentExam');
+						// 	}
+						// }
 						console.log('this.examDetail', this.examDetail);
 						if (this.examDetail.is_test_start && Number(this.examDetail.es_grace_time_extend) !== 1) {
 							if (Number(this.examDetail.es_status) === 1 && Number(this.examDetail.es_exam_type) !== 2) {

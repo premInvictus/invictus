@@ -254,7 +254,9 @@ export class JeeMainsComponent implements OnInit {
 		const dialogRef = this.dialog.open(QuestionNoModalComponent, {
 			width: '380px',
 			data: {
-				eva_id: this.eva_id
+				eva_id: this.evalutionDetail.eva_id,
+				eva_es_id:this.evalutionDetail.eva_es_id,
+				eva_login_id:this.evalutionDetail.eva_login_id
 			}
 		});
 		dialogRef.componentInstance.loadQus.subscribe(qusInd => {
@@ -359,14 +361,18 @@ export class JeeMainsComponent implements OnInit {
 																localStorage.setItem(
 																	'currentExamQus',
 																	JSON.stringify({
-																		eva_id: this.eva_id,
+																		eva_id: this.evalutionDetail.eva_id, 
+																		es_id:this.evalutionDetail.eva_es_id,
+																		login_id:this.evalutionDetail.eva_login_id,
 																		eva_id_qus: this.questionsArray
 																	})
 																);
 																localStorage.setItem(
 																	'currentExamSub',
 																	JSON.stringify({
-																		eva_id: this.eva_id,
+																		eva_id: this.evalutionDetail.eva_id, 
+																		es_id:this.evalutionDetail.eva_es_id,
+																		login_id:this.evalutionDetail.eva_login_id,
 																		eva_id_sub: this.examSubArray
 																	})
 																);
@@ -652,7 +658,7 @@ export class JeeMainsComponent implements OnInit {
 				const currentExamQus = JSON.parse(
 					localStorage.getItem('currentExamQus')
 				);
-				if (currentExamQus.eva_id === eva_id) {
+				if (currentExamQus.eva_id == this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}
@@ -668,7 +674,7 @@ export class JeeMainsComponent implements OnInit {
 				const currentExamSub = JSON.parse(
 					localStorage.getItem('currentExamSub')
 				);
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.evalutionDetail.eva_id && currentExamSub.es_id == this.evalutionDetail.eva_es_id && currentExamSub.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -683,7 +689,12 @@ export class JeeMainsComponent implements OnInit {
 			console.log('LS --- ', this.questionsArray);
 			localStorage.setItem(
 				'currentExamQus',
-				JSON.stringify({ eva_id: this.eva_id, eva_id_qus: this.questionsArray })
+				JSON.stringify({
+					eva_id: this.evalutionDetail.eva_id, 
+					es_id:this.evalutionDetail.eva_es_id,
+					login_id:this.evalutionDetail.eva_login_id,
+					eva_id_qus: this.questionsArray 
+					})
 			);
 			resolve();
 		});
@@ -691,7 +702,7 @@ export class JeeMainsComponent implements OnInit {
 	getCurrentQusFromLS(cqai) {
 		if (localStorage.getItem('currentExamQus')) {
 			const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-			if (currentExamQus.eva_id === this.eva_id) {
+			if (currentExamQus.eva_id == this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 				const lsquestions = currentExamQus.eva_id_qus;
 				return lsquestions[cqai];
 			}
@@ -700,13 +711,15 @@ export class JeeMainsComponent implements OnInit {
 	setCurrentQusToLS(cqai, qus) {
 		if (localStorage.getItem('currentExamQus')) {
 			const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-			if (currentExamQus.eva_id === this.eva_id) {
+			if (currentExamQus.eva_id == this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 				const lsquestions = currentExamQus.eva_id_qus;
 				this.questionsArray[cqai] = qus;
 				localStorage.setItem(
 					'currentExamQus',
 					JSON.stringify({
-						eva_id: this.eva_id,
+						eva_id: this.evalutionDetail.eva_id, 
+						es_id:this.evalutionDetail.eva_es_id,
+						login_id:this.evalutionDetail.eva_login_id,
 						eva_id_qus: this.questionsArray
 					})
 				);
@@ -2665,7 +2678,7 @@ export class QuestionNoModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamSub')) {
 				const currentExamSub = JSON.parse(localStorage.getItem('currentExamSub'));
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.data.eva_id && currentExamSub.es_id == this.data.eva_es_id && currentExamSub.login_id == this.data.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -2679,7 +2692,7 @@ export class QuestionNoModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamQus')) {
 				const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-				if (currentExamQus.eva_id === eva_id) {
+				if (currentExamQus.eva_id == this.data.eva_id && currentExamQus.es_id == this.data.eva_es_id && currentExamQus.login_id == this.data.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}

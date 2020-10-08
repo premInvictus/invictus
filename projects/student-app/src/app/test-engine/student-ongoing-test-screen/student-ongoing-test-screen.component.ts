@@ -179,12 +179,13 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.ongoingDiv = false;
 	}
-
 	openQuesDialog(): void {
 		const dialogRef = this.dialog.open(QuestionNoOnGoingModalComponent, {
 			width: '380px',
 			data: {
-				eva_id: this.eva_id
+				eva_id: this.evalutionDetail.eva_id,
+				eva_es_id:this.evalutionDetail.eva_es_id,
+				eva_login_id:this.evalutionDetail.eva_login_id
 			}
 		});
 
@@ -345,7 +346,12 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 																	}
 																	));
 															localStorage.setItem('currentExamSub',
-																JSON.stringify({ eva_id: this.eva_id, eva_id_sub: this.subjectArrayOfQP }));
+																JSON.stringify({ 
+																	eva_id: this.evalutionDetail.eva_id, 
+																	es_id:this.evalutionDetail.eva_es_id,
+																	login_id:this.evalutionDetail.eva_login_id, 
+																	eva_id_sub: this.subjectArrayOfQP 
+																}));
 															this.loadCurrentQ(0);
 														}
 													}
@@ -395,7 +401,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamSub')) {
 				const currentExamSub = JSON.parse(localStorage.getItem('currentExamSub'));
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.evalutionDetail.eva_id && currentExamSub.es_id == this.evalutionDetail.eva_es_id && currentExamSub.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -415,7 +421,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 				// 	}
 				// 	resolve([]);
 				// }
-				if (currentExamQus.eva_id === this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
+				if (currentExamQus.eva_id == this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}
@@ -1889,7 +1895,7 @@ export class QuestionNoOnGoingModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamSub')) {
 				const currentExamSub = JSON.parse(localStorage.getItem('currentExamSub'));
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.data.eva_id && currentExamSub.es_id == this.data.eva_es_id && currentExamSub.login_id == this.data.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -1903,7 +1909,7 @@ export class QuestionNoOnGoingModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamQus')) {
 				const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-				if (currentExamQus.eva_id === eva_id) {
+				if (currentExamQus.eva_id == this.data.eva_id && currentExamQus.es_id == this.data.eva_es_id && currentExamQus.login_id == this.data.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}
