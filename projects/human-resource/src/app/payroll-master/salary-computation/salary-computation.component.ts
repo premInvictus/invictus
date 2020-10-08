@@ -1345,6 +1345,8 @@ export class SalaryComputationComponent implements OnInit {
 				if (item.emp_salary_detail && item.emp_salary_detail.empPaymentModeDetail && item.emp_salary_detail.empPaymentModeDetail.length > 0) {
 					empPaymentModeDetail = item.emp_salary_detail.empPaymentModeDetail;
 				}
+				//console.log('this.SALARY_COMPUTE_ELEMENT[index].emp_total',this.SALARY_COMPUTE_ELEMENT[index].emp_total);
+				this.SALARY_COMPUTE_ELEMENT[index].emp_total = 0;
 				for (let pi = 0; pi < this.paymentModeArray.length; pi++) {
 					console.log('this.paymentModeArray[pi]',this.paymentModeArray[pi]);
 					console.log(this.getCalculationType(item, this.paymentModeArray[pi]['config_id']));
@@ -1368,8 +1370,8 @@ export class SalaryComputationComponent implements OnInit {
 							}
 
 							//this.SALARY_COMPUTE_ELEMENT[index].balance = (Number(emp_present_days ? Number(empBasicPay) + salary_payable : 0) - 0) - deduction;
-							this.SALARY_COMPUTE_ELEMENT[index].balance = this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable - deduction;
-							this.SALARY_COMPUTE_ELEMENT[index].emp_total = deduction;
+							//this.SALARY_COMPUTE_ELEMENT[index].balance = this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable - deduction;
+							this.SALARY_COMPUTE_ELEMENT[index].emp_total += deduction;
 
 							this.formGroupArray[index]['value'][this.paymentModeArray[pi]['pm_id']] = Math.round((Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) * Number(curpaymetmode['value'])) / 100)
 							////console.log(formJson);
@@ -1390,8 +1392,8 @@ export class SalaryComputationComponent implements OnInit {
 							this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data.push(inputJson);
 
 							tdeduction = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]['pm_value']));
-
-							this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
+							this.SALARY_COMPUTE_ELEMENT[index].emp_total += tdeduction;
+							// this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
 						}
 
 					} else {
@@ -1411,13 +1413,17 @@ export class SalaryComputationComponent implements OnInit {
 
 						tdeduction = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_modes_data.mode_data[pi]['pm_value']));
 
-						this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
-						if (this.SALARY_COMPUTE_ELEMENT[index].emp_total < 0) {
-							this.SALARY_COMPUTE_ELEMENT[index].emp_total = - this.SALARY_COMPUTE_ELEMENT[index].emp_total;
-						}
-						this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) -
-							Number(this.SALARY_COMPUTE_ELEMENT[index].emp_total));
+						// this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(this.SALARY_COMPUTE_ELEMENT[index].balance - tdeduction);
+						// if (this.SALARY_COMPUTE_ELEMENT[index].emp_total < 0) {
+						// 	this.SALARY_COMPUTE_ELEMENT[index].emp_total = - this.SALARY_COMPUTE_ELEMENT[index].emp_total;
+						// }
+						this.SALARY_COMPUTE_ELEMENT[index].emp_total += tdeduction;
+						// this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) -
+						// 	Number(this.SALARY_COMPUTE_ELEMENT[index].emp_total));
 					}
+					this.SALARY_COMPUTE_ELEMENT[index].balance = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[index].emp_salary_payable) -
+							Number(this.SALARY_COMPUTE_ELEMENT[index].emp_total));
+					
 				}
 
 				//console.log(this.formGroupArray, '2345');
@@ -1951,7 +1957,7 @@ export class SalaryComputationComponent implements OnInit {
 						// this.checkForFilter();
 					},
 					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
 					});
 				});
 			} else {
@@ -1970,7 +1976,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.checkForFilter();
 					},
 					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
 					});
 				});
 			}
@@ -2652,7 +2658,7 @@ export class SalaryComputationComponent implements OnInit {
 						// this.checkForFilter();
 					},
 					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
 					});
 				});
 			} else {
@@ -2663,7 +2669,7 @@ export class SalaryComputationComponent implements OnInit {
 						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
 					},
 					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
 					});
 				});
 			}
