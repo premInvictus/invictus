@@ -200,7 +200,21 @@ export class AppComponent implements OnInit {
 							if (result.status === 'ok') {
 								this.deleteToken();
 								localStorage.clear();
-								this.loaderService.setUserPrefix('');
+								const method = 'head';
+								const url: any = window.location.href;
+								let prefix: any = '';
+								const xhr = new XMLHttpRequest();
+								xhr.open(method, url, true);
+								xhr.send(null);
+								xhr.onreadystatechange =  () => {
+									if (xhr.readyState) {
+										prefix = xhr.getResponseHeader('prefix');
+										if (prefix) {
+											this.loaderService.setUserPrefix(prefix);
+											localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
+										}
+									}
+								};
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
 								routeStore.login_id = '';

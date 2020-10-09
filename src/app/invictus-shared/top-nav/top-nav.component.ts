@@ -451,7 +451,21 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 								routeStore.adm_no = '';
 								routeStore.login_id = '';
 								this._cookieService.removeAll();
-								this.commonAPIService.setUserPrefix('');
+								const method = 'head';
+								const url: any = window.location.href;
+								let prefix: any = '';
+								const xhr = new XMLHttpRequest();
+								xhr.open(method, url, true);
+								xhr.send(null);
+								xhr.onreadystatechange =  () => {
+									if (xhr.readyState) {
+										prefix = xhr.getResponseHeader('prefix');
+										if (prefix) {
+											this.commonAPIService.setUserPrefix(prefix);
+											localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
+										}
+									}
+								};
 								this.router.navigate(['/login']);
 							} else {
 								this.notif.showSuccessErrorMessage('Error While Logout', 'error');

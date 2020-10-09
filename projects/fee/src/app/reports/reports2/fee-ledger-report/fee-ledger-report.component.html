@@ -1,5 +1,15 @@
 <form [formGroup]="reportFilterForm">
   <div class="row">
+      <div class="col-2" *ngIf="schoolBranchArray.length > 0">
+          <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Select Branch</mat-label>
+              <mat-select formControlName="school_branch" multiple>
+                  <!-- <mat-option value="">Please Select</mat-option> -->
+                  <mat-option *ngFor="let item of schoolBranchArray" [value]="item.si_school_prefix">
+                      {{item.si_school_name}}</mat-option>
+              </mat-select>
+          </mat-form-field>
+  </div>
     <div *ngIf="filterFlag" class="col-4">
       <div class="margin-top-10">
         <button class="filter-bt" mat-raised-button (click)="openFilterDialog()">

@@ -7,12 +7,14 @@ import {LeaveCreditComponent} from './leave-credit/leave-credit.component';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {of} from 'rxjs'
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 @Component({
 	selector: 'app-employee-leave',
 	templateUrl: './employee-leave.component.html',
 	styleUrls: ['./employee-leave.component.scss']
 })
 export class EmployeeLeaveComponent implements OnInit {
+	@ViewChild(MatAutocompleteTrigger) trigger;
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
 	searchForm: FormGroup;
@@ -46,7 +48,10 @@ export class EmployeeLeaveComponent implements OnInit {
 		this.buildForm();
 		this.getAllEmployee();
 	}
-	
+	onFocus(event){
+		this.trigger._onChange("");
+		this.trigger.openPanel();
+	}
 	getLeaveType() {
 		this.commonAPIService.getLeaveManagement().subscribe((result: any) => {
 		  this.leaveTypeArray = result;
@@ -84,7 +89,14 @@ export class EmployeeLeaveComponent implements OnInit {
 		// 		startWith(''),
 		// 		map(value => this._filter(value))
 		// 	);
+		if(event){
 			this.filteredOptions = of(this._filter(event));
+			console.log('calling getfilteremployee1 if',this._filter(event));
+		} else {
+			console.log('calling getfilteremployee1 else');
+			this.filteredOptions = of(this.options);
+		}
+			
 	}
 	getFilterEmployee(event) {
 		var tempArr = [];

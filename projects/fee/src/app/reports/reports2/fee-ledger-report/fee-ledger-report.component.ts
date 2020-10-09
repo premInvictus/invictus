@@ -126,6 +126,8 @@ export class FeeLedgerReportComponent implements OnInit {
 	levelHeading: any[] = [];
 	levelTotalFooter: any[] = [];
 	levelSubtotalFooter: any[] = [];
+	schoolBranchArray:any[] = [];
+	showMultiSchool = 0;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -136,6 +138,7 @@ export class FeeLedgerReportComponent implements OnInit {
 	ngOnInit() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
+		this.checkForMultiBranch();
 		this.getSession();
 		this.getSchool();
 		this.buildForm();
@@ -162,6 +165,9 @@ export class FeeLedgerReportComponent implements OnInit {
 		}
 	}
 	buildForm() {
+		let tempArray = [];
+		console.log('this.currentUser',this.currentUser)
+		tempArray.push(this.currentUser.Prefix);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
 			'fee_value': '',
@@ -179,8 +185,25 @@ export class FeeLedgerReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'orderBy': ''
+			'orderBy': '',
+			'school_branch':''
+
 		});
+		this.reportFilterForm.patchValue({
+			school_branch:tempArray
+		})
+	}
+	checkForMultiBranch() {
+		let param: any = {};
+		param.gs_name = ['show_branch_on_reports'];
+		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+		if (result && result.status === 'ok' && result.data) {
+			this.showMultiSchool = result.data[0]['gs_value'] == '1'? 1 : 0;
+		
+		} else {
+			this.showMultiSchool = 0;
+		}}
+		);
 	}
 
 	getFeeLedgerReport(value: any) {
@@ -309,6 +332,7 @@ export class FeeLedgerReportComponent implements OnInit {
 			'login_id': value.login_id,
 			'orderBy': value.orderBy,
 			'downloadAll': true,
+			'school_branch': this.reportFilterForm.value.school_branch
 		};
 		this.columnDefinitions = [
 			{
@@ -606,6 +630,29 @@ export class FeeLedgerReportComponent implements OnInit {
 				cssClass: 'fee-ledger-no'
 			},
 		];
+		if(this.reportFilterForm.value.school_branch.length > 1) {
+			let aColumn = {
+				id: 'school_prefix',
+				name: 'School',
+				field: 'school_prefix',
+				filterable: true,
+				filterSearchType: FieldType.string,
+				filter: { model: Filters.compoundInputText },
+				sortable: true,
+				width: 90,
+				grouping: {
+					getter: 'school_prefix',
+					formatter: (g) => {
+						return `${g.value} <span style="color:green"> (${g.count})</span>`;
+					},
+					aggregators: this.aggregatearray,
+					aggregateCollapsed: true,
+					collapsed: false
+				},
+			};
+			this.columnDefinitions.splice(0, 0, aColumn);
+			
+		}
 		this.feeService.getFeeLedgerReport(collectionJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				repoArray = [];
@@ -630,6 +677,7 @@ export class FeeLedgerReportComponent implements OnInit {
 								obj['id'] = repoArray[Number(index)]['au_admission_no'] + stu_arr['rpt_receipt_no'] + j + k +
 									stu_arr['rpt_receipt_date'] + stu_arr['inv_due_date'];
 								obj['stu_admission_no'] = repoArray[Number(index)]['au_admission_name'];
+								obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ? repoArray[Number(index)]['school_prefix'] : '-';
 								obj['au_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['au_full_name']);
 								if (repoArray[Number(index)]['sec_id'] !== '0') {
 									obj['class_name'] = repoArray[Number(index)]['class_name'] + '-' + repoArray[Number(index)]['sec_name'];
@@ -1393,9 +1441,50 @@ export class FeeLedgerReportComponent implements OnInit {
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
+				this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
+				this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
+				this.schoolBranchArray  = [];
+				this.schoolBranchArray.push(this.schoolInfo);
+				this.getSchoolBranch();
 			}
 		});
 	}
+
+	getSchoolBranch() {
+		
+		
+		this.feeService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.feeService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolBranchArray.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolBranchArray);
+					}
+				})
+			}
+		})
+	
+}
+
 	checkReturn(data) {
 		if (Number(data)) {
 			return Number(data);

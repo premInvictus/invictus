@@ -133,6 +133,12 @@ export class OutstandingReportComponent implements OnInit {
 	notFormatedCellArray: any[] = [];
 	monthArray = [];
 	rowChosenData: any[] = [];
+	schoolBranchArray:any[] = [];
+	showMultiSchool=0;
+	multiBranchClass:any[] = [];
+	multiBranchFeeHeads:any[] = [];
+	multiBranchRoutes:any[] = [];
+	multiValueArray:any[] = [];
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -143,7 +149,7 @@ export class OutstandingReportComponent implements OnInit {
 	ngOnInit() {
 
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
+		this.checkForMultiBranch();
 		this.getSchool();
 		this.getInvoiceFeeMonths();
 		this.session = JSON.parse(localStorage.getItem('session'));
@@ -199,6 +205,18 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		this.filterFlag = true;
 	}
+	checkForMultiBranch() {
+		let param: any = {};
+		param.gs_name = ['show_branch_on_reports'];
+		this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+		if (result && result.status === 'ok' && result.data) {
+			this.showMultiSchool = result.data[0]['gs_value'] == '1'? 1 : 0;
+		
+		} else {
+			this.showMultiSchool = 0;
+		}}
+		);
+	}
 	angularGridReady(angularGrid: AngularGridInstance) {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
@@ -217,6 +235,9 @@ export class OutstandingReportComponent implements OnInit {
 		}
 	}
 	buildForm() {
+		let tempArray = [];
+		console.log('this.currentUser',this.currentUser)
+		tempArray.push(this.currentUser.Prefix);
 		this.reportFilterForm = this.fbuild.group({
 			'report_type': '',
 			'fee_value': '',
@@ -235,8 +256,12 @@ export class OutstandingReportComponent implements OnInit {
 			'pageSize': '10',
 			'pageIndex': '0',
 			'login_id': '',
-			'orderBy': ''
+			'orderBy': '',
+			'school_branch' : tempArray
 		});
+		this.reportFilterForm.patchValue({
+			school_branch:tempArray
+		})
 	}
 
 	getInvoiceFeeMonths() {
@@ -391,7 +416,8 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
@@ -399,9 +425,37 @@ export class OutstandingReportComponent implements OnInit {
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						
+						var branchArray = this.reportFilterForm.value.school_branch;
 						let i = 0;
 						let j = 0;
+						let stuFeeHeadArray = [];
 						const feeHead: any[] = [];
+						var tempHeadArray= [];
+						var schoolArray = [];
+						var commonHeadsArray = [];
+						var tempCommonHeadsArray = [];
+						
+						for (var bi=0; bi<repoArray.length;bi++) {
+							
+							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
+								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
+								
+								schoolArray.push(repoArray[bi]['school_prefix']);
+								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
+								}
+								
+							}
+						}
+
+						for(var ti=0; ti<tempHeadArray.length;ti++) {
+							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
+								commonHeadsArray.push(tempHeadArray[ti]);
+							}
+						}
 						Object.keys(repoArray).forEach((keys: any) => {
 							const obj: any = {};
 							if (Number(keys) === 0) {
@@ -519,11 +573,40 @@ export class OutstandingReportComponent implements OnInit {
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
+									if(this.reportFilterForm.value.school_branch.length > 1) {
+										let aColumn = {
+											id: 'school_prefix',
+											name: 'School',
+											field: 'school_prefix',
+											filterable: true,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText },
+											sortable: true,
+											width: 90,
+											grouping: {
+												getter: 'school_prefix',
+												formatter: (g) => {
+													return `${g.value} <span style="color:green"> (${g.count})</span>`;
+												},
+												aggregators: this.aggregatearray,
+												aggregateCollapsed: true,
+												collapsed: false
+											},
+										};
+										this.columnDefinitions.splice(1, 0, aColumn);
+										
+									}
 							}
 							if (repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
+								stuFeeHeadArray = [];
+								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
+									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
+									
+								}
+								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
 											const feeObj: any = {};
@@ -552,6 +635,8 @@ export class OutstandingReportComponent implements OnInit {
 												(Number(keys) + 1);
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
 											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -569,8 +654,17 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
-											obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
-											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
+												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+													break;
+													
+												} 
+											}
+											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
+											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
@@ -666,13 +760,41 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
 						this.totalRecords = Number(result.data.totalRecords);
+						var branchArray = this.reportFilterForm.value.school_branch;
+						let stuFeeHeadArray = [];						
+						var tempHeadArray= [];
+						var schoolArray = [];
+						var commonHeadsArray = [];
+						var tempCommonHeadsArray = [];
+						
+						for (var bi=0; bi<repoArray.length;bi++) {
+							
+							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
+								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
+								
+								schoolArray.push(repoArray[bi]['school_prefix']);
+								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
+								}
+								
+							}
+						}
+
+						for(var ti=0; ti<tempHeadArray.length;ti++) {
+							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
+								commonHeadsArray.push(tempHeadArray[ti]);
+							}
+						}
 						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 						let i = 0;
 						let j = 0;
@@ -828,11 +950,40 @@ export class OutstandingReportComponent implements OnInit {
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
+									if(this.reportFilterForm.value.school_branch.length > 1) {
+										let aColumn = {
+											id: 'school_prefix',
+											name: 'School',
+											field: 'school_prefix',
+											filterable: true,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText },
+											sortable: true,
+											width: 90,
+											grouping: {
+												getter: 'school_prefix',
+												formatter: (g) => {
+													return `${g.value} <span style="color:green"> (${g.count})</span>`;
+												},
+												aggregators: this.aggregatearray,
+												aggregateCollapsed: true,
+												collapsed: false
+											},
+										};
+										this.columnDefinitions.splice(1, 0, aColumn);
+										
+									}
 							}
 							if (repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
-								for (const titem of repoArray[Number(keys)]['fee_head_data']) {
+								stuFeeHeadArray = [];
+								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
+									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
+									
+								}
+								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
 											const feeObj: any = {};
@@ -860,6 +1011,8 @@ export class OutstandingReportComponent implements OnInit {
 												(Number(keys) + 1);
 											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
 											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -877,8 +1030,17 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
-											obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
-											tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+											// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
+											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
+												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+													break;
+													
+												} 
+											}
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
@@ -977,7 +1139,8 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.columnDefinitions = [
 					{
@@ -1119,6 +1282,29 @@ export class OutstandingReportComponent implements OnInit {
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					}];
+					if(this.reportFilterForm.value.school_branch.length > 1) {
+						let aColumn = {
+							id: 'school_prefix',
+							name: 'School',
+							field: 'school_prefix',
+							filterable: true,
+							filterSearchType: FieldType.string,
+							filter: { model: Filters.compoundInputText },
+							sortable: true,
+							width: 90,
+							grouping: {
+								getter: 'school_prefix',
+								formatter: (g) => {
+									return `${g.value} <span style="color:green"> (${g.count})</span>`;
+								},
+								aggregators: this.aggregatearray,
+								aggregateCollapsed: true,
+								collapsed: false
+							},
+						};
+						this.columnDefinitions.splice(1, 0, aColumn);
+						
+					}
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -1132,6 +1318,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
+							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
+								repoArray[Number(index)]['school_prefix'] : '-';
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
 							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
@@ -1197,7 +1385,8 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.columnDefinitions = [
 					{
@@ -1357,7 +1546,30 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
-					}];
+				}];
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
 				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
@@ -1373,6 +1585,8 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
+								repoArray[Number(index)]['school_prefix'] : '-';
 							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -1447,7 +1661,8 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 				this.columnDefinitions = [
 					{
@@ -1563,8 +1778,31 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false,
 						},
-					}];
-				this.feeService.geOutStandingHeadWiseCollection(collectionJSON).subscribe((result: any) => {
+				}];
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
+				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data.reportData;
@@ -1582,6 +1820,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
+												repoArray[Number(index)]['school_prefix'] : '-';
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
 
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
@@ -1639,7 +1879,8 @@ export class OutstandingReportComponent implements OnInit {
 					'filterReportBy': 'outstanding',
 					'login_id': value.login_id,
 					'orderBy': value.orderBy,
-					'downloadAll': true
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch
 				};
 
 				if (!(this.reportFilterForm.value.month_id)) {
@@ -1654,6 +1895,33 @@ export class OutstandingReportComponent implements OnInit {
 							let i = 0;
 							let j = 0;
 							const feeHead: any[] = [];
+							var branchArray = this.reportFilterForm.value.school_branch;
+							let stuFeeHeadArray = [];						
+							var tempHeadArray= [];
+							var schoolArray = [];
+							var commonHeadsArray = [];
+							var tempCommonHeadsArray = [];
+						
+						for (var bi=0; bi<repoArray.length;bi++) {
+							
+							if (branchArray.indexOf(repoArray[bi]['school_prefix']) > -1 
+								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
+								
+								schoolArray.push(repoArray[bi]['school_prefix']);
+								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
+								}
+								
+							}
+						}
+
+						for(var ti=0; ti<tempHeadArray.length;ti++) {
+							if(tempCommonHeadsArray.indexOf(tempHeadArray[ti]['fh_name']) == -1) {
+								tempCommonHeadsArray.push(tempHeadArray[ti]['fh_name']);
+								commonHeadsArray.push(tempHeadArray[ti]);
+							}
+						}
 							Object.keys(repoArray).forEach((keys: any) => {
 								const obj: any = {};
 								if (Number(keys) === 0) {
@@ -1817,11 +2085,40 @@ export class OutstandingReportComponent implements OnInit {
 										// 	groupTotalsFormatter: this.sumTotalsFormatter
 										// }
 									];
+									if(this.reportFilterForm.value.school_branch.length > 1) {
+										let aColumn = {
+											id: 'school_prefix',
+											name: 'School',
+											field: 'school_prefix',
+											filterable: true,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText },
+											sortable: true,
+											width: 90,
+											grouping: {
+												getter: 'school_prefix',
+												formatter: (g) => {
+													return `${g.value} <span style="color:green"> (${g.count})</span>`;
+												},
+												aggregators: this.aggregatearray,
+												aggregateCollapsed: true,
+												collapsed: false
+											},
+										};
+										this.columnDefinitions.splice(1, 0, aColumn);
+										
+									}
 								}
 								if (repoArray[Number(keys)] && repoArray[Number(keys)]['fee_head_data']) {
 									let k = 0;
 									let tot = 0;
-									for (const titem of repoArray[Number(keys)]['fee_head_data']) {
+									stuFeeHeadArray = [];
+								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
+									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
+									
+								}
+									for (const titem of commonHeadsArray) {
 										Object.keys(titem).forEach((key2: any) => {
 											if (key2 === 'fh_name' && Number(keys) === 0) {
 												const feeObj: any = {};
@@ -1849,6 +2146,8 @@ export class OutstandingReportComponent implements OnInit {
 													(Number(keys) + 1);
 												obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
 													repoArray[Number(keys)]['stu_admission_no'] : '-';
+													obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+													repoArray[Number(keys)]['school_prefix'] : '-';
 												obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 													repoArray[Number(keys)]['login_id'] : '-';
 												obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
@@ -1869,8 +2168,17 @@ export class OutstandingReportComponent implements OnInit {
 												obj['invoice_due_date'] = repoArray[Number(keys)]['invoice_due_date'] ?
 													repoArray[Number(keys)]['invoice_due_date'] : '-';
 
-												obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
-												tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+												// obj[key2 + k] = titem['fh_amt'] ? Number(titem['fh_amt']) : 0;
+												// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
+												for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
+													if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+														break;
+														
+													} 
+												}
 												obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 													? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
 												obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
@@ -1959,8 +2267,7 @@ export class OutstandingReportComponent implements OnInit {
 					});
 				}
 
-			}
-			else if (this.reportType === 'aging') {
+			} else if (this.reportType === 'aging') {
 				this.columnDefinitions = [
 					{
 						id: 'srno', name: 'SNo.', field: 'srno',
@@ -2007,7 +2314,30 @@ export class OutstandingReportComponent implements OnInit {
 						formatter: this.checkCurrencyFormatter
 					}
 				];
-				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly' }).subscribe((result: any) => {
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
+				this.feeService.getClassWiseMonthWiseSeperation({ projectionType: 'yearly','school_branch': this.reportFilterForm.value.school_branch  }).subscribe((result: any) => {
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
 						repoArray = result.data;
@@ -2019,6 +2349,7 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
 								(index + 1);
+							obj['school_prefix'] = item['school_prefix'];
 							obj['class_name'] = item.class_name;
 							obj['ltm'] = item.resultData.ltm.total_fee_amount
 							obj['m13'] = item.resultData.m13.total_fee_amount
@@ -2309,22 +2640,47 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
-				this.getFeeHeads();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchFeeHeads();
+				} else {
+					this.getFeeHeads();
+				}
+				
 			} else if ($event.value === 'headwisedetail') {
 				this.valueLabel = 'Fee Heads';
-				this.getFeeHeads();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchFeeHeads();
+				} else {
+					this.getFeeHeads();
+				}
 			} else if ($event.value === 'classwise') {
 				this.valueLabel = 'Class';
-				this.getClass();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchClass();
+				} else {
+					this.getClass();
+				}
 			} else if ($event.value === 'routewise') {
 				this.valueLabel = 'Routes';
-				this.getRoutes();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchRoutes();
+				} else {
+					this.getRoutes();
+				}
 			} else if ($event.value === 'defaulter') {
 				this.valueLabel = 'Class';
-				this.getClass();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchClass();
+				} else {
+					this.getClass();
+				}
 			} else if ($event.value === 'feedue') {
 				this.valueLabel = 'Fee Dues';
-				this.getFeeHeads();
+				if (this.reportFilterForm.value.school_branch.length > 1) {
+					this.getMultiBranchFeeHeads();
+				} else {
+					this.getFeeHeads();
+				}
 			} else if ($event.value === 'aging') {
 				this.valueLabel = '';
 			}
@@ -2333,6 +2689,95 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: '', report_name: 'Outstanding Report' });
 			this.filterFlag = false;
 		}
+	}
+	getMultiBranchFeeHeads() {
+		this.multiValueArray=[];
+		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
+		console.log('inputJson--',inputJson)
+		this.feeService.getMultiBranchFeeHeads(inputJson).subscribe((result:any)=>{
+			if(result && result.data) {
+				this.multiBranchFeeHeads = result.data;
+				let  groupJson = {};
+				let temp_array=[];
+				for (const item of result.data) {
+					temp_array=[{
+						id: '0',
+						name: 'Transport'
+					}];
+					groupJson = {};
+					for (const it of item.items) {						
+						temp_array.push({
+							id: it.fh_id,
+							name: new CapitalizePipe().transform(it.fh_name)
+						});
+					}
+					
+					groupJson = {name: item.name, items : temp_array };
+					this.multiValueArray.push(groupJson);
+					
+				}
+				
+			} else {
+				this.multiBranchFeeHeads = [];
+			}			
+		});
+
+	}
+
+	getMultiBranchRoutes() {
+		this.multiValueArray = [];
+		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
+		console.log('multi branch route json', inputJson)
+		this.feeService.getMultiBranchRoutes(inputJson).subscribe((result:any)=>{
+			if(result && result.data) {
+				this.multiBranchRoutes = result.data;
+				
+				let  groupJson = {};
+				let temp_array=[];
+				for (const item of result.data) {
+					temp_array=[];
+					groupJson = {};
+					for (const it of item.items) {						
+						temp_array.push({
+							id: it.tr_id,
+							name: new CapitalizePipe().transform(it.tr_route_name)
+						});
+					}
+					
+					groupJson = {name: item.name, items : temp_array };
+					this.multiValueArray.push(groupJson);
+					
+				}
+			} else {
+				this.multiBranchRoutes = [];
+			}			
+		});
+	}
+	getMultiBranchClass() {
+		this.feeService.getMultiBranchClass({school_branch:this.reportFilterForm.value.school_branch}).subscribe((result:any)=>{
+			if(result && result.data) {
+				this.multiBranchClass = result.data;
+				let  groupJson = {};
+				let temp_array=[];
+				for (const item of result.data) {
+					temp_array=[];
+					groupJson = {};
+					for (const it of item.items) {						
+						temp_array.push({
+							id: it.class_id,
+							name: new CapitalizePipe().transform(it.class_name)
+						});
+					}
+					
+					groupJson = {name: item.name, items : temp_array };
+					this.multiValueArray.push(groupJson);
+					
+				}
+				
+			} else {
+				this.multiBranchClass = [];
+			}			
+		});
 	}
 	resetValues() {
 		this.reportFilterForm.patchValue({
@@ -2403,9 +2848,50 @@ export class OutstandingReportComponent implements OnInit {
 		this.sisService.getSchool().subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 				this.schoolInfo = res.data[0];
+				console.log('this.schoolInfo 202', this.schoolInfo)
+				this.schoolInfo['disable'] = true;
+				this.schoolInfo['si_school_prefix'] = this.schoolInfo.school_prefix;
+				this.schoolInfo['si_school_name'] = this.schoolInfo.school_name;
+				this.schoolBranchArray  = [];
+				this.schoolBranchArray.push(this.schoolInfo);
+				this.getSchoolBranch();
 			}
 		});
 	}
+	getSchoolBranch() {
+		
+		
+		this.feeService.getAllSchoolGroups({si_group:this.schoolInfo.si_group, si_school_prefix: this.schoolInfo.school_prefix}).subscribe((data:any)=>{
+			if (data && data.status == 'ok') {
+				//this.schoolGroupData = data.data;
+				
+				console.log('this.schoolGroupData--', data.data);
+				this.feeService.getMappedSchoolWithUser({prefix: this.schoolInfo.school_prefix, group_name: this.schoolInfo.si_group, login_id: this.currentUser.login_id}).subscribe((result:any)=>{
+					if (result && result.data && result.data.length > 0) {
+						
+						var userSchoolMappedData = [];
+						console.log('result.data--', result.data	)
+						for (var j=0; j< result.data.length; j++) {
+
+
+							if (result.data[j]['sgm_mapped_status'] == "1" || result.data[j]['sgm_mapped_status'] == 1) {
+								userSchoolMappedData.push(result.data[j]['sgm_si_prefix']);
+							}
+						}
+						
+						console.log('userSchoolMappedData', userSchoolMappedData)
+						for (var i=0; i<data.data.length;i++) {
+							if (userSchoolMappedData.indexOf(data.data[i]['si_school_prefix']) > -1) {
+								this.schoolBranchArray.push(data.data[i]);
+							}
+						}
+						console.log('userSchoolMappedData', this.schoolBranchArray);
+					}
+				})
+			}
+		})
+	
+}
 	getSessionName(id) {
 		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
 		if (findex !== -1) {
