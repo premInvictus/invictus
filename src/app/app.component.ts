@@ -93,6 +93,7 @@ export class AppComponent implements OnInit {
 		this.getCurrentUrl();
 		this.sessionTimeout();
 		let prefix: any = '';
+		
 		const xhr = new XMLHttpRequest();
 		const load: any = this.loaderService;
 		if (!localStorage.getItem('Prefix')) {
@@ -108,6 +109,7 @@ export class AppComponent implements OnInit {
 						localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
 					}
 				}
+				
 			};
 		} else {
 			load.setUserPrefix((JSON.parse(localStorage.getItem('Prefix')).pre));
@@ -199,8 +201,10 @@ export class AppComponent implements OnInit {
 						(result: any) => {
 							if (result.status === 'ok') {
 								this.deleteToken();
+								const prefix = (JSON.parse(localStorage.getItem('Prefix')).pre);
 								localStorage.clear();
-								this.loaderService.setUserPrefix('');
+								localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
+								this.loaderService.setUserPrefix(prefix);
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
 								routeStore.login_id = '';
