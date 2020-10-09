@@ -576,7 +576,7 @@ export class EmployeeAttendanceComponent implements OnInit {
 				}
 			},
 			(errorResponse:any) => {
-				this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+				this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
 			});
 
 			}
