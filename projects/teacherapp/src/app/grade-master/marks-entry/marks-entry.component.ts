@@ -408,22 +408,76 @@ export class MarksEntryComponent implements OnInit {
       }
     });
   }
-  // getSubjectsByClass() {
-  //   this.paramform.patchValue({
-  //     eme_sub_id: ''
-  //   });
-  //   this.subjectArray = [];
-  //   this.smartService.getSubjectByTeacherIdClassIdSectionId({
-  //     teacher_id: this.currentUser.login_id,
-  //     class_id: this.paramform.value.eme_class_id,
-  //     sec_id: this.paramform.value.eme_sec_id
-  //   }).subscribe((result: any) => {
-  //     if (result && result.status === 'ok') {
-  //       this.subjectArray = result.data;
-  //       console.log(this.subjectArray);
-  //     }
-  //   });
-  // }
+  getSubjectsByClass1() {
+    this.subjectArray = [];
+    this.paramform.patchValue({
+      eme_sub_id: ''
+    });
+    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        this.subSubjectArray = result.data;
+        const temp = result.data;
+        let scholastic_subject: any[] = [];
+        let coscholastic_subject: any[] = [];
+        if (temp.length > 0) {
+
+          temp.forEach(element => {
+            if (element.sub_type === '1' || element.sub_type === '3') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                scholastic_subject.push(element);
+              }
+            } else if (element.sub_type === '2' || element.sub_type === '4') {
+              if (element.sub_parent_id && element.sub_parent_id === '0') {
+                var childSub: any[] = [];
+                for (const item of temp) {
+                  if (element.sub_id === item.sub_parent_id) {
+                    childSub.push(item);
+                  }
+                }
+                element.childSub = childSub;
+                coscholastic_subject.push(element);
+              }
+            }
+          });
+        }
+
+        for (var i = 0; i < scholastic_subject.length; i++) {
+          this.subjectArray.push(scholastic_subject[i]);
+        }
+        for (var i = 0; i < coscholastic_subject.length; i++) {
+          this.subjectArray.push(coscholastic_subject[i]);
+        }
+      } else {
+        this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+      }
+    });
+  }
+
+  isClassTeacher(){
+    this.smartService.isClassTeacher({
+      teacher_id: this.currentUser.login_id,
+      class_id: this.paramform.value.eme_class_id,
+      sec_id: this.paramform.value.eme_sec_id
+    }).subscribe((result: any) => {
+      if (result && result.status === 'ok') {
+        console.log('result',result);
+        if(result.data[0]['uc_class_teacher'] == 1){
+          this.getSubjectsByClass1();
+        } else {
+          this.getSubjectsByClass();
+        }
+      } else {
+        this.getSubjectsByClass();
+      }
+    });
+  }
 
   getSubjectsByClass() {
     this.subjectArray = [];
@@ -443,16 +497,6 @@ export class MarksEntryComponent implements OnInit {
         if (temp.length > 0) {
 
           temp.forEach(element => {
-            // if (element.sub_parent_id && element.sub_parent_id === '0') {
-            //   const childSub: any[] = [];
-            //   for (const item of temp) {
-            //     if (element.sub_id === item.sub_parent_id) {
-            //       childSub.push(item);
-            //     }
-            //   }
-            //   element.childSub = childSub;
-            //   this.subjectArray.push(element);
-            // }
             if (element.sub_type === '1' || element.sub_type === '3') {
               if (element.sub_parent_id && element.sub_parent_id === '0') {
                 var childSub: any[] = [];

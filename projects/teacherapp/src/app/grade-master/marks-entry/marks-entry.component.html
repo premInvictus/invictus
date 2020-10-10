@@ -19,7 +19,7 @@
                         <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
                             <mat-label>Section</mat-label>
                             <mat-select placeholder="Section" formControlName="eme_sec_id"
-                                (selectionChange)="getSubjectsByClass();" required>
+                                (selectionChange)="isClassTeacher();" required>
                                 <mat-option value="">Please select</mat-option>
                                 <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
                                 </mat-option>

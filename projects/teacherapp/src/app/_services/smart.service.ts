@@ -11,6 +11,10 @@ export class SmartService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getSubjectByTeacherId', value);
 	}
+	isClassTeacher(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/isClassTeacher', value);
+	}
 	getClassByTeacherIdSubjectId(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getClassByTeacherIdSubjectId', value);
