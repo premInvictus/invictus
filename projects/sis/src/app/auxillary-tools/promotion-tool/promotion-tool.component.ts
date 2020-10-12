@@ -54,6 +54,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('sortD') sortD: MatSort;
 	allselectedP = false;
 	allselectedD = false;
+	secformgroup:any[]=[];
 
 
 	constructor(private commonApiService: CommonAPIService,
@@ -79,6 +80,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.promoteForm = this.fbuild.group({
 			class_id: '',
 			new_class_id: '',
+			new_sec_id:'',
 			ses_id: '',
 			sec_id: '',
 			enrollment_type: '',
@@ -165,6 +167,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getPromotionList() {
+		this.secformgroup = [];
 		this.toBePromotedList = [];
 		this.promoteStudentListArray = [];
 		this.PROMOTE_ELEMENT_DATA = [];
@@ -186,6 +189,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 					this.promoteStudentListArray = result.data;
 					let counter = 1;
 					for (const item of this.promoteStudentListArray) {
+						this.secformgroup.push({sectionform :this.fbuild.group({
+							each_sec_id:this.promoteForm.value.new_sec_id
+						})});
 						this.PROMOTE_ELEMENT_DATA.push({
 							select: counter,
 							no: item.au_login_id,
@@ -292,6 +298,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		}
 	}
 	promoteStudent(item) {
+		const findex = this.PROMOTE_ELEMENT_DATA.findIndex(e => e.no == item.no);
+		console.log('findex ', findex);
+		console.log(this.secformgroup[findex].sectionform.value.each_sec_id);
 		if (!this.promoteForm.value.new_class_id) {
 			this.commonApiService.showSuccessErrorMessage('New Class Required', 'error');
 		} else {
@@ -305,7 +314,7 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 				students: [{
 					pmap_login_id: item.action.au_login_id,
 					pmap_class_id: this.promoteForm.value.new_class_id,
-					pmap_sec_id: item.action.sec_id,
+					pmap_sec_id: this.secformgroup[findex].sectionform.value.each_sec_id,
 					pmap_hou_id: item.action.hou_id,
 					pmap_ses_id: this.demoteSessionId,
 					pmap_enrollment_type: this.promoteForm.value.enrollment_type
@@ -392,10 +401,13 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 			});
 			const promoteBulkArray: any[] = [];
 			for (const titem of this.toBePromotedList) {
+				const findex = this.PROMOTE_ELEMENT_DATA.findIndex(e => e.no == titem.em_admission_no);
+				// console.log('findex ', findex);
+				// console.log(this.secformgroup[findex].sectionform.value.each_sec_id);
 				promoteBulkArray.push({
 					pmap_login_id: titem.item.au_login_id,
 					pmap_class_id: this.promoteForm.value.new_class_id,
-					pmap_sec_id: titem.item.sec_id,
+					pmap_sec_id: this.secformgroup[findex].sectionform.value.each_sec_id,
 					pmap_hou_id: titem.item.hou_id,
 					pmap_ses_id: this.demoteSessionId,
 					pmap_enrollment_type: this.promoteForm.value.enrollment_type

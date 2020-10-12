@@ -78,6 +78,16 @@
               <div class="row">
                 <div class="col-6">
                   <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>New Section</mat-label>
+                    <mat-select placeholder="Section" formControlName="new_sec_id">
+                      <mat-option value="">Please Select</mat-option>
+                      <mat-option *ngFor="let item of promotionSectionArray" [value]="item.sec_id">{{item.sec_name}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div class="col-6">
+                  <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Sorted By</mat-label>
                     <mat-select placeholder="Sorted by" formControlName="order_by">
                       <mat-option value="">Please Select</mat-option>
@@ -162,8 +172,17 @@
                           <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Section
                           </th>
-                          <td mat-cell *matCellDef="let item">
-                            <span class="text-center">{{ item.section }}</span>
+                          <td mat-cell *matCellDef="let item; let i=index">
+                            <!-- <span class="text-center">{{ item.section }}</span>  -->
+                            <form [formGroup]="secformgroup[i].sectionform">
+                              <mat-form-field class="form-field" appearance="outline">
+                                <mat-select placeholder="Section" formControlName="each_sec_id">
+                                  <mat-option value="">Please Select</mat-option>
+                                  <mat-option *ngFor="let section of promotionSectionArray" [value]="section.sec_id">{{section.sec_name}}
+                                  </mat-option>
+                                </mat-select>
+                              </mat-form-field>
+                            </form>
                           </td>
                         </ng-container>
                         <!-- Promote Column -->
