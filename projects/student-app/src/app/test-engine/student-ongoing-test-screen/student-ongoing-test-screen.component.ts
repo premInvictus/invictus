@@ -179,12 +179,13 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.ongoingDiv = false;
 	}
-
 	openQuesDialog(): void {
 		const dialogRef = this.dialog.open(QuestionNoOnGoingModalComponent, {
 			width: '380px',
 			data: {
-				eva_id: this.eva_id
+				eva_id: this.evalutionDetail.eva_id,
+				eva_es_id:this.evalutionDetail.eva_es_id,
+				eva_login_id:this.evalutionDetail.eva_login_id
 			}
 		});
 
@@ -336,9 +337,21 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 															// load the 1st question as soon as the exam starts
 															this.currentQA = this.questionsArray[this.currentQAIndex];
 															localStorage.setItem('currentExamQus',
-																JSON.stringify({ eva_id: this.eva_id, eva_id_qus: this.questionsArray }));
+																JSON.stringify(
+																	{ 
+																		eva_id: this.evalutionDetail.eva_id, 
+																		es_id:this.evalutionDetail.eva_es_id,
+																		login_id:this.evalutionDetail.eva_login_id,
+																		eva_id_qus: this.questionsArray 
+																	}
+																	));
 															localStorage.setItem('currentExamSub',
-																JSON.stringify({ eva_id: this.eva_id, eva_id_sub: this.subjectArrayOfQP }));
+																JSON.stringify({ 
+																	eva_id: this.evalutionDetail.eva_id, 
+																	es_id:this.evalutionDetail.eva_es_id,
+																	login_id:this.evalutionDetail.eva_login_id, 
+																	eva_id_sub: this.subjectArrayOfQP 
+																}));
 															this.loadCurrentQ(0);
 														}
 													}
@@ -388,7 +401,7 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamSub')) {
 				const currentExamSub = JSON.parse(localStorage.getItem('currentExamSub'));
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.evalutionDetail.eva_id && currentExamSub.es_id == this.evalutionDetail.eva_es_id && currentExamSub.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -402,7 +415,13 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamQus')) {
 				const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-				if (currentExamQus.eva_id === eva_id) {
+				// if (currentExamQus.eva_id === eva_id) {
+				// 	if (currentExamQus.eva_id_qus) {
+				// 		resolve(currentExamQus.eva_id_qus);
+				// 	}
+				// 	resolve([]);
+				// }
+				if (currentExamQus.eva_id == this.evalutionDetail.eva_id && currentExamQus.es_id == this.evalutionDetail.eva_es_id && currentExamQus.login_id == this.evalutionDetail.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}
@@ -414,7 +433,14 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 	}
 	setQusToLS() {
 		return new Promise(resolve => {
-			localStorage.setItem('currentExamQus', JSON.stringify({ eva_id: this.eva_id, eva_id_qus: this.questionsArray }));
+			localStorage.setItem('currentExamQus', JSON.stringify(
+				{ 
+					eva_id: this.evalutionDetail.eva_id, 
+					es_id:this.evalutionDetail.eva_es_id,
+					login_id:this.evalutionDetail.eva_login_id,
+					eva_id_qus: this.questionsArray 
+				}
+				));
 			resolve();
 		});
 	}
@@ -1752,8 +1778,10 @@ export class StudentOngoingTestScreenComponent implements OnInit, OnDestroy {
 		const reader = new FileReader();
 		reader.onloadend = (e) => {
 			this.currentImage = reader.result;
+			//this.userDetails.au_full_name.replace(/ /g,"_")+'-'+this.userDetails.au_admission_no+'-'+this.es_id+files.name.split('.').pop()
 			const fileJson = {
-				fileName: files.name,
+				fileName: this.userDetails.au_full_name.replace(/ /g,"_")+'-'+this.userDetails.au_admission_no+'-'+this.es_id+'.'+files.name.split('.').pop(),
+				rename:true,
 				imagebase64: this.currentImage,
 				module: 'classworkupdate'
 			};
@@ -1867,7 +1895,7 @@ export class QuestionNoOnGoingModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamSub')) {
 				const currentExamSub = JSON.parse(localStorage.getItem('currentExamSub'));
-				if (currentExamSub.eva_id === eva_id) {
+				if (currentExamSub.eva_id == this.data.eva_id && currentExamSub.es_id == this.data.eva_es_id && currentExamSub.login_id == this.data.eva_login_id) {
 					if (currentExamSub.eva_id_sub) {
 						resolve(currentExamSub.eva_id_sub);
 					}
@@ -1881,7 +1909,7 @@ export class QuestionNoOnGoingModalComponent implements OnInit {
 		return new Promise(resolve => {
 			if (localStorage.getItem('currentExamQus')) {
 				const currentExamQus = JSON.parse(localStorage.getItem('currentExamQus'));
-				if (currentExamQus.eva_id === eva_id) {
+				if (currentExamQus.eva_id == this.data.eva_id && currentExamQus.es_id == this.data.eva_es_id && currentExamQus.login_id == this.data.eva_login_id) {
 					if (currentExamQus.eva_id_qus) {
 						resolve(currentExamQus.eva_id_qus);
 					}

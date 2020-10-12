@@ -125,7 +125,7 @@ export class LeaveCreditComponent implements OnInit {
       },
       (errorResponse:any) => {
         console.log('error',errorResponse);
-        this.common.showSuccessErrorMessage(errorResponse.error.message, errorResponse.error.status);
+        this.common.showSuccessErrorMessage('Error to update database, Structure is not valid', errorResponse.error.status);
       });
     }
   }

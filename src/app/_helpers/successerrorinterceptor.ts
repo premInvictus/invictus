@@ -28,11 +28,7 @@ export class SuccessErrorInterceptor implements HttpInterceptor {
 		const deviceType = JSON.parse(JSON.parse(localStorage.getItem('currentUser'))['device_details']);
 		console.log('deviceType', deviceType)
 		if (deviceType && deviceType.length > 0) {
-			for (var i=0; i<deviceType.length;i++) {
-				if (deviceType[i]['last_login'] ==="true") {
-					request = request.clone({ headers: request.headers.set('DeviceType', deviceType[i]['type']) });
-				}
-			}
+			request = request.clone({ headers: request.headers.set('DeviceType', 'web') });
 		}}
 		if (loginSource && loginSource == 'support') {
 			request = request.clone({ headers: request.headers.set('LoginSource', 'support') });

@@ -751,7 +751,7 @@ export class MyLeaveComponent implements OnInit {
 		});
 	}
 	openLeaveApplicationForm() {
-		if(this.employeeRecord.emp_id){
+		if(this.employeeRecord && this.employeeRecord.emp_id){
 			localStorage.setItem('eRecord', JSON.stringify(this.employeeRecord));
 			const dialogRef = this.dialog.open(LeaveApplicationComponent, {
 				width: '500px',
@@ -764,7 +764,7 @@ export class MyLeaveComponent implements OnInit {
 				}
 			});
 		} else {
-			this.common.showSuccessErrorMessage('Does not have employee id','error');
+			this.common.showSuccessErrorMessage('Does not have employee details in HR','error');
 		}
 	}
 	deleteCancel() {
