@@ -86,17 +86,17 @@
                 </div>
                 <div class="col-2">
                     <table>
-                        <tr>
+                        <tr *ngIf="gradecard_total_mettings == '1'">
                             <td><span>Total Meetings</span></td>
                             <td><span>:</span></td>
                             <td>{{totalworkingdays}}</td>
                         </tr>
-                        <tr>
+                        <tr *ngIf="gradecard_mettings_present == '1'">
                             <td><span>Meetings Present</span></td>
                             <td><span>:</span></td>
                             <td>{{totalpresentday}}</td>
                         </tr>
-                        <tr>
+                        <tr *ngIf="gradecard_attendance == '1'">
                             <td><span>Attendance (%)</span></td>
                             <td><span>:</span></td>
                             <td>{{attendenceInPercent}}</td>

@@ -84,6 +84,9 @@ export class ViewGradecardDialogComponent implements OnInit {
   all_term_subject_total_mark = 0;
   all_term_student_total_mark = 0;
   all_term_student_total_percentage = 0;
+  gradecard_attendance:any;
+  gradecard_total_mettings:any;
+  gradecard_mettings_present:any;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -375,7 +378,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_alias = ['gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+    param.gs_alias = ['gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
       'gradecard_health_status', 'gradecard_date', 'school_achievement'];
     this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -427,6 +430,12 @@ export class ViewGradecardDialogComponent implements OnInit {
               this.isuserachivement = element.gs_value;
               this.getUserAchievement();
             }
+          } else if (element.gs_alias === 'gradecard_attendance') {
+            this.gradecard_attendance = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_total_mettings') {
+            this.gradecard_total_mettings = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_mettings_present') {
+            this.gradecard_mettings_present = element.gs_value;
           }
         });
       }
