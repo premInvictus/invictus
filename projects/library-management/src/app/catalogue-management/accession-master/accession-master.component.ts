@@ -256,20 +256,21 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					for (const item of res.data.resultData) {
 						let authName = '';
+						if(item && item.authors) {
 						for (const aut of item.authors) {
 							authName = authName + aut + ',';
-						}
+						} }
 						if(authName && authName.length > 0) {
 							authName = authName.substring(0, authName.length - 1);
 						}
 						
 						this.BOOK_ELEMENT_DATA.push({
 							sr_no: i + 1,
-							book_name: item.title,
+							book_name: item.title ? item.title : '',
 							book_no: item.reserv_id,
 							authors: authName,
-							publisher: item.publisher,
-							location: item.location,
+							publisher: item.publisher ?  item.publisher : '',
+							location: item.location ? item.location : '' ,
 							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
 							action: item
 						});
@@ -317,17 +318,19 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of res.data.resultData) {
 					let authName = '';
+					if (item && item.authors) {
 					for (const aut of item.authors) {
 						authName = authName + aut + ',';
-					}
-					authName = authName.substring(0, authName.length - 1);
+					}}
+					if(authName && authName.length > 0) {
+					authName = authName.substring(0, authName.length - 1);}
 					this.BOOK_ELEMENT_DATA.push({
 						sr_no: i + 1,
-						book_name: item.title,
+						book_name: item.title ? item.title : '',
 						book_no: item.reserv_id,
 						authors: authName,
-						publisher: item.publisher,
-						location: item.location,
+						publisher: item.publisher ? item.publisher :'',
+						location: item.location ? item.location:'',
 						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
 						action: item
 					});
@@ -416,17 +419,21 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 					for (const item of res.data.resultData) {
 						let authName = '';
+						if ( item && item.authors) {
 						for (const aut of item.authors) {
 							authName = authName + aut + ',';
+						}}
+						if (authName && authName.length > 0) {
+							authName = authName.substring(0, authName.length - 1);
 						}
-						authName = authName.substring(0, authName.length - 1);
+						
 						this.BOOK_ELEMENT_DATA.push({
 							sr_no: i + 1,
-							book_name: item.title,
+							book_name: item.title ? item.title : '',
 							book_no: item.reserv_id,
 							authors: authName,
-							publisher: item.publisher,
-							location: item.location,
+							publisher: item.publisher ? item.publisher : '',
+							location: item.location ? item.location :'',
 							status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
 							action: item
 						});
@@ -624,21 +631,22 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
 				for (const item of res.data.resultData) {
 					let authName = '';
+					if (item && item.authors) {
 					for (const aut of item.authors) {
 						authName = authName + aut + ',';
 					}
 					if(authName && authName.length > 0) {
 						authName = authName.substring(0, authName.length - 1);
-					}
+					} }
 					
 
 					this.BOOK_ELEMENT_DATA.push({
 						sr_no: i + 1,
-						book_name: item.title,
+						book_name: item.title ? item.title : '',
 						book_no: item.reserv_id,
 						authors: authName,
-						publisher: item.publisher,
-						location: item.location,
+						publisher: item.publisher ? item.publisher :'',
+						location: item.location ? item.location : '',
 						status: item.reserv_flagged_status.status ? item.reserv_flagged_status.status : item.reserv_status,
 						action: item
 					});
