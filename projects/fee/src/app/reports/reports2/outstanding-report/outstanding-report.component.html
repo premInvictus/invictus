@@ -1,5 +1,15 @@
 <form [formGroup]="reportFilterForm">
     <div class="row">
+        <div class="col-2" *ngIf="schoolBranchArray.length > 0">
+                <mat-form-field appearance="outline" class="form-field">
+                    <mat-label>Select Branch</mat-label>
+                    <mat-select formControlName="school_branch" multiple>
+                        <!-- <mat-option value="">Please Select</mat-option> -->
+                        <mat-option *ngFor="let item of schoolBranchArray" [value]="item.si_school_prefix">
+                            {{item.si_school_name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+        </div>
         <div class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Report Type</mat-label>
@@ -10,7 +20,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging'"
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && multiValueArray.length ==0"
             class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
@@ -18,6 +28,19 @@
                     (selectionChange)="filtered($event)">
                     <mat-option *ngFor="let item of valueArray; let i = index;" [value]="item.id">{{item.name}}
                     </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && multiValueArray.length > 0"
+            class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>{{valueLabel}}</mat-label>
+                <mat-select formControlName="fee_value" [placeholder]="valueLabel" multiple
+                (selectionChange)="filtered($event)">
+                <mat-optgroup *ngFor="let group of multiValueArray" [label]="group.name">
+                    <mat-option *ngFor="let item of group.items" [value]="item.id">{{item.name}}
+                    </mat-option>
+                    </mat-optgroup>
                 </mat-select>
             </mat-form-field>
         </div>

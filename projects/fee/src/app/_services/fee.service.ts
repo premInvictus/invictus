@@ -543,4 +543,31 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/geOutStandingHeadWiseCollection', value);
 	}
+
+	getSchoolBranch(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
+	getDefaulterList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDefaulterList', value);
+	}
+	getGlobalSetting(value) {
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	getMultiBranchFeeHeads(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMultiBranchFeeHeads', value);
+	}
+	getMultiBranchRoutes(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMultiBranchRoutes', value);
+	}
+	getMultiBranchClass(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getMultiBranchClass', value);
+	}
+	getAllSchoolGroups(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
+	}
+
+	getMappedSchoolWithUser(value) {
+		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
+	}
 }

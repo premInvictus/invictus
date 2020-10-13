@@ -259,7 +259,10 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 						for (const aut of item.authors) {
 							authName = authName + aut + ',';
 						}
-						authName = authName.substring(0, authName.length - 1);
+						if(authName && authName.length > 0) {
+							authName = authName.substring(0, authName.length - 1);
+						}
+						
 						this.BOOK_ELEMENT_DATA.push({
 							sr_no: i + 1,
 							book_name: item.title,
@@ -624,7 +627,11 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 					for (const aut of item.authors) {
 						authName = authName + aut + ',';
 					}
-					authName = authName.substring(0, authName.length - 1);
+					if(authName && authName.length > 0) {
+						authName = authName.substring(0, authName.length - 1);
+					}
+					
+
 					this.BOOK_ELEMENT_DATA.push({
 						sr_no: i + 1,
 						book_name: item.title,
