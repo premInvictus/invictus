@@ -203,26 +203,8 @@ export class AppComponent implements OnInit {
 								this.deleteToken();
 								const prefix = (JSON.parse(localStorage.getItem('Prefix')).pre);
 								localStorage.clear();
-<<<<<<< HEAD
-								const method = 'head';
-								const url: any = window.location.href;
-								let prefix: any = '';
-								const xhr = new XMLHttpRequest();
-								xhr.open(method, url, true);
-								xhr.send(null);
-								xhr.onreadystatechange =  () => {
-									if (xhr.readyState) {
-										prefix = xhr.getResponseHeader('prefix');
-										if (prefix) {
-											this.loaderService.setUserPrefix(prefix);
-											localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
-										}
-									}
-								};
-=======
 								localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
 								this.loaderService.setUserPrefix(prefix);
->>>>>>> upstream/development
 								const routeStore: RouteStore = new RouteStore();
 								routeStore.adm_no = '';
 								routeStore.login_id = '';
