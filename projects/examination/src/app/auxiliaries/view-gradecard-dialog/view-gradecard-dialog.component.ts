@@ -87,6 +87,8 @@ export class ViewGradecardDialogComponent implements OnInit {
   gradecard_attendance:any;
   gradecard_total_mettings:any;
   gradecard_mettings_present:any;
+  gradecard_show_scholastic_gradescale:any;
+  gradecard_scholastic_abbreviation:any;
   constructor(
     public dialogRef: MatDialogRef<ViewGradecardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data,
@@ -378,7 +380,7 @@ export class ViewGradecardDialogComponent implements OnInit {
   }
   getGlobalSetting() {
     let param: any = {};
-    param.gs_alias = ['gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
+    param.gs_alias = ['gradecard_scholastic_abbreviation','gradecard_show_scholastic_gradescale','gradecard_attendance','gradecard_total_mettings','gradecard_mettings_present','gradecard_header', 'gradecard_footer', 'gradecard_principal_signature', 'gradecard_use_principal_signature', 'gradecard_use_hod_signature', 'gradecard_hod_signature', 'gradecard_use_teacher_signature', 'school_attendance_theme',
       'gradecard_health_status', 'gradecard_date', 'school_achievement'];
     this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
       if (result && result.status === 'ok') {
@@ -436,6 +438,10 @@ export class ViewGradecardDialogComponent implements OnInit {
             this.gradecard_total_mettings = element.gs_value;
           } else if (element.gs_alias === 'gradecard_mettings_present') {
             this.gradecard_mettings_present = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_scholastic_abbreviation') {
+            this.gradecard_scholastic_abbreviation = element.gs_value;
+          } else if (element.gs_alias === 'gradecard_show_scholastic_gradescale') {
+            this.gradecard_show_scholastic_gradescale = element.gs_value;
           }
         });
       }
