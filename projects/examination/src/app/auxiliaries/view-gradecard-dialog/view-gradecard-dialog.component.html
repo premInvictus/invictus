@@ -23,7 +23,7 @@
                     <!-- <span class="font-size-20 font-bold">Academic Session : {{currentSession.ses_name}}</span><br> -->
                     <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id != 'comulative'">
                         <!-- Report Card for Class {{studentDetails.class_name}} -->
-                        Progress Report Academic Session : {{currentSession.ses_name}}
+                        Progress Report <br> Academic Session : {{currentSession.ses_name}}
                     </span>
                     <span class="font-size-20 font-bold" *ngIf="data.param.eme_term_id == 'comulative'">
                         Cumulative Progress Report Academic Session : {{currentSession.ses_name}}</span>
@@ -32,7 +32,7 @@
             <div class="row">
                 <div class="col-3" *ngIf="studentDetails">
                     <table>
-                        <tr>
+                        <tr *ngIf="studentDetails.r_rollno">
                             <td><span>Roll no.</span></td>
                             <td><span>:</span></td>
                             <td>{{studentDetails.r_rollno}}</td>
@@ -86,17 +86,17 @@
                 </div>
                 <div class="col-2">
                     <table>
-                        <tr>
+                        <tr *ngIf="gradecard_total_mettings == '1'">
                             <td><span>Total Meetings</span></td>
                             <td><span>:</span></td>
                             <td>{{totalworkingdays}}</td>
                         </tr>
-                        <tr>
+                        <tr *ngIf="gradecard_mettings_present == '1'">
                             <td><span>Meetings Present</span></td>
                             <td><span>:</span></td>
                             <td>{{totalpresentday}}</td>
                         </tr>
-                        <tr>
+                        <tr *ngIf="gradecard_attendance == '1'">
                             <td><span>Attendance (%)</span></td>
                             <td><span>:</span></td>
                             <td>{{attendenceInPercent}}</td>
@@ -472,8 +472,7 @@
                                                             <tr class="custom-tr">
                                                                 <td [attr.colspan]="2"
                                                                     class="custom-td text-left padding-left-8px">
-                                                                    Total({{eachterm.term_total_so_subject[sub_category]}}
-                                                                    main subject)</td>
+                                                                    Total</td>
                                                                 <td class="custom-td"
                                                                     [attr.colspan]="eachterm.examcolspan[sub_category]">
                                                                 </td>
@@ -641,8 +640,7 @@
                                                             <ng-container *ngIf="sub_category == 'A'">
                                                                 <tr class="custom-tr">
                                                                     <td class="custom-td text-left padding-left-8px">
-                                                                        Total({{eachterm.term_total_so_subject[sub_category]}}
-                                                                        main subject)</td>
+                                                                        Total</td>
                                                                     <td class="custom-td"
                                                                         [attr.colspan]="eachterm.examcolspan[sub_category]">
                                                                     </td>
@@ -1433,12 +1431,12 @@
                         <thead>
                             <tr><br></tr>
                             <tr *ngIf="!obtainedGradeAvgHighest.remark && data.ect_exam_type == 1 && remarkOfSub()">
-                                <td width="10%" valign="top">Remarks</td>
+                                <td width="10%" valign="top">Class Teacher's Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub()}}</td>
                             </tr>
                             <tr *ngIf="data.ect_exam_type == 2 && remarkOfSub()">
-                                <td width="10%" valign="top">Remarks</td>
+                                <td width="10%" valign="top">Class Teacher's Remarks</td>
                                 <td width="1%" valign="top">:</td>
                                 <td> {{remarkOfSub()}}</td>
                             </tr>
@@ -1515,6 +1513,18 @@
                                 <table>
                                     <thead>
                                         <tr>
+                                            <th> </th>
+                                        </tr>
+                                        <tr>
+                                            <th>Signature of Parent</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                            <th style="text-align: right; vertical-align: bottom;" height="80">
+                                <table>
+                                    <thead>
+                                        <tr>
                                             <th *ngIf="usePrincipalSignature === '1' && principalSignature"> <img
                                                     [src]="principalSignature" height="60px" width="120px"></th>
                                         </tr>
@@ -1529,77 +1539,80 @@
                 </div>
             </div>
             <hr>
-            <div class="row"
-                *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
-                <div class="col-12">
-                    <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a
-                        {{gradingSystem}}
-                        scale as
-                        follows</span>
-                </div>
-            </div>
-            <div class="row"
-                *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
-                <div class="col-12">
-
-                    <div style="margin-top: 15px; text-align: center; width: 100%;">
-                        <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
-                            <tbody>
-                                <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Marks
-                                        Range </th>
-                                    <td *ngFor="let item of GradeSet"
-                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item.egs_range_start}} - {{item.egs_range_end}}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
-                                        Name
-                                    </th>
-                                    <td *ngFor="let item of GradeSet"
-                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item?.egs_grade_name | titlecase}}
-                                        <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
-                                    </td>
-                                </tr>
-
-                            </tbody>
-                        </table>
+            <div *ngIf="gradecard_show_scholastic_gradescale  == '1'">
+                <div class="row"
+                    *ngIf="!(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
+                    <div class="col-12">
+                        <span><b>Grading Scale for scholatic Area</b></span><span> : Grades are awarded on a
+                            {{gradingSystem}}
+                            scale as
+                            follows</span>
                     </div>
                 </div>
-            </div>
-            <div class="row"
-                *ngIf="data.ect_exam_type == 1 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
-                <div class="col-12">
+                <div class="row"
+                    *ngIf="data.ect_exam_type == 2 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
+                    <div class="col-12">
 
-                    <div style="margin-top: 15px; text-align: center; width: 100%;">
-                        <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
-                            <tbody>
-                                <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
-                                        Name </th>
-                                    <td *ngFor="let item of GradeSetPoint"
-                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">(
-                                            {{item?.egs_grade_text}} )</span>
-                                    </td>
-                                </tr>
-                                <!-- <tr>
-                                    <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade Text
-                                    </th>
-                                    <td *ngFor="let item of GradeSetPoint"
-                                        style="border: 1px solid black;border-collapse: collapse;padding: 5px">
-                                        <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
-                                    </td>
-                                </tr> -->
+                        <div style="margin-top: 15px; text-align: center; width: 100%;">
+                            <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
+                                <tbody>
+                                    <tr>
+                                        <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Marks
+                                            Range </th>
+                                        <td *ngFor="let item of GradeSet"
+                                            style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                            {{item.egs_range_start}} - {{item.egs_range_end}}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
+                                            Name
+                                        </th>
+                                        <td *ngFor="let item of GradeSet"
+                                            style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                            {{item?.egs_grade_name | titlecase}}
+                                            <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
+                                        </td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div class="row"
+                    *ngIf="data.ect_exam_type == 1 && !(data.param.eme_subexam_id && data.param.eme_subexam_id.length > 0) && obtainedGradeAvgHighest.grade">
+                    <div class="col-12">
+
+                        <div style="margin-top: 15px; text-align: center; width: 100%;">
+                            <table style="width:100%; border: 1px solid black;border-collapse: collapse;">
+                                <tbody>
+                                    <tr>
+                                        <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade's
+                                            Name </th>
+                                        <td *ngFor="let item of GradeSetPoint"
+                                            style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                            {{item?.egs_grade_name}} <span *ngIf="item?.egs_grade_text">(
+                                                {{item?.egs_grade_text}} )</span>
+                                        </td>
+                                    </tr>
+                                    <!-- <tr>
+                                        <th style="border: 1px solid black;border-collapse: collapse;padding: 5px">Grade Text
+                                        </th>
+                                        <td *ngFor="let item of GradeSetPoint"
+                                            style="border: 1px solid black;border-collapse: collapse;padding: 5px">
+                                            <span *ngIf="item?.egs_grade_text">( {{item?.egs_grade_text}} )</span>
+                                        </td>
+                                    </tr> -->
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br>
             </div>
-            <br>
+            
             <div class="">
                 <div [innerHTML]="footer"></div>
                 <div style="width: 100%; height:10px; background-color:#f4981e;"></div>
