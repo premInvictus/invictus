@@ -53,6 +53,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	totalRecords: number;
 	currentUser: any;
 	schoolInfo:any
+	showPdf=false;
 	constructor(public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
@@ -370,6 +371,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				});
 	}
 	downloadPdf() {
+		this.showPdf = true;
+		console.log('this.CHEQUE_ELEMENT_DATA',this.dataSource)
 		setTimeout(() => {
 			const doc = new jsPDF('landscape');
 
@@ -446,7 +449,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				theme: 'striped'
 			});
 			doc.autoTable({
-				head: [['No. of Records : ' + this.CHEQUE_ELEMENT_DATA.length]],
+				head: [['No. of Records : ' + this.dataSource.filteredData.length]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
@@ -461,8 +464,9 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				theme: 'striped'
 			});
 
-
+			
 			doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
+			this.showPdf = false;
 		}, 1000);
 	}
 }
