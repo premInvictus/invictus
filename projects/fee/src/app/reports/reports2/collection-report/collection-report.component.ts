@@ -4184,6 +4184,8 @@ export class CollectionReportComponent implements OnInit {
 			reportType = new TitleCasePipe().transform('summaryfee_') + this.sessionName;
 		} else if (this.reportType === 'cumulativeheadwise') {
 			reportType = new TitleCasePipe().transform('cumulativeheadwise_') + this.sessionName;
+		}else if (this.reportType === 'dailyheadwise') {
+			reportType = new TitleCasePipe().transform('dailycollection_') + this.sessionName;
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
@@ -4203,6 +4205,8 @@ export class CollectionReportComponent implements OnInit {
 		}
 		else if (this.reportType === 'cumulativeheadwise') {
 			reportType2 = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
+		}else if (this.reportType === 'dailyheadwise') {
+			reportType2 = new TitleCasePipe().transform('daily collection report: ') + this.sessionName;
 		}
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
