@@ -1,5 +1,6 @@
 export interface ChequeToolElement {
 	srno: any;
+	position:any;
 	chequeno: any;
 	admno: any;
 	studentname: any;
@@ -16,4 +17,5 @@ export interface ChequeToolElement {
 	remarks: any;
 	ftr_family_number: any;
 	selectionDisable: boolean;
+	fee:any;
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatPaginator, PageEvent, MatPaginatorIntl, MatSort } from '@angular/material';
 import { ChequeToolElement } from './cheque-control-tool.model';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FeeService, CommonAPIService } from '../../_services';
+import { FeeService, CommonAPIService,SisService } from '../../_services';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatPaginatorI18n } from '../../sharedmodule/customPaginatorClass';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
@@ -27,13 +27,12 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	@ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild('deleteModal') deleteModal;
-	@ViewChild(MatSort)sort: MatSort;
-	displayedColumns: string[] =
-		['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
-			'processingdate', 'status',
-			'entered_by', 'approved_by',
-			'admno', 'studentnam', 'class_name',
-			'action', 'remarks'];
+	@ViewChild(MatSort) sort: MatSort;
+	displayedColumns: string[] =['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
+	'processingdate', 'status',
+	'entered_by', 'approved_by',
+	'admno', 'studentnam', 'class_name',
+	'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	selection = new SelectionModel<ChequeToolElement>(true, []);
@@ -50,21 +49,26 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		{ id: '4', name: 'Admission No.' },
 		{ id: '5', name: 'Alumni No.' }
 	];
+	allBanks: any[] = [];
 	totalRecords: number;
 	currentUser: any;
-	schoolInfo:any
-	showPdf=false;
+	schoolInfo: any
+	showPdf = false;
+	sessionArray:any[] = [];
 	constructor(public feeService: FeeService,
 		private fbuild: FormBuilder,
 		private common: CommonAPIService,
+		public sisService:SisService,
 		public dialog: MatDialog,
-		public erpCommonService:ErpCommonService) { }
+		public erpCommonService: ErpCommonService) { }
 
 	ngOnInit() {
 		localStorage.removeItem('invoiceBulkRecords');
-		
+
 		this.buildForm();
+		this.getSession();
 		this.getSchool();
+		this.getAllBanks();
 		this.getChequeControlListAll();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const filterModal = document.getElementById('formFlag');
@@ -87,7 +91,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'au_full_name': '',
 			'from_date': '',
 			'to_date': '',
-			'status': ''
+			'status': '',
+			'deposit_bank_id': ''
 		});
 	}
 
@@ -148,6 +153,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: item,
+						position:pos,
 						class_name: item.sec_id !== '0' ? (item.class_name + ' - ' + item.sec_name) : (item.class_name),
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
@@ -164,6 +170,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -179,9 +186,13 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.dataSource.sort = this.sort;
-				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
-				this.dataSource.paginator = this.paginator;
 				
+					this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+					this.dataSource.paginator = this.paginator;
+				
+				
+				
+
 			}
 		});
 	}
@@ -204,12 +215,14 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		}
 	}
 	getFilteredValue() {
+		this.showPdf = false;
 		this.filterForm.value.from_date = new DatePipe('en-in').
 			transform(this.filterForm.value.from_date, 'yyyy-MM-dd');
 		this.filterForm.value.to_date = new DatePipe('en-in').
 			transform(this.filterForm.value.to_date, 'yyyy-MM-dd');
 		this.CHEQUE_ELEMENT_DATA = [];
 		this.formGroupArray = [];
+		
 		this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 		this.feeService.getCheckControlList(this.filterForm.value).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
@@ -220,6 +233,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				for (const item of temparray) {
 					this.CHEQUE_ELEMENT_DATA.push({
 						srno: item,
+						position:pos,
 						class_name: item.class_name + ' ' + item.sec_name,
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
@@ -236,6 +250,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -253,15 +268,18 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				this.dataSource.paginator = this.paginator;
 			}
 		});
+
 	}
 	enableSearch() {
+		this.showPdf = false;
+		this.reset();
 		const filter = document.getElementById('formFlag');
-		if (filter.style.display === 'none') {
-			filter.style.display = 'block';
-		} else {
-			filter.style.display = 'none';
-			this.reset();
-		}
+		// if (filter.style.display === 'none') {
+		filter.style.display = 'block';
+		// } else {
+		// 	filter.style.display = 'none';
+
+		// }
 	}
 	openDialog(invoiceNo, edit): void {
 		const dialogRef = this.dialog.open(InvoiceDetailsModalComponent, {
@@ -301,7 +319,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'au_full_name': '',
 			'from_date': '',
 			'to_date': '',
-			'status': ''
+			'status': '',
+			'deposit_bank_id':''
 		});
 		this.getChequeControlListAll();
 	}
@@ -370,9 +389,132 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					}
 				});
 	}
+	toggleDownload() {
+		this.showPdf = true;
+		this.reset();
+		const filter = document.getElementById('formFlag');
+		// if (filter.style.display === 'none') {
+		filter.style.display = 'block';
+		this.displayedColumns=['srno','processingdate', 'recieptno','admno','studentnam', 'class_name', 'fee', 'amount', 'chequeno', 'bankname'];
+		// 	} else {
+		// 		filter.style.display = 'none';
+
+		// 	}
+		// }
+
+
+	}
+	showDownloadPdf() {
+		
+		this.filterForm.value.from_date = new DatePipe('en-in').
+			transform(this.filterForm.value.from_date, 'yyyy-MM-dd');
+		this.filterForm.value.to_date = new DatePipe('en-in').
+			transform(this.filterForm.value.to_date, 'yyyy-MM-dd');
+		this.CHEQUE_ELEMENT_DATA = [];
+		this.formGroupArray = [];
+		
+		this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+		this.feeService.getCheckControlList(this.filterForm.value).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				let pos = 1;
+				const temparray = result.data.reportData ? result.data.reportData : [];
+				this.totalRecords = Number(result.data.totalRecords);
+				let total =0 ;
+				localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+				for (const item of temparray) {
+					this.CHEQUE_ELEMENT_DATA.push({
+						position: pos,
+						srno: item,
+						class_name: item.class_name + ' ' + item.sec_name,
+						chequeno: item.cheque_no,
+						admno: item.inv_process_usr_no,
+						studentname: item.au_full_name,
+						recieptno: item.receipt_no,
+						amount: item.receipt_amount,
+						bankname: item.bank_name,
+						entered_by: item.created_by,
+						approved_by: item.approved_by ? item.approved_by : '-',
+						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
+						bankdeposite: item.fcc_deposite_date ? new DatePipe('en-in').transform(item.fcc_deposite_date, 'd-MMM-y') : '-',
+						processingdate: item.fcc_process_date ? this.common.dateConvertion(item.fcc_process_date, 'd-MMM-y') : '-',
+						remarks: item.fcc_remarks ? new CapitalizePipe().transform(item.fcc_remarks) : '-',
+						action: item,
+						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
+						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
+					});
+					total=total+Number(item.receipt_amount);
+
+					this.formGroupArray.push({
+						formGroup: this.fbuild.group({
+							'fcc_ftr_id': '',
+							'fcc_process_date': '',
+							'fcc_status': 'c',
+							'fcc_deposite_date': '',
+							'fcc_inv_id': ''
+						})
+					});
+					pos++;
+				}
+				this.CHEQUE_ELEMENT_DATA.push({
+					position: '',
+					srno: '',
+					class_name: '',
+					chequeno: '',
+					admno: '',
+					studentname: '',
+					recieptno: '',
+					amount: total,
+					bankname: '',
+					entered_by: '',
+					approved_by: '',
+					recieptdate: '',
+					bankdeposite:  '',
+					processingdate: '',
+					remarks: '',
+					action: '',
+					ftr_family_number: '',
+					selectionDisable: true,
+					fee:'Total'});
+				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
+				if(this.dataSource && this.dataSource.paginator) {
+
+				
+				this.dataSource.paginator.length = this.paginator.length = this.totalRecords;
+				this.dataSource.paginator = this.paginator;
+				}
+				this.downloadPdf();
+			}
+		});
+	}
+
+	getBankInfo(bnk_id) {
+		console.log('bnk_id',bnk_id);
+		console.log('allBanks',this.allBanks);
+		var bankOInfo:any;
+		for(var i=0; i<this.allBanks.length;i++) {
+			if(Number(this.allBanks[i]['bnk_id'] === bnk_id)) {
+				bankOInfo = this.allBanks[i];
+			}
+		}
+		return bankOInfo;
+	}
+	getSessionName(id) {
+		const findex = this.sessionArray.findIndex(f => f.ses_id === id);
+		if (findex !== -1) {
+			return this.sessionArray[findex].ses_name;
+		}
+	}
 	downloadPdf() {
 		this.showPdf = true;
-		console.log('this.CHEQUE_ELEMENT_DATA',this.dataSource)
+		var fromDate = this.filterForm.value.from_date ? this.filterForm.value.from_date.format("DD-MM-YYYY") : 'N/A';
+		var toDate = this.filterForm.value.to_date ? this.filterForm.value.to_date.format("DD-MM-YYYY") : 'N/A';
+		var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
+		var bankInfo = this.getBankInfo(this.filterForm.value.deposit_bank_id);
+		let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
+		let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
+
+		console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
 		setTimeout(() => {
 			const doc = new jsPDF('landscape');
 
@@ -388,7 +530,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				headerStyles: {
 					fontStyle: 'bold',
 					fillColor: '#ffffff',
-					textColor: 'black',
+					textColor: '#ff0000',
 					halign: 'center',
 					fontSize: 20,
 				},
@@ -396,22 +538,42 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 				theme: 'striped'
 			});
 
+			if(bankName && bankAccNo) {
+
 			doc.autoTable({
 				head: [[
-					new TitleCasePipe().transform('Cheque Listing ')
+					new TitleCasePipe().transform(bankName+' A/C No. '+bankAccNo)
 				]],
 				didDrawPage: function (data) {
 					doc.setFont('Roboto');
 				},
 				headerStyles: {
-					fontStyle: 'bold',
+					fontStyle: 'italic',
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 14,
+					fontSize: 16,
 				},
 				useCss: true,
 				theme: 'striped'
+			});}
+
+			doc.autoTable({
+				head: [[
+					{content: 'From Date : '+fromDate,  styles: {halign: 'left', fillColor: '#ffffff'}}, 
+					{content: 'To Date : '+toDate,  styles: {halign: 'center', fillColor: '#ffffff'}},
+					{content: 'Session : '+session,  styles: {halign: 'right', fillColor: '#ffffff'}}
+				]],
+					
+				
+				headerStyles: {
+					fontStyle: 'bold',
+					fillColor: '#ffffff',
+					textColor: 'black',
+					fontSize: 14,
+				},
+				useCss: true,
+				theme: 'grid'
 			});
 
 			doc.autoTable({
@@ -421,11 +583,11 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					fillColor: '#ffffff',
 					textColor: 'black',
 					halign: 'center',
-					fontSize: 6,
+					fontSize: 8,
 				},
 				useCss: true,
 				styles: {
-					fontSize: 6,
+					fontSize: 8,
 					cellWidth: 'auto',
 					textColor: 'black',
 					lineColor: '#89A8C9',
@@ -434,39 +596,61 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			});
 
 			doc.autoTable({
-				head: [['Report Generated By : ' + this.currentUser.full_name]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
+				head: [[
+					{content: 'Date',  styles: {halign: 'left', fillColor: '#ffffff'}}, 
+					{content: 'Deposit By : '+this.currentUser.full_name,  styles: {halign: 'right', fillColor: '#ffffff'}}]],
+				
 				headerStyles: {
-					fontStyle: 'bold',
+					fontStyle: 'italic',
 					fillColor: '#ffffff',
 					textColor: 'black',
-					halign: 'left',
-					fontSize: 10,
+					fontWeight:'bold',
+					fontSize: 14,
 				},
 				useCss: true,
-				theme: 'striped'
+				theme: 'grid'
 			});
-			doc.autoTable({
-				head: [['No. of Records : ' + this.dataSource.filteredData.length]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'left',
-					fontSize: 10,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
+			// doc.autoTable({
+			// 	head: [['No. of Records : ' + this.dataSource.filteredData.length]],
+			// 	didDrawPage: function (data) {
+			// 		doc.setFont('Roboto');
+			// 	},
+			// 	headerStyles: {
+			// 		fontStyle: 'bold',
+			// 		fillColor: '#ffffff',
+			// 		textColor: 'black',
+			// 		halign: 'left',
+			// 		fontSize: 10,
+			// 	},
+			// 	useCss: true,
+			// 	theme: 'striped'
+			// });
 
-			
+
 			doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
 			this.showPdf = false;
+			this.displayedColumns = ['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
+	'processingdate', 'status',
+	'entered_by', 'approved_by',
+	'admno', 'studentnam', 'class_name',
+	'action', 'remarks'];
 		}, 1000);
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				this.sessionArray = result2.data;
+				this.getSchool();
+			}
+		});
+	}
+
+	getAllBanks() {
+		this.allBanks = [];
+		this.feeService.getBanks({}).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				this.allBanks = result.data;
+			}
+		});
 	}
 }
