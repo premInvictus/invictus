@@ -18,22 +18,31 @@
             <form [formGroup]="filterForm" id="formFlag">
               <div class="row margin-top-5">
                 <div class="col-12 remove-col-padding">
-                  <div class="inline-flex margin-left-15">
+                  <div class="inline-flex margin-left-15" *ngIf="!showPdf">
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Enrollment No.</mat-label>
                       <input matInput placeholder="Enrollment No." formControlName="inv_process_usr_no">
                     </mat-form-field>
                   </div>
-                  <div class="inline-flex margin-left-15 ">
+                  <div class="inline-flex margin-left-15 " *ngIf="!showPdf">
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Student Name</mat-label>
                       <input matInput placeholder="Student Name" formControlName="au_full_name">
                     </mat-form-field>
                   </div>
-                  <div class="inline-flex margin-left-15 ">
+                  <div class="inline-flex margin-left-15 " *ngIf="!showPdf">
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Invoice No.</mat-label>
                       <input matInput placeholder="Invoice No." formControlName="invoice_no">
+                    </mat-form-field>
+                  </div>
+                  <div class="inline-flex margin-left-15" *ngIf="showPdf">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                      <mat-label>Deposited To Bank</mat-label>
+                      <mat-select placeholder="Status" formControlName="deposit_bank_id">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of allBanks" [value]="item.bnk_id">{{item.bank_name}}</mat-option>
+                      </mat-select>
                     </mat-form-field>
                   </div>
                   <div class="inline-flex margin-left-15 ">
@@ -52,7 +61,7 @@
                       <mat-datepicker #picker5></mat-datepicker>
                     </mat-form-field>
                   </div>
-                  <div class="inline-flex margin-left-15">
+                  <div class="inline-flex margin-left-15" >
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Status</mat-label>
                       <mat-select placeholder="Status" formControlName="status">
@@ -62,7 +71,9 @@
                     </mat-form-field>
                   </div>
                   <div class="inline-flex margin-left-15">
-                    <span><button mat-raised-button class="apply-btn" (click)="getFilteredValue()">Apply</button></span>
+                    <span><button mat-raised-button class="apply-btn" *ngIf="!showPdf" (click)="getFilteredValue()">Apply</button></span>
+                    <span><button mat-raised-button class="apply-btn" *ngIf="showPdf" (click)="showDownloadPdf()">Apply</button></span>
+                    
                     &nbsp;
                     <span>
                       <button mat-raised-button class="rst-btn " (click)="reset()">Reset</button>
@@ -88,8 +99,9 @@
               <button mat-raised-button class="my-filter-btn" (click)="enableSearch()">Filter
                 Search</button>&nbsp;
                 <span>
-                  <button mat-raised-button class="my-filter-btn " (click)="downloadPdf()">Download Pdf</button>
+                  <button mat-raised-button class="my-filter-btn " (click)="toggleDownload()">Filter &amp; Download Pdf</button>
                 </span>
+                
             </div>
           </div>
         </div>
@@ -104,16 +116,18 @@
             <table mat-table id="cheque_control_list" [dataSource]="dataSource" class="fee-table-100 text-center" matSort>
               <ng-container matColumnDef="srno">
                 <th mat-header-cell *matHeaderCellDef>
-                  <mat-checkbox (change)="$event ? masterToggle() : null"
+                  <mat-checkbox *ngIf="!showPdf" (change)="$event ? masterToggle() : null"
                     [checked]="selection.hasValue() && isAllSelected()"
                     [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
                   </mat-checkbox>
+                  <span *ngIf="showPdf">S.No.</span>
                 </th>
                 <td width="3%" mat-cell *matCellDef="let row">
-                  <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
+                  <mat-checkbox *ngIf="!showPdf" (click)="$event.stopPropagation()" (change)="$event ? manipulateAction(row) : null"
                     [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)"
                     [disabled]="row.selectionDisable">
                   </mat-checkbox>
+                  <span *ngIf="showPdf">{{row?.position}}</span>
                 </td>
                 <td mat-footer-cell *matFooterCellDef></td>
               </ng-container>
@@ -143,6 +157,10 @@
                 <th mat-header-cell *matHeaderCellDef> Deposit at Bank </th>
                 <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
               </ng-container>
+              <ng-container matColumnDef="fee">
+                  <th mat-header-cell *matHeaderCellDef> Fee </th>
+                  <td mat-cell *matCellDef="let item"> {{item.fee}} </td>
+                </ng-container>
               <ng-container matColumnDef="bankdeposite">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Deposit</th>
                 <td mat-cell *matCellDef="let item">
