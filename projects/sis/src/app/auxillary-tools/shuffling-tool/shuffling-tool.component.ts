@@ -17,6 +17,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	sectionArray = [];
 	shufflesectionArray = [];
 	houseArray = [];
+	shufflehouseArray = [];
 	allselected = false;
 	STUDENT_ELEMENT_DATA: Student[];
 	STUDENT_ELEMENT_DATA_ONE: any;
@@ -85,7 +86,8 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 		this.shufflebasedform = this.fbuild.group({
 			based_on: '',
 			criteria:'',
-			shuffle_sec_id:''
+			shuffle_sec_id:'',
+			shuffle_house_id:''
 		});
 	}
 
@@ -119,6 +121,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 		this.sisService.getHouses().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.houseArray = result.data;
+				this.shufflehouseArray = result.data;
 			}
 		});
 	}
@@ -180,6 +183,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 			param.based_on = this.shufflebasedform.value.based_on;
 			param.criteria = this.shufflebasedform.value.criteria;
 			param.shuffle_sec_id = this.shufflebasedform.value.shuffle_sec_id;
+			param.shuffle_house_id = this.shufflebasedform.value.shuffle_house_id;
 			param.login_id = this.loginArray;
 			this.disableApiCall = true;
 			if (this.loginArray.length > 0) {

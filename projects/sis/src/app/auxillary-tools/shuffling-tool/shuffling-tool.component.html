@@ -166,9 +166,19 @@
                                       </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <div class="col-3" *ngIf="this.shufflebasedform.value.based_on == 'hou_id' && this.shufflebasedform.value.criteria == 'specific'">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <mat-label>Shuffle House</mat-label>
+                                      <mat-select placeholder="Shuffle House" formControlName="shuffle_house_id">
+                                        <mat-option value="">Please Select</mat-option>
+                                        <mat-option *ngFor="let item of shufflehouseArray" [value]="item.hou_id">{{item.hou_house_name}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                </div>
                                 <div class="col-3">
                                     <button mat-raised-button class="btn-success btn-margin-top" 
-                                    [disabled]="disableApiCall"
+                                    
                                     (click)="getShuffleStudents()">Generate</button>
                                 </div>
                             </div>
