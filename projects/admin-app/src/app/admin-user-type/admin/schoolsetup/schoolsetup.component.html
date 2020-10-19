@@ -450,6 +450,13 @@
                               </mat-form-field>
                            </div>
                         </div>
+                        <div class="row">
+                           <mat-label>Allow Data Sync &nbsp;&nbsp;</mat-label>
+                           <mat-slide-toggle class="system-info-toggle-btn"
+                                    [checked]="si_data_sync == '1'"
+                                   (click)="toggleDataSync()">
+                               </mat-slide-toggle>
+                        </div>
 
                      </div>
                   </div>
