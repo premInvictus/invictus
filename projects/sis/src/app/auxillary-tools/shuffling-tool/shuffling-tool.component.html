@@ -27,7 +27,7 @@
                                           Please select enrollment type
                                         </mat-error>
                                       </mat-form-field>
-                                </div>
+                                </div> 
                                 <div class="col-3">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Current Class</mat-label>
@@ -37,6 +37,16 @@
                                                 {{item.class_name}}
                                             </mat-option>
                                         </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <mat-label>Current Section</mat-label>
+                                      <mat-select placeholder="Section" formControlName="sec_id">
+                                        <mat-option value="">Please Select</mat-option>
+                                        <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}
+                                        </mat-option>
+                                      </mat-select>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-3">
@@ -128,7 +138,7 @@
                         </div>
                         <form [formGroup]="shufflebasedform" novalidate>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-3">
                                     <mat-form-field class="form-field" appearance="outline">
                                         <mat-label>Shuffle Based On</mat-label>
                                         <mat-select formControlName="based_on" placeholder="Shuffle Based On" (ngModelChange)="resetshuffletableflag()" required>
@@ -137,9 +147,38 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-3">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                        <mat-label>Shuffle Criteria</mat-label>
+                                        <mat-select formControlName="criteria" placeholder="Shuffle Criteria" (ngModelChange)="resetshuffletableflag()" required>
+                                            <mat-option value="random">Random</mat-option>
+                                            <mat-option value="specific">Specific</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3" *ngIf="this.shufflebasedform.value.based_on == 'sec_id' && this.shufflebasedform.value.criteria == 'specific'">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <mat-label>Shuffle Section</mat-label>
+                                      <mat-select placeholder="Shuffle Section" formControlName="shuffle_sec_id">
+                                        <mat-option value="">Please Select</mat-option>
+                                        <mat-option *ngFor="let item of shufflesectionArray" [value]="item.sec_id">{{item.sec_name}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3" *ngIf="this.shufflebasedform.value.based_on == 'hou_id' && this.shufflebasedform.value.criteria == 'specific'">
+                                    <mat-form-field class="form-field" appearance="outline">
+                                      <mat-label>Shuffle House</mat-label>
+                                      <mat-select placeholder="Shuffle House" formControlName="shuffle_house_id">
+                                        <mat-option value="">Please Select</mat-option>
+                                        <mat-option *ngFor="let item of shufflehouseArray" [value]="item.hou_id">{{item.hou_house_name}}
+                                        </mat-option>
+                                      </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-3">
                                     <button mat-raised-button class="btn-success btn-margin-top" 
-                                    [disabled]="disableApiCall"
+                                    
                                     (click)="getShuffleStudents()">Generate</button>
                                 </div>
                             </div>

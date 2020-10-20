@@ -15,7 +15,9 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	classArray = [];
 	disableApiCall = false;
 	sectionArray = [];
+	shufflesectionArray = [];
 	houseArray = [];
+	shufflehouseArray = [];
 	allselected = false;
 	STUDENT_ELEMENT_DATA: Student[];
 	STUDENT_ELEMENT_DATA_ONE: any;
@@ -77,11 +79,15 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 	buildForm() {
 		this.shufflesortform = this.fbuild.group({
 			class_id: '',
+			sec_id:'',
 			order_by: '',
 			enrollment_type: ''
 		});
 		this.shufflebasedform = this.fbuild.group({
-			based_on: ''
+			based_on: '',
+			criteria:'',
+			shuffle_sec_id:'',
+			shuffle_house_id:''
 		});
 	}
 
@@ -106,6 +112,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 		this.sisService.getSectionsByClass({ class_id: this.shufflesortform.value.class_id }).subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.sectionArray = result.data;
+				this.shufflesectionArray = result.data;
 			}
 		});
 	}
@@ -114,6 +121,7 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 		this.sisService.getHouses().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.houseArray = result.data;
+				this.shufflehouseArray = result.data;
 			}
 		});
 	}
@@ -170,8 +178,12 @@ export class ShufflingToolComponent implements OnInit, AfterViewInit {
 			this.resetShuffleTableAndSelection();
 			const param: any = {};
 			param.class_id = this.shufflesortform.value.class_id;
+			param.sec_id = this.shufflesortform.value.sec_id;
 			param.order_by = this.shufflesortform.value.order_by;
 			param.based_on = this.shufflebasedform.value.based_on;
+			param.criteria = this.shufflebasedform.value.criteria;
+			param.shuffle_sec_id = this.shufflebasedform.value.shuffle_sec_id;
+			param.shuffle_house_id = this.shufflebasedform.value.shuffle_house_id;
 			param.login_id = this.loginArray;
 			this.disableApiCall = true;
 			if (this.loginArray.length > 0) {

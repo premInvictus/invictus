@@ -385,7 +385,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 				if (result && result.status === 'ok') {
 					
 					this.templateArray = result.data;
-
+					console.log('this.templateArray',this.templateArray);
 					const sub_arr = this.templateArray[0].tp_sub_id.replace(/ /g,'').split(',');
 					const st_arr = this.templateArray[0].tp_st_id.replace(/ /g,'').split(',');
 					this.express_form_one.controls.qp_name.setValue(this.templateArray[0].qp_name);
