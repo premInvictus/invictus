@@ -705,7 +705,7 @@ export class AccessionReportComponent implements OnInit {
 					// new CapitalizePipe().transform(repoArray[Number(index)]['title']);
 					obj['book_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['title']) ? new CapitalizePipe().transform(repoArray[Number(index)]['title']) : '-';
 					obj['book_sub_title'] = new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) ? new CapitalizePipe().transform(repoArray[Number(index)]['subtitle']) : '-';
-					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'] && repoArray[Number(index)]['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['authors'][0]) : '-';
+					obj['author'] = new CapitalizePipe().transform(repoArray[Number(index)]['authors'] && repoArray[Number(index)]['authors'][0]) ? new CapitalizePipe().transform(repoArray[Number(index)]['authors'].join()) : '-';
 					obj['genre'] = new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) ? new CapitalizePipe().transform(repoArray[Number(index)]['genre']['genre_name']) : '-';
 					obj['pages'] = repoArray[Number(index)]['pages'] ? repoArray[Number(index)]['pages'] : '-';
 					obj['price'] = repoArray[Number(index)]['price'] ? repoArray[Number(index)]['price'] : '-';

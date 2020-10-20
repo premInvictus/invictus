@@ -87,6 +87,7 @@ export class SchoolsetupComponent implements OnInit {
 	monthArray: any[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	invictusUserData:any[] = [];
 	schoolGroupData:any[]= [];
+	si_data_sync  = '0';
 	constructor(
 		private adminService: AdminService,
 		private acsetupService: AcsetupService,
@@ -459,6 +460,10 @@ export class SchoolsetupComponent implements OnInit {
 				'school_group',
 				(this.newSchoolForm.value.school_group_text ? this.newSchoolForm.value.school_group_text : this.newSchoolForm.value.school_group )
 			);
+			newSchoolFormData.append(
+				
+				'si_data_sync',this.si_data_sync
+			);
 			this.adminService.addSchool(newSchoolFormData).subscribe(
 				(result: any) => {
 					if (result && result.status === 'ok') {
@@ -545,6 +550,7 @@ export class SchoolsetupComponent implements OnInit {
 		this.file1 = value.school_logo;
 		this.file2 = value.school_favicon;
 		this.city_id = value.school_city_id;
+		this.si_data_sync = value.si_data_sync;
 		this.newSchoolForm.patchValue({
 			school_id: value.school_id,
 			school_logo: '',
@@ -670,6 +676,10 @@ export class SchoolsetupComponent implements OnInit {
 				'school_group',
 				(this.newSchoolForm.value.school_group_text ? this.newSchoolForm.value.school_group_text : this.newSchoolForm.value.school_group )
 			);
+			newSchoolFormData.append(
+				
+				'si_data_sync',this.si_data_sync
+			);
 			console.log('newSchoolFormData--', newSchoolFormData, this.newSchoolForm)
 			this.adminService.editSchool(newSchoolFormData).subscribe(
 				(result: any) => {
@@ -749,6 +759,14 @@ export class SchoolsetupComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	toggleDataSync() {
+		if(this.si_data_sync == '1') {
+			this.si_data_sync = '0';
+		} else {
+			this.si_data_sync = '1';
+		}
 	}
 
 	manageSchoolUser(item) {
