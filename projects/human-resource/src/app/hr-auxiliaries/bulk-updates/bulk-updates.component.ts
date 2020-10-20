@@ -22,7 +22,7 @@ export class BulkUpdatesComponent implements OnInit {
 
 	bulkupdate(event) {
 		console.log('this.uploadModule', this.uploadComponent);
-		if (this.uploadComponent === '' || (this.uploadComponent === '4' && !this.month_id)) {
+		if (this.uploadComponent === '' || ((this.uploadComponent === '4' || this.uploadComponent === '5') && !this.month_id)) {
 			this.commonAPIService.showSuccessErrorMessage('Please choose one component or month for which do you wish to download template', 'error');
 		} else {
 			const file = event.target.files[0];
@@ -36,6 +36,8 @@ export class BulkUpdatesComponent implements OnInit {
 				formData.append('month', (Number(this.month_id) - 1).toString());
 				formData.append('year', (new Date().getFullYear()).toString());
 				formData.append('currentUser', JSON.stringify(this.currentUser));
+			} else if (Number(component) === 5) {
+				formData.append('month', this.month_id);
 			}
 			console.log(formData);
 			const options = { content: formData, module: 'auxillary', component: this.uploadComponent };
