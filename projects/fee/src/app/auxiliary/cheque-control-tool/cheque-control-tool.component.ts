@@ -31,13 +31,14 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[] =['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
 	'processingdate', 'status',
 	'entered_by', 'approved_by',
-	'admno', 'studentnam', 'class_name',
+	'admno', 'studentnam','studenttags' ,'class_name',
 	'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 	selection = new SelectionModel<ChequeToolElement>(true, []);
 	formGroupArray: any[] = [];
 	filterForm: FormGroup;
+	tags:any[] = [];
 	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Dishonoured' }];
 	toggleSearch = false;
 	pageEvent: PageEvent;
@@ -69,6 +70,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		this.getSession();
 		this.getSchool();
 		this.getAllBanks();
+		this.getStudentTags();
 		this.getChequeControlListAll();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const filterModal = document.getElementById('formFlag');
@@ -92,7 +94,15 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'from_date': '',
 			'to_date': '',
 			'status': '',
-			'deposit_bank_id': ''
+			'deposit_bank_id': '',
+			'tag_id':''
+		});
+	}
+	getStudentTags()  {
+		this.sisService.getstudenttags({ tag_status: '1' }).subscribe((result: any) => {
+			if (result.status === 'ok') {
+				this.tags = result.data;
+			}
 		});
 	}
 
@@ -158,6 +168,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
+						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
@@ -238,6 +249,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
+						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
@@ -320,7 +332,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'from_date': '',
 			'to_date': '',
 			'status': '',
-			'deposit_bank_id':''
+			'deposit_bank_id':'',
+			'tag_id':''
 		});
 		this.getChequeControlListAll();
 	}
@@ -395,7 +408,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 		const filter = document.getElementById('formFlag');
 		// if (filter.style.display === 'none') {
 		filter.style.display = 'block';
-		this.displayedColumns=['srno','processingdate', 'recieptno','admno','studentnam', 'class_name', 'fee', 'amount', 'chequeno', 'bankname'];
+		this.displayedColumns=['srno','processingdate', 'recieptno','admno','studentnam', 'studenttags','class_name', 'fee', 'amount', 'chequeno', 'bankname'];
 		// 	} else {
 		// 		filter.style.display = 'none';
 
@@ -429,6 +442,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						chequeno: item.cheque_no,
 						admno: item.inv_process_usr_no,
 						studentname: item.au_full_name,
+						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
 						bankname: item.bank_name,
@@ -463,6 +477,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					chequeno: '',
 					admno: '',
 					studentname: '',
+					studenttags:'',
 					recieptno: '',
 					amount: total,
 					bankname: '',
@@ -632,7 +647,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
 	'processingdate', 'status',
 	'entered_by', 'approved_by',
-	'admno', 'studentnam', 'class_name',
+	'admno', 'studentnam','studenttags' ,'class_name',
 	'action', 'remarks'];
 		}, 1000);
 	}

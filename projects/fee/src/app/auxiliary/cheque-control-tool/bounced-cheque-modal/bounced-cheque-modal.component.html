@@ -199,7 +199,166 @@
   <div class="row text-center">
     <div class="col-12">
       <button mat-raised-button class="btn-success" [disabled]="((bouncedForm.value.fcc_status !== 'c' && data.fcc_status === 'b') &&
-      (bouncedForm.value.fcc_status !== 'd' && data.fcc_status === 'b'))" (click)="submit()">Submit</button>
+      (bouncedForm.value.fcc_status !== 'd' && data.fcc_status === 'b'))" (click)="submit(false)">Submit</button>
+    </div>
+    <div class="col-12">
+      <button mat-raised-button class="btn-success" [disabled]="((bouncedForm.value.fcc_status !== 'c' && data.fcc_status === 'b') &&
+      (bouncedForm.value.fcc_status !== 'd' && data.fcc_status === 'b'))" (click)="submit(true)">Submit & Print</button>
+    </div>
+  </div>
+  <div class="row" [hidden]="true">
+    <div class="col-12">
+      <table mat-table id="cheque_control_list1" [dataSource]="dataSource" class="fee-table-100 text-center" matSort>
+        <ng-container matColumnDef="srno">
+          <th mat-header-cell *matHeaderCellDef>
+           
+            <span >S.No.</span>
+          </th>
+          <td width="3%" mat-cell *matCellDef="let row">
+            
+            <span>{{row?.position}}</span>
+          </td>
+          <td mat-footer-cell *matFooterCellDef></td>
+        </ng-container>
+        <ng-container matColumnDef="recieptdate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reciept Date </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.recieptdate}} </td>
+        </ng-container>
+        <ng-container matColumnDef="recieptno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reciept no. </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap">
+              <span>{{item.recieptno}}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef> Amount </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.amount | number}} </td>
+        </ng-container>
+        <ng-container matColumnDef="chequeno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque No </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chequeno}}</td>
+        </ng-container>
+        <ng-container matColumnDef="bankname">
+          <th mat-header-cell *matHeaderCellDef> Deposit at Bank </th>
+          <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fee">
+            <th mat-header-cell *matHeaderCellDef> Fee </th>
+            <td mat-cell *matCellDef="let item"> {{item.fee}} </td>
+          </ng-container>
+        <ng-container matColumnDef="bankdeposite">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Deposit</th>
+          <td mat-cell *matCellDef="let item">
+            <span style="font-size: 14px">
+              <b>{{item.bankdeposite}}</b>
+            </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="processingdate">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Date of Clearence/Dishonoured</th>
+          <td mat-cell *matCellDef="let item">
+            <span style="font-size: 14px" *ngIf="item.action.fcc_status === 'b'">
+              <b *ngIf="item.action.dishonor_date">{{item.action.dishonor_date | date : 'd-MMM-y'}}</b>
+              <b *ngIf="!item.action.dishonor_date">-</b>
+            </span>
+            <span style="font-size: 14px" *ngIf="item.action.fcc_status === 'c'">
+              <b *ngIf="item.action.fcc_process_date">{{item.action.fcc_process_date | date : 'd-MMM-y'}}</b>
+              <b *ngIf="!item.action.fcc_process_date">-</b>
+            </span>
+            <span style="font-size: 14px" *ngIf="item.action.status === '0'">
+              <b>-</b>
+            </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef> Status </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap">
+            <div class="inline-flex margin-top-5">
+              <div class="text-center">
+                <span style="font-size: 14px" *ngIf="item.action.status === '4'">
+                  <b *ngIf="item.action.fcc_status === 'c'"
+                    style="font-size: 14px;cursor: pointer;color: green">Cleared</b>
+                  <b *ngIf="item.action.fcc_status === 'b'" [matTooltip]="item.action.fcc_remarks"
+                    style="font-size: 14px;cursor: pointer;color: red">Dishonoured</b>
+                </span>
+                <span style="font-size: 14px" *ngIf="item.action.status === '1'"
+                  style="font-size: 14px;cursor: pointer;color:green">
+                  <b>Cleared</b>
+                </span>
+                <span [matTooltip]="item.action.fcc_remarks" style="font-size: 14px;cursor: pointer;color: red"
+                  *ngIf="item.action.status === '2'" class="font-size-10"><b>Dishonoured</b>
+                </span>
+                <span style="font-size: 14px" *ngIf="item.action.status === '3'">
+                  <b>Deposited</b>
+                </span>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="entered_by">
+          <th mat-header-cell *matHeaderCellDef> Entered By </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.entered_by}} </td>
+        </ng-container>
+        <ng-container matColumnDef="approved_by">
+          <th mat-header-cell *matHeaderCellDef> Approved By </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.approved_by}} </td>
+        </ng-container>
+        <ng-container matColumnDef="admno">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Enrollment no. </th>
+          <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
+        </ng-container>
+        <ng-container matColumnDef="studentnam">
+          <th mat-header-cell *matHeaderCellDef> Student Name </th>
+          <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
+            <span class="icon-spacer">{{item.studentname | titlecase}} </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="studenttags">
+          <th mat-header-cell *matHeaderCellDef> Student Tag </th>
+          <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
+            <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="class_name">
+          <th mat-header-cell *matHeaderCellDef> Class </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.class_name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="action" >
+          <th mat-header-cell *matHeaderCellDef [hidden]="showPdf"> Action </th>
+          <td mat-cell *matCellDef="let item" class="text-nowrap" [hidden]="showPdf">
+            <div class="inline-flex margin-top-5">
+              <span style="font-size: 14px" *ngIf="item.action.status === '4'">
+                <b>Approved</b>
+              </span>
+              &nbsp;<i
+                *ngIf="item.action.status !== '4' && (item.action.status === '0' || item.action.status === '3')"
+                class="material-icons" style="cursor: pointer" (click)="openCheckOperationModal(item.action)"
+                [matTooltip]="'Action'">list_alt</i>
+              &nbsp;<i
+                *ngIf="item.action.status !== '4' && (item.action.status === '2' || item.action.status === '1')"
+                class="material-icons" style="cursor: pointer" (click)="openCheckOperationModal(item.action)"
+                [matTooltip]="'Edit'">edit</i>
+              &nbsp;<i *ngIf="item.action.status === '2' || item.action.status === '1'" class="material-icons"
+                style="cursor: pointer" (click)="openDeleteModal(item.action)"
+                [matTooltip]="'Approve'">thumb_up</i>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="remarks">
+          <th mat-header-cell *matHeaderCellDef> Remarks </th>
+          <td mat-cell *matCellDef="let item"> {{item.remarks}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+        </tr>
+      </table>
+      <table class="table-100 text-center" style="margin-top:5px;">
+        <tr *ngIf="CHEQUE_ELEMENT_DATA.length == 0">
+          <td colspan="11">No Record Found</td>
+        </tr>
+      </table>
+      <!-- <mat-paginator [hidden]="!(CHEQUE_ELEMENT_DATA.length > 0)" #paginator [pageSize]="10"
+        [pageSizeOptions]="[5,10,25,100,1000]" (page)="pageEvent = fetchData($event)"></mat-paginator> -->
     </div>
   </div>
 </div>
