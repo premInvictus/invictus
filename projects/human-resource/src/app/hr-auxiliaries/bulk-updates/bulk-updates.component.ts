@@ -22,7 +22,7 @@ export class BulkUpdatesComponent implements OnInit {
 
 	bulkupdate(event) {
 		console.log('this.uploadModule', this.uploadComponent);
-		if (this.uploadComponent === '' || (this.uploadComponent === '4' && !this.month_id)) {
+		if (this.uploadComponent === '' || ((this.uploadComponent === '4') && !this.month_id)) {
 			this.commonAPIService.showSuccessErrorMessage('Please choose one component or month for which do you wish to download template', 'error');
 		} else {
 			const file = event.target.files[0];
