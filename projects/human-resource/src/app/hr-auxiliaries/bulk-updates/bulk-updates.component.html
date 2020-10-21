@@ -21,7 +21,7 @@
                 <mat-option value="5">Employee Leave Credit</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field *ngIf="uploadComponent && uploadComponent === '4' || uploadComponent === '5'" class="form-field" appearance="outline">
+            <mat-form-field *ngIf="uploadComponent && uploadComponent === '4'" class="form-field" appearance="outline">
               <mat-label>Choose Month</mat-label>
               <mat-select formControlName="starting_month" placeholder="Choose Month"
               (selectionChange)="changeMonth($event)">
