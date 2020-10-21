@@ -4,6 +4,7 @@ export interface ChequeToolElement {
 	chequeno: any;
 	admno: any;
 	studentname: any;
+	studenttags:any;
 	recieptno: any;
 	amount: any;
 	bankname: any;
