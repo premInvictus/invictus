@@ -1015,4 +1015,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/saveUserLastState', value);
 	}
+	getstudenttags(value) {
+		this.service.startLoading();
+		return this.http.get(environment.apiSisUrl + '/siSetup/studentTags');
+	}
 }
