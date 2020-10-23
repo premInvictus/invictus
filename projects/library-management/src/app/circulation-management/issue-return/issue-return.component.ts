@@ -350,6 +350,13 @@ export class IssueReturnComponent implements OnInit {
 	}
 
 	removeBook(index) {
+		for(var i=0; i<this.finIssueBook.length;i++) {
+			console.log(this.bookData[index]['reserv_id'],this.finIssueBook[i]['reserv_id'],i)
+			if(this.bookData[index]['reserv_id']==this.finIssueBook[i]['reserv_id']) {
+				this.finIssueBook.splice(i,1);
+			}
+		}
+		console.log('this.finIssueBook-->',this.finIssueBook)
 		this.bookData.splice(index, 1);
 	}
 
@@ -445,6 +452,7 @@ export class IssueReturnComponent implements OnInit {
 
 	saveIssueReturn() {
 		const updatedBookData = [];
+		console.log('this.bookData',this.bookData);
 		const bookData = JSON.parse(JSON.stringify(this.bookData));
 		
 		for (let i = 0; i < bookData.length; i++) {
@@ -480,12 +488,23 @@ export class IssueReturnComponent implements OnInit {
 					bookData[i]['issued_by'] = {'login_id':this.currentUser.login_id, "name" :this.currentUser.full_name };
 					bookData[i]['due_date'] = this.common.dateConvertion(bookData[i]['fdue_date'], 'yyyy-MM-dd');
 					bookData[i]['issued_on'] = this.common.dateConvertion(new Date(), 'yyyy-MM-dd');
-					this.finIssueBook.push(bookData[i]);
+					var flag=0;
+					for(var ki=0; ki<this.finIssueBook.length;ki++) {
+						if(this.finIssueBook[ki]['reserv_id']==bookData[i]['reserv_id']) {
+							flag=1;
+						}
+					}
+					if(!flag) {
+						this.finIssueBook.push(bookData[i]);
+						
+					}
 					updatedBookData.push(bookData[i]);
+					
 				}
 			}
-    }
-    
+		   }
+		   console.log('this.finIssueBook--',this.finIssueBook);
+		   console.log('updatedBookData--',updatedBookData);
 
 		var limitFlag = this.checkForIssueBookLimit();
 		if (!limitFlag) {
