@@ -82,8 +82,8 @@
                 <ng-container *ngFor="let subtopic of topic.subtopics; let j=index">
                   <tr class="custom-tr" *ngIf="j == 0">
                     <td [attr.rowspan]="topic.subtopicCount" class="custom-td text-left">
-                      {{topic.topic_name  | capitalize}}</td>
-                    <td class="custom-td text-left">{{subtopic.st_name | capitalize}}</td>
+                      <span [innerHTML]="topic.topic_name"></span>
+                    <td class="custom-td text-left"><span [innerHTML]="subtopic.st_name"></span></td>
                     <td [attr.rowspan]="topic.subtopicCount" class="custom-td"
                       (click)="toggleStatus(i,1,topic.courseCompleted)">
                       <ng-container *ngIf="topic.courseCompleted">
@@ -113,7 +113,7 @@
                     </td>
                   </tr>
                   <tr class="custom-tr" *ngIf="j != 0">
-                    <td class="custom-td text-left">{{subtopic.st_name | capitalize}}</td>
+                    <td class="custom-td text-left"><span [innerHTML]="subtopic.st_name"></span></td>
                   </tr>
                 </ng-container>
               </ng-container>

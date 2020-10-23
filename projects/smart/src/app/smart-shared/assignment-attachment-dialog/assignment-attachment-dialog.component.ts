@@ -181,7 +181,7 @@ export class AssignmentAttachmentDialogComponent implements OnInit {
 				});
 			}
 		} else {
-			this.smartService.getSubjectsByClass({ class_id: this.assignmentForm.value.class_id }).subscribe((result: any) => {
+			this.smartService.getSubjectsByClass({ class_id: this.assignmentForm.value.class_id,sub_timetable:1 }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
 					this.subjectArray = result.data;
 					if (this.sub_id) {

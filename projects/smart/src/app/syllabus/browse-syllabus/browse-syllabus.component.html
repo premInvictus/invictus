@@ -64,7 +64,8 @@
                 <ng-container *ngFor="let item of finalSpannedArray;let i=index">
                     <ng-container *ngIf="item.sd_topic_id === item.details[0].sd_topic_id">
                         <div class="drag-drop-box" cdkDrag (click)="openInner(i)">
-                            {{getTopicName(item.sd_topic_id)}}
+                            <span [innerHTML]="getTopicName(item.sd_topic_id)"></span>
+                            
                         </div>
                         <div 
                         [class]="innerst[i]"
@@ -72,7 +73,7 @@
                         (cdkDropListDropped)="drop($event)">
                             <ng-container *ngFor="let det of item.details;let j = index">
                                 <div *ngIf="det.sd_ctr_id == 1" class="drag-drop-box box-2" cdkDrag>
-                                    {{det.sd_st_name}}
+                                    <span [innerHTML]="det.sd_st_name"></span>
                                 </div>
                                 <div *ngIf="det.sd_ctr_id == 2" class="drag-drop-box box-2" cdkDrag>
                                     Test
@@ -129,9 +130,10 @@
                                         <tr class="custom-tr " *ngFor="let det of item.details;let j = index">
                                             <td class="custom-td text-left" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
-                                                {{getTopicName(item.sd_topic_id)}}</td>
+                                                <span [innerHTML]="getTopicName(item.sd_topic_id)"></span>
+                                                </td>
                                             <td class="custom-td text-left" *ngIf="det.sd_ctr_id == 1">
-                                                {{det.sd_st_name}}
+                                                <span [innerHTML]="det.sd_st_name"></span>
                                             </td>
                                             <td class="custom-td text-left " *ngIf="det.sd_ctr_id == 2">
                                                 Test

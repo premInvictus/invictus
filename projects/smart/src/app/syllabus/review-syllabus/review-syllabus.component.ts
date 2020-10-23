@@ -216,6 +216,7 @@ export class ReviewSyllabusComponent implements OnInit {
 		const subjectParam: any = {};
 		this.finalDivFlag = true;
 		subjectParam.class_id = this.reviewForm.value.syl_class_id;
+		subjectParam.sub_timetable=1;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {

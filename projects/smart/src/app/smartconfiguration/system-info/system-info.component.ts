@@ -6,6 +6,7 @@ import { ConfigElement } from './system-info.model';
 import { ConfirmValidParentMatcher } from '../../ConfirmValidParentMatcher';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import { ckconfig } from '../ckeditorconfig';
 @Component({
 	selector: 'app-system-info',
 	templateUrl: './system-info.component.html',
@@ -49,6 +50,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	ptopicArray: any[] = [];
 	stopicArray: any[] = [];
 	disabledApiButton = false;
+	ckeConfig:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private smartService: SmartService,
@@ -64,13 +66,14 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		this.buildForm();
 		// this.getClass();
 		// this.getDetailsCdpRelation();
+		this.ckeConfig = ckconfig;
 	}
 	advanceSearchToggle() {
 		this.searchtoggle = true;
 	}
 	getSubjectsByClass() {
 		this.psubArray = [];
-		this.smartService.getSubjectsByClass({ class_id: this.paramform.value.param_class_id }).subscribe((result: any) => {
+		this.smartService.getSubjectsByClass({ class_id: this.paramform.value.param_class_id,sub_timetable:1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.psubArray = result.data;
 			}
@@ -82,6 +85,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 		if (topicformgroup.value.topic_class_id) {
 			param.class_id = topicformgroup.value.topic_class_id;
 		}
+		param.sub_timetable=1;
 		this.subArray = [];
 		this.smartService.getSubjectsByClass(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {

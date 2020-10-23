@@ -95,9 +95,10 @@
                                         <tr class="custom-tr" *ngFor="let det of item.details;let j = index">
                                             <td class="custom-td text-left topic-width" *ngIf="j == 0"
                                                 [attr.rowspan]="item.details.length">
-                                                {{getTopicName(item.sd_topic_id)}}</td>
+                                                <span [innerHTML]="getTopicName(item.sd_topic_id)"></span>
+                                                </td>
                                             <td class="custom-td text-left topic-width" *ngIf="det.sd_ctr_id === '1'">
-                                                {{det.sd_st_name}}
+                                                <span [innerHTML]="det.sd_st_name"></span>
                                             </td>
                                             <td class="custom-td text-left topic-width" *ngIf="det.sd_ctr_id === '2'">
                                                 Test

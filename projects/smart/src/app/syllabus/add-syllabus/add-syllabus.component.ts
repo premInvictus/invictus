@@ -305,6 +305,7 @@ export class AddSyllabusComponent implements OnInit {
 	getSubjectsByClass(): void {
 		const subjectParam: any = {};
 		subjectParam.class_id = this.syllabusForm.value.syl_class_id;
+		subjectParam.sub_timetable=1;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {

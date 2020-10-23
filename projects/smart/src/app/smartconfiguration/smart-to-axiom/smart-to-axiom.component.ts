@@ -45,7 +45,7 @@ export class SmartToAxiomComponent implements OnInit {
       sub_id: ''
     });
     this.gsArray = [];
-    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.class_id }).subscribe((result: any) => {
+    this.smartService.getSubjectsByClass({ class_id: this.paramform.value.class_id,sub_timetable:1 }).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.gsArray = result.data;
       }
