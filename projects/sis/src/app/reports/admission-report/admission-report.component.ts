@@ -30,6 +30,7 @@ import { count } from 'rxjs/operators';
 	encapsulation: ViewEncapsulation.None
 })
 export class AdmissionReportComponent implements OnInit, AfterViewInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -326,7 +327,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	getSchool() {
 		this.sisService.getSchool().subscribe((res: any) => {
@@ -373,7 +374,7 @@ export class AdmissionReportComponent implements OnInit, AfterViewInit {
 			});
 			columValue.push(item.name);
 		}
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');
