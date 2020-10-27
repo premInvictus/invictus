@@ -168,6 +168,7 @@ export class ViewSyllabusComponent implements OnInit {
 		const subjectParam: any = {};
 		this.finaldivflag = true;
 		subjectParam.class_id = this.reviewform.value.syl_class_id;
+		subjectParam.sub_timetable=1;
 		this.syllabusService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {

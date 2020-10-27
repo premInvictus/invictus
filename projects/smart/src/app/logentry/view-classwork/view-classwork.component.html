@@ -97,9 +97,9 @@
                                     <td class="custom-td text-left">{{item1.ctr_name | capitalize}}</td>
                                     <td class="custom-td" *ngIf="item1.csName ">{{item1.csName | uppercase }}</td>
                                     <td class="custom-td" *ngIf="!item1.csName ">-</td>
-                                    <td class="custom-td text-left" *ngIf="item1.topic_name">{{item1.topic_name | capitalize}}</td>
+                                    <td class="custom-td text-left" *ngIf="item1.topic_name"><span [innerHTML]="item1.topic_name"></span></td>
                                     <td class="custom-td text-left" *ngIf="!item1.topic_name">-</td>
-                                    <td class="custom-td text-left" *ngIf="item1.st_name">{{item1.st_name | capitalize}}</td>
+                                    <td class="custom-td text-left" *ngIf="item1.st_name"><span [innerHTML]="item1.st_name"></span></td>
                                     <td class="custom-td text-left" *ngIf="!item1.st_name">-</td>
                                     <!-- *ngIf="item1.edit_flag == '1'" -->
                                     <td class="custom-td text-left" *ngIf="item1.edit_flag === '1' && currentUser.role_id === '3'"><i class="material-icons icon-edit" (click)="openEditClassworkModal(item1)">create</i></td>

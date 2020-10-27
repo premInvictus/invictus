@@ -160,6 +160,7 @@ export class ClassWiseTimetableComponent implements OnInit {
 	getSubjectsByClass() {
 		const subjectParam: any = {};
 		subjectParam.class_id = this.classwiseForm.value.tt_class_id;
+		subjectParam.sub_timetable=1;
 		this.smartService.getSubjectsByClass(subjectParam)
 			.subscribe(
 				(result: any) => {

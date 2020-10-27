@@ -166,7 +166,7 @@
                                         required placeholder="Topic">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
-                                            {{item.topic_name}}
+                                            <span [innerHTML]="item.topic_name"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -179,7 +179,7 @@
                                     <mat-select formControlName="sd_st_id" placeholder="Subtopic">
                                         <mat-option value="">Please select</mat-option>
                                         <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
-                                            {{item.st_name}}
+                                            <span [innerHTML]="item.st_name"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>
@@ -258,7 +258,8 @@
                                                     <!-- <td *ngIf="j == 0" class="custom-td" [attr.rowspan]="item.details.length">{{i+1}}</td> -->
                                                     <td class="custom-td topic-width" *ngIf="j == 0"
                                                         [attr.rowspan]="item.details.length">
-                                                        {{getTopicName(item.sd_topic_id)}}</td>
+                                                        <span [innerHTML]="getTopicName(item.sd_topic_id)"></span>
+                                                        </td>
                                                     <td class="custom-td topic-width" *ngIf="det.sd_ctr_id == 1">
                                                         {{getSubTopicName(det.sd_st_id)}}
                                                     </td>
