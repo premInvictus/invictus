@@ -12,7 +12,7 @@
                                 <mat-label>Topic</mat-label>
                                 <mat-select formControlName="topic_id" multiple>
                                     <mat-option *ngFor="let item1 of tArray" [value]="item1.topic_id">
-                                        {{item1.topic_name}}
+                                        <span [innerHTML]="item1.topic_name"></span>
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>

@@ -70,7 +70,7 @@
                                 <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                                     <mat-label>Topic</mat-label>
                                     <mat-select formControlName="topic_id">
-                                        <mat-option *ngFor="let item1 of gtArray" [value]="item1.topic_id">{{item1.topic_name}}
+                                        <mat-option *ngFor="let item1 of gtArray" [value]="item1.topic_id"><span [innerHTML]="item1.topic_name"></span>
                                         </mat-option>
                                     </mat-select>
                                 </mat-form-field>

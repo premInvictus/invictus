@@ -32,16 +32,16 @@
                 <td class="custom-td " [attr.rowspan]="item.cw_array.length">
                   <span>{{item.cw_entry_date | date:'dd-MMM-yyyy'}}</span></td>
                   <td class="custom-td "><span>{{item1.class_name}} - {{item1.sec_name}}</span></td>
-                <td class="custom-td text-left"><span>{{item1.topic_name | capitalize}}</span></td>
-                <td class="custom-td text-left"><span>{{item1.st_name | capitalize}}</span></td>
+                <td class="custom-td text-left"><span [innerHTML]="item1.topic_name"></span></td>
+                <td class="custom-td text-left"><span [innerHTML]="item1.st_name"></span></td>
                 <td class="custom-td "><span>{{item1.ctr_name | capitalize}}</span></td>
                 <td class="custom-td "><span>{{item1.cw_period_id}}<sup>{{periodSup[item1.cw_period_id]}}</sup></span></td>
                 <td class="custom-td "><span>{{item1.au_full_name | capitalize}}</span></td>
               </tr>
               <tr class="custom-tr" *ngIf="j != 0">
                   <td class="custom-td "><span>{{item1.class_name}} - {{item1.sec_name}}</span></td>
-                  <td class="custom-td text-left"><span>{{item1.topic_name | capitalize}}</span></td>
-                  <td class="custom-td text-left"><span>{{item1.st_name | capitalize}}</span></td>
+                  <td class="custom-td text-left"><span [innerHTML]="item1.topic_name"></span></td>
+                  <td class="custom-td text-left"><span [innerHTML]="item1.st_name"></span></td>
                   <td class="custom-td "><span>{{item1.ctr_name | capitalize}}</span></td>
                   <td class="custom-td "><span>{{item1.cw_period_id}}<sup>{{periodSup[item1.cw_period_id]}}</sup></span></td>
                   <td class="custom-td "><span>{{item1.au_full_name | capitalize}}</span></td>

@@ -144,11 +144,11 @@
                                         <tr class="custom-tr2" *ngFor="let det of item.details;let j = index">
                                             <td class="custom-td text-left bold topic-width" *ngIf="j == 0 "
                                                 [attr.rowspan]="item.details.length">
-                                                {{det.sd_topic_name}}</td>
+                                                <span [innerHTML]="det.sd_topic_name"></span></td>
                                             <td class="custom-td text-left topic-width"
                                                 [ngClass]="getBold(j,item.details.length - 1 )"
                                                 *ngIf="det.sd_ctr_id == 1 && hide">
-                                                {{det.sd_st_name}}
+                                                <span [innerHTML]="det.sd_st_name"></span>
                                             </td>
                                             <td class="custom-td text-left"
                                                 [ngClass]="getBold(j,item.details.length - 1)"

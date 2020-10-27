@@ -45,7 +45,7 @@
                                 <mat-select formControlName="subtopic_name" placeholder="Subtopic" [disabled]="isReadOnly">
                                     <mat-option value="">Please select</mat-option>
                                     <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
-                                        {{item.st_name}}
+                                        <span [innerHTML]="item.st_name"></span>
                                     </mat-option>
                                 </mat-select>
                                 <!-- <input matInput type="text" formControlName="subtopic_name" readonly> -->

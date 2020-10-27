@@ -90,12 +90,12 @@ export class AssignmentReviewComponent implements OnInit, AfterViewInit {
 		});
 	}
 
-	getSubjectsByClass() {
+	getSubjectsByClass() { 
 		this.subjectArray = [];
 		this.paramForm.patchValue({
 			sub_id: ''
 		});
-		this.smartService.getSubjectsByClass({ class_id: this.paramForm.value.class_id }).subscribe((result: any) => {
+		this.smartService.getSubjectsByClass({ class_id: this.paramForm.value.class_id,sub_timetable:1 }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.subjectArray = result.data;
 			} else {

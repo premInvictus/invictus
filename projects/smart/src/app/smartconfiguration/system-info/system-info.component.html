@@ -258,9 +258,9 @@
                                                         </mat-form-field>
                                                     </div>
                                                 </div>
-                                                <div class="row">
+                                                <div class="row"> 
                                                     <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
+                                                        <!-- <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Enter Topic Name</mat-label>
                                                             <input matInput placeholder="Enter Topic Name" type="text"
                                                                 class="text-capitalize" formControlName="topic_name"
@@ -268,7 +268,10 @@
                                                                 [value]="formGroupArray[configValue-1].formGroup.get('topic_name').value "
                                                                 required>
                                                             <mat-error>Please Enter Topic Name</mat-error>
-                                                        </mat-form-field>
+                                                        </mat-form-field> -->
+                                                        <ckeditor ngDefaultControl required name="topic_name" id="topic_name" class="text-editor"
+                                                        formControlName="topic_name" #answerckeditor [config]="ckeConfig" debounce="500">
+                                                        </ckeditor>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -359,7 +362,7 @@
                                                                 <mat-option value="">Please select</mat-option>
                                                                 <mat-option *ngFor="let item of stopicArray"
                                                                     [value]="item.topic_id">
-                                                                    {{item.topic_name}}
+                                                                    <span [innerHTML]="item.topic_name"></span>
                                                                 </mat-option>
                                                             </mat-select>
                                                             <mat-error>Please Choose Topic Name</mat-error>
@@ -368,7 +371,7 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <mat-form-field class="form-field" appearance="outline">
+                                                        <!-- <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Enter Sub-Topic Name</mat-label>
                                                             <input matInput placeholder="Enter Sub-Topic Name"
                                                                 class="text-capitalize" type="text"
@@ -377,7 +380,10 @@
                                                                 [value]="formGroupArray[configValue-1].formGroup.get('st_name').value"
                                                                 required>
                                                             <mat-error>Please Enter Sub-Topic Name</mat-error>
-                                                        </mat-form-field>
+                                                        </mat-form-field> -->
+                                                        <ckeditor ngDefaultControl required name="st_name" id="st_name" class="text-editor"
+                                                        formControlName="st_name" #answerckeditor [config]="ckeConfig" debounce="500">
+                                                        </ckeditor>
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -623,7 +629,7 @@
                                                                                                         <mat-option
                                                                                                             *ngFor="let item of ptopicArray"
                                                                                                             [value]="item.topic_id">
-                                                                                                            {{item.topic_name}}
+                                                                                                            <span [innerHTML]="item.topic_name"></span>
                                                                                                         </mat-option>
                                                                                                     </mat-select>
                                                                                                     <mat-error>Please
@@ -693,8 +699,8 @@
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
-                                                                                    <span
-                                                                                        *ngIf="item.name">{{ item.name }}</span>
+                                                                                    <span [innerHTML]="item.name"
+                                                                                        *ngIf="item.name"></span>
                                                                                     <span *ngIf="!item.name">-</span>
                                                                                 </td>
                                                                             </ng-container>
@@ -728,7 +734,7 @@
                                                                                 </th>
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
-                                                                                    {{ item.topic_name }}
+                                                                                    <div [innerHTML]="item.topic_name"></div>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container *ngIf="configValue == '4'"

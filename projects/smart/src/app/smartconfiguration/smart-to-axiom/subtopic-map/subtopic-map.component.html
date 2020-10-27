@@ -11,7 +11,7 @@
                             <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
                                 <mat-label>Subtopic</mat-label>
                                 <mat-select formControlName="st_id" multiple>
-                                    <mat-option *ngFor="let item1 of tArray" [value]="item1.st_id">{{item1.st_name}}
+                                    <mat-option *ngFor="let item1 of tArray" [value]="item1.st_id"><span [innerHTML]="item1.st_name"></span>
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>
