@@ -155,7 +155,7 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="amount">
-                <th mat-header-cell *matHeaderCellDef> Amount </th>
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header> Amount </th>
                 <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.amount | number}} </td>
               </ng-container>
               <ng-container matColumnDef="chequeno">
@@ -195,7 +195,7 @@
                 </td>
               </ng-container>
               <ng-container matColumnDef="status">
-                <th mat-header-cell *matHeaderCellDef> Status </th>
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header> Status </th>
                 <td mat-cell *matCellDef="let item" class="text-nowrap">
                   <div class="inline-flex margin-top-5">
                     <div class="text-center">
@@ -232,13 +232,13 @@
                 <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
               </ng-container>
               <ng-container matColumnDef="studentnam">
-                <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header> Student Name </th>
                 <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
                   <span class="icon-spacer">{{item.studentname | titlecase}} </span>
                 </td>
               </ng-container>
               <ng-container matColumnDef="studenttags">
-                <th mat-header-cell *matHeaderCellDef> Student Tag </th>
+                <th mat-header-cell *matHeaderCellDef  mat-sort-header> Student Tag </th>
                 <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
                   <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
                 </td>
