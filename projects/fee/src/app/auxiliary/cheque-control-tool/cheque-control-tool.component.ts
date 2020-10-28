@@ -39,7 +39,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	formGroupArray: any[] = [];
 	filterForm: FormGroup;
 	tags:any[] = [];
-	status: any[] = [{ status: '0', value: 'Pending' }, { status: '1', value: 'Cleared' }, { status: '2', value: 'Dishonoured' }];
+	status: any[] = [{ status: '0', value: 'Pending' },{status:'3', value: 'Deposited'}, { status: '1', value: 'Cleared' }, { status: '2', value: 'Dishonoured' }];
 	toggleSearch = false;
 	pageEvent: PageEvent;
 	checkboxLength = 0;
@@ -181,7 +181,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
-						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
+						status:item.fcc_status
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -262,7 +263,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
-						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
+						status:item.fcc_status
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -455,7 +457,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						action: item,
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
-						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :''
+						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
+						status:item.fcc_status
 					});
 					total=total+Number(item.receipt_amount);
 
@@ -490,6 +493,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					action: '',
 					ftr_family_number: '',
 					selectionDisable: true,
+					status:'',
 					fee:'Total'});
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 				if(this.dataSource && this.dataSource.paginator) {

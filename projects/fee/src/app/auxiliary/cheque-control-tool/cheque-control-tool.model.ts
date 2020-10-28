@@ -16,6 +16,7 @@ export interface ChequeToolElement {
 	action: any;
 	class_name: any;
 	remarks: any;
+	status:any;
 	ftr_family_number: any;
 	selectionDisable: boolean;
 	fee:any;
