@@ -33,6 +33,7 @@ import { findIndex } from 'rxjs/operators';
 	styleUrls: ['./outstanding-report.component.css']
 })
 export class OutstandingReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	@ViewChild('smsFeeModal') smsFeeModal;
 	@Output() displyRep = new EventEmitter();
 	rowsChosen: any[] = [];
@@ -2990,7 +2991,7 @@ export class OutstandingReportComponent implements OnInit {
 		} else if (this.reportType === 'aging') {
 			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
 		}
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -3861,7 +3862,7 @@ export class OutstandingReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {

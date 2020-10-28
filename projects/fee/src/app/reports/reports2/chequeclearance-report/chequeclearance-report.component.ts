@@ -30,6 +30,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./chequeclearance-report.component.css']
 })
 export class ChequeclearanceReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	sessionArray: any[] = [];
 	feeHeadJson: any[] = [];
 	totalRow: any;
@@ -1306,7 +1307,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('cheque clearance_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('cheque clearance report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -1918,7 +1919,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {

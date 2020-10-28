@@ -30,6 +30,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./deleted-feetrans-report.component.css']
 })
 export class DeletedFeetransReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	@Input() userName: any = '';
 	totalRow: any;
 	groupColumns: any[] = [];
@@ -853,7 +854,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('deleted feetrans_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('deleted fee transaction report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -1464,7 +1465,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {

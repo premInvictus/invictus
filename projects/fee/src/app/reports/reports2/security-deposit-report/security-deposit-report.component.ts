@@ -24,6 +24,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./security-deposit-report.component.css']
 })
 export class SecurityDepositReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	gridHeight: any;
 	totalRow: any;
 	columnDefinitions1: Column[] = [];
@@ -59,6 +60,7 @@ export class SecurityDepositReportComponent implements OnInit {
 	sectionArray: any[] = [];
 	schoolInfo: any;
 	activeReport = 1;
+	currentSession;
 	constructor(translate: TranslateService,
 		private feeService: FeeService,
 		private common: CommonAPIService,
@@ -68,6 +70,7 @@ export class SecurityDepositReportComponent implements OnInit {
 
 	ngOnInit() {
 		this.getSchool();
+		this.getSession();
 		this.buildForm();
 		this.getClassData();
 		this.filterFlag = true;
@@ -612,7 +615,12 @@ export class SecurityDepositReportComponent implements OnInit {
 			hasBackdrop: true
 		});
 	}
+	getReportHeader() {
+		return this.reportFilterForm.value.sd_type_value === '1' ? 'Security Deposite' + ' With in System' :
+			'Security Deposite' + ' Out of System';
+	}
 	exportAsPDF() {
+		const reportType = this.getReportHeader() + ' : ' + this.currentSession.ses_name;
 		const headerData: any[] = [];
 		let rowData: any[] = [];
 		for (const item of this.columnDefinitions) {
@@ -689,7 +697,8 @@ export class SecurityDepositReportComponent implements OnInit {
 				},
 				theme: 'striped'
 			});
-			doc.save('table.pdf');
+			//doc.save('table.pdf');
+			doc.save(reportType + '_' + this.reportdate + '.pdf');
 		} else {
 			const doc = new jsPDF('l', 'mm', 'a0');
 			doc.autoTable({
@@ -749,7 +758,8 @@ export class SecurityDepositReportComponent implements OnInit {
 					theme: 'striped'
 				});
 			}
-			doc.save('table.pdf');
+			//doc.save('table.pdf');
+			doc.save(reportType + '_' + this.reportdate + '.pdf');
 			console.log(rowData);
 		}
 	}
@@ -1062,6 +1072,19 @@ export class SecurityDepositReportComponent implements OnInit {
 			this.activeReport = 2;
 			
 		}
+	}
+	getSession() {
+		this.sisService.getSession().subscribe((result2: any) => {
+			if (result2.status === 'ok') {
+				const sessionArray = result2.data;
+				const ses_id = JSON.parse(localStorage.getItem('session')).ses_id;
+				sessionArray.forEach(element => {
+					if (element.ses_id === ses_id) {
+						this.currentSession = element;
+					}
+				});
+			}
+		});
 	}
 
 	generate() {

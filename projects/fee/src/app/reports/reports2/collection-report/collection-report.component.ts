@@ -34,6 +34,7 @@ import { arrayObjectToCsvFormatter } from 'angular-slickgrid/app/modules/angular
 	styleUrls: ['./collection-report.component.css']
 })
 export class CollectionReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	sessionArray: any[] = [];
 	session: any = {};
 	notFormatedCellArray: any[] = [];
@@ -4208,7 +4209,7 @@ export class CollectionReportComponent implements OnInit {
 		}else if (this.reportType === 'dailyheadwise') {
 			reportType2 = new TitleCasePipe().transform('daily collection report: ') + this.sessionName;
 		}
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
@@ -4735,7 +4736,7 @@ export class CollectionReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	countTotalsFormatter(totals, columnDef) {
 		return '<b class="total-footer-report">' + totals.group.rows.length + '</b>';
