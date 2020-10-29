@@ -28,7 +28,8 @@ import 'jspdf-autotable';
   templateUrl: './acumulative-deduction.component.html',
   styleUrls: ['./acumulative-deduction.component.scss']
 })
-export class AcumulativeDeductionComponent implements OnInit {
+export class AcumulativeDeductionComponent implements OnInit { 
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('searchModal') searchModal;
   aggregatearray: any[] = [];
   pdfrowdata: any[] = [];
@@ -729,7 +730,7 @@ export class AcumulativeDeductionComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.save(reportType + '_' + new Date() + '.pdf');
+    doc.save(reportType + '_' + this.reportdate + '.pdf');
   }
   getGroupColumns(columns) {
     let grName = '';
@@ -826,7 +827,7 @@ export class AcumulativeDeductionComponent implements OnInit {
     reportType = new TitleCasePipe().transform('accumulative_deduction_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('Accumulative Deduction report: ') + this.sessionName;
-    const fileName = reportType + '.xlsx';
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });
