@@ -452,7 +452,7 @@ export class FeeLedgerComponent implements OnInit {
 			key: 'remarks',
 			width: this.checkWidth('remarks', 'Remarks')
 		});
-		reportType = new TitleCasePipe().transform('Fee ledger report: ' + this.sessionName);
+		reportType = new TitleCasePipe().transform('Fee_ledger_report: ' + this.sessionName+'_'+this.commonStudentProfileComponent.studentdetails.au_full_name+'_'+this.commonStudentProfileComponent.studentdetails.em_admission_no);
 		const fileName = reportType + '.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },

@@ -29,6 +29,7 @@ import {
 	encapsulation: ViewEncapsulation.None
 })
 export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	columnDefinitions: Column[] = [];
 	gridOptions: GridOption = {};
 	dataset: any[] = [];
@@ -556,7 +557,7 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {
@@ -779,7 +780,7 @@ export class SkillAndAwardsReportComponent implements OnInit, AfterViewInit {
 			});
 			columValue.push(item.name);
 		}
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } }, { pageSetup: { fitToWidth: 7 } });
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1');

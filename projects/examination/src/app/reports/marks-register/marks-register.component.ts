@@ -3,14 +3,15 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'app-marks-register',
   templateUrl: './marks-register.component.html',
   styleUrls: ['./marks-register.component.css']
 })
-export class MarksRegisterComponent implements OnInit {
-
+export class MarksRegisterComponent implements OnInit { 
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   paramform: FormGroup
   classArray: any[] = [];
   subjectArray: any[] = [];
@@ -481,4 +482,15 @@ export class MarksRegisterComponent implements OnInit {
       eme_exam_id: ''
     });
   }
+  getReportHeader() {
+    let reporttypeheading = 'Marks Register';
+    if(this.paramform.value.eme_report_type == 'marksinput') {
+      reporttypeheading = reporttypeheading+' '+ 'Marks Input';
+    } else if(this.paramform.value.eme_report_type == 'weightagescore') {
+      reporttypeheading = reporttypeheading+' '+ 'Weighted Score';
+    } else if(this.paramform.value.eme_report_type == 'consolidatedregister') {
+      reporttypeheading = reporttypeheading+' '+ 'Consolidated Register';
+    }
+		return reporttypeheading;
+	}
 }

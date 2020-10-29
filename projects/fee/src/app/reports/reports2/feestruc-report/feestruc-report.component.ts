@@ -28,6 +28,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./feestruc-report.component.css']
 })
 export class FeestrucReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	@Output() displyRep = new EventEmitter();
 	exportColumnDefinitions: any[] = [];
 	totalRow: any;
@@ -1270,7 +1271,7 @@ export class FeestrucReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 	checkGroupLevelPDF(item, doc, headerData) {
 		if (item.length > 0) {
@@ -1421,7 +1422,7 @@ export class FeestrucReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('fee structure allotee_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('fee structure allotee report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
