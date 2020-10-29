@@ -28,6 +28,7 @@ import 'jspdf-autotable';
   styleUrls: ['./attendance-reports.component.scss']
 })
 export class AttendanceReportsComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('searchModal') searchModal;
   pdfrowdata: any[] = [];
   levelHeading: any[] = [];
@@ -848,7 +849,7 @@ export class AttendanceReportsComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.save(reportType + '_' + new Date() + '.pdf');
+    doc.save(reportType + '_' + this.reportdate + '.pdf');
   }
   getGroupColumns(columns) {
     let grName = '';
@@ -880,7 +881,7 @@ export class AttendanceReportsComponent implements OnInit {
     reportType = new TitleCasePipe().transform('employee_attendance_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('employee attendance report: ') + this.sessionName;
-    const fileName = reportType + '.xlsx';
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });

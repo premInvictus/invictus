@@ -29,6 +29,7 @@ import 'jspdf-autotable';
   styleUrls: ['./enquiry-report.component.scss']
 })
 export class EnquiryReportComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('searchModal') searchModal;
   sessionArray: any[] = [];
   documentArray: any[] = [];
@@ -757,7 +758,7 @@ export class EnquiryReportComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.save(reportType + '_' + new Date() + '.pdf');
+    doc.save(reportType + '_' + this.reportdate + '.pdf');
   }
   getGroupColumns(columns) {
     let grName = '';
@@ -886,7 +887,7 @@ export class EnquiryReportComponent implements OnInit {
     reportType = new TitleCasePipe().transform('employee_enquiry_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('employee enquiry report: ') + this.sessionName;
-    const fileName = reportType + '.xlsx';
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });

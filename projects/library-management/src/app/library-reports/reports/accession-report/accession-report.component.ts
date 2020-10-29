@@ -29,6 +29,7 @@ import 'jspdf-autotable';
 	styleUrls: ['./accession-report.component.css']
 })
 export class AccessionReportComponent implements OnInit {
+	reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
 	sessionArray: any[] = [];
 	totalRow: any;
 	groupColumns: any[] = [];
@@ -1095,7 +1096,7 @@ export class AccessionReportComponent implements OnInit {
 		reportType = new TitleCasePipe().transform('accession_') + this.sessionName;
 		let reportType2: any = '';
 		reportType2 = new TitleCasePipe().transform('accession report: ') + this.sessionName;
-		const fileName = reportType + '.xlsx';
+		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -1704,7 +1705,7 @@ export class AccessionReportComponent implements OnInit {
 			useCss: true,
 			theme: 'striped'
 		});
-		doc.save(reportType + '_' + new Date() + '.pdf');
+		doc.save(reportType + '_' + this.reportdate + '.pdf');
 	}
 
 	checkGroupLevelPDF(item, doc, headerData) {

@@ -28,6 +28,7 @@ import 'jspdf-autotable';
   styleUrls: ['./emp-details-report.component.scss']
 })
 export class EmpDetailsReportComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('searchModal') searchModal;
   sessionArray: any[] = [];
   documentArray: any[] = [];
@@ -877,7 +878,7 @@ export class EmpDetailsReportComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.save(reportType + '_' + new Date() + '.pdf');
+    doc.save(reportType + '_' + this.reportdate + '.pdf');
   }
   getGroupColumns(columns) {
     let grName = '';
@@ -1020,7 +1021,7 @@ export class EmpDetailsReportComponent implements OnInit {
     reportType = new TitleCasePipe().transform('employee_details_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('employee details report: ') + this.sessionName;
-    const fileName = reportType + '.xlsx';
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });

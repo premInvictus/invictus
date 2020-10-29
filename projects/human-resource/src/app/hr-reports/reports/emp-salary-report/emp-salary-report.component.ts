@@ -27,6 +27,7 @@ import 'jspdf-autotable';
   styleUrls: ['./emp-salary-report.component.scss']
 })
 export class EmpSalaryReportComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('searchModal') searchModal;
   sessionArray: any[] = [];
   totalRow: any;
@@ -910,7 +911,7 @@ export class EmpSalaryReportComponent implements OnInit {
     reportType = new TitleCasePipe().transform('employee_salary_') + this.sessionName;
     let reportType2: any = '';
     reportType2 = new TitleCasePipe().transform('employee salary report: ') + this.sessionName;
-    const fileName = reportType + '.xlsx';
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });
@@ -1508,7 +1509,7 @@ export class EmpSalaryReportComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.save(reportType + '_' + new Date() + '.pdf');
+    doc.save(reportType + '_' + this.reportdate + '.pdf');
   }
   checkGroupLevelPDF(item, doc, headerData) {
     if (item.length > 0) {
