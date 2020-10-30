@@ -176,7 +176,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
 
 		console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
 		setTimeout(() => {
-			const doc = new jsPDF("p", "pt", "a4");
+			const doc = new jsPDF("l", "pt", "a4");
 
 			doc.autoTable({
 				margin: { top: 10, right: 0, bottom: 10, left: 0 },
@@ -288,14 +288,15 @@ export class BouncedChequeMultipleComponent implements OnInit {
 
 
 			doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
-      this.studentDetails = [];
+      
      this.dialogRef.close({ status: '1' });
+     this.studentDetails = [];
     }, 1000);
      
 	}
 
   submitAndPrint() {
-    console.log('submit and print1');
+    console.log('submit and print1', this.studentDetails);
     
     
     this.CHEQUE_ELEMENT_DATA = [];
@@ -303,7 +304,7 @@ export class BouncedChequeMultipleComponent implements OnInit {
     this.dataSource = new MatTableDataSource<any>(this.CHEQUE_ELEMENT_DATA);
     
       let pos = 1;
-      const temparray = this.studentDetails ? this.studentDetails : [];
+      const temparray = this.studentDetails.length > 0 ? this.studentDetails : [this.studentDetails];
       let total =0 ;
       for (const item of temparray) {
         this.CHEQUE_ELEMENT_DATA.push({

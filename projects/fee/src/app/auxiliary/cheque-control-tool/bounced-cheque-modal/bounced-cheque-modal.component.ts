@@ -257,8 +257,11 @@ export class BouncedChequeModalComponent implements OnInit {
 	}
 
   downloadPdf() {
-		var fromDate = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.format("DD-MM-YYYY") : 'N/A';
-		var toDate = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.format("DD-MM-YYYY") : 'N/A';
+	  console.log(this.bouncedForm.value.fcc_deposite_date);
+	  var fromDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.split(" ")[0]: '';
+	  var toDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.split(" ")[0]: '';
+		var fromDate = fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MM-yyyy") : 'N/A';
+		var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MM-yyyy") : 'N/A';
 		var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
 		var bankInfo = this.getBankInfo(this.bouncedForm.value.ftr_deposit_bnk_id);
 		let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
@@ -266,7 +269,7 @@ export class BouncedChequeModalComponent implements OnInit {
 
 		console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
 		setTimeout(() => {
-			const doc = new jsPDF('portrait');
+			const doc = new jsPDF('landscape');
 
 			doc.autoTable({
 				margin: { top: 10, right: 0, bottom: 10, left: 0 },
@@ -378,15 +381,16 @@ export class BouncedChequeModalComponent implements OnInit {
 
 
 			doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
-			this.studentDetails = [];
+			
 	this.dialogRef.close({ status: '1' });
+	this.studentDetails = [];
 		
     }, 1000);
 	
 	}
 
   submitAndPrint() {
-    console.log('submit and print1');
+    console.log('submit and print1',this.studentDetails);
     
     
     this.CHEQUE_ELEMENT_DATA = [];
@@ -394,7 +398,7 @@ export class BouncedChequeModalComponent implements OnInit {
     this.dataSource = new MatTableDataSource<any>(this.CHEQUE_ELEMENT_DATA);
     
       let pos = 1;
-      const temparray = this.studentDetails ? this.studentDetails : [];
+      const temparray = this.studentDetails.length > 0 ? this.studentDetails : [this.studentDetails];
       let total =0 ;
       for (const item of temparray) {
         this.CHEQUE_ELEMENT_DATA.push({
