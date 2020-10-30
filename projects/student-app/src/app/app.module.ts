@@ -20,6 +20,7 @@ import { ReportService } from 'projects/axiom/src/app/reports/service/report.ser
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ErpCommonService } from '../../../../src/app/_services/index';
+import { AdvancePaymentFeeComponent } from './advance-payment-fee/advance-payment-fee.component';
 const providers = [
 	AuthGuard,
 	LoaderService,
@@ -36,7 +37,7 @@ const providers = [
 	ErpCommonService
 ];
 @NgModule({
-	declarations: [AppComponent],
+	declarations: [AppComponent, AdvancePaymentFeeComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
