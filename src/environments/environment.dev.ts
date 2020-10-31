@@ -11,6 +11,7 @@ export const environment = {
 	apiFaUrl: 'http://dev-api-fa.invictusprojects.in',
 	logoutUrl: 'http://devlogin.invictusprojects.in',
 	socketUrl: 'http://13.234.2.36:8081',
+	helpDeskUrl: "http://support.invictusdigisoft.com/autologin.php",
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',
 	testOngoingCode : 'T102',
