@@ -7,6 +7,7 @@ import { StudentFeeDetailComponent } from './student-fee-detail/student-fee-deta
 import { FamilywiseFeeRecieptComponent } from './familywise-fee-reciept/familywise-fee-reciept.component';
 import { FamilyInformationComponent } from './family-information/family-information.component';
 import { PaymentChooserComponent } from './payment-chooser/payment-chooser.component';
+import { AdvancePaymentFeeComponent } from './advance-payment-fee/advance-payment-fee.component';
 
 @NgModule({
 	imports: [
@@ -17,6 +18,6 @@ import { PaymentChooserComponent } from './payment-chooser/payment-chooser.compo
 		FormsModule,
 	],
 	entryComponents: [PaymentChooserComponent],
-	declarations: [StudentFeeDetailComponent, FamilywiseFeeRecieptComponent, FamilyInformationComponent, PaymentChooserComponent]
+	declarations: [StudentFeeDetailComponent, FamilywiseFeeRecieptComponent, FamilyInformationComponent, PaymentChooserComponent, AdvancePaymentFeeComponent]
 })
 export class StudentFeeModule { }

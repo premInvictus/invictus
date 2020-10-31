@@ -1,0 +1,55 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-8">
+          <span class="font-size-24 font-medium"> Fee Details</span>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <div class="row" *ngIf="finalMonthArr && finalMonthArr.length > 0">
+        <div class="col-12 remove-col-padding">
+          <form [formGroup]="advanceFeepayForm">
+            <div class="row">
+              <div class="col-3">
+                <mat-form-field class="form-field">
+                  <mat-label>Payment Months</mat-label>
+                  <mat-select required formControlName="months" multiple placeholder="Payment Months">
+                    <mat-option *ngFor="let item of finalMonthArr" [value]="item.month_id">
+                      {{item.month_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="form-field">
+                  <mat-label>Amount</mat-label>
+                  <input matInput formControlName="amount" required type="number" placeholder="Amount">
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <button mat-raised-button class="pay-btn" (click)="orderPayment(advanceFeepayForm.value)" 
+                [disabled]="!advanceFeepayForm.valid">
+                Make Payment</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="row" *ngIf="finalMonthArr.length === 0">
+        <div class="col-12 text-center">
+          No Record Found
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div #paytmResponse></div>
+
+<app-payment-chooser #chooser (confirm)="exceutePayment($event)"></app-payment-chooser>
+<!-- <app-payment-order-modal #paymentOrderModel [orderMessage]="orderMessage" (orderOk)="makePayment($event)"></app-payment-order-modal> -->

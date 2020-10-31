@@ -22,6 +22,9 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/slctc/printAllCertificate', value);
 	}
+	getAlreadyPaidMonthsPerSessionAndLoginId(value: any) {
+		return this.http.post(environment.apiFeeUrl + '/feeSetup/getAlreadyPaidMonthsPerSessionAndLoginId', value);
+	}
 	checkCertAccess(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/students/checkCertAccess', value);
