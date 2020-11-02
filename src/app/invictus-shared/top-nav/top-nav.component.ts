@@ -100,8 +100,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	ngOnInit() {
 		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+		console.log('this.currentUser', this.currentUser);
 		this.session = JSON.parse(localStorage.getItem('session'));
-		this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321";
+		
 		
 		this.getSession();
 		this.getProjectList();
@@ -277,6 +278,9 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.sisService.getSchool().subscribe((result: any) => {
 			if (result.status === 'ok') {
 				this.schoolInfo = result.data[0];
+				console.log(this.schoolInfo);
+				console.log('helpdeskurl',environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile)
+				this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile;
 				this.getGroupedSchool();
 			}
 		});
