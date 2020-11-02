@@ -68,6 +68,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	webDeviceToken: any = {};
 	userSaveData: any;
 	returnUrl: string;
+	helpDeskUrl:any;
 	constructor(
 		changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, public sanitizer: DomSanitizer,
 		private userAccessMenuService:UserAccessMenuService,
@@ -100,6 +101,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.getPushNotification();
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.session = JSON.parse(localStorage.getItem('session'));
+		this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321";
 		
 		this.getSession();
 		this.getProjectList();
@@ -140,6 +142,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		this.proUrl = JSON.parse(localStorage.getItem('project')).pro_url;
 		if (localStorage.getItem('project')) {
 			const url = JSON.parse(localStorage.getItem('project')).pro_url;
+			console.log('url--', url);
 			if (url === 'axiom') {
 				this.defaultProject = 'AXIOM';
 				this.projectId = '1';
@@ -913,5 +916,8 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	);
 	}
 	}
-
+	gotToHelpDesk() {
+		console.log('this.currentUser', this.currentUser);
+		
+	}
 }
