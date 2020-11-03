@@ -12,6 +12,7 @@ export const environment = {
 	logoutUrl: 'https://login.invictusdigisoft.com',
 	socketUrl: 'https://sockets.invictusdigisoft.com',
 	helpDeskUrl: "https://support.invictusdigisoft.com/autologin.php",
+	helpDeskAgentUrl: "https://support.invictusprojects.com/scp/login.php",
 	testInitiateCode : 'T100',
 	testStartCode : 'T101',
 	testOngoingCode : 'T102',

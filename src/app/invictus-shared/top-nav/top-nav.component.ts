@@ -280,7 +280,11 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				this.schoolInfo = result.data[0];
 				console.log(this.schoolInfo);
 				console.log('helpdeskurl',environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile)
-				this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile;
+				if(this.currentUser.Prefix == 'invictus') {
+					this.helpDeskUrl = environment.helpDeskAgentUrl;
+				} else {
+					this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile;
+				}
 				this.getGroupedSchool();
 			}
 		});
