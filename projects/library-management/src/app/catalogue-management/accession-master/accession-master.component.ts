@@ -670,7 +670,7 @@ export class AccessionMasterComponent implements OnInit, AfterViewInit {
 	submitBook() {
 		if (Object.keys(this.bookDetails).length > 0) {
 			this.bookForm.value['language_details'] = {
-				lang_code: this.bookDetails.volumeInfo.language ? this.bookDetails.volumeInfo.language : '',
+				lang_code: this.bookDetails.volumeInfo && this.bookDetails.volumeInfo.language ? this.bookDetails.volumeInfo.language : '',
 				lang_name: this.getLanguageName(this.bookDetails.volumeInfo.language)
 			};
 			if (this.bookDetails.volumeInfo.categories) {
