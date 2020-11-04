@@ -239,11 +239,11 @@
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chequeno}}</td>
         </ng-container>
         <ng-container matColumnDef="bankname">
-          <th mat-header-cell *matHeaderCellDef> Deposit at Bank </th>
+          <th mat-header-cell *matHeaderCellDef> Drawn  on Bank </th>
           <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
         </ng-container>
         <ng-container matColumnDef="fee">
-            <th mat-header-cell *matHeaderCellDef> Fee </th>
+            <th mat-header-cell *matHeaderCellDef> Fee Period</th>
             <td mat-cell *matCellDef="let item"> {{item.fee}} </td>
           </ng-container>
         <ng-container matColumnDef="bankdeposite">
@@ -304,18 +304,18 @@
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.approved_by}} </td>
         </ng-container>
         <ng-container matColumnDef="admno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Enrollment no. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Enrl. No. </th>
           <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
         </ng-container>
         <ng-container matColumnDef="studentnam">
           <th mat-header-cell *matHeaderCellDef> Student Name </th>
-          <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
+          <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studentname | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="studenttags">
-          <th mat-header-cell *matHeaderCellDef> Student Tag </th>
-          <td style="text-align: left !important" mat-cell *matCellDef="let item" class="text-nowrap">
+          <th mat-header-cell *matHeaderCellDef> Tag </th>
+          <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
           </td>
         </ng-container>
