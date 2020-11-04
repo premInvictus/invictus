@@ -511,5 +511,16 @@ export class CommonAPIService {
 		this.loader.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/updateSalaryStructureToEmployee', value);
 	}
+	getShift() {
+		return this.http.get(environment.apiHRUrl + '/hr-shift/getShift');
+	}
+	insertShift(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/hr-shift/insertShift', value);
+	}
+	updateShift(value) {
+		this.loader.startLoading();
+		return this.http.post(environment.apiHRUrl + '/hr-shift/updateShift', value);
+	}
 
 }

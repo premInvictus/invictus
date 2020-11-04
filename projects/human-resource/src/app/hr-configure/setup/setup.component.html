@@ -321,6 +321,66 @@
                                                 </div>
                                             </form>
                                         </div>
+                                        <div *ngIf="configValue == '6'">
+                                            <form [formGroup]="formGroupArray[configValue-1].formGroup">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter shift name</mat-label>
+                                                            <input matInput type="text" id="shift_name" 
+                                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                                            formControlName="shift_intime"
+                                                            required>
+                                                            <mat-error>Please Enter Name</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter in time</mat-label>
+                                                            <input matInput type="time" id="shift_intime" 
+                                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                                            formControlName="shift_intime"
+                                                            required>
+                                                            <mat-error>Please Enter Intime</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter exit time</mat-label>
+                                                            <input matInput type="time" id="shift_outtime" 
+                                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                                            formControlName="shift_outtime"
+                                                            required>
+                                                            <mat-error>Please Enter Exit time</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter grace period (minutes)</mat-label>
+                                                            <input matInput type="number" id="shift_graceperiod" 
+                                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                                            formControlName="shift_graceperiod"
+                                                            required>
+                                                            <mat-error>Please Enter Grace Period</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Enter short laave count</mat-label>
+                                                            <input matInput type="number" id="shift_shortleave_count" 
+                                                            [errorStateMatcher]="confirmValidParentMatcher"
+                                                            formControlName="shift_shortleave_count"
+                                                            required>
+                                                            <mat-error>Please Enter Grace Period</mat-error>
+                                                        </mat-form-field>
+                                                        <mat-form-field class="form-field" appearance="outline">
+                                                            <mat-label>Leave for deduction</mat-label>
+                                                            <mat-select
+                                                                placeholder="Leave to deduct"
+                                                                formControlName="shift_leave_id">
+                                                                <mat-option value="">Please select</mat-option>
+                                                                <mat-option *ngFor="let item of leaveTypeArray"
+                                                                    [value]="item.leave_id">
+                                                                    {{item.leave_name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
                                         <div class="text-center margin-top-15" *ngIf="configValue != ''">
                                             <button *ngIf="!setupUpdateFlag" mat-raised-button class="btn-success"
                                                 (click)="addConfiguration(configValue)"
@@ -364,7 +424,7 @@
                                                                                     {{ item.position }}
                                                                                 </td>
                                                                             </ng-container>
-                                                                            <!-- Name Column -->
+                                                                            <!-- Name Column --> 
                                                                             <ng-container matColumnDef="name">
                                                                                 <th mat-header-cell *matHeaderCellDef
                                                                                     mat-sort-header>
@@ -565,6 +625,66 @@
                                                                                     <span
                                                                                         *ngIf="item.value">{{ item.value }}</span>
                                                                                     <span *ngIf="!item.value">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="shift_intime" *ngIf="configValue === '6'">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    In Time
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.shift_intime">{{ item.shift_intime }}</span>
+                                                                                    <span *ngIf="!item.shift_intime">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="shift_outtime" *ngIf="configValue === '6'">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Exit Time
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.shift_outtime">{{ item.shift_outtime }}</span>
+                                                                                    <span *ngIf="!item.shift_outtime">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="shift_graceperiod" *ngIf="configValue === '6'">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Grace Period (minutes)
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.shift_graceperiod">{{ item.shift_graceperiod }}</span>
+                                                                                    <span *ngIf="!item.shift_graceperiod">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="shift_shortleave_count" *ngIf="configValue === '6'">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Short Leave Count
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.shift_shortleave_count">{{ item.shift_shortleave_count }}</span>
+                                                                                    <span *ngIf="!item.shift_shortleave_count">-</span>
+                                                                                </td>
+                                                                            </ng-container>
+                                                                            <ng-container matColumnDef="shift_leave_id" *ngIf="configValue === '6'">
+                                                                                <th mat-header-cell *matHeaderCellDef
+                                                                                    mat-sort-header>
+                                                                                    Leave For Deduction
+                                                                                </th>
+                                                                                <td class="left" mat-cell
+                                                                                    *matCellDef="let item">
+                                                                                    <span
+                                                                                        *ngIf="item.shift_leave_id">{{ item.shift_leave_id }}</span>
+                                                                                    <span *ngIf="!item.shift_leave_id">-</span>
                                                                                 </td>
                                                                             </ng-container>
                                                                             <ng-container matColumnDef="status">
