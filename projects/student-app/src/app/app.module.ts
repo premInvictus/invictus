@@ -37,7 +37,7 @@ const providers = [
 	ErpCommonService
 ];
 @NgModule({
-	declarations: [AppComponent, AdvancePaymentFeeComponent],
+	declarations: [AppComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
@@ -46,7 +46,7 @@ const providers = [
 		ReactiveFormsModule,
 		HttpClientModule,
 	],
-	providers: [providers],
+	providers: [providers,AdvancePaymentFeeComponent],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
