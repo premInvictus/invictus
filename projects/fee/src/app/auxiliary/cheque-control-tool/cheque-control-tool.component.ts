@@ -95,7 +95,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'to_date': '',
 			'status': '',
 			'deposit_bank_id': '',
-			'tag_id':''
+			'tag_id':'',
+			'cheque_no':''
 		});
 	}
 	getStudentTags()  {
@@ -335,7 +336,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 			'to_date': '',
 			'status': '',
 			'deposit_bank_id':'',
-			'tag_id':''
+			'tag_id':'',
+			'cheque_no':''
 		});
 		this.getChequeControlListAll();
 	}

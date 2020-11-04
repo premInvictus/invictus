@@ -24,15 +24,7 @@
                       <input matInput placeholder="Enrollment No." formControlName="inv_process_usr_no">
                     </mat-form-field>
                   </div>
-                  <div class="inline-flex margin-left-15" >
-                    <mat-form-field appearance="outline" class="form-field-220">
-                      <mat-label>Student Tags</mat-label>
-                      <mat-select placeholder="Student Tags" formControlName="tag_id">
-                        <mat-option value="">Please Select</mat-option>
-                        <mat-option *ngFor="let item of tags" [value]="item.tag_id">{{item.tag_name}}</mat-option>
-                      </mat-select>
-                    </mat-form-field>
-                  </div>
+                  
                   <div class="inline-flex margin-left-15 " *ngIf="!showPdf">
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Student Name</mat-label>
@@ -43,6 +35,12 @@
                     <mat-form-field appearance="outline" class="form-field-220">
                       <mat-label>Invoice No.</mat-label>
                       <input matInput placeholder="Invoice No." formControlName="invoice_no">
+                    </mat-form-field>
+                  </div>
+                  <div class="inline-flex margin-left-15 " *ngIf="!showPdf">
+                    <mat-form-field appearance="outline" class="form-field-220">
+                      <mat-label>Cheque No.</mat-label>
+                      <input matInput placeholder="Cheque No." formControlName="cheque_no">
                     </mat-form-field>
                   </div>
                   <div class="inline-flex margin-left-15">
@@ -68,6 +66,15 @@
                       <input matInput [matDatepicker]="picker5" placeholder="To" formControlName="to_date">
                       <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
                       <mat-datepicker #picker5></mat-datepicker>
+                    </mat-form-field>
+                  </div>
+                  <div class="inline-flex margin-left-15" >
+                    <mat-form-field appearance="outline" class="form-field-220">
+                      <mat-label>Student Tags</mat-label>
+                      <mat-select placeholder="Student Tags" formControlName="tag_id">
+                        <mat-option value="">Please Select</mat-option>
+                        <mat-option *ngFor="let item of tags" [value]="item.tag_id">{{item.tag_name}}</mat-option>
+                      </mat-select>
                     </mat-form-field>
                   </div>
                   <div class="inline-flex margin-left-15" >
