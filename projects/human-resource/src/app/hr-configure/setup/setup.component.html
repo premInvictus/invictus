@@ -329,7 +329,7 @@
                                                             <mat-label>Enter shift name</mat-label>
                                                             <input matInput type="text" id="shift_name" 
                                                             [errorStateMatcher]="confirmValidParentMatcher"
-                                                            formControlName="shift_intime"
+                                                            formControlName="shift_name"
                                                             required>
                                                             <mat-error>Please Enter Name</mat-error>
                                                         </mat-form-field>
@@ -368,6 +368,7 @@
                                                         <mat-form-field class="form-field" appearance="outline">
                                                             <mat-label>Leave for deduction</mat-label>
                                                             <mat-select
+                                                                required
                                                                 placeholder="Leave to deduct"
                                                                 formControlName="shift_leave_id">
                                                                 <mat-option value="">Please select</mat-option>

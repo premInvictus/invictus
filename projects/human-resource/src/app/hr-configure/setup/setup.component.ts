@@ -536,15 +536,19 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				department_id: value.department_id.id,
 			});
 		} else if (Number(this.configValue) === 6) {
+			console.log('value',value);
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				shift_id: value.shift_id,
 				shift_name: value.shift_name,
+				shift_intime: value.shift_intime,
+				shift_outtime: value.shift_outtime,
 				shift_graceperiod:value.shift_graceperiod,
 				shift_shortleave_count: value.shift_shortleave_count,
 				shift_leave_id: value.shift_leave_id,
 				shift_status: value.shift_status,
 			});
+			console.log('form 6',this.formGroupArray[this.configValue - 1]);
 		}
 	}
 	loadConfiguration(event) {
@@ -672,6 +676,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				data.departmentwise_leave_status = '5';
 				this.deleteEntry(data, 'updateDepartmentLeave', 'data');
 				break;
+			case '6':
+				data.shift_status = '5';
+				this.deleteEntry(data, 'updateShift', 'data');
+				break;
 		}
 	}
 
@@ -769,6 +777,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							this.addEntry(this.setupDetails, 'insertDepartmentLeave', 'data');
 						}
 					});
+					break;
+				case '6':
+					this.setupDetails = {
+						shift_name: this.formGroupArray[value - 1].formGroup.value.shift_name,
+						shift_intime: this.formGroupArray[value - 1].formGroup.value.shift_intime,
+						shift_outtime: this.formGroupArray[value - 1].formGroup.value.shift_outtime,
+						shift_graceperiod: this.formGroupArray[value - 1].formGroup.value.shift_graceperiod,
+						shift_shortleave_count: this.formGroupArray[value - 1].formGroup.value.shift_shortleave_count,
+						shift_leave_id: this.formGroupArray[value - 1].formGroup.value.shift_leave_id,
+						shift_status: '1'
+					};
+					this.addEntry(this.setupDetails, 'insertShift', 'data');
 					break;
 			}
 		}
@@ -957,7 +977,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.commonService.updateShift(value).subscribe((result: any) => {
 				if (result) {
 					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
-					this.getleaveDepartment();
+					this.getShift();
 				}
 			});
 		}
@@ -976,6 +996,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '5') {
 					this.dptFormGroupArray = [];
 					this.getleaveDepartment();
+				} else if (this.configValue === '6') {
+					this.hrshiftArray = [];
+					this.getShift();
 				}
 				this.commonService.showSuccessErrorMessage('Delete Successfully', 'success');
 			}
@@ -1003,6 +1026,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '5') {
 					this.getleaveDepartment();
 					this.dptFormGroupArray = [];
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '6') {
+					this.getShift();
+					this.hrshiftArray = [];
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Inserted Successfully', 'success');
