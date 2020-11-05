@@ -300,7 +300,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		});
 	}
 	getLeaveType() {
-		this.commonService.getLeaveManagement().subscribe((result: any) => {
+		this.commonService.getLeaveManagement().toPromise().then((result: any) => {
 		  this.leaveTypeArray = result;
 		});
 	}
@@ -321,7 +321,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							shift_outtime:item.shift_outtime,
 							shift_graceperiod: item.shift_graceperiod,
 							shift_shortleave_count: item.shift_shortleave_count,
-							shift_leave_id: item.shift_leave_id,
+							shift_leave_id: this.getLeaveName(item.shift_leave_id),
 							status:item.shift_status,
 							action: item
 						});
@@ -334,6 +334,12 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				}
 			}
 		});
+	}
+	getLeaveName(id){
+		const findex = this.leaveTypeArray.findIndex(e => e.leave_id == id);
+		if(findex != -1) {
+			return this.leaveTypeArray[findex].leave_name;
+		}
 	}
 	getLeaveManagement() {
 		this.leaveManagementArray = [];
@@ -551,7 +557,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			console.log('form 6',this.formGroupArray[this.configValue - 1]);
 		}
 	}
-	loadConfiguration(event) {
+	async loadConfiguration(event) {
 		this.searchtoggle = false;
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
@@ -591,8 +597,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.displayedColumns = ['position', 'name', 'leave_credit_count', 'status', 'action'];
 			this.configFlag = true;
 		} else if (Number(this.configValue) === 6) {
-			this.getLeaveType();
-			this.getShift();
+			await this.getLeaveType();
+			await this.getShift();
 			this.displayedColumns = ['position','name', 'shift_intime', 'shift_outtime', 'shift_graceperiod', 'shift_shortleave_count','shift_leave_id','status', 'action'];
 			this.configFlag = true;
 		}

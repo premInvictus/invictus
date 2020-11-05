@@ -684,7 +684,7 @@
                                                                                 <td class="left" mat-cell
                                                                                     *matCellDef="let item">
                                                                                     <span
-                                                                                        *ngIf="item.shift_leave_id">{{ item.shift_leave_id }}</span>
+                                                                                        *ngIf="item.shift_leave_id">{{ item.shift_leave_id | titlecase }}</span>
                                                                                     <span *ngIf="!item.shift_leave_id">-</span>
                                                                                 </td>
                                                                             </ng-container>
