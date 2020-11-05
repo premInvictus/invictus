@@ -6,6 +6,7 @@ import { IdCardPrintingComponent } from './id-card-printing/id-card-printing.com
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { ChangeStatusComponent } from './change-status/change-status.component';
 import { ChangeEnrollmentNoComponent } from './change-enrollment-no/change-enrollment-no.component';
+import { ShiftMappingToStaffComponent } from './shift-mapping-to-staff/shift-mapping-to-staff.component';
 
 const routes: Routes = [
   { path: 'admin-return', component: AdminReturnComponent },
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'id-card-printing', component: IdCardPrintingComponent },
   { path: 'bulk-updates', component: BulkUpdatesComponent },
   { path: 'change-status', component: ChangeStatusComponent },
-  { path: 'change-no', component: ChangeEnrollmentNoComponent }
+  { path: 'change-no', component: ChangeEnrollmentNoComponent },
+  { path: 'shift-mapping', component: ShiftMappingToStaffComponent }
 ];
 
 @NgModule({
