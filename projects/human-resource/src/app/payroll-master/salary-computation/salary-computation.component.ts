@@ -2083,11 +2083,11 @@ export class SalaryComputationComponent implements OnInit {
 						this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'] = Math.round(Number(total_earnings));
 					}
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round((((Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings'])) * (Number(element.emp_present_days)) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
-						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings']) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+					Number(element.emp_total_deductions));
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
-						Number(element.emp_total_deductions));
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(Number(total_earnings) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
+						(Number(element.emp_total_deductions)));
 					if (element) {
 						const formJson: any = {};
 						var deduction = 0;
@@ -2300,6 +2300,7 @@ export class SalaryComputationComponent implements OnInit {
 		if (event.target.value) {
 
 			value = event.target.value;
+			console.log('setNetPerTDS',value);
 
 			for (var i = 0; i < this.SALARY_COMPUTE_ELEMENT.length; i++) {
 				if (Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_id']) === Number(element.emp_id)) {
@@ -2307,19 +2308,18 @@ export class SalaryComputationComponent implements OnInit {
 					var total_earnings = 0;
 					total_earnings = Number(this.totalEarnings[i]);
 					var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
-
+					let tdValue = this.formGroupArray[i].value.td || 0;
 					let tdsValue = value || 0;
 					let arrearValue = this.formGroupArray[i].value.arrear || 0;
 					let advanceValue = this.formGroupArray[i].value.advance || 0;
 					console.log(tdsValue);
 
 					//this.SALARY_COMPUTE_ELEMENT[i]['balance'] = this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'];
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(((Number(element['emp_total_earnings']) * (Number(element.emp_present_days)) / Number(no_of_days))) + - Number(tdsValue) - Number(advanceValue) +
-						(Number(element.emp_total_deductions) * (Number(element.emp_present_days) / Number(no_of_days))));
-					console.log(element.emp_total_deductions);
-					console.log(element);
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_salary_payable'] = Math.round(Number(this.SALARY_COMPUTE_ELEMENT[i]['emp_total_earnings']) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+						Number(element.emp_total_deductions));
+					
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
-					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(((Number(total_earnings)) * (Number(element.emp_present_days) / Number(no_of_days))) + Number(arrearValue) - Number(advanceValue) - Number(tdsValue) +
+					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(Number(total_earnings) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
 						(Number(element.emp_total_deductions)));
 					if (element.emp_id) {
 						const formJson: any = {};
@@ -2396,12 +2396,7 @@ export class SalaryComputationComponent implements OnInit {
 								element.balance = Math.round(element.balance - tdeduction);
 							}
 						}
-						// formJson['td'] = this.records[i].emp_salary_detail.emp_salary_structure && this.records[i].emp_salary_detail.emp_salary_structure.td ?
-						//this.records[i].emp_salary_detail.emp_salary_structure.td : 0,
 						this.formGroupArray[i]['value']['tds'] = Math.round(tdsValue);
-						// formJson['advance'] = advance_salary.toString();
-						//this.formGroupArray[i] = this.fbuild.group(formJson);
-						console.log(this.formGroupArray[i]);
 						if (element['emp_total'] > element['emp_salary_payable']) {
 							element.colorCode = 'rgb(252, 191, 188)';
 						}

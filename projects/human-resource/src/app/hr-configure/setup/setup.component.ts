@@ -46,12 +46,15 @@ export class SetupComponent implements OnInit, AfterViewInit {
 	multipleDropdownName: any;
 	disabledApiButton = false;
 	slabvalueFormGroupArray: any[] = [];
+	leaveTypeArray:any[]=[];
+	hrshiftArray: any[] = [];
 	congigArray = [
 		{ id: "1", name: 'Master' },
 		{ id: "2", name: 'Salary Component' },
 		{ id: "3", name: 'Salary Structure' },
 		{ id: "4", name: 'Leave Management' },
 		{ id: "5", name: 'Department Wise Leave' },
+		{ id: "6", name: 'Attendance Shift' }
 	];
 	calculationTypeArray = [
 		{ id: "1", name: 'Text' },
@@ -146,6 +149,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				department_id: '',
 				departmentwise_leave: '',
 				status: ''
+			})
+		},
+		{
+			formGroup: this.fbuild.group({
+				shift_id: '',
+				shift_name: '',
+				shift_intime: '',
+				shift_outtime: '',
+				shift_graceperiod: '',
+				shift_shortleave_count: '',
+				shift_leave_id: '',
+				shift_status:''
 			})
 		},
 		];
@@ -284,6 +299,48 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			}
 		});
 	}
+	getLeaveType() {
+		this.commonService.getLeaveManagement().toPromise().then((result: any) => {
+		  this.leaveTypeArray = result;
+		});
+	}
+	getShift() {
+		this.hrshiftArray = [];
+		this.CONFIG_ELEMENT_DATA = [];
+		this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+		this.commonService.getShift().subscribe((result: any) => {
+			if (result) {
+				this.hrshiftArray = result;
+				if (this.configValue === '6') {
+					let pos = 1;
+					for (const item of result) {
+						this.CONFIG_ELEMENT_DATA.push({
+							position: pos,
+							name:item.shift_name,
+							shift_intime: item.shift_intime,
+							shift_outtime:item.shift_outtime,
+							shift_graceperiod: item.shift_graceperiod,
+							shift_shortleave_count: item.shift_shortleave_count,
+							shift_leave_id: this.getLeaveName(item.shift_leave_id),
+							status:item.shift_status,
+							action: item
+						});
+						pos++;
+					}
+					this.configDataSource = new MatTableDataSource<any>(this.CONFIG_ELEMENT_DATA);
+					this.configDataSource.paginator = this.paginator;
+					this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+					this.configDataSource.sort = this.sort;
+				}
+			}
+		});
+	}
+	getLeaveName(id){
+		const findex = this.leaveTypeArray.findIndex(e => e.leave_id == id);
+		if(findex != -1) {
+			return this.leaveTypeArray[findex].leave_name;
+		}
+	}
 	getLeaveManagement() {
 		this.leaveManagementArray = [];
 		this.CONFIG_ELEMENT_DATA = [];
@@ -386,6 +443,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			if (value.departmentwise_leave_status === '1') {
 				return true;
 			}
+		} else if (Number(this.configValue) === 6) {
+			if (value.shift_status === '1') {
+				return true;
+			}
 		}
 	}
 
@@ -480,9 +541,23 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				id: value.dept_id,
 				department_id: value.department_id.id,
 			});
+		} else if (Number(this.configValue) === 6) {
+			console.log('value',value);
+			this.setupUpdateFlag = true;
+			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
+				shift_id: value.shift_id,
+				shift_name: value.shift_name,
+				shift_intime: value.shift_intime,
+				shift_outtime: value.shift_outtime,
+				shift_graceperiod:value.shift_graceperiod,
+				shift_shortleave_count: value.shift_shortleave_count,
+				shift_leave_id: value.shift_leave_id,
+				shift_status: value.shift_status,
+			});
+			console.log('form 6',this.formGroupArray[this.configValue - 1]);
 		}
 	}
-	loadConfiguration(event) {
+	async loadConfiguration(event) {
 		this.searchtoggle = false;
 		this.configFlag = false;
 		this.setupUpdateFlag = false;
@@ -520,6 +595,11 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			this.getLeaveManagement();
 			this.getleaveDepartment();
 			this.displayedColumns = ['position', 'name', 'leave_credit_count', 'status', 'action'];
+			this.configFlag = true;
+		} else if (Number(this.configValue) === 6) {
+			await this.getLeaveType();
+			await this.getShift();
+			this.displayedColumns = ['position','name', 'shift_intime', 'shift_outtime', 'shift_graceperiod', 'shift_shortleave_count','shift_leave_id','status', 'action'];
 			this.configFlag = true;
 		}
 	}
@@ -601,6 +681,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 			case '5':
 				data.departmentwise_leave_status = '5';
 				this.deleteEntry(data, 'updateDepartmentLeave', 'data');
+				break;
+			case '6':
+				data.shift_status = '5';
+				this.deleteEntry(data, 'updateShift', 'data');
 				break;
 		}
 	}
@@ -699,6 +783,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							this.addEntry(this.setupDetails, 'insertDepartmentLeave', 'data');
 						}
 					});
+					break;
+				case '6':
+					this.setupDetails = {
+						shift_name: this.formGroupArray[value - 1].formGroup.value.shift_name,
+						shift_intime: this.formGroupArray[value - 1].formGroup.value.shift_intime,
+						shift_outtime: this.formGroupArray[value - 1].formGroup.value.shift_outtime,
+						shift_graceperiod: this.formGroupArray[value - 1].formGroup.value.shift_graceperiod,
+						shift_shortleave_count: this.formGroupArray[value - 1].formGroup.value.shift_shortleave_count,
+						shift_leave_id: this.formGroupArray[value - 1].formGroup.value.shift_leave_id,
+						shift_status: '1'
+					};
+					this.addEntry(this.setupDetails, 'insertShift', 'data');
 					break;
 			}
 		}
@@ -799,6 +895,20 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					};
 					this.updateEntry(this.setupDetails, 'updateDepartmentLeave', 'data');
 					break;
+				case '6':
+					this.setupDetails = {
+						shift_id: this.formGroupArray[value - 1].formGroup.value.shift_id,
+						shift_name: this.formGroupArray[value - 1].formGroup.value.shift_name,
+						shift_intime: this.formGroupArray[value - 1].formGroup.value.shift_intime,
+						shift_outtime: this.formGroupArray[value - 1].formGroup.value.shift_outtime,
+						shift_graceperiod: this.formGroupArray[value - 1].formGroup.value.shift_graceperiod,
+						shift_shortleave_count: this.formGroupArray[value - 1].formGroup.value.shift_shortleave_count,
+						shift_status: this.formGroupArray[value - 1].formGroup.value.shift_status,
+						shift_leave_id: this.formGroupArray[value - 1].formGroup.value.shift_leave_id
+					};
+					this.updateEntry(this.setupDetails, 'updateShift', this.formGroupArray[value - 1].formGroup.value.type);
+					this.setupUpdateFlag = false;
+					break;
 			}
 		}
 	}
@@ -864,6 +974,18 @@ export class SetupComponent implements OnInit, AfterViewInit {
 					this.getleaveDepartment();
 				}
 			});
+		} else if (Number(this.configValue) === 6) {
+			if (value.shift_status === '1') {
+				value.shift_status = '0';
+			} else {
+				value.shift_status = '1';
+			}
+			this.commonService.updateShift(value).subscribe((result: any) => {
+				if (result) {
+					this.commonService.showSuccessErrorMessage('Status Changed', 'success');
+					this.getShift();
+				}
+			});
 		}
 	}
 	deleteEntry(deletedData, serviceName, next) {
@@ -880,6 +1002,9 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '5') {
 					this.dptFormGroupArray = [];
 					this.getleaveDepartment();
+				} else if (this.configValue === '6') {
+					this.hrshiftArray = [];
+					this.getShift();
 				}
 				this.commonService.showSuccessErrorMessage('Delete Successfully', 'success');
 			}
@@ -907,6 +1032,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '5') {
 					this.getleaveDepartment();
 					this.dptFormGroupArray = [];
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '6') {
+					this.getShift();
+					this.hrshiftArray = [];
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Inserted Successfully', 'success');
@@ -937,6 +1066,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				} else if (this.configValue === '5') {
 					this.getleaveDepartment();
 					this.dptFormGroupArray = [];
+					this.resetForm(this.configValue);
+				} else if (this.configValue === '6') {
+					this.getShift();
+					this.hrshiftArray = [];
 					this.resetForm(this.configValue);
 				}
 				this.commonService.showSuccessErrorMessage('Updated Successfully', 'success');

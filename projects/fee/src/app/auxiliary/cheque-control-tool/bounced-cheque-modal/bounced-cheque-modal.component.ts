@@ -17,7 +17,8 @@ import { CapitalizePipe } from '../../../_pipes';
 export class BouncedChequeModalComponent implements OnInit {
 	studentDetails: any = {};
 	defaultSrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
-	displayedColumns=['srno','bankdeposite', 'recieptno','admno','studentnam', 'studenttags','class_name', 'fee', 'amount', 'chequeno', 'bankname'];
+	//'bankdeposite',
+	displayedColumns=['srno', 'recieptno','admno','studentnam', 'studenttags','class_name', 'fee', 'amount', 'chequeno', 'bankname'];
 	bouncedForm: FormGroup;
 	reasonArray: any[] = [];
 	gender: any;
@@ -96,6 +97,7 @@ export class BouncedChequeModalComponent implements OnInit {
 		this.feeService.getBanks({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.banks = result.data;
+				this.allBanks= result.data;
 			}
 		});
 	}
@@ -243,7 +245,7 @@ export class BouncedChequeModalComponent implements OnInit {
 		console.log('allBanks',this.allBanks);
 		var bankOInfo:any;
 		for(var i=0; i<this.allBanks.length;i++) {
-			if(Number(this.allBanks[i]['bnk_id'] === bnk_id)) {
+			if(Number(this.allBanks[i]['bnk_gid'] === bnk_id)) {
 				bankOInfo = this.allBanks[i];
 			}
 		}
@@ -256,138 +258,138 @@ export class BouncedChequeModalComponent implements OnInit {
 		}
 	}
 
-  downloadPdf() {
-	  console.log(this.bouncedForm.value.fcc_deposite_date);
-	  var fromDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.split(" ")[0]: '';
-	  var toDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date.split(" ")[0]: '';
-		var fromDate = fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MM-yyyy") : 'N/A';
-		var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MM-yyyy") : 'N/A';
-		var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
-		var bankInfo = this.getBankInfo(this.bouncedForm.value.ftr_deposit_bnk_id);
-		let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
-		let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
-
-		console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
-		setTimeout(() => {
-			const doc = new jsPDF('landscape');
-
-			doc.autoTable({
-				margin: { top: 10, right: 0, bottom: 10, left: 0 },
-			})
-
-			doc.autoTable({
-				head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: '#ff0000',
-					halign: 'center',
-					fontSize: 20,
-				},
-				useCss: true,
-				theme: 'striped'
-			});
-
-			if(bankName && bankAccNo) {
-
-			doc.autoTable({
-				head: [[
-					new TitleCasePipe().transform(bankName+' A/C No. '+bankAccNo)
-				]],
-				didDrawPage: function (data) {
-					doc.setFont('Roboto');
-				},
-				headerStyles: {
-					fontStyle: 'italic',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 16,
-				},
-				useCss: true,
-				theme: 'striped'
-			});}
-
-			doc.autoTable({
-				head: [[
-					{content: 'From Date : '+fromDate,  styles: {halign: 'left', fillColor: '#ffffff'}}, 
-					{content: 'To Date : '+toDate,  styles: {halign: 'center', fillColor: '#ffffff'}},
-					{content: 'Session : '+session,  styles: {halign: 'right', fillColor: '#ffffff'}}
-				]],
-					
-				
-				headerStyles: {
-					fontStyle: 'bold',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					fontSize: 14,
-				},
-				useCss: true,
-				theme: 'grid'
-			});
-
-			doc.autoTable({
-				html: '#cheque_control_list1',
-				headerStyles: {
-					fontStyle: 'normal',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					halign: 'center',
-					fontSize: 8,
-				},
-				useCss: true,
-				styles: {
-					fontSize: 8,
-					cellWidth: 'auto',
-					textColor: 'black',
-					lineColor: '#89A8C9',
-				},
-				theme: 'grid'
-			});
-
-			doc.autoTable({
-				head: [[
-					{content: 'Date',  styles: {halign: 'left', fillColor: '#ffffff'}}, 
-					{content: 'Deposit By : '+this.currentUser.full_name,  styles: {halign: 'right', fillColor: '#ffffff'}}]],
-				
-				headerStyles: {
-					fontStyle: 'italic',
-					fillColor: '#ffffff',
-					textColor: 'black',
-					fontWeight:'bold',
-					fontSize: 14,
-				},
-				useCss: true,
-				theme: 'grid'
-			});
-			// doc.autoTable({
-			// 	head: [['No. of Records : ' + this.dataSource.filteredData.length]],
-			// 	didDrawPage: function (data) {
-			// 		doc.setFont('Roboto');
-			// 	},
-			// 	headerStyles: {
-			// 		fontStyle: 'bold',
-			// 		fillColor: '#ffffff',
-			// 		textColor: 'black',
-			// 		halign: 'left',
-			// 		fontSize: 10,
-			// 	},
-			// 	useCss: true,
-			// 	theme: 'striped'
-			// });
-
-
-			doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
-			
-	this.dialogRef.close({ status: '1' });
-	this.studentDetails = [];
-		
-    }, 1000);
-	
-	}
+	downloadPdf() {
+		console.log(this.bouncedForm.value.fcc_deposite_date);
+		var fromDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date: '';
+		var toDate1 = this.bouncedForm.value.fcc_deposite_date ? this.bouncedForm.value.fcc_deposite_date: '';
+		  var fromDate = fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MM-yyyy") : 'N/A';
+		  var toDate = toDate1 ? this.commonAPIService.dateConvertion(toDate1, "dd-MM-yyyy") : 'N/A';
+		  var session = this.getSessionName(JSON.parse(localStorage.getItem('session'))['ses_id']);
+		  var bankInfo = this.getBankInfo(this.bouncedForm.value.ftr_deposit_bnk_id);
+		  let bankName = bankInfo && bankInfo['bank_name'] ? (bankInfo['bank_name']).toUpperCase() : '';
+		  let bankAccNo = bankInfo && bankInfo['bnk_account_no'] ? bankInfo['bnk_account_no'] : '';
+  
+		  console.log('this.CHEQUE_ELEMENT_DATA', this.dataSource,localStorage.getItem('session'));
+		  setTimeout(() => {
+			  const doc = new jsPDF('portrait');
+  
+			  doc.autoTable({
+				  margin: { top: 10, right: 0, bottom: 10, left: 0 },
+			  })
+  
+			  doc.autoTable({
+				  head: [[new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state]],
+				  didDrawPage: function (data) {
+					  doc.setFont('Roboto');
+				  },
+				  headerStyles: {
+					  fontStyle: 'bold',
+					  fillColor: '#ffffff',
+					  textColor: '#ff0000',
+					  halign: 'center',
+					  fontSize: 20,
+				  },
+				  useCss: true,
+				  theme: 'striped'
+			  });
+  
+			  if(bankName && bankAccNo) {
+  
+			  doc.autoTable({
+				  head: [[
+					  new TitleCasePipe().transform(bankName+' A/C No. '+bankAccNo)
+				  ]],
+				  didDrawPage: function (data) {
+					  doc.setFont('Roboto');
+				  },
+				  headerStyles: {
+					  fontStyle: 'italic',
+					  fillColor: '#ffffff',
+					  textColor: 'black',
+					  halign: 'center',
+					  fontSize: 16,
+				  },
+				  useCss: true,
+				  theme: 'striped'
+			  });}
+  
+			  doc.autoTable({
+				  head: [[
+					  {content: 'Date (From - To) : '+fromDate+" - "+toDate,  styles: {halign: 'left', fillColor: '#ffffff'}}, 
+					  // {content: toDate,  styles: {halign: 'left', fillColor: '#ffffff'}},
+					  //{content: 'Session : '+session,  styles: {halign: 'right', fillColor: '#ffffff'}}
+				  ]],
+					  
+				  
+				  headerStyles: {
+					  fontStyle: 'bold',
+					  fillColor: '#ffffff',
+					  textColor: 'black',
+					  fontSize: 14,
+				  },
+				  useCss: true,
+				  theme: 'grid'
+			  });
+  
+			  doc.autoTable({
+				  html: '#cheque_control_list1',
+				  headerStyles: {
+					  fontStyle: 'normal',
+					  fillColor: '#ffffff',
+					  textColor: 'black',
+					  halign: 'center',
+					  fontSize: 5,
+				  },
+				  useCss: true,
+				  styles: {
+					  fontSize: 5,
+					  cellWidth: 'auto',
+					  textColor: 'black',
+					  lineColor: '#89A8C9',
+				  },
+				  theme: 'grid'
+			  });
+  
+			  doc.autoTable({
+				  head: [[
+					  {content: 'Deposited On',  styles: {halign: 'left', fillColor: '#ffffff'}}, 
+					  {content: 'Generated By : '+this.currentUser.full_name,  styles: {halign: 'right', fillColor: '#ffffff'}}]],
+				  
+				  headerStyles: {
+					  fontStyle: 'italic',
+					  fillColor: '#ffffff',
+					  textColor: 'black',
+					  fontWeight:'bold',
+					  fontSize: 14,
+				  },
+				  useCss: true,
+				  theme: 'grid'
+			  });
+			  // doc.autoTable({
+			  // 	head: [['No. of Records : ' + this.dataSource.filteredData.length]],
+			  // 	didDrawPage: function (data) {
+			  // 		doc.setFont('Roboto');
+			  // 	},
+			  // 	headerStyles: {
+			  // 		fontStyle: 'bold',
+			  // 		fillColor: '#ffffff',
+			  // 		textColor: 'black',
+			  // 		halign: 'left',
+			  // 		fontSize: 10,
+			  // 	},
+			  // 	useCss: true,
+			  // 	theme: 'striped'
+			  // });
+  
+  
+			  doc.save('ChequeControl_' + (new Date).getTime() + '.pdf');
+			  
+	  this.dialogRef.close({ status: '1' });
+	  this.studentDetails = [];
+		  
+	  }, 1000);
+	  
+	  }
 
   submitAndPrint() {
     console.log('submit and print1',this.studentDetails);
