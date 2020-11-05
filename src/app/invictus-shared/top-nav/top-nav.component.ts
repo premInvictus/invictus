@@ -290,8 +290,10 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		});
 	}
 	viewProfile() {
-		if (Number(this.currentUser.role_id) === 4) {
+		if (Number(this.currentUser.role_id) === 4 || Number(this.currentUser.role_id) === 3) {
 			this.router.navigateByUrl('/student/view-profile-student')
+		} else {
+			console.log('only student can view profile');
 		}
 	}
 	goToProject(pro_url, pro_status, pro_id) {
