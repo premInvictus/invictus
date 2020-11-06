@@ -29,3 +29,16 @@ button.nav-button.mat-mini-fab.mat-accent {
     50%{opacity: .5;}
     100%{opacity: 1;}
     }
+
+    @media (max-width:1280px) and (min-width:1024px) {
+        .three-icon {
+            position: absolute !important;
+            right:20px !important;
+        }
+    }
+    @media (max-width:1280px) and (min-width:960px) {
+        .three-icon {
+            position: absolute !important;
+            right:20px !important;
+        }
+    }
