@@ -7,8 +7,8 @@
           <div class="col-6 margin-top-15">
             <span class="font-size-24">Shift Mapping To Staff</span>
           </div>
-          <div class="col-2">
-            <mat-form-field class="form-field" appearance="outline">
+          <div class="col-6 text-right">
+            <mat-form-field class="form-field-150" appearance="outline">
               <mat-label>Category</mat-label>
               <mat-select formControlName="cat_id" (selectionChange)="getEmployeeDetail();">
                 <mat-option value="">Please select</mat-option>
@@ -78,7 +78,7 @@
                       [placeholder]="!(formGroupArray[element.srno - 1]?.formGroup?.value.emp_shift) ? 'Type Here.' : ''"
                       formControlName="emp_shift" autocomplete="off"
                       [readonly]="!(element.viewFlag) ? true : false" /> -->
-                    <mat-select formControlName="emp_shift" multiple>
+                    <mat-select formControlName="emp_shift" multiple >
                       <mat-option *ngFor="let item of hrshiftArray" [value]="item.shift_id">
                         {{item.shift_name}}
                       </mat-option>

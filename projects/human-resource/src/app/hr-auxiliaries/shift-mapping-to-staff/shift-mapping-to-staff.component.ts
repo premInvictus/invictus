@@ -103,7 +103,6 @@ export class ShiftMappingToStaffComponent implements OnInit {
     };
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
       let element: any = {};
-      let recordArray = [];
       this.employeeData = result;
       console.log('this.employeeData',this.employeeData);
       this.EMPLOYEE_ELEMENT = [];
@@ -118,10 +117,12 @@ export class ShiftMappingToStaffComponent implements OnInit {
           this.formGroupArray[j] = {
             formGroup: this.fbuild.group({
               emp_id: item.emp_id,
-              emp_shift: '',
+              emp_shift: ''
             })
-          }
-
+		  }
+		  this.formGroupArray[j].formGroup.patchValue({
+			emp_shift:item.emp_shift
+		  });
           element = {
             srno: pos,
             emp_id: item.emp_id,
@@ -180,21 +181,21 @@ export class ShiftMappingToStaffComponent implements OnInit {
 			});
     }
 		console.log('filterArr',filterArr);
-		// this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
-		// 	if (result) {
-		// 		this.disabledApiButton = false;
-		// 		this.getEmployeeDetail();
-		// 		this.commonAPIService.showSuccessErrorMessage('Employee Updated Successfully', 'success');
-		// 	} else {
-		// 		this.disabledApiButton = false;
-		// 		this.getEmployeeDetail();
-		// 		//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-		// 		this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee ', 'success');
-		// 	}
-		// },
-		// (errorResponse:any) => {
-		// 	this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
-		// });
+		this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
+			if (result) {
+				this.disabledApiButton = false;
+				this.getEmployeeDetail();
+				this.commonAPIService.showSuccessErrorMessage('Employee Updated Successfully', 'success');
+			} else {
+				this.disabledApiButton = false;
+				this.getEmployeeDetail();
+				//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee ', 'success');
+			}
+		},
+		(errorResponse:any) => {
+			this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+		});
   }
 
 }
