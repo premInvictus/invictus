@@ -106,9 +106,9 @@
       <br />
       <div class="row text-center" *ngIf="EMPLOYEE_ELEMENT.length > 0">
         <div class="col-12" *ngIf="!editFlag">
-          <button mat-raised-button class="btn-success-green margin-right-15" (click)="saveEmployeeAttendance()"
+          <button mat-raised-button class="btn-success-green margin-right-15" (click)="saveEmployeeShift()"
             [disabled]="disabledApiButton">Submit</button>
-          <button mat-raised-button class="btn-reset btn-spacer" (click)="resetEmployeeAttendance()">
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="resetEmployeeShift()">
             Reset
           </button>
         </div>

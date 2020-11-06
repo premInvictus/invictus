@@ -23,8 +23,6 @@ export class ShiftMappingToStaffComponent implements OnInit {
 	@ViewChild(MatSort) sort: MatSort;
 	employeeForm: FormGroup;
 	searchForm: FormGroup;
-	sessionArray: any[] = [];
-	sessionDetails:any;
 	formGroupArray: any[] = [];
 	totalPresentArr: any[] = [];
 	//editFlag = false;
@@ -92,10 +90,6 @@ export class ShiftMappingToStaffComponent implements OnInit {
 		}
 	}
 
-	getDaysInMonth(month, year) {
-		return new Date(year, month, 0).getDate();
-	};
-
 	getEmployeeDetail() {
     let inputJson = {
       emp_cat_id: this.searchForm.value.cat_id,
@@ -150,53 +144,47 @@ export class ShiftMappingToStaffComponent implements OnInit {
 	
 	}
 
-	resetEmployeeAttendance() {
+	resetEmployeeShift() {
 		this.getEmployeeDetail();
 	}
-
-	resetAll() {
-		this.editAllStatus = true;
-		this.getEmployeeDetail();
-	}
-
 
 	applyFilter(filterValue: String) {
 		console.log('filterValue', filterValue);
 		this.employeedataSource.filter = filterValue.trim().toLowerCase();
-  }
-  getShift() {
-		this.hrshiftArray = [];
-		this.commonAPIService.getShift().subscribe((result: any) => {
-			if (result) {
-				this.hrshiftArray = result;
-			}
-		});
-  }
-  saveEmployeeAttendance(){
-    let filterArr:any[]=[];
-    for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
-      filterArr.push({
-				emp_id: this.formGroupArray[i].formGroup.value.emp_id,
-				emp_shift: this.formGroupArray[i].formGroup.value.emp_shift
+  	}
+	getShift() {
+			this.hrshiftArray = [];
+			this.commonAPIService.getShift().subscribe((result: any) => {
+				if (result) {
+					this.hrshiftArray = result;
+				}
 			});
-    }
-		console.log('filterArr',filterArr);
-		this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
-			if (result) {
-				this.disabledApiButton = false;
-				this.getEmployeeDetail();
-				this.commonAPIService.showSuccessErrorMessage('Employee Updated Successfully', 'success');
-			} else {
-				this.disabledApiButton = false;
-				this.getEmployeeDetail();
-				//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
-				this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee ', 'success');
-			}
-		},
-		(errorResponse:any) => {
-			this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
-		});
-  }
+	}
+	saveEmployeeShift(){
+		let filterArr:any[]=[];
+		for (var i = 0; i < this.EMPLOYEE_ELEMENT.length; i++) {
+		filterArr.push({
+					emp_id: this.formGroupArray[i].formGroup.value.emp_id,
+					emp_shift: this.formGroupArray[i].formGroup.value.emp_shift
+				});
+		}
+			console.log('filterArr',filterArr);
+			this.commonAPIService.updateEmployeeDatainBulk(filterArr).subscribe((result: any) => {
+				if (result) {
+					this.disabledApiButton = false;
+					this.getEmployeeDetail();
+					this.commonAPIService.showSuccessErrorMessage('Employee Updated Successfully', 'success');
+				} else {
+					this.disabledApiButton = false;
+					this.getEmployeeDetail();
+					//this.commonAPIService.showSuccessErrorMessage('Employee Attendance Updated Successfully', 'success');
+					this.commonAPIService.showSuccessErrorMessage('Error While Updating Employee ', 'success');
+				}
+			},
+			(errorResponse:any) => {
+				this.commonAPIService.showSuccessErrorMessage(errorResponse.error, 'error');
+			});
+	}
 
 }
 
