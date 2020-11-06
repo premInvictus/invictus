@@ -31,7 +31,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 	displayedColumns: string[] =['srno', 'recieptdate', 'recieptno', 'amount', 'chequeno', 'bankname', 'bankdeposite',
 	'processingdate', 'status',
 	'entered_by', 'approved_by',
-	'admno', 'studentnam','studenttags' ,'class_name',
+	'admno', 'studentnam','drawnbankname','studenttags' ,'class_name',
 	'action', 'remarks'];
 	CHEQUE_ELEMENT_DATA: ChequeToolElement[] = [];
 	dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
@@ -172,7 +172,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
-						bankname: item.bank_name,
+						bankname: (item.fcc_status == 'b' ||  item.fcc_status == 'c' || item.fcc_status == 'd') ? item.bank_name:'-',
 						entered_by: item.created_by,
 						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
@@ -183,7 +183,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
-						status:item.fcc_status
+						status:item.fcc_status,
+						drawnbankname:item.drawnbankname
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -254,7 +255,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
-						bankname: item.bank_name,
+						bankname: (item.fcc_status == 'b' ||  item.fcc_status == 'c' || item.fcc_status == 'd') ? item.bank_name:'-',
 						entered_by: item.created_by,
 						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
@@ -265,7 +266,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
-						status:item.fcc_status
+						status:item.fcc_status,
+						drawnbankname:item.drawnbankname
 					});
 					this.formGroupArray.push({
 						formGroup: this.fbuild.group({
@@ -449,7 +451,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						studenttags:item.tag_name ? item.tag_name : '',
 						recieptno: item.receipt_no,
 						amount: item.receipt_amount,
-						bankname: item.bank_name,
+						bankname: (item.fcc_status == 'b' ||  item.fcc_status == 'c' || item.fcc_status == 'd') ? item.bank_name:'-',
 						entered_by: item.created_by,
 						approved_by: item.approved_by ? item.approved_by : '-',
 						recieptdate: new DatePipe('en-in').transform(item.transaction_date, 'd-MMM-y'),
@@ -460,7 +462,8 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 						ftr_family_number: item.ftr_family_number ? item.ftr_family_number : '-',
 						selectionDisable: item.fcc_status === 'c' || item.fcc_status === 'b' ? true : false,
 						fee:item.inv_fp_name ? JSON.parse(item.inv_fp_name)[0] :'',
-						status:item.fcc_status
+						status:item.fcc_status,
+						drawnbankname:item.drawnbankname
 					});
 					total=total+Number(item.receipt_amount);
 
@@ -496,6 +499,7 @@ export class ChequeControlToolComponent implements OnInit, AfterViewInit {
 					ftr_family_number: '',
 					selectionDisable: true,
 					status:'',
+					drawnbankname:'',
 					fee:'Total'});
 				this.dataSource = new MatTableDataSource<ChequeToolElement>(this.CHEQUE_ELEMENT_DATA);
 				if(this.dataSource && this.dataSource.paginator) {
