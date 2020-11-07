@@ -14,6 +14,7 @@ import { IdCardPrintingComponent } from './id-card-printing/id-card-printing.com
 import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { ChangeStatusComponent } from './change-status/change-status.component';
 import { ChangeEnrollmentNoComponent } from './change-enrollment-no/change-enrollment-no.component';
+import { ShiftMappingToStaffComponent } from './shift-mapping-to-staff/shift-mapping-to-staff.component';
 
 @NgModule({
   imports: [
@@ -30,7 +31,8 @@ import { ChangeEnrollmentNoComponent } from './change-enrollment-no/change-enrol
     PrintIdCardComponent,
     BulkUpdatesComponent,
     ChangeStatusComponent,
-    ChangeEnrollmentNoComponent
+    ChangeEnrollmentNoComponent,
+    ShiftMappingToStaffComponent
   ],
   entryComponents: [ViewIdCardComponent, PrintIdCardComponent]
 })

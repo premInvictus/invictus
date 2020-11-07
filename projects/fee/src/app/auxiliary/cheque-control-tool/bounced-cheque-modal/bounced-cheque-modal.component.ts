@@ -315,7 +315,7 @@ export class BouncedChequeModalComponent implements OnInit {
   
 			  doc.autoTable({
 				  head: [[
-					  {content: 'Date (From - To) : '+fromDate+" - "+toDate,  styles: {halign: 'left', fillColor: '#ffffff'}}, 
+					{content: 'Deposited On : '+(fromDate1 ? this.commonAPIService.dateConvertion(fromDate1, "dd-MM-yyyy"):''),  styles: {halign: 'left', fillColor: '#ffffff'}}, 
 					  // {content: toDate,  styles: {halign: 'left', fillColor: '#ffffff'}},
 					  //{content: 'Session : '+session,  styles: {halign: 'right', fillColor: '#ffffff'}}
 				  ]],
