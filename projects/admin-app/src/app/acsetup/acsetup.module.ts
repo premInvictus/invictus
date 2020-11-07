@@ -24,6 +24,7 @@ import { SystemInfoUploadComponent } from './system-info-upload/system-info-uplo
 import { ViewStudentProfileComponent } from './manage-users/student-management/view-student-profile/view-student-profile.component';
 import { SearchStudentComponent } from './manage-users/student-management/view-student-profile/search-student/search-student.component';
 import { SearchTeacherComponent } from './manage-users/teacher-management/view-teacher-profile/search-teacher/search-teacher.component';
+import {QuestionPaperSyncComponent} from './question-paper-sync/question-paper-sync.component';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 
 
@@ -43,7 +44,7 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
 
 	entryComponents: [SearchStudentComponent, SearchTeacherComponent],
 	// tslint:disable-next-line:max-line-length
-	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent],
+	declarations: [SysteminfoComponent, UserManagementComponent, TeacherManagementComponent, StudentManagementComponent, ParentManagementComponent, CreateNewUserComponent, CreateNewTeacherComponent, ManageAccessUserComponent, CreateNewStudentComponent, StudentDashboardManagementComponent, ViewTeacherProfileComponent, SystemInfoUploadComponent, ViewStudentProfileComponent, SearchStudentComponent, SearchTeacherComponent,QuestionPaperSyncComponent],
 	providers: [AcsetupService, AuthGuard, NotificationsService]
 })
 

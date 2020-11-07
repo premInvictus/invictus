@@ -4,13 +4,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
 	LoaderService,
-	NotificationService,
+	
 	SocketService,
 	CommonAPIService,
-	UserAccessMenuService,
-	HtmlToTextService,
-	BreadCrumbService
+	
 } from 'projects/axiom/src/app/_services';
+import { UserAccessMenuService,
+	NotificationService,
+	HtmlToTextService,
+	BreadCrumbService } from 'projects/admin-app/src/app/_services';
 import { AuthGuard } from './_guards/auth.guard';
 import { UserTypeService } from 'projects/axiom/src/app/user-type/user-type.service';
 import { QelementService } from './questionbank/service/qelement.service';

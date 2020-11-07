@@ -43,6 +43,7 @@ import { AdminUserAccessModalComponent } from './admin-user-access-model/admin-u
 import { SupportLoginModalComponent } from './support-login-model/support-login-model.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
+import { AddInstructionComponent }   from './add-instruction/add-instruction.component';
 
 @NgModule({
 	imports: [
@@ -93,7 +94,8 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
 		SupportLoginModalComponent,
-		IndianCurrency,TruncatetextPipe
+		IndianCurrency,TruncatetextPipe,
+		AddInstructionComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -132,7 +134,8 @@ import {  IndianCurrency,TruncatetextPipe } from '../_pipes/index';
 		QuestionPaperDialogComponent,
 		AdminUserAccessModalComponent,
 		SupportLoginModalComponent,
-		IndianCurrency,TruncatetextPipe
+		IndianCurrency,TruncatetextPipe,
+		AddInstructionComponent
 	],
 	entryComponents: [DeleteModalComponent,AdminUserAccessModalComponent,SupportLoginModalComponent]
 })

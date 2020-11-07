@@ -834,5 +834,12 @@ export class QelementService {
 		this.loaderService.startLoading();
 		return this._http.post(environment.apiAxiomUrl + '/report/topicWiseReportOverview', value);
 	}
+	updateExpressQuestionPaper(value) {
+		return this._http.post(environment.apiAxiomUrl + '/questionpaper/updateExpressQuestionPaper', value);
+	}
+
+	printQuestionPaperPDF(value) {
+		return this._http.post(environment.apiAxiomUrl + '/questionpaper/printQuestionPaperPDF', value);
+	}
 }
 
