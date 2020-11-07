@@ -1,0 +1,42 @@
+<div class="modal-custom-cotainer">
+    <div class="row remove-top-margin">
+      <div class="col-12 remove-col-padding">
+        <div class="modal-title-box">
+          <span class="font-size-20 font-white font-regular">Shift Attendance</span><span
+            class="float-right margin-top-5"><i (click)="closeDialog()"
+              class="far fa-times-circle font-white cursor-pointer font-size-24"></i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="border-div">
+    <form [formGroup]="paramform">
+      <div class="row remove-top-margin">
+        <div class="col-12 remove-col-padding">
+          <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Enter time</mat-label>
+              <input matInput type="time" id="user_time" 
+              formControlName="user_time"
+              required>
+          </mat-form-field>
+      </div>
+      <div class="col-12 remove-col-padding">
+        <mat-form-field class="form-field" appearance="outline">
+            <mat-label>Enter Remarks</mat-label>
+            <input matInput type="text" id="user_time_remarks" 
+            formControlName="user_time_remarks"
+            required>
+        </mat-form-field>
+    </div>
+    </div>
+  </form>
+  </div>
+  <br>
+  <div class="text-center">
+    <button mat-raised-button class="btn-spacer btn-danger" (click)="submit()"
+      style="background-color:#277d9d !important">
+      submit
+    </button>
+  </div>

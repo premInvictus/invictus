@@ -12,11 +12,6 @@ import { analyzeAndValidateNgModules } from '@angular/compiler';
   styleUrls: ['./shift-mapping-to-staff.component.scss']
 })
 
-@Component({
-  selector: 'app-shift-mapping-to-staff',
-  templateUrl: './shift-mapping-to-staff.component.html',
-  styleUrls: ['./shift-mapping-to-staff.component.scss']
-})
 export class ShiftMappingToStaffComponent implements OnInit {
 
   @ViewChild('paginator') paginator: MatPaginator;
