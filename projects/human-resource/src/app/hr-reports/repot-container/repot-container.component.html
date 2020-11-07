@@ -64,6 +64,7 @@
                 </app-acumulative-deduction>
                 <app-enquiry-report (displyRep)="displyRep($event)" *ngIf="reportType === '4'">
                   </app-enquiry-report>
+                  <app-shift-attendance-report (displyRep)="displyRep($event)" *ngIf="reportType === '5'"></app-shift-attendance-report>
               </div>
             </div>
           </mat-expansion-panel>

@@ -169,7 +169,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 					emp_code_no: this.employeeData.emp_code_no ? this.employeeData.emp_code_no : '-',
 					emp_name: this.employeeData.emp_name,
 					emp_shift: shift_arr,
-					shift_time: item.datetime ? item.datetime : '',
+					shift_time: item.datetime ? item.datetime.split(' ')[1] : '',
 
 				};
 				if(item.in) {
