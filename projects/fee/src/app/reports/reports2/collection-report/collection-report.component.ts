@@ -4258,6 +4258,15 @@ export class CollectionReportComponent implements OnInit {
 						}
 					}
 				}
+				for(key in obj) {
+					// console.log(obj,obj[key]);
+					if ((key.toString()).includes('fh_name')) {
+						if (obj[key] == "undefined") {
+							obj[key] = 0;
+						}
+					}
+				}
+				// console.log('obj',obj);
 				worksheet.addRow(obj);
 			});
 		} else {

@@ -1,0 +1,59 @@
+.user-table {
+    padding-top: 10px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+tr,
+th,
+td {
+    padding: 5px;
+}
+
+img {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+}
+
+table {
+    font-size: 14px;
+}
+
+
+/* .question-table td,th{
+  border-top :none;
+} */
+
+.row {
+    font-size: 14px;
+}
+
+.sc-logo {
+    border-radius: 100%;
+    margin-bottom: 10px;
+}
+
+.max-mark {
+    float: right;
+}
+
+.top {
+    border-width: 2px;
+    border-style: dashed;
+}
+
+.table td,
+.table th {
+    padding: 0px !important;
+    border: 0px solid #89A8C9;
+}
+
+.table td {
+    vertical-align: top !important;
+}
+
+/* table { page-break-inside:auto }
+tr    { page-break-inside:avoid; page-break-after:auto }
+thead { display:table-header-group }
+tfoot { display:table-footer-group } */

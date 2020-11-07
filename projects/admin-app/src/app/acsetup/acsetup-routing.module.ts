@@ -15,7 +15,7 @@ import { StudentDashboardManagementComponent } from './manage-users/student-mana
 import { ViewTeacherProfileComponent } from './manage-users/teacher-management/view-teacher-profile/view-teacher-profile.component';
 import { SystemInfoUploadComponent } from './system-info-upload/system-info-upload.component';
 import { ViewStudentProfileComponent } from './manage-users/student-management/view-student-profile/view-student-profile.component';
-
+import {QuestionPaperSyncComponent} from './question-paper-sync/question-paper-sync.component';
 
 const routes: Routes = [
 	{
@@ -32,7 +32,8 @@ const routes: Routes = [
 			{ path: 'student-dashboard-management', component: StudentDashboardManagementComponent },
 			{ path: 'view-teacher-profile', component: ViewTeacherProfileComponent },
 			{ path: 'system-info-upload' , component: SystemInfoUploadComponent },
-			{ path: 'view-student-profile', component: ViewStudentProfileComponent}
+			{ path: 'view-student-profile', component: ViewStudentProfileComponent},
+			{path:'question-paper-sync', component:QuestionPaperSyncComponent}
 		]
 	}
 ];

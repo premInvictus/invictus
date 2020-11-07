@@ -1,0 +1,21 @@
+.change-color-header
+{
+    background-color: #ececec;
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-size:13px;
+    font-weight:normal;
+}
+
+.change-color-row:nth-child(even)
+{
+    background-color: #f4f5f8;
+    
+}
+
+.change-color-row
+{
+   
+    font-family: Roboto,Helvetica Neue,sans-serif;
+    font-size:13px;
+    font-weight: normal
+}

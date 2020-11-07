@@ -2957,7 +2957,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		console.log('this.exportColumnDefinitions-->',this.exportColumnDefinitions)
 		for (const item of this.exportColumnDefinitions) {
-			if(item.id != 'checkbox_select') {
+			if(!(item.id.includes('checkbox_select'))) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)

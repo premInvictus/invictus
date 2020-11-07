@@ -1,0 +1,65 @@
+/*** custom checkboxes ***/
+/* input[type=checkbox] { display:none; }
+input[type=checkbox] + label:before {
+  font-family: FontAwesome;
+  display: inline-block;
+}
+input[type=checkbox] + label:before { content: "\f096"; }
+input[type=checkbox] + label:before { letter-spacing: 10px; } 
+input[type=checkbox]:checked + label:before { content: "\f046"; } 
+input[type=checkbox]:checked + label:before { letter-spacing: 5px; }  */
+
+/***************************/
+/* 
+
+.marks-left-btn {
+  float: right;
+  cursor: not-allowed;
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.25rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  border-radius: .2rem;
+  margin-bottom: 0px; 
+}
+
+.update-btn {
+  color: #fff
+}
+
+.user-table {
+  padding-top: 10px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+tr, th, td {
+  padding: 5px;
+}
+
+.fa-edit {
+  color: #0069d9;
+}
+
+.fa-delete {
+  color: #dc3545;
+}
+
+table {
+  font-size: 14px;
+}
+
+.backdrop[_ngcontent-c4] {
+  bottom: -120px;
+} */

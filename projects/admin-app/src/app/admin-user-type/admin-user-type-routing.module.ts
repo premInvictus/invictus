@@ -30,6 +30,18 @@ const routes: Routes = [
 				loadChildren: 'projects/admin-app/src/app/question/question.module#QuestionModule'
 			},
 			{
+				path: 'template',
+				loadChildren: 'projects/admin-app/src/app/questiontemplate/questiontemplate.module#QuestiontemplateModule'
+			},
+			{
+				path: 'questionpaper',
+				loadChildren: 'projects/admin-app/src/app/questionpaper/questionpaper.module#QuestionpaperModule'
+			},
+			{
+				path: 'question_paper_setup',
+				loadChildren: 'projects/admin-app/src/app/question-paper-setup/question-paper-setup.module#QuestionPaperSetupModule'
+			},
+			{
 				path: 'review',
 				loadChildren:
 					'projects/admin-app/src/app/secondaryreview/secondaryreview.module#SecondaryreviewModule'
