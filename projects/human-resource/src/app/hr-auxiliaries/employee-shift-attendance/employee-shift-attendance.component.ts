@@ -53,6 +53,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	tempEmpData: any[] = [];
 	footer:any={duration:''};
 	absent = false;
+	default = true;
 	constructor(
 		private fbuild: FormBuilder,
 		private commonAPIService: CommonAPIService,
@@ -152,7 +153,7 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 					this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
 				} else {
 					this.absent = true;
-					this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
+					// this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
 				}
 			});
 		}

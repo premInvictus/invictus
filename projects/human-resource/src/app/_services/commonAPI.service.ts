@@ -525,6 +525,9 @@ export class CommonAPIService {
 	getShiftAttendance(value) {
 		return this.http.post(environment.apiHRUrl + '/shiftattendance/get',value);
 	}
+	getShiftAttendanceAll(value) {
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/getall',value);
+	}
 	updateShiftAttendance(value) {
 		return this.http.post(environment.apiHRUrl + '/shiftattendance/updateAttendance',value);
 	}
