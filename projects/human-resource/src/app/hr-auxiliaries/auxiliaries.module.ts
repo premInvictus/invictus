@@ -15,6 +15,8 @@ import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { ChangeStatusComponent } from './change-status/change-status.component';
 import { ChangeEnrollmentNoComponent } from './change-enrollment-no/change-enrollment-no.component';
 import { ShiftMappingToStaffComponent } from './shift-mapping-to-staff/shift-mapping-to-staff.component';
+import { EmployeeShiftAttendanceComponent } from './employee-shift-attendance/employee-shift-attendance.component';
+import { UserTimeModalComponent } from './employee-shift-attendance/user-time-modal/user-time-modal.component';
 
 @NgModule({
   imports: [
@@ -32,8 +34,10 @@ import { ShiftMappingToStaffComponent } from './shift-mapping-to-staff/shift-map
     BulkUpdatesComponent,
     ChangeStatusComponent,
     ChangeEnrollmentNoComponent,
-    ShiftMappingToStaffComponent
+    ShiftMappingToStaffComponent,
+    EmployeeShiftAttendanceComponent,
+    UserTimeModalComponent
   ],
-  entryComponents: [ViewIdCardComponent, PrintIdCardComponent]
+  entryComponents: [ViewIdCardComponent, PrintIdCardComponent, UserTimeModalComponent]
 })
 export class AuxiliariesModule { }
