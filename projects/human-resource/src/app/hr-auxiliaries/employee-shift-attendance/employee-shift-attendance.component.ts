@@ -31,29 +31,33 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 	categoryOneArray: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
-	displayedEmployeeColumns: string[] = ['srno', 'emp_code_no', 'emp_name', 'emp_shift','shift_time'];
+	displayedEmployeeColumns: string[] = ['srno','shift_time', 'shift_status','shift_shortleave', 'shift_remarks',];
 	currentMonthName = '';
 	currentStatusName = '';
 	currentCategoryName = '';
 	editAllStatus = true;
 	disabledApiButton = false;
 	holidayArray: any[] = [];
+	shift_arr: any[] = [];
 	sessionName: any;
 	currSess: any;
 	hrshiftArray = [];
-	  leaveTypeArray:any[] = [];
-	  timeflag:any;
+	leaveTypeArray:any[] = [];
+	timeflag:any;
   
-  options: any[] = [];
+  	options: any[] = [];
 	filteredOptions: Observable<any[]>;
-  myControl = new FormControl();
-  allEmployeeData: any[] = [];
+  	myControl = new FormControl();
+  	allEmployeeData: any[] = [];
 	tmpAllEmployeeData: any;
 	tempEmpData: any[] = [];
+	footer:any={duration:''};
+	absent = false;
 	constructor(
 		private fbuild: FormBuilder,
 		private commonAPIService: CommonAPIService,
-		private dialog: MatDialog
+		private dialog: MatDialog,
+		private smartService: SmartService,
 
 
 	) {
@@ -137,61 +141,93 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
     this.getEmployeeDetail();
 		//this.getShiftAttendance();
 	}
+	getHolidayOnly(){
+		if(this.searchForm.valid){
+			this.absent = false;
+			const inputJson: any = {};
+			inputJson.datefrom = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
+			inputJson.dateto = new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd');
+			this.smartService.getHolidayOnly(inputJson).subscribe((res: any) => {
+				if(res && res.status=='ok') {
+					this.commonAPIService.showSuccessErrorMessage('Holiday', 'error');
+				} else {
+					this.absent = true;
+					this.commonAPIService.showSuccessErrorMessage('Absent', 'error');
+				}
+			});
+		}
+	}
 
 	getEmployeeDetail() {
-		let inputJson = {
-		emp_code_no: this.searchForm.value.emp_code_no,
-		};
-		this.commonAPIService.getEmployeeDetail(inputJson).subscribe((result1: any) => {
-			let element: any = {};
-			this.employeeData = result1;
-			console.log('this.employeeData',this.employeeData);
-			let shift_arr:any[] = [];
-			if(this.employeeData && this.employeeData.emp_shift_details && this.employeeData.emp_shift_details.length > 0) {
-				this.employeeData.emp_shift_details.forEach(element => {
-					shift_arr.push(element.shift_name);
-				});				
-			}
-			let inputJson = {
-				emp_code_no: this.searchForm.value.emp_code_no, 
-				entrydate:new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd'),
-				ses_id:this.session_id.ses_id
-			};
-			this.commonAPIService.getShiftAttendance(inputJson).subscribe((result: any) => {
-			this.EMPLOYEE_ELEMENT = [];
-			this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-			if (result) {
-				let pos = 1;
-				//console.log('result', result);
-				for (const item of result.employeeList) {
-				element = {
-					srno: pos,
-					emp_code_no: this.employeeData.emp_code_no ? this.employeeData.emp_code_no : '-',
-					emp_name: this.employeeData.emp_name,
-					emp_shift: shift_arr,
-					shift_time: item.datetime ? item.datetime.split(' ')[1] : '',
+		if(this.searchForm.valid){
 
+			this.footer.duration='';
+			let inputJson = {
+				emp_code_no: this.searchForm.value.emp_code_no,
 				};
-				if(item.in) {
-					element.shift_time = element.shift_time + ' (In)'
-				}
-				if(item.exit) {
-					element.shift_time = element.shift_time + ' (Exit)'
-				}
-				console.log('before push element',element);
-				this.EMPLOYEE_ELEMENT.push(element);
-				pos++;
-				}
-				this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-				this.employeedataSource.paginator = this.paginator;
-				if (this.sort) {
-				this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-				this.employeedataSource.sort = this.sort;
-				}
-			}
-		});
-    });
-	
+				this.commonAPIService.getEmployeeDetail(inputJson).subscribe((result1: any) => {
+					let element: any = {};
+					this.employeeData = result1;
+					console.log('this.employeeData',this.employeeData);
+					this.shift_arr=[];
+					if(this.employeeData && this.employeeData.emp_shift_details && this.employeeData.emp_shift_details.length > 0) {
+						this.employeeData.emp_shift_details.forEach(element => {
+							this.shift_arr.push(element.shift_name);
+						});				
+					}
+					let inputJson1:any = {
+						emp_code_no: this.searchForm.value.emp_code_no, 
+						entrydate:new DatePipe('en-in').transform(this.searchForm.value.entry_date, 'yyyy-MM-dd'),
+						ses_id:this.session_id.ses_id
+					};
+					this.commonAPIService.getShiftAttendance(inputJson1).subscribe((result: any) => {
+						this.EMPLOYEE_ELEMENT = [];
+						this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+						if (result) {
+							let pos = 1;
+							//console.log('result', result);
+							for (const item of result.employeeList) {
+							element = {
+								srno: pos,
+								shift_shortleave: item.shortleave ? 'Yes' : '',
+								shift_remarks: item.remarks,
+								shift_status: '',
+								shift_time: item.datetime ? item.datetime.split(' ')[1] : '',
+			
+							};
+							if(item.in) {
+								element.shift_status = 'In';
+							}
+							if(item.exit) {
+								element.shift_status = 'Exit';
+							}
+							console.log('before push element',element);
+							this.EMPLOYEE_ELEMENT.push(element);
+							pos++;
+							}
+							const intm = result.employeeList.find(e => e.in == true);
+							const exittm = result.employeeList.find(e => e.exit == true);
+							var exitdate = new Date(exittm.datetime);
+							var indate = new Date(intm.datetime);
+							if(intm && exittm) {
+								const diff = exitdate.getTime()-indate.getTime();
+								let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+								let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+								let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+								this.footer.duration = hours + 'h ' + minutes + 'm ' + seconds + 's ';
+							}
+							this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+							this.employeedataSource.paginator = this.paginator;
+							if (this.sort) {
+							this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+							this.employeedataSource.sort = this.sort;
+							}
+						} else {
+							this.getHolidayOnly();
+						}
+					});
+				});
+		}
 	}
 
 	applyFilter(filterValue: String) {
@@ -220,8 +256,8 @@ export class EmployeeShiftAttendanceComponent implements OnInit {
 
 export interface EmployeeElement {
 	srno: number;
-  	emp_code_no:string,
-	emp_name: string;
+  	shift_shortleave:string,
+	shift_remarks: string;
 	shift_time: string;
-	emp_shift: any;
+	shift_status: any;
 }

@@ -12,7 +12,7 @@
                 appearance="outline">
                 <mat-label>Date</mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date"
-                  formControlName="entry_date">
+                  formControlName="entry_date" (dateChange)="getEmployeeDetail()" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
               </mat-form-field>
@@ -52,8 +52,14 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-12 margin-top-15">
-          <span class="font-size-20 font-bold">Employee List</span>
+        <div class="col-3 margin-top-15">
+          <span class="font-size-14 font-bold">Employee No: </span><span class="font-size-14">{{employeeData?.emp_code_no}}</span>
+        </div>
+        <div class="col-3 margin-top-15">
+          <span class="font-size-14 font-bold">Employee Name:</span><span class="font-size-14">{{employeeData?.emp_name | titlecase}}</span>
+        </div>
+        <div class="col-3 margin-top-15">
+          <span class="font-size-14 font-bold">Employee Shift:</span><span class="font-size-14">{{shift_arr}}</span>
         </div>
       </div>
       <div class="row" class="overflow">
@@ -70,42 +76,41 @@
             <ng-container matColumnDef="srno">
               <th mat-header-cell *matHeaderCellDef mat-sort-header class="text-nowrap" width="2%"> Sr. No. </th>
               <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+              <td mat-footer-cell *matFooterCellDef> Duration </td>
             </ng-container>
-            <ng-container matColumnDef="emp_code_no">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Emp. No </th>
+            <ng-container matColumnDef="shift_shortleave">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="8%"> Short Leave </th>
               <td mat-cell *matCellDef="let element">
-                {{element.emp_code_no}}
+                {{element.shift_shortleave | titlecase}}
               </td>
+              <td mat-footer-cell *matFooterCellDef> </td>
             </ng-container>
-            <ng-container matColumnDef="emp_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%"> Employee Name </th>
-              <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_name}} <span
-                  *ngIf="element?.emp_name?.length > 50">...</span>
+            <ng-container matColumnDef="shift_remarks">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="20%"> Remarks </th>
+              <td mat-cell *matCellDef="let element" class="text-left">{{element.shift_remarks | titlecase}} <span
+                  *ngIf="element?.shift_remarks?.length > 50">...</span>
               </td>
+              <td mat-footer-cell *matFooterCellDef> </td>
             </ng-container>
             <ng-container matColumnDef="shift_time">
               <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Timing </th>
-              <td mat-cell *matCellDef="let element" class="text-left">{{element.shift_time }} <span
-                  *ngIf="element?.shift_time?.length > 50">...</span>
+              <td mat-cell *matCellDef="let element" class="text-left">{{element.shift_time }}
               </td>
+              <td mat-footer-cell *matFooterCellDef class="text-left">{{footer?.duration}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="emp_shift">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Shift </th>
-              <td mat-cell *matCellDef="let element" class="text-left">{{element.emp_shift }}
+            <ng-container matColumnDef="shift_status">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Status </th>
+              <td mat-cell *matCellDef="let element">{{element.shift_status | titlecase }}
               </td>
+              <td mat-footer-cell *matFooterCellDef> </td>
             </ng-container>
 
 
             <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
             </tr>
-          </table>
-
-          <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
-            <tr *ngIf="EMPLOYEE_ELEMENT.length == 0">
-              <td colspan="7">No Record Found</td>
-            </tr>
+            <tr mat-footer-row *matFooterRowDef="displayedEmployeeColumns"></tr>
           </table>
           <mat-paginator #paginator [pageSizeOptions]=[100,300,500,1000] [pageSize]="300" showFirstLastButtons>
           </mat-paginator>
@@ -118,7 +123,14 @@
           [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
       </div>
     </mat-card>
-    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0 && absent">
+        <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
+            <tr *ngIf="absent">
+              <td colspan="7">Absent</td>
+            </tr>
+          </table>
+    </mat-card>
+    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0 && default">
       <div class="text-center">
         <app-no-data
           [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
