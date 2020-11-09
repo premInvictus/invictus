@@ -80,6 +80,17 @@ export class CreateNewUserComponent implements OnInit {
 			});
 		}
 	}
+	changeAdminRightsValue($event) {
+		if ($event.checked) {
+			this.Cu_Form.patchValue({
+				'au_non_teaching_staff_admin': '1'
+			});
+		} else {
+			this.Cu_Form.patchValue({
+				'au_non_teaching_staff_admin': '0'
+			});
+		}
+	}
 
 	buildForm() {
 		this.Cu_Form = this.fbuild.group({
@@ -96,7 +107,8 @@ export class CreateNewUserComponent implements OnInit {
 			up_change_date: '',
 			up_switch_tp: '',
 			up_read_only: '',
-			changepassword: ''
+			changepassword: '',
+			au_non_teaching_staff_admin: '0'
 		});
 
 	}
@@ -112,7 +124,7 @@ export class CreateNewUserComponent implements OnInit {
 		return this.userAccessMenuService.isExistUserAccessMenu(mod_id);
 	}
 	activePasswordInput(event) {
-		if(!event.checked) {
+		if (!event.checked) {
 			this.Cu_Form.patchValue({
 				'au_password': ''
 			});
@@ -158,6 +170,7 @@ export class CreateNewUserComponent implements OnInit {
 			newUserFormData.append('up_change_date', this.Cu_Form.value.up_change_date);
 			newUserFormData.append('up_switch_tp', this.Cu_Form.value.up_switch_tp);
 			newUserFormData.append('up_read_only', this.Cu_Form.value.up_read_only);
+			newUserFormData.append('au_non_teaching_staff_admin', this.Cu_Form.value.au_non_teaching_staff_admin);
 			const today: any = new Date().toJSON().split('T')[0];
 			const date = '12-10-2004';
 			const dateArray = date.split('-');
@@ -230,6 +243,7 @@ export class CreateNewUserComponent implements OnInit {
 			newUserFormData.append('up_change_date', this.Cu_Form.value.up_change_date);
 			newUserFormData.append('up_switch_tp', this.Cu_Form.value.up_switch_tp);
 			newUserFormData.append('up_read_only', this.Cu_Form.value.up_read_only);
+			newUserFormData.append('au_non_teaching_staff_admin', this.Cu_Form.value.au_non_teaching_staff_admin);
 			newUserFormData.append('au_role_id', '2');
 
 			const today: any = new Date().toJSON().split('T')[0];
@@ -269,6 +283,7 @@ export class CreateNewUserComponent implements OnInit {
 			au_mobile: value.au_mobile,
 			au_email: value.au_email,
 			au_dob: value.au_dob,
+			au_non_teaching_staff_admin: value.au_non_teaching_staff_admin
 		});
 		if (value.privileges.length > 0) {
 			this.Cu_Form.patchValue({

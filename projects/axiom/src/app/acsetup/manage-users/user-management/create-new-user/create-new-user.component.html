@@ -101,6 +101,13 @@
                                  </mat-form-field>
                               </div>
                            </div>
+                           <div class="row">
+                              <div class="col-6">
+                                 <mat-checkbox (change)="changeAdminRightsValue($event)"
+                                 [checked]="Cu_Form.value.au_non_teaching_staff_admin === '1'">Assign Full Admin App Rights
+                                 </mat-checkbox>
+                              </div>
+                           </div>
                         </div>
                      </div>
                   </div>
