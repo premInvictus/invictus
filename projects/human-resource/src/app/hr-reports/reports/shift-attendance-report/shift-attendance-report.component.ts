@@ -43,9 +43,12 @@ export class ShiftAttendanceReportComponent implements OnInit {
   categoryOneArray: any[] = [];
   holidayArray: any[] = [];
   dateArray: any[] = [];
+  emp_shift_arr: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
-	displayedEmployeeColumns: string[] = ['srno', 'emp_code_no', 'emp_name', 'emp_shift'];
+  displayedEmployeeColumns: string[] = ['srno', 'emp_code_no', 'emp_name', 'emp_shift','parameters'];
+  parameters_arr = ['in','exit','duration','remarks'];
+  spans = [];
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -92,7 +95,44 @@ export class ShiftAttendanceReportComponent implements OnInit {
   getDaysInMonth(month, year) {
     return new Date(year, month, 0).getDate();
   };
-  getShiftAttendanceReport(){
+  getdaystatus(shortdate,element){
+    const fdata = element.find(e => e.shortdate == shortdate)
+    if(fdata){
+      return fdata.data;
+    }
+    return '';
+  }
+  getRowSpan(col, index) {
+    //console.log('col '+col, 'index'+index);
+    return this.spans[index] && this.spans[index][col];
+  }
+  cacheSpan(key, accessor) {
+    //console.log(key, accessor);
+    for (let i = 0; i < this.EMPLOYEE_ELEMENT.length;) {
+      let currentValue = accessor(this.EMPLOYEE_ELEMENT[i]);
+      let count = 1;
+      //console.log('currentValue',currentValue);
+      // Iterate through the remaining rows to see how many match
+      // the current value as retrieved through the accessor.
+      for (let j = i + 1; j < this.EMPLOYEE_ELEMENT.length; j++) {
+        if (currentValue != accessor(this.EMPLOYEE_ELEMENT[j])) {
+          break;
+        }
+        count++;
+      }
+
+      if (!this.spans[i]) {
+        this.spans[i] = {};
+      }
+
+      // Store the number of similar values that were found (the span)
+      // and skip i to the next unique row.
+      this.spans[i][key] = count;
+      i += count;
+    }
+  }
+  async getShiftAttendanceReport(){
+
     let inputJson = {
 			'month_id': this.acumulativeReport.value.month_id,
 			'emp_status': 'all',
@@ -100,92 +140,147 @@ export class ShiftAttendanceReportComponent implements OnInit {
     };
     this.dateArray=[];
     var no_of_days = this.getDaysInMonth(this.acumulativeReport.value.month_id, new Date().getFullYear());
-    // const inputJson1: any = {};
-    // inputJson1.datefrom = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-1';
-    // inputJson1.dateto = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
-    // this.smartService.getHolidayOnly(inputJson1).subscribe((res: any) => {
-    //   if (res) {
-    //     this.holidayArray = res.data ? res.data : [];
-    //     const dateArray: any[] = [];
-    //     var date;
-    //     var dateFormate;
-    //     for (let i = 1; i <= no_of_days; i++) {
-    //       date = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + i;
-    //       dateFormate = this.commonAPIService.dateConvertion(date, 'y-MM-dd');
-    //       if (i !== 0) {
-    //         const findex = this.holidayArray.indexOf(dateFormate);
-    //         if (findex !== -1) {
-    //           dateArray.push({
-    //             date: date,
-    //             attendance: 'h'
-    //           });
-    //         } else {
-    //           dateArray.push({
-    //             date: date,
-    //             attendance: ''
-    //           });
-    //         }
+    const inputJson1: any = {};
+    inputJson1.datefrom = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-1';
+    inputJson1.dateto = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
 
-    //       }
-    //     }
-    //   }
-    // })
-    for (let i = 1; i <= no_of_days; i++) {
-      const date = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + i;
-      this.displayedEmployeeColumns.push(i.toString());
-      this.dateArray.push({
-        date:date,
-        shortdate:i
-      })
-    }
+    await this.smartService.getHolidayOnly(inputJson1).toPromise().then((res: any) => {
+      if (res) {
+        this.holidayArray = res.data ? res.data : [];
+        var date;
+        var dateFormate;
+        for (let i = 1; i <= no_of_days; i++) {
+          this.displayedEmployeeColumns.push(i.toString());
+          date = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + ("0" + i).slice(-2);;
+          dateFormate = this.commonAPIService.dateConvertion(date, 'y-MM-dd');
+          if (i !== 0) {
+            const findex = this.holidayArray.indexOf(dateFormate);
+            if (findex !== -1) {
+              this.dateArray.push({
+                date: date,
+                attendance: 'H',
+                shortdate:i.toString(),
+                data:'H'
+              });
+            } else {
+              this.dateArray.push({
+                date: date,
+                attendance: '',
+                shortdate:i.toString(),
+                data:''
+              });
+            }
+
+          }
+        }
+      }
+    });
+    console.log('dateArray',this.dateArray);
     this.EMPLOYEE_ELEMENT = [];
     this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result1: any) => {
       if(result1 && result1.length > 0) {
-        result1.forEach(employeeData => {
-          let element: any = {};
-          console.log('employeeData',employeeData);
-          let shift_arr:any[] = [];
-          if(employeeData && employeeData.emp_shift_details && employeeData.emp_shift_details.length > 0) {
-            employeeData.emp_shift_details.forEach(element => {
-              shift_arr.push(element.shift_name);
-            });				
-          }
-          let inputJson = {
-            month_id: this.acumulativeReport.value.month_id,
-            ses_id:this.session.ses_id,
-          };
-          this.commonAPIService.getShiftAttendance(inputJson).subscribe((result: any) => {
-          // if (result) {
-          //   let pos = 1;
-          //   //console.log('result', result);
-          //   for (const item of result.employeeList) {
-          //   element = {
-          //     srno: pos,
-          //     emp_code_no: employeeData.emp_code_no ? employeeData.emp_code_no : '-',
-          //     emp_name: employeeData.emp_name,
-          //     emp_shift: shift_arr,
-          //     shift_time: item.datetime ? item.datetime : '',
+        let inputJson = {
+          month_id: this.acumulativeReport.value.month_id,
+          ses_id:this.session.ses_id,
+        };
+        this.commonAPIService.getShiftAttendanceAll(inputJson).subscribe((result: any) => {
+          if (result) {
+            this.emp_shift_arr = result;
+            let pos = 0;
+            result1.forEach(employeeData => {
+              pos++;
+              let shift_arr:any[] = [];
+              if(employeeData && employeeData.emp_shift_details && employeeData.emp_shift_details.length > 0) {
+                employeeData.emp_shift_details.forEach(element => {
+                  shift_arr.push(element.shift_name);
+                });				
+              }
+              this.parameters_arr.forEach(para => {
+                let element:any = {
+                  srno: pos,
+                  emp_code_no: employeeData.emp_code_no ? employeeData.emp_code_no : '-',
+                  emp_name: employeeData.emp_name,
+                  emp_shift: shift_arr,
+                  parameters: para,
+                  dateArray:JSON.parse(JSON.stringify(this.dateArray))
+                };
+                element.dateArray.forEach(dt => {
+                  if(dt.attendance == 'H') {
 
-          //   };
-          //   if(item.in) {
-          //     element.shift_time = element.shift_time + ' (In)'
-          //   }
-          //   if(item.exit) {
-          //     element.shift_time = element.shift_time + ' (Exit)'
-          //   }
-          //   console.log('before push element',element);
-          //   this.EMPLOYEE_ELEMENT.push(element);
-          //   pos++;
-          //   }
-          //   this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-          //   this.employeedataSource.paginator = this.paginator;
-          //   if (this.sort) {
-          //   this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-          //   this.employeedataSource.sort = this.sort;
-          //   }
-          // }
-          });
+                  } else {
+                    const shiftdayAtt = this.emp_shift_arr.find(e => e.entrydate == dt.date);
+                    if(para == 'in') {
+                      if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        let temp = shiftdayAtt.employeeList.find(e => e.in == true && e.emp_code_no == employeeData.emp_code_no);
+                        if(temp){
+                          // dt.data = temp.datetime.split(' ')[1];
+                          dt.data = temp.datetime;
+                        }
+                      }  else {
+                        dt.data = 'A';
+                      }
+                    }
+                    if(para == 'exit') {
+                      if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        let temp = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
+                        if(temp){
+                          // dt.data = temp.datetime.split(' ')[1];
+                          dt.data = temp.datetime;
+                        }
+                      }  else {
+                        dt.data = 'A';
+                      }
+                    }
+                    if(para == 'duration') {
+                      if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        const intm = shiftdayAtt.employeeList.find(e => e.in == true && e.emp_code_no == employeeData.emp_code_no);
+                        const exittm = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
+                        if(intm && exittm) {
+                          var exitdate = new Date(exittm.datetime);
+                          var indate = new Date(intm.datetime);
+                          const diff = exitdate.getTime()-indate.getTime();
+                          let hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                          let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                          let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                          dt.data = hours + 'h ' + minutes + 'm ' + seconds + 's ';
+                        }
+                      }  else {
+                        dt.data = 'A';
+                      }
+                    }
+                    if(para == 'remarks') {
+                      if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        const intm = shiftdayAtt.employeeList.find(e => e.in == true && e.emp_code_no == employeeData.emp_code_no);
+                        const exittm = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
+                        let remarks = '';
+                        if(intm) {
+                          remarks += intm.remarks+' ';
+                        }
+                        if(exittm) {
+                          remarks += exittm.remarks+' ';
+                        }
+                      }  else {
+                        dt.data = 'A';
+                      }
+                    }
+                  }
+                });
+                this.EMPLOYEE_ELEMENT.push(element);
+              });
+            });
+            this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
+            this.employeedataSource.paginator = this.paginator;
+            // if (this.sort) {
+            // this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+            // this.employeedataSource.sort = this.sort;
+            // }
+            this.cacheSpan('srno', d => d.srno);
+            this.cacheSpan('emp_code_no', d => d.emp_code_no);
+            this.cacheSpan('emp_name', d => d.emp_name);
+            this.cacheSpan('emp_shift', d => d.emp_shift);
+            console.log('this.EMPLOYEE_ELEMENT',this.EMPLOYEE_ELEMENT)
+          }
         });
       }
     });
@@ -196,6 +291,6 @@ export interface EmployeeElement {
 	srno: number;
   	emp_code_no:string,
 	emp_name: string;
-	shift_time: string;
+	parameters: string;
 	emp_shift: any;
 }
