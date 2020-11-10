@@ -46,9 +46,10 @@ export class ShiftAttendanceReportComponent implements OnInit {
   emp_shift_arr: any[] = [];
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
-  displayedEmployeeColumns: string[] = ['srno', 'emp_code_no', 'emp_name', 'emp_shift','parameters'];
-  parameters_arr = ['in','exit','duration','remarks'];
+  displayedEmployeeColumns: string[] = ['emp_code_no', 'emp_name', 'emp_shift','parameters'];
+  parameters_arr = ['in','exit','duration','remarks','status'];
   spans = [];
+  allemployeeleavearr:any[]=[];
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -175,6 +176,11 @@ export class ShiftAttendanceReportComponent implements OnInit {
         }
       }
     });
+    await this.commonAPIService.getAllEmployeeLeaveData().toPromise().then((result: any) => {
+      if(result) {
+        this.allemployeeleavearr = result;
+      }
+    });
     console.log('dateArray',this.dateArray);
     this.EMPLOYEE_ELEMENT = [];
     this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
@@ -193,7 +199,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
               let shift_arr:any[] = [];
               if(employeeData && employeeData.emp_shift_details && employeeData.emp_shift_details.length > 0) {
                 employeeData.emp_shift_details.forEach(element => {
-                  shift_arr.push(element.shift_name);
+                  shift_arr.push(new TitleCasePipe().transform(element.shift_name));
                 });				
               }
               this.parameters_arr.forEach(para => {
@@ -207,29 +213,31 @@ export class ShiftAttendanceReportComponent implements OnInit {
                 };
                 element.dateArray.forEach(dt => {
                   if(dt.attendance == 'H') {
-
+                    if(para == 'in' || para == 'exit' || para == 'duration' || para == 'remarks') {
+                      dt.data='';
+                    }
                   } else {
                     const shiftdayAtt = this.emp_shift_arr.find(e => e.entrydate == dt.date);
                     if(para == 'in') {
                       if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
                         let temp = shiftdayAtt.employeeList.find(e => e.in == true && e.emp_code_no == employeeData.emp_code_no);
                         if(temp){
-                          // dt.data = temp.datetime.split(' ')[1];
-                          dt.data = temp.datetime;
+                          dt.data = temp.datetime.split(' ')[1];
+                          // dt.data = temp.datetime;
                         }
                       }  else {
-                        dt.data = 'A';
+                        // dt.data = 'A';
                       }
                     }
                     if(para == 'exit') {
                       if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
                         let temp = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
                         if(temp){
-                          // dt.data = temp.datetime.split(' ')[1];
-                          dt.data = temp.datetime;
+                          dt.data = temp.datetime.split(' ')[1];
+                          // dt.data = temp.datetime;
                         }
                       }  else {
-                        dt.data = 'A';
+                        // dt.data = 'A';
                       }
                     }
                     if(para == 'duration') {
@@ -246,7 +254,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           dt.data = hours + 'h ' + minutes + 'm ' + seconds + 's ';
                         }
                       }  else {
-                        dt.data = 'A';
+                        // dt.data = 'A';
                       }
                     }
                     if(para == 'remarks') {
@@ -259,6 +267,53 @@ export class ShiftAttendanceReportComponent implements OnInit {
                         }
                         if(exittm) {
                           remarks += exittm.remarks+' ';
+                        }
+                      }  else {
+                        // dt.data = 'A';
+                      }
+                    }
+                    if(para == 'status') {
+                      let temp;
+                      let status='';
+                      if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        temp = shiftdayAtt.employeeList.find(e => e.shortleave == true && e.emp_code_no == employeeData.emp_code_no);
+                        if(temp){
+                          status='Shortleave';
+                        }
+                        temp = shiftdayAtt.employeeList.find(e => e.emp_code_no == employeeData.emp_code_no);
+                        if(!temp){
+                          let day_emp_leave:any;
+                          let emp_leave_arr:any[]=[];
+                          if(this.allemployeeleavearr && this.allemployeeleavearr.length > 0) {
+                            for(let e of this.allemployeeleavearr) {
+                              if(e.leave_emp_detail.emp_id == employeeData.emp_id){
+                                emp_leave_arr.push(e)
+                              }
+                            }
+                            console.log('emp_leave_arr',emp_leave_arr);
+                            if(emp_leave_arr && emp_leave_arr.length > 0) {
+                              for(let item of emp_leave_arr) {
+                                if(item.leave_request_schedule_data && item.leave_request_schedule_data.length > 0){
+                                  for(let item1 of item.leave_request_schedule_data) {
+                                    console.log('item1.date',item1.date);
+                                    if(item1.date == dt.date) {
+
+                                      day_emp_leave = item;
+                                      console.log('inner, day_emp_leave',day_emp_leave);
+                                    }
+                                  }
+                                }
+                              }
+                            }
+
+                          }
+                          console.log('outer, day_emp_leave',dt.date,day_emp_leave);
+                          if(day_emp_leave) {
+                            status = day_emp_leave.leave_type.aliasname;
+                          } else {
+                            status='A';
+                          }
+                          dt.data=status;
                         }
                       }  else {
                         dt.data = 'A';

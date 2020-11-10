@@ -61,6 +61,9 @@
         <div class="col-3 margin-top-15">
           <span class="font-size-14 font-bold">Employee Shift:</span><span class="font-size-14">{{shift_arr}}</span>
         </div>
+        <div class="col-3 margin-top-15">
+          <span class="font-size-14 font-bold">Date:</span><span class="font-size-14">{{searchForm.value.entry_date | date:'d-MMM-y'}}</span>
+        </div>
       </div>
       <div class="row" class="overflow">
         <div class="col-12">
@@ -124,6 +127,19 @@
       </div>
     </mat-card>
     <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0 && absent">
+        <div class="row">
+            <div class="col-10 remove-col-padding"></div>
+            <div class="col-1 text-right">
+              <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
+              (click)="openLeaveCredit('in')">Add In-Time
+              </button>
+            </div>
+            <div class="col-1 text-right">
+              <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
+              (click)="openLeaveCredit('exit')">Add Exit-Time
+              </button>
+            </div>
+          </div>
         <table class="table table-borderd table-stripped custom-table text-center" style="margin-top:5px;">
             <tr *ngIf="absent">
               <td colspan="7">Absent</td>
