@@ -23,6 +23,7 @@ declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 
+
 @Component({
   selector: 'app-shift-attendance-report',
   templateUrl: './shift-attendance-report.component.html',
@@ -50,6 +51,56 @@ export class ShiftAttendanceReportComponent implements OnInit {
   parameters_arr = ['in','exit','duration','remarks','status'];
   spans = [];
   allemployeeleavearr:any[]=[];
+	sessionName: any;
+  sessionArray: any[] = [];
+  length:any;
+  alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+	};
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -68,6 +119,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     this.buildForm();
     this.getFeeMonths();
     this.getSchool();
+    this.getSession();
   }
   buildForm() {
     this.acumulativeReport = this.fbuild.group({
@@ -75,6 +127,19 @@ export class ShiftAttendanceReportComponent implements OnInit {
     });
 
   }
+  // get session year of the selected session
+	getSession() {
+		this.sisService.getSession()
+			.subscribe(
+				(result: any) => {
+					if (result && result.status === 'ok') {
+						for (const citem of result.data) {
+							this.sessionArray[citem.ses_id] = citem.ses_name;
+						}
+						this.sessionName = this.sessionArray[this.session_id.ses_id];
+					}
+				});
+	}
   getFeeMonths() {
     this.monthArray = [];
     this.feeService.getFeeMonths({}).subscribe((result: any) => {
@@ -330,7 +395,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
             // this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
             // this.employeedataSource.sort = this.sort;
             // }
-            this.cacheSpan('srno', d => d.srno);
+            //this.cacheSpan('srno', d => d.srno);
             this.cacheSpan('emp_code_no', d => d.emp_code_no);
             this.cacheSpan('emp_name', d => d.emp_name);
             this.cacheSpan('emp_shift', d => d.emp_shift);
@@ -341,11 +406,207 @@ export class ShiftAttendanceReportComponent implements OnInit {
     });
   }
 
+  getMonthName(id){
+    return this.monthArray.find(e => e.fm_id == id).fm_name;
+  }
+  // export excel code
+	exportAsExcel() {
+		let reportType: any = '';
+		let reportType2: any = '';
+    const columns: any = [];
+		columns.push({
+			key: 'emp_code_no',
+			width: this.checkWidth('emp_code_no', 'Emp. No.')
+		});
+		columns.push({
+			key: 'emp_name',
+			width: this.checkWidth('emp_name', 'Emp. Name')
+		});
+		columns.push({
+			key: 'emp_shift',
+			width: this.checkWidth('emp_shift', 'Shift')
+		});
+		columns.push({
+			key: 'parameters',
+			width: this.checkWidth('parameters', 'Parameters')
+    });
+    if(this.dateArray && this.dateArray.length > 0) {
+      this.dateArray.forEach(dt => {
+        columns.push({
+          key: dt.shortdate.toString(),
+          width: this.checkWidth(dt.shortdate.toString(), '08:10')
+        });
+      });
+    }
+		reportType = new TitleCasePipe().transform('shift_attendance_report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+		worksheet.getCell('A6').value = 'Emp. No.';
+		worksheet.getCell('B6').value = 'Emp. Name';
+		worksheet.getCell('C6').value = 'Shift';
+    worksheet.getCell('D6').value = 'Parameters';
+    let headerColIndex = 5;
+    if(this.dateArray && this.dateArray.length > 0) {
+      this.dateArray.forEach(dt => {
+        worksheet.getCell(this.alphabetJSON[headerColIndex++]+'6').value = dt.shortdate.toString();
+      });
+    }
+		worksheet.columns = columns;
+		this.length = worksheet._rows.length;
+		for (const dety of this.EMPLOYEE_ELEMENT) {
+      let tshift = dety.emp_shift[0];
+      for (let ti = 1; ti < dety.emp_shift.length; ti++) {
+        const element = dety.emp_shift[ti];
+        tshift += ','+element
+        
+      }
+			const prev = this.length + 1;
+			const obj: any = {};
+			this.length++;
+			worksheet.getCell('A' + this.length).value = dety.emp_code_no;
+			worksheet.getCell('B' + this.length).value = new TitleCasePipe().transform(dety.emp_name);
+			worksheet.getCell('C' + this.length).value = new TitleCasePipe().transform(tshift);
+      worksheet.getCell('D' + this.length).value = new TitleCasePipe().transform(dety.parameters);
+      headerColIndex = 5;
+      if(this.dateArray && this.dateArray.length > 0) {
+        this.dateArray.forEach(dt => {
+          worksheet.getCell(this.alphabetJSON[headerColIndex++]+this.length).value = this.getdaystatus(dt.shortdate,dety.dateArray)
+        });
+      }
+			worksheet.addRow(obj);
+		}
+
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 6) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum > 6 && rowNum <= worksheet._rows.length) {
+				row.eachCell(cell => {
+					// tslint:disable-next-line: max-line-length
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+		});
+
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === worksheet._rows.length) {
+				row.eachCell(cell => {
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: '004261' },
+						bgColor: { argb: '004261' },
+					};
+					cell.font = {
+						color: { argb: 'ffffff' },
+						bold: true,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center' };
+				});
+			}
+		});
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+
+  }
+  checkWidth(id, header) {
+		const res = this.EMPLOYEE_ELEMENT.map((f) => f[id] !== '-' && f[id] ? f[id].toString().length : 1);
+		const max2 = header.toString().length;
+		const max = Math.max.apply(null, res);
+		return max2 > max ? max2 : max;
+	}
+	getColor(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
+	getBorder(element) {
+		if (element && element.colorCode) {
+			return element.colorCode;
+		}
+	}
+
+
 }
 export interface EmployeeElement {
 	srno: number;
-  	emp_code_no:string,
+  emp_code_no:string,
 	emp_name: string;
 	parameters: string;
-	emp_shift: any;
+  emp_shift: any;
+  dateArray:any
 }
