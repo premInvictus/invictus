@@ -31,6 +31,13 @@
                 </mat-form-field>
               </div>
             </div> -->
+            <div class="row ">
+                <div class="col-12 remove-col-padding">
+                    <span
+                    style="float:right; padding-right: 10px;"><img style="cursor: pointer"
+                      src="/assets/images/xml.svg" (click)="exportAsExcel()" matTooltip="Export as excel"></span>
+                </div>
+              </div>
             <table mat-table [dataSource]="employeedataSource" class="table-100 text-center" id="report_table3">
               <ng-container matColumnDef="srno">
                 <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="2%"> Sr. No. </th>
