@@ -30,6 +30,7 @@ import 'jspdf-autotable';
   styleUrls: ['./shift-attendance-report.component.scss']
 })
 export class ShiftAttendanceReportComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
   monthArray: any[] = [];
@@ -129,17 +130,19 @@ export class ShiftAttendanceReportComponent implements OnInit {
   }
   // get session year of the selected session
 	getSession() {
-		this.sisService.getSession()
-			.subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						for (const citem of result.data) {
-							this.sessionArray[citem.ses_id] = citem.ses_name;
-						}
-						this.sessionName = this.sessionArray[this.session_id.ses_id];
-					}
-				});
-	}
+    this.erpCommonService.getSession().subscribe((result2: any) => {
+      if (result2.status === 'ok') {
+        this.sessionArray = result2.data;
+        this.sessionName = this.getSessionName(this.session.ses_id);
+      }
+    });
+  }
+  getSessionName(id) {
+    const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
+    if (findex !== -1) {
+      return this.sessionArray[findex].ses_name;
+    }
+  }
   getFeeMonths() {
     this.monthArray = [];
     this.feeService.getFeeMonths({}).subscribe((result: any) => {
@@ -205,6 +208,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 			from_attendance: true,
     };
     this.dateArray=[];
+    this.EMPLOYEE_ELEMENT = [];
     var no_of_days = this.getDaysInMonth(this.acumulativeReport.value.month_id, new Date().getFullYear());
     const inputJson1: any = {};
     inputJson1.datefrom = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-1';
@@ -247,7 +251,6 @@ export class ShiftAttendanceReportComponent implements OnInit {
       }
     });
     console.log('dateArray',this.dateArray);
-    this.EMPLOYEE_ELEMENT = [];
     this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result1: any) => {
       if(result1 && result1.length > 0) {
@@ -439,7 +442,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
       });
     }
 		reportType = new TitleCasePipe().transform('shift_attendance_report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
-		const fileName = reportType + '.xlsx';
+    let reportType1 = new TitleCasePipe().transform('shift Attendance Report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -448,20 +452,22 @@ export class ShiftAttendanceReportComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
-		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell('A2').value = reportType1;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
-		worksheet.getCell('A6').value = 'Emp. No.';
-		worksheet.getCell('B6').value = 'Emp. Name';
-		worksheet.getCell('C6').value = 'Shift';
-    worksheet.getCell('D6').value = 'Parameters';
+		worksheet.getCell('A4').value = 'Emp. No.';
+		worksheet.getCell('B4').value = 'Emp. Name';
+		worksheet.getCell('C4').value = 'Shift';
+    worksheet.getCell('D4').value = 'Parameters';
     let headerColIndex = 5;
     if(this.dateArray && this.dateArray.length > 0) {
       this.dateArray.forEach(dt => {
-        worksheet.getCell(this.alphabetJSON[headerColIndex++]+'6').value = dt.shortdate.toString();
+        worksheet.getCell(this.alphabetJSON[headerColIndex++]+'4').value = dt.shortdate.toString();
       });
     }
 		worksheet.columns = columns;
-		this.length = worksheet._rows.length;
+    this.length = worksheet._rows.length;
+    let mergelength = worksheet._rows.length+1;
+    console.log(this.length);
 		for (const dety of this.EMPLOYEE_ELEMENT) {
       let tshift = dety.emp_shift[0];
       for (let ti = 1; ti < dety.emp_shift.length; ti++) {
@@ -469,9 +475,9 @@ export class ShiftAttendanceReportComponent implements OnInit {
         tshift += ','+element
         
       }
-			const prev = this.length + 1;
 			const obj: any = {};
-			this.length++;
+      this.length++;
+      //worksheet.mergeCells('A' + this.length);
 			worksheet.getCell('A' + this.length).value = dety.emp_code_no;
 			worksheet.getCell('B' + this.length).value = new TitleCasePipe().transform(dety.emp_name);
 			worksheet.getCell('C' + this.length).value = new TitleCasePipe().transform(tshift);
@@ -483,8 +489,16 @@ export class ShiftAttendanceReportComponent implements OnInit {
         });
       }
 			worksheet.addRow(obj);
-		}
+    }
 
+    const parameterslength = this.parameters_arr.length;
+    console.log('parameterslength',parameterslength)
+    console.log('mergelength',mergelength)
+    for (let index = 0; index < this.EMPLOYEE_ELEMENT.length; index=index+parameterslength) {
+      worksheet.mergeCells('A'+(mergelength+index)+':A'+(mergelength + index + parameterslength - 1));
+      worksheet.mergeCells('B'+(mergelength+index)+':B'+(mergelength + index + parameterslength - 1));
+      worksheet.mergeCells('C'+(mergelength+index)+':C'+(mergelength + index + parameterslength - 1));
+    }
 		worksheet.eachRow((row, rowNum) => {
 			if (rowNum === 1) {
 				row.font = {
@@ -500,7 +514,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 					bold: true
 				};
 			}
-			if (rowNum === 6) {
+			if (rowNum === 4) {
 				row.eachCell(cell => {
 					cell.font = {
 						name: 'Arial',
@@ -523,7 +537,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum > 6 && rowNum <= worksheet._rows.length) {
+			if (rowNum > 4 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
@@ -575,7 +589,25 @@ export class ShiftAttendanceReportComponent implements OnInit {
 					cell.alignment = { horizontal: 'center' };
 				});
 			}
-		});
+    });
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+      + new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
+
+    worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+      this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+    worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+    worksheet.getCell('A' + worksheet._rows.length).font = {
+      name: 'Arial',
+      size: 10,
+      bold: true
+    };
 		workbook.xlsx.writeBuffer().then(data => {
 			const blob = new Blob([data], { type: 'application/octet-stream' });
 			saveAs(blob, fileName);
