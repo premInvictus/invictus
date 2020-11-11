@@ -30,6 +30,7 @@ import 'jspdf-autotable';
   styleUrls: ['./shift-attendance-report.component.scss']
 })
 export class ShiftAttendanceReportComponent implements OnInit {
+  reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
   @ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
   monthArray: any[] = [];
@@ -441,7 +442,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
       });
     }
 		reportType = new TitleCasePipe().transform('shift_attendance_report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
-		const fileName = reportType + '.xlsx';
+    let reportType1 = new TitleCasePipe().transform('shift Attendance Report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
+    const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
@@ -450,16 +452,16 @@ export class ShiftAttendanceReportComponent implements OnInit {
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
 		worksheet.getCell('A1').alignment = { horizontal: 'left' };
 		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
-		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell('A2').value = reportType1;
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
-		worksheet.getCell('A6').value = 'Emp. No.';
-		worksheet.getCell('B6').value = 'Emp. Name';
-		worksheet.getCell('C6').value = 'Shift';
-    worksheet.getCell('D6').value = 'Parameters';
+		worksheet.getCell('A4').value = 'Emp. No.';
+		worksheet.getCell('B4').value = 'Emp. Name';
+		worksheet.getCell('C4').value = 'Shift';
+    worksheet.getCell('D4').value = 'Parameters';
     let headerColIndex = 5;
     if(this.dateArray && this.dateArray.length > 0) {
       this.dateArray.forEach(dt => {
-        worksheet.getCell(this.alphabetJSON[headerColIndex++]+'6').value = dt.shortdate.toString();
+        worksheet.getCell(this.alphabetJSON[headerColIndex++]+'4').value = dt.shortdate.toString();
       });
     }
 		worksheet.columns = columns;
@@ -512,7 +514,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 					bold: true
 				};
 			}
-			if (rowNum === 6) {
+			if (rowNum === 4) {
 				row.eachCell(cell => {
 					cell.font = {
 						name: 'Arial',
@@ -535,7 +537,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
 				});
 			}
-			if (rowNum > 6 && rowNum <= worksheet._rows.length) {
+			if (rowNum > 4 && rowNum <= worksheet._rows.length) {
 				row.eachCell(cell => {
 					// tslint:disable-next-line: max-line-length
 					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
