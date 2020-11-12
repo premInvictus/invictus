@@ -71,6 +71,7 @@ import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/acc
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
+import { SearchViaStudentComponent } from './search-via-student/search-via-student.component'
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -134,7 +135,7 @@ export const MY_FORMATS = {
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent,
-		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent, ProcessdateModalComponent],
+		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent,SearchViaStudentComponent, ProcessdateModalComponent],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
@@ -188,7 +189,7 @@ export const MY_FORMATS = {
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		AdmissionRemarksThemeTwoComponent, ImageViewerComponent,
-		SearchViaNameComponent, ProcessdateModalComponent],
+		SearchViaNameComponent, SearchViaStudentComponent,ProcessdateModalComponent],
 	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService,
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 

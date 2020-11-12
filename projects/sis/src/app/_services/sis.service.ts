@@ -1111,4 +1111,13 @@ export class SisService {
 	getMappedSchoolWithUser(value) {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
 	}
+	getWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/wallets/getWallets',value);
+	}
+
+	insertWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/wallets/insertWallets',value);
+	}
 }
