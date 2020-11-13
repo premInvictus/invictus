@@ -318,7 +318,7 @@ export class AddTransactionComponent implements OnInit {
 			}
 		}
 		if (validateFlag) {
-      this.feeTransactionForm.value.w_amount_type='cr';
+      this.feeTransactionForm.value.w_amount_type='credit';
 			this.btnDisable = true;
 			this.sisService.insertWallets(this.feeTransactionForm.value).subscribe((result: any) => {
 				this.btnDisable = false;

@@ -1,0 +1,213 @@
+<div class="overflow-x-hidden">
+  <div class="row">
+    <div class="col-12 text-right">
+      <a class="close-btn" (click)="closemodal()"><i class="material-icons">
+          clear
+        </i></a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-2 text-center">
+      <img style="border-radius:50%"
+        [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=80&w=80'">
+      <div class="">
+        <div>
+          <span class="font-size-16 font-bold">{{studentdetails?.process_name}} {{studentdetails?.au_admission_no}}
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-1 smart-col-3">
+      <div class="vertical-line-divider"></div>
+    </div>
+    <div class="col-9 fee-col-80 remove-col-padding">
+      <div class="row remove-top-margin">
+        <div class="col-3 remove-col-padding">
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <span class="font-size-16 font-medium">{{studentdetails?.au_full_name | titlecase}},
+                {{class_sec}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Parent Name: </span><span
+                class="font-size-16 font-regular">{{parentinfo?.epd_parent_name | titlecase}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Mobile No: </span><span
+                class="font-size-16 font-regular">{{parentinfo?.epd_contact_no}}</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="col-1">
+          <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-3">
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Receipt no: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.w_rpt_no}}</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Receipt Date: </span><span
+                class="font-size-16 font-regular"><b>{{invoiceDetails?.w_transaction_date | date:'dd MMM, yyyy'}}</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="vertical-line-divider"></div>
+        </div>
+        <div class="col-4">
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Payment Mode: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.pay_name}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.w_pay_id === '3'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Cheque No.: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.w_cheque_no}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.w_pay_id === '3'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Cheque Date: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.w_cheque_date | date:'dd MMM, yyyy'}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.w_pay_id === '3' || invoiceDetails?.w_pay_id === '2'">
+            <div class="col-12">
+              <span *ngIf="invoiceDetails?.w_pay_id === '3' && invoiceDetails && invoiceDetails.tb_name_deposit" class="font-size-16 font-light">Bank Details:
+              </span><span class="font-size-16 font-regular">{{invoiceDetails?.tb_name_deposit}},
+                {{invoiceDetails?.w_branch}}
+                <!-- <p class="font-size-16 font-regular margin-top-10"
+                  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code  }"
+                  *ngIf="invoiceDetails?.w_pay_id === '3' && invoiceDetails?.ftr_status === '2'">Cheque Dishonored
+                  <span
+                    [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code  }">({{invoiceDetails.fcc_dishonor_date |date:'dd MMM, yyyy'}})</span>
+                </p>
+                <p class="font-size-16 font-regular margin-top-10"
+                  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code }"
+                  *ngIf="invoiceDetails?.w_pay_id === '3' && invoiceDetails?.ftr_status === '1'">Cheque Cleared
+                  <span
+                    [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code  }">({{invoiceDetails.fcc_process_date |date:'dd MMM, yyyy'}})</span>
+                </p>
+                <p class="font-size-16 font-regular margin-top-10"
+                  [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code }"
+                  *ngIf="invoiceDetails?.w_pay_id === '3' && invoiceDetails?.ftr_status === '3'">Cheque Deposited
+                  <span
+                    [ngStyle]="{'color': invoiceDetails?.color_code ,'border': invoiceDetails?.color_code  }">({{invoiceDetails.fcc_deposite_date |date:'dd MMM, yyyy'}})</span>
+                </p> -->
+              </span>
+            </div>
+          </div>
+          <div class="row"
+            *ngIf="invoiceDetails?.w_pay_id != '1' && invoiceDetails?.w_pay_id != '2' && invoiceDetails?.w_pay_id != '3' && invoiceDetails?.w_pay_id != '6' ">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Transaction Id: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.w_transaction_id}}</span>
+            </div>
+          </div>
+          <div class="row" *ngIf="invoiceDetails?.w_pay_id === '6'">
+            <div class="col-12">
+              <span class="font-size-16 font-light">Order Id: </span><span
+                class="font-size-16 font-regular">{{invoiceDetails?.w_transaction_id}}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-1">
+          <div class="vertical-line-divider"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 print-receipt">
+      <div class="row float-right">
+        <div class="">
+          <div class="text-right">
+            <button mat-raised-button class="btn-primary btn-danger  print-invoice-btn"
+              (click)="printReceipt(invoiceDetails?.receipt_id)">Print Receipt</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row margin-top-20">
+    <div class="col-12">
+      <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+
+        <ng-container matColumnDef="srno">
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Sr. No. </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.srno}} </td>
+        </ng-container>
+        <ng-container matColumnDef="w_transaction_date">
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Date (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.w_transaction_date | date:'d-MMM-y'}} </td>
+        </ng-container>
+        <ng-container matColumnDef="w_amount_type">
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amount Type (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.w_amount_type | titlecase}} </td>
+        </ng-container>
+        <ng-container matColumnDef="w_amount">
+          <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Amount (<span><i
+                class="fas fa-rupee-sign"></i></span>)</th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.w_amount | number}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div>
+        <div>
+          <table width="100%">
+            <tr *ngIf="invoiceDetails?.w_amount">
+              <td width="70%">
+
+              </td>
+              <td align="right" width="30%" style="padding-right: 50px;">
+                <span class="float-right"><span class="font-size-16">Grand Total : </span>
+                  <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
+                    {{invoiceDetails?.w_amount}} </span></span>
+              </td>
+            </tr>
+            <tr class="grey-box" height="50">
+              <td style="padding-left: 15px;">
+                <span class="font-size-16 ">Amount in Words : </span><span class="font-size-16 font-medium">Rupees
+                  {{invoiceDetails?.w_amount | numberToWord | titlecase}}
+                  Only</span>
+              </td>
+              <td align="right" style="padding-right: 50px;">
+                <span class="float-right"><span class="font-size-16">Amount Received : </span>
+                  <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
+                    {{invoiceDetails?.w_amount}} </span></span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6 margin-top-25">
+      <mat-form-field class="form-field">
+        <input matInput placeholder="Remarks" [value]="invoiceDetails?.w_remarks">
+      </mat-form-field>
+    </div>
+  </div>
+  <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteInvoice($event)">
+  </app-delete-modal>
+  <app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"
+    (deleteOk)="recalculateInvoice($event)"></app-delete-modal>
+</div>

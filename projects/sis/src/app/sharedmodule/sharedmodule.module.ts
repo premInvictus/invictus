@@ -65,13 +65,14 @@ import { ManagementRemarksThemeTwoComponent } from '../student-master-theme-two/
 // tslint:disable-next-line: max-line-length
 import { AdmissionRemarksThemeTwoComponent } from '../student-master-theme-two/admission-remarks-theme-two/admission-remarks-theme-two.component';
 import { ImageViewerComponent } from './image-viewer/image-viewer.component';
-import { CapitalizePipe, TruncatetextPipe } from '../_pipes';
+import { CapitalizePipe, TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe } from '../_pipes';
 import { SafePipe } from '../_pipes/safe.pipe';
 import { AccountDetailsThemeTwoComponent } from '../student-master-theme-two/account-details-theme-two/account-details-theme-two.component';
 import { InvictusSharedModule } from 'src/app/invictus-shared/invictus-shared.module';
 import { SearchViaNameComponent } from './search-via-name/search-via-name.component';
 import { ProcessdateModalComponent } from './processdate-modal/processdate-modal.component';
-import { SearchViaStudentComponent } from './search-via-student/search-via-student.component'
+import { SearchViaStudentComponent } from './search-via-student/search-via-student.component';
+import { ReceiptDetailsModalComponent } from './receipt-details-modal/receipt-details-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -124,7 +125,7 @@ export const MY_FORMATS = {
 		InvictusSharedModule,
 	],
 	declarations: [CommonDynamicChartComponent, DynamicContentComponent,
-		TruncatetextPipe,
+		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe,
 		ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent, AdmissionConcessionComponent,
 		AdmissionRemarksComponent, ThemeTwoTabOneContainerComponent, ThemeTwoTabTwoContainerComponent, ThemeTwoTabThreeContainerComponent,
@@ -135,7 +136,7 @@ export const MY_FORMATS = {
 		MedicalInformationThemeTwoComponent, EducationDetailsThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent,
-		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent,SearchViaStudentComponent, ProcessdateModalComponent],
+		AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent, SearchViaNameComponent,SearchViaStudentComponent,ReceiptDetailsModalComponent, ProcessdateModalComponent],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
 		MatSlideToggleModule,
@@ -176,7 +177,7 @@ export const MY_FORMATS = {
 		ManagementRemarksThemeTwoComponent, CommonDynamicChartComponent,
 		AccountDetailsThemeTwoComponent, AdmissionRemarksThemeTwoComponent, CapitalizePipe, SafePipe, ImageViewerComponent,
 		ProcessdateModalComponent,
-		TruncatetextPipe
+		TruncatetextPipe,IndianCurrency,NumberToWordPipe,ZerodashPipe
 	],
 	entryComponents: [ChildDetailsComponent, ParentDetailsComponent, EducationDetailsComponent, AccountsComponent,
 		MedicalInformationComponent, SkillsAwardsComponent, DocumentsComponent, ParentGeneralRemarksComponent,
@@ -189,7 +190,7 @@ export const MY_FORMATS = {
 		SkillsAwardsThemeTwoComponent, DocumentsThemeTwoComponent, GeneralRemarksThemeTwoComponent,
 		ManagementRemarksThemeTwoComponent, AccountDetailsThemeTwoComponent,
 		AdmissionRemarksThemeTwoComponent, ImageViewerComponent,
-		SearchViaNameComponent, SearchViaStudentComponent,ProcessdateModalComponent],
+		SearchViaNameComponent, SearchViaStudentComponent,ReceiptDetailsModalComponent,ProcessdateModalComponent],
 	providers: [StudentFormConfigService, FormEnabledService, StudentFormConfigTwoService, FormEnabledTwoService,
 		{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
 
