@@ -37,10 +37,17 @@ export class CommonAPIService {
 	counterTimer: any = 0;
 	notif: any = 0;
 	searchDashboardData: any;
+	sessionSub = new Subject();
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular
 		tmp.innerHTML = html;
 		return tmp.textContent || tmp.innerText || '';
+	}
+	startSessionTime() {
+		this.sessionSub.next(true);
+	}
+	stopSessionTime() {
+		this.sessionSub.next(false);
 	}
 
 	startLoading() {

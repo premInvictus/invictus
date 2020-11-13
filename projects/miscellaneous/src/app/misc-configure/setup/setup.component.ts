@@ -10,8 +10,14 @@ import { SisService } from '../../_services/index';
     styleUrls: ['./setup.component.css']
 })
 export class SetupComponent implements OnInit {
-
+    paramform: FormGroup;
     currentGsetup: string;
+    GRADE_CARD_SETTINS: any[] = [];
+    classNamegr: any = '';
+    secNamegr: any = '';
+    termNamegr: any = '';
+    examNamegr: any = '';
+    subExamNamegr: any = '';
     formFlag = false;
     paymemtgways: any[] = [];
     settingForm: FormGroup;
@@ -66,7 +72,7 @@ export class SetupComponent implements OnInit {
     showWaterImage = false;
     waterMarkImage: any = '';
     currentImage: any;
-    fasignatureForm:any=[];
+    fasignatureForm: any = [];
     logoPosition: any[] = [{ id: '1', pos: 'Top' },
     { id: '2', pos: 'Bottom' },
     { id: '3', pos: 'Left' },
@@ -111,6 +117,11 @@ export class SetupComponent implements OnInit {
     sessionArray: any[] = [];
     accountsArray: any[] = [];
     showClosingSession = false;
+    sectionArray: any;
+    termsArray: any[];
+    classterm: any;
+    examArray: any[];
+    subexamArray: any[];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
@@ -118,39 +129,39 @@ export class SetupComponent implements OnInit {
 
     ngOnInit() {
         this.ckeConfig = {
-			allowedContent: true,
-			pasteFromWordRemoveFontStyles: false,
-			contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
-			disallowedContent: 'm:omathpara',
-			height: '150',
-			width: '100%',
-			// tslint:disable-next-line:max-line-length 
-			extraPlugins: 'language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
-			scayt_multiLanguageMod: true,
-			mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
-			language_list: ['fr:French', 'es:Spanish', 'it:Italian', 'he:Hebrew:rtl', 'pt:Portuguese', 'de:German', 'hi:Hindi'],
-			filebrowserUploadMethod: 'form',
-			uploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-			filebrowserImageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-			filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-			filebrowserBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-			filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
-			toolbar: [
-				// tslint:disable-next-line:max-line-length
-				['Source','Font', 'FontSize', 'Subscript', 'Superscript', 'Bold', 'Italic', 'Underline', 'StrikeThrough', 'Image', 'Table',
-					// { name: 'Html5audio', items: [ 'Html5audio' ] },
-					// { name: 'Html5video', items: [ 'Html5video' ] },
-					{ name: 'UploadFile', items: ['UploadFile'] },
-					{ name: 'UploadImage', items: ['UploadImage'] },
-					{ name: 'UploadWidget', items: ['UploadWidget'] },
-					{ name: 'FileTools', items: ['FileTools'] },
-					{ name: 'Notificationsggregator', items: ['Notificationaggregator'] },
-					{ name: 'Notification', items: ['Notification'] },
-					{ name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
-				]
-			],
-			removeDialogTabs: 'image:advanced;image:Link;html5video:advanced;html5audio:advanced'
-		};
+            allowedContent: true,
+            pasteFromWordRemoveFontStyles: false,
+            contentsCss: ['https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'],
+            disallowedContent: 'm:omathpara',
+            height: '150',
+            width: '100%',
+            // tslint:disable-next-line:max-line-length 
+            extraPlugins: 'language,html5audio,html5video,clipboard,undo,uploadfile,uploadimage,uploadwidget,filetools,notificationaggregator,notification,simpleImageUpload',
+            scayt_multiLanguageMod: true,
+            mathJaxLib: '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_HTML',
+            language_list: ['fr:French', 'es:Spanish', 'it:Italian', 'he:Hebrew:rtl', 'pt:Portuguese', 'de:German', 'hi:Hindi'],
+            filebrowserUploadMethod: 'form',
+            uploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+            filebrowserImageUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+            filebrowserUploadUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+            filebrowserBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+            filebrowserImageBrowseUrl: 'https://apiaxiom.invictusdigisoft.com/upload.php',
+            toolbar: [
+                // tslint:disable-next-line:max-line-length
+                ['Source', 'Font', 'FontSize', 'Subscript', 'Superscript', 'Bold', 'Italic', 'Underline', 'StrikeThrough', 'Image', 'Table',
+                    // { name: 'Html5audio', items: [ 'Html5audio' ] },
+                    // { name: 'Html5video', items: [ 'Html5video' ] },
+                    { name: 'UploadFile', items: ['UploadFile'] },
+                    { name: 'UploadImage', items: ['UploadImage'] },
+                    { name: 'UploadWidget', items: ['UploadWidget'] },
+                    { name: 'FileTools', items: ['FileTools'] },
+                    { name: 'Notificationsggregator', items: ['Notificationaggregator'] },
+                    { name: 'Notification', items: ['Notification'] },
+                    { name: 'SimpleImageUpload', items: ['SimpleImageUpload'] }
+                ]
+            ],
+            removeDialogTabs: 'image:advanced;image:Link;html5video:advanced;html5audio:advanced'
+        };
         for (let i = 0; i < 100; i++) {
             this.pageArray.push(i + 1);
         }
@@ -188,34 +199,34 @@ export class SetupComponent implements OnInit {
         var matchedIndex;
         var nextSession;
         var nextSessionId;
-        for (var i=0; i<this.sessionArray.length;i++) {
+        for (var i = 0; i < this.sessionArray.length; i++) {
             if (this.sessionArray[i]['ses_id'] === ses_id) {
-                matchedIndex =i;
+                matchedIndex = i;
                 break;
             }
         }
-        if (this.sessionArray[matchedIndex+1]) {
-         nextSession = this.sessionArray[matchedIndex+1]['ses_name'].split("-")[0];
-         nextSessionId = this.sessionArray[matchedIndex+1]['ses_id'];
+        if (this.sessionArray[matchedIndex + 1]) {
+            nextSession = this.sessionArray[matchedIndex + 1]['ses_name'].split("-")[0];
+            nextSessionId = this.sessionArray[matchedIndex + 1]['ses_id'];
         }
         console.log('next_ses_id--', matchedIndex)
-        var inputJson = { monthId: 3,coa_id:[], ses_id : ses_id, moveClosingBalance: true };
+        var inputJson = { monthId: 3, coa_id: [], ses_id: ses_id, moveClosingBalance: true };
         this.erpCommonService.getTrialBalance(inputJson).subscribe((data: any) => {
             if (data && data.ledger_data) {
-                var tempAccountData:any = [];
-                
-                for (var i=0; i<data.ledger_data.length;i++) {
+                var tempAccountData: any = [];
+
+                for (var i = 0; i < data.ledger_data.length; i++) {
                     var fJson = {};
                     var closing_balance = 0;
                     closing_balance = this.getDeviation(data.ledger_data[i]);
                     fJson = {
                         coa_id: data.ledger_data[i]['coa_id'],
-                        "coa_opening_balance_data" : {
-                            "opening_balance" : closing_balance,
-                            "opening_balance_date" : nextSession+"-04-01",
-                            "opening_balance_month" : 4,
-                            "opening_balance_year" : nextSession,
-                            "opening_balance_type" : closing_balance >0 ? "debit" : "credit"
+                        "coa_opening_balance_data": {
+                            "opening_balance": closing_balance,
+                            "opening_balance_date": nextSession + "-04-01",
+                            "opening_balance_month": 4,
+                            "opening_balance_year": nextSession,
+                            "opening_balance_type": closing_balance > 0 ? "debit" : "credit"
                         },
                         //nextSesId:nextSessionId
                     };
@@ -223,36 +234,36 @@ export class SetupComponent implements OnInit {
                 }
                 console.log('tempAccountData--', tempAccountData)
                 if (tempAccountData.length > 0) {
-                    this.erpCommonService.updateClosingBalance({bulkData: tempAccountData}).subscribe((data:any) => {
-                        if(data) {
-                            this.commonService.showSuccessErrorMessage('Session Data Moved Successfully','success');
+                    this.erpCommonService.updateClosingBalance({ bulkData: tempAccountData }).subscribe((data: any) => {
+                        if (data) {
+                            this.commonService.showSuccessErrorMessage('Session Data Moved Successfully', 'success');
                         } else {
-                            this.commonService.showSuccessErrorMessage('Error While Move Session Data','error');
+                            this.commonService.showSuccessErrorMessage('Error While Move Session Data', 'error');
                         }
                     })
                 }
             }
         });
-        
+
         console.log('ses_id', ses_id, this.disabledApiButton)
     }
 
 
-  getDeviation(param) {
-    if(param) {
-      var debit_total_f = 0;
-      var credit_total_f = 0;
-      var deviation_f =0;
-      for(var i=0; i<param['debit_data'].length; i++) {
-        debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0 );
-      }
-      for(var i=0; i<param['credit_data'].length; i++) {
-        credit_total_f = credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
-      }
-      deviation_f = debit_total_f - credit_total_f;
-      return deviation_f;
+    getDeviation(param) {
+        if (param) {
+            var debit_total_f = 0;
+            var credit_total_f = 0;
+            var deviation_f = 0;
+            for (var i = 0; i < param['debit_data'].length; i++) {
+                debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+            }
+            for (var i = 0; i < param['credit_data'].length; i++) {
+                credit_total_f = credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+            }
+            deviation_f = debit_total_f - credit_total_f;
+            return deviation_f;
+        }
     }
-  }
     enableHeaderFooter($event) {
         if (Number($event.value) === 2) {
             this.headerFooterFlag = true;
@@ -629,6 +640,183 @@ export class SetupComponent implements OnInit {
             }
         ];
     }
+    getClassTerm() {
+        this.termsArray = [];
+        this.sisService.getClassTerm({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+                this.classterm = result.data;
+                //console.log(result.data);
+                result.data.ect_no_of_term.split(',').forEach(element => {
+                    this.termsArray.push({ id: element, name: result.data.ect_term_alias + ' ' + element });
+                });
+                this.termsArray.push({ id: 'comulative', name: 'Cumulative' });
+                this.sisService.getExamPerCumulativeExam({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+                    if (result && result.status === 'ok') {
+                        this.termsArray.push({ id: 'percumulative', name: 'Percentage Cumulative' });
+                    } else {
+
+                    }
+                })
+                console.log('termsArray', this.termsArray);
+            } else {
+                // this.commonAPIService.showSuccessErrorMessage(result.message, 'error'); 
+            }
+        });
+    }
+    changeStat($event, value) {
+        if ($event.checked) {
+            value.status = '1';
+        } else {
+            value.status = '0';
+        }
+    }
+    deleteStep(index) {
+        this.GRADE_CARD_SETTINS.splice(index , 1);
+    }
+    addSetting() {
+        if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id && this.paramform.value.eme_term_id) {
+            const findex = this.GRADE_CARD_SETTINS.findIndex(f => Number(f.class_id) === Number(this.paramform.value.eme_class_id)
+                && Number(f.sec_id) === Number(this.paramform.value.eme_sec_id)
+            );
+            if (findex === -1) {
+                this.GRADE_CARD_SETTINS.push({
+                    class_id: this.paramform.value.eme_class_id,
+                    class_name: this.classNamegr ? this.classNamegr : '',
+                    sec_id: this.paramform.value.eme_sec_id,
+                    sec_name: this.secNamegr ? this.secNamegr : '',
+                    term_id: this.paramform.value.eme_term_id,
+                    term_name: this.termNamegr ? this.termNamegr : '',
+                    exam_name: this.examNamegr ? this.examNamegr : '',
+                    exam_id: this.paramform.value.eme_exam_id ? this.paramform.value.eme_exam_id : '',
+                    sub_exam_id: this.paramform.value.eme_subexam_id ? this.paramform.value.eme_subexam_id : [],
+                    sub_exam_name: this.subExamNamegr ? this.subExamNamegr : '',
+                    status: '1'
+                });
+            } else {
+                this.GRADE_CARD_SETTINS[findex].term_id = this.paramform.value.eme_term_id ? this.paramform.value.eme_term_id : '';
+                this.GRADE_CARD_SETTINS[findex].term_name = this.termNamegr ? this.termNamegr : '';
+                this.GRADE_CARD_SETTINS[findex].exam_id = this.paramform.value.eme_exam_id ? this.paramform.value.eme_exam_id : '';
+                this.GRADE_CARD_SETTINS[findex].sub_exam_id = this.paramform.value.eme_subexam_id ? this.paramform.value.eme_subexam_id : '';
+                this.GRADE_CARD_SETTINS[findex].exam_name = this.examNamegr ? this.examNamegr : '';
+                this.GRADE_CARD_SETTINS[findex].sub_exam_name = this.subExamNamegr ? this.subExamNamegr : '';
+                this.GRADE_CARD_SETTINS[findex].status = '1';
+            }
+        } else {
+            this.commonService.showSuccessErrorMessage('Please select class, section and term', 'error');
+        }
+
+    }
+    getSubExamName($event) {
+        this.subExamNamegr = '';
+        setTimeout(() => {
+            this.subExamNamegr = $event.source._elementRef.nativeElement.outerText;
+        }, 500);
+    }
+    getSubExam($event) {
+        this.examNamegr = '';
+        setTimeout(() => {
+            this.examNamegr = $event.source._elementRef.nativeElement.outerText;
+        }, 500);
+        this.paramform.patchValue({
+            eme_subexam_id: ''
+        });
+        this.subexamArray = [];
+        if (this.paramform.value.eme_exam_id) {
+            this.sisService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid(), exam_id: this.paramform.value.eme_exam_id }).subscribe((result: any) => {
+                if (result && result.status === 'ok') {
+                    if (result.data.length > 0 && result.data[0].exam_sub_exam_max_marks.length > 0) {
+                        this.subexamArray = result.data[0].exam_sub_exam_max_marks;
+                        console.log(this.subexamArray);
+                        const subexam_id_arr: any[] = [];
+                        for (let item of this.subexamArray) {
+                            subexam_id_arr.push(item.se_id);
+                        }
+                        const param: any = {};
+                        param.ssm_class_id = this.paramform.value.eme_class_id;
+                        param.ssm_exam_id = this.paramform.value.eme_exam_id;
+                        param.ssm_se_id = subexam_id_arr;
+                        param.ssm_sub_id = this.paramform.value.eme_sub_id;
+                        this.sisService.getSubjectSubexamMapping(param).subscribe((result: any) => {
+                            if (result && result.status === 'ok') {
+                                for (let item of result.data) {
+                                    for (let item1 of this.subexamArray) {
+                                        if (item.ssm_se_id === item1.se_id) {
+                                            item1.exam_max_marks = item.ssm_sub_mark;
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                    }
+                }
+            });
+        }
+    }
+    getSectionsByClass($event) {
+        this.classNamegr = '';
+        setTimeout(() => {
+            this.classNamegr = $event.source._elementRef.nativeElement.outerText;
+        }, 500);
+        this.paramform.patchValue({
+            eme_sec_id: '',
+            eme_term_id: '',
+            eme_exam_id: '',
+            eme_subexam_id: ''
+        });
+        this.sectionArray = [];
+        this.sisService.getSectionsByClass({ class_id: this.paramform.value.eme_class_id }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+                this.sectionArray = result.data;
+            } else {
+                this.commonService.showSuccessErrorMessage(result.message, 'error');
+            }
+        });
+    }
+    getTermid() {
+        if (this.paramform.value.eme_term_id == 'comulative') {
+            const termIndex = this.termsArray.findIndex(e => e.id === this.paramform.value.eme_term_id);
+            return this.termsArray[termIndex - 1].id;
+        } else {
+            const termIndex = this.termsArray.findIndex(e => e.id === this.paramform.value.eme_term_id);
+            return this.termsArray[termIndex].id;
+        }
+    }
+    getExamDetails($event) {
+        this.termNamegr = '';
+        this.paramform.patchValue({
+            eme_exam_id: '',
+            eme_subexam_id: ''
+        });
+        setTimeout(() => {
+            this.termNamegr = $event.source._elementRef.nativeElement.outerText;
+        }, 500);
+        this.paramform.patchValue({
+            eme_exam_id: '',
+            eme_subexam_id: '',
+        });
+        this.examArray = [];
+        this.sisService.getExamDetails({ exam_class: this.paramform.value.eme_class_id, term_id: this.getTermid() }).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+                this.examArray = result.data;
+            } else {
+                // this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+            }
+        });
+    }
+    sectionChange($event) {
+        this.secNamegr = '';
+        this.paramform.patchValue({
+            eme_term_id: '',
+            eme_exam_id: '',
+            eme_subexam_id: ''
+        });
+        setTimeout(() => {
+            this.secNamegr = $event.source._elementRef.nativeElement.outerText;
+        }, 500);
+        this.paramform.patchValue({
+            eme_term_id: '',
+        });
+    }
     getGlobalSetting(value) {
         this.showImage = false;
         this.hideIfBlankFlag = false;
@@ -697,7 +885,28 @@ export class SetupComponent implements OnInit {
                             this.assignEmailSmsFormats();
                         }
                     }
-                    
+                    if (this.settingForm && this.settingForm.value & this.settingForm.value.gradecard_report_settings_app) {
+
+                        const gradesSettings: any[] = JSON.parse(this.settingForm.value.gradecard_report_settings_app);
+                        if (gradesSettings && gradesSettings.length > 0) {
+                            for (const item of gradesSettings) {
+                                this.GRADE_CARD_SETTINS.push({
+                                    class_id: item.class_id,
+                                    class_name: item.class_name,
+                                    sec_id: item.sec_id,
+                                    sec_name: item.sec_name,
+                                    term_id: item.term_id,
+                                    term_name: item.term_name,
+                                    exam_name: item.exam_name,
+                                    exam_id: item.exam_id,
+                                    sub_exam_id: item.sub_exam_id,
+                                    sub_exam_name: item.sub_exam_name,
+                                });
+
+                            }
+                        }
+                    }
+
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.idcard_printsetup) {
                         const cardSettings: any[] = JSON.parse(this.settingForm.value.idcard_printsetup);
                         this.idCardSettings = JSON.parse(this.settingForm.value.idcard_printsetup);
@@ -722,7 +931,7 @@ export class SetupComponent implements OnInit {
                             ];
                         }
                     }
-                    
+
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.employee_salary_slip) {
                         const payJson: any = JSON.parse(this.settingForm.value.employee_salary_slip);
                         if (Object.keys(payJson).length > 0) {
@@ -818,10 +1027,10 @@ export class SetupComponent implements OnInit {
                     }
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.financial_accounting_signature) {
                         console.log('in fa');
-                        this.fasignatureForm =[];
+                        this.fasignatureForm = [];
                         if (this.settingForm.value.financial_accounting_signature) {
                             let tempSignatureForm = JSON.parse(this.settingForm.value.financial_accounting_signature);
-                            for (var i=0; i<tempSignatureForm.length;i++) {
+                            for (var i = 0; i < tempSignatureForm.length; i++) {
                                 var tForm = this.fbuild.group({
                                     title: tempSignatureForm[i]['title'],
                                     signature: tempSignatureForm[i]['signature'],
@@ -830,7 +1039,7 @@ export class SetupComponent implements OnInit {
                                 this.fasignatureForm.push(tForm)
                             }
                         }
-                        
+
                     }
                     console.log(this.settingForm);
                 }
@@ -842,10 +1051,10 @@ export class SetupComponent implements OnInit {
     togglePrefix($event) {
         if ($event.checked) {
             this.prefixToggle = "true";
-           
+
         } else {
             this.prefixToggle = "false";
-        }  
+        }
     }
     enableTDS($event) {
         if ($event.checked) {
@@ -870,13 +1079,20 @@ export class SetupComponent implements OnInit {
         }
     }
     buildForm() {
+        this.paramform = this.fbuild.group({
+            eme_class_id: '',
+            eme_sec_id: '',
+            eme_term_id: '',
+            eme_exam_id: '',
+            eme_subexam_id: ''
+        });
         this.payForm = this.fbuild.group({
             format: ''
         });
         this.flaggedForm = this.fbuild.group({
             tds: false,
             gratuity: false,
-            updateSalaryStructureToEmployee:''
+            updateSalaryStructureToEmployee: ''
         });
         this.idcardForm = this.fbuild.group({
             ps_card_style: '',
@@ -978,9 +1194,9 @@ export class SetupComponent implements OnInit {
 
         });
         let fasignfrm = this.fbuild.group({
-            'title':'',
-            'signature':'',
-            'order':''
+            'title': '',
+            'signature': '',
+            'order': ''
         });
         this.fasignatureForm.push(fasignfrm);
     }
@@ -1072,6 +1288,10 @@ export class SetupComponent implements OnInit {
                     headerFormat: this.payForm.value.format
                 });
             }
+        }
+        if (this.settingForm.value && this.settingForm.value.gradecard_report_settings_app) {
+            this.settingForm.value.gradecard_report_settings_app = JSON.stringify(this.GRADE_CARD_SETTINS);
+            this.paramform.reset();
         }
         if (this.settingForm.value && this.settingForm.value.deduction_config) {
 
@@ -1286,7 +1506,7 @@ export class SetupComponent implements OnInit {
             this.settingForm.value.invoice_receipt_format = JSON.stringify(this.formatSettings);
         }
         if (this.settingForm.value && this.settingForm.value.add_prefix_before_admission_no) {
-            this.settingForm.value.add_prefix_before_admission_no = JSON.stringify({addPrefix : this.prefixToggle})
+            this.settingForm.value.add_prefix_before_admission_no = JSON.stringify({ addPrefix: this.prefixToggle })
         }
         if (this.settingForm.value && this.settingForm.value.enquiry_registration_email_sms) {
             const finalDataArr: any[] = [
@@ -1332,13 +1552,13 @@ export class SetupComponent implements OnInit {
         }
         if (this.showClosingSession) {
             this.moveClosingBalance();
-        } 
-        if(this.flaggedForm.value.updateSalaryStructureToEmployee == true){
+        }
+        if (this.flaggedForm.value.updateSalaryStructureToEmployee == true) {
             this.erpCommonService.updateSalaryStructureToEmployee({}).subscribe((result: any) => {
                 if (result) {
                     this.commonService.showSuccessErrorMessage('Update Salary Structure To Employee Successpully', 'success');
                 } else {
-                    this.commonService.showSuccessErrorMessage('Erro to update','error');
+                    this.commonService.showSuccessErrorMessage('Erro to update', 'error');
                 }
             });
         }
@@ -1346,35 +1566,37 @@ export class SetupComponent implements OnInit {
         if (this.currentGsetup === 'financial accounting') {
             if (this.fasignatureForm.length > 0) {
                 var tempSignatureArr = [];
-                for (var i=0; i<this.fasignatureForm.length;i++) {
-                    tempSignatureArr.push( {'title':this.fasignatureForm[i].value.title,
-                    'signature':this.fasignatureForm[i].value.signature,
-                    'order':this.fasignatureForm[i].value.order});
+                for (var i = 0; i < this.fasignatureForm.length; i++) {
+                    tempSignatureArr.push({
+                        'title': this.fasignatureForm[i].value.title,
+                        'signature': this.fasignatureForm[i].value.signature,
+                        'order': this.fasignatureForm[i].value.order
+                    });
                 }
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
         }
 
-            if(this.settingForm.value && this.settingForm.value.admit_code_reset === '1') {
-                this.sisService.resetAdmitCode({}).subscribe((data:any)=>{
+        if (this.settingForm.value && this.settingForm.value.admit_code_reset === '1') {
+            this.sisService.resetAdmitCode({}).subscribe((data: any) => {
 
 
-                })
+            })
+        }
+
+        console.log(this.settingForm.value, this.currentGsetup);
+        this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
+            if (result && result.status === 'ok') {
+                this.disabledApiButton = false;
+                this.fasignatureForm = [];
+                this.commonService.showSuccessErrorMessage(result.message, result.status);
+                this.getGlobalSetting(this.currentGsetup);
+            } else {
+                this.disabledApiButton = false;
+                this.commonService.showSuccessErrorMessage(result.message, result.status);
             }
+        });
 
-            console.log(this.settingForm.value, this.currentGsetup);
-            this.erpCommonService.updateGlobalSetting(this.settingForm.value).subscribe((result: any) => {
-                if (result && result.status === 'ok') {
-                    this.disabledApiButton = false;
-                    this.fasignatureForm = [];
-                    this.commonService.showSuccessErrorMessage(result.message, result.status);
-                    this.getGlobalSetting(this.currentGsetup);
-                } else {
-                    this.disabledApiButton = false;
-                    this.commonService.showSuccessErrorMessage(result.message, result.status);
-                }
-            });
-        
 
     }
     getBanks() {
@@ -1830,21 +2052,21 @@ export class SetupComponent implements OnInit {
 
     addSignature() {
         let fasignfrm = this.fbuild.group({
-            'title':'',
-            'signature':'',
-            'order':''
+            'title': '',
+            'signature': '',
+            'order': ''
         });
         this.fasignatureForm.push(fasignfrm);
     }
 
     removeSignature(fi) {
-        console.log('fi--',fi)
-        this.fasignatureForm.splice(fi,1);
+        console.log('fi--', fi)
+        this.fasignatureForm.splice(fi, 1);
     }
 
-    deleteSignatureImage(fitem,fi) {
-        console.log('fitem',fitem, fi);
-        console.log('fitem1',this.fasignatureForm[fi]);
+    deleteSignatureImage(fitem, fi) {
+        console.log('fitem', fitem, fi);
+        console.log('fitem1', this.fasignatureForm[fi]);
         this.fasignatureForm[fi]['value']['signature'] = '';
     }
     uploadSignatureFile($event, fi) {
@@ -1857,9 +2079,9 @@ export class SetupComponent implements OnInit {
             };
             this.sisService.uploadDocuments([fileJson]).subscribe((result: any) => {
                 if (result.status === 'ok') {
-                    console.log('this.fasignatureForm[fi]--',this.fasignatureForm[fi])
+                    console.log('this.fasignatureForm[fi]--', this.fasignatureForm[fi])
                     this.fasignatureForm[fi].get('signature').patchValue(result.data[0].file_url);
-                    console.log('this.fasignatureForm[fi]--',this.fasignatureForm[fi])
+                    console.log('this.fasignatureForm[fi]--', this.fasignatureForm[fi])
                     //this.settingForm.get(gs_alias).patchValue(result.data[0].file_url);
                 }
             });

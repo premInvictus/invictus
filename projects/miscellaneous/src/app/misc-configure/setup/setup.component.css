@@ -18,6 +18,14 @@
     width: 100%;
     object-fit: cover;
 }
+button.add-repo-settings.mat-button {
+  border: 1px solid;
+  text-transform: uppercase !important;
+  width: 70%;
+  position: relative;
+  top: 13px;
+  background: #f1f1f1;
+}
   .white-box-content {
     padding: 20px;
     margin-bottom: 40px;

@@ -46,7 +46,7 @@ const providers = [
 		ReactiveFormsModule,
 		HttpClientModule,
 	],
-	providers: [providers,AdvancePaymentFeeComponent],
+	providers: [providers],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

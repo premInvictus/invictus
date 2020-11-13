@@ -53,6 +53,18 @@ export class AppComponent implements OnInit {
 		this.loaderService.showLoading.subscribe((flag: boolean) => {
 			setTimeout(() => this.showLoadingFlag = flag, 0);
 		});
+		// this.loaderService.sessionSub.subscribe((flag: boolean) => {
+		// 	if (flag) {
+		// 		let expire_time: any = '';
+		// 		if (JSON.parse(localStorage.getItem('expire_time'))) {
+		// 			expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;
+		// 			this.idle.setConfigValues(
+		// 				{ idle: expire_time, timeout: 1, ping: 30 }
+		// 			)
+		// 		}
+		// 		this.sessionTimeout();
+		// 	}
+		// });
 		this.router.events.subscribe((event: Event) => {
 			switch (true) {
 				case event instanceof NavigationStart: {
@@ -93,7 +105,7 @@ export class AppComponent implements OnInit {
 		this.getCurrentUrl();
 		this.sessionTimeout();
 		let prefix: any = '';
-		
+
 		const xhr = new XMLHttpRequest();
 		const load: any = this.loaderService;
 		if (!localStorage.getItem('Prefix')) {
@@ -109,7 +121,7 @@ export class AppComponent implements OnInit {
 						localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
 					}
 				}
-				
+
 			};
 		} else {
 			load.setUserPrefix((JSON.parse(localStorage.getItem('Prefix')).pre));
@@ -139,20 +151,36 @@ export class AppComponent implements OnInit {
 	}
 
 	sessionTimeout() {
-		this.idle.stopWatching();
-		this.idle.startWatching();
+		const x = setInterval(() => {
+			console.log('ter');
+			if (localStorage.getItem('expire_time') && JSON.parse(localStorage.getItem('expire_time')).expire_time) {
+				let expire_time;
+				expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;
+				this.idle.setConfigValues(
+					{ idle: expire_time, timeout: 1, ping: 30 }
+				);
+				//console.log(this.idle.getConfigValue());
+				//this.idle.stopWatching();
+				this.idle.startWatching();
+				clearInterval(x);
+			}
+		}, 1);
 		this.loaderService.counterTimer = 4;
 		this.idle.onTimerStart().subscribe((count: any) => {
+			console.log(count);
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
 			const routeUrl: String = routeData._routerState.url;
 			const pageUrl = (routeData._routerState.url).substring(1, routeData._routerState.url.length);
+
 			if (JSON.parse(localStorage.getItem('project'))) {
 				this.proUrl = JSON.parse(localStorage.getItem('project')).pro_url;
 			}
+
 			if (!(pageUrl === 'login') && !(routeUrl.includes('axiom'))
 				&& Number(this.currentUser.role_id) !== 4
 				&& Number(count) === Number(valJson['timeout'])) {
+
 				this.dialogRef = this.diaog.open(TimeoutModalComponent, {
 					disableClose: true,
 					'height': '180px',

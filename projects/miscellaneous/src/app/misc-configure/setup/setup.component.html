@@ -45,10 +45,12 @@
                                 && control.gs_alias != 'financial_accounting_signature'
                                 && control.gs_alias !== 'add_prefix_before_admission_no'
                                 && control.gs_alias !== 'voucher_printsetup'
+                                && control.gs_alias !== 'gradecard_report_settings_app'
                                 ">
                                 <div class="col-lg-3 col-mobile-view-add-ques remove-col-modal-padding"
                                   style="margin-top: 20px;">
-                                  <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move'">{{control.gs_name | titlecase}}
+                                  <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move'">
+                                    {{control.gs_name | titlecase}}
                                   </mat-label>
                                 </div>
                                 <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
@@ -112,10 +114,12 @@
                                         </mat-select>
                                       </mat-form-field>
                                     </ng-container>
-                                    <ng-container
-                                      *ngIf="control.gs_alias == 'fa_closing_balance_move'">
-                                      <mat-checkbox class="example-margin" (change)="showClosingSession = !showClosingSession">Move Closing Balance For Session </mat-checkbox>
-                                      <mat-form-field class="form-field" appearance="outline" *ngIf="showClosingSession">
+                                    <ng-container *ngIf="control.gs_alias == 'fa_closing_balance_move'">
+                                      <mat-checkbox class="example-margin"
+                                        (change)="showClosingSession = !showClosingSession">Move Closing Balance For
+                                        Session </mat-checkbox>
+                                      <mat-form-field class="form-field" appearance="outline"
+                                        *ngIf="showClosingSession">
                                         <mat-select [formControlName]="control.gs_alias">
                                           <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
                                             {{item.ses_name}}
@@ -353,45 +357,48 @@
                                 </div>
                               </div>
                               <ng-container *ngIf="control.gs_alias=='financial_accounting_signature'">
-                                  <div class="col-12">
-                                    Upload Signature &nbsp;<input type="button" value="+ Add Signature" (click)="addSignature()"/>
-                                <ng-container *ngFor="let fitem of fasignatureForm;let fi=index ">
-                                 <form [formGroup]="fitem">
-                                  <div class="row" style="padding:15px 0">
-                                  
-                                  <div class="col-3">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                      <input matInput type="text" class="text-capitalize"
-                                        formControlName="title" placeholder="Signature Title">
-                                    </mat-form-field>
-                                    </div>
-                                    
-                                    <div class="col-3">
-                                    <mat-form-field class="form-field" appearance="outline">
-                                      <input matInput type="text" class="text-capitalize"
-                                        formControlName="order" placeholder="Order">
-                                    </mat-form-field>
-                                  </div>
-                                  <div class="col-3" style="margin-top:-10px">
-                                      <div>
-                                      <button mat-stroked-button class="btn-outline-green">
-                                          <label for="sig_{{fi}}">Choose File
-                                            &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
-                                        <input style="display:none" type="file" accept="image/*"
-                                          (change)="uploadSignatureFile($event, fi)" id="sig_{{fi}}">
-                                        
-                                          <img *ngIf="fitem?.value?.signature"
-                                          style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
-                                          [src]="fitem?.value?.signature"/>
-                                          <span *ngIf="fitem?.value?.signature"><a href="javascript:void(0)" class="delete-signature" (click)="deleteSignatureImage(fitem,fi)">X</a></span>
+                                <div class="col-12">
+                                  Upload Signature &nbsp;<input type="button" value="+ Add Signature"
+                                    (click)="addSignature()" />
+                                  <ng-container *ngFor="let fitem of fasignatureForm;let fi=index ">
+                                    <form [formGroup]="fitem">
+                                      <div class="row" style="padding:15px 0">
+
+                                        <div class="col-3">
+                                          <mat-form-field class="form-field" appearance="outline">
+                                            <input matInput type="text" class="text-capitalize" formControlName="title"
+                                              placeholder="Signature Title">
+                                          </mat-form-field>
                                         </div>
-                                        
-                                  </div>
-                                  <div class="col-1">
-                                      <input type="button" value="-" (click)="removeSignature(fi)"/>
-                                    </div>
-                                </div>
-                                  </form>
+
+                                        <div class="col-3">
+                                          <mat-form-field class="form-field" appearance="outline">
+                                            <input matInput type="text" class="text-capitalize" formControlName="order"
+                                              placeholder="Order">
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-3" style="margin-top:-10px">
+                                          <div>
+                                            <button mat-stroked-button class="btn-outline-green">
+                                              <label for="sig_{{fi}}">Choose File
+                                                &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                                            <input style="display:none" type="file" accept="image/*"
+                                              (change)="uploadSignatureFile($event, fi)" id="sig_{{fi}}">
+
+                                            <img *ngIf="fitem?.value?.signature"
+                                              style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
+                                              [src]="fitem?.value?.signature" />
+                                            <span *ngIf="fitem?.value?.signature"><a href="javascript:void(0)"
+                                                class="delete-signature"
+                                                (click)="deleteSignatureImage(fitem,fi)">X</a></span>
+                                          </div>
+
+                                        </div>
+                                        <div class="col-1">
+                                          <input type="button" value="-" (click)="removeSignature(fi)" />
+                                        </div>
+                                      </div>
+                                    </form>
                                   </ng-container>
                                 </div>
                               </ng-container>
@@ -412,23 +419,23 @@
                                         <form [formGroup]="flaggedForm">
                                           <div class="row">
                                             <div class="col-12">
-                                              <mat-checkbox (change)="enableTDS($event)"
-                                              formControlName="tds"> &nbsp;&nbsp;Enable T.D.S
+                                              <mat-checkbox (change)="enableTDS($event)" formControlName="tds">
+                                                &nbsp;&nbsp;Enable T.D.S
                                               </mat-checkbox>
                                             </div>
                                           </div>
                                           <div class="row">
                                             <div class="col-12">
-                                              <mat-checkbox  formControlName="gratuity" 
-                                              (change)="enableGratuity($event)"> &nbsp;&nbsp;Enable
+                                              <mat-checkbox formControlName="gratuity"
+                                                (change)="enableGratuity($event)"> &nbsp;&nbsp;Enable
                                                 Gratuity
                                               </mat-checkbox>
                                             </div>
                                           </div>
                                           <div class="row">
                                             <div class="col-12">
-                                              <mat-checkbox  formControlName="updateSalaryStructureToEmployee" 
-                                              > &nbsp;&nbsp;Enable
+                                              <mat-checkbox formControlName="updateSalaryStructureToEmployee">
+                                                &nbsp;&nbsp;Enable
                                                 Update Salary Structure To Employee
                                               </mat-checkbox>
                                             </div>
@@ -454,9 +461,9 @@
                                     <div class="row">
                                       <div class="col-12">
                                         <mat-checkbox (change)="togglePrefix($event)"
-                                        [checked]="prefixToggle === 'true'">
+                                          [checked]="prefixToggle === 'true'">
                                         </mat-checkbox> Add a prefix of year before admission no
-                                      </div>    
+                                      </div>
                                     </div>
                                   </ng-container>
                                 </div>
@@ -482,6 +489,133 @@
                                         </form>
                                       </div>
                                       <div class="col-4"></div>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </div>
+                              <div class="row" *ngIf="control.gs_alias === 'gradecard_report_settings_app'">
+                                <div class="col-12">
+                                  <ng-container *ngIf="control.gs_alias == 'gradecard_report_settings_app'">
+                                    <div class="row">
+                                      <div class="col-12">
+                                        <div class="text-center">
+                                          <span style="font-weight: bold;
+                          font-size: 16px;
+                          text-transform: uppercase;">App Settings Grade Card</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <form [formGroup]="paramform">
+                                      <div class="row">
+                                        <div class="col-4">
+                                          <mat-form-field appearance="outline" class="form-field">
+                                            <mat-label>Class</mat-label>
+                                            <mat-select placeholder="Class" formControlName="eme_class_id"
+                                              (selectionChange)="getSectionsByClass($event);getClassTerm();" required>
+                                              <mat-option value="">Please select</mat-option>
+                                              <mat-option *ngFor="let item of classArray" [value]="item.class_id">
+                                                {{item.class_name}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-form-field appearance="outline" class="form-field">
+                                            <mat-label>Section</mat-label>
+                                            <mat-select placeholder="Section" formControlName="eme_sec_id"
+                                              (selectionChange)="sectionChange($event)" required>
+                                              <mat-option value="">Please select</mat-option>
+                                              <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">
+                                                {{item.sec_name}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-form-field appearance="outline" class="form-field">
+                                            <mat-label>Term</mat-label>
+                                            <mat-select placeholder="Term" formControlName="eme_term_id"
+                                              (selectionChange)="getExamDetails($event)" required>
+                                              <mat-option value="">Please select</mat-option>
+                                              <mat-option *ngFor="let item of termsArray" [value]="item.id">
+                                                {{item.name}}
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-form-field appearance="outline" class="form-field"
+                                            *ngIf="paramform.value.eme_term_id != 'comulative'">
+                                            <mat-label>Exam</mat-label>
+                                            <mat-select placeholder="Exam" formControlName="eme_exam_id"
+                                              (selectionChange)="getSubExam($event)">
+                                              <mat-option value="">Please select</mat-option>
+                                              <mat-option *ngFor="let item of examArray" [value]="item.exam_id">
+                                                {{item.exam_name}}
+                                              </mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-4">
+                                          <mat-form-field appearance="outline" class="form-field"
+                                            *ngIf="paramform.value.eme_term_id != 'comulative'">
+                                            <mat-label>Sub-Exam</mat-label>
+                                            <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id"
+                                              (selectionChange)="getSubExamName($event)" multiple>
+
+                                              <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">
+                                                {{item.sexam_name | titlecase}}</mat-option>
+                                            </mat-select>
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-2">
+                                          <button mat-button class="add-repo-settings"
+                                            (click)="addSetting()">Add</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                    <br>
+                                    <div class="row" *ngIf="GRADE_CARD_SETTINS.length === 0">
+                                      <div class="col-12">
+                                        <div class="text-center">
+                                          No Record Found
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" *ngIf="GRADE_CARD_SETTINS.length > 0">
+                                      <div class="col-12">
+
+                                        <table class="table-100 text-center">
+                                          <thead>
+                                            <th class="custom-th">#</th>
+                                            <th class="custom-th">Class</th>
+                                            <th class="custom-th">Section</th>
+                                            <th class="custom-th">Term</th>
+                                            <th class="custom-th">Exam</th>
+                                            <th class="custom-th">Sub Exam</th>
+                                            <th class="custom-th">Actions</th>
+                                          </thead>
+                                          <tbody>
+                                            <tr *ngFor="let item of GRADE_CARD_SETTINS;let i = index">
+                                              <td class="custom-td">{{i + 1}}</td>
+                                              <td class="custom-td">{{item.class_name}}</td>
+                                              <td class="custom-td">{{item.sec_name}}</td>
+                                              <td class="custom-td">{{item.term_name}}</td>
+                                              <td class="custom-td">{{item.exam_name}}</td>
+                                              <td class="custom-td">{{item.sub_exam_name}}</td>
+                                              <td class="custom-td">
+                                                <div style="display: inline-flex;">
+                                                  <span class="margin-right-15"><mat-slide-toggle (change)="changeStat($event, item)"
+                                                    [checked]="item.status === '1'">
+                                                  </mat-slide-toggle></span>
+                                                  <span><i class="fas fa-trash font-color-grey margin-right-15"
+                                                      (click)="deleteStep(i)"></i></span>
+                                                </div>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+
+                                        </table>
+
+                                      </div>
                                     </div>
                                   </ng-container>
                                 </div>
