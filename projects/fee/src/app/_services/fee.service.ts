@@ -570,4 +570,17 @@ export class FeeService {
 	getMappedSchoolWithUser(value) {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
 	}
+	getWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/getWallets',value);
+	}
+
+	insertWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/insertWallets',value);
+	}
+	printWalletReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/printReceipt',value);
+	}
 }

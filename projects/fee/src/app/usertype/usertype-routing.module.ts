@@ -15,7 +15,8 @@ const routes: Routes = [
 			{ path: 'feemaster', loadChildren: '../feemaster/feemaster.module#FeemasterModule'},
 			{ path: 'reports', loadChildren: 'projects/fee/src/app/reports/reports.module#ReportsModule'},
 			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'},
-			{ path: 'user-credential', component: UserCredentialComponent}
+			{ path: 'user-credential', component: UserCredentialComponent},
+			{ path: 'wallets',loadChildren: '../wallets/wallets.module#WalletsModule'},
 		]
 	}
 ];

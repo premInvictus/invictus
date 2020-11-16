@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,7 +40,7 @@ export class AddTransactionComponent implements OnInit {
 	currentInvoiceId = '';
 	constructor(
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
 		public common: CommonAPIService,
@@ -320,7 +320,7 @@ export class AddTransactionComponent implements OnInit {
 		if (validateFlag) {
       this.feeTransactionForm.value.w_amount_type='credit';
 			this.btnDisable = true;
-			this.sisService.insertWallets(this.feeTransactionForm.value).subscribe((result: any) => {
+			this.feeService.insertWallets(this.feeTransactionForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
 				if (result && result.status === 'ok') {
 					this.common.showSuccessErrorMessage(result.messsage, 'success');

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { SisService, ProcesstypeService, FeeService, CommonAPIService } from '../../_services';
+import { SisService, ProcesstypeFeeService, FeeService, CommonAPIService } from '../../_services';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MatTableDataSource, MatPaginator, MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
+import { WalletReceiptDetailsModalComponent } from '../../sharedmodule/wallet-receipt-details-modal/wallet-receipt-details-modal.component';
 
 
 @Component({
@@ -54,7 +54,7 @@ export class WalletsLedgerComponent implements OnInit {
   recordArray: any[] = [];
 	constructor(
 		private sisService: SisService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public feeService: FeeService,
 		private fbuild: FormBuilder,
 		public common: CommonAPIService,
@@ -137,7 +137,7 @@ export class WalletsLedgerComponent implements OnInit {
 		let element: any = {};
 		this.ELEMENT_DATA = [];
 		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
-		this.sisService.getWallets({ login_id: this.feeLoginId }).subscribe((result: any) => {
+		this.feeService.getWallets({ login_id: this.feeLoginId }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
         this.recordArray=result.data;
 				let pos = 1;
@@ -172,7 +172,8 @@ export class WalletsLedgerComponent implements OnInit {
 					this.ELEMENT_DATA.push(element);
 					pos++;
         }
-        this.footerRecord.balancetotal = total_credit - total_debit;
+		this.footerRecord.balancetotal = total_credit - total_debit;
+		this.commonStu.wallet_balance = this.footerRecord.balancetotal;
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 				console.log('this.ELEMENT_DATA',this.ELEMENT_DATA);
 				
@@ -268,7 +269,7 @@ export class WalletsLedgerComponent implements OnInit {
 		}
   }
   openReceiptDialog(rpt_id, edit): void {
-		const dialogRef = this.dialog.open(ReceiptDetailsModalComponent, {
+		const dialogRef = this.dialog.open(WalletReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
         rpt_id: rpt_id,

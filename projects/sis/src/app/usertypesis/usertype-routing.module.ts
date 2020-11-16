@@ -36,8 +36,6 @@ const routes: Routes = [
 			loadChildren: '../setup/setup.module#SetupModule'},
 			{ path: 'notifications',
 			loadChildren: '../scheduler-notifications/scheduler-notifications.module#SchedulerNotificationsModule'},
-			{ path: 'wallets',
-			loadChildren: '../wallets/wallets.module#WalletsModule'},
 			{ path: 'user-credential', component: UserCredentialComponent }
 		]
 	}

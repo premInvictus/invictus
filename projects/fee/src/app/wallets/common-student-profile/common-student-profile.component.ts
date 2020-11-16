@@ -18,7 +18,7 @@ import {
 import {
 	SisService,
 	CommonAPIService,
-	ProcesstypeService,
+	ProcesstypeFeeService,
 	FeeService
 } from '../../_services';
 import {
@@ -103,6 +103,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	section_name: any;
 	class_sec: any;
 	gender: any;
+	wallet_balance:any
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },
@@ -116,7 +117,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		private router: Router,
 		private route: ActivatedRoute,
 		private commonAPIService: CommonAPIService,
-		public processtypeService: ProcesstypeService,
+		public processtypeService: ProcesstypeFeeService,
 		public studentRouteMoveStoreService: StudentRouteMoveStoreService,
 		public dialog: MatDialog
 	) { }

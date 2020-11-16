@@ -1120,4 +1120,8 @@ export class SisService {
 		this.service.startLoading();
 		return this.http.post(environment.apiSisUrl + '/wallets/insertWallets',value);
 	}
+	printReceipt(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/wallets/printReceipt',value);
+	}
 }

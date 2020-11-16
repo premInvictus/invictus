@@ -8,11 +8,11 @@ import { Element } from './receipt-details.model';
 
 import { saveAs } from 'file-saver';
 @Component({
-	selector: 'app-receipt-details-modal',
-	templateUrl: './receipt-details-modal.component.html',
-	styleUrls: ['./receipt-details-modal.component.scss']
+	selector: 'app-wallet-receipt-details-modal',
+	templateUrl: './wallet-receipt-details-modal.component.html',
+	styleUrls: ['./wallet-receipt-details-modal.component.css']
 })
-export class ReceiptDetailsModalComponent implements OnInit {
+export class WalletReceiptDetailsModalComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('editReference') editReference;
 	ELEMENT_DATA: Element[] = [];
@@ -33,7 +33,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	balance: number;
 	parentinfo:any;
 	constructor(
-		public dialogRef: MatDialogRef<ReceiptDetailsModalComponent>,
+		public dialogRef: MatDialogRef<WalletReceiptDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
 		private feeService: FeeService,
 		private sisService: SisService,
@@ -49,7 +49,8 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		.subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result && result.data && result.data[0]) {
-					this.studentdetails = result.data[0];
+          this.studentdetails = result.data[0];
+          console.log('studentdetails',this.studentdetails);
 					this.parentinfo=this.studentdetails.parentinfo[0] ? this.studentdetails.parentinfo[0] : {};
 					this.gender = this.studentdetails.au_gender;
 					if (this.gender === 'M') {
@@ -65,7 +66,14 @@ export class ReceiptDetailsModalComponent implements OnInit {
 						this.class_sec = this.class_name + ' - ' + this.section_name;
 					} else {
 						this.class_sec = this.class_name;
-					}
+          }
+          if(this.studentdetails.au_process_type == 4){
+            this.studentdetails['process_name'] = 'A';
+            this.studentdetails['au_admission_no'] = this.studentdetails.em_admission_no;
+          } else if(this.studentdetails.au_process_type == 3){
+            this.studentdetails['process_name'] = 'P';
+            this.studentdetails['au_admission_no'] = this.studentdetails.em_provisional_admission_no;
+          }
 				}
 			}
 		});
@@ -104,7 +112,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		this.invoiceBifurcationArray = [];
 		let recieptJSON = {};
 		recieptJSON = { w_rpt_no: this.data.rpt_id };
-		this.sisService.getWallets(recieptJSON).subscribe((result: any) => {
+		this.feeService.getWallets(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
@@ -116,7 +124,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	}
 	printReceipt(rpt_id) {
 		console.log('this.data', this.data);
-		this.sisService.printReceipt({ w_rpt_no: rpt_id}).subscribe((result: any) => {
+		this.feeService.printWalletReceipt({ w_rpt_no: rpt_id}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
 				const length = result.data.split('/').length;
