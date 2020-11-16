@@ -60,7 +60,7 @@
             </mat-menu>
             <div class="flex-spacer"></div>
             <div class="dropdown">
-                    <a aria-label="axiom App" class="axiom-icon-button mat-button" mat-button tabindex="0"
+                    <a aria-label="axiom App" *ngIf="(currentUser.role_id != '4')" class="axiom-icon-button mat-button" mat-button tabindex="0"
                     aria-disabled="false" href="{{helpDeskUrl}}" target="_blank">
                     <span class="mat-button-wrapper">
                         <!-- <img class="header-notification-bell"

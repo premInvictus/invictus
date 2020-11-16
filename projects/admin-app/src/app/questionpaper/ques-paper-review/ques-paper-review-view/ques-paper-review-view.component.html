@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="col-lg-12">
+    <div class="close-button-content">
+      <button mat-icon-button class="close-button" (click)="closeDialog()">
+        <img src="/assets/images/clear-button.svg">
+      </button>
+    </div>
+  </div>
+</div>
+<div id="printModal2">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="information-bar">
+        <div class="information-bar-content">
+          <div class="row">
+            <div class="col-lg-12">
+              <span class="info-template-name">
+                <b>Template Name:</b> {{viewCurrentQP.qp_name}}</span>
+            </div>
+          </div>
+          <br>
+          <div class="row row-remove-top-margin">
+            <div class="col-lg-12 remove-col-modal-padding">
+              <div class="row row-remove-top-margin">
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-first-circle"></i>
+                  <span>
+                    <b>Class:</b> {{viewCurrentQP.class_name}}</span>
+                </div>
+                <div class="col-lg-3" *ngIf="viewCurrentQP.sec_name">
+                  <i class="fas fa-circle info-second-circle"></i>
+                  <span>
+                    <b>Section:</b> {{viewCurrentQP.sec_name}}</span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-third-circle"></i>
+                  <span>
+                    <b>Subject:</b> {{viewCurrentQP.sub_name}}</span>
+                </div>
+                <div class="col-lg-3">
+                  <i class="fas fa-circle info-four-circle"></i>
+                  <span>
+                    <b>Time:</b> {{viewCurrentQP.tp_time_alloted }} minutes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+
+      <div class="table-box">
+        <div class="row">
+          <ng-container *ngFor="let subQuestions of subjectArrayInCurrentPaperDetails; let k=index">
+            <div class="col-lg-12 text-center">
+              <h3> {{subQuestions.sub_name}}</h3>
+            </div>
+            <div class="col-lg-12 col-remove-padding" *ngFor="let item of filterQuestionList;let j=index">
+              <div *ngIf="item.qlist[0]" class="text-center">
+                <span *ngIf="item.tf_qt_id == 3">Essay {{item.qst_name}}</span>
+                <span *ngIf="item.tf_qt_id == 1 || item.tf_qt_id == 2">{{item.qst_name}}</span>
+              </div>
+              <br>
+              <div *ngIf="item.qlist[0]" class="dialog-table-review-main normal-table-responsive">
+                <table class="dialog-table-review table" style="word-break: break-all !important">
+                  <thead>
+                    <tr class="dialog-table-review-header">
+                      <td style="width:3rem;">Q.No</td>
+                      <td style="width:28rem;">Question</td>
+                      <td style="width:10rem;">Skill</td>
+                      <!-- <td style="width:15rem;">Level Of Difficulty</td> -->
+                      <td class="text-center" style="width:5rem;">Marks</td>
+                      <td class="text-center" style="width:6rem;">Replace</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="table-dialog-review-row" *ngFor="let qitem of item.qlist;let i=index">
+                      <ng-container *ngIf="qitem.qus_sub_id == subQuestions.sub_id">
+                        <td>{{getQusPosFromCurrentQP(qitem.qus_id)}}</td>
+                        <td style="width:25rem;">
+                          <div class="imgclassQuestionPaperReview" [MathJax]="qitem.qus_name"></div>
+                        </td>
+                        <td style="width:10rem;">{{qitem.skill_name}}</td>
+                        <!-- <td style="width:20rem;">{{qitem.dl_name}}</td> -->
+                        <td class="text-center">{{qitem.qus_marks}}</td>
+                        <td class="text-center"><i class="fas fa-redo-alt" (click)="replaceOneQuestion(i,j)"></i></td>
+                      </ng-container>
+                    </tr>
+                  </tbody>
+                  <br>
+                </table>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="print-button-content">
+      <button class="submit-button" mat-button (click)="updateQuestionPaper();closeDialog()">
+        <i class="fas fa-upload dialog-table-update-icon"></i> &nbsp;Update</button>
+    </div>
+  </div>
+</div>

@@ -129,7 +129,9 @@
                 studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '6' ? 'Sir.' :
                 studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '7' ? 'Dr.' :
                 studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '8' ? 'Lady' :
-                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '9' ? 'Late' : ''
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '9' ? 'Late' : 
+                studentdetails.parentinfo && studentdetails.parentinfo[0] && studentdetails.parentinfo[0]['epd_parent_honorific'] === '10' ? 'Md.' : 
+                ''
               }}
 
 
@@ -163,7 +165,7 @@
         </div>
       </div>
       <div class="col-1 smart-col-1 vertical-divide"></div>
-      <div class="col-1  custom-fee-entry-col-8 lap-custom-fee-entry-col-9 tab-remove-padding">
+      <div class="col-1  custom-fee-entry-col-8 three-icon lap-custom-fee-entry-col-9 tab-remove-padding">
         <div class="row remove-top-margin">
           <div class="col-6">
             <div class=" blue-circle-btn margin-top-5" (click)="goToPage('student-profile')"

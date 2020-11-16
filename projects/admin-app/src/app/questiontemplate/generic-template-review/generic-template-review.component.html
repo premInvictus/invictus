@@ -1,0 +1,75 @@
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-title>
+                <h1 class="remove-bottom-margin font-size-24">Generic Template Review</h1>
+            </mat-card-title>
+        </mat-card>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <mat-card>
+            <mat-card-content>
+                <div class="ecol-12 col-sm-12 col-md-4 col-lg-2 col-xl-2">
+                    <mat-form-field class="form-field">
+                        <input matInput (keyup)=" applyFilter($event.target.value)" placeholder="Filter">
+                        <span matPrefix>
+                     <i class="fas fa-sliders-h table-filter-icon"></i>&nbsp;&nbsp; </span>
+                    </mat-form-field>
+                </div>
+                <div class="table-overflow">
+                    <table mat-table class="specific-table table-100 table-qpaper-table-padding" #table [dataSource]="dataSource" matSort>
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="position">
+                            <th *matHeaderCellDef mat-sort-header>S No. </th>
+                            <td *matCellDef="let item"> {{item.position}} </td>
+                        </ng-container>
+                        <!-- Template Name Column -->
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-sort-header> Template Name </th>
+                            <td *matCellDef="let item"> {{item.name}} </td>
+                        </ng-container>
+                        <!-- Marks Column -->
+                        <ng-container matColumnDef="marks">
+                            <th *matHeaderCellDef mat-sort-header> Marks </th>
+                            <td *matCellDef="let item"> {{item.marks}}</td>
+                        </ng-container>
+                        <!-- Time Alloted Column -->
+                        <ng-container matColumnDef="time">
+                            <th *matHeaderCellDef mat-sort-header> Time_Alloted </th>
+                            <td *matCellDef="let item"> {{item.time}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="reasons">
+                            <th *matHeaderCellDef>Reason to Unpublish</th>
+                            <td *matCellDef="let item">
+                                <div [innerHTML]="item.reasons"></div>
+                            </td>
+                        </ng-container>
+                        <!-- Action Column -->
+                        <ng-container matColumnDef="action">
+                            <th *matHeaderCellDef style="text-align: center"> Action </th>
+                            <td align="center" *matCellDef="let item"> <i *ngIf="isExistUserAccessMenu('42')" class="far fa-thumbs-up table-publish-icon" matTooltip="publish" (click)=publishTemplate(item.action.tp_id)>&nbsp;</i>
+                                <i *ngIf="isExistUserAccessMenu('46')" class="fa fa-print table-print-icon" data-toggle="tooltip" data-placement="top" matTooltip="print" aria-hidden="true" (click)="openDialog(item.action)" data-toggle="modal" data-target="#printModal">&nbsp;</i>
+                                <a *ngIf="isExistUserAccessMenu('40')" [routerLink]="['../generictemplate']" [queryParams]="{tp_id:item.action.tp_id}">
+                                    <i class="far fa-edit table-edit-icon" matTooltip="edit">&nbsp;</i>
+                                </a>
+                                <i *ngIf="isExistUserAccessMenu('28')" matTooltip="delete" class="far fa-trash-alt table-delete-icon" (click)="openModal({});deleteTemp(item.action.tp_id)"></i>
+                            </td>
+                        </ng-container>
+                        <tr mat-header-row class="top_header template-mat-header-row" *matHeaderRowDef="displayedColumns">
+                        </tr>
+                        <tr mat-row class="template-mat-row" *matRowDef="let row; columns: displayedColumns;">
+                        </tr>
+                    </table>
+                </div>
+                <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10,20,30]" [showFirstLastButtons]="true">
+                </mat-paginator>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<app-delete-modal #deleteModalRef [deleteMessage]="'Are you Sure? You want to Delete '" (deleteOk)="deleteTemplate(currentQues)" (deleteCancel)="deleteComCancel()">
+</app-delete-modal>
+<!--Ends-->

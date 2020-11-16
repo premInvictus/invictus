@@ -283,7 +283,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 				if(this.currentUser.Prefix == 'invictus') {
 					this.helpDeskUrl = environment.helpDeskAgentUrl;
 				} else {
-					this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.currentUser.email+"&t=654321&fname="+this.currentUser.full_name+"&sname="+this.schoolInfo.school_name+"&contact="+this.currentUser.mobile;
+					this.helpDeskUrl=environment.helpDeskUrl+"?e="+this.encode(this.currentUser.email)+"&t="+this.encode('654321')+"&fname="+this.encode(this.currentUser.full_name)+"&sname="+this.encode(this.schoolInfo.school_name)+"&contact="+this.encode(this.currentUser.mobile);
 				}
 				this.getGroupedSchool();
 			}
@@ -930,4 +930,15 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		console.log('this.currentUser', this.currentUser);
 		
 	}
+
+
+	 encode(str) {
+		var encoded = "";
+		for (var i=0; i<str.length;i++) {
+		  var a = str.charCodeAt(i);
+		  var b = a ^ 51;    // bitwise XOR with any number, e.g. 123
+		  encoded = encoded+String.fromCharCode(b);
+		}
+		return encoded;
+	  }
 }

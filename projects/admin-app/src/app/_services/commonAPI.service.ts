@@ -15,6 +15,8 @@ export class CommonAPIService {
 	homeUrl: string;
 	userData: any;
 	menus: any[] = [];
+	question_type: any[] = [];
+	question_subtype: any[] = [];
 	familyData: any;
 	familyNumber: any;
 	selectedChildData: any;
@@ -230,5 +232,23 @@ export class CommonAPIService {
 	getClassData(value) {
 		this.loader.startLoading();
 		return this.http.post(environment.apiSmartUrl + '/common/getClassData', value);
+	}
+	getQtype() {
+		if (JSON.parse(localStorage.getItem('qSubType'))) {
+			this.question_type = JSON.parse(localStorage.getItem('qSubType'));
+			return of(this.question_type);
+		}
+		return of(this.question_type);
+	}
+	getQsubtype(qt_id) {
+		let tempdata: any = null;
+		if (this.question_type.length > 0) {
+			this.question_type.forEach(element => {
+				if (Number(element.qt_id) === Number(qt_id)) {
+					tempdata = element.qst_id;
+				}
+			});
+		}
+		return of(tempdata);
 	}
 }

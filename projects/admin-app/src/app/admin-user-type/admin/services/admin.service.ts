@@ -227,4 +227,12 @@ export class AdminService {
 	getAllSchoolGroups(value) {
 		return this.http.get(environment.apiAxiomUrl + '/dashboard/getAllSchoolGroups',value);
 	}
+
+	exportQuestionPaper(value) {
+		return this.http.post(environment.apiAxiomUrl + '/questionpaper/exportQuestionPaper',value);
+	}
+
+	getQuestionPaper(value) {
+		return this.http.post(environment.apiAxiomUrl + '/questionpaper/getAllQuestionPaper', value);
+	}
 }

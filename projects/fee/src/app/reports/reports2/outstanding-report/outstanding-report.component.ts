@@ -2955,12 +2955,14 @@ export class OutstandingReportComponent implements OnInit {
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
+		console.log('this.exportColumnDefinitions-->',this.exportColumnDefinitions)
 		for (const item of this.exportColumnDefinitions) {
+			if(!(item.id.includes('checkbox_select'))) {
 			columns.push({
 				key: item.id,
 				width: this.checkWidth(item.id, item.name)
 			});
-			columValue.push(item.name);
+			columValue.push(item.name);}
 		}
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
