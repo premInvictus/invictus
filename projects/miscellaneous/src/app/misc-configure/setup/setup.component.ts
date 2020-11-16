@@ -671,13 +671,15 @@ export class SetupComponent implements OnInit {
         }
     }
     deleteStep(index) {
-        this.GRADE_CARD_SETTINS.splice(index , 1);
+        this.GRADE_CARD_SETTINS.splice(index, 1);
+        console.log(this.GRADE_CARD_SETTINS);
     }
     addSetting() {
-        if (this.paramform.value.eme_class_id && this.paramform.value.eme_sec_id && this.paramform.value.eme_term_id) {
+        if (this.paramform.value.eme_class_id && this.paramform.value.eme_term_id) {
             const findex = this.GRADE_CARD_SETTINS.findIndex(f => Number(f.class_id) === Number(this.paramform.value.eme_class_id)
-                && Number(f.sec_id) === Number(this.paramform.value.eme_sec_id)
+                && Number(f.term_id) === Number(this.paramform.value.eme_term_id)
             );
+
             if (findex === -1) {
                 this.GRADE_CARD_SETTINS.push({
                     class_id: this.paramform.value.eme_class_id,
@@ -693,30 +695,37 @@ export class SetupComponent implements OnInit {
                     status: '1'
                 });
             } else {
+                this.GRADE_CARD_SETTINS[findex].sec_id = this.paramform.value.eme_sec_id ? this.paramform.value.eme_sec_id : '';
+                this.GRADE_CARD_SETTINS[findex].sec_name = this.secNamegr ? this.secNamegr : '';
                 this.GRADE_CARD_SETTINS[findex].term_id = this.paramform.value.eme_term_id ? this.paramform.value.eme_term_id : '';
                 this.GRADE_CARD_SETTINS[findex].term_name = this.termNamegr ? this.termNamegr : '';
                 this.GRADE_CARD_SETTINS[findex].exam_id = this.paramform.value.eme_exam_id ? this.paramform.value.eme_exam_id : '';
                 this.GRADE_CARD_SETTINS[findex].sub_exam_id = this.paramform.value.eme_subexam_id ? this.paramform.value.eme_subexam_id : '';
                 this.GRADE_CARD_SETTINS[findex].exam_name = this.examNamegr ? this.examNamegr : '';
                 this.GRADE_CARD_SETTINS[findex].sub_exam_name = this.subExamNamegr ? this.subExamNamegr : '';
-                this.GRADE_CARD_SETTINS[findex].status = '1';
+                this.GRADE_CARD_SETTINS[findex].status = this.GRADE_CARD_SETTINS[findex].status ? this.GRADE_CARD_SETTINS[findex].status : '1';
             }
         } else {
-            this.commonService.showSuccessErrorMessage('Please select class, section and term', 'error');
+            this.commonService.showSuccessErrorMessage('Please select class and term', 'error');
         }
 
     }
     getSubExamName($event) {
         this.subExamNamegr = '';
-        setTimeout(() => {
-            this.subExamNamegr = $event.source._elementRef.nativeElement.outerText;
-        }, 500);
+        if ($event.value) {
+            setTimeout(() => {
+                this.subExamNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+        }
     }
     getSubExam($event) {
+
         this.examNamegr = '';
-        setTimeout(() => {
-            this.examNamegr = $event.source._elementRef.nativeElement.outerText;
-        }, 500);
+        if ($event.value) {
+            setTimeout(() => {
+                this.examNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+        }
         this.paramform.patchValue({
             eme_subexam_id: ''
         });
@@ -754,9 +763,11 @@ export class SetupComponent implements OnInit {
     }
     getSectionsByClass($event) {
         this.classNamegr = '';
-        setTimeout(() => {
-            this.classNamegr = $event.source._elementRef.nativeElement.outerText;
-        }, 500);
+        if ($event.value) {
+            setTimeout(() => {
+                this.classNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+        }
         this.paramform.patchValue({
             eme_sec_id: '',
             eme_term_id: '',
@@ -783,13 +794,16 @@ export class SetupComponent implements OnInit {
     }
     getExamDetails($event) {
         this.termNamegr = '';
+
         this.paramform.patchValue({
             eme_exam_id: '',
             eme_subexam_id: ''
         });
-        setTimeout(() => {
-            this.termNamegr = $event.source._elementRef.nativeElement.outerText;
-        }, 500);
+        if ($event.value) {
+            setTimeout(() => {
+                this.termNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+        }
         this.paramform.patchValue({
             eme_exam_id: '',
             eme_subexam_id: '',
@@ -805,17 +819,13 @@ export class SetupComponent implements OnInit {
     }
     sectionChange($event) {
         this.secNamegr = '';
-        this.paramform.patchValue({
-            eme_term_id: '',
-            eme_exam_id: '',
-            eme_subexam_id: ''
-        });
-        setTimeout(() => {
-            this.secNamegr = $event.source._elementRef.nativeElement.outerText;
-        }, 500);
-        this.paramform.patchValue({
-            eme_term_id: '',
-        });
+
+        if ($event.value && $event.value.length > 0) {
+            setTimeout(() => {
+                this.secNamegr = $event.source._elementRef.nativeElement.outerText;
+            }, 500);
+        }
+
     }
     getGlobalSetting(value) {
         this.showImage = false;
@@ -833,6 +843,7 @@ export class SetupComponent implements OnInit {
         this.currentGsetup = value;
         this.gsettingArr = [];
         this.processTypes = [];
+        this.paramform.reset();
         this.sisService.getGlobalSetting({ gs_group: value, not_json: true }).subscribe((res: any) => {
             if (res && res.status === 'ok') {
                 this.gsettingArr = res.data;
@@ -845,6 +856,28 @@ export class SetupComponent implements OnInit {
                     });
                     this.settingForm = this.fbuild.group(temp);
                     console.log('this.settingForm', this.settingForm)
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.gradecard_report_settings_app) {
+                        const gradesSettings: any[] = JSON.parse(this.settingForm.value.gradecard_report_settings_app);
+                        this.GRADE_CARD_SETTINS = [];
+                        if (gradesSettings && gradesSettings.length > 0) {
+                            for (const item of gradesSettings) {
+                                this.GRADE_CARD_SETTINS.push({
+                                    class_id: item.class_id,
+                                    class_name: item.class_name,
+                                    sec_id: item.sec_id,
+                                    sec_name: item.sec_name,
+                                    term_id: item.term_id,
+                                    term_name: item.term_name,
+                                    exam_name: item.exam_name,
+                                    exam_id: item.exam_id,
+                                    sub_exam_id: item.sub_exam_id,
+                                    sub_exam_name: item.sub_exam_name,
+                                    status: item.status
+                                });
+
+                            }
+                        }
+                    }
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.add_prefix_before_admission_no) {
                         const obj: any = JSON.parse(this.settingForm.value.add_prefix_before_admission_no);
                         if (obj && Object.keys(obj).length > 0) {
@@ -885,27 +918,7 @@ export class SetupComponent implements OnInit {
                             this.assignEmailSmsFormats();
                         }
                     }
-                    if (this.settingForm && this.settingForm.value & this.settingForm.value.gradecard_report_settings_app) {
 
-                        const gradesSettings: any[] = JSON.parse(this.settingForm.value.gradecard_report_settings_app);
-                        if (gradesSettings && gradesSettings.length > 0) {
-                            for (const item of gradesSettings) {
-                                this.GRADE_CARD_SETTINS.push({
-                                    class_id: item.class_id,
-                                    class_name: item.class_name,
-                                    sec_id: item.sec_id,
-                                    sec_name: item.sec_name,
-                                    term_id: item.term_id,
-                                    term_name: item.term_name,
-                                    exam_name: item.exam_name,
-                                    exam_id: item.exam_id,
-                                    sub_exam_id: item.sub_exam_id,
-                                    sub_exam_name: item.sub_exam_name,
-                                });
-
-                            }
-                        }
-                    }
 
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.idcard_printsetup) {
                         const cardSettings: any[] = JSON.parse(this.settingForm.value.idcard_printsetup);
