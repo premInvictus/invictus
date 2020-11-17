@@ -7,14 +7,34 @@ import { of } from 'rxjs';
 export class SisService {
  
 	constructor(private http: HttpClient, private service: CommonAPIService) { }
-	
+	getSectionsByClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSmartUrl + '/common/getSectionsByClass', value);
+	}
 	getSchool() {
 		this.service.startLoading();
 		return this.http.get(environment.apiSisUrl + '/dashboard/getSchool');
 	}
+	getSubjectSubexamMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getSubjectSubexamMapping', value);
+	}
+	getExamDetails(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamDetails', value);
+	}
 	getReason(value) {
 		this.service.startLoading();
+		
 		return this.http.post(environment.apiSisUrl + '/setup/getReason', value);
+	}
+	getExamPerCumulativeExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeExam', value);
+	}
+	getClassTerm(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/common/getClassTerm', value);
 	}
 	getPaymentGateways(value) {
 		this.service.startLoading();
