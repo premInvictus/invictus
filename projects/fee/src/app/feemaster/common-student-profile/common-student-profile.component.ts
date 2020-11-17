@@ -109,6 +109,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		{ id: '3', name: 'Provisional Admission No.' },
 		{ id: '4', name: 'Admission No.' }
 	];
+	wallet_balance:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
