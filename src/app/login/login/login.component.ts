@@ -42,8 +42,8 @@ export class LoginComponent implements OnInit {
 	userSaveData: any;
 	webDeviceToken: any = {};
 	private OTPstatus: any = {};
-	supportLogin:any;
-	showLogin=true;
+	supportLogin: any;
+	showLogin = true;
 	/*Forgot passwrd Ends*/
 
 	constructor(
@@ -70,16 +70,16 @@ export class LoginComponent implements OnInit {
 		// get return url from route parameters or default to '/'
 		this.messagingService.requestPermission();
 		this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/login';
-		this.supportLogin= this.route.snapshot.queryParams['s'];
-		if(this.supportLogin) {
-			this.showLogin =  false;
+		this.supportLogin = this.route.snapshot.queryParams['s'];
+		if (this.supportLogin) {
+			this.showLogin = false;
 			this.checkForSupportLogin();
 		} else {
 			this.buildForm();
 			this.checkLoginStatus();
 			this.active_resend_otp();
 		}
-		
+
 	}
 	checkLoginStatus() {
 		const cookieData = this.getCookie('userData');
@@ -135,7 +135,7 @@ export class LoginComponent implements OnInit {
 	checkForSupportLogin() {
 		var prefix = this.supportLogin.split("-")[1];
 		var role = this.supportLogin.split("-")[0];
-		var childWindow:any;
+		var childWindow: any;
 		// this.model.username = 'xavier-2-0000';
 		// this.model.password = 'support@123';
 		// this.model.rememberme = 1;
@@ -143,25 +143,25 @@ export class LoginComponent implements OnInit {
 		// if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
 		// 	childWindow = window;
 		// }
-		if (window.location.href==="https://login.invictusdigisoft.com/login?s="+role+"-"+prefix) {
+		if (window.location.href === "https://login.invictusdigisoft.com/login?s=" + role + "-" + prefix) {
 			childWindow = window;
 		}
-		
-		console.log('window--',childWindow)
-		
+
+		console.log('window--', childWindow)
+
 		this.model.username = 'support';
 		this.model.password = '654321';
 		this.model.rememberme = 1;
 		this.model.loginsource = 'support';
 
 		this.loaderService.setUserPrefix(prefix)
-		
+
 		this._cookieService.put('username', this.model.username);
 		this._cookieService.put('password', this.model.password);
 		this._cookieService.put('remember', this.model.rememberme);
-		
+
 		this.webDeviceToken = '';
-		
+
 		console.log('this.model--', this.model)
 		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', this.model.loginsource)
 			.subscribe(
@@ -195,6 +195,7 @@ export class LoginComponent implements OnInit {
 									this.notif.getSchool().subscribe((result2: any) => {
 										if (result2.status === 'ok') {
 											this.schoolInfo = result2.data[0];
+											childWindow.localStorage.setItem('expire_time', JSON.stringify({ expire_time: this.schoolInfo.seesion_expire }));
 											if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
 												Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
 												const currentSession =
@@ -229,7 +230,7 @@ export class LoginComponent implements OnInit {
 												childWindow.localStorage.setItem('session', JSON.stringify(sessionParam));
 											}
 											console.log('role if', JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id, returnUrl)
-											
+
 											if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '1') {
 												this.returnUrl = '/admin';
 											} else if (JSON.parse(childWindow.localStorage.getItem('currentUser')).role_id === '2') {
@@ -260,7 +261,7 @@ export class LoginComponent implements OnInit {
 				},
 				error => {
 					this.notif.showSuccessErrorMessage('Please enter a valid username and password', 'error');
-				});	
+				});
 	}
 
 	login(event) {
@@ -273,9 +274,9 @@ export class LoginComponent implements OnInit {
 		this._cookieService.put('remember', this.model.rememberme);
 		//this.loaderService.setUserPrefix(this.model.username.split("-")[0])
 		if (localStorage.getItem("web-token")) {
-		this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
+			this.webDeviceToken = JSON.parse(localStorage.getItem("web-token"));
 		}
-		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web','')
+		this.authenticationService.login(this.model.username, this.model.password, this.webDeviceToken['web-token'], 'web', '')
 			.subscribe(
 				(result: any) => {
 					if (result.status === 'ok' && result.data) {
@@ -304,6 +305,7 @@ export class LoginComponent implements OnInit {
 									this.notif.getSchool().subscribe((result2: any) => {
 										if (result2.status === 'ok') {
 											this.schoolInfo = result2.data[0];
+											localStorage.setItem('expire_time', JSON.stringify({ expire_time: this.schoolInfo.session_expire }));
 											if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
 												Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
 												const currentSession =
@@ -349,7 +351,7 @@ export class LoginComponent implements OnInit {
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
 												this.returnUrl = returnUrl + '/parent';
 											}
-											console.log('this.returnUrl', this.returnUrl);
+											//this.notif.startSessionTime();
 											this.router.navigate([this.returnUrl]);
 										}
 									});
