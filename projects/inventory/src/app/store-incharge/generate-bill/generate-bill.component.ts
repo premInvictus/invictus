@@ -14,6 +14,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class GenerateBillComponent implements OnInit {
   searchForm: FormGroup;
+  payForm: FormGroup;
   itemSearchForm: FormGroup;
   userData: any = '';
   itemData: any = [];
@@ -27,6 +28,13 @@ export class GenerateBillComponent implements OnInit {
   formGroupArray: any[] = [];
   tableReciptArray: any[] = [];
   tableHeader: any;
+  payModes:any[]=['cash','wallet'];
+  wallet_details:any={
+    balancetotal: 0,
+    balancetype:'',
+    submitflag:false,
+    min_wallet_balance:0
+  };
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -57,6 +65,9 @@ export class GenerateBillComponent implements OnInit {
       return_date: ''
     });
     this.formGroupArray = [];
+    this.payForm = this.fbuild.group({
+      pay_id:''
+    })
   }
   getSchool() {
     this.sisService.getSchool()
@@ -271,6 +282,65 @@ export class GenerateBillComponent implements OnInit {
       this.common.showSuccessErrorMessage('Please fill all required fields', 'error');
     }
   }
+  async getWallets() {
+    this.wallet_details = {
+      balancetotal: 0,
+      balancetype:'',
+      submitflag:false,
+      min_wallet_balance:0
+    };
+    if(this.payForm.value.pay_id == 'wallet') {
+      let finalJson = {
+        "gs_alias": [
+          "min_wallet_balance"
+        ]
+      };
+      await this.inventory.getGlobalSettingReplace(finalJson).toPromise().then((result: any) => {
+        if (result && result.status === 'ok') {
+          if(result.data[0].gs_value) {
+            this.wallet_details.min_wallet_balance = parseInt(result.data[0].gs_value);
+  
+          }
+        }
+      });
+      this.inventory.getWallets({ login_id: this.userData.au_login_id }).toPromise().then((result: any) => {
+        if (result && result.status === 'ok') {
+          let total_credit = 0;
+          let total_debit = 0;
+          for (const item of result.data) {
+            if(item.w_amount_type == 'credit'){
+              total_credit += parseInt(item.w_amount);
+            }
+            if(item.w_amount_type == 'debit'){
+              total_debit += parseInt(item.w_amount);
+            }
+          }
+          this.wallet_details.balancetotal = total_credit - total_debit;
+          if(this.wallet_details.balancetotal > 0) {
+            this.wallet_details.balancetype = '+';
+          } else if(this.wallet_details.balancetotal < 0) {
+            this.wallet_details.balancetype = '';
+          }
+          let grandTotal= 0; 
+          for (let item of this.formGroupArray) {
+            if (item.formGroup.valid) {
+              if (item.formGroup.value.item_location !== '') {
+                grandTotal = Number(grandTotal) + Number(item.formGroup.value.total_price);
+              }
+            }
+          }
+          if((this.wallet_details.balancetotal+this.wallet_details.min_wallet_balance) > grandTotal){
+            this.wallet_details.submitflag = true;
+          }
+          console.log('this.wallet_details',this.wallet_details);
+        } else {
+          this.common.showSuccessErrorMessage(result.data, 'error');
+        }
+      });
+    } else if(this.payForm.value.pay_id == 'cash') {
+      this.wallet_details.submitflag = true;
+    }
+	}
   saveItem() {
     let grandTotal = 0;
     var filterJson: any = {};
@@ -339,6 +409,23 @@ export class GenerateBillComponent implements OnInit {
             billArray['adm_no'] = result.buyer_details.em_admission_no;
             billArray['class_name'] = result.buyer_details.sec_name ? result.buyer_details.class_name + '-' + result.buyer_details.sec_name : '';
             billArray['role_id'] = 'Admission No.';
+          }
+          if(this.payForm.value.pay_id == 'wallet') {
+            const inputJson:any={};
+            inputJson.w_ref_id=billArray.bill_id;
+            inputJson.w_transaction_date=billArray.bill_date;
+            inputJson.w_amount=result.bill_total;
+            inputJson.w_amount_type='debit';
+            inputJson.login_id=this.userData.au_login_id;
+            this.inventory.insertWallets(inputJson).subscribe((result:any)=>{
+              if(result && result.status == 'ok'){
+                this.common.showSuccessErrorMessage(result.message,'success');
+              } else {
+                this.common.showSuccessErrorMessage(result.message,'error');
+              }
+            })
+          } else {
+
           }
           this.inventory.generateStoreBill(billArray).subscribe((result: any) => {
             if (result && result.status == 'ok') {

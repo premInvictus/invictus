@@ -217,4 +217,13 @@ export class InventoryService {
     this.service.startLoading();
     return this.http.post(environment.apiInvUrl + '/vendor/getAll', value);
   }
+  getWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/getWallets',value);
+	}
+
+	insertWallets(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/wallets/insertWallets',value);
+	}
 }
