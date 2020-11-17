@@ -325,6 +325,7 @@ export class LoginComponent implements OnInit {
 												}
 											}
 											let returnUrl: any;
+											console.log('this.userSaveData', this.userSaveData);
 											if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
 												localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
 												returnUrl = '/axiom';
@@ -348,6 +349,7 @@ export class LoginComponent implements OnInit {
 											} else if (JSON.parse(localStorage.getItem('currentUser')).role_id === '5') {
 												this.returnUrl = returnUrl + '/parent';
 											}
+											console.log('this.returnUrl', this.returnUrl);
 											this.router.navigate([this.returnUrl]);
 										}
 									});
