@@ -327,6 +327,7 @@ export class LoginComponent implements OnInit {
 												}
 											}
 											let returnUrl: any;
+											console.log('this.userSaveData', this.userSaveData);
 											if ((this.userSaveData && !this.userSaveData.pro_url) || !this.userSaveData) {
 												localStorage.setItem('project', JSON.stringify({ pro_url: 'axiom' }));
 												returnUrl = '/axiom';
