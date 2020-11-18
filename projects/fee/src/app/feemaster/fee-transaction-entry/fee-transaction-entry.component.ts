@@ -42,7 +42,6 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	feeRenderId: any = '';
 	btnDisable = false;
 	currentInvoiceId = '';
-	showWalletLedger = true;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -492,7 +491,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.btnDisable = true;
 			if (this.selectedMode === '4') {
 				let inputjson:any = this.feeTransactionForm.value;
-				inputjson.w_amount_type = 'credit';
+				inputjson.ftr_amount_type = 'credit';
 				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
@@ -586,7 +585,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.btnDisable = true;
 			if (this.selectedMode === '4') {
 				let inputjson:any = this.feeTransactionForm.value;
-				inputjson.w_amount_type = 'credit';
+				inputjson.ftr_amount_type = 'credit';
 				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {

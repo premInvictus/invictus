@@ -103,6 +103,7 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 	section_name: any;
 	class_sec: any;
 	gender: any;
+	showWalletLedger=true;
 	processTypeArray: any[] = [
 		{ id: '1', name: 'Enquiry No.' },
 		{ id: '2', name: 'Registration No.' },

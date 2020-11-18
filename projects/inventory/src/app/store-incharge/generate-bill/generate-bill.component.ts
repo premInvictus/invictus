@@ -329,7 +329,7 @@ export class GenerateBillComponent implements OnInit {
               }
             }
           }
-          if((this.wallet_details.balancetotal+this.wallet_details.min_wallet_balance) > grandTotal){
+          if((this.wallet_details.balancetotal-(this.wallet_details.min_wallet_balance)) >= grandTotal){
             this.wallet_details.submitflag = true;
           }
           console.log('this.wallet_details',this.wallet_details);
@@ -412,10 +412,10 @@ export class GenerateBillComponent implements OnInit {
           }
           if(this.payForm.value.pay_id == 'wallet') {
             const inputJson:any={};
-            inputJson.w_ref_id=billArray.bill_id;
-            inputJson.w_transaction_date=billArray.bill_date;
-            inputJson.w_amount=result.bill_total;
-            inputJson.w_amount_type='debit';
+            inputJson.ftr_ref_id=billArray.bill_id;
+            inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
+            inputJson.ftr_amount=result.bill_total;
+            inputJson.ftr_amount_type='debit';
             inputJson.login_id=this.userData.au_login_id;
             this.inventory.insertWallets(inputJson).subscribe((result:any)=>{
               if(result && result.status == 'ok'){

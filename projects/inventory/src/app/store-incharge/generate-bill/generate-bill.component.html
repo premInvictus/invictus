@@ -370,7 +370,7 @@
           <br><br>
         </div>
         <div class="col-12 text-center " style="margin-top:2%">
-          <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton">Submit
+          <button mat-raised-button class="btn-success-green" (click)="saveItem()" [disabled]="disabledApiButton" *ngIf="wallet_details.submitflag">Submit
             & Print</button>
           <button mat-raised-button class="btn-reset btn-spacer" (click)="resetPrint()">
             Back
