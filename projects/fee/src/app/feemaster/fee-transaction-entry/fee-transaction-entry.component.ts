@@ -244,7 +244,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
-	getStudentInformation(login_id) {
+	async getStudentInformation(login_id) {
 		this.studentInfo = {};
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
@@ -264,6 +264,24 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'ftr_deposit_bnk_id': '',
 			'saveAndPrint': ''
 		});
+		const optedforhostel = 1;
+		if(optedforhostel == 1) {
+			await this.feeService.getFeeAccount({ accd_login_id: this.feeLoginId }).toPromise().then((result: any) => {
+				if (result && result.status === 'ok') {
+					const accountdet:any = result.data[0];
+					if(accountdet.accd_is_hostel.toLowerCase() == 'y') {
+						
+					} else {
+						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
+						if(findex != -1) {
+							this.entryModes.splice(findex,1);
+							this.commonStu.showWalletLedger=false;
+
+						}
+					}
+				}
+			});
+		}
 		this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.studentInfo = result.data[0];
@@ -432,7 +450,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
 		}
-		if (this.selectedMode !== '1' && Number(this.feeTransactionForm.value.ftr_amount) <= 0) {
+		if (this.selectedMode === '2' && Number(this.feeTransactionForm.value.ftr_amount) <= 0) {
+			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
+			validateFlag = false;
+		}
+		if (this.selectedMode === '4' && Number(this.feeTransactionForm.value.ftr_amount) <= 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
 		}
@@ -467,20 +489,39 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		if (validateFlag) {
 			this.btnDisable = true;
-			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
-				this.btnDisable = false;
-				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.messsage, 'success');
-					this.reset();
-					this.getStudentInformation(this.lastRecordId);
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
-				} else {
-					this.common.showSuccessErrorMessage(result.messsage, 'error');
-					this.reset();
-					this.getStudentInformation(this.lastRecordId);
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
-				}
-			});
+			if (this.selectedMode === '4') {
+				let inputjson:any = this.feeTransactionForm.value;
+				inputjson.ftr_amount_type = 'credit';
+				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.messsage, 'success');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			} else {
+				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage(result.messsage, 'success');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			}
 		} else {
 			this.btnDisable = false;
 		}
@@ -542,22 +583,44 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		}
 		if (validateFlag) {
 			this.btnDisable = true;
-			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
-				this.btnDisable = false;
-				if (result && result.status === 'ok') {
-					const length = result.data.split('/').length;
-					this.common.showSuccessErrorMessage(result.message, 'success');
-					window.open(result.data, '_blank');
-					this.reset();
-					this.getStudentInformation(this.lastRecordId);
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
-				} else {
-					this.reset();
-					this.common.showSuccessErrorMessage(result.messsage, 'error');
-					this.getStudentInformation(this.lastRecordId);
-					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
-				}
-			});
+			if (this.selectedMode === '4') {
+				let inputjson:any = this.feeTransactionForm.value;
+				inputjson.ftr_amount_type = 'credit';
+				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						const length = result.data.split('/').length;
+						this.common.showSuccessErrorMessage(result.message, 'success');
+						console.log('result.data',result.data);
+						window.open(result.data, '_blank');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			} else {
+				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+					this.btnDisable = false;
+					if (result && result.status === 'ok') {
+						const length = result.data.split('/').length;
+						this.common.showSuccessErrorMessage(result.message, 'success');
+						window.open(result.data, '_blank');
+						this.reset();
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					} else {
+						this.reset();
+						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						this.getStudentInformation(this.lastRecordId);
+						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+					}
+				});
+			}
 		} else {
 			this.btnDisable = false;
 		}

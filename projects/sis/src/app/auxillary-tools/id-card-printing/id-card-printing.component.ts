@@ -271,6 +271,8 @@ export class IdCardPrintingComponent implements OnInit, AfterViewInit {
 					} else {
 						this.idCardSettings = {};
 					}
+				} else {
+					this.idCardSettings = {};
 				}
 			}
 		});

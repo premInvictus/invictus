@@ -8,6 +8,8 @@ import { FeeTransactionEntryComponent } from './fee-transaction-entry/fee-transa
 import { FeeLedgerComponent } from './fee-ledger/fee-ledger.component';
 import { FeeModificationComponent } from './fee-modification/fee-modification.component';
 import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/fee-transaction-entry-bulk.component';
+import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.component';
+
 
 const routes: Routes = [
 	{ path: 'student-profile', component: StudentProfileComponent},
@@ -18,7 +20,8 @@ const routes: Routes = [
 	{ path: 'fee-transaction-entry-individual', component: FeeTransactionEntryComponent},
 	{ path: 'fee-ledger', component: FeeLedgerComponent},
 	{ path: 'fee-modification', component: FeeModificationComponent},
-	{ path: 'fee-transaction-entry-bulk', component: FeeTransactionEntryBulkComponent}
+	{ path: 'fee-transaction-entry-bulk', component: FeeTransactionEntryBulkComponent},
+	{ path: 'wallet-ledger', component: WalletsLedgerComponent}
 ];
 
 @NgModule({

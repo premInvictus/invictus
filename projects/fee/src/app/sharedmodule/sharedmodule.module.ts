@@ -43,6 +43,7 @@ import { DeleteWithReasonComponent } from './delete-with-reason/delete-with-reas
 import { CreateInvoiceModalComponent } from './create-invoice-modal/create-invoice-modal.component';
 import { SearchDialogComponent } from './search-dialog/search-dialog.component';
 import { FeeCommunicationModalComponent } from './fee-communication-modal/fee-communication-modal.component';
+import { WalletReceiptDetailsModalComponent } from './wallet-receipt-details-modal/wallet-receipt-details-modal.component';
 declare var CKEDITOR: any;
 const moment = _moment;
 
@@ -117,7 +118,8 @@ export const MY_FORMATS = {
 		CreateInvoiceModalComponent,
 		SearchDialogComponent,
 		TruncatetextPipe,
-		FeeCommunicationModalComponent
+		FeeCommunicationModalComponent,
+		WalletReceiptDetailsModalComponent
 	],
 	exports: [FormsModule, ReactiveFormsModule,
 		MatTooltipModule,
@@ -157,6 +159,7 @@ export const MY_FORMATS = {
 		NumberToWordPipe,
 		ZerodashPipe,
 		ReceiptDetailsModalComponent,
+		WalletReceiptDetailsModalComponent,
 		CommonDynamicChartComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,
@@ -174,6 +177,7 @@ export const MY_FORMATS = {
 		EditRequestModalComponent,
 		InvoiceDetailsModalComponent,
 		ReceiptDetailsModalComponent,
+		WalletReceiptDetailsModalComponent,
 		SearchViaStudentComponent,
 		DeleteWithReasonComponent,
 		CreateInvoiceModalComponent,

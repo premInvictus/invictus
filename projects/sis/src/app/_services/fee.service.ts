@@ -3,12 +3,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CommonAPIService } from '../_services/commonAPI.service';
 import { observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ProcesstypeFeeService } from './processtype.service';
+import { ProcesstypeService } from './processtype.service';
 @Injectable()
 export class FeeService {
 
 	constructor(private http: HttpClient, private service: CommonAPIService,
-		private processType: ProcesstypeFeeService) { }
+		private processType: ProcesstypeService) { }
 	getFeeTypes(value) {
 		this.service.startLoading();
 		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeTypes');
@@ -569,18 +569,5 @@ export class FeeService {
 
 	getMappedSchoolWithUser(value) {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
-	}
-	getWallets(value) {
-		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/wallets/getWallets',value);
-	}
-
-	insertWallets(value) {
-		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/wallets/insertWallets',value);
-	}
-	printWalletReceipt(value) {
-		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/wallets/printReceipt',value);
 	}
 }
