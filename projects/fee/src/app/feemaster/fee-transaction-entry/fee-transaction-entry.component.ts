@@ -28,6 +28,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	studentInfo: any = {};
 	invoiceTotal: any;
 	entryModes: any[] = [];
+	tempentryModes: any[] = [];
 	payModes: any[] = [];
 	invoice: any = {};
 	feePeriods: any[] = [];
@@ -245,7 +246,9 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		});
 	}
 	async getStudentInformation(login_id) {
+		this.commonStu.showWalletLedger=false;
 		this.studentInfo = {};
+		this.entryModes = JSON.parse(JSON.stringify(this.tempentryModes));
 		this.feeTransactionForm.patchValue({
 			'inv_id': [],
 			'inv_invoice_no': '',
@@ -269,13 +272,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			await this.feeService.getFeeAccount({ accd_login_id: this.feeLoginId }).toPromise().then((result: any) => {
 				if (result && result.status === 'ok') {
 					const accountdet:any = result.data[0];
-					if(accountdet.accd_is_hostel.toLowerCase() == 'y') {
-						
+					if(accountdet.accd_is_hostel == 'Y') {
+						this.commonStu.showWalletLedger=true;
 					} else {
 						const findex = this.entryModes.findIndex(e => e.emod_alias == 'EAW');
 						if(findex != -1) {
 							this.entryModes.splice(findex,1);
-							this.commonStu.showWalletLedger=false;
 
 						}
 					}
@@ -310,6 +312,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.feeService.getEntryMode({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.entryModes = result.data;
+				this.tempentryModes = JSON.parse(JSON.stringify(result.data));
 			}
 		});
 	}

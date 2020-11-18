@@ -1,0 +1,63 @@
+.itemlog{
+    padding-left: 15%;
+    padding-right: 15%;
+}
+.table-receipt td,
+.table-receipt th {
+    font-size: 14px;
+    color: #000;
+    background: #fff;
+    /* border-bottom: 1px solid #fff; */
+}
+
+.bold-footer {
+    font-weight: 500;
+}
+
+.table-receipt th {
+    white-space: nowrap;
+    font-weight: 400;
+    font-size: 12px
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.pad-overall {
+   padding:14px;
+   text-align: center;
+}
+.pad-overall-name{
+    padding:14px;
+    text-align: left;
+}
+.pad-overall-2 {
+    padding:3px;
+    text-align: left !important;
+ }
+.border-table-th {
+    color: #000 ! important;
+    font-size: 14px ! important;
+}
+.pad-overall-bottom {
+    padding-top: 15px;
+    padding-left: 5px;
+    padding-bottom: 1px;
+    padding-right: 5px;
+}
+
+.pad-5 {
+    padding-top: 5px;
+}
+.image_class{
+    width:80px !important;
+}
