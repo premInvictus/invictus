@@ -154,10 +154,11 @@ export class WalletsLedgerComponent implements OnInit {
 		for (const item of this.recordArray) {
 			element = {
 				w_transaction_date: item.w_transaction_date,
-				w_rpt_no: item.w_rpt_no ? item.w_rpt_no : '-',
+				w_rpt_no: item.w_rpt_no && item.w_rpt_no != 0 ? item.w_rpt_no : '',
 				w_remarks: item.w_remarks ? item.w_remarks : '-',
 				w_amount: item.w_amount ? item.w_amount : '0',
 				w_amount_type: item.w_amount_type ? item.w_amount_type : '-',
+				w_amount_sign: item.w_amount_type == 'credit' ?  '+': '-',
 				w_pay_id: item.pay_name ? item.pay_name : '-',
 				w_cheque_no: item.w_cheque_no ? item.w_cheque_no : '-',
 				w_cheque_date: item.w_cheque_date ? item.w_cheque_date : '-',
@@ -181,7 +182,7 @@ export class WalletsLedgerComponent implements OnInit {
 		if(this.footerRecord.balancetotal > 0) {
 			this.footerRecord.balancetype = '+';
 		} else if(this.footerRecord.balancetotal < 0) {
-			this.footerRecord.balancetype = '-';
+			this.footerRecord.balancetype = '';
 		}
 		this.commonStu.wallet_balance = this.footerRecord.balancetotal;
 				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
@@ -303,6 +304,7 @@ export interface Element {
 	w_transaction_date: string;
 	w_amount: number;
 	w_amount_type: string;
+	w_amount_sign:string;
 	w_pay_id: string;
   w_cheque_no: string;
   w_bnk_id: string;

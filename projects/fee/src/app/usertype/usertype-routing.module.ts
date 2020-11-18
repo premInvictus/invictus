@@ -16,7 +16,7 @@ const routes: Routes = [
 			{ path: 'reports', loadChildren: 'projects/fee/src/app/reports/reports.module#ReportsModule'},
 			{ path: 'auxiliary', loadChildren: '../auxiliary/auxiliary.module#AuxiliaryModule'},
 			{ path: 'user-credential', component: UserCredentialComponent},
-			{ path: 'wallets',loadChildren: '../wallets/wallets.module#WalletsModule'},
+			// { path: 'wallets',loadChildren: '../wallets/wallets.module#WalletsModule'},
 		]
 	}
 ];
