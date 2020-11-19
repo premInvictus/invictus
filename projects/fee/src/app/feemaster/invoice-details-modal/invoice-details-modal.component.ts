@@ -19,7 +19,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('editReference') editReference;
 	ELEMENT_DATA: InvoiceDetails[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
+	displayedColumns: string[] = ['srno', 'feehead','feegroup', 'feedue', 'concession', 'adjustment', 'netpay'];
 	dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceDetails>(true, []);
 	invoiceBifurcationArray: any[] = [];
@@ -142,7 +142,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.modifyInvoiceForm.patchValue({
 				inv_opening_balance: $event.target.value
 			});
-			this.invoiceDetails.inv_prev_balance = $event.target.value;
+			this.invoiceDetails.balance_amt = $event.target.value;
 		}
 		this.invoiceDetialsTable(this.invoiceBifurcationArray);
 	}
@@ -162,7 +162,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.modificationFlag = true;
 			this.adjRemark = '';
 			this.modifyInvoiceForm.patchValue({
-				'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
+				'inv_opening_balance': this.invoiceDetails.balance_amt,
 				'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 				'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 				'inv_due_date': this.invoiceDetails.inv_due_date,
@@ -241,14 +241,14 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
-		if (this.invoiceDetails.inv_prev_balance && Number(this.invoiceDetails.inv_prev_balance) !== 0) {
+		if (this.invoiceDetails.balance_amt && Number(this.invoiceDetails.balance_amt) !== 0) {
 			const element = {
 				srno: ++i,
 				feehead: 'Previous Balance',
-				feedue: Number(this.invoiceDetails.inv_prev_balance),
+				feedue: Number(this.invoiceDetails.balance_amt),
 				concession: 0,
 				adjustment: 0,
-				netpay: Number(this.invoiceDetails.inv_prev_balance),
+				netpay: Number(this.invoiceDetails.balance_amt),
 				invg_id: ''
 			};
 			this.invoiceTotal += element.netpay;			
@@ -258,6 +258,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			const element = {
 				srno: ++i,
 				feehead: item.invg_fh_name,
+				fs_name: item.fs_name ? item.fs_name : '',
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
@@ -298,7 +299,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						// this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
 						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
 						this.modifyInvoiceForm.patchValue({
-							'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
+							'inv_opening_balance': this.invoiceDetails.balance_amt,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 							'inv_due_date': this.invoiceDetails.inv_due_date,
@@ -348,7 +349,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 						// inv_opening_balance = this.invoiceDetails.inv_opening_balance;
 						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
 						this.modifyInvoiceForm.patchValue({
-							'inv_opening_balance': this.invoiceDetails.inv_prev_balance,
+							'inv_opening_balance': this.invoiceDetails.balance_amt,
 							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
 							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
 							'inv_due_date': this.invoiceDetails.inv_due_date,

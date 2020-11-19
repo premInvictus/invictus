@@ -215,6 +215,12 @@
             {{element.feehead | titlecase}}
           </td>
         </ng-container>
+        <ng-container matColumnDef="feegroup">
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Fee Group </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap" style="text-align: left !important;">
+            {{element.fs_name | titlecase}}
+          </td>
+        </ng-container>
         <ng-container matColumnDef="feedue">
           <th mat-header-cell *matHeaderCellDef style="width: 100px !important;" class="text-nowrap"> Fee Due (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>

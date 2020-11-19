@@ -161,6 +161,12 @@
           <td mat-cell *matCellDef="let element" style="text-align: left !important;" class="text-nowrap">
             {{element.feehead | titlecase}} </td>
         </ng-container>
+        <ng-container matColumnDef="feegroup">
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Fee Group </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap" style="text-align: left !important;">
+            {{element.fs_name | titlecase}}
+          </td>
+        </ng-container>
         <ng-container matColumnDef="feedue">
           <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Fee (<span><i
                 class="fas fa-rupee-sign"></i></span>)</th>
@@ -204,26 +210,26 @@
       <div>
         <div>
           <table width="100%">
-            <tr *ngIf="invoiceDetails.inv_fee_amount">
+            <tr *ngIf="invoiceDetails?.inv_fee_amount">
               <td width="70%">
 
               </td>
               <td align="right" width="30%" style="padding-right: 50px;">
                 <span class="float-right"><span class="font-size-16">Grand Total : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
-                    {{invoiceDetails.inv_fee_amount | indianCurrency}} </span></span>
+                    {{invoiceDetails?.inv_fee_amount | indianCurrency}} </span></span>
               </td>
             </tr>
             <tr class="grey-box" height="50">
               <td style="padding-left: 15px;">
                 <span class="font-size-16 ">Amount in Words : </span><span class="font-size-16 font-medium">Rupees
-                  {{invoiceDetails.rpt_net_amount | numberToWord | titlecase}}
+                  {{invoiceDetails?.rpt_net_amount | numberToWord | titlecase}}
                   Only</span>
               </td>
               <td align="right" style="padding-right: 50px;">
                 <span class="float-right"><span class="font-size-16">Amount Received : </span>
                   <span class="font-size-16 font-medium"><i class="fas fa-rupee-sign"></i>
-                    {{invoiceDetails.rpt_net_amount | indianCurrency}} </span></span>
+                    {{invoiceDetails?.rpt_net_amount | indianCurrency}} </span></span>
               </td>
             </tr>
             <tr *ngIf="balance && invoiceDetails.ftr_emod_id != '2'">

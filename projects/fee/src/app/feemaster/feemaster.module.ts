@@ -20,6 +20,7 @@ import { FeeTransactionEntryBulkComponent } from './fee-transaction-entry-bulk/f
 import { StudentRouteMoveStoreService } from './student-route-move-store.service';
 import { LoadingModule } from 'ngx-loading';
 import { InvoiceSearchModalComponent } from './invoice-search-modal/invoice-search-modal.component';
+import { WalletsLedgerComponent } from './wallets-ledger/wallets-ledger.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -43,6 +44,7 @@ import { InvoiceSearchModalComponent } from './invoice-search-modal/invoice-sear
 		FeeFilterModalComponent,
 		FeeTransactionEntryBulkComponent,
 		InvoiceSearchModalComponent,
+		WalletsLedgerComponent
 	],
 	providers: [StudentRouteMoveStoreService]
 })

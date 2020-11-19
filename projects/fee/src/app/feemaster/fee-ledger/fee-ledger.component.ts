@@ -7,7 +7,7 @@ import { TitleCasePipe, DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 declare var require;
-import * as Excel from 'exceljs/dist/exceljs';
+import * as Excel from 'exceljs/dist/exceljs'; 
 import { InvoiceDetailsModalComponent } from '../invoice-details-modal/invoice-details-modal.component';
 import { ReceiptDetailsModalComponent } from '../../sharedmodule/receipt-details-modal/receipt-details-modal.component';
 import { StudentRouteMoveStoreService } from '../student-route-move-store.service';

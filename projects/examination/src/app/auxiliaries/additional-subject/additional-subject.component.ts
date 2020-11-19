@@ -153,6 +153,8 @@ export class AdditionalSubjectComponent implements OnInit {
 		this.ELEMENT_DATA = [];
 		this.rollNoDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 		this.studentArray = [];
+		this.addselectionArray = [];
+		this.selectionArray = [];
 		this.getSubjectsByClass();
 		const studentParam: any = {};
 		studentParam.au_class_id = this.firstForm.value.syl_class_id;

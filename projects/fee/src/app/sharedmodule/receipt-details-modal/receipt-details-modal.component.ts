@@ -16,7 +16,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('editReference') editReference;
 	ELEMENT_DATA: ReceiptDetails[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
+	displayedColumns: string[] = ['srno', 'feehead','feegroup', 'feedue', 'concession', 'adjustment', 'netpay'];
 	dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
 	selection = new SelectionModel<ReceiptDetails>(true, []);
 	invoiceBifurcationArray: any[] = [];
@@ -161,6 +161,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			const element = {
 				srno: ++i,
 				feehead: item.invg_fh_name,
+				fs_name:item.fs_name ? item.fs_name : '',
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
