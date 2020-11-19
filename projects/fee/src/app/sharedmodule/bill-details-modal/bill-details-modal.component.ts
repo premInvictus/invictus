@@ -48,7 +48,7 @@ export class BillDetailsModalComponent implements OnInit {
     this.tableReciptArray['name'] = data.buyer_details.au_full_name;
     this.tableReciptArray['mobile'] = data.buyer_details.au_mobile;
     this.tableReciptArray['adm_no'] = data.buyer_details.em_admission_no;
-    this.tableReciptArray['class'] = data.buyer_details.class_name;
+    this.tableReciptArray['class'] = this.data.buyer_details.sec_name ? this.data.buyer_details.class_name + '-' + this.data.buyer_details.sec_name : '';
     this.dialogRef = this.dialog.open(this.billDetailsModal, {
       'height': '50vh',
       'width': '100vh',
