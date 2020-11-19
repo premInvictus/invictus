@@ -183,6 +183,55 @@ export class TransportReportComponent implements OnInit {
 		this.angularGrid = angularGrid;
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
+		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
+	}
+	parseRoman(s) {
+        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
+            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+        }, 0);
+	}
+	isRoman(s) {
+        // http://stackoverflow.com/a/267405/1447675
+        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+	}
+	updateClassSort(grid:any,dataView:any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx];
+			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
+				grid.onSort.subscribe((e, args)=> {
+					console.log('in, args', args);
+					// args.multiColumnSort indicates whether or not this is a multi-column sort.
+					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
+					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
+				  
+					// We'll use a simple comparer function here.
+					args = args.sortCols[0];
+					var comparer = (a, b) =>{
+						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
+							
+							
+						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
+						
+						
+						} else {
+							
+							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+						}
+					
+					}
+				  
+					// Delegate the sorting to DataView.
+					// This will fire the change events and update the grid.
+					dataView.sort(comparer, args.sortAsc);
+				  });
+			}
+		}
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -238,6 +287,7 @@ export class TransportReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			rowHeight:65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -462,6 +512,7 @@ export class TransportReportComponent implements OnInit {
 					sortable: true,
 					filterable: true,
 					filterSearchType: FieldType.number,
+					type:FieldType.number,
 					filter: { model: Filters.compoundInputNumber },
 					formatter: this.checkFeeFormatter,
 					groupTotalsFormatter: this.sumTotalsFormatter
@@ -1255,7 +1306,12 @@ export class TransportReportComponent implements OnInit {
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
-			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			if (new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100)))) {
+				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';	
+			} else {
+				return '';
+			}
+			
 		}
 		return '';
 	}
@@ -1263,21 +1319,35 @@ export class TransportReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value) {
+				return new DecimalPipe('en-in').transform(value);
+			} else {
+				return '-';
+			}
+			
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value) {
+				return new DecimalPipe('en-in').transform(value);
+			} else {
+				return '-';
+			}
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
 		} else {
-			return '<a>' + value + '</a>';
+			if (value) {
+				return '<a>' + value + '</a>';
+			} else {
+				return '-';
+			}
+			
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {

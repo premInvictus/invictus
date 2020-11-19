@@ -157,6 +157,55 @@ export class FeestrucReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 		this.updateTotalRow(angularGrid.slickGrid);
+		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
+	}
+	parseRoman(s) {
+        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
+            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+        }, 0);
+	}
+	isRoman(s) {
+        // http://stackoverflow.com/a/267405/1447675
+        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+	}
+	updateClassSort(grid:any,dataView:any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx];
+			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
+				grid.onSort.subscribe((e, args)=> {
+					console.log('in, args', args);
+					// args.multiColumnSort indicates whether or not this is a multi-column sort.
+					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
+					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
+				  
+					// We'll use a simple comparer function here.
+					args = args.sortCols[0];
+					var comparer = (a, b) =>{
+						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
+							
+							
+						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
+						
+						
+						} else {
+							
+							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+						}
+					
+					}
+				  
+					// Delegate the sorting to DataView.
+					// This will fire the change events and update the grid.
+					dataView.sort(comparer, args.sortAsc);
+				  });
+			}
+		}
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -489,6 +538,7 @@ export class FeestrucReportComponent implements OnInit {
 											filterSearchType: FieldType.number,
 											filter: { model: Filters.compoundInput },
 											formatter: this.checkFeeFormatter,
+											type:FieldType.number,
 											groupTotalsFormatter: this.sumTotalsFormatter
 										});
 										feeObj['fh_name' + j] = '';
@@ -554,6 +604,7 @@ export class FeestrucReportComponent implements OnInit {
 							sortable: true,
 							formatter: this.checkTotalFormatter,
 							cssClass: 'amount-report-fee',
+							type:FieldType.number,
 							groupTotalsFormatter: this.sumTotalsFormatter
 						},
 					);
@@ -644,7 +695,12 @@ export class FeestrucReportComponent implements OnInit {
 		console.log(columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
-			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			if (new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100)))) {
+				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			} else {
+				return '';
+			}
+			
 		}
 		return '';
 	}
@@ -652,25 +708,42 @@ export class FeestrucReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
 		}
 	}
 	checkFeeHeadFormatter(row, cell, value, columnDef, dataContext) {
 		console.log(value);
-		return value;
+		if (value) {
+			return value;
+		} else {
+			return '';
+		}
+		
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
 		} else {
-			return '<a>' + value + '</a>';
+			if (value ){
+				return '<a>' + value + '</a>';
+			} else {
+				return '-';
+			}
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -797,7 +870,7 @@ export class FeestrucReportComponent implements OnInit {
 					createFooterRow: true,
 					showFooterRow: true,
 					footerRowHeight: 21,
-					rowHeight: 300,
+					rowHeight: 500,
 					enableExcelCopyBuffer: true,
 					fullWidthRows: true,
 					enableAutoTooltip: true,
@@ -887,6 +960,7 @@ export class FeestrucReportComponent implements OnInit {
 					fullWidthRows: true,
 					enableAutoTooltip: true,
 					enableCellNavigation: true,
+					rowHeight:35,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
 						iconSortAscCommand: 'fas fa-sort-up',
@@ -1411,13 +1485,13 @@ export class FeestrucReportComponent implements OnInit {
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
-		for (const item of this.exportColumnDefinitions) {
-			columns.push({
-				key: item.id,
-				width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);
-		}
+		// for (const item of this.exportColumnDefinitions) {
+		// 	columns.push({
+		// 		key: item.id,
+		// 		width: this.checkWidth(item.id, item.name)
+		// 	});
+		// 	columValue.push(item.name);
+		// }
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		reportType = new TitleCasePipe().transform('fee structure allotee_') + this.sessionName;
 		let reportType2: any = '';
@@ -1426,6 +1500,15 @@ export class FeestrucReportComponent implements OnInit {
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
+		for (const item of this.exportColumnDefinitions) {
+			if(!(item.id.includes('checkbox_select'))) {
+			columns.push({
+				key: item.id,
+				//width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);}
+		}
+		worksheet.properties.defaultRowHeight =60;
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -1435,6 +1518,11 @@ export class FeestrucReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
+		for(var i=1; i<=columns.length;i++) {
+			
+			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
+			
+		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
@@ -1512,7 +1600,7 @@ export class FeestrucReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
+					cell.alignment = { wrapText:true,horizontal: 'center' };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);

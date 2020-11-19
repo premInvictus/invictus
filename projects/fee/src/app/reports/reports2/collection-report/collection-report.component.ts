@@ -3,6 +3,7 @@ import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
+	OperatorType,
 	Formatters,
 	Sorters,
 	SortDirectionNumber,
@@ -206,6 +207,7 @@ export class CollectionReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 		this.updateTotalRow(angularGrid.slickGrid);
+		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -323,6 +325,55 @@ export class CollectionReportComponent implements OnInit {
 			school_branch:tempArray
 		})
 	}
+
+	parseRoman(s) {
+        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
+            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+        }, 0);
+	}
+	isRoman(s) {
+        // http://stackoverflow.com/a/267405/1447675
+        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+	}
+	updateClassSort(grid:any,dataView:any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx];
+			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
+				grid.onSort.subscribe((e, args)=> {
+					console.log('in, args', args);
+					// args.multiColumnSort indicates whether or not this is a multi-column sort.
+					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
+					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
+				  
+					// We'll use a simple comparer function here.
+					args = args.sortCols[0];
+					var comparer = (a, b) =>{
+						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
+							
+							
+						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
+						
+						
+						} else {
+							
+							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+						}
+					
+					}
+				  
+					// Delegate the sorting to DataView.
+					// This will fire the change events and update the grid.
+					dataView.sort(comparer, args.sortAsc);
+				  });
+			}
+		}
+	}
 	getHeadWiseCollectionReport(value: any) {
 		value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 		value.to_date = new DatePipe('en-in').transform(value.to_date, 'yyyy-MM-dd');
@@ -347,6 +398,7 @@ export class CollectionReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			fullWidthRows: true,
+			// rowHeight:65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -442,6 +494,7 @@ export class CollectionReportComponent implements OnInit {
 		this.dataset = [];
 		if (this.reportFilterForm.value.report_type) {
 			if (this.reportType === 'headwise') {
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -647,7 +700,8 @@ export class CollectionReportComponent implements OnInit {
 										filterable: true,
 										cssClass: 'amount-report-fee',
 										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
+										type:FieldType.number,
+										filter: { model: Filters.compoundInputNumber,   operator: OperatorType.greaterThan },
 										sortable: true,
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
@@ -704,7 +758,8 @@ export class CollectionReportComponent implements OnInit {
 												sortable: true,
 												filterable: true,
 												filterSearchType: FieldType.number,
-												filter: { model: Filters.compoundInput },
+												type:FieldType.number,
+												filter: { model: Filters.compoundInputNumber },
 												formatter: this.checkFeeFormatter,
 												groupTotalsFormatter: this.sumTotalsFormatter
 											});
@@ -745,7 +800,6 @@ export class CollectionReportComponent implements OnInit {
 												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													console.log(key2 + k,'titem--',titem['fh_name'],titem['fh_amt'],stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
 													break;
 													
 												} 
@@ -754,7 +808,7 @@ export class CollectionReportComponent implements OnInit {
 											
 											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
 												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
-											obj['inv_opening_balance'] = obj['inv_opening_balance'] + (repoArray[Number(keys)]['defaulter_inv_group_amount']
+											obj['inv_opening_balance'] = obj['inv_opening_balance'] + Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 											? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
 											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
 												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
@@ -770,6 +824,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['pay_name'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
+											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
 
 											k++;
 										}
@@ -785,6 +840,7 @@ export class CollectionReportComponent implements OnInit {
 								filterable: true,
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
+								type:FieldType.number,
 								sortable: true,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
@@ -794,6 +850,7 @@ export class CollectionReportComponent implements OnInit {
 								filterable: true,
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
+								type:FieldType.number,
 								sortable: true,
 								formatter: this.checkFeeFormatter,
 								cssClass: 'amount-report-fee',
@@ -804,6 +861,7 @@ export class CollectionReportComponent implements OnInit {
 								filterable: true,
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
+								type:FieldType.number,
 								sortable: true,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
@@ -831,6 +889,25 @@ export class CollectionReportComponent implements OnInit {
 								width: 100,
 								grouping: {
 									getter: 'tb_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'created_by',
+								name: 'Created By',
+								field: 'created_by',
+								filterable: true,
+								sortable: true,
+								width: 180,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'created_by',
 									formatter: (g) => {
 										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
@@ -893,6 +970,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'classwise') {
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -940,7 +1018,7 @@ export class CollectionReportComponent implements OnInit {
 						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no',
 						sortable: true,
 						filterable: true,
-						width: 20,
+						width: 30,
 						grouping: {
 							getter: 'stu_admission_no',
 							formatter: (g) => {
@@ -972,7 +1050,7 @@ export class CollectionReportComponent implements OnInit {
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 						filterable: true,
-						width: 15,
+						width: 30,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
 						grouping: {
@@ -1004,7 +1082,7 @@ export class CollectionReportComponent implements OnInit {
 					{
 						id: 'invoice_created_date', name: 'Trans. Date', field: 'invoice_created_date', sortable: true,
 						filterable: true,
-						width: 30,
+						width: 60,
 						formatter: this.checkDateFormatter,
 						filterSearchType: FieldType.dateIso,
 						filter: { model: Filters.compoundDate },
@@ -1046,7 +1124,7 @@ export class CollectionReportComponent implements OnInit {
 						id: 'receipt_no',
 						name: 'Reciept No.',
 						field: 'receipt_no',
-						width: 15,
+						width: 20,
 						sortable: true,
 						filterable: true,
 						filterSearchType: FieldType.number,
@@ -1059,11 +1137,12 @@ export class CollectionReportComponent implements OnInit {
 						name: 'Reciept Amt.',
 						field: 'rpt_amount',
 						sortable: true,
-						width: 20,
+						width: 25,
 						cssClass: 'amount-report-fee',
 						filterable: true,
 						filterSearchType: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
+						type:FieldType.number,
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					},
@@ -1071,7 +1150,7 @@ export class CollectionReportComponent implements OnInit {
 						id: 'payment_mode',
 						name: 'Payment Mode',
 						field: 'payment_mode',
-						width: 15,
+						width: 20,
 						sortable: true,
 						filterable: true,
 						grouping: {
@@ -1106,10 +1185,29 @@ export class CollectionReportComponent implements OnInit {
 						id: 'transaction_id',
 						name: 'Transaction Id/Cheque No.',
 						field: 'transaction_id',
-						width: 15,
+						width: 25,
 						sortable: true,
 						filterable: true
 					},
+					{
+						id: 'created_by',
+						name: 'Created By',
+						field: 'created_by',
+						filterable: true,
+						sortable: true,
+						width: 90,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'created_by',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					}
 				];
 				if(this.reportFilterForm.value.school_branch.length > 1) {
 					let aColumn = {
@@ -1179,6 +1277,7 @@ export class CollectionReportComponent implements OnInit {
 							} else {
 							obj['transaction_id'] = repoArray[Number(index)]['ftr_transaction_id'] > 0 ?
 								(repoArray[Number(index)]['ftr_transaction_id']) : '-';
+							obj['created_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 
 							}
 
@@ -1217,6 +1316,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'modewise') {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -1306,7 +1406,7 @@ export class CollectionReportComponent implements OnInit {
 									{
 										id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 										filterable: true,
-										width: 40,
+										width: 60,
 										filterSearchType: FieldType.string,
 										filter: { model: Filters.compoundInput },
 										grouping: {
@@ -1380,7 +1480,7 @@ export class CollectionReportComponent implements OnInit {
 										id: 'receipt_no',
 										name: 'Reciept No.',
 										field: 'receipt_no',
-										width: 30,
+										width: 60,
 										sortable: true,
 										filterable: true,
 										filterSearchType: FieldType.number,
@@ -1465,6 +1565,7 @@ export class CollectionReportComponent implements OnInit {
 											tot = tot + (titem['pay_amount'] ? Number(titem['pay_amount']) : 0);
 											obj['bank_name'] = repoArray[Number(keys)]['bank_name'] ?
 												repoArray[Number(keys)]['bank_name'] : '-';
+											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
 											obj['total'] = tot;
 											k++;
 										}
@@ -1496,13 +1597,33 @@ export class CollectionReportComponent implements OnInit {
 								id: 'total', name: 'Total', field: 'total',
 								filterable: true,
 								filterSearchType: FieldType.number,
-								filter: { model: Filters.compoundInput },
+								filter: { model: Filters.compoundInputNumber },
+								type:FieldType.number,
 								sortable: true,
 								cssClass: 'amount-report-fee',
 								width: 50,
 								formatter: this.checkTotalFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
+							{
+								id: 'created_by',
+								name: 'Created By',
+								field: 'created_by',
+								filterable: true,
+								sortable: true,
+								width: 180,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'created_by',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							}
 						);
 						this.totalRow = {};
 						const obj3: any = {};
@@ -1711,6 +1832,7 @@ export class CollectionReportComponent implements OnInit {
 						sortable: true,
 						filterable: true,
 						filterSearchType: FieldType.number,
+						type:FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
@@ -1770,6 +1892,24 @@ export class CollectionReportComponent implements OnInit {
 							aggregators: this.aggregatearray,
 							aggregateCollapsed: true,
 							collapsed: false,
+						},
+					},{
+						id: 'created_by',
+						name: 'Created By',
+						field: 'created_by',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'created_by',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
 						},
 					}];
 					if(this.reportFilterForm.value.school_branch.length > 1) {
@@ -1836,6 +1976,7 @@ export class CollectionReportComponent implements OnInit {
 								repoArray[Number(index)]['stoppages_name'] : '-';
 							obj['slab_name'] = repoArray[Number(index)]['slab_name'] ?
 								repoArray[Number(index)]['slab_name'] : '-';
+							obj['created_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 							this.dataset.push(obj);
 							index++;
 						}
@@ -1984,13 +2125,15 @@ export class CollectionReportComponent implements OnInit {
 						field: 'stu_opening_balance',
 						filterSearchType: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
+						type:FieldType.number,
 						filterable: true,
 						sortable: true,
 						width: 160,
 						formatter: this.checkFeeFormatter,
 						cssClass: 'amount-report-fee',
 						groupTotalsFormatter: this.sumTotalsFormatter
-					}];
+					}
+				];
 					if(this.reportFilterForm.value.school_branch.length > 1) {
 						let aColumn = {
 							id: 'school_prefix',
@@ -2186,6 +2329,7 @@ export class CollectionReportComponent implements OnInit {
 											inv_invoice_no: item['inv_invoice_generated_status'][0]['inv_invoice_no']
 										};
 									}
+									obj['created_by'] = repoArray[Number(index)]['created_by'] ? repoArray[Number(index)]['created_by'] : '-';
 								});
 							}
 							this.dataset.push(obj);
@@ -2380,6 +2524,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === "cumulativeheadwise") {
+				this.gridOptions.rowHeight = 65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -2507,7 +2652,7 @@ export class CollectionReportComponent implements OnInit {
 										field: 'stu_class_name',
 										sortable: true,
 										filterable: true,
-										width: 60,
+										width: 80,
 										filterSearchType: FieldType.string,
 										filter: { model: Filters.compoundInputText },
 										grouping: {
@@ -2620,6 +2765,7 @@ export class CollectionReportComponent implements OnInit {
 										filter: { model: Filters.compoundInputNumber },
 										sortable: true,
 										formatter: this.checkFeeFormatter,
+										type:FieldType.number,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
 									if(branchArray.length > 1) {
@@ -2670,6 +2816,7 @@ export class CollectionReportComponent implements OnInit {
 												filterSearchType: FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
+												type:FieldType.number,
 												groupTotalsFormatter: this.sumTotalsFormatter
 											});
 											feeObj['fh_name' + j] = '';
@@ -2724,6 +2871,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['pay_name'] : '-';
 											obj['tb_name'] = repoArray[Number(keys)]['tb_name'] ?
 												repoArray[Number(keys)]['tb_name'] : '-';
+											obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
 
 											k++;
 										}
@@ -2742,6 +2890,7 @@ export class CollectionReportComponent implements OnInit {
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
 								formatter: this.checkFeeFormatter,
+								type:FieldType.number,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 							{
@@ -2752,6 +2901,7 @@ export class CollectionReportComponent implements OnInit {
 								sortable: true,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
+								type:FieldType.number,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 							{
@@ -2776,6 +2926,25 @@ export class CollectionReportComponent implements OnInit {
 								width: 100,
 								grouping: {
 									getter: 'tb_name',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'created_by',
+								name: 'Created By',
+								field: 'created_by',
+								filterable: true,
+								sortable: true,
+								width: 180,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'created_by',
 									formatter: (g) => {
 										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
@@ -2835,6 +3004,7 @@ export class CollectionReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === "dailyheadwise") {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -2998,7 +3168,7 @@ export class CollectionReportComponent implements OnInit {
 										field: 'ses_name',
 										sortable: true,
 										filterable: true,
-										width: 60,
+										width: 80,
 										filterSearchType: FieldType.string,
 										filter: { model: Filters.compoundInputText },
 										grouping: {
@@ -3072,6 +3242,7 @@ export class CollectionReportComponent implements OnInit {
 										filterSearchType: FieldType.number,
 										filter: { model: Filters.compoundInputNumber },
 										sortable: true,
+										type:FieldType.number,
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
@@ -3122,6 +3293,7 @@ export class CollectionReportComponent implements OnInit {
 												filterSearchType: FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
+												type:FieldType.number,
 												groupTotalsFormatter: this.sumTotalsFormatter
 											});
 											feeObj['fh_name' + j] = '';
@@ -3178,6 +3350,7 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['tb_name'] : '-';
 											obj['transaction_id'] = repoArray[Number(keys)]['ftr_transaction_id'] ?
 												repoArray[Number(keys)]['ftr_transaction_id'] : '-';
+												obj['created_by'] = repoArray[Number(keys)]['created_by'] ? repoArray[Number(keys)]['created_by'] : '-';
 
 											k++;
 										}
@@ -3196,6 +3369,7 @@ export class CollectionReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
+								type:FieldType.number,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
@@ -3207,6 +3381,7 @@ export class CollectionReportComponent implements OnInit {
 								sortable: true,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
+								type:FieldType.number,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 							{
@@ -3246,6 +3421,25 @@ export class CollectionReportComponent implements OnInit {
 								width: 100,
 								grouping: {
 									getter: 'transaction_id',
+									formatter: (g) => {
+										return `${g.value}  <span style="color:green">(${g.count})</span>`;
+									},
+									aggregators: this.aggregatearray,
+									aggregateCollapsed: true,
+									collapsed: false
+								},
+							},
+							{
+								id: 'created_by',
+								name: 'Created By',
+								field: 'created_by',
+								filterable: true,
+								sortable: true,
+								width: 180,
+								filterSearchType: FieldType.string,
+								filter: { model: Filters.compoundInputText },
+								grouping: {
+									getter: 'created_by',
 									formatter: (g) => {
 										return `${g.value}  <span style="color:green">(${g.count})</span>`;
 									},
@@ -3371,8 +3565,11 @@ export class CollectionReportComponent implements OnInit {
 	}
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
-		if (val != null && totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
-			return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+		if (val != null && val != '-' && totals.group.rows[0].invoice_created_date !== '<b>Grand Total</b>') {
+			if (new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100)))) {
+			return '<b class="total-footer-report">' + new IndianCurrency().transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';} else {
+				return '';
+			}
 		}
 		return '';
 	}
@@ -3394,14 +3591,20 @@ export class CollectionReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new IndianCurrency().transform(value);
+			if(value)
+				return new IndianCurrency().transform(value);
+			else 
+				return '-';
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
 		} else {
-			return '<a>' + value + '</a>';
+			if (value)
+				return '<a>' + value + '</a>';
+			else 
+				return '-';
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -4162,13 +4365,7 @@ export class CollectionReportComponent implements OnInit {
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
-		for (const item of this.exportColumnDefinitions) {
-			columns.push({
-				key: item.id,
-				width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);
-		}
+		
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
 			reportType = new TitleCasePipe().transform('head wise_') + this.sessionName;
@@ -4190,28 +4387,92 @@ export class CollectionReportComponent implements OnInit {
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType2 = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'classwise') {
-			reportType2 = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'modewise') {
-			reportType2 = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType2 = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
-		} else if (this.reportType === 'mfr') {
-			reportType2 = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
-		}
-		else if (this.reportType === 'summary') {
-			reportType2 = new TitleCasePipe().transform('collection summary report: ') + this.sessionName;
-		}
-		else if (this.reportType === 'cumulativeheadwise') {
-			reportType2 = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
-		}else if (this.reportType === 'dailyheadwise') {
-			reportType2 = new TitleCasePipe().transform('daily collection report: ') + this.sessionName;
-		}
+		
 		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } });
+		if (this.reportType === 'headwise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =60;
+			reportType2 = new TitleCasePipe().transform('head wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'classwise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('class wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'modewise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('mode wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);
+			}
+			reportType2 = new TitleCasePipe().transform('route wise collection report: ') + this.sessionName;
+		} else if (this.reportType === 'mfr') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('monthly fee report: ') + this.sessionName;
+		}
+		else if (this.reportType === 'summary') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('collection summary report: ') + this.sessionName;
+		}
+		else if (this.reportType === 'cumulativeheadwise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('cumulative head wise report: ') + this.sessionName;
+		}else if (this.reportType === 'dailyheadwise') {
+			for (const item of this.exportColumnDefinitions) {
+				columns.push({
+					key: item.id,
+					//  width: 20
+				});
+				columValue.push(item.name);
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('daily collection report: ') + this.sessionName;
+		}
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -4221,6 +4482,14 @@ export class CollectionReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
+		
+		for(var i=1; i<=columns.length;i++) {
+			if (this.reportType === 'headwise' || this.reportType === 'classwise' || this.reportType === 'modewise' || 
+			this.reportType === 'mfr' || this.reportType === 'summary' 
+	|| this.reportType === 'cumulativeheadwise' || this.reportType === 'dailyheadwise')  {
+			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
+			}
+		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
@@ -4285,7 +4554,7 @@ export class CollectionReportComponent implements OnInit {
 					name: 'Arial',
 					size: 10
 				};
-				cell.alignment = { wrapText: true, horizontal: 'center' };
+				cell.alignment = { wrapText: true, horizontal: 'center', vertical:'middle' };
 				cell.fill = {
 					type: 'pattern',
 					pattern: 'solid',
@@ -4333,7 +4602,7 @@ export class CollectionReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
+					cell.alignment = { horizontal: 'center', wrapText:true };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
