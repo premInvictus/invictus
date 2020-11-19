@@ -27,7 +27,7 @@
                    <ng-container matColumnDef="w_rpt_no">
                       <th mat-header-cell *matHeaderCellDef>Receipt No</th>
                       <td mat-cell *matCellDef="let element"><span *ngIf="element.w_rpt_no" class="pointer font-bold font-skyblue font-underline">
-                        <a (click)="openReceiptDialog(element, false)">{{element.w_rpt_no}}</a>
+                        <a (click)="openReceiptDialog(element, false)">{{element.rpt_type}}-{{element.w_rpt_no}}</a>
                       </span> </td>
                       <td mat-footer-cell *matFooterCellDef>Total</td>
                    </ng-container>

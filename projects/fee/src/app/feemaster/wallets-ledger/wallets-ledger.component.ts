@@ -157,6 +157,7 @@ export class WalletsLedgerComponent implements OnInit {
 			element = {
 				w_transaction_date: item.w_transaction_date,
 				w_rpt_no: item.w_rpt_no && item.w_rpt_no != 0 ? item.w_rpt_no : '',
+				rpt_type:'',
 				w_remarks: item.w_remarks ? item.w_remarks : '-',
 				w_amount: item.w_amount ? item.w_amount : '0',
 				w_amount_type: item.w_amount_type ? item.w_amount_type : '-',
@@ -173,10 +174,12 @@ export class WalletsLedgerComponent implements OnInit {
 			}
 			if(item.w_amount_type == 'credit'){
 				total_credit += parseInt(item.w_amount);
+				element.rpt_type = 'RPT';
 			}
 			if(item.w_amount_type == 'debit'){
 				total_debit += parseInt(item.w_amount);
 				element.w_rpt_no = item.w_ref_id
+				element.rpt_type = 'BIL';
 			}
 			this.ELEMENT_DATA.push(element);
 			pos++;
@@ -315,6 +318,7 @@ export class WalletsLedgerComponent implements OnInit {
 
 export interface Element {
 	w_rpt_no: number;
+	rpt_type: string;
 	w_transaction_date: string;
 	w_amount: number;
 	w_amount_type: string;

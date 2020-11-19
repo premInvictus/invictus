@@ -17,7 +17,7 @@
           </h4>
         </td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td class="text-left pad-overall-2" style="width: 30%;">
           <span>{{tableReciptArray.role_id}}</span><span> : {{tableReciptArray.adm_no}}</span>
         </td>
@@ -36,6 +36,18 @@
         </td>
         <td class="text-left pad-overall-2" style="width: 40%;">
         </td>
+      </tr> -->
+      <tr>
+        <td colspan="8" style="padding: 0px;">
+          <div class="row">
+              <div class="col-10">
+              </div>
+            <div class="col-2 float-right">
+                <button mat-raised-button class="btn-primary btn-danger  print-invoice-btn"
+                (click)="printBill()">Print</button>
+            </div>
+          </div>
+        </td>
       </tr>
       <tr>
         <td colspan="8" style="padding: 0px;">
@@ -47,7 +59,7 @@
                 </th>
                 <th class=" pad-overall border-table-th">Item Price</th>
                 <th class=" pad-overall border-table-th">Item Quantity</th>
-                <th class=" pad-overall border-table-th">Total</th>
+                <th class=" pad-overall border-table-th">Total(<i style="font-size: 11px;" class="fas fa-rupee-sign"></i>)</th>
               </tr>
             </thead>
             <tbody>
@@ -104,7 +116,7 @@
         </td>
       </tr>
       <tr style="margin-top: 10%;">
-        <td class="text-left pad-overall-2" style="width: 30%;font-size: 11px;">
+        <td class="text-left pad-overall-2" style="width: 30%;font-size: 14px;">
           Amount Payable : {{tableReciptArray.bill_total_words}}
         </td>
         <td class="text-left pad-overall-2" style="width: 30%;">

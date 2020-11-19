@@ -587,4 +587,8 @@ export class FeeService {
 		this.service.stopLoading();
 		return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
 	}
+	generateStoreBill(value) {
+		this.service.stopLoading();
+		return this.http.post(environment.apiInvUrl + '/change-status/generateStoreBill', value);
+	}
 }

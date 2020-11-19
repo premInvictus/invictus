@@ -419,7 +419,7 @@ export class GenerateBillComponent implements OnInit {
             inputJson.login_id=this.userData.au_login_id;
             this.inventory.insertWallets(inputJson).subscribe((result:any)=>{
               if(result && result.status == 'ok'){
-                this.common.showSuccessErrorMessage(result.message,'success');
+                this.common.showSuccessErrorMessage('Ordered placed successfully','success');
               } else {
                 this.common.showSuccessErrorMessage(result.message,'error');
               }

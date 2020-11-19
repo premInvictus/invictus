@@ -158,7 +158,7 @@
                   <th class="custom-th ">Item Name</th>
                   <th class="custom-th">Item Price</th>
                   <th class="custom-th">Item Quantity</th>
-                  <th class="custom-th">Total</th>
+                  <th class="custom-th">Total(<i class="fas fa-rupee-sign"></i>)</th>
                   <th class="custom-th">Action</th>
                 </tr>
               </thead>
@@ -275,7 +275,7 @@
                         </th>
                         <th class=" pad-overall border-table-th">Item Price</th>
                         <th class=" pad-overall border-table-th">Item Quantity</th>
-                        <th class=" pad-overall border-table-th">Total</th>
+                        <th class=" pad-overall border-table-th">Total(<i style="font-size: 11px;" class="fas fa-rupee-sign"></i>)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -332,7 +332,7 @@
                 </td>
               </tr>
               <tr style="margin-top: 10%;">
-                <td class="text-left pad-overall-2" style="width: 30%;font-size: 11px;">
+                <td class="text-left pad-overall-2" style="width: 30%;font-size: 14px;">
                   Amount Payable : {{tableReciptArray.bill_total_words}}
                 </td>
                 <td class="text-left pad-overall-2" style="width: 30%;">
@@ -350,7 +350,7 @@
                                   <mat-select formControlName="pay_id" placeholder="Payment Mode"
                                      (selectionChange)="getWallets()" required>
                                      <mat-option value="">Please Select</mat-option>
-                                     <mat-option *ngFor="let mode of payModes" [value]="mode">{{mode}}
+                                     <mat-option *ngFor="let mode of payModes" [value]="mode">{{mode | titlecase}}
                                      </mat-option>
                                   </mat-select>
                                </mat-form-field>
