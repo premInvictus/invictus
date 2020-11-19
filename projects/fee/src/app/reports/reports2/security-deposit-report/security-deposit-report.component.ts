@@ -188,6 +188,10 @@ export class SecurityDepositReportComponent implements OnInit {
 
 			enableCellNavigation: true,
 			rowHeight:65,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -879,6 +883,10 @@ export class SecurityDepositReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',

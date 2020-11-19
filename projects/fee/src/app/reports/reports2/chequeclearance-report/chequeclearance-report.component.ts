@@ -282,6 +282,10 @@ export class ChequeclearanceReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			rowHeight:90,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
@@ -681,6 +685,10 @@ export class ChequeclearanceReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			rowHeight:70,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',

@@ -412,7 +412,7 @@ export class GenerateBillComponent implements OnInit {
           }
           if(this.payForm.value.pay_id == 'wallet') {
             const inputJson:any={};
-            inputJson.ftr_ref_id=billArray.bill_id;
+            inputJson.ftr_ref_id=result.bill_no;
             inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
             inputJson.ftr_amount=result.bill_total;
             inputJson.ftr_amount_type='debit';

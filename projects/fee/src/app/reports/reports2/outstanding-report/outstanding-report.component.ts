@@ -362,7 +362,10 @@ export class OutstandingReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'

@@ -398,6 +398,10 @@ export class CollectionReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			fullWidthRows: true,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			// rowHeight:65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',

@@ -273,6 +273,10 @@ export class DeletedFeetransReportComponent implements OnInit {
 			enableCellNavigation: true,
 			fullWidthRows: true,
 			rowHeight:90,
+			defaultColumnWidth:100,
+			forceFitColumns:false,
+			enableAutoResize:false,
+			autoFitColumnsOnFirstLoad:false,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
