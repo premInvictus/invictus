@@ -1160,7 +1160,6 @@ export class FeeconReportComponent implements OnInit {
 					enableAutoTooltip: true,
 					enableCellNavigation: true,
 					fullWidthRows: true,
-
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',
 						iconSortAscCommand: 'fas fa-sort-up',
@@ -1245,10 +1244,6 @@ export class FeeconReportComponent implements OnInit {
 					fullWidthRows: true,
 					enableAutoTooltip: true,
 					rowHeight:70,
-					defaultColumnWidth:100,
-					forceFitColumns:false,
-					enableAutoResize:false,
-					autoFitColumnsOnFirstLoad:false,
 					enableCellNavigation: true,
 					headerMenu: {
 						iconColumnHideCommand: 'fas fa-times',

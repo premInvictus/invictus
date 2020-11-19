@@ -398,10 +398,7 @@ export class CollectionReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			fullWidthRows: true,
-			defaultColumnWidth:100,
-			forceFitColumns:false,
-			enableAutoResize:false,
-			autoFitColumnsOnFirstLoad:false,
+			
 			// rowHeight:65,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
@@ -921,6 +918,12 @@ export class CollectionReportComponent implements OnInit {
 								},
 							}
 						);
+						if (this.columnDefinitions.length > 15) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -2958,6 +2961,12 @@ export class CollectionReportComponent implements OnInit {
 								},
 							}
 						);
+						if (this.columnDefinitions.length > 15) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -3453,6 +3462,12 @@ export class CollectionReportComponent implements OnInit {
 								},
 							}
 						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));

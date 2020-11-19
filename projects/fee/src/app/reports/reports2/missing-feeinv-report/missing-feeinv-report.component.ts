@@ -263,10 +263,6 @@ export class MissingFeeinvReportComponent implements OnInit {
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
 			rowHeight:65,
-			defaultColumnWidth:100,
-			forceFitColumns:false,
-			enableAutoResize:false,
-			autoFitColumnsOnFirstLoad:false,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',

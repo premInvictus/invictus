@@ -362,10 +362,7 @@ export class OutstandingReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
-			defaultColumnWidth:100,
-			forceFitColumns:false,
-			enableAutoResize:false,
-			autoFitColumnsOnFirstLoad:false,
+			
 			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
@@ -771,6 +768,12 @@ export class OutstandingReportComponent implements OnInit {
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -1152,6 +1155,12 @@ export class OutstandingReportComponent implements OnInit {
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -2295,6 +2304,12 @@ export class OutstandingReportComponent implements OnInit {
 									groupTotalsFormatter: this.sumTotalsFormatter
 								},
 							);
+							if (this.columnDefinitions.length > 18) {
+								this.gridOptions.defaultColumnWidth =100;
+								this.gridOptions.forceFitColumns=false;
+								this.gridOptions.enableAutoResize=false;
+								this.gridOptions.autoFitColumnsOnFirstLoad=false;
+							}
 							this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 							this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 							this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));

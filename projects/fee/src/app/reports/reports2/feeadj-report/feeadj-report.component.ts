@@ -275,10 +275,6 @@ export class FeeadjReportComponent implements OnInit {
 			enableCellNavigation: true,
 			fullWidthRows: true,
 			rowHeight:65,
-			defaultColumnWidth:100,
-			forceFitColumns:false,
-			enableAutoResize:false,
-			autoFitColumnsOnFirstLoad:false,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -598,6 +594,12 @@ export class FeeadjReportComponent implements OnInit {
 						filter: { model: Filters.compoundInput },
 					}
 				);
+				if (this.columnDefinitions.length > 18) {
+					this.gridOptions.defaultColumnWidth =100;
+					this.gridOptions.forceFitColumns=false;
+					this.gridOptions.enableAutoResize=false;
+					this.gridOptions.autoFitColumnsOnFirstLoad=false;
+				}
 				this.aggregatearray.push(new Aggregators.Sum('invg_adj_amount'));
 				this.totalRow = {};
 				const obj3: any = {};
