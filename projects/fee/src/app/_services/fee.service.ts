@@ -583,4 +583,8 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/wallets/printReceipt',value);
 	}
+	allStoreBill(value) {
+		this.service.stopLoading();
+		return this.http.post(environment.apiInvUrl + '/store-bill/all-store-bill', value);
+	}
 }

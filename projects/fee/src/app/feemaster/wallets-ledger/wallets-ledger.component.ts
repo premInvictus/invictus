@@ -9,6 +9,7 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 import { CommonStudentProfileComponent } from '../common-student-profile/common-student-profile.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { WalletReceiptDetailsModalComponent } from '../../sharedmodule/wallet-receipt-details-modal/wallet-receipt-details-modal.component';
+import { BillDetailsModalComponent } from '../../sharedmodule/bill-details-modal/bill-details-modal.component';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { WalletReceiptDetailsModalComponent } from '../../sharedmodule/wallet-re
   styleUrls: ['./wallets-ledger.component.css']
 })
 export class WalletsLedgerComponent implements OnInit {
+	@ViewChild('billDetailsModal') billDetailsModal;
   @ViewChild(CommonStudentProfileComponent) commonStu: CommonStudentProfileComponent;
   displayedColumns: string[] = ['w_rpt_no', 'w_transaction_date', 'w_amount'
   //, 'w_amount_type'
@@ -174,6 +176,7 @@ export class WalletsLedgerComponent implements OnInit {
 			}
 			if(item.w_amount_type == 'debit'){
 				total_debit += parseInt(item.w_amount);
+				element.w_rpt_no = item.w_ref_id
 			}
 			this.ELEMENT_DATA.push(element);
 			pos++;
@@ -279,11 +282,12 @@ export class WalletsLedgerComponent implements OnInit {
 			return false;
 		}
   }
-  openReceiptDialog(rpt_id, edit): void {
+  openReceiptDialog(element, edit): void {
+	  if(element.w_amount_type == 'credit') {
 		const dialogRef = this.dialog.open(WalletReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
-        rpt_id: rpt_id,
+        rpt_id: element.w_rpt_no,
         admission_id:this.loginId,
 				edit: edit
 			},
@@ -292,6 +296,16 @@ export class WalletsLedgerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 		});
+	  } else if(element.w_amount_type == 'debit') {
+		  this.feeService.allStoreBill({bill_no:parseInt(element.w_rpt_no)}).subscribe((result:any) => {
+			  if(result && result.length > 0) {
+				this.billDetailsModal.openModal(result[result.length-1]);
+
+			  }
+		  } )
+	  }
+	  console.log(element);
+		
 	}
 	ngOnDestroy() {
 		this.studentRouteMoveStoreService.setInvoiceId({});
