@@ -470,12 +470,13 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 				this.btnDisable = false;
 				if (result && result.status === 'ok') {
-					this.common.showSuccessErrorMessage(result.messsage, 'success');
+					this.common.showSuccessErrorMessage(result.message, 'success');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
-					this.common.showSuccessErrorMessage(result.messsage, 'error');
+					console.log('result', result)
+					this.common.showSuccessErrorMessage(result.message, 'error');
 					this.reset();
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -553,7 +554,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				} else {
 					this.reset();
-					this.common.showSuccessErrorMessage(result.messsage, 'error');
+					this.common.showSuccessErrorMessage(result.message, 'error');
 					this.getStudentInformation(this.lastRecordId);
 					this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 				}
