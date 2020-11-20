@@ -37,3 +37,24 @@ th.mat-header-cell {
     cursor: pointer!important;
     margin-left: -10px;
 }
+
+:host ::ng-deep #child-table thead{
+    display:none
+}
+
+:host ::ng-deep #child-table thead{
+    display:none
+}
+
+:host ::ng-deep #child-table .mat-cell:first-child {
+    border-top:none !important;
+    border-left:none !important;
+    
+}
+
+:host ::ng-deep #child-table .mat-cell:last-child {
+    border-bottom:none !important;
+    
+    border-right:none !important;
+    
+}

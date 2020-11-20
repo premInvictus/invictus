@@ -148,9 +148,9 @@
       </div>
     </div>
   </div>
-  <div class="row margin-top-20">
+  <div class="row margin-top-20" >
     <div class="col-12">
-      <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+      <table mat-table [dataSource]="dataSource" class="table-100 text-center" *ngIf="modificationFlag">
 
         <ng-container matColumnDef="srno">
           <th mat-header-cell *matHeaderCellDef class="text-nowrap"> Sr. No. </th>
@@ -203,8 +203,134 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
         </tr>
       </table>
+      <table mat-table [dataSource]="dataSource" multiTemplateDataRows class="table-100 text-center"
+      *ngIf="!modificationFlag">
+
+      <ng-container matColumnDef="srno">
+        <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="width: 5% !important;" > Sr. No. </th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.srno}} </td>
+      </ng-container>
+      <ng-container matColumnDef="feehead">
+        <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Particulars </th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap" style="text-align: left !important;">
+          <!-- {{element.feehead | titlecase}} -->
+          <span *ngIf="element?.grouped_data"><a href="javascript:void(0)">{{element.fs_name | titlecase}}</a></span>
+          <span *ngIf="!element?.grouped_data">{{element.feehead | titlecase}} </span>
+        </td>
+      </ng-container>
+      <!-- <ng-container matColumnDef="feegroup">
+          <th mat-header-cell *matHeaderCellDef style="width: 55% !important;" class="text-nowrap"> Fee Group </th>
+          <td mat-cell *matCellDef="let element" class="text-nowrap" style="text-align: left !important;">
+            {{element.fs_name | titlecase}}
+          </td>
+        </ng-container> -->
+      <ng-container matColumnDef="feedue">
+        <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Fee Due (<span><i
+              class="fas fa-rupee-sign"></i></span>)</th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap">
+          <ng-template [ngIf]="modificationFlag && !element.invg_id && element.feehead !== 'Previous Balance'"
+            [ngIfElse]="elseFeeContaintent">
+            <mat-form-field class="margin-top-10 form-field-60">
+              <input matInput type="number" [value]="element.feedue" (change)="changeOpeningAndFine(element, $event)">
+            </mat-form-field>
+          </ng-template>
+          <ng-template #elseFeeContaintent>
+            {{element.feedue | number | zerodash}}
+          </ng-template>
+
+
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="concession">
+        <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Concession
+          (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap"> {{element.concession | number | zerodash}} </td>
+      </ng-container>
+      <ng-container matColumnDef="adjustment">
+        <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Adjustment
+          (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap">
+          <ng-template [ngIf]="modificationFlag && element.invg_id" [ngIfElse]="elseContaint">
+            <mat-form-field class="margin-top-10 form-field-60">
+              <input matInput type="number" [value]="element.adjustment"
+                (change)="changeAdjAmt(element.invg_id, $event)">
+            </mat-form-field>
+          </ng-template>
+          <ng-template #elseContaint>
+            {{element.adjustment | number | zerodash}}
+          </ng-template>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="netpay">
+        <th mat-header-cell *matHeaderCellDef style="width: 10% !important;" class="text-nowrap"> Net Payable
+          (<span><i class="fas fa-rupee-sign"></i></span>)</th>
+        <td mat-cell *matCellDef="let element" class="text-nowrap">{{element.netpay | number}} </td>
+      </ng-container>
+
+      <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+      <ng-container matColumnDef="expandedDetail">
+        <tr [hidden]="!(detaildataSource.length > 0)">
+          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+
+            <div [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+              
+              <table mat-table [dataSource]="detaildataSource" class="table-100 text-center" id="child-table">
+                <ng-container matColumnDef="srno">
+                    <th mat-header-cell *matHeaderCellDef class="text-nowrap" style="display: none;"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let celement" class="text-nowrap" style="width:5% !important;"> {{element.srno}} . {{celement.srno}} </td>
+                </ng-container>
+                <ng-container matColumnDef="feehead">
+                    <th mat-header-cell *matHeaderCellDef style="width: 55% !important;display: none;" class="text-nowrap"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let element"  class="text-nowrap"
+                    style="text-align: left !important;width: 55% !important">
+                    {{element.feehead | titlecase}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="feedue">
+                    <th mat-header-cell *matHeaderCellDef style="display: none;" class="text-nowrap"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let celement" class="text-nowrap" style="width: 10% !important;"> {{celement.feedue | number | zerodash}} </td>
+                </ng-container>
+                <ng-container matColumnDef="concession">
+                    <th mat-header-cell *matHeaderCellDef style="display: none;" class="text-nowrap"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let celement" class="text-nowrap" style="width: 10% !important;"> {{celement.concession | number | zerodash}} </td>
+                </ng-container>
+                <ng-container matColumnDef="adjustment">
+                    <th mat-header-cell *matHeaderCellDef style="display: none;"  class="text-nowrap"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let celement" class="text-nowrap" style="width: 10% !important;"> {{celement.adjustment | number | zerodash}} </td>
+                </ng-container>
+                <ng-container matColumnDef="netpay">
+                    <th mat-header-cell *matHeaderCellDef style="display: none;"  class="text-nowrap"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let celement" class="text-nowrap" style="width: 10% !important;"> {{(celement.feedue -celement.adjustment- celement.concession ) | number | zerodash}}</td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let celement; columns: displayedColumns;">
+                </tr>
+              </table>
+              <!-- <tr  class="text-nowrap" *ngFor="let sitem of selectedRowItem; let i=index">
+                <td mat-cell class="text-nowrap text-center" style="width: 2.5%">{{element.srno}}.{{i}}</td>
+                <td mat-cell class="text-nowrap text-left" style="width: 38.75%">{{sitem.invg_fh_name | titlecase}}</td>                  
+                <td mat-cell class="text-nowrap text-center" style="width: 7%">{{sitem.invg_fh_amount | number | zerodash}}</td>
+                <td mat-cell class="text-nowrap  text-center" style="width: 7.50%">{{sitem.invg_fcc_amount | number | zerodash}}</td>
+                <td mat-cell class="text-nowrap  text-center" style="width: 7.50%">{{sitem.invg_adj_amount | number | zerodash}}</td>
+                <td mat-cell class="text-nowrap  text-center" style="width: 7.50%">{{(sitem.invg_fh_amount -sitem.invg_fcc_amount- sitem.invg_adj_amount ) | number | zerodash}}</td>
+              </tr> -->
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let element; columns: displayedColumns;"
+        [class.example-expanded-row]="expandedElement === element"
+        (click)="showStructureDetail(element);showDetailRows=!showDetailRows;expandedElement = expandedElement === element ? null : element">
+      </tr>
+      <ng-container>
+        <tr [hidden]="!showDetailRows" mat-row *matRowDef="let row; columns: ['expandedDetail']"></tr>
+      </ng-container>
+    </table>
     </div>
   </div>
+
   <div class="row">
     <div class="col-12">
       <div>

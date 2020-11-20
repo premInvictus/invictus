@@ -9,18 +9,28 @@ import { StudentRouteMoveStoreService } from '../student-route-move-store.servic
 import { saveAs } from 'file-saver';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 @Component({
 	selector: 'app-invoice-details-modal',
 	templateUrl: './invoice-details-modal.component.html',
-	styleUrls: ['./invoice-details-modal.component.scss']
+	styleUrls: ['./invoice-details-modal.component.scss'],
+	animations: [
+		trigger('detailExpand', [
+		  state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+		  state('expanded', style({height: '*'})),
+		  transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+		]),
+	  ],
 })
 export class InvoiceDetailsModalComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('editReference') editReference;
 	ELEMENT_DATA: InvoiceDetails[] = [];
-	displayedColumns: string[] = ['srno', 'feehead','feegroup', 'feedue', 'concession', 'adjustment', 'netpay'];
+	DETAIL_ELEMENT_DATA: InvoiceDetails[] = [];
+	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
 	dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
+	detaildataSource = new MatTableDataSource<InvoiceDetails>(this.DETAIL_ELEMENT_DATA);
 	selection = new SelectionModel<InvoiceDetails>(true, []);
 	invoiceBifurcationArray: any[] = [];
 	invoiceDetails: any;
@@ -37,7 +47,8 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	gender: any;
 	inv_opening_balance: any;
 	inv_fine_amount: any;
-
+	selectedRowItem:any[] = [];
+	showDetailRows=false;
 	constructor(
 		public dialogRef: MatDialogRef<InvoiceDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -238,6 +249,7 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			});
 	}
 	invoiceDetialsTable(arr) {
+		console.log('modificationFlag-->', this.modificationFlag);
 		this.ELEMENT_DATA = [];
 		this.invoiceTotal = 0;
 		let i = 0;
@@ -257,13 +269,15 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		arr.forEach(item => {
 			const element = {
 				srno: ++i,
-				feehead: item.invg_fh_name,
+				feehead: item.group_detail ? '-' : item.invg_fh_name,
 				fs_name: item.fs_name ? item.fs_name : '',
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
 				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-				invg_id: item.invg_id
+				invg_id: item.invg_id,
+				grouped_data: item.group_detail ? true : false,
+				action:item
 			};
 			
 			
@@ -289,8 +303,12 @@ export class InvoiceDetailsModalComponent implements OnInit {
 		}
 		this.dataSource = new MatTableDataSource<InvoiceDetails>(this.ELEMENT_DATA);
 	}
+
+	
 	getInvoiceBifurcation(data: any) {
 		this.invoiceBifurcationArray = [];
+		console.log('this.modificationFlag', this.modificationFlag)
+		if (this.modificationFlag) {
 		if (this.data.invoiceNo) {
 			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true, fromModel : true }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -365,6 +383,86 @@ export class InvoiceDetailsModalComponent implements OnInit {
 					this.closemodal();
 				}
 			});
+		}} else {
+			this.getInvoiceGroupBifurcation(data);
+		}
+	}
+
+	getInvoiceGroupBifurcation(data:any) {
+		if (this.data.invoiceNo) {
+			this.feeService.getInvoiceGroupBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true, fromModel : true }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.invoiceDetails = result.data[0];
+						// this.inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+						this.modifyInvoiceForm.patchValue({
+							'inv_opening_balance': this.invoiceDetails.balance_amt,
+							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
+							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
+							'inv_due_date': this.invoiceDetails.inv_due_date,
+						});
+
+						this.class_name = this.invoiceDetails.class_name;
+						this.section_name = this.invoiceDetails.sec_name;
+						if (this.section_name !== '') {
+							this.class_sec = this.class_name + ' - ' + this.section_name;
+						} else {
+							this.class_sec = this.class_name;
+						}
+						this.gender = this.invoiceDetails.au_gender;
+						if (this.gender === 'M') {
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+						} else if (this.gender === 'F') {
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+						} else {
+							this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+						}
+						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
+							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
+							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+						}
+						this.adjustmentForm.patchValue({
+							au_profileimage: this.invoiceDetails.au_profileimage
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc,
+						});
+						this.defaultsrc =
+							this.invoiceDetails.au_profileimage !== ''
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc;
+
+					}
+				} else {
+
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					this.closemodal();
+				}
+			});
+		} else if (this.data.inv_invoice_no) {
+			this.feeService.getInvoiceGroupBifurcation({ inv_invoice_no: this.data.inv_invoice_no, fromModel : true }).subscribe((result: any) => {
+				if (result && result.status === 'ok') {
+					if (result.data.length > 0) {
+						this.invoiceDetails = result.data[0];
+						// inv_opening_balance = this.invoiceDetails.inv_opening_balance;
+						// this.inv_fine_amount = this.invoiceDetails.inv_fine_amount;
+						this.modifyInvoiceForm.patchValue({
+							'inv_opening_balance': this.invoiceDetails.balance_amt,
+							'inv_fine_amount': this.invoiceDetails.inv_fine_amount,
+							'inv_invoice_date': this.invoiceDetails.inv_invoice_date,
+							'inv_due_date': this.invoiceDetails.inv_due_date,
+						});
+						if (this.invoiceDetails.invoice_bifurcation.length > 0) {
+							this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
+							this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+						}
+
+					}
+				} else {
+					this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
+					this.closemodal();
+				}
+			});
 		}
 	}
 
@@ -392,5 +490,35 @@ export class InvoiceDetailsModalComponent implements OnInit {
 			this.closemodal();
 			this.router.navigate(['fees/school/feemaster/fee-transaction-entry-individual']);
 		}
+	}
+
+	showStructureDetail(element) {
+		console.log(element);
+		this.DETAIL_ELEMENT_DATA = [];
+		this.selectedRowItem = element.action.group_detail;
+		var i=0;
+		this.selectedRowItem.forEach(item => {
+			const element = {
+				srno: ++i,
+				feehead: item.group_detail ? '-' : item.invg_fh_name,
+				fs_name: item.fs_name ? item.fs_name : '',
+				feedue: Number(item.invg_fh_amount),
+				concession: Number(item.invg_fcc_amount),
+				adjustment: Number(item.invg_adj_amount),
+				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+				invg_id: item.invg_id,
+				grouped_data: item.group_detail ? true : false,
+				action:item
+			};
+			
+			
+			// this.invoiceTotal += element.netpay;
+			console.log('item', item);
+			console.log('this.invoiceTotal',this.invoiceTotal);
+			this.DETAIL_ELEMENT_DATA.push(element);
+		});
+		this.detaildataSource = new MatTableDataSource<InvoiceDetails>(this.DETAIL_ELEMENT_DATA);
+		console.log('this.detaildatasource', this.detaildataSource);
+		// this.detaildataSource = element.action.group_detail
 	}
 }
