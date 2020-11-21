@@ -167,7 +167,8 @@ export class WalletsLedgerComponent implements OnInit {
 				w_cheque_date: item.w_cheque_date ? item.w_cheque_date : '-',
 							w_bnk_id: item.tb_name_bnk ? item.tb_name_bnk : '-',
 				w_branch: item.w_branch ? item.w_branch : '-',
-				w_transaction_id: item.w_transaction_id ? item.w_transaction_id : '-'
+				w_transaction_id: item.w_transaction_id ? item.w_transaction_id : '-',
+				w_opening: item.w_opening
 			};
 			if(item.w_pay_id == 3){
 				element.w_bnk_id = item.tb_name_deposit ? item.tb_name_deposit : '-';
@@ -180,6 +181,9 @@ export class WalletsLedgerComponent implements OnInit {
 				total_debit += parseInt(item.w_amount);
 				element.w_rpt_no = item.w_ref_id
 				element.rpt_type = 'BIL';
+			}
+			if(item.w_opening == 1){
+				element.w_rpt_no = 'Opening Balance';
 			}
 			this.ELEMENT_DATA.push(element);
 			pos++;
@@ -330,4 +334,5 @@ export interface Element {
   w_transaction_id: string;
   w_remarks: string;
   w_cheque_date:string;
+  w_opening:number
 }
