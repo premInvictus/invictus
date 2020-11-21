@@ -3111,6 +3111,7 @@ export class OutstandingReportComponent implements OnInit {
 				if(!(item.id.includes('checkbox_select'))) {
 				columns.push({
 					key: item.id,
+					width: 8
 					//width: this.checkWidth(item.id, item.name)
 				});
 				columValue.push(item.name);}
@@ -3122,6 +3123,7 @@ export class OutstandingReportComponent implements OnInit {
 				if(!(item.id.includes('checkbox_select'))) {
 				columns.push({
 					key: item.id,
+					width: 8
 					//width: this.checkWidth(item.id, item.name)
 				});
 				columValue.push(item.name);}
@@ -3133,6 +3135,7 @@ export class OutstandingReportComponent implements OnInit {
 				if(!(item.id.includes('checkbox_select'))) {
 				columns.push({
 					key: item.id,
+					width: 8
 					//width: this.checkWidth(item.id, item.name)
 				});
 				columValue.push(item.name);}
