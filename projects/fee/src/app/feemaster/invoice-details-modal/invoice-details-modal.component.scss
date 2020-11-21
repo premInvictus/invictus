@@ -36,8 +36,8 @@
     font-size: 12px!important;
 }
 .mat-column-srno {
-    width: 3% !important;
-    flex: 0 0 8% !important;
+    width: 5% !important;
+    // flex: 0 0 8% !important;
 }
 .cdk-column-feehead {
     width: 50%!important;
@@ -49,6 +49,14 @@
     .cdk-column-netpay {
         width:11%!important;
     }
+
+    #child-table .cdk-column-feehead {
+        width:45%!important;
+    }
+    #child-table .cdk-column-netpay {
+        width:11%!important;
+    }
+
 }
 td.mat-cell {
     border: 1px solid #89A8C9 !important;
@@ -62,4 +70,25 @@ th.mat-header-cell {
 }
 .form-field-60 {
     max-width: 60px !important;
+}
+
+:host ::ng-deep #child-table thead{
+    display:none
+}
+
+:host ::ng-deep #child-table thead{
+    display:none
+}
+
+:host ::ng-deep #child-table .mat-cell:first-child {
+    border-top:none !important;
+    border-left:none !important;
+    
+}
+
+:host ::ng-deep #child-table .mat-cell:last-child {
+    border-bottom:none !important;
+    
+    border-right:none !important;
+    
 }

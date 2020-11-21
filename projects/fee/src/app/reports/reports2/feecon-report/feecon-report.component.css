@@ -51,4 +51,21 @@ button.filter-bt{
       width: 40px !important;
       margin-left: 6px !important;
     }
+    :host ::ng-deep .slick-header-columns {
+      white-space: normal !important;
+      height: 50px !important;
+    }
+    
+    :host ::ng-deep .slick-cell  {
+      white-space: normal !important;
+      
+      word-wrap: break-word !important;
+    }
+    :host ::ng-deep .slick-header-column.ui-state-default {
+      height: 100% !important;
+    }
+    
+    :host ::ng-deep .slick-row {
+      height:auto !important;
+    }
     

@@ -6,18 +6,28 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ReceiptDetails } from './receipt-details.model';
 import { FeeService, CommonAPIService } from '../../_services/index';
 import { saveAs } from 'file-saver';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 @Component({
 	selector: 'app-receipt-details-modal',
 	templateUrl: './receipt-details-modal.component.html',
-	styleUrls: ['./receipt-details-modal.component.scss']
+	styleUrls: ['./receipt-details-modal.component.scss'],
+	animations: [
+		trigger('detailExpand', [
+		  state('collapsed', style({height: '0px', minHeight: '0', display: 'none'})),
+		  state('expanded', style({height: '*'})),
+		  transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+		]),
+	  ],
 })
 export class ReceiptDetailsModalComponent implements OnInit {
 	@ViewChild('deleteModal') deleteModal;
 	@ViewChild('recalculateModal') recalculateModal;
 	@ViewChild('editReference') editReference;
 	ELEMENT_DATA: ReceiptDetails[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feedue', 'concession', 'adjustment', 'netpay'];
+	DETAIL_ELEMENT_DATA: ReceiptDetails[] = [];
+	displayedColumns: string[] = ['srno', 'feehead','feedue', 'concession', 'adjustment', 'netpay'];
 	dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
+	detaildataSource = new MatTableDataSource<ReceiptDetails>(this.DETAIL_ELEMENT_DATA);
 	selection = new SelectionModel<ReceiptDetails>(true, []);
 	invoiceBifurcationArray: any[] = [];
 	invoiceDetails: any;
@@ -32,6 +42,7 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	gender: any;
 	balance: number;
+	selectedRowItem:any[] = [];
 	constructor(
 		public dialogRef: MatDialogRef<ReceiptDetailsModalComponent>,
 		@Inject(MAT_DIALOG_DATA) public data,
@@ -161,12 +172,15 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			const element = {
 				srno: ++i,
 				feehead: item.invg_fh_name,
+				fs_name:item.fs_name ? item.fs_name : '',
 				feedue: Number(item.invg_fh_amount),
 				concession: Number(item.invg_fcc_amount),
 				adjustment: Number(item.invg_adj_amount),
 				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount)
 					- (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-				invg_id: item.invg_id
+				invg_id: item.invg_id,
+				grouped_data: item.group_detail ? true : false,
+				action:item
 			};
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
@@ -179,13 +193,16 @@ export class ReceiptDetailsModalComponent implements OnInit {
 				concession: 0,
 				adjustment: 0,
 				netpay: Number(this.invoiceDetails.late_fine_amt),
-				invg_id: ''
+				invg_id: '',
+				
 			};
 			this.invoiceTotal += element.netpay;
 			this.ELEMENT_DATA.push(element);
 		}
 		this.dataSource = new MatTableDataSource<ReceiptDetails>(this.ELEMENT_DATA);
 	}
+
+	
 
 	// prepareAdhocPaymentHead() {
 	// 	this.ELEMENT_DATA = [];
@@ -207,12 +224,64 @@ export class ReceiptDetailsModalComponent implements OnInit {
 		console.log('data--', data);
 		this.invoiceBifurcationArray = [];
 		let recieptJSON = {};
+		
 		if (this.data.invoiceNo) {
 			recieptJSON = { inv_id: this.data.invoiceNo };
 		} else {
 			recieptJSON = { rpt_id: this.data.rpt_id };
 		}
 		this.feeService.getReceiptBifurcation(recieptJSON).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				if (result.data.length > 0) {
+					this.invoiceDetails = result.data[0];
+					this.class_name = this.invoiceDetails.class_name;
+					this.section_name = this.invoiceDetails.sec_name;
+					this.balance = Number(this.invoiceDetails.inv_fee_amount) - Number(this.invoiceDetails.rpt_net_amount);
+					if (this.section_name !== ' ') {
+						this.class_sec = this.class_name + ' - ' + this.section_name;
+					} else {
+						this.class_sec = this.class_name;
+					}
+					this.gender = this.invoiceDetails.au_gender;
+					if (this.gender === 'M') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png';
+					} else if (this.gender === 'F') {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/girl.png';
+					} else {
+						this.defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+					}
+					if (this.invoiceDetails.invoice_bifurcation.length > 0) {
+						this.invoiceBifurcationArray = this.invoiceDetails.invoice_bifurcation;
+						this.invoiceDetialsTable(this.invoiceDetails.invoice_bifurcation);
+					}
+
+					if (this.adjustmentForm) {
+						this.adjustmentForm.patchValue({
+							au_profileimage: this.invoiceDetails.au_profileimage
+								? this.invoiceDetails.au_profileimage
+								: this.defaultsrc,
+						});
+					}
+
+					this.defaultsrc =
+						this.invoiceDetails.au_profileimage !== ''
+							? this.invoiceDetails.au_profileimage
+							: this.defaultsrc;
+
+				}
+			}
+		});
+	}
+
+	getReceiptGroupBifurcation(data:any) {
+		this.invoiceBifurcationArray = [];
+		let recieptJSON = {};
+		if (this.data.invoiceNo) {
+			recieptJSON = { inv_id: this.data.invoiceNo };
+		} else {
+			recieptJSON = { rpt_id: this.data.rpt_id };
+		}
+		this.feeService.getReceiptGroupBifurcation(recieptJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				if (result.data.length > 0) {
 					this.invoiceDetails = result.data[0];
@@ -268,6 +337,36 @@ export class ReceiptDetailsModalComponent implements OnInit {
 			}
 		});
 
+	}
+
+	showStructureDetail(element) {
+		console.log(element);
+		this.DETAIL_ELEMENT_DATA = [];
+		this.selectedRowItem = element.action.group_detail;
+		var i=0;
+		this.selectedRowItem.forEach(item => {
+			const element = {
+				srno: ++i,
+				feehead: item.group_detail ? '-' : item.invg_fh_name,
+				fs_name: item.fs_name ? item.fs_name : '',
+				feedue: Number(item.invg_fh_amount),
+				concession: Number(item.invg_fcc_amount),
+				adjustment: Number(item.invg_adj_amount),
+				netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+				invg_id: item.invg_id,
+				grouped_data: item.group_detail ? true : false,
+				action:item
+			};
+			
+			
+			// this.invoiceTotal += element.netpay;
+			console.log('item', item);
+			console.log('this.invoiceTotal',this.invoiceTotal);
+			this.DETAIL_ELEMENT_DATA.push(element);
+		});
+		this.detaildataSource = new MatTableDataSource<ReceiptDetails>(this.DETAIL_ELEMENT_DATA);
+		console.log('this.detaildatasource', this.detaildataSource);
+		// this.detaildataSource = element.action.group_detail
 	}
 
 }

@@ -177,6 +177,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 		this.updateTotalRow(angularGrid.slickGrid);
+		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -184,6 +185,54 @@ export class ChequeclearanceReportComponent implements OnInit {
 			const columnId = grid.getColumns()[columnIdx].id;
 			const columnElement: HTMLElement = grid.getFooterRowColumn(columnId);
 			columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
+		}
+	}
+	parseRoman(s) {
+        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
+            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+        }, 0);
+	}
+	isRoman(s) {
+        // http://stackoverflow.com/a/267405/1447675
+        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+	}
+	updateClassSort(grid:any,dataView:any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx];
+			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
+				grid.onSort.subscribe((e, args)=> {
+					console.log('in, args', args);
+					// args.multiColumnSort indicates whether or not this is a multi-column sort.
+					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
+					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
+				  
+					// We'll use a simple comparer function here.
+					args = args.sortCols[0];
+					var comparer = (a, b) =>{
+						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
+							
+							
+						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
+						
+						
+						} else {
+							
+							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+						}
+					
+					}
+				  
+					// Delegate the sorting to DataView.
+					// This will fire the change events and update the grid.
+					dataView.sort(comparer, args.sortAsc);
+				  });
+			}
 		}
 	}
 	buildForm() {
@@ -233,6 +282,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			rowHeight:90,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -352,7 +402,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-				width: 80,
+				width: 70,
 				grouping: {
 					getter: 'stu_admission_no',
 					formatter: (g) => {
@@ -383,7 +433,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
-				width: 80,
+				width: 70,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
@@ -399,7 +449,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'cheque_date', name: 'Cheque Date', field: 'cheque_date', sortable: true,
 				filterable: true,
-				width: 120,
+				width: 100,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
@@ -416,7 +466,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'deposite_date', name: 'Deposit Date', field: 'deposite_date', sortable: true,
 				filterable: true,
-				width: 120,
+				width: 100,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
@@ -433,7 +483,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'dishonor_date', name: 'Dishonour/ Cleareance Date', field: 'dishonor_date', sortable: true,
 				filterable: true,
-				width: 150,
+				width: 100,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
@@ -504,7 +554,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				id: 'fcc_remarks',
 				name: 'Remarks',
 				field: 'fcc_remarks',
-				width: 40,
+				width: 100,
 				sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
@@ -631,6 +681,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			rowHeight:70,
 			headerMenu: {
 				iconColumnHideCommand: 'fas fa-times',
 				iconSortAscCommand: 'fas fa-sort-up',
@@ -750,7 +801,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				filterable: true,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
-				width: 80,
+				width: 70,
 				grouping: {
 					getter: 'stu_admission_no',
 					formatter: (g) => {
@@ -781,7 +832,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 				filterable: true,
-				width: 80,
+				width: 70,
 				filterSearchType: FieldType.string,
 				filter: { model: Filters.compoundInput },
 				grouping: {
@@ -820,7 +871,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'cheque_no',
 				name: 'Cheque No.',
-				width: 40,
+				width: 60,
 				field: 'cheque_no',
 				sortable: true,
 				filterable: true,
@@ -830,7 +881,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'cheque_date', name: 'Cheque Date', field: 'cheque_date', sortable: true,
 				filterable: true,
-				width: 120,
+				width: 100,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
@@ -847,7 +898,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			{
 				id: 'transaction_date', name: 'Transaction Date', field: 'transaction_date', sortable: true,
 				filterable: true,
-				width: 120,
+				width: 100,
 				filterSearchType: FieldType.dateIso,
 				filter: { model: Filters.compoundDate },
 				formatter: this.checkDateFormatter,
@@ -896,7 +947,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 				id: 'fcc_remarks',
 				name: 'Remarks',
 				field: 'fcc_remarks',
-				width: 40,
+				width: 100,
 				sortable: true,
 				filterable: true,
 				filterSearchType: FieldType.string,
@@ -1040,7 +1091,12 @@ export class ChequeclearanceReportComponent implements OnInit {
 		console.log(columnDef);
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
-			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			if (new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100)))) {
+				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			} else {
+				return '';
+			}
+			
 		}
 		return '';
 	}
@@ -1048,7 +1104,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
 		}
 	}
 	checkReturn(data) {
@@ -1062,14 +1122,21 @@ export class ChequeclearanceReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
 		} else {
-			return '<a>' + value + '</a>';
+			if (value)
+				return '<a>' + value + '</a>';
+			else
+				return '-';
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -1296,13 +1363,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 		const columValue: any[] = [];
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
-		for (const item of this.exportColumnDefinitions) {
-			columns.push({
-				key: item.id,
-				width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);
-		}
+		
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		reportType = new TitleCasePipe().transform('cheque clearance_') + this.sessionName;
 		let reportType2: any = '';
@@ -1311,6 +1372,22 @@ export class ChequeclearanceReportComponent implements OnInit {
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
+		// for (const item of this.exportColumnDefinitions) {
+		// 	columns.push({
+		// 		key: item.id,
+		// 		width: this.checkWidth(item.id, item.name)
+		// 	});
+		// 	columValue.push(item.name);
+		// }
+		for (const item of this.exportColumnDefinitions) {
+			if(!(item.id.includes('checkbox_select'))) {
+			columns.push({
+				key: item.id,
+				//width: this.checkWidth(item.id, item.name)
+			});
+			columValue.push(item.name);}
+		}
+		worksheet.properties.defaultRowHeight =60;
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -1320,6 +1397,11 @@ export class ChequeclearanceReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
+		for(var i=1; i<=columns.length;i++) {
+			
+			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
+			
+		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
@@ -1332,6 +1414,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 						obj[item2.id] = this.checkReturn(this.common.htmlToText(json[key][item2.id]));
 					}
 				}
+				
 				worksheet.addRow(obj);
 			});
 		} else {
@@ -1398,7 +1481,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
+					cell.alignment = { wrapText:true,horizontal: 'center' };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);

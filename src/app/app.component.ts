@@ -152,7 +152,7 @@ export class AppComponent implements OnInit {
 
 	sessionTimeout() {
 		const x = setInterval(() => {
-			console.log('ter');
+			// console.log('ter');
 			if (localStorage.getItem('expire_time') && JSON.parse(localStorage.getItem('expire_time')).expire_time) {
 				let expire_time;
 				expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;

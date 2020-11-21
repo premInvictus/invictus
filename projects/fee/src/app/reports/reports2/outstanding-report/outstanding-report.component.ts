@@ -3,6 +3,7 @@ import {
 	GridOption, Column, AngularGridInstance, Grouping, Aggregators,
 	FieldType,
 	Filters,
+	OperatorType,
 	Formatters,
 	Sorters,
 	SortDirectionNumber,
@@ -223,6 +224,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.gridObj = angularGrid.slickGrid; // grid object
 		this.dataviewObj = angularGrid.dataView;
 		this.updateTotalRow(angularGrid.slickGrid);
+		this.updateClassSort(angularGrid.slickGrid, angularGrid.dataView);
 	}
 	updateTotalRow(grid: any) {
 		let columnIdx = grid.getColumns().length;
@@ -233,6 +235,65 @@ export class OutstandingReportComponent implements OnInit {
 				columnElement.innerHTML = '<b>' + this.totalRow[columnId] + '<b>';
 			}
 
+		}
+	}
+	
+	parseRoman(s) {
+        var val = { M: 1000, D: 500, C: 100, L: 50, X: 10, V: 5, I: 1 };
+        return s.toUpperCase().split('').reduce( (r, a, i, aa) => {
+            return val[a] < val[aa[i + 1]] ? r - val[a] : r + val[a];
+        }, 0);
+	}
+	isRoman(s) {
+        // http://stackoverflow.com/a/267405/1447675
+        return /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/i.test(s);
+	}
+	getClassOrder(cName) {
+		var order = '';
+		for (var i=0; i<this.classDataArray.length;i++) {
+			if(this.classDataArray[i]['class_name'] === cName) {
+				order = this.classDataArray[i]['class_order'];
+				break;
+			}
+		}
+		return order;
+	}
+	updateClassSort(grid:any,dataView:any) {
+		let columnIdx = grid.getColumns().length;
+		while (columnIdx--) {
+			const columnId = grid.getColumns()[columnIdx];
+			if (columnId['name'] == 'Class Name' || columnId['name'] == 'Class-Section') {
+				grid.onSort.subscribe((e, args)=> {
+					console.log('in, args', args);
+					// args.multiColumnSort indicates whether or not this is a multi-column sort.
+					// If it is, args.sortCols will have an array of {sortCol:..., sortAsc:...} objects.
+					// If not, the sort column and direction will be in args.sortCol & args.sortAsc.
+				  
+					// We'll use a simple comparer function here.
+					args = args.sortCols[0];
+					var comparer = (a, b) =>{
+						if (this.isRoman(a[args.sortCol.field].split(" ")[0]) || this.isRoman(b[args.sortCol.field].split(" ")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split(" ")[0]) > this.parseRoman(b[args.sortCol.field].split(" ")[0])) ? 1 : -1;
+							
+							
+						} else if (this.isRoman(a[args.sortCol.field].split("-")[0]) || this.isRoman(b[args.sortCol.field].split("-")[0])) {
+							
+							return (this.parseRoman(a[args.sortCol.field].split("-")[0]) > this.parseRoman(b[args.sortCol.field].split("-")[0])) ? 1 : -1;
+						
+						
+						} else {
+							
+							return (a[args.sortCol.field] > b[args.sortCol.field]) ? 1 : -1;
+						}
+					
+					}
+				  
+					// Delegate the sorting to DataView.
+					// This will fire the change events and update the grid.
+					dataView.sort(comparer, args.sortAsc);
+				  });
+			}
 		}
 	}
 	buildForm() {
@@ -296,11 +357,12 @@ export class OutstandingReportComponent implements OnInit {
 			enableColumnReorder: true,
 			createFooterRow: true,
 			showFooterRow: true,
-			footerRowHeight: 35,
+			footerRowHeight: 21,
 			enableExcelCopyBuffer: true,
 			fullWidthRows: true,
 			enableAutoTooltip: true,
 			enableCellNavigation: true,
+			
 			enableCheckboxSelector: this.reportType === 'aging' ? false : true,
 			checkboxSelector: {
 				columnId: 'checkbox_select'
@@ -405,6 +467,7 @@ export class OutstandingReportComponent implements OnInit {
 		this.dataset = [];
 		if (this.reportFilterForm.value.report_type) {
 			if (this.reportType === 'headwise') {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -571,6 +634,7 @@ export class OutstandingReportComponent implements OnInit {
 										filterSearchType: FieldType.number,
 										filter: { model: Filters.compoundInputNumber },
 										sortable: true,
+										type:FieldType.number,
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
@@ -621,6 +685,7 @@ export class OutstandingReportComponent implements OnInit {
 												filterSearchType: FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
+												type:FieldType.number,
 												groupTotalsFormatter: this.sumTotalsFormatter
 											});
 											feeObj['fh_name' + j] = '';
@@ -687,6 +752,7 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
+								type:FieldType.number,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
@@ -696,11 +762,18 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
+								type:FieldType.number,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -749,6 +822,7 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'headwisedetail') {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
@@ -948,6 +1022,7 @@ export class OutstandingReportComponent implements OnInit {
 										filterSearchType: FieldType.number,
 										filter: { model: Filters.compoundInputNumber },
 										sortable: true,
+										type:FieldType.number,
 										formatter: this.checkFeeFormatter,
 										groupTotalsFormatter: this.sumTotalsFormatter
 									}];
@@ -996,6 +1071,7 @@ export class OutstandingReportComponent implements OnInit {
 												sortable: true,
 												filterable: true,
 												filterSearchType: FieldType.number,
+												type:FieldType.number,
 												filter: { model: Filters.compoundInput },
 												formatter: this.checkFeeFormatter,
 												groupTotalsFormatter: this.sumTotalsFormatter
@@ -1063,6 +1139,7 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
+								type:FieldType.number,
 								formatter: this.checkFeeFormatter,
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
@@ -1072,11 +1149,18 @@ export class OutstandingReportComponent implements OnInit {
 								filterSearchType: FieldType.number,
 								filter: { model: Filters.compoundInputNumber },
 								sortable: true,
+								type:FieldType.number,
 								formatter: this.checkTotalFormatter,
 								cssClass: 'amount-report-fee',
 								groupTotalsFormatter: this.sumTotalsFormatter
 							},
 						);
+						if (this.columnDefinitions.length > 18) {
+							this.gridOptions.defaultColumnWidth =100;
+							this.gridOptions.forceFitColumns=false;
+							this.gridOptions.enableAutoResize=false;
+							this.gridOptions.autoFitColumnsOnFirstLoad=false;
+						}
 						this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 						this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -1280,6 +1364,7 @@ export class OutstandingReportComponent implements OnInit {
 						filterable: true,
 						filterSearchType: FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
+						type:FieldType.number,
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
 					}];
@@ -1487,6 +1572,7 @@ export class OutstandingReportComponent implements OnInit {
 						sortable: true,
 						filterable: true,
 						filterSearchType: FieldType.number,
+						type:FieldType.number,
 						filter: { model: Filters.compoundInputNumber },
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
@@ -1755,8 +1841,9 @@ export class OutstandingReportComponent implements OnInit {
 						width: 50,
 						filterable: true,
 						cssClass: 'amount-report-fee',
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
 						sortable: true,
 						formatter: this.checkFeeFormatter,
 						groupTotalsFormatter: this.sumTotalsFormatter
@@ -2131,6 +2218,7 @@ export class OutstandingReportComponent implements OnInit {
 													sortable: true,
 													filterable: true,
 													filterSearchType: FieldType.number,
+													type:FieldType.number,
 													filter: { model: Filters.compoundInput },
 													formatter: this.checkFeeFormatter,
 													groupTotalsFormatter: this.sumTotalsFormatter
@@ -2209,12 +2297,19 @@ export class OutstandingReportComponent implements OnInit {
 									filterable: true,
 									filterSearchType: FieldType.number,
 									filter: { model: Filters.compoundInputNumber },
+									type:FieldType.number,
 									sortable: true,
 									formatter: this.checkTotalFormatter,
 									cssClass: 'amount-report-fee',
 									groupTotalsFormatter: this.sumTotalsFormatter
 								},
 							);
+							if (this.columnDefinitions.length > 18) {
+								this.gridOptions.defaultColumnWidth =100;
+								this.gridOptions.forceFitColumns=false;
+								this.gridOptions.enableAutoResize=false;
+								this.gridOptions.autoFitColumnsOnFirstLoad=false;
+							}
 							this.aggregatearray.push(new Aggregators.Sum('inv_opening_balance'));
 							this.aggregatearray.push(new Aggregators.Sum('inv_prev_balance'));
 							this.aggregatearray.push(new Aggregators.Sum('invoice_fine_amount'));
@@ -2269,6 +2364,7 @@ export class OutstandingReportComponent implements OnInit {
 				}
 
 			} else if (this.reportType === 'aging') {
+				// this.gridOptions.rowHeight = 35;
 				this.columnDefinitions = [
 					{
 						id: 'srno', name: 'SNo.', field: 'srno',
@@ -2285,32 +2381,36 @@ export class OutstandingReportComponent implements OnInit {
 					{
 						id: 'ltm', name: 'Less Than Month', field: 'ltm', filterable: true,
 						width: 60,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
 						width: 60,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
 						width: 60,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					},
 					{
 						id: 'total', name: 'Total', field: 'total', filterable: true,
 						width: 60,
-						filterSearchType: FieldType.string,
-						filter: { model: Filters.compoundInput },
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
 						sortable: true,
 						formatter: this.checkCurrencyFormatter
 					}
@@ -2352,9 +2452,9 @@ export class OutstandingReportComponent implements OnInit {
 								(index + 1);
 							obj['school_prefix'] = item['school_prefix'];
 							obj['class_name'] = item.class_name;
-							obj['ltm'] = item.resultData.ltm.total_fee_amount
-							obj['m13'] = item.resultData.m13.total_fee_amount
-							obj['m3'] = item.resultData.m3.total_fee_amount
+							obj['ltm'] = Number(item.resultData.ltm.total_fee_amount);
+							obj['m13'] = Number(item.resultData.m13.total_fee_amount);
+							obj['m3'] = Number(item.resultData.m3.total_fee_amount);
 							total = Number(item.resultData.ltm.total_fee_amount) + Number(item.resultData.m13.total_fee_amount) + Number(item.resultData.m3.total_fee_amount);
 							obj['total'] = total;
 							this.dataset.push(obj);
@@ -2486,7 +2586,12 @@ export class OutstandingReportComponent implements OnInit {
 	sumTotalsFormatter(totals, columnDef) {
 		const val = totals.sum && totals.sum[columnDef.field];
 		if (val != null) {
-			return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			if (new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100)))) {
+				return '<b class="total-footer-report">' + new DecimalPipe('en-in').transform(((Math.round(parseFloat(val) * 100) / 100))) + '</b>';
+			} else {
+				return '';
+			}
+			
 		}
 		return '';
 	}
@@ -2494,21 +2599,35 @@ export class OutstandingReportComponent implements OnInit {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
+			
 		}
 	}
 	checkTotalFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === 0) {
 			return '-';
 		} else {
-			return new DecimalPipe('en-in').transform(value);
+			if (value ) {
+				return new DecimalPipe('en-in').transform(value);
+			}else {
+				return '-';
+			}
 		}
 	}
 	checkReceiptFormatter(row, cell, value, columnDef, dataContext) {
 		if (value === '-') {
 			return '-';
 		} else {
-			return '<a>' + value + '</a>';
+			if (value){
+				return '<a>' + value + '</a>';
+			} else {
+				return '-';
+			}
+			
 		}
 	}
 	checkDateFormatter(row, cell, value, columnDef, dataContext) {
@@ -2555,6 +2674,7 @@ export class OutstandingReportComponent implements OnInit {
 	}
 	getClass() {
 		this.valueArray = [];
+		
 		for (const item of this.classDataArray) {
 			this.valueArray.push({
 				id: item.class_id,
@@ -2568,6 +2688,7 @@ export class OutstandingReportComponent implements OnInit {
 				this.classDataArray = result.data;
 			}
 		});
+		console.log('this.classDataArray',this.classDataArray)
 	}
 	getModes() {
 		this.valueArray = [];
@@ -2956,14 +3077,14 @@ export class OutstandingReportComponent implements OnInit {
 		this.exportColumnDefinitions = [];
 		this.exportColumnDefinitions = this.angularGrid.slickGrid.getColumns();
 		console.log('this.exportColumnDefinitions-->',this.exportColumnDefinitions)
-		for (const item of this.exportColumnDefinitions) {
-			if(!(item.id.includes('checkbox_select'))) {
-			columns.push({
-				key: item.id,
-				width: this.checkWidth(item.id, item.name)
-			});
-			columValue.push(item.name);}
-		}
+		// for (const item of this.exportColumnDefinitions) {
+		// 	if(!(item.id.includes('checkbox_select'))) {
+		// 	columns.push({
+		// 		key: item.id,
+		// 		//width: this.checkWidth(item.id, item.name)
+		// 	});
+		// 	columValue.push(item.name);}
+		// }
 		this.sessionName = this.getSessionName(this.session.ses_id);
 		if (this.reportType === 'headwise') {
 			reportType = new TitleCasePipe().transform('head wise outstanding report: ') + this.sessionName;
@@ -2980,23 +3101,76 @@ export class OutstandingReportComponent implements OnInit {
 		}
 		let reportType2: any = '';
 		this.sessionName = this.getSessionName(this.session.ses_id);
-		if (this.reportType === 'headwise') {
-			reportType2 = new TitleCasePipe().transform('head wise_') + this.sessionName;
-		} else if (this.reportType === 'headwisedetail') {
-			reportType2 = new TitleCasePipe().transform('head wise detail_') + this.sessionName;
-		} else if (this.reportType === 'routewise') {
-			reportType2 = new TitleCasePipe().transform('route wise_') + this.sessionName;
-		} else if (this.reportType === 'defaulter') {
-			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
-		} else if (this.reportType === 'feedue') {
-			reportType2 = new TitleCasePipe().transform('fee dues detail_') + this.sessionName;
-		} else if (this.reportType === 'aging') {
-			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
-		}
+		
 		const fileName =reportType + '_' + this.reportdate +'.xlsx';
 		const workbook = new Excel.Workbook();
 		const worksheet = workbook.addWorksheet(reportType2, { properties: { showGridLines: true } },
 			{ pageSetup: { fitToWidth: 7 } });
+		if (this.reportType === 'headwise') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					//width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('head wise_') + this.sessionName;
+		} else if (this.reportType === 'headwisedetail') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					//width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			worksheet.properties.defaultRowHeight =40;
+			reportType2 = new TitleCasePipe().transform('head wise detail_') + this.sessionName;
+		} else if (this.reportType === 'routewise') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					//width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			worksheet.properties.defaultRowHeight =40;
+			
+			reportType2 = new TitleCasePipe().transform('route wise_') + this.sessionName;
+		} else if (this.reportType === 'defaulter') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			reportType2 = new TitleCasePipe().transform('defaulter list_') + this.sessionName;
+		} else if (this.reportType === 'feedue') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			reportType2 = new TitleCasePipe().transform('fee dues detail_') + this.sessionName;
+		} else if (this.reportType === 'aging') {
+			for (const item of this.exportColumnDefinitions) {
+				if(!(item.id.includes('checkbox_select'))) {
+				columns.push({
+					key: item.id,
+					width: this.checkWidth(item.id, item.name)
+				});
+				columValue.push(item.name);}
+			}
+			reportType2 = new TitleCasePipe().transform('aging details_') + this.sessionName;
+		}
 		worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
 		worksheet.getCell('A1').value =
 			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
@@ -3006,6 +3180,11 @@ export class OutstandingReportComponent implements OnInit {
 		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
 		worksheet.getRow(4).values = columValue;
 		worksheet.columns = columns;
+		for(var i=1; i<=columns.length;i++) {
+			if (this.reportType === 'headwise' || this.reportType === 'headwisedetail' || this.reportType === 'routewise')  {
+			worksheet.getColumn(i).alignment = {vertical: 'middle', horizontal: 'left',  wrapText: true};
+			}
+		}
 		if (this.dataviewObj.getGroups().length === 0) {
 			Object.keys(json).forEach(key => {
 				const obj: any = {};
@@ -3099,7 +3278,7 @@ export class OutstandingReportComponent implements OnInit {
 						bottom: { style: 'thin' },
 						right: { style: 'thin' }
 					};
-					cell.alignment = { horizontal: 'center' };
+					cell.alignment = { horizontal: 'center',wrapText:true };
 				});
 			} else if (rowNum > 4 && rowNum < worksheet._rows.length) {
 				const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);

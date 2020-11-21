@@ -182,9 +182,17 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceBifurcation', value);
 	}
+	getInvoiceGroupBifurcation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getInvoiceGroupBifurcation', value);
+	}
 	getReceiptBifurcation(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/invoice/getReceiptBifurcation', value);
+	}
+	getReceiptGroupBifurcation(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/invoice/getReceiptGroupBifurcation', value);
 	}
 	invoiceAdjustmentRemark(value) {
 		this.service.startLoading();
