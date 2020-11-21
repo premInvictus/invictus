@@ -4414,7 +4414,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4424,7 +4424,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4434,7 +4434,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4453,7 +4453,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4464,7 +4464,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4475,7 +4475,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}
@@ -4485,7 +4485,7 @@ export class CollectionReportComponent implements OnInit {
 			for (const item of this.exportColumnDefinitions) {
 				columns.push({
 					key: item.id,
-					//  width: 20
+					width: 8
 				});
 				columValue.push(item.name);
 			}

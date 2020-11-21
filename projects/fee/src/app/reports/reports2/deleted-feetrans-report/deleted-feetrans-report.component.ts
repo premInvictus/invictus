@@ -930,6 +930,7 @@ export class DeletedFeetransReportComponent implements OnInit {
 		columns.push({
 		key: item.id,
 		//width: this.checkWidth(item.id, item.name)
+		width: 8
 		});
 		columValue.push(item.name);}
 		}

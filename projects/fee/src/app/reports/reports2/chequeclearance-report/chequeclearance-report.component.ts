@@ -1383,7 +1383,7 @@ export class ChequeclearanceReportComponent implements OnInit {
 			if(!(item.id.includes('checkbox_select'))) {
 			columns.push({
 				key: item.id,
-				//width: this.checkWidth(item.id, item.name)
+				width: 8
 			});
 			columValue.push(item.name);}
 		}
