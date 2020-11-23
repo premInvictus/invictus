@@ -199,13 +199,6 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-6 margin-top-25">
-      <mat-form-field class="form-field">
-        <input matInput placeholder="Remarks" [value]="invoiceDetails?.w_remarks">
-      </mat-form-field>
-    </div>
-  </div>
   <app-delete-modal #deleteModal [deleteMessage]="'Are you sure want to delete?'" (deleteOk)="deleteInvoice($event)">
   </app-delete-modal>
   <app-delete-modal #recalculateModal [deleteMessage]="'Are you sure want to recalculate'"

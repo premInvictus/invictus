@@ -35,6 +35,7 @@ export class GenerateBillComponent implements OnInit {
     submitflag:false,
     min_wallet_balance:0
   };
+  storeinchargeDetails:any;
   constructor(
     private fbuild: FormBuilder,
     private common: CommonAPIService,
@@ -156,6 +157,7 @@ export class GenerateBillComponent implements OnInit {
       }
       this.inventory.getStoreIncharge(inputJson).subscribe((result: any) => {
         if (result.length > 0) {
+          this.storeinchargeDetails = result[0];
           this.tableArray = [];
           this.itemArray.push(result[0].item_assign[0]);
           for (let item of this.itemArray) {
@@ -412,6 +414,8 @@ export class GenerateBillComponent implements OnInit {
           }
           if(this.payForm.value.pay_id == 'wallet') {
             const inputJson:any={};
+            inputJson.ftr_ref_location_id = this.storeinchargeDetails.item_location;
+            inputJson.ftr_ref_no_of_items=result.bill_details.length;
             inputJson.ftr_ref_id=result.bill_no;
             inputJson.ftr_transaction_date=this.common.dateConvertion(result.created_date, 'y-MM-dd');
             inputJson.ftr_amount=result.bill_total;
@@ -419,7 +423,7 @@ export class GenerateBillComponent implements OnInit {
             inputJson.login_id=this.userData.au_login_id;
             this.inventory.insertWallets(inputJson).subscribe((result:any)=>{
               if(result && result.status == 'ok'){
-                this.common.showSuccessErrorMessage(result.message,'success');
+                this.common.showSuccessErrorMessage('Ordered placed successfully','success');
               } else {
                 this.common.showSuccessErrorMessage(result.message,'error');
               }

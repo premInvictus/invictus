@@ -17,6 +17,7 @@ import { BulkUpdatesComponent } from './bulk-updates/bulk-updates.component';
 import { DropoutComponent } from './dropout/dropout.component';
 import { BouncedChequeMultipleComponent } from './cheque-control-tool/bounced-cheque-multiple/bounced-cheque-multiple.component';
 import { PreviewDocumentComponent } from './concession-rectification/preview-document/preview-document.component';
+import { BulkWalletTransactionComponent } from './bulk-wallet-transaction/bulk-wallet-transaction.component';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -38,7 +39,8 @@ import { PreviewDocumentComponent } from './concession-rectification/preview-doc
 		DropoutComponent,
 		BulkUpdatesComponent,
 		BouncedChequeMultipleComponent,
-		PreviewDocumentComponent
+		PreviewDocumentComponent,
+		BulkWalletTransactionComponent
 	]
 })
 export class AuxiliaryModule { }
