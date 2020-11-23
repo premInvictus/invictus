@@ -232,7 +232,7 @@ export class WalletsLedgerComponent implements OnInit {
 			element = {
 				particulars:'',
 				subparticulars:'',
-				w_transaction_date: item.w_transaction_date,
+				w_transaction_date: new DatePipe('en-in').transform(item.w_transaction_date,'d-MMM-y'),
 				w_rpt_no: item.w_rpt_no && item.w_rpt_no != 0 ? item.w_rpt_no : '',
 				rpt_type:'',
 				w_remarks: item.w_remarks ? item.w_remarks : '-',
@@ -465,8 +465,8 @@ export class WalletsLedgerComponent implements OnInit {
 			const obj: any = {};
 			this.length++;
 			worksheet.getCell('A' + this.length).value = dety.w_rpt_no;
-			worksheet.getCell('B' + this.length).value = new DatePipe('en-in').transform(dety.w_transaction_date,'d-MMM-y') ;
-			worksheet.getCell('C' + this.length).value = dety.particulars+'-'+dety.subparticulars;
+			worksheet.getCell('B' + this.length).value = dety.w_transaction_date;
+			worksheet.getCell('C' + this.length).value = dety.particulars+ (dety.subparticulars ? '-'+dety.subparticulars : '');
 			worksheet.getCell('D' + this.length).value = dety.w_amount_sign+dety.w_amount;
 			worksheet.addRow(obj);
 		}

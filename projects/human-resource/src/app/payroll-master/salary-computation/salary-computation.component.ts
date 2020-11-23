@@ -387,9 +387,10 @@ export class SalaryComputationComponent implements OnInit {
 			from_attendance: true,
 			year: this.currSess
 		};
+		//console.log('this.salaryComputeEmployeeIds',this.salaryComputeEmployeeIds);
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
 			if (result && result.length > 0) {
-				console.log('getAllEmployee', result);
+				//console.log('getAllEmployee', result);
 				var temp_arr = [];
 				for (let i = 0; i < this.shacolumns.length; i++) {
 					this.displayedSalaryComputeColumns.push(this.shacolumns[i]['header'] + this.shacolumns[i]['data']['sc_id']);
@@ -451,7 +452,7 @@ export class SalaryComputationComponent implements OnInit {
 
 
 					// console.log('pos-->' + pos);
-					console.log('editable-->' + editableStatus);
+					console.log('editable-->'+item.emp_id + editableStatus);
 					var no_of_days = this.getDaysInMonth(this.searchForm.value.month_id, new Date().getFullYear());
 					if (editableStatus) {
 						emp_present_days = this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'].emp_present_days;
@@ -614,6 +615,7 @@ export class SalaryComputationComponent implements OnInit {
 							formJson[this.paymentModeArray[i]['pm_id']] = this.salaryComputeEmployeeData[eIndex] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data'] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i] && this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'] ? Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].mode_data[i]['pm_value'])) : '';
 						}
 						formJson['td'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].td));
+						//console.log('this.deductions '+this.salaryComputeEmployeeData[eIndex].emp_id,this.deductions)
 						if (this.deductions && this.deductions.tds) {
 							formJson['tds'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].tds));
 						}
@@ -623,6 +625,9 @@ export class SalaryComputationComponent implements OnInit {
 						formJson['advance'] = Math.round(Number(this.salaryComputeEmployeeData[eIndex]['emp_salary_compute_data']['emp_modes_data'].advance));
 
 						this.formGroupArray[pos - 1] = this.fbuild.group(formJson);
+						if(this.salaryComputeEmployeeData[eIndex].emp_id == 2){
+							console.log('formJson',formJson);
+						}
 						element = {
 							srno: pos,
 							emp_id: item.emp_id,
@@ -664,6 +669,9 @@ export class SalaryComputationComponent implements OnInit {
 							isEditable: editableStatus,
 							action: item
 						};
+						if(this.salaryComputeEmployeeData[eIndex].emp_id == 2){
+							console.log('element',element);
+						}
 						this.tAr.push(element.emp_modes_data.arrear);
 						this.tdArr.push(element.emp_modes_data.td);
 						this.totalEarnings.push(element.emp_total_earnings);
@@ -1053,7 +1061,7 @@ export class SalaryComputationComponent implements OnInit {
 					pos++;
 				}
 
-				////console.log('this.SALARY_COMPUTE_ELEMENT', this.SALARY_COMPUTE_ELEMENT);
+				console.log('this.SALARY_COMPUTE_ELEMENT', this.SALARY_COMPUTE_ELEMENT);
 				this.footerrow = {
 					emp_salary_payable: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_salary_payable || 0), 0),
 					emp_total_earnings: this.SALARY_COMPUTE_ELEMENT.reduce((a, b) => a + Number(b.emp_total_earnings || 0), 0),
@@ -2321,7 +2329,7 @@ export class SalaryComputationComponent implements OnInit {
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = 0;
 					this.SALARY_COMPUTE_ELEMENT[i]['emp_total'] = Math.round(Number(total_earnings) + Number(arrearValue) - Number(advanceValue) + Number(tdValue) - Number(tdsValue) +
 						(Number(element.emp_total_deductions)));
-					if (element.emp_id) {
+					if (element) {
 						const formJson: any = {};
 						var deduction = 0;
 						let empPaymentModeDetail: any[] = [];
@@ -2396,11 +2404,16 @@ export class SalaryComputationComponent implements OnInit {
 								element.balance = Math.round(element.balance - tdeduction);
 							}
 						}
+
+
+						
+
+
 						this.formGroupArray[i]['value']['tds'] = Math.round(tdsValue);
 						if (element['emp_total'] > element['emp_salary_payable']) {
 							element.colorCode = 'rgb(252, 191, 188)';
 						}
-						//console.log(this.formGroupArray, '2345');
+						console.log(this.formGroupArray, '2345');
 					}
 				}
 			}
@@ -2559,6 +2572,7 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	save() {
+		console.log('this.SALARY_COMPUTE_ELEMENT',this.SALARY_COMPUTE_ELEMENT);
 		this.disabledApiButton = true;
 		var empArr = [];
 		let empJson = {};
