@@ -87,7 +87,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		coa_acc_group: this.data.formData.coa_acc_group.group_id,
 		coa_acc_type: this.data.formData.coa_acc_type.acc_type_id,
 		coa_particulars: this.data.formData.coa_particulars,
-		coa_dependency_local: 'ca-9',
+		coa_dependency_local: this.data.formData.coa_dependency_local,
 		dependencies_type: this.data.formData.dependencies_type,
 		opening_balance_date: (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today),
 		opening_balance: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance : 0),
