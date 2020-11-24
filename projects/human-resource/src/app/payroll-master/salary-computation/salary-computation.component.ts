@@ -1512,15 +1512,15 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			console.log('fjJson--', fJson);
-			this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
-				if (data) {
-					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+			// this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
+			// 	if (data) {
+			// 		this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
 
 
-				} else {
-					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-				}
-			});
+			// 	} else {
+			// 		this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+			// 	}
+			// });
 		}
 
 
@@ -2018,35 +2018,35 @@ export class SalaryComputationComponent implements OnInit {
 			console.log('inputArr', inputArr);
 			console.log('empArr', empArr);
 			if (!edit) {
-				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						// this.checkForFilter();
-					},
-					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
-					});
-				});
+				// this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
+				// 	this.disabledApiButton = false;
+				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+				// 		// this.checkForFilter();
+				// 	},
+				// 	(errorResponse:any) => {
+				// 		this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
+				// 	});
+				// });
 			} else {
-				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						this.checkForFilter();
-						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-					});
-				});
-				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
-					this.disabledApiButton = false;
-					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-						// this.checkForFilter();
-						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-						this.checkForFilter();
-					},
-					(errorResponse:any) => {
-						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
-					});
-				});
+				// this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+				// 	this.disabledApiButton = false;
+				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+				// 		this.checkForFilter();
+				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+				// 	});
+				// });
+				// this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
+				// 	this.disabledApiButton = false;
+				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+				// 		// this.checkForFilter();
+				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+				// 		this.checkForFilter();
+				// 	},
+				// 	(errorResponse:any) => {
+				// 		this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
+				// 	});
+				// });
 			}
 		}
 
