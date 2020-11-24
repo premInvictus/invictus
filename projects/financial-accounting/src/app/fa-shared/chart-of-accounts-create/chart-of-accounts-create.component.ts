@@ -72,26 +72,33 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		});
 		console.log('this.data.formData', this.data.formData);
 		if(this.data.formData && this.data.formData.coa_id) {
-			this.currentCoaId =this.data.formData.coa_id;
-			this.accountform.patchValue({
-				coa_code: this.data.formData.coa_code,
-				coa_acc_name: this.data.formData.coa_acc_name,
-				coa_acc_group: this.data.formData.coa_acc_group.group_id,
-				coa_acc_type: this.data.formData.coa_acc_type.acc_type_id,
-				coa_particulars: this.data.formData.coa_particulars,
-				coa_dependency_local: this.data.formData.coa_dependency_local,
-				dependencies_type: this.data.formData.dependencies_type,
-				opening_balance_date: (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today),
-				opening_balance: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance : 0),
-				opening_balance_type: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance_type : ''),
-			});
-			this.today = (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today);
-			console.log('this.oday,,,,,,,,,,,,,,,,', this.today)
-			this.getDependancy();
+			this.setFormValue();
+
 		}
   }
+  async setFormValue() {
+	  console.log('first')
+	await this.getDependancy();
+	console.log('last')
+	this.currentCoaId =this.data.formData.coa_id;
+	this.accountform.patchValue({
+		coa_code: this.data.formData.coa_code,
+		coa_acc_name: this.data.formData.coa_acc_name,
+		coa_acc_group: this.data.formData.coa_acc_group.group_id,
+		coa_acc_type: this.data.formData.coa_acc_type.acc_type_id,
+		coa_particulars: this.data.formData.coa_particulars,
+		coa_dependency_local: 'ca-9',
+		dependencies_type: this.data.formData.dependencies_type,
+		opening_balance_date: (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today),
+		opening_balance: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance : 0),
+		opening_balance_type: (this.data.formData.coa_opening_balance_data ? this.data.formData.coa_opening_balance_data.opening_balance_type : ''),
+	});
+	this.today = (this.data.formData.coa_opening_balance_data ? moment(this.data.formData.coa_opening_balance_data.opening_balance_date) : this.today);
+	console.log('this.accountform', this.accountform.value)
+	this.setDependancyValue();
+
+  }
   async getDependancy(){
-	
 	this.dependancyeArr.push(
 		{id:'ca-1', name: 'Cash Collection'},
 		{id:'ca-9', name: 'Cash Payment'},
@@ -130,12 +137,10 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 			}
 		}
 	})
-	
-	
-
+	console.log('middle')
   }
   checkFeeHead() {
-	this.dependancyeArr = [];
+	//this.dependancyeArr = [];
 	this.faService.getFeeHead({}).subscribe((result: any) => {
 		if(result) {
 			console.log('result-', result);
@@ -155,6 +160,8 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 	console.log('this.depeb', this.dependancyeArr);
   }
   setDependancyValue(){
+	console.log('this.dependancyeArr',this.dependancyeArr);
+	console.log('this.accountform.value.coa_dependency_local',this.accountform.value.coa_dependency_local);
 	if(this.accountform.value.coa_dependency_local){
 		console.log(this.accountform.value.coa_dependency_local)
 		const temparr = this.accountform.value.coa_dependency_local.split('-');
@@ -163,6 +170,7 @@ export class ChartOfAccountsCreateComponent implements OnInit {
 		if(temparr.length == 2 || temparr.length == 3){
 			const tempjson: any = {};
 			const temp = this.dependancyeArr.find(e => e.id == this.accountform.value.coa_dependency_local);
+			console.log('temp',temp);
 			coa_dependencies: [{ dependancy_id : 5, dependency_local_id: "pm-5", dependenecy_component: "payment_mode", "dependency_name":"Corpration Bank" }]
 			if(temparr[0] == 'pm' && temparr.length === 2 ){				
 				tempjson.dependancy_id = temparr.length === 2 ? temparr[1] : temparr[2];

@@ -78,13 +78,14 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
   
 	getVouchers() {
-		const param:any = {};
-		if(this.searchData && this.searchData.from_date){
-			param.from_date = this.searchData.from_date;
-		}
-		if(this.searchData && this.searchData.to_date){
-			param.to_date = this.searchData.to_date;
-		}
+		let param:any = {};
+		// if(this.searchData && this.searchData.from_date){
+		// 	param.from_date = this.searchData.from_date;
+		// }
+		// if(this.searchData && this.searchData.to_date){
+		// 	param.to_date = this.searchData.to_date;
+		// }
+		param=this.searchData;
 		  this.faService.getAllVoucherEntry(param).subscribe((data:any)=>{
 			  if(data) {
 		  this.vouchersArray = data;
