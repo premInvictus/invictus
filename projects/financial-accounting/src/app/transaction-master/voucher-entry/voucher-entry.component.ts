@@ -317,6 +317,10 @@ export class VoucherEntryComponent implements OnInit {
 				valid = false;
 				break;
 			}
+			if(!this.voucherFormGroupArray[i].value.vc_account_type_id){
+				valid = false;
+				break;
+			}
 		}
 		return valid;
 	}
@@ -329,7 +333,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (this.voucherForm.valid) {
 				for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
 					if (this.voucherFormGroupArray[i].value.vc_credit || this.voucherFormGroupArray[i].value.vc_debit) {
-						let vFormJson = {};
+						let vFormJson:any = {};
 						vFormJson = {
 							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
 							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
@@ -342,6 +346,12 @@ export class VoucherEntryComponent implements OnInit {
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
+						if(vFormJson.vc_debit == 0) {
+							vFormJson.vc_debit='';
+						}
+						if(vFormJson.vc_credit == 0) {
+							vFormJson.vc_credit='';
+						}
 						this.voucherEntryArray.push(vFormJson);
 					}
 
@@ -375,7 +385,7 @@ export class VoucherEntryComponent implements OnInit {
 						vc_state: 'draft',
 						vc_sattle_status: 1
 					}
-
+					console.log('inputJson',inputJson);
 					if (this.currentVoucherId ) {
 						if (this.voucherForm.value.vc_narrations.trim() === "") {
 							this.commonAPIService.showSuccessErrorMessage('Narration Cannot be Empty', 'error');
@@ -411,7 +421,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 			}
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 		}
 	}
 
@@ -424,7 +434,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (this.voucherForm.valid) {
 				if (this.totalDebit == this.totalCredit) {
 					for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
-						let vFormJson = {};
+						let vFormJson:any = {};
 						vFormJson = {
 							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
 							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
@@ -437,6 +447,12 @@ export class VoucherEntryComponent implements OnInit {
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
+						if(vFormJson.vc_debit == 0) {
+							vFormJson.vc_debit='';
+						}
+						if(vFormJson.vc_credit == 0) {
+							vFormJson.vc_credit='';
+						}
 						this.voucherEntryArray.push(vFormJson);
 					}
 					let tempdate: any;
@@ -501,7 +517,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 			}
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 		}
 
 	}
@@ -515,7 +531,7 @@ export class VoucherEntryComponent implements OnInit {
 			if (this.voucherForm.valid) {
 				if (this.totalDebit == this.totalCredit) {
 					for (let i = 0; i < this.voucherFormGroupArray.length; i++) {
-						let vFormJson = {};
+						let vFormJson:any = {};
 						vFormJson = {
 							vc_account_type: this.voucherFormGroupArray[i].value.vc_account_type,
 							vc_account_type_id: this.voucherFormGroupArray[i].value.vc_account_type_id,
@@ -528,6 +544,12 @@ export class VoucherEntryComponent implements OnInit {
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
+						if(vFormJson.vc_debit == 0) {
+							vFormJson.vc_debit='';
+						}
+						if(vFormJson.vc_credit == 0) {
+							vFormJson.vc_credit='';
+						}
 						this.voucherEntryArray.push(vFormJson);
 					}
 					let tempdate: any;
@@ -594,7 +616,7 @@ export class VoucherEntryComponent implements OnInit {
 				this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 			}
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill either debit or credit', 'error');
+			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Fields', 'error');
 		}
 
 	}
@@ -715,7 +737,26 @@ export class VoucherEntryComponent implements OnInit {
 			this.commonAPIService.showSuccessErrorMessage('Error Plese fill eiher credit or debit', 'error');
 		}
 	}
-
+	removeZero(i){
+		if (this.voucherFormGroupArray[i].value.vc_credit == 0) {
+			this.voucherFormGroupArray[i].patchValue({
+				vc_credit:''
+			})
+		} else {
+			this.voucherFormGroupArray[i].patchValue({
+				vc_credit:parseInt(this.voucherFormGroupArray[i].value.vc_credit,10)
+			})
+		}
+		if (this.voucherFormGroupArray[i].value.vc_debit == 0) {
+			this.voucherFormGroupArray[i].patchValue({
+				vc_debit:''
+			})
+		} else {
+			this.voucherFormGroupArray[i].patchValue({
+				vc_debit:parseInt(this.voucherFormGroupArray[i].value.vc_debit,10)
+			})
+		}
+	}
 	calculateCreditTotal() {
 		this.totalCredit = 0;
 		for (let i = 0; i < this.voucherFormGroupArray.length; i++) {

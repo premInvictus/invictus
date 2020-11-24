@@ -33,6 +33,22 @@
             </mat-form-field>
           </div>
         </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Account</mat-label>
+              <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account"
+                      aria-label="State" [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)"
+                      required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name"
+                        (onSelectionChange)="setaccount(aitem,i)">
+                        {{aitem.coa_acc_name | titlecase}}
+                      </mat-option>
+                    </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
       </form>
       <br />
       <div class="row text-center">
