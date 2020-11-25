@@ -41,6 +41,7 @@ export class AdjustmentComponent implements OnInit, OnChanges {
   vcYearlyStatus   = 0;
   feeAdjustableAccountId = 0;
   feeAdjustableAccountName = 'Fee Adjustment';
+	globalsetup:any;
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -71,16 +72,29 @@ export class AdjustmentComponent implements OnInit, OnChanges {
     }
 
   }
+  // getGlobalSetting() {
+	// 	let param: any = {};
+	// 	param.gs_alias = ['fa_voucher_code_format_yearly_status'];
+	// 	this.faService.getGlobalSetting(param).subscribe((result: any) => {
+	// 		if (result && result.status === 'ok') {
+	// 			if (result.data && result.data[0]) {
+	// 				this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+	// 				console.log('this.vcYearlyStatus', this.vcYearlyStatus)
+	// 			}
+
+	// 		}
+	// 	})
+  // }
   getGlobalSetting() {
 		let param: any = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status'];
+		this.globalsetup = {};
+		param.gs_alias = ['fa_voucher_code_format_yearly_status','fa_session_freez'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				if (result.data && result.data[0]) {
-					this.vcYearlyStatus = Number(result.data[0]['gs_value']);
-					console.log('this.vcYearlyStatus', this.vcYearlyStatus)
-				}
-
+				result.data.forEach(element => {
+					this.globalsetup[element.gs_alias] = element.gs_value
+				});
+				this.vcYearlyStatus = Number(this.globalsetup['fa_voucher_code_format_yearly_status']);
 			}
 		})
 	}
