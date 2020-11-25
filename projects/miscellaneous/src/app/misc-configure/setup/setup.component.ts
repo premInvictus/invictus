@@ -177,7 +177,11 @@ export class SetupComponent implements OnInit {
         this.getPayGways();
         this.getBanks();
     }
-
+    setSessionFreez(key1,key2){
+        if(this.settingForm.value[key2]){
+            this.settingForm.value[key1]=this.settingForm.value[key2];
+        }
+    }
     getSession() {
         this.erpCommonService.getSession().subscribe((data: any) => {
             this.sessionArray = data.data;

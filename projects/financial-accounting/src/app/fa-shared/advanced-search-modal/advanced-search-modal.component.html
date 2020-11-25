@@ -33,13 +33,57 @@
             </mat-form-field>
           </div>
         </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Account</mat-label>
+              <input matInput type="text" formControlName="vc_account_type" placeholder="Please Select Account"
+                      aria-label="State" [matAutocomplete]="auto" (click)="getAccounts()" (keyup)="getAccounts($event)"
+                      required>
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let aitem of accountsArray" [value]="aitem.coa_acc_name"
+                        (onSelectionChange)="setaccount(aitem,i)">
+                        {{aitem.coa_acc_name | titlecase}}
+                      </mat-option>
+                    </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Voucher Type</mat-label>
+              <mat-select formControlName="vc_type">
+                <mat-option value="">Please Select Voucher Type</mat-option>
+                <mat-option *ngFor="let item of voucherArray" [value]="item">{{item}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Operator</mat-label>
+              <mat-select formControlName="operator">
+                <mat-option value="">Please Select Operator</mat-option>
+                <mat-option *ngFor="let item of operatorArray" [value]="item.id">{{item.value}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-4">
+            <mat-form-field class="form-field" appearance="outline">
+              <mat-label>Amount</mat-label>
+              <input matInput type="number" placeholder="Amount" formControlName="vc_debit">
+            </mat-form-field>
+          </div>
+        </div>
       </form>
       <br />
       <div class="row text-center">
         <div class="col-12">
           <button mat-raised-button class="btn-success-green" (click)="submit()">Submit</button>
-          <button mat-raised-button class="btn-reset btn-spacer" (click)="cancel()">
-            Cancel
+          <button mat-raised-button class="btn-reset btn-spacer" (click)="reset()">
+            Reset
           </button>
         </div>
       </div>

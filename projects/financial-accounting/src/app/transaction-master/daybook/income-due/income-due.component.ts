@@ -46,6 +46,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   previousBalanceObject = {};
   previousYearVoucherExists = false;
   previousYearVoucherData:any[] = [];
+  globalsetup:any;
+
   constructor(
     private fbuild: FormBuilder,
     private sisService: SisService,
@@ -76,25 +78,39 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     }
 
   }
+  // getGlobalSetting() {
+	// 	let param: any = {};
+	// 	param.gs_alias = ['fa_voucher_code_format_yearly_status', 'fee_invoice_includes_adjustments'];
+	// 	this.faService.getGlobalSetting(param).subscribe((result: any) => {
+	// 		if (result && result.status === 'ok') {
+	// 			if (result.data && result.data[0]) {
+  //         for (var i=0; i< result.data.length;i++) {
+  //           if (result.data[i]['gs_alias'] === 'fa_voucher_code_format_yearly_status') {
+  //             this.vcYearlyStatus = Number(result.data[i]['gs_value']);
+  //           } 
+  //           if (result.data[i]['gs_alias'] === 'fee_invoice_includes_adjustments') {
+  //             this.adjustmentStatus = result.data[i]['gs_value'] == '1' ? 1 : 0 ;
+  //           }
+  //         }
+					
+  //         console.log('this.vcYearlyStatus', this.vcYearlyStatus);
+  //         console.log('this.adjustmentStatus', this.adjustmentStatus)
+	// 			}
+
+	// 		}
+	// 	})
+  // }
   getGlobalSetting() {
 		let param: any = {};
-		param.gs_alias = ['fa_voucher_code_format_yearly_status', 'fee_invoice_includes_adjustments'];
+		this.globalsetup = {};
+		param.gs_alias = ['fa_voucher_code_format_yearly_status','fee_invoice_includes_adjustments','fa_session_freez'];
 		this.faService.getGlobalSetting(param).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				if (result.data && result.data[0]) {
-          for (var i=0; i< result.data.length;i++) {
-            if (result.data[i]['gs_alias'] === 'fa_voucher_code_format_yearly_status') {
-              this.vcYearlyStatus = Number(result.data[i]['gs_value']);
-            } 
-            if (result.data[i]['gs_alias'] === 'fee_invoice_includes_adjustments') {
-              this.adjustmentStatus = result.data[i]['gs_value'] == '1' ? 1 : 0 ;
-            }
-          }
-					
-          console.log('this.vcYearlyStatus', this.vcYearlyStatus);
-          console.log('this.adjustmentStatus', this.adjustmentStatus)
-				}
-
+				result.data.forEach(element => {
+					this.globalsetup[element.gs_alias] = element.gs_value
+				});
+        this.vcYearlyStatus = Number(this.globalsetup['fa_voucher_code_format_yearly_status']);
+        this.adjustmentStatus = this.globalsetup['fee_invoice_includes_adjustments'] == '1' ? 1 : 0 ;
 			}
 		})
 	}

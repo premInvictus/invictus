@@ -11,6 +11,7 @@ import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-mo
 import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
 import { saveAs } from 'file-saver';
 import { VoucherPrintSetupComponent } from '../../voucher-print-setup/voucher-print-setup.component';
+
 @Component({
   selector: 'app-vouchers-list',
   templateUrl: './vouchers-list.component.html',
@@ -29,6 +30,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	vouchersArray:any[] = [];
 	searchData:any;
+	session:any;
+	globalsetup:any;
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -41,6 +44,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	
   
 	ngOnInit(){
+		this.session = JSON.parse(localStorage.getItem('session'));
+		this.getGlobalSetting();
 	  this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	  this.tableDivFlag = true;
 	  this.getVouchers();
@@ -78,13 +83,15 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
   
 	getVouchers() {
-		const param:any = {};
-		if(this.searchData && this.searchData.from_date){
-			param.from_date = this.searchData.from_date;
-		}
-		if(this.searchData && this.searchData.to_date){
-			param.to_date = this.searchData.to_date;
-		}
+		let param:any = {};
+		// if(this.searchData && this.searchData.from_date){
+		// 	param.from_date = this.searchData.from_date;
+		// }
+		// if(this.searchData && this.searchData.to_date){
+		// 	param.to_date = this.searchData.to_date;
+		// }
+
+		param=this.commonAPIService.state$['filter'] ? this.commonAPIService.state$['filter'] : {};
 		  this.faService.getAllVoucherEntry(param).subscribe((data:any)=>{
 			  if(data) {
 		  this.vouchersArray = data;
@@ -228,8 +235,11 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		this.searchModal.openModal();
 	}
 	searchOk(event){
+		console.log(this.router.url);
 		console.log(event);
 		this.searchData = event;
+		this.commonAPIService.state$ = this.commonAPIService.state$ ? this.commonAPIService.state$ : {};
+		this.commonAPIService.state$['filter']=event;
 		this.getVouchers();
 	}
 	searchCancel(){
@@ -260,6 +270,24 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			  console.log('The dialog was closed');
 			});
 		  
+	}
+	getGlobalSetting() {
+		let param: any = {};
+		this.globalsetup = {};
+		param.gs_alias = ['fa_session_freez'];
+		this.faService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.forEach(element => {
+					this.globalsetup[element.gs_alias] = element.gs_value
+				});
+				
+				// if (result.data && result.data[0]) {
+				// 	this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+				// 	console.log('this.vcYearlyStatus', this.vcYearlyStatus)
+				// }
+
+			}
+		})
 	}
 
 }
