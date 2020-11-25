@@ -258,25 +258,25 @@
           </div>
           <div class="row margin-top-25">
             <div class="col-12 text-center">
-              <button *ngIf="(!editMode) && isExistUserAccessMenu('736')" mat-button style="background-color: #89A8C9"
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('736') && session.ses_id != globalsetup['fa_session_freez']" mat-button style="background-color: #89A8C9"
                 (click)="$event.stopPropagation(); saveAsDraft();">Save as Draft</button>
 
-              <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('737') && session.ses_id != globalsetup['fa_session_freez']" mat-button
                 class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); saveAndPublish(); ">Save &
                 Publish</button>
 
-              <button *ngIf="(!editMode) && isExistUserAccessMenu('737')" mat-button
+              <button *ngIf="(!editMode) && isExistUserAccessMenu('737') && session.ses_id != globalsetup['fa_session_freez']" mat-button
                 class="btn-success-green btn-spacer"
                 (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish & Print</button>
 
               <button *ngIf="editMode && isExistUserAccessMenu('738')" mat-button style="background-color: #89A8C9"
                 (click)="$event.stopPropagation(); saveAsDraft();">Update as Draft</button>
 
-              <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer"
+              <button *ngIf="editMode && isExistUserAccessMenu('739') && session.ses_id != globalsetup['fa_session_freez']" mat-button class="btn-success-green btn-spacer"
                 (click)="$event.stopPropagation(); saveAndPublish(); ">Update &
                 Publish</button>
 
-              <button *ngIf="editMode && isExistUserAccessMenu('739')" mat-button class="btn-success-green btn-spacer"
+              <button *ngIf="editMode && isExistUserAccessMenu('739') && session.ses_id != globalsetup['fa_session_freez']" mat-button class="btn-success-green btn-spacer"
                 (click)="$event.stopPropagation(); saveAndPublishAndPrint(); ">Publish &
                 Print</button>
               <button mat-button class="btn-danger btn-spacer"

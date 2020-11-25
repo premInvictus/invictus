@@ -29,6 +29,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	vouchersArray:any[] = [];
 	searchData:any;
+	session:any;
+	globalsetup:any;
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -41,6 +43,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	
   
 	ngOnInit(){
+		this.session = JSON.parse(localStorage.getItem('session'));
+		this.getGlobalSetting();
 	  this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	  this.tableDivFlag = true;
 	  this.getVouchers();
@@ -261,6 +265,24 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			  console.log('The dialog was closed');
 			});
 		  
+	}
+	getGlobalSetting() {
+		let param: any = {};
+		this.globalsetup = {};
+		param.gs_alias = ['fa_session_freez'];
+		this.faService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok') {
+				result.data.forEach(element => {
+					this.globalsetup[element.gs_alias] = element.gs_value
+				});
+				
+				// if (result.data && result.data[0]) {
+				// 	this.vcYearlyStatus = Number(result.data[0]['gs_value']);
+				// 	console.log('this.vcYearlyStatus', this.vcYearlyStatus)
+				// }
+
+			}
+		})
 	}
 
 }
