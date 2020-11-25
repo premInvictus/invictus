@@ -19,6 +19,12 @@ export class AdvancedSearchModalComponent implements OnInit {
   currentUser: any = {};
   today=new Date();
   accountsArray:any[]=[];
+  voucherArray:any[]=['Journal','Contra','Cash Payment','Bank Payment','Receipt','Credit Note','Debit Note','Purchase','Sale'];
+  operatorArray:any[]=[
+    {id:'$eq',value:'='},
+    {id:'$gte',value:'>='},
+    {id:'$lte',value:'<='},
+    ];
   constructor(private dialog: MatDialog, private fbuild: FormBuilder,
     private common: ErpCommonService,
     private commonAPIService: CommonAPIService,
@@ -44,7 +50,9 @@ export class AdvancedSearchModalComponent implements OnInit {
       to_date:'',
       vc_type:'',
       vc_account_type_id:'',
-      vc_account_type:''
+      vc_account_type:'',
+      operator:'',
+      vc_debit:''
     });
   }
   setaccount(item, i) {
