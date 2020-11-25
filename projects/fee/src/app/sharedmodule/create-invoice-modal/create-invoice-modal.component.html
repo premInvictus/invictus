@@ -75,7 +75,7 @@
         <div class="col-12">
           <div class="text-center">
             <div class="inline-flex margin-left-15">
-              <button *ngIf="commonAPIService.isExistUserAccessMenu('359')" mat-raised-button
+              <button  mat-raised-button
                 class="btn-primary  btn-width-164 btn-success" (click)="insertInvoice()" [disabled]="btnDisable">Generate Invoice</button>
               <button mat-raised-button style="margin-left: 15px; background-color: #e11022" class="print-btn"
                 (click)="btnDisable = false;invoiceCreationForm.reset()">Reset</button>

@@ -44,3 +44,9 @@ td.mat-footer-cell {
 .pointer {
     cursor: pointer;
 }
+.credit {
+    color: green;
+}
+.debit {
+    color: red;
+}

@@ -97,6 +97,7 @@ export class ReceiptModeWiseComponent implements OnInit {
       }
     })
   }
+
   getInvoiceDayBook() {
     this.headtoatl = 0;
     this.displayedColumns = [];
@@ -139,6 +140,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             tempelement['vc_id'] = e.vc_id;
             tempelement['vc_state'] = e.vc_state;
             tempelement['voucherExists'] = e.voucherExists;
+            tempelement['be_back_status'] = e.be_back_status;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -224,6 +226,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             tempelement['voucherExists'] = e.voucherExists;
             tempelement['invoice_head_arr'] = e.invoice_head_arr;
             tempelement['vc_records'] = e.vc_data;
+            tempelement['be_back_status'] = e.be_back_status;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
               this.displayedColumns.forEach(ee => {
@@ -302,6 +305,7 @@ export class ReceiptModeWiseComponent implements OnInit {
     this.chartsOfAccountInvoice = [];
     this.tempChartsOfAccountInvoice = [];
     this.faService.getAllChartsOfAccount({}).subscribe((result: any) => {
+      
       for (var i = 0; i < result.length; i++) {
         if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && result[i]['coa_dependencies'][0] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_collection" || result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash")) {
           this.chartsOfAccount.push(result[i]);
@@ -763,12 +767,17 @@ export class ReceiptModeWiseComponent implements OnInit {
 
       }
 
-
+      
 
       console.log('fJson--', fJson);
       if (!this.currentVoucherData.vc_id) {
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
+            if(this.currentVoucherData.be_back_status) {
+              this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
+      
+              });
+            }
             this.getInvoiceDayBook();
             this.commonAPIService.showSuccessErrorMessage('Voucher entry Created Successfully', 'success');
 
@@ -781,6 +790,9 @@ export class ReceiptModeWiseComponent implements OnInit {
 
         this.faService.insertVoucherEntry(fJson).subscribe((data: any) => {
           if (data) {
+            this.faService.updateBackDateEntry({be_back_date:this.currentVoucherData.be_back_date, be_back_status:this.currentVoucherData.be_back_status}).subscribe((data:any)=>{
+      
+            });
             this.getInvoiceDayBook();
             this.commonAPIService.showSuccessErrorMessage('Voucher entry Updated Successfully', 'success');
 
