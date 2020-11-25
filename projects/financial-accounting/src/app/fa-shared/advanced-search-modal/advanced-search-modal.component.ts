@@ -54,6 +54,23 @@ export class AdvancedSearchModalComponent implements OnInit {
       operator:'',
       vc_debit:''
     });
+    const param=this.commonAPIService.state$['filter'] ? this.commonAPIService.state$['filter'] : {};
+    if(param) {
+      Object.keys(param).forEach(key => {
+        if(param[key]) {
+          this.generalFilterForm.get(key).patchValue(param[key]);
+        }
+      });
+      // this.generalFilterForm.patchValue({
+      //   from_date:param.from_date,
+      //   to_date:param.to_date,
+      //   vc_type:param.vc_type,
+      //   vc_account_type_id:param.vc_account_type_id,
+      //   vc_account_type:param.vc_account_type,
+      //   operator:param.operator,
+      //   vc_debit:param.vc_debit
+      // });
+    }
   }
   setaccount(item, i) {
 		this.generalFilterForm.patchValue({
@@ -100,6 +117,10 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   cancel() {
     this.closeDialog();
+  }
+  reset(){
+    this.generalFilterForm.reset();
+    this.commonAPIService.state$['filter']={};
   }
   getFromDate(value) {
     this.generalFilterForm.patchValue({

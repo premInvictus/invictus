@@ -11,6 +11,7 @@ import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-mo
 import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
 import { saveAs } from 'file-saver';
 import { VoucherPrintSetupComponent } from '../../voucher-print-setup/voucher-print-setup.component';
+
 @Component({
   selector: 'app-vouchers-list',
   templateUrl: './vouchers-list.component.html',
@@ -89,7 +90,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		// if(this.searchData && this.searchData.to_date){
 		// 	param.to_date = this.searchData.to_date;
 		// }
-		param=this.searchData;
+
+		param=this.commonAPIService.state$['filter'] ? this.commonAPIService.state$['filter'] : {};
 		  this.faService.getAllVoucherEntry(param).subscribe((data:any)=>{
 			  if(data) {
 		  this.vouchersArray = data;
@@ -233,8 +235,11 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		this.searchModal.openModal();
 	}
 	searchOk(event){
+		console.log(this.router.url);
 		console.log(event);
 		this.searchData = event;
+		this.commonAPIService.state$ = this.commonAPIService.state$ ? this.commonAPIService.state$ : {};
+		this.commonAPIService.state$['filter']=event;
 		this.getVouchers();
 	}
 	searchCancel(){

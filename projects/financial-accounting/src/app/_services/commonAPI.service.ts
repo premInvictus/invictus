@@ -29,6 +29,7 @@ export class CommonAPIService {
 	renderTab = new Subject();
 	tabChange = new Subject();
 	currentVcType:string;
+	state$:any={};
 	htmlToText(html: any) {
 		const tmp = document.createElement('DIV'); // TODO: Check if this the way to go with Angular 
 		tmp.innerHTML = html;
