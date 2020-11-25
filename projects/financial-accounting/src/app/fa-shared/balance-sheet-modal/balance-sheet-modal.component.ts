@@ -202,14 +202,24 @@ export class BalanceSheetModalComponent implements OnInit {
     var diffCTotal = 0;
     this.debitSideBlankArr = [];
     this.creditSideBlankArr = [];
+    var debitTotal =0;
+    var creditTotal = 0;
     for (var i = 0; i < this.param['ledger_data'].length; i++) {
       this.debitTotal = 0;
       this.creditTotal = 0;
+
+      if (this.param['ledger_data'][i]['account_display'] && this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+        // console.log('liability', this.param['ledger_data'][i]['total_dev']);
+        debitTotal = debitTotal+(this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
+      }
+      if (this.param['ledger_data'][i]['account_display'] && this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
+        // console.log('asset', this.param['ledger_data'][i]['total_dev']);
+        creditTotal = creditTotal+(this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
+      }
+
       for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
         if (this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
           this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? (this.param['ledger_data'][i]['debit_data'][j]['vc_credit'] < 0 ? -(this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : this.param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
-
-          //console.log('debitTotal>', this.debitTotal, this.param['ledger_data'][i]['debit_data'][j]['vc_credit'], i);
         }
 
 
@@ -217,24 +227,19 @@ export class BalanceSheetModalComponent implements OnInit {
       for (var k = 0; k < this.param['ledger_data'][i]['credit_data'].length; k++) {
         if (this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
           this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
-
-          //console.log('debitTotal>', this.creditTotal,this.param['ledger_data'][i]['credit_data'][k]['vc_debit'], i);
         }
       }
-      //console.log('this.creditTotal', this.creditTotal);
-      if (this.debitTotal == 5880) {
-      console.log('this.debitTotal', this.debitTotal, this.param['ledger_data'][i]); }
+      
 
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
-        diffTotal = diffTotal - diff;
-        //console.log(diff, i);
-        this.creditSideTotal = diffTotal;
+        // diffTotal = diffTotal - diff;
+        // this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
 
-        diffCTotal = diffCTotal + diff;
-        this.debitSideTotal = diffCTotal;
+        // diffCTotal = diffCTotal + diff;
+        // this.debitSideTotal = diffCTotal;
         this.debitSideBlankArr.push(i);
       }
 
@@ -243,15 +248,17 @@ export class BalanceSheetModalComponent implements OnInit {
 
     }
 
-    this.creditSideTotal = this.creditSideTotal;
-    if (this.creditSideTotal < 0) {
-      this.creditSideTotal = -this.creditSideTotal;
-    }
-    this.debitSideTotal = this.debitSideTotal;
-    if (this.debitSideTotal < 0) {
-      this.debitSideTotal = -this.debitSideTotal;
-    }
-    ///console.log('this.debitSideTotal--',this.debitSideTotal, this.creditSideTotal);
+    // this.creditSideTotal = this.creditSideTotal;
+    // if (this.creditSideTotal < 0) {
+    //   this.creditSideTotal = -this.creditSideTotal;
+    // }
+    // this.debitSideTotal = this.debitSideTotal;
+    // if (this.debitSideTotal < 0) {
+    //   this.debitSideTotal = -this.debitSideTotal;
+    // }
+    this.debitSideTotal = debitTotal;
+    this.creditSideTotal = creditTotal;
+    console.log('debitTotal', debitTotal, 'creditTotal', creditTotal)
     this.checkBlankArray();
   }
 

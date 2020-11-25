@@ -132,6 +132,14 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/daybook/getInvoiceDayBook', value);
 	}
+
+	updateBackDateEntry(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeTransaction/updateBackDateEntry', value);
+	}
+
+	checkPreviosuDueStatus(value) {
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/checkPreviosuDueStatus', value);
+	}
 	
 	
 }

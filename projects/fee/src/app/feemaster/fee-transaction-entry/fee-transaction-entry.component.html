@@ -32,39 +32,82 @@
          <mat-card class="card-top-title__container">
             <div class="row">
                <div class="col-12">
-                  <table mat-table [dataSource]="dataSource" class="text-center table-100">
-                     <!-- Position Column -->
-                     <ng-container matColumnDef="srno">
-                        <th mat-header-cell *matHeaderCellDef>Sr No. </th>
-                        <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
-                     </ng-container>
-                     <!-- Name Column -->
-                     <ng-container matColumnDef="feehead">
-                        <th mat-header-cell *matHeaderCellDef> Fee Head </th>
-                        <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}}
-                        </td>
-                     </ng-container>
-                     <!-- Weight Column -->
-                     <ng-container matColumnDef="feedue">
-                        <th mat-header-cell *matHeaderCellDef> Fee Due (<i class="fas fa-rupee-sign"></i>)</th>
-                        <td mat-cell *matCellDef="let element"> {{element.feedue | number}} </td>
-                     </ng-container>
-                     <!-- Symbol Column -->
-                     <ng-container matColumnDef="concession">
-                        <th mat-header-cell *matHeaderCellDef> Concession (<i class="fas fa-rupee-sign"></i>) </th>
-                        <td mat-cell *matCellDef="let element"> {{element.concession | number | zerodash}} </td>
-                     </ng-container>
-                     <ng-container matColumnDef="adjustment">
-                        <th mat-header-cell *matHeaderCellDef> Adjustment (<i class="fas fa-rupee-sign"></i>)</th>
-                        <td mat-cell *matCellDef="let element"> {{element.adjustment | number | zerodash}} </td>
-                     </ng-container>
-                     <ng-container matColumnDef="netpay">
-                        <th mat-header-cell *matHeaderCellDef> Net payable (<i class="fas fa-rupee-sign"></i>) </th>
-                        <td mat-cell *matCellDef="let element"> {{element.netpay | number | zerodash}} </td>
-                     </ng-container>
-                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                  </table>
+                 
+                        
+                     <table mat-table [dataSource]="dataSource" class="text-center table-100">
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="srno">
+                           <th mat-header-cell *matHeaderCellDef>Sr No. </th>
+                           <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                        </ng-container>
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="feehead">
+                           <th mat-header-cell *matHeaderCellDef> Fee Head </th>
+                           <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}}
+                           </td>
+                        </ng-container>
+                        <!-- Weight Column -->
+                        <ng-container matColumnDef="feedue">
+                           <th mat-header-cell *matHeaderCellDef> Fee Due (<i class="fas fa-rupee-sign"></i>)</th>
+                           <td mat-cell *matCellDef="let element; let i = index;"> 
+                              {{element.feedue | number}} 
+                              <!-- <form [formGroup]="invoiceArrayForm[i]">
+                                    <mat-form-field class="form-field lib-form">
+                                      <input matInput 
+                                        formControlName="feedue" autocomplete="off" [value]="element?.feedue"
+                                        (keydown.enter)="setNetPay(element, i)" />
+                                    </mat-form-field>
+                              </form>    -->
+                           </td>
+                        </ng-container>
+                        <!-- Symbol Column -->
+                        <ng-container matColumnDef="concession">
+                           <th mat-header-cell *matHeaderCellDef> Concession (<i class="fas fa-rupee-sign"></i>) </th>
+                           <td mat-cell *matCellDef="let element;let i = index;"> 
+                              {{element.concession | number | zerodash}} 
+                              <!-- <form [formGroup]="invoiceArrayForm[i]">
+                              <mat-form-field class="form-field lib-form">
+                                    <input matInput 
+                                      formControlName="concession" autocomplete="off" [value]="element?.concession"
+                                      (keydown.enter)="setNetPay(element, i)" />
+                                  </mat-form-field>
+                                 </form> -->
+                           </td>
+                        </ng-container>
+                        <ng-container matColumnDef="adjustment">
+                           <th mat-header-cell *matHeaderCellDef> Adjustment (<i class="fas fa-rupee-sign"></i>)</th>
+                           <td mat-cell *matCellDef="let element;let i = index;"> 
+                              {{element.adjustment | number | zerodash}} 
+                              <!-- <form [formGroup]="invoiceArrayForm[i]">
+                              <mat-form-field class="form-field lib-form">
+                                    <input matInput 
+                                      formControlName="adjustment" autocomplete="off" [value]="element?.adjustment"
+                                      (keydown.enter)="setNetPay(element, i)" />
+                                  </mat-form-field>
+                                 </form> -->
+                           </td>
+                        </ng-container>
+                        <ng-container matColumnDef="netpay">
+                           <th mat-header-cell *matHeaderCellDef> Net payable (<i class="fas fa-rupee-sign"></i>) </th>
+                           <td mat-cell *matCellDef="let element;let i=index"> 
+                              <!-- {{element.netpay | number | zerodash}}  -->
+                              <div *ngIf="element?.feehead != 'Previous Balance' && element?.feehead != 'Fine & Penalties' && element?.feehead != 'Previous Received Amt.'">
+                              <form [formGroup]="invoiceArrayForm[i]">
+                              <mat-form-field class="form-field lib-form">
+                                    <input matInput 
+                                      formControlName="netpay" autocomplete="off" [value]="element?.netpay"
+                                      (keydown.enter)="setNetPay(element, i)" (blur)="setNetPay(element, i)"/>
+                                  </mat-form-field>
+                                 </form>
+                              </div>
+                              <div *ngIf="element?.feehead == 'Previous Balance' || element?.feehead == 'Fine & Penalties' || element?.feehead == 'Previous Received Amt.'">
+                                 {{element.netpay | number | zerodash}} 
+                              </div>
+                           </td>
+                        </ng-container>
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                     </table>
                </div>
             </div>
             <div class="row">

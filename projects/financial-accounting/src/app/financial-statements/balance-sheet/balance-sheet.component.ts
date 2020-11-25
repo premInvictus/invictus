@@ -234,12 +234,12 @@ export class BalanceSheetComponent implements OnInit {
 
           } else {
             if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
-              console.log('iunn 236')
+              // console.log('iunn 236')
               if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if ( data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
-                console.log(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
+                // console.log(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
                 data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
               } else {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
@@ -305,7 +305,7 @@ export class BalanceSheetComponent implements OnInit {
       }
 
       if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['assets']) {
-        console.log('data.ledger_data[i]--', data.ledger_data[i])
+        // console.log('data.ledger_data[i]--', data.ledger_data[i])
         if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
 
           if ((((tempAssetsGrouparr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
@@ -364,7 +364,7 @@ export class BalanceSheetComponent implements OnInit {
                 tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
               }
             }
-            console.log("data['assets_group_data']---?",data['assets_group_data'])
+            // console.log("data['assets_group_data']---?",data['assets_group_data'])
 
           }
 
@@ -437,7 +437,7 @@ export class BalanceSheetComponent implements OnInit {
         data['liabilities_group_data'] = liabilitiesArr;
         this.ledgerArray = data;
         this.tableDivFlag = true;
-         console.log('data--', data);
+        //  console.log('data--', data);
       }
     }
 
@@ -448,6 +448,9 @@ export class BalanceSheetComponent implements OnInit {
       let debit_total_f = 0;
       let credit_total_f = 0;
       let deviation_f = 0;
+      // console.log('param--', param);
+
+      
       if (param['debit_data']) {
         for (var i = 0; i < param['debit_data'].length; i++) {
           debit_total_f = debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
@@ -460,7 +463,13 @@ export class BalanceSheetComponent implements OnInit {
       }
       deviation_f = debit_total_f - credit_total_f;
 
-      return deviation_f < 0 ? -deviation_f : deviation_f;
+      if (param && param.account_display && param.account_display.display_section && param.account_display.display_section.balanceSheet.liabilities) {
+        return -deviation_f ;
+      } else {
+        return deviation_f ;
+
+      }
+
     }
   }
 

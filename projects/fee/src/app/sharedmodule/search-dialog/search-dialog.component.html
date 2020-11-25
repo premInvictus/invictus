@@ -28,16 +28,91 @@
               <div class="col-12">
                  <mat-form-field appearance="outline" class="form-field">
                     <mat-label>Receipt Number</mat-label>
-                    <input matInput placeholder="Enter Receipt Number" type="number" formControlName="receipt_number"
+                    <input matInput placeholder="Enter Receipt Number" type="number" formControlName="receipt_number" (keyup.enter)="search($event)" (blur)="search($event)" 
                     required>
                  </mat-form-field>
               </div>
            </div>
+           <div [hidden]="!(invoiceArray.length > 0)" class="row ">
+            <div class="col-12 padding-8">
+               <mat-card class="card-top-title__container">
+                  <div class="row">
+                     <div class="col-12">
+                       
+                              
+                           <table mat-table [dataSource]="dataSource" class="text-center table-100">
+                              <!-- Position Column -->
+                              <ng-container matColumnDef="srno">
+                                 <th mat-header-cell *matHeaderCellDef>Sr No. </th>
+                                 <td mat-cell *matCellDef="let element"> {{element.srno}} </td>
+                              </ng-container>
+                              <!-- Name Column -->
+                              <ng-container matColumnDef="feehead">
+                                 <th mat-header-cell *matHeaderCellDef> Fee Head </th>
+                                 <td mat-cell *matCellDef="let element" style="text-align: left !important;"> {{element.feehead}}
+                                 </td>
+                              </ng-container>
+                              <!-- Weight Column -->
+                              <ng-container matColumnDef="feedue">
+                                 <th mat-header-cell *matHeaderCellDef> Fee Due (<i class="fas fa-rupee-sign"></i>)</th>
+                                 <td mat-cell *matCellDef="let element; let i = index;"> 
+                                    {{element.feedue | number}} 
+                                 </td>
+                              </ng-container>
+                              <!-- Symbol Column -->
+                              <ng-container matColumnDef="concession">
+                                 <th mat-header-cell *matHeaderCellDef> Concession (<i class="fas fa-rupee-sign"></i>) </th>
+                                 <td mat-cell *matCellDef="let element;let i = index;"> 
+                                    {{element.concession | number | zerodash}} 
+                                 </td>
+                              </ng-container>
+                              <ng-container matColumnDef="adjustment">
+                                 <th mat-header-cell *matHeaderCellDef> Adjustment (<i class="fas fa-rupee-sign"></i>)</th>
+                                 <td mat-cell *matCellDef="let element;let i = index;"> 
+                                    {{element.adjustment | number | zerodash}} 
+                                 </td>
+                              </ng-container>
+                              <ng-container matColumnDef="netpay">
+                                 <th mat-header-cell *matHeaderCellDef> Net payable (<i class="fas fa-rupee-sign"></i>) </th>
+                                 <td mat-cell *matCellDef="let element;let i=index"> 
+                                    <div *ngIf="element?.feehead != 'Previous Balance' && element?.feehead != 'Fine & Penalties' && element?.feehead != 'Previous Received Amt.'">
+                                    <form [formGroup]="invoiceArrayForm[i]">
+                                    <mat-form-field class="form-field lib-form">
+                                          <input matInput 
+                                            formControlName="netpay" autocomplete="off" [value]="element?.netpay"
+                                            (keydown.enter)="setNetPay()" (blur)="setNetPay()"/>
+                                        </mat-form-field>
+                                       </form>
+                                    </div>
+                                    <div *ngIf="element?.feehead == 'Previous Balance' || element?.feehead == 'Fine & Penalties' || element?.feehead == 'Previous Received Amt.'">
+                                       {{element.netpay | number | zerodash}} 
+                                    </div>
+                                 </td>
+                              </ng-container>
+                              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                           </table>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col-12">
+                        <div class="grey-box ">
+                           <div class="margin-right-50"><span class="font-size-16 ">Amount in Words : </span><span
+                                 class="font-size-16 font-medium">Rupees {{invoiceTotal | numberToWord | titlecase}} Only
+                              </span><span class="float-right font-size-16 font-medium"><span>Grand Total :</span><span
+                                    class="font-size-16 font-medium">
+                                    {{invoiceTotal | number}}</span></span></div>
+                        </div>
+                     </div>
+                  </div>
+               </mat-card>
+            </div>
+         </div>
         </div>
         <div class="text-center">
             <br>
    
-            <button mat-raised-button class="btn-success" (click)="$event.preventDefault();search();">Submit</button>&nbsp;
+            <button mat-raised-button class="btn-success" (click)="$event.preventDefault();submitReceipt($event);">Submit</button>&nbsp;
             <button mat-raised-button class="btn-danger" (click)="closeDialog()">Cancel</button>
          </div>
         </form>

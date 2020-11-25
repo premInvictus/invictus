@@ -20,3 +20,7 @@ table tbody tr {
      background: #FAFAFA;
      
  }
+
+ .table td, .table th {
+     padding:10px 5px !important;
+ }

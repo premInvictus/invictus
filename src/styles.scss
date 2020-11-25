@@ -5592,6 +5592,8 @@ div.barcode-print-lib3 > ngx-barcode > div > img {
 
 .slickgrid-container .slick-viewport {
     border-bottom: 1px solid #0e7d9e !important;
+    width:100% !important;
+    overflow-y:scroll !important;
 }
 
 .slick-preheader-panel .ui-droppable .slick-placeholder,

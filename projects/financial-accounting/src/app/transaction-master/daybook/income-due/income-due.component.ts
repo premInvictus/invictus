@@ -31,6 +31,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   partialPaymentStatus = 1;
   apiInvoiceData = [];
   apiReceiptData = [];
+  apiData:any[]=[];
   chartsOfAccount: any[] = [];
   vcData: any;
   currentVcType = 'Journal Voucher';
@@ -42,6 +43,9 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   feeReceivableAccountId = 0;
   feeReceivableAccountName = 'Fee Receivable';
   adjustmentStatus = 0;
+  previousBalanceObject = {};
+  previousYearVoucherExists = false;
+  previousYearVoucherData:any[] = [];
   globalsetup:any;
 
   constructor(
@@ -122,6 +126,52 @@ export class IncomeDueComponent implements OnInit, OnChanges {
       }
     })
   }
+
+  getPreviousHeadAmt(item) {
+    var flag=0;
+    for(var i=0; i< this.apiData.length;i++) {
+      
+      if(this.apiData[i]['fh_name']==item['name']) {
+        
+        flag= Number(this.apiData[i]['head_amt'])-Number(this.apiData[i]['adjustment_amt'])-Number(this.apiData[i]['concession_amt']);
+        
+        break;
+      }
+    }
+    return flag;
+  }
+
+  checkForPreviousYearVoucher() {
+    
+    this.faService.checkPreviosuDueStatus({vc_narrations: 'Previous Due' }).subscribe((data:any)=> {
+      console.log('data--', data);
+      if(data && data[0]['vc_id']) {
+        this.previousYearVoucherData = data[0];
+        this.previousYearVoucherExists = true;
+        this.previousBalanceObject = {};
+          this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
+          this.previousBalanceObject['vc_id'] =  this.previousYearVoucherData['vc_id'];
+          this.previousBalanceObject['vc_state'] = this.previousYearVoucherData['vc_state'];
+          this.previousBalanceObject['vc_records'] = [this.previousYearVoucherData];
+          this.previousBalanceObject['value'] = this.apiData;
+          this.previousBalanceObject['prev_balance_voucher'] = true;
+          this.previousBalanceObject['date'] = '';
+          for(var i=0; i <this.apiData.length;i++) {
+            if (!(this.apiData[i]['fh_name'])) {
+              this.apiData[i]['fh_name'] = 'Transport Fee';
+              this.apiData[i]['fh_id'] = 0;
+              this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+            } else {
+              this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+            }
+          }
+          console.log('this.previousBalanceObject--',this.previousBalanceObject)
+      } else {
+        this.previousYearVoucherExists = false;
+      }
+    })
+  }
+
   getInvoiceDayBook() {
     this.headtoatl = 0;
     this.contoatl = 0;
@@ -129,8 +179,41 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.ELEMENT_DATA = [];
     this.apiInvoiceData = [];
     this.apiReceiptData = [];
+    
     this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
       if (data && data.invoice_due_data.length > 0) {
+        this.displayedColumns = [];
+        if (Number(this.param.month)==4) {
+          this.checkForPreviousYearVoucher();
+        
+        
+        this.apiData = data.previous_years_data ? data.previous_years_data: [];
+        if (this.previousYearVoucherData.length > 0) {
+          
+        } else {
+        this.previousBalanceObject = {};
+        this.previousBalanceObject['voucherExists'] = this.previousYearVoucherExists;
+        this.previousBalanceObject['vc_id'] = '';
+        this.previousBalanceObject['vc_state'] = 'draft';
+        this.previousBalanceObject['vc_records'] = [];
+        this.previousBalanceObject['value'] = this.apiData;
+        this.previousBalanceObject['prev_balance_voucher'] = true;
+        this.previousBalanceObject['date'] = '';
+        for(var i=0; i <this.apiData.length;i++) {
+          if (!(this.apiData[i]['fh_name'])) {
+            this.apiData[i]['fh_name'] = 'Transport Fee';
+            this.apiData[i]['fh_id'] = 0;
+            this.previousBalanceObject['id_0'] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+          } else {
+            this.previousBalanceObject['id_'+this.apiData[i]['fh_id']] = this.apiData[i]['head_amt']-this.apiData[i]['adjustment_amt']-this.apiData[i]['concession_amt'];
+          }
+        }
+        console.log('this.previousBalanceObject--',this.previousBalanceObject)
+      }}
+        
+
+
+        
         this.apiInvoiceData = data.invoice_due_data;
         console.log('data.invoice_due_data--',data.invoice_due_data)
         this.apiReceiptData = data.receipt_data;
@@ -187,6 +270,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
               });
             }
+            console.log('tempelement--',tempelement);
             this.ELEMENT_DATA.push(tempelement);
           });
           this.tableDivFlag = true;
@@ -201,9 +285,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   getColumnTotal(item) {
     let total = 0;
     Object.keys(item).forEach(key => {
-      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'vc_records') {
+      if (key != 'date' && key != 'vc_id' && key != 'vc_state' && key != 'voucherExists' && key != 'vc_records' && key != 'prev_balance_voucher' && key != 'value') {
         let v = item[key] || 0;
-
         total += v;
       }
     });
@@ -255,18 +338,25 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
   createVoucher(item, action) {
     console.log('item--', item);
+    console.log('this.apiInvoiceData--',this.apiInvoiceData)
     this.currentVoucherData = item;
     console.log('this.currentvoucherData', this.currentVoucherData)
-    for (var i = 0; i < this.apiInvoiceData.length; i++) {
-      if (this.apiInvoiceData[i]['date'] === item.date) {
-        this.voucherDate = item.date;
-        this.checkForHeadData(this.apiInvoiceData[i]['value'], action);
-        break;
+    if (item && item['prev_balance_voucher']) {
+      this.voucherDate = item.date;
+      this.checkForHeadData(item['value'], action, true);
+    } else {
+      for (var i = 0; i < this.apiInvoiceData.length; i++) {
+        if (this.apiInvoiceData[i]['date'] === item.date) {
+          this.voucherDate = item.date;
+          this.checkForHeadData(this.apiInvoiceData[i]['value'], action, false);
+          break;
+        }
       }
     }
+    
   }
 
-  checkForHeadData(invoiceHeadArr, action) {
+  checkForHeadData(invoiceHeadArr, action,prev_balance_voucher) {
     //invoiceHeadArr[0]['total_amt']=5500;
     // invoiceHeadArr[6]['total_amt']=3500;
     console.log(this.chartsOfAccount, invoiceHeadArr);
@@ -368,7 +458,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_credit: 0
       };
       voucherEntryArray.push(vFormJson);
-      this.getVoucherTypeMaxId(voucherEntryArray);
+      this.getVoucherTypeMaxId(voucherEntryArray, prev_balance_voucher);
     }
     if (voucherEntryArray.length > 0  && action == 'update') {
       
@@ -382,7 +472,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_credit: 0
       };
       voucherEntryArray.push(vFormJson);
-      this.getVoucherTypeMaxId(voucherEntryArray);
+      this.getVoucherTypeMaxId(voucherEntryArray, prev_balance_voucher);
     }
 
     if (voucherEntryArray.length  === 0) {
@@ -392,7 +482,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
 
   }
 
-  getVoucherTypeMaxId(voucherEntryArray) {
+  getVoucherTypeMaxId(voucherEntryArray, prev_balance_voucher) {
     let param: any = {};
     param.vc_type = this.currentVcType;;
     param.vc_date = this.currentVoucherData.date;
@@ -404,14 +494,14 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         flag = 1;
         result = data;
 
-        this.getVcName(result, voucherEntryArray);
+        this.getVcName(result, voucherEntryArray, prev_balance_voucher);
 
       }
     });
 
   }
 
-  getVcName(vcData, voucherEntryArray) {
+  getVcName(vcData, voucherEntryArray, prev_balance_voucher) {
     let vcType = '';
     const vcTypeArr = this.currentVcType.split(" ");
     if (vcTypeArr.length > 0) {
@@ -448,8 +538,8 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         vc_id: null,
         vc_type: 'Journal Voucher',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
-        vc_date: this.voucherDate,
-        vc_narrations: 'Invoice Due of Date ' + this.voucherDate,
+        vc_date: prev_balance_voucher  ? '' : this.voucherDate,
+        vc_narrations: prev_balance_voucher ? 'Previous Due' : 'Invoice Due of Date ' + this.voucherDate,
         vc_attachments: [],
         vc_particulars_data: voucherEntryArray,
         vc_state: 'draft',

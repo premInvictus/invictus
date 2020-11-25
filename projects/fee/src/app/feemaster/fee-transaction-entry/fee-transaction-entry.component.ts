@@ -43,6 +43,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	feeRenderId: any = '';
 	btnDisable = false;
 	currentInvoiceId = '';
+	invoiceArrayForm: any[]= [];
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -162,6 +163,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	getInvoices(inv_number) {
 		const datePipe = new DatePipe('en-in');
 		this.INVOICE_ELEMENT_DATA = [];
+		this.invoiceArrayForm = [];
 		this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 		this.invoiceArray = [];
 		const invoiceJSON: any = {
@@ -170,6 +172,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		};
 		this.feeService.getInvoiceBifurcation(invoiceJSON).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+
 				this.INVOICE_ELEMENT_DATA = [];
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 				this.invoice = {};
@@ -192,8 +195,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					this.invoice.netPay = 0;
 				}
 
+				
 
 				this.invoiceArray = this.invoice.invoice_bifurcation;
+
+				
+
 				this.feeTransactionForm.patchValue({
 					'ftr_amount': this.invoice.netPay,
 					'ftr_emod_id': this.invoiceArray.length > 0 && this.selectedMode === '1' ? this.selectedMode : '',
@@ -211,8 +218,28 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					};
 					this.invoiceTotal += element.netpay;
 					this.INVOICE_ELEMENT_DATA.push(element);
+					var fb = this.fbuild.group({	
+						rm_inv_id:'',
+						rm_head_type:'',
+						rm_fm_id:'',
+						rm_fh_id:'',
+						rm_fh_name:'',
+						rm_fh_amount:'',
+						rm_fcc_id:'',
+						rm_fcc_name:'',
+						rm_fcc_amount:'',
+						rm_adj_amount:'',
+						rm_total_amount:'',
+
+
+						netpay:Number(this.invoice.inv_prev_balance),
+						feehead: 'Previous Balance'
+					});
+					this.invoiceArrayForm.push(fb);
+					pos++;
 				}
 				for (const item of this.invoiceArray) {
+					if (Number(item.head_bal_amount) != 0) {
 					this.INVOICE_ELEMENT_DATA.push({
 						srno: pos,
 						feehead: item.invg_fh_name,
@@ -220,14 +247,34 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						concession: item.invg_fcc_amount,
 						adjustment: item.invg_adj_amount,
 						// tslint:disable-next-line: max-line-length
-						netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
-					});
+						//netpay: Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0),
+						netpay: Number(item.head_bal_amount)
+					});}
 					// tslint:disable-next-line: max-line-length
+					if (item.head_bal_amount && item.invg_fh_name != 'Previous Received Amt.' &&  Number(item.head_bal_amount) != 0) {
+						var fb = this.fbuild.group({
+							rm_inv_id:item.invg_inv_id,
+							rm_head_type:item.invg_head_type,
+							rm_fm_id:item.invg_fm_id,
+							rm_fh_id:item.invg_fh_id,
+							rm_fh_name:item.invg_fh_name,
+							rm_fh_amount:item.invg_fh_amount,
+							rm_fcc_id:item.invg_fcc_id,
+							rm_fcc_name:item.invg_fcc_name,
+							rm_fcc_amount:item.invg_fcc_amount,
+							rm_adj_amount:item.invg_adj_amount,
+							rm_total_amount:Number(item.head_bal_amount) > 0 ? Number(item.head_bal_amount) : 0,
+							//netpay:Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0)
+							netpay: Number(item.head_bal_amount)
+						});
+						this.invoiceArrayForm.push(fb);
+						pos++;
+					}
 					
 					this.invoiceTotal += Number(item.invg_fh_amount) - Number(item.invg_fcc_amount) - (Number(item.invg_adj_amount) ? Number(item.invg_adj_amount) : 0);
 					
 					
-					pos++;
+					
 				}
 				if (this.invoice.inv_fine_amount && Number(this.invoice.inv_fine_amount > 0)) {
 					const element = {
@@ -240,6 +287,21 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					};
 					this.invoiceTotal += element.netpay;
 					this.INVOICE_ELEMENT_DATA.push(element);
+					var fb = this.fbuild.group({
+						rm_inv_id:'',
+						rm_head_type:'',
+						rm_fm_id:'',
+						rm_fh_id:'',
+						rm_fh_name:'',
+						rm_fh_amount:'',
+						rm_fcc_id:'',
+						rm_fcc_name:'',
+						rm_fcc_amount:'',
+						rm_adj_amount:'',
+						rm_total_amount:'',						
+						netpay:Number(this.invoice.inv_fine_amount)
+					});
+					this.invoiceArrayForm.push(fb);
 				}
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 			}
@@ -495,6 +557,25 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			if (this.selectedMode === '4') {
 				let inputjson:any = this.feeTransactionForm.value;
 				inputjson.ftr_amount_type = 'credit';
+				let receiptMappArr=  [];
+				for (var i=0;i<this.invoiceArrayForm.length;i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
+					receiptMappArr.push({
+						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
+						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
+						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
+						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
+						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
+						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
+						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
+						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
+						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
+						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+					}) }
+				}
+				inputjson.receipt_mapping= receiptMappArr;
+
 				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
@@ -510,7 +591,27 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}
 				});
 			} else {
-				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
+				let inputjson:any = this.feeTransactionForm.value;
+				let receiptMappArr=  [];
+				for (var i=0;i<this.invoiceArrayForm.length;i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
+					receiptMappArr.push({
+						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
+						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
+						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
+						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
+						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
+						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
+						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
+						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
+						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
+						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+					}) }
+				}
+				inputjson.receipt_mapping= receiptMappArr;
+				console.log('inputjson-->', inputjson);
+				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
 						this.common.showSuccessErrorMessage(result.messsage, 'success');
@@ -589,6 +690,24 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			if (this.selectedMode === '4') {
 				let inputjson:any = this.feeTransactionForm.value;
 				inputjson.ftr_amount_type = 'credit';
+				let receiptMappArr=  [];
+				for (var i=0;i<this.invoiceArrayForm.length;i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
+					receiptMappArr.push({
+						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
+						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
+						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
+						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
+						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
+						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
+						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
+						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
+						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
+						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+					}) }
+				}
+				inputjson.receipt_mapping= receiptMappArr;
 				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
@@ -607,6 +726,25 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}
 				});
 			} else {
+				let inputjson:any = this.feeTransactionForm.value;
+				let receiptMappArr=  [];
+				for (var i=0;i<this.invoiceArrayForm.length;i++) {
+					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
+					receiptMappArr.push({
+						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
+						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
+						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
+						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
+						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
+						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
+						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
+						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
+						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
+						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
+						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+					}) }
+				}
+				inputjson.receipt_mapping= receiptMappArr;
 				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
@@ -762,5 +900,24 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	}
 	ngOnDestroy() {
 		this.studentRouteMoveStoreService.setInvoiceId({});
+	}
+
+	setNetPay(element,i) {
+		console.log(this.invoiceArrayForm);
+		this.invoiceTotal = 0;
+		// this.invoiceArrayForm[i].patchValue({
+		// 	netpay:Number(this.invoiceArrayForm[i].value.feedue)-Number(this.invoiceArrayForm[i].value.concession) - Number(this.invoiceArrayForm[i].value.adjustment)
+		// });
+		for (let i=0; i<this.invoiceArrayForm.length;i++) {
+
+			this.invoiceTotal = this.invoiceTotal+Number(this.invoiceArrayForm[i].value.netpay);
+			this.invoiceArrayForm[i].patchValue({rm_total_amount : this.invoiceArrayForm[i].value.netpay});
+		}
+
+		this.feeTransactionForm.patchValue({
+			ftr_amount:this.invoiceTotal
+		})
+
+
 	}
 }

@@ -9,8 +9,8 @@
 
               <tr>
                 <td width="20%">Account Code</td>
-                <td width="65%">Capital & Liabilites</td>
-                <td width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
+                <td width="55%">Capital & Liabilites</td>
+                <td width="25%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
               </tr>
             </tbody>
           </table>
@@ -21,8 +21,8 @@
 
               <tr>
                 <td width="20%">Account Code</td>
-                <td width="65%">Assets</td>
-                <td width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
+                <td width="55%">Assets</td>
+                <td width="25%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</td>
               </tr>
             </tbody>
           </table>
@@ -40,11 +40,11 @@
               <ng-container>
                 <tr *ngIf="incomeExpenditureDeviation != 0">
                   <td width="20%"></td>
-                  <td width="65%" class="text-left">
+                  <td width="55%" class="text-left">
                     <span *ngIf="incomeExpenditureDeviation > 0">Excess of Income over Expenditure</span>
                     <span *ngIf="incomeExpenditureDeviation < 0">Excess of Expenditure over Income</span>
                   </td>
-                  <td width="15%" class="text-right">
+                  <td width="25%" class="text-right">
                     <span *ngIf="incomeExpenditureDeviation   < 0">
                       {{-getTwoDecimalValue(incomeExpenditureDeviation)  | indianCurrency}}
                     </span>
@@ -62,9 +62,9 @@
                       <span *ngIf="item[0][0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                       <span *ngIf="!(item[0][0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                     </a></td>
-                  <td width="65%" class="text-left cursor-pointer">
+                  <td width="55%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
-                  <td width="15%" class="text-right">
+                  <td width="25%" class="text-right">
                     <span *ngIf="!(item[0][0]['expand'])">
                       <b>{{getGroupTotal(item[0][0]['coa_acc_group']['group_parent_name'],'', 'liabilities') | indianCurrency}}</b>
                     </span>
@@ -78,9 +78,9 @@
                           (click)="toggle('',gitem[0]?.coa_acc_group?.group_name, 'liabilities')"><span
                             *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                           <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></a></td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right">
+                      <td width="25%" class="text-right">
                         <span *ngIf="!(gitem[0]['expand'])">
                         <b>{{getGroupTotal('',gitem[0]?.coa_acc_group?.group_name, 'liabilities') | indianCurrency}}</b>
                       </span>
@@ -92,9 +92,9 @@
                           <span *ngIf="gitem['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                           <span *ngIf="!(gitem['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                         </a></td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right"><span *ngIf="!(gitem['expand'])"><b>{{getGroupTotal('',gitem?.coa_acc_group?.group_name, 'liabilities') | indianCurrency}}</b></span></td>
+                      <td width="25%" class="text-right"><span *ngIf="!(gitem['expand'])"><b>{{getGroupTotal('',gitem?.coa_acc_group?.group_name, 'liabilities') | indianCurrency}}</b></span></td>
                     </tr>
                   </ng-container>
                   <ng-container *ngIf="gitem?.length > 0">
@@ -103,9 +103,9 @@
                           (click)="toggle('',gitem[0]?.coa_acc_group?.group_name, 'liabilities')"><span
                             *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                           <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span></a> </td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right">
+                      <td width="25%" class="text-right">
                         <span *ngIf="!(gitem[0]['expand'])">
                           <b>{{getGroupTotal('',gitem[0]?.coa_acc_group?.group_name, 'liabilities') | indianCurrency}}</b>
                         </span>
@@ -114,22 +114,24 @@
                     <ng-container *ngFor="let ggitem of gitem">
                       <tr *ngIf="ggitem?.expand">
                         <td width="20%">{{ggitem?.coa_code}}</td>
-                        <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
+                        <td width="55%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                         </td>
-                        <td width="15%" class="text-right">
-                          <b><span>{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span></b></td>
+                        <td width="25%" class="text-right">
+                          <b><span *ngIf="getTwoDecimalValue(ggitem?.total_dev) < 0">( - ) {{-getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span>
+                            <span *ngIf="getTwoDecimalValue(ggitem?.total_dev) > 0">{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span></b></td>
                       </tr>
                     </ng-container>
                   </ng-container>
                   <ng-container *ngIf="!(gitem?.length > 0)">
                     <tr *ngIf="gitem?.expand">
                       <td width="20%">{{gitem?.coa_code}}</td>
-                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                      <td width="55%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
-                      <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span></b></td>
+                      <td width="25%" class="text-right">
+                        <b><span *ngIf="getTwoDecimalValue(gitem?.total_dev) < 0">( - ) {{-getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span>
+                          <span *ngIf="getTwoDecimalValue(gitem?.total_dev) > 0">{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span></b></td>
                     </tr>
                   </ng-container>
 
@@ -139,15 +141,16 @@
               <ng-container *ngIf="debitRow < creditRow">
                 <tr *ngFor="let citem of blankArr">
                   <td width="20%">&nbsp;</td>
-                  <td width="65%">&nbsp;</td>
+                  <td width="55%">&nbsp;</td>
 
-                  <td width="15%" class="text-right"></td>
+                  <td width="25%" class="text-right"></td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"></td>
-                <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" classs="text-right"><b>{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</b></td>
+                <td width="55%" class="text-left"><b>Total</b></td>
+                <td width="25%" classs="text-right"><b><span *ngIf="getTwoDecimalValue(debitSideTotal) < 0">( - ) {{-getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span>
+                  <span *ngIf="getTwoDecimalValue(debitSideTotal) > 0">{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span></b></td>
               </tr>
 
             </tbody>
@@ -164,9 +167,9 @@
                     <span *ngIf="item[0][0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                     <span *ngIf="!(item[0][0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                   </a></td>
-                  <td width="65%" class="text-left cursor-pointer">
+                  <td width="55%" class="text-left cursor-pointer">
                     <b>{{item[0][0]['coa_acc_group']['group_parent_name']}}</b></td>
-                  <td width="15%" class="text-right">
+                  <td width="25%" class="text-right">
                     <span *ngIf="!(item[0][0]['expand'])">
                       <b>{{getGroupTotal(item[0][0]['coa_acc_group']['group_parent_name'],'', 'assets') | indianCurrency}}</b>
                     </span>
@@ -181,9 +184,9 @@
                         <span *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                         <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right">
+                      <td width="25%" class="text-right">
                         <span *ngIf="!(gitem[0]['expand'])">
                           <b>{{getGroupTotal('',gitem[0]['coa_acc_group']['group_name'], 'assets') | indianCurrency}}</b>
                         </span>
@@ -195,9 +198,9 @@
                         <span *ngIf="gitem['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                         <span *ngIf="!(gitem['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right">
+                      <td width="25%" class="text-right">
                         <span *ngIf="!(gitem['expand'])">
                           <b>{{getGroupTotal('',gitem['coa_acc_group']['group_name'], 'assets') | indianCurrency}}</b>
                         </span>
@@ -211,9 +214,9 @@
                         <span *ngIf="gitem[0]['expand']"><i class="fa fa-minus-circle" aria-hidden="true"></i></span>
                         <span *ngIf="!(gitem[0]['expand'])"><i class="fa fa-plus-circle" aria-hidden="true"></i></span>
                       </a></td>
-                      <td width="65%" class="text-left cursor-pointer">
+                      <td width="55%" class="text-left cursor-pointer">
                         <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem[0]?.coa_acc_group?.group_name}}</b></td>
-                      <td width="15%" class="text-right">
+                      <td width="25%" class="text-right">
                         <span *ngIf="!(gitem[0]['expand'])">
                           <b>{{getGroupTotal('',gitem[0]['coa_acc_group']['group_name'], 'assets') | indianCurrency}}</b>
                         </span>
@@ -222,22 +225,26 @@
                     <ng-container *ngFor="let ggitem of gitem">
                     <tr *ngIf="ggitem?.expand">
                       <td width="20%">{{ggitem?.coa_code}}</td>
-                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
+                      <td width="55%" class="text-left cursor-pointer" (click)="openLedgerModal(ggitem)">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ggitem?.coa_acc_name}}
                       </td>
-                      <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span></b></td>
+                      <td width="25%" class="text-right">
+                        <b><span *ngIf="getTwoDecimalValue(ggitem?.total_dev) < 0">( - ) {{-getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span>
+                          <span *ngIf="getTwoDecimalValue(ggitem?.total_dev) > 0">{{getTwoDecimalValue(ggitem?.total_dev) | indianCurrency}}</span>
+                        </b></td>
                     </tr>
                   </ng-container>
                   </ng-container>
                   <ng-container *ngIf="!(gitem?.length > 0)">
                     <tr *ngIf="gitem?.expand">
                       <td width="20%">{{gitem?.coa_code}}</td>
-                      <td width="65%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
+                      <td width="55%" class="text-left cursor-pointer" (click)="openLedgerModal(gitem)">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{gitem?.coa_acc_name}}
                       </td>
-                      <td width="15%" class="text-right">
-                        <b><span>{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span></b></td>
+                      <td width="25%" class="text-right">
+                        <b><span *ngIf="getTwoDecimalValue(gitem?.total_dev) < 0">( - ) {{-getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span>
+                          <span *ngIf="getTwoDecimalValue(gitem?.total_dev) > 0">{{getTwoDecimalValue(gitem?.total_dev) | indianCurrency}}</span>
+                        </b></td>
                     </tr>
                   </ng-container>
 
@@ -248,15 +255,16 @@
               <ng-container *ngIf="debitRow > creditRow">
                 <tr *ngFor="let item of blankArr">
                   <td width="20%">&nbsp;</td>
-                  <td width="65%">&nbsp;</td>
+                  <td width="55%">&nbsp;</td>
 
-                  <td width="15%" class="text-right"></td>
+                  <td width="25%" class="text-right"></td>
                 </tr>
               </ng-container>
               <tr>
                 <td width="20%"><b>&nbsp;</b></td>
-                <td width="65%" class="text-left"><b>Total</b></td>
-                <td width="15%" class="text-right"><b>{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</b></td>
+                <td width="55%" class="text-left"><b>Total</b></td>
+                <td width="25%" class="text-right"><b><span *ngIf="getTwoDecimalValue(creditSideTotal) < 0">( - ) {{-getTwoDecimalValue(creditSideTotal) | indianCurrency}}</span>
+                  <span *ngIf="getTwoDecimalValue(creditSideTotal) > 0">{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</span></b></td>
               </tr>
             </tbody>
           </table>

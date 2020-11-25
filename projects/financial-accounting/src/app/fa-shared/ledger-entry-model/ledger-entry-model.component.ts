@@ -63,7 +63,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   if(this.data.showtitle){
     this.showtitle = true;
   }
-  //this.getLedger();
+  this.getLedger();
   this.getSchool();
   this.checkPartialPaymentStatus();
   }

@@ -958,7 +958,7 @@ export class CollectionReportComponent implements OnInit {
 						});
 						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-						obj3['total']=obj3['total']+obj3['additional_amt'];
+						obj3['total']=(obj3['total'] ? obj3['total'] : 0)+(obj3['additional_amt'] ? obj3['additional_amt'] : 0);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
