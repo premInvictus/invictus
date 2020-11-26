@@ -19,7 +19,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 	@ViewChild(MatSort) sort: MatSort;
 	@ViewChild('paginator') paginator: MatPaginator;
 	ELEMENT_DATA: FHModel[] = [];
-	displayedColumns: string[] = ['srno', 'feehead', 'feetype', 'class', 'calculate', 'period', 'date', 'status', 'action'];
+	displayedColumns: string[] = ['srno', 'feehead', 'feetype','feeorder', 'class', 'calculate', 'period', 'date', 'status', 'action'];
 	dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
 	// member declaration
@@ -80,7 +80,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_class_amount_detail: '',
 			fh_hostel: '',
 			fh_fcc_id: '',
-			fh_status: ''
+			fh_status: '',
+			fh_order:''
 
 		});
 	}
@@ -157,6 +158,7 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 						pushitem.class = class_name;
 						pushitem.calculate = item.calm_name;
 						pushitem.period = item.fp_name;
+						pushitem.feeorder = item.fh_order;
 						pushitem.date = item.fh_created_date;
 						pushitem.status = item.fh_status === '1' ? true : false;
 						pushitem.action = item;
@@ -247,7 +249,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_transport: value.fh_transport,
 			fh_hostel: value.fh_hostel,
 			fh_fcc_id: value.fh_fcc_id,
-			fh_status: value.fh_status
+			fh_status: value.fh_status,
+			fh_order:value.fh_order
 
 		});
 	}
@@ -343,7 +346,8 @@ export class FeeHeadsComponent implements OnInit, AfterViewInit {
 			fh_class_amount_detail: '',
 			fh_hostel: '',
 			fh_fcc_id: '',
-			fh_status: ''
+			fh_status: '',
+			fh_order:''
 
 		});
 	}

@@ -81,6 +81,15 @@
                       </mat-form-field>
                     </div>
                 </div>
+                <div class="row">
+                  <div class="col-6">
+                    <mat-form-field class="form-field" appearance="outline">
+                      <mat-label>Fee Head Order</mat-label>
+                      <input matInput formControlName="fh_order" placeholder="Fee Head Order" required>
+                    </mat-form-field>
+                  </div>
+                  
+                </div>
                 <div class="row" [hidden]="!(formGroupArray.length > 0)" *ngFor="let item of formGroupArray">
                   <div class="col-2">
                     <br>
@@ -192,6 +201,10 @@
                       <ng-container matColumnDef="feetype">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Type </th>
                         <td mat-cell *matCellDef="let element"> {{element.feetype}} </td>
+                      </ng-container>
+                      <ng-container matColumnDef="feeorder">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fee Order </th>
+                        <td mat-cell *matCellDef="let element"> {{element.feeorder}} </td>
                       </ng-container>
                       <ng-container matColumnDef="class">
                         <th mat-header-cell *matHeaderCellDef style="width: 43%"> Class-Amount </th>
