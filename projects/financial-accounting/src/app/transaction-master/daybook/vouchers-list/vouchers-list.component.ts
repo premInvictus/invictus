@@ -35,7 +35,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
-		  private commonAPIService: CommonAPIService,
+		  public commonAPIService: CommonAPIService,
 		  private faService:FaService,
 		  private dialog: MatDialog,
 		  private router: Router,
@@ -54,7 +54,11 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		this.dataSource.paginator = this.paginator;
 		this.dataSource.sort = this.sort;
 	}
-
+	resetFilter(){
+		this.commonAPIService.state$['filter']={};
+		this.commonAPIService.state$['filterText']=[];
+		this.getVouchers();
+	}
 	openDeleteDialog = (data) => this.deleteModal.openModal(data);
 
 	deleteConfirm(element) {

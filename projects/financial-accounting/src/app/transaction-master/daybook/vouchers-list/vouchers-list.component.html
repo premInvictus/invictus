@@ -24,13 +24,19 @@
 </div> --> 
 <div *ngIf="tableDivFlag">
           <div class="row">
-            <div class="col-6">
+            <div class="col-2">
               <mat-form-field appearance="legacy">
                 <input matInput (keyup)="applyFilter($event.target.value)">
                 <mat-icon matPrefix>filter_list</mat-icon>
               </mat-form-field>
             </div>
-            <div class="col-6 text-right">
+            <div class="col-6 font-size-14" style="padding-top: 10px;">
+              Filters : {{commonAPIService.state$['filterText']}}
+            </div>
+            <div class="col-4 text-right">
+              <button mat-raised-button class="btn-reset" (click)="resetFilter()">
+                  Reset
+                </button> &nbsp;
               <button mat-raised-button class="btn-success-blue" (click)="openFilter()">
                 Filter
               </button> &nbsp;
