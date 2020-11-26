@@ -43,7 +43,9 @@ export class AdvancedSearchModalComponent implements OnInit {
   }
   
   
-  
+  getOperatorValue(id){
+    return this.operatorArray.find(e => e.id == id).value;
+  }
   buildForm() {
     this.generalFilterForm = this.fbuild.group({
       from_date:'',
@@ -113,6 +115,27 @@ export class AdvancedSearchModalComponent implements OnInit {
       });
     }
     this.searchOk.emit(this.generalFilterForm.value);
+    let filter_text_arr:any[]=[];
+    Object.keys(this.generalFilterForm.value).forEach(key => {
+      if(this.generalFilterForm.value[key]) {
+        if(key == 'from_date') {
+          filter_text_arr.push('From: '+new DatePipe('en-in').transform(this.generalFilterForm.value[key], 'd-MMM-y'));
+        }
+        if(key == 'to_date') {
+          filter_text_arr.push('To: '+new DatePipe('en-in').transform(this.generalFilterForm.value[key], 'd-MMM-y'));
+        }
+        if(key == 'vc_type') {
+          filter_text_arr.push('Voucher: '+this.generalFilterForm.value[key]);
+        }
+        if(key == 'vc_account_type') {
+          filter_text_arr.push('Account: '+this.generalFilterForm.value[key]);
+        }
+        if(key == 'operator') {
+          filter_text_arr.push('Amount: '+this.getOperatorValue(this.generalFilterForm.value[key]) + ' ' + this.generalFilterForm.value['vc_debit'] );
+        }
+      }
+    });
+    this.commonAPIService.state$['filterText']=filter_text_arr;
     this.closeDialog();
   }
   cancel() {
