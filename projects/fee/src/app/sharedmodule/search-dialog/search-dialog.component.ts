@@ -29,6 +29,7 @@ export class SearchDialogComponent implements OnInit {
 	dialogRef: MatDialogRef<SearchDialogComponent>;
 	@ViewChild('searchDialogModal') searchDialogModal;
 	receiptData:any;
+	showTable =false;
 	constructor(private feeService:FeeService,private sisService: SisService, private dialog: MatDialog, private fbuild: FormBuilder, public common: CommonAPIService, ) { }
 
 	ngOnInit() {
@@ -52,9 +53,10 @@ export class SearchDialogComponent implements OnInit {
 		});
 		this.getInvoices(data[0])
 		this.dialogRef = this.dialog.open(this.searchDialogModal, {
-			'height': '350px',
+			'height': '450px',
+			'width': '60%',
 			position: {
-				'top': '20%'
+				'top': '15%'
 			}
 		});
 	}
@@ -220,6 +222,7 @@ export class SearchDialogComponent implements OnInit {
 		//this.invoiceArrayForm = this.invoiceFormArrayClone;
 		this.feeService.getReceiptBifurcation({flgr_invoice_receipt_no:this.searchForm.value.receipt_number}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.showTable = true;
 				console.log('result--', result);
 				console.log('this.invoiceArray--',this.invoiceArrayForm);
 				if (result && result.data && result.data[0]) {
@@ -307,7 +310,7 @@ export class SearchDialogComponent implements OnInit {
 		if (code  == 13) {               
 			event.preventDefault();
 			return false;
-		}
+		} else {
 		
 		let inputJson = this.searchForm.value;
 		let receiptMappArr = [];
@@ -343,6 +346,6 @@ export class SearchDialogComponent implements OnInit {
 		} else {
 			this.common.showSuccessErrorMessage('Please choose reason to delete invoice', 'error');
 		}
-	}
+	}}
 
 }
