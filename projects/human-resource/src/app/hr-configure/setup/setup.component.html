@@ -178,6 +178,18 @@
                                                             <mat-radio-button value="prorata">Prorata</mat-radio-button>
                                                             <mat-radio-button value="fixed">Fixed</mat-radio-button>
                                                         </mat-radio-group>
+                                                        <ng-container *ngIf="formGroupArray[configValue-1].formGroup.get('type').value == 2">
+                                                            <mat-form-field class="form-field" appearance="outline">
+                                                                <mat-label>Deduction Type</mat-label>
+                                                                <mat-select placeholder="Deduction Type" formControlName="deductiontype">
+                                                                    <mat-option value="">Please select</mat-option>
+                                                                    <mat-option *ngFor="let item of deductiontypeTypeArray"
+                                                                        [value]="item.id">
+                                                                        {{item.name}}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </ng-container>
                                                         <!-- <ng-container *ngIf="formGroupArray[configValue-1].formGroup.value.type === '2'">
                                                             <br>
                                                             Check if optional ? 
