@@ -150,7 +150,10 @@ export class SchoolsetupComponent implements OnInit {
 			school_session_end_month: '',
 			school_fee_period: '',
 			school_group:'',
-			school_group_text:''
+			school_group_text:'',
+			school_esi:'',
+			school_pf:'',
+			school_tan:''
 		});
 	}
 	getFeePeriods() {
@@ -417,6 +420,18 @@ export class SchoolsetupComponent implements OnInit {
 				this.newSchoolForm.value.school_smsid
 			);
 			newSchoolFormData.append(
+				'school_esi',
+				this.newSchoolForm.value.school_esi
+			);
+			newSchoolFormData.append(
+				'school_pf',
+				this.newSchoolForm.value.school_pf
+			);
+			newSchoolFormData.append(
+				'school_tan',
+				this.newSchoolForm.value.school_tan
+			);
+			newSchoolFormData.append(
 				'school_email',
 				this.newSchoolForm.value.school_email
 			);
@@ -539,7 +554,10 @@ export class SchoolsetupComponent implements OnInit {
 			school_session_end_month: '',
 			school_fee_period: '',
 			school_group:'',
-			school_group_text:''
+			school_group_text:'',
+			school_esi: '',
+			school_pf: '',
+			school_tan: '',
 		});
 	}
 	editNewSchoolForm(value: any) {
@@ -577,7 +595,10 @@ export class SchoolsetupComponent implements OnInit {
 			school_session_end_month: Number(value.session_end_month),
 			school_fee_period: value.school_fee_period,
 			school_group: value.si_group,
-			school_group_text: value.si_group
+			school_group_text: value.si_group,
+			school_esi: value.school_esi,
+			school_pf: value.school_pf,
+			school_tan: value.school_tan,
 		});
 		console.log('this.newSchoolForm--',this.newSchoolForm)
 	}
@@ -634,6 +655,18 @@ export class SchoolsetupComponent implements OnInit {
 			newSchoolFormData.append(
 				'school_smsid',
 				this.newSchoolForm.value.school_smsid
+			);
+			newSchoolFormData.append(
+				'school_esi',
+				this.newSchoolForm.value.school_esi
+			);
+			newSchoolFormData.append(
+				'school_pf',
+				this.newSchoolForm.value.school_pf
+			);
+			newSchoolFormData.append(
+				'school_tan',
+				this.newSchoolForm.value.school_tan
 			);
 			newSchoolFormData.append(
 				'school_email',

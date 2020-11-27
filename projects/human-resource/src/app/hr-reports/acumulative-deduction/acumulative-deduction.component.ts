@@ -127,6 +127,34 @@ export class AcumulativeDeductionComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
+
+  configArray:any[]=[];
+  deductionArray:any[]=[];
+  mapdeduction:any[] = [
+    {id:'ESI',head:'ESI No.',reporthead:'Employer ESI No.',reportheadkey:'school_esi',reportsubhead:'ESI report for the month of ',keyname:'esi_ac_no',
+      moreColumn:[
+        {name:'emp_present_days',value:'Days Present',percentage:false,onfield:false,mapname:'emp_salary_compute_data.emp_present_days',total:false},
+        {name:'esi_earnings',value:'ESI Earnings',percentage:100/0.75,onfield:false,mapname:false,total:true},
+        {name:'employee_contribution',value:'Employee Contribution',percentage:false,onfield:false,mapname:false,total:true},
+        {name:'employer_contribution',value:'Employer Contribution',percentage:3.25/0.75,onfield:false,mapname:false,total:true}
+      ]
+    },
+    {id:'PF',head:'PF/UAN',reporthead:'Employer PF No.',reportheadkey:'school_pf',reportsubhead:'EPF report for the month of ',keyname:'pf_acc_no',
+      moreColumn:[
+        {name:'gross_salary',value:'Gross Salary',percentage:100/12,onfield:false,mapname:false,total:true},
+        {name:'employee_contribution',value:'Employee Contribution',percentage:false,onfield:false,mapname:false,total:true},
+        {name:'employer_contribution',value:'Employer Contribution',percentage:3.67/12,onfield:false,mapname:false,total:true},
+        {name:'pension_fund',value:'Pension Fund',percentage:8.33/12,onfield:false,mapname:false,total:true}
+
+      ]
+    },
+    {id:'TDS',head:'PAN',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'TDS Deducted for the month of ',keyname:'pan_no',
+    moreColumn:[
+      {name:'TDS Deducted',value:'TDS Deducted',percentage:false,onfield:false,mapname:false,total:true}
+    ]
+    }
+  ];
+  currentDeduction:any;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -147,20 +175,26 @@ export class AcumulativeDeductionComponent implements OnInit {
     this.getSchool();
     this.getSession();
     this.getFeeMonths();
+    this.getSalaryComponent();
     //this.getAllEmployee('');
   }
 
   buildForm() {
     this.acumulativeReport = this.fbuild.group({
-      month_id: ''
+      month_id: '',
+      deduction_id:''
     });
 
   }
+  
   getFeeMonths() {
     this.monthArray = [];
     this.feeService.getFeeMonths({}).subscribe((result: any) => {
       if (result && result.status === 'ok') {
         this.monthArray = result.data;
+        this.monthArray.forEach(element => {
+          element.fm_id=parseInt(element.fm_id).toString();
+        });
       } else {
       }
     });
@@ -189,6 +223,21 @@ export class AcumulativeDeductionComponent implements OnInit {
       }
     });
   }
+  getMontWithYear(month,dateformat) {
+    let montWithYear = '';
+    this.sessionName = this.getSessionName(this.session.ses_id);
+    const sessionNameArr = this.sessionName.split('-');
+    if(month){
+      let monthtemp = ('0'+month).slice(-2);
+      if(month >= 4 && month <= 12){        
+        montWithYear = new DatePipe('en-in').transform(new Date(sessionNameArr[0]+'-'+monthtemp+'-01'),dateformat);
+      } else {
+        montWithYear = new DatePipe('en-in').transform(new Date(sessionNameArr[1]+'-'+monthtemp+'-01'),dateformat);
+      }
+    }
+    return montWithYear;
+    
+  }
   getSessionName(id) {
     const findex = this.sessionArray.findIndex(f => Number(f.ses_id) === Number(id));
     if (findex !== -1) {
@@ -204,6 +253,26 @@ export class AcumulativeDeductionComponent implements OnInit {
           }
         });
   }
+  getSalaryComponent(){
+    this.configArray = [];
+    this.deductionArray = [];
+    this.commonAPIService.getSalaryComponent().subscribe((result: any) => {
+      if (result) {
+        this.configArray = result;
+        this.configArray.forEach(element => {
+            if(element.sc_type.type_id == 2){
+              this.deductionArray.push(element);
+            }
+        });
+        const tdselement = {
+          "sc_name" : "TDS",
+          "sc_id" : 'tds',
+          "deductiontype" : "TDS"
+      }
+        this.deductionArray.push(tdselement);
+      }
+    });
+  }
 
   getEmployeeDeductiondff() {
     let inputJson = {
@@ -217,234 +286,334 @@ export class AcumulativeDeductionComponent implements OnInit {
     });
   }
   getEmployeeDeduction() {
-    this.dataArr = [];
-    this.aggregatearray = [];
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.tableFlag = false;
-    this.nodataFlag = false;
-    this.gridOptions = {
-      enableDraggableGrouping: true,
-      createPreHeaderPanel: true,
-      showPreHeaderPanel: true,
-      enableHeaderMenu: true,
-      preHeaderPanelHeight: 40,
-      enableFiltering: true,
-      enableSorting: true,
-      enableColumnReorder: true,
-      createFooterRow: true,
-      showFooterRow: true,
-      footerRowHeight: 35,
-      enableExcelCopyBuffer: true,
-      fullWidthRows: true,
-      enableAutoTooltip: true,
-      enableCellNavigation: true,
-      headerMenu: {
-        iconColumnHideCommand: 'fas fa-times',
-        iconSortAscCommand: 'fas fa-sort-up',
-        iconSortDescCommand: 'fas fa-sort-down',
-        title: 'Sort'
-      },
-      exportOptions: {
-        sanitizeDataExport: true,
-        exportWithFormatter: true
-      },
-      gridMenu: {
-        customItems: [{
-          title: 'pdf',
-          titleKey: 'Export as PDF',
-          command: 'exportAsPDF',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'excel',
-          titleKey: 'Export Excel',
-          command: 'exportAsExcel',
-          iconCssClass: 'fas fa-download'
-        },
-        {
-          title: 'expand',
-          titleKey: 'Expand Groups',
-          command: 'expandGroup',
-          iconCssClass: 'fas fa-expand-arrows-alt'
-        },
-        {
-          title: 'collapse',
-          titleKey: 'Collapse Groups',
-          command: 'collapseGroup',
-          iconCssClass: 'fas fa-compress'
-        },
-        {
-          title: 'cleargroup',
-          titleKey: 'Clear Groups',
-          command: 'cleargroup',
-          iconCssClass: 'fas fa-eraser'
-        }
-        ],
-        onCommand: (e, args) => {
-          if (args.command === 'toggle-preheader') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsPDF') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportAsPDF(this.dataset);
-          }
-          if (args.command === 'expandGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.expandAllGroups();
-          }
-          if (args.command === 'collapseGroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.collapseAllGroups();
-          }
-          if (args.command === 'cleargroup') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-            this.clearGrouping();
-          }
-          if (args.command === 'exportAsExcel') {
-            // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
-
-            this.exportToExcel(this.dataset);
-          }
-          if (args.command === 'export-csv') {
-            this.exportToFile('csv');
-          }
-        },
-        onColumnsChanged: (e, args) => {
-          this.updateTotalRow(this.angularGrid.slickGrid);
-        },
-      },
-      draggableGrouping: {
-        dropPlaceHolderText: 'Drop a column header here to group by the column',
-        // groupIconCssClass: 'fa fa-outdent',
-        deleteIconCssClass: 'fa fa-times',
-        onGroupChanged: (e, args) => {
-          this.groupColumns = [];
-          this.groupColumns = args.groupColumns;
-          this.onGroupChanged(args && args.groupColumns);
-          setTimeout(() => {
-            this.updateTotalRow(this.angularGrid.slickGrid);
-          }, 100);
-        },
-        onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
-      }
-    };
-    let repoArray = [];
-    this.columnDefinitions = [];
-    this.dataset = [];
-    this.columnDefinitions = [
-      {
-        id: 'srno',
-        name: 'SNo.',
-        field: 'srno',
-        sortable: true,
-        maxWidth: 40
-      },
-      {
-        id: 'full_name', name: 'Full Name', field: 'full_name', sortable: true,
-        filterable: true,
-        filterSearchType: FieldType.string
-      }
-    ];
-    let inputJson = {
-      'month_id': this.acumulativeReport.value.month_id
-    };
-
-    this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
-      if (result) {
-        const deductionHead: any[] = [];
-        this.commonAPIService.showSuccessErrorMessage(result.message, 'success');
-        repoArray = result;
-        let index = 0;
-        for (const item of repoArray) {
-          this.empShacolumns = item.emp_salary_compute_data.empShacolumns;
-          this.empShdcolumns = item.emp_salary_compute_data.empShdcolumns;
-          var total_deductions = 0;
-          if (index === 0) {
-            for (const item of this.empShdcolumns) {
-              deductionHead.push(item.columnDef);
-              this.columnDefinitions.push({
-                id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
-                filterable: true,
-                filterSearchType: FieldType.string,
-                grouping: {
-                  getter: item.columnDef,
-                  formatter: (g) => {
-                    return `${g.value}  <span style="color:green">(${g.count})</span>`;
-                  },
-                  aggregators: this.aggregatearray,
-                  aggregateCollapsed: true,
-                  collapsed: false
-                },
-                groupTotalsFormatter: this.srnTotalsFormatter
-              });
-            }
-          }
-          const obj: any = {};
-          obj['id'] = (index + 1);
-          obj['srno'] = (index + 1);
-          obj['full_name'] = item.emp_salary_compute_data.emp_name ? new CapitalizePipe().transform(item.emp_salary_compute_data.emp_name) : '-';
-          for (const item of this.empShdcolumns) {
-            obj[item.columnDef] = item.value.toFixed(2);
-            total_deductions = total_deductions + Number(item.value);
-          }
-          obj['total_deductions'] = total_deductions.toFixed(2);
-
-          this.dataset.push(obj);
-          index++;
-        }
-        this.columnDefinitions.push({
-          id: 'total_deductions', name: 'Total Deductions', field: 'total_deductions', sortable: true,
-          filterable: true,
-          filterSearchType: FieldType.string,
-          width: 80,
-          formatter: this.checkTotalFormatter,
-          grouping: {
-            getter: 'total_deductions',
-            formatter: (g) => {
-              return `${g.value}  <span style="color:green">(${g.count})</span>`;
-            },
-            aggregators: this.aggregatearray,
-            aggregateCollapsed: true,
-            collapsed: false
-          },
-        });
-
-
-        this.totalRow = {};
-        const obj3: any = {};
-        obj3['id'] = 'footer';
-        obj3['srno'] = '';
-        obj3['full_name'] = 'Grand Total';
-        Object.keys(deductionHead).forEach(key2 => {
-          Object.keys(this.dataset).forEach(key3 => {
-            Object.keys(this.dataset[key3]).forEach(key4 => {
-              if (key4 === deductionHead[key2]) {
-                obj3[deductionHead[key2]] = this.dataset.map(t => t[deductionHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
-              }
-            });
-          });
-        });
-        obj3['total_deductions'] = new IndianCurrency().transform(this.dataset.map(t => t['total_deductions']).reduce((acc, val) => Number(acc) + Number(val), 0));
-        if (this.dataset.length <= 5) {
-          this.gridHeight = 300;
-        } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-          this.gridHeight = 400;
-        } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-          this.gridHeight = 550;
-        } else if (this.dataset.length > 20) {
-          this.gridHeight = 750;
-        }
-        this.totalRow = obj3;
-        this.tableFlag = true;
+    if(this.acumulativeReport.valid) {
+      this.currentDeduction = this.deductionArray.find(e => e.sc_id == this.acumulativeReport.value.deduction_id);
+      if(this.currentDeduction){
+        this.dataArr = [];
+        this.aggregatearray = [];
+        this.columnDefinitions = [];
+        this.dataset = [];
+        this.tableFlag = false;
         this.nodataFlag = false;
-      } else {
-        this.tableFlag = true;
-        this.nodataFlag = true;
+        this.gridOptions = {
+          enableDraggableGrouping: true,
+          createPreHeaderPanel: true,
+          showPreHeaderPanel: true,
+          enableHeaderMenu: true,
+          preHeaderPanelHeight: 40,
+          enableFiltering: true,
+          enableSorting: true,
+          enableColumnReorder: true,
+          createFooterRow: true,
+          showFooterRow: true,
+          footerRowHeight: 35,
+          enableExcelCopyBuffer: true,
+          fullWidthRows: true,
+          enableAutoTooltip: true,
+          enableCellNavigation: true,
+          headerMenu: {
+            iconColumnHideCommand: 'fas fa-times',
+            iconSortAscCommand: 'fas fa-sort-up',
+            iconSortDescCommand: 'fas fa-sort-down',
+            title: 'Sort'
+          },
+          exportOptions: {
+            sanitizeDataExport: true,
+            exportWithFormatter: true
+          },
+          gridMenu: {
+            customItems: [{
+              title: 'pdf',
+              titleKey: 'Export as PDF',
+              command: 'exportAsPDF',
+              iconCssClass: 'fas fa-download'
+            },
+            {
+              title: 'excel',
+              titleKey: 'Export Excel',
+              command: 'exportAsExcel',
+              iconCssClass: 'fas fa-download'
+            },
+            {
+              title: 'expand',
+              titleKey: 'Expand Groups',
+              command: 'expandGroup',
+              iconCssClass: 'fas fa-expand-arrows-alt'
+            },
+            {
+              title: 'collapse',
+              titleKey: 'Collapse Groups',
+              command: 'collapseGroup',
+              iconCssClass: 'fas fa-compress'
+            },
+            {
+              title: 'cleargroup',
+              titleKey: 'Clear Groups',
+              command: 'cleargroup',
+              iconCssClass: 'fas fa-eraser'
+            }
+            ],
+            onCommand: (e, args) => {
+              if (args.command === 'toggle-preheader') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+              if (args.command === 'exportAsPDF') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+    
+                this.exportAsPDF(this.dataset);
+              }
+              if (args.command === 'expandGroup') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.expandAllGroups();
+              }
+              if (args.command === 'collapseGroup') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.collapseAllGroups();
+              }
+              if (args.command === 'cleargroup') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+                this.clearGrouping();
+              }
+              if (args.command === 'exportAsExcel') {
+                // in addition to the grid menu pre-header toggling (internally), we will also clear grouping
+    
+                this.exportToExcel(this.dataset);
+              }
+              if (args.command === 'export-csv') {
+                this.exportToFile('csv');
+              }
+            },
+            onColumnsChanged: (e, args) => {
+              this.updateTotalRow(this.angularGrid.slickGrid);
+            },
+          },
+          draggableGrouping: {
+            dropPlaceHolderText: 'Drop a column header here to group by the column',
+            // groupIconCssClass: 'fa fa-outdent',
+            deleteIconCssClass: 'fa fa-times',
+            onGroupChanged: (e, args) => {
+              this.groupColumns = [];
+              this.groupColumns = args.groupColumns;
+              this.onGroupChanged(args && args.groupColumns);
+              setTimeout(() => {
+                this.updateTotalRow(this.angularGrid.slickGrid);
+              }, 100);
+            },
+            onExtensionRegistered: (extension) => this.draggableGroupingPlugin = extension,
+          }
+        };
+        let repoArray = [];
+        this.columnDefinitions = [];
+        this.dataset = [];
+        this.columnDefinitions.push({
+          id: 'srno',
+          name: 'SNo.',
+          field: 'srno',
+          sortable: true,
+          maxWidth: 40
+        });
+        this.columnDefinitions.push( {
+          id: 'emp_code_no', name: 'Employee No', field: 'emp_code_no', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string
+        });
+        this.columnDefinitions.push({
+          id: 'full_name', name: 'Full Name', field: 'full_name', sortable: true,
+          filterable: true,
+          filterSearchType: FieldType.string
+        });
+        if(this.currentDeduction.deductiontype) {
+          const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+          if(deductiondetails) {
+            this.columnDefinitions.push({
+              id: deductiondetails.keyname, name: deductiondetails.head, field: deductiondetails.keyname, sortable: true,
+              filterable: true,
+              filterSearchType: FieldType.string
+            });
+          }
+        }
+        
+        let inputJson = {
+          'month_id': this.acumulativeReport.value.month_id
+        };
+    
+        this.commonAPIService.getSalaryCompute(inputJson).subscribe((result: any) => {
+          if (result) {
+            const deductionHead: any[] = [];
+            this.commonAPIService.showSuccessErrorMessage('Salary detail fetched', 'success');
+            repoArray = result;
+            let index = 0;
+            for (const item of repoArray) {
+              this.empShacolumns = item.emp_salary_compute_data.empShacolumns;
+              this.empShdcolumns = item.emp_salary_compute_data.empShdcolumns;
+              this.empShdcolumns.push({
+                columnDef: "TDS",
+                header: "TDS",
+                isUpper: false,
+                value: item.emp_salary_compute_data.emp_modes_data.tds
+              });
+              var total_deductions = 0;
+              if (index === 0) {
+                if(this.currentDeduction.deductiontype) {
+                  const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+                  if(deductiondetails) {
+                    deductiondetails.moreColumn.forEach(element => {
+                      this.columnDefinitions.push({
+                        id: element.name, name: element.value, field: element.name, sortable: true,
+                        filterable: true,
+                        filterSearchType: FieldType.string
+                      });
+                    });
+                  }
+                } else {
+                  const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+                  if(shdcolumns) {
+                    this.columnDefinitions.push({
+                      id: shdcolumns.columnDef.toLowerCase().split(' ').join('_'), name: shdcolumns.header, field: shdcolumns.columnDef.toLowerCase().split(' ').join('_'), sortable: true,
+                      filterable: true,
+                      filterSearchType: FieldType.string
+                    });
+                  }
+                }
+                // for (const item of this.empShdcolumns) {
+                //   deductionHead.push(item.columnDef);
+                //   this.columnDefinitions.push({
+                //     id: item.columnDef, name: item.header, field: item.columnDef, sortable: true,
+                //     filterable: true,
+                //     filterSearchType: FieldType.string,
+                //     grouping: {
+                //       getter: item.columnDef,
+                //       formatter: (g) => {
+                //         return `${g.value}  <span style="color:green">(${g.count})</span>`;
+                //       },
+                //       aggregators: this.aggregatearray,
+                //       aggregateCollapsed: true,
+                //       collapsed: false
+                //     },
+                //     groupTotalsFormatter: this.srnTotalsFormatter
+                //   });
+                // }
+              }
+              const obj: any = {};
+              obj['id'] = (index + 1);
+              obj['srno'] = (index + 1);
+              obj['full_name'] = item.relations.emp_name ? new CapitalizePipe().transform(item.relations.emp_name) : '-';
+              obj['emp_code_no'] = item.relations.emp_code_no ? item.relations.emp_code_no : '-';
+              if(this.currentDeduction.deductiontype) {
+                const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+                obj[deductiondetails.keyname] = item.relations.emp_salary_detail.account_docment_detail[deductiondetails.keyname]
+                const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+                if(deductiondetails) {
+                  deductiondetails.moreColumn.forEach(element => {
+                    if(element.percentage) {
+                      obj[element.name]= shdcolumns.value ? (shdcolumns.value * element.percentage).toFixed(2) : 0;
+                    } else {
+                      if(element.mapname) {
+                        const mapnamearr = element.mapname.split('.');
+                        if(mapnamearr.length == 1) {
+                          obj[element.name] = item[mapnamearr[0]]
+                        } else if(mapnamearr.length == 2) {
+                          obj[element.name] = item[mapnamearr[0]][mapnamearr[1]]
+                        }
+                      } else {
+                        obj[element.name]= shdcolumns.value ? (shdcolumns.value).toFixed(2) : 0;
+                      }
+                    }
+                    if(element.total) {
+                      deductionHead.push(element.name);
+                    }
+                    
+                  });
+                }
+              } else {
+                const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+                if(shdcolumns) {
+                  obj[shdcolumns.columnDef.toLowerCase().split(' ').join('_')] = shdcolumns.value.toFixed(2)
+                }
+              }
+              // for (const item of this.empShdcolumns) {
+              //   obj[item.columnDef] = item.value.toFixed(2);
+              //   total_deductions = total_deductions + Number(item.value);
+              // }
+              // obj['total_deductions'] = total_deductions.toFixed(2);
+    
+              this.dataset.push(obj);
+              index++;
+            }
+            // this.columnDefinitions.push({
+            //   id: 'total_deductions', name: 'Total Deductions', field: 'total_deductions', sortable: true,
+            //   filterable: true,
+            //   filterSearchType: FieldType.string,
+            //   width: 80,
+            //   formatter: this.checkTotalFormatter,
+            //   grouping: {
+            //     getter: 'total_deductions',
+            //     formatter: (g) => {
+            //       return `${g.value}  <span style="color:green">(${g.count})</span>`;
+            //     },
+            //     aggregators: this.aggregatearray,
+            //     aggregateCollapsed: true,
+            //     collapsed: false
+            //   },
+            // });
+    
+    
+            this.totalRow = {};
+            const obj3: any = {};
+            obj3['id'] = 'footer';
+            obj3['srno'] = '';
+            obj3['full_name'] = 'Grand Total';
+            obj3['emp_code_no'] = '';
+            if(this.currentDeduction.deductiontype) {
+              const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+              if(deductiondetails) {
+                obj3[deductiondetails.keyname]='';
+                deductiondetails.moreColumn.forEach(element => {
+                  if(element.total) {
+                    obj3[element.name] = this.dataset.map(t => t[element.name]).reduce((acc, val) => Number(acc) + Number(val), 0);
+                  } else {
+                    obj3[element.name] = '';
+                  }
+                  
+                });
+              }
+            } else {
+              const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+              if(shdcolumns) {
+                obj3[shdcolumns.columnDef.toLowerCase().split(' ').join('_')] = this.dataset.map(t => t[shdcolumns.columnDef.toLowerCase().split(' ').join('_')]).reduce((acc, val) => Number(acc) + Number(val), 0);
+              }
+            }
+            console.log('obj3',obj3)
+            // Object.keys(deductionHead).forEach(key2 => {
+            //   Object.keys(this.dataset).forEach(key3 => {
+            //     Object.keys(this.dataset[key3]).forEach(key4 => {
+            //       if (key4 === deductionHead[key2]) {
+            //         obj3[deductionHead[key2]] = this.dataset.map(t => t[deductionHead[key2]]).reduce((acc, val) => Number(acc) + Number(val), 0);
+            //       }
+            //     });
+            //   });
+            // });
+            // obj3['total_deductions'] = new IndianCurrency().transform(this.dataset.map(t => t['total_deductions']).reduce((acc, val) => Number(acc) + Number(val), 0));
+            if (this.dataset.length <= 5) {
+              this.gridHeight = 300;
+            } else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+              this.gridHeight = 400;
+            } else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+              this.gridHeight = 550;
+            } else if (this.dataset.length > 20) {
+              this.gridHeight = 750;
+            }
+            this.totalRow = obj3;
+            this.tableFlag = true;
+            this.nodataFlag = false;
+          } else {
+            this.tableFlag = true;
+            this.nodataFlag = true;
+          }
+        });
       }
-    });
+    }
 
   }
 
@@ -553,22 +722,63 @@ export class AcumulativeDeductionComponent implements OnInit {
       useCss: true,
       theme: 'striped'
     });
-    doc.autoTable({
-      head: [[reportType]],
-      margin: { top: 0 },
-      didDrawPage: function (data) {
-
-      },
-      headStyles: {
-        fontStyle: 'bold',
-        fillColor: '#ffffff',
-        textColor: 'black',
-        halign: 'left',
-        fontSize: 20,
-      },
-      useCss: true,
-      theme: 'striped'
-    });
+    if(this.currentDeduction.deductiontype) {
+      const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+      if(deductiondetails) {
+        doc.autoTable({
+          head: [[deductiondetails.reporthead + ':' + this.schoolInfo[deductiondetails.reportheadkey]]],
+          margin: { top: 0 },
+          didDrawPage: function (data) {
+    
+          },
+          headStyles: {
+            fontStyle: 'bold',
+            fillColor: '#ffffff',
+            textColor: 'black',
+            halign: 'left',
+            fontSize: 20,
+          },
+          useCss: true,
+          theme: 'striped'
+        });
+        doc.autoTable({
+          head: [[deductiondetails.reportsubhead + this.getMontWithYear(this.acumulativeReport.value.month_id,'MMM y')]],
+          margin: { top: 0 },
+          didDrawPage: function (data) {
+    
+          },
+          headStyles: {
+            fontStyle: 'bold',
+            fillColor: '#ffffff',
+            textColor: 'black',
+            halign: 'left',
+            fontSize: 20,
+          },
+          useCss: true,
+          theme: 'striped'
+        });
+      }
+    } else {
+      const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+      if(shdcolumns) {   
+        doc.autoTable({
+          head: [[shdcolumns.columnDef+' '+'deducted for the month of '+ this.getMontWithYear(this.acumulativeReport.value.month_id,'MMM y')]],
+          margin: { top: 0 },
+          didDrawPage: function (data) {
+    
+          },
+          headStyles: {
+            fontStyle: 'bold',
+            fillColor: '#ffffff',
+            textColor: 'black',
+            halign: 'left',
+            fontSize: 20,
+          },
+          useCss: true,
+          theme: 'striped'
+        });  
+      }
+    }
     const rowData: any[] = [];
     for (const item of this.exportColumnDefinitions) {
       headerData.push(item.name);
@@ -810,6 +1020,7 @@ export class AcumulativeDeductionComponent implements OnInit {
     }
   }
   exportToExcel(json: any[]) {
+    let excelHeaderRowI=0;
     this.notFormatedCellArray = [];
     let reportType: any = '';
     const columns: any[] = [];
@@ -831,14 +1042,37 @@ export class AcumulativeDeductionComponent implements OnInit {
     const workbook = new Excel.Workbook();
     const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
       { pageSetup: { fitToWidth: 7 } });
+    let rowi = 1;
     worksheet.mergeCells('A1:' + this.alphabetJSON[columns.length] + '1'); // Extend cell over all column headers
     worksheet.getCell('A1').value =
       new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
     worksheet.getCell('A1').alignment = { horizontal: 'left' };
-    worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
-    worksheet.getCell('A2').value = reportType2;
-    worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
-    worksheet.getRow(4).values = columValue;
+
+    if(this.currentDeduction.deductiontype) {
+      const deductiondetails = this.mapdeduction.find(e => e.id.toUpperCase() == this.currentDeduction.deductiontype.toUpperCase())
+      if(deductiondetails) {
+        rowi++;
+        worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+        worksheet.getCell('A2').value = deductiondetails.reporthead + ':' + this.schoolInfo[deductiondetails.reportheadkey];
+        worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+        rowi++;
+        worksheet.mergeCells('A3:' + this.alphabetJSON[columns.length] + '3');
+        worksheet.getCell('A3').value = deductiondetails.reportsubhead + this.getMontWithYear(this.acumulativeReport.value.month_id,'MMM y');
+        worksheet.getCell(`A3`).alignment = { horizontal: 'left' };
+      }
+    } else {
+      rowi++;
+      const shdcolumns = this.empShdcolumns.find(e => e.columnDef.toUpperCase() == this.currentDeduction.sc_name.toUpperCase())
+      if(shdcolumns) {
+        worksheet.mergeCells('A2:' + this.alphabetJSON[columns.length] + '2');
+        worksheet.getCell('A2').value = shdcolumns.columnDef+' '+'deducted for the month of '+ this.getMontWithYear(this.acumulativeReport.value.month_id,'MMM y');
+        worksheet.getCell(`A2`).alignment = { horizontal: 'left' };      
+      }
+    }
+    rowi++;
+    rowi++;
+    excelHeaderRowI = rowi;
+    worksheet.getRow(rowi).values = columValue;
     worksheet.columns = columns;
     if (this.dataviewObj.getGroups().length === 0) {
       Object.keys(json).forEach(key => {
@@ -890,17 +1124,17 @@ export class AcumulativeDeductionComponent implements OnInit {
           size: 14,
           bold: true
         };
-      } else if (rowNum === 2) {
+      } else if (rowNum === 2 || rowNum === 3) {
         row.font = {
           name: 'Arial',
-          size: 12,
+          size: 11,
           bold: true
         };
-      } else if (rowNum === 4) {
+      } else if (rowNum === excelHeaderRowI) {
         row.eachCell((cell) => {
           cell.font = {
             name: 'Arial',
-            size: 12,
+            size: 11,
             bold: true
           };
           cell.fill = {
@@ -917,7 +1151,7 @@ export class AcumulativeDeductionComponent implements OnInit {
           };
           cell.alignment = { horizontal: 'center' };
         });
-      } else if (rowNum > 4 && rowNum <= worksheet._rows.length) {
+      } else if (rowNum > excelHeaderRowI && rowNum <= worksheet._rows.length) {
         const cellIndex = this.notFormatedCellArray.findIndex(item => item === rowNum);
         if (cellIndex === -1) {
           row.eachCell((cell) => {

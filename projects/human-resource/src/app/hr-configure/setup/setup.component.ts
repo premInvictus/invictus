@@ -69,6 +69,10 @@ export class SetupComponent implements OnInit, AfterViewInit {
 		{ id: "1", name: 'Addition' },
 		{ id: "2", name: 'Deduction' },
 	];
+	deductiontypeTypeArray = [
+		{ id: "PF", name: 'PF' },
+		{ id: "ESI", name: 'ESI' },
+	];
 	typeArray = [
 		{ id: "1", name: 'Wing Master' },
 		{ id: "2", name: 'Designation Master' },
@@ -122,7 +126,8 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				type: '',
 				value: '',
 				optional: false,
-				upper_value: ''
+				upper_value: '',
+				deductiontype:''
 			})
 		},
 		{
@@ -251,6 +256,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 							upper_value : item.sc_type.upper_value ?  item.sc_type.upper_value : '',
 							slabvalue:item.sc_calculation_type == 'Slab' ? item.slabvalue : '',
 							calculation_option : item.calculation_option ?  item.calculation_option : '',
+							deductiontype : item.deductiontype ?  item.deductiontype : '',
 							calculation_type: item.sc_calculation_type,
 							status: item.sc_status,
 							action: item
@@ -496,6 +502,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 				calculation_type: value.sc_calculation_type,
 				status: value.sc_status,
 				calculation_option:value.calculation_option,
+				deductiontype:value.deductiontype,
 				upper_value: value.sc_type && value.sc_type.upper_value ? value.sc_type.upper_value : '',
 				optional: value.sc_type.type_id === '2' && value.sc_type.optional ? value.sc_type.optional : false
 			});
@@ -736,6 +743,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
 						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
+						deductiontype:this.formGroupArray[value - 1].formGroup.value.deductiontype,
 						slabvalue:slabvalueArr
 					};
 					this.addEntry(this.setupDetails, 'insertSalaryComponent', this.formGroupArray[value - 1].formGroup.value.type);
@@ -850,6 +858,7 @@ export class SetupComponent implements OnInit, AfterViewInit {
 						sc_calculation_type: this.getName(this.formGroupArray[value - 1].formGroup.value.calculation_type, this.calculationTypeArray),
 						sc_status: '1',
 						calculation_option:this.formGroupArray[value - 1].formGroup.value.calculation_option,
+						deductiontype:this.formGroupArray[value - 1].formGroup.value.deductiontype,
 						sc_id: this.formGroupArray[value - 1].formGroup.value.id,
 						slabvalue:slabvalueArr
 					};
