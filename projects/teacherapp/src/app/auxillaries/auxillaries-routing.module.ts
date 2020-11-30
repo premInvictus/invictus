@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
+import { ReportCorrectionComponent } from './report-correction/report-correction.component';
 
 const routes: Routes = [
 	{
@@ -16,6 +17,11 @@ const routes: Routes = [
 	,
 	{
 		path: 'exam-achievement', component: ExamAchievementComponent
+		
+	}
+	,
+	{
+		path: 'report-correction', component: ReportCorrectionComponent
 		
 	}
 ];

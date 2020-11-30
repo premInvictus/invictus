@@ -3,7 +3,7 @@
     <div class="col-2">
       <mat-form-field appearance="outline">
         <mat-label>Month</mat-label>
-        <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getEmployeeAttendance()" required>
+        <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getAllEmployee()" required>
           <mat-option value="">Please select</mat-option>
           <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
         </mat-select>
