@@ -176,7 +176,7 @@ export class WalletsLedgerComponent implements OnInit {
 					this.lastRecordId = result.data[0].last_record;
 					this.loginId = result.data[0].au_login_id;
 					this.feeLoginId = this.loginId;
-					this.getWallets(this.lastRecordId);
+					//this.getWallets(this.lastRecordId);
 				}
 			});
 		}

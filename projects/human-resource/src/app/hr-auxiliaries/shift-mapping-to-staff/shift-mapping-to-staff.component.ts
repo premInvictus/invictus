@@ -88,7 +88,7 @@ export class ShiftMappingToStaffComponent implements OnInit {
 	getEmployeeDetail() {
     let inputJson = {
       emp_cat_id: this.searchForm.value.cat_id,
-      from_attendance: true,
+    //   from_attendance: true,
     };
 		this.commonAPIService.getAllEmployee(inputJson).subscribe((result: any) => {
       let element: any = {};
