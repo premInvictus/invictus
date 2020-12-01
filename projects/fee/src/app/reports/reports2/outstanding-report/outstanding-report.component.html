@@ -20,7 +20,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && multiValueArray.length ==0"
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length ==0"
             class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
@@ -31,7 +31,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && multiValueArray.length > 0"
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length > 0"
             class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
@@ -53,7 +53,7 @@
                 <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
         </div>
-        <div *ngIf="reportType === 'feedue'" class="col-2">
+        <div *ngIf="reportType === 'feedue' " class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Month</mat-label>
                 <mat-select formControlName="month_id" [placeholder]="valueLabel">
@@ -62,7 +62,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && (reportType !== 'feedue' &&  reportType !== 'aging')" class="col-2">
+        <div *ngIf="filterFlag && (reportType !== 'feedue' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>To Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"

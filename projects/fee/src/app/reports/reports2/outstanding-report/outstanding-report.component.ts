@@ -2689,6 +2689,22 @@ export class OutstandingReportComponent implements OnInit {
 						width: 2
 					},
 					{
+						id: 'au_admission_no', name: 'Enrollment No.', field: 'au_admission_no', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						
+					},
+					{
+						id: 'user_name', name: 'Student Name', field: 'user_name', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						
+					},
+					{
 						id: 'stu_class_name', name: 'Class Name', field: 'stu_class_name', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.string,
@@ -2705,7 +2721,7 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					},
 					{
-						id: 'user_name', name: 'Student Name', field: 'user_name', filterable: true,
+						id: 'sec_name', name: 'Section', field: 'sec_name', filterable: true,
 						width: 60,
 						filterSearchType: FieldType.string,
 						filter: { model: Filters.compoundInput },
@@ -2819,6 +2835,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['school_prefix'] = item['school_prefix'];
 							obj['stu_class_name'] = item.class_name;
 							obj['user_name'] = item.resultData.ltm.user_name;
+							obj['sec_name'] = item.resultData.ltm.sec_name;
+							obj['au_admission_no'] = item.resultData.ltm.au_admission_no;
 							obj['ltm'] = Number(item.resultData.ltm.total_fee_amount);
 							obj['m13'] = Number(item.resultData.m13.total_fee_amount);
 							obj['m3'] = Number(item.resultData.m3.total_fee_amount);
