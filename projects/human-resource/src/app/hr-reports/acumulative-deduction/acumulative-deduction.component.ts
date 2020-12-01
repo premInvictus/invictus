@@ -136,7 +136,8 @@ export class AcumulativeDeductionComponent implements OnInit {
         {name:'emp_present_days',value:'Days Present',percentage:false,onfield:false,mapname:'emp_salary_compute_data.emp_present_days',total:false},
         {name:'esi_earnings',value:'ESI Earnings',percentage:100/0.75,onfield:false,mapname:false,total:true},
         {name:'employee_contribution',value:'Employee Contribution',percentage:false,onfield:false,mapname:false,total:true},
-        {name:'employer_contribution',value:'Employer Contribution',percentage:3.25/0.75,onfield:false,mapname:false,total:true}
+        {name:'employer_contribution',value:'Employer Contribution',percentage:3.25/0.75,onfield:false,mapname:false,total:true},
+        {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['employee_contribution','employer_contribution']},
       ]
     },
     {id:'PF',head:'PF/UAN',reporthead:'Employer PF No.',reportheadkey:'school_pf',reportsubhead:'EPF report for the month of ',keyname:'pf_acc_no',
@@ -144,13 +145,17 @@ export class AcumulativeDeductionComponent implements OnInit {
         {name:'gross_salary',value:'Gross Salary',percentage:100/12,onfield:false,mapname:false,total:true},
         {name:'employee_contribution',value:'Employee Contribution',percentage:false,onfield:false,mapname:false,total:true},
         {name:'employer_contribution',value:'Employer Contribution',percentage:3.67/12,onfield:false,mapname:false,total:true},
+        {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['employee_contribution','employer_contribution']},
         {name:'pension_fund',value:'Pension Fund',percentage:8.33/12,onfield:false,mapname:false,total:true}
 
       ]
     },
     {id:'TDS',head:'PAN',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'TDS Deducted for the month of ',keyname:'pan_no',
     moreColumn:[
-      {name:'TDS Deducted',value:'TDS Deducted',percentage:false,onfield:false,mapname:false,total:true}
+      {name:'tds_deducted_previous',value:'Previous TDS Deducted',percentage:false,onfield:false,mapname:'previous_tds',total:true},
+      {name:'tds_deducted',value:'TDS Deducted',percentage:false,onfield:false,mapname:false,total:true},
+      {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['tds_deducted_previous','tds_deducted']},
+
     ]
     }
   ];
@@ -512,9 +517,18 @@ export class AcumulativeDeductionComponent implements OnInit {
                       if(element.mapname) {
                         const mapnamearr = element.mapname.split('.');
                         if(mapnamearr.length == 1) {
-                          obj[element.name] = item[mapnamearr[0]]
+                          if(item[mapnamearr[0]]){
+                            obj[element.name] = item[mapnamearr[0]]
+                          } else {
+                            obj[element.name] = 0
+                          }
                         } else if(mapnamearr.length == 2) {
-                          obj[element.name] = item[mapnamearr[0]][mapnamearr[1]]
+                          if(item[mapnamearr[0]][mapnamearr[1]]){
+                            obj[element.name] = item[mapnamearr[0]][mapnamearr[1]]
+                          } else {
+                            obj[element.name] = 0
+                          }
+                          
                         }
                       } else {
                         obj[element.name]= shdcolumns.value ? (shdcolumns.value).toFixed(2) : 0;
@@ -522,6 +536,13 @@ export class AcumulativeDeductionComponent implements OnInit {
                     }
                     if(element.total) {
                       deductionHead.push(element.name);
+                    }
+                    if(element.columnTotal) {
+                      let total=0;
+                      element.columnTotal.forEach(t => {
+                        total += Number(obj[t])
+                      });
+                      obj[element.name] = total.toFixed(2);
                     }
                     
                   });
@@ -571,7 +592,12 @@ export class AcumulativeDeductionComponent implements OnInit {
                 obj3[deductiondetails.keyname]='';
                 deductiondetails.moreColumn.forEach(element => {
                   if(element.total) {
-                    obj3[element.name] = this.dataset.map(t => t[element.name]).reduce((acc, val) => Number(acc) + Number(val), 0);
+                    const temptotal = this.dataset.map(t => t[element.name]).reduce((acc, val) => Number(acc) + Number(val), 0);
+                    if(temptotal) {
+                      obj3[element.name] = temptotal;
+                    } else {
+                      obj3[element.name] = 0;
+                    }
                   } else {
                     obj3[element.name] = '';
                   }

@@ -2,6 +2,7 @@ export interface Element {
 	sr_no: any;
 	au_admission_no: any;
 	au_full_name: any;
-	au_roll_no: any;
-	au_board_roll_no: any;
+	father_name: any;
+	mother_name: any;
+	upd_dob:any;
 } 
