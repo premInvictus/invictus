@@ -145,8 +145,8 @@ export class AcumulativeDeductionComponent implements OnInit {
         {name:'gross_salary',value:'Gross Salary',percentage:100/12,onfield:false,mapname:false,total:true},
         {name:'employee_contribution',value:'Employee Contribution',percentage:false,onfield:false,mapname:false,total:true},
         {name:'employer_contribution',value:'Employer Contribution',percentage:3.67/12,onfield:false,mapname:false,total:true},
-        {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['employee_contribution','employer_contribution']},
-        {name:'pension_fund',value:'Pension Fund',percentage:8.33/12,onfield:false,mapname:false,total:true}
+        {name:'pension_fund',value:'Pension Fund',percentage:8.33/12,onfield:false,mapname:false,total:true},
+        {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['employee_contribution','employer_contribution','pension_fund']}
 
       ]
     },
