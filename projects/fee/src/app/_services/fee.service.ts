@@ -523,6 +523,9 @@ export class FeeService {
 	getClassWiseMonthWiseSeperation(value) {
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperation', value);
 	}
+	getClassWiseMonthWiseSeperationDetail(value) {
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getClassWiseMonthWiseSeperationDetail', value);
+	}
 	insertHostelConfig(value) {
 		return this.http.post(environment.apiFeeUrl + '/hostel/insertHostelConfig', value);
 	}

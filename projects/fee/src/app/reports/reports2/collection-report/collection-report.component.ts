@@ -956,9 +956,13 @@ export class CollectionReportComponent implements OnInit {
 								});
 							});
 						});
+						let additional_amt = this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0);
+						let tamt = this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0);;
+
 						obj3['additional_amt'] = new IndianCurrency().transform(this.dataset.map(t => t.additional_amt).reduce((acc, val) => acc + val, 0));
 						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t.total).reduce((acc, val) => acc + val, 0));
-						obj3['total']=(obj3['total'] ? obj3['total'] : 0)+(obj3['additional_amt'] ? obj3['additional_amt'] : 0);
+
+						obj3['total']=new IndianCurrency().transform(additional_amt+tamt);
 						obj3['receipt_mode_name'] = '';
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
@@ -3504,11 +3508,11 @@ export class CollectionReportComponent implements OnInit {
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
-							this.gridHeight = 300;
+							this.gridHeight = 750;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-							this.gridHeight = 400;
+							this.gridHeight = 750;
 						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-							this.gridHeight = 550;
+							this.gridHeight = 750;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
 						}

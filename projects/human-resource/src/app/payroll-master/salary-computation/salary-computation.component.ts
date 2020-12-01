@@ -93,7 +93,7 @@ export class SalaryComputationComponent implements OnInit {
 	salaryComputeEmployeeData: any[] = [];
 	salaryComputeEmployeeIds: any[] = [];
 	sessionArray: any[] = [];
-	currentVcType = 'Journal Voucher';
+	currentVcType = 'Journal';
 	sessionName: any;
 	vcData: any;
 	alphabetJSON = {
@@ -190,10 +190,10 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			for (var i = 0; i < result.length; i++) {
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash"))) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && (result[i]['coa_dependencies'][0]['dependenecy_component'] === "salary_component" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "ca-7") || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "ca-8") || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "ca-10"))) {
 					this.chartsOfAccount.push(result[i]);
 				}
-				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && ((result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_payment" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") || result[i]['coa_dependencies'][0]['dependency_local_id'] === "ca-9") && (result[i]['coa_dependencies'][0]['dependency_local_id'] !== "ca-1"))) {
+				if ((result[i]['dependencies_type']) === "internal" && result[i]['coa_dependencies'] && ((result[i]['coa_dependencies'][0]['dependenecy_component'] === "payment_mode_payment" || (result[i]['coa_dependencies'][0]['dependenecy_component'] === "cash") || result[i]['coa_dependencies'][0]['dependency_local_id'] === "ca-9")  && (result[i]['coa_dependencies'][0]['dependency_local_id'] !== "ca-1"))) {
 					this.paymentModeAccount.push(result[i]);
 				}
 			}
@@ -1520,15 +1520,15 @@ export class SalaryComputationComponent implements OnInit {
 
 
 			console.log('fjJson--', fJson);
-			// this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
-			// 	if (data) {
-			// 		this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
+			this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
+				if (data) {
+					this.commonAPIService.showSuccessErrorMessage('Voucher entry Published Successfully', 'success');
 
 
-			// 	} else {
-			// 		this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
-			// 	}
-			// });
+				} else {
+					this.commonAPIService.showSuccessErrorMessage('Error While Publish Voucher Entry', 'error');
+				}
+			});
 		}
 
 
@@ -1755,17 +1755,17 @@ export class SalaryComputationComponent implements OnInit {
 									console.log('in deduction', salary_total);
 									// console.log('in deduction',salary_total, Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj]['value']), finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['empShdcolumns'][cj], finJson['emp_salary_compute_data'][ci] );
 								}
-								// if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS') {
-								// 	// console.log('in tds');
-								// 	let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-								// 	let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['tds']) : 0;
-								// 	salary_total = salary_total + tempTotal;
-								// 	console.log('in deduction',salary_total);
-								// }
+								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === 'TDS' || this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_local_id'] == 'ca-7') {
+									// console.log('in tds');
+									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
+									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['emp_modes_data']['tds']) ;
+									salary_total = salary_total + tempTotal;
+									console.log('in deduction',salary_total);
+								}
 								if (this.chartsOfAccount[i]['coa_dependencies'][0]['dependency_name'] === "Gratuity") {
 									console.log('in gratuity');
 									let no_of_days = new Date(this.currentYear, this.searchForm.value.month_id, 0).getDate();
-									let tempTotal = this.salaryComputeEmployeeData[ci] && this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity'] ? Number(this.salaryComputeEmployeeData[ci]['relations']['emp_salary_detail']['emp_salary_structure']['gratuity']) : 0;
+									let tempTotal = Number(finJson['emp_salary_compute_data'][ci]['emp_salary_compute_data']['gratuity']);
 									salary_total = salary_total + tempTotal;
 									salary_pay_total = salary_pay_total + tempTotal;
 									console.log('in deduction', salary_total);
@@ -1892,7 +1892,7 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 				}
-				this.getVoucherTypeMaxId(voucherEntryArray, 'Journal Voucher');
+				this.getVoucherTypeMaxId(voucherEntryArray, 'Journal');
 
 			}
 
@@ -2026,35 +2026,35 @@ export class SalaryComputationComponent implements OnInit {
 			console.log('inputArr', inputArr);
 			console.log('empArr', empArr);
 			if (!edit) {
-				// this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
-				// 	this.disabledApiButton = false;
-				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-				// 		// this.checkForFilter();
-				// 	},
-				// 	(errorResponse:any) => {
-				// 		this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
-				// 	});
-				// });
+				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
+					this.disabledApiButton = false;
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+						// this.checkForFilter();
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
+					});
+				});
 			} else {
-				// this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
-				// 	this.disabledApiButton = false;
-				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-				// 		this.checkForFilter();
-				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-				// 	});
-				// });
-				// this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
-				// 	this.disabledApiButton = false;
-				// 	this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
-				// 		// this.checkForFilter();
-				// 		this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
-				// 		this.checkForFilter();
-				// 	},
-				// 	(errorResponse:any) => {
-				// 		this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
-				// 	});
-				// });
+				this.commonAPIService.updateInBulk(inputArr).subscribe((result: any) => {
+					this.disabledApiButton = false;
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+						this.checkForFilter();
+						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+					});
+				});
+				this.commonAPIService.insertInBulk(inputArr).subscribe((result: any) => {
+					this.disabledApiButton = false;
+					this.commonAPIService.updateEmployeeDatainBulk(empArr).subscribe((result: any) => {
+						// this.checkForFilter();
+						this.commonAPIService.showSuccessErrorMessage('Salary Compute Successfully', 'success');
+						this.checkForFilter();
+					},
+					(errorResponse:any) => {
+						this.commonAPIService.showSuccessErrorMessage('Error to update database, Structure is not valid', 'error');
+					});
+				});
 			}
 		}
 

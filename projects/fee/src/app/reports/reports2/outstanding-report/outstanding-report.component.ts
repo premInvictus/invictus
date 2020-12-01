@@ -196,6 +196,9 @@ export class OutstandingReportComponent implements OnInit {
 		if(this.common.isExistUserAccessMenu('661')) {
 			this.reportTypeArray.push({report_type: 'aging', report_name: 'Aging'});
 		}
+		if(this.common.isExistUserAccessMenu('661')) {
+			this.reportTypeArray.push({report_type: 'aging_detail', report_name: 'Aging Detail'});
+		}
 		if (this.sessionName) {
 			const date = new Date(this.sessionName.split('-')[0], new Date().getMonth(), new Date().getDate());
 			const firstDay = new Date(this.sessionName.split('-')[0], new Date().getMonth(), 1);
@@ -571,6 +574,35 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'epd_parent_name',
+										name: 'Active Parent',
+										field: 'epd_parent_name',
+										filterable: true,
+										sortable: true,
+										width: 180,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'epd_parent_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									},
+									{
+										id: 'epd_contact_no',
+										name: 'Active Parent Contact',
+										field: 'epd_contact_no',
+										filterable: true,
+										sortable: true,
+										width: 180,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText }										
+									},
+									{
 										id: 'stu_class_name',
 										name: 'Class-Section',
 										field: 'stu_class_name',
@@ -706,6 +738,10 @@ export class OutstandingReportComponent implements OnInit {
 											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
+
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
@@ -924,6 +960,35 @@ export class OutstandingReportComponent implements OnInit {
 										},
 									},
 									{
+										id: 'epd_parent_name',
+										name: 'Active Parent',
+										field: 'epd_parent_name',
+										filterable: true,
+										sortable: true,
+										width: 180,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText },
+										grouping: {
+											getter: 'epd_parent_name',
+											formatter: (g) => {
+												return `${g.value}  <span style="color:green">(${g.count})</span>`;
+											},
+											aggregators: this.aggregatearray,
+											aggregateCollapsed: true,
+											collapsed: false
+										},
+									},
+									{
+										id: 'epd_contact_no',
+										name: 'Active Parent Contact',
+										field: 'epd_contact_no',
+										filterable: true,
+										sortable: true,
+										width: 180,
+										filterSearchType: FieldType.string,
+										filter: { model: Filters.compoundInputText }										
+									},
+									{
 										id: 'stu_class_name',
 										name: 'Class-Section',
 										field: 'stu_class_name',
@@ -1093,6 +1158,9 @@ export class OutstandingReportComponent implements OnInit {
 											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
 												repoArray[Number(keys)]['login_id'] : '-';
 											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
 											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
 											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
 												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
@@ -1270,6 +1338,36 @@ export class OutstandingReportComponent implements OnInit {
 						},
 					},
 					{
+						id: 'epd_parent_name',
+						name: 'Active Parent',
+						field: 'epd_parent_name',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'epd_parent_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_contact_no',
+						name: 'Active Parent Contact',
+						field: 'epd_contact_no',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText }										
+					},
+
+					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
 						filterable: true,
 						width: 15,
@@ -1408,6 +1506,9 @@ export class OutstandingReportComponent implements OnInit {
 								repoArray[Number(index)]['school_prefix'] : '-';
 							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
 								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
+							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ?
+								repoArray[Number(index)]['epd_contact_no'] : '-';
 							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
@@ -1514,6 +1615,35 @@ export class OutstandingReportComponent implements OnInit {
 							collapsed: false
 						},
 						groupTotalsFormatter: this.srnTotalsFormatter
+					},
+					{
+						id: 'epd_parent_name',
+						name: 'Active Parent',
+						field: 'epd_parent_name',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'epd_parent_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_contact_no',
+						name: 'Active Parent Contact',
+						field: 'epd_contact_no',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText }										
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', sortable: true,
@@ -1678,6 +1808,9 @@ export class OutstandingReportComponent implements OnInit {
 								repoArray[Number(index)]['login_id'] : '-';
 							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
+							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ?
+								repoArray[Number(index)]['epd_contact_no'] : '-';
 
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
@@ -1791,6 +1924,35 @@ export class OutstandingReportComponent implements OnInit {
 							aggregateCollapsed: true,
 							collapsed: false
 						},
+					},
+					{
+						id: 'epd_parent_name',
+						name: 'Active Parent',
+						field: 'epd_parent_name',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'epd_parent_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_contact_no',
+						name: 'Active Parent Contact',
+						field: 'epd_contact_no',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText }										
 					},
 					{
 						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
@@ -1911,6 +2073,8 @@ export class OutstandingReportComponent implements OnInit {
 							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
 												repoArray[Number(index)]['school_prefix'] : '-';
 							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
+							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ? repoArray[Number(index)]['epd_contact_no'] : '-';
 
 							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
 								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
@@ -2058,6 +2222,35 @@ export class OutstandingReportComponent implements OnInit {
 												aggregateCollapsed: true,
 												collapsed: false
 											},
+										},
+										{
+											id: 'epd_parent_name',
+											name: 'Active Parent',
+											field: 'epd_parent_name',
+											filterable: true,
+											sortable: true,
+											width: 180,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText },
+											grouping: {
+												getter: 'epd_parent_name',
+												formatter: (g) => {
+													return `${g.value}  <span style="color:green">(${g.count})</span>`;
+												},
+												aggregators: this.aggregatearray,
+												aggregateCollapsed: true,
+												collapsed: false
+											},
+										},
+										{
+											id: 'epd_contact_no',
+											name: 'Active Parent Contact',
+											field: 'epd_contact_no',
+											filterable: true,
+											sortable: true,
+											width: 180,
+											filterSearchType: FieldType.string,
+											filter: { model: Filters.compoundInputText }										
 										},
 										{
 											id: 'stu_class_name',
@@ -2274,6 +2467,9 @@ export class OutstandingReportComponent implements OnInit {
 													? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
 												obj['total'] = repoArray[Number(keys)]['inv_due_total_amt']
 													? Number(repoArray[Number(keys)]['inv_due_total_amt']) : 0;
+												obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+												obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+														repoArray[Number(keys)]['epd_contact_no'] : '-';
 												k++;
 											}
 										});
@@ -2480,6 +2676,204 @@ export class OutstandingReportComponent implements OnInit {
 							this.gridHeight = 750;
 						}
 						this.tableFlag = true;
+					} else {
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.reportType === 'aging_detail') {
+				// this.gridOptions.rowHeight = 35;
+				this.columnDefinitions = [
+					{
+						id: 'srno', name: 'SNo.', field: 'srno',
+						sortable: true,
+						width: 2
+					},
+					{
+						id: 'au_admission_no', name: 'Enrollment No.', field: 'au_admission_no', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						
+					},
+					{
+						id: 'user_name', name: 'Student Name', field: 'user_name', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						
+					},
+					{
+						id: 'stu_class_name', name: 'Class Name', field: 'stu_class_name', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'stu_class_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'sec_name', name: 'Section', field: 'sec_name', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						
+					},
+
+					{
+						id: 'ltm', name: 'Less Than Month', field: 'ltm', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						sortable: true,
+						formatter: this.checkCurrencyFormatter,
+						grouping: {
+							getter: 'ltm',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'm13', name: '1-3 Month', field: 'm13', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						sortable: true,
+						formatter: this.checkCurrencyFormatter,
+						grouping: {
+							getter: 'm13',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'm3', name: 'More Than 3 Months', field: 'm3', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						sortable: true,
+						formatter: this.checkCurrencyFormatter,
+						grouping: {
+							getter: 'm3',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'total', name: 'Total', field: 'total', filterable: true,
+						width: 60,
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber,  operator: OperatorType.greaterThan },
+						sortable: true,
+						formatter: this.checkCurrencyFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					}
+				];
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
+				this.feeService.getClassWiseMonthWiseSeperationDetail({ projectionType: 'yearly','school_branch': this.reportFilterForm.value.school_branch  }).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data;
+						let index = 0;
+						var total = 0;
+						for (const item of repoArray) {
+							const obj: any = {};
+							obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['school_prefix'] = item['school_prefix'];
+							obj['stu_class_name'] = item.class_name;
+							obj['user_name'] = item.resultData.ltm.user_name;
+							obj['sec_name'] = item.resultData.ltm.sec_name;
+							obj['au_admission_no'] = item.resultData.ltm.au_admission_no;
+							obj['ltm'] = Number(item.resultData.ltm.total_fee_amount);
+							obj['m13'] = Number(item.resultData.m13.total_fee_amount);
+							obj['m3'] = Number(item.resultData.m3.total_fee_amount);
+							total = Number(item.resultData.ltm.total_fee_amount) + Number(item.resultData.m13.total_fee_amount) + Number(item.resultData.m3.total_fee_amount);
+							obj['total'] = total;
+							this.dataset.push(obj);
+							index++;
+						}
+						this.aggregatearray.push(new Aggregators.Sum('ltm'));
+							this.aggregatearray.push(new Aggregators.Sum('m13'));
+							this.aggregatearray.push(new Aggregators.Sum('m3'));
+							this.aggregatearray.push(new Aggregators.Sum('total'));
+							this.aggregatearray.push(new Aggregators.Sum('srno'));
+
+						
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['stu_class_name'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['ltm'] = new IndianCurrency().transform(this.dataset.map(t => t['ltm']).reduce((acc, val) => acc + val, 0));
+						obj3['m13'] = new IndianCurrency().transform(this.dataset.map(t => t['m13']).reduce((acc, val) => acc + val, 0));
+						obj3['m3'] = new IndianCurrency().transform(this.dataset.map(t => t['m3']).reduce((acc, val) => acc + val, 0));
+						obj3['total'] = new IndianCurrency().transform(this.dataset.map(t => t['total']).reduce((acc, val) => acc + val, 0));
+						this.totalRow = obj3;
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						
+						this.tableFlag = true;
+						setTimeout(() => this.groupByClass(), 2);
 					} else {
 						this.tableFlag = true;
 					}
