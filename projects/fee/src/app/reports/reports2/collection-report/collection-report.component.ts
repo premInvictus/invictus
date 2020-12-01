@@ -3504,11 +3504,11 @@ export class CollectionReportComponent implements OnInit {
 						obj3['tb_name'] = '';
 						this.totalRow = obj3;
 						if (this.dataset.length <= 5) {
-							this.gridHeight = 300;
+							this.gridHeight = 750;
 						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
-							this.gridHeight = 400;
+							this.gridHeight = 750;
 						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
-							this.gridHeight = 550;
+							this.gridHeight = 750;
 						} else if (this.dataset.length > 20) {
 							this.gridHeight = 750;
 						}
