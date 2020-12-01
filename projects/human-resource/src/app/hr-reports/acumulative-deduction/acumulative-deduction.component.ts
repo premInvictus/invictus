@@ -152,9 +152,9 @@ export class AcumulativeDeductionComponent implements OnInit {
     },
     {id:'TDS',head:'PAN',reporthead:'Employer TAN.',reportheadkey:'school_pan',reportsubhead:'TDS Deducted for the month of ',keyname:'pan_no',
     moreColumn:[
-      {name:'tds_deducted_previous',value:'Previous TDS Deducted',percentage:false,onfield:false,mapname:'previous_tds',total:true},
-      {name:'tds_deducted',value:'TDS Deducted',percentage:false,onfield:false,mapname:false,total:true},
-      {name:'total',value:'Total',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['tds_deducted_previous','tds_deducted']},
+      {name:'tds_deducted_previous',value:'TDS Deduction Till Previous Month',percentage:false,onfield:false,mapname:'previous_tds',total:true},
+      {name:'tds_deducted',value:'TDS Deduction For Current Month',percentage:false,onfield:false,mapname:false,total:true},
+      {name:'total',value:'Total Deduction',percentage:false,onfield:false,mapname:false,total:true,columnTotal:['tds_deducted_previous','tds_deducted']},
 
     ]
     }
