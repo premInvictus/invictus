@@ -121,6 +121,7 @@ export class AttendanceReportsComponent implements OnInit {
     43: 'AQ',
     44: 'AR',
   };
+  currSess:string;
   constructor(
     public dialog: MatDialog,
     private fbuild: FormBuilder,
@@ -140,7 +141,7 @@ export class AttendanceReportsComponent implements OnInit {
     this.getSchool();
     this.getSession();
     this.getFeeMonths();
-    this.getAllEmployee('');
+    //this.getAllEmployee('');
   }
 
   buildForm() {
@@ -185,7 +186,17 @@ export class AttendanceReportsComponent implements OnInit {
         }
       });
     } else {
-      this.commonAPIService.getAllEmployee({}).subscribe((result: any) => {
+      if (Number(this.attendanceReport.value.month_id) === 1 || Number(this.attendanceReport.value.month_id) === 2 || Number(this.attendanceReport.value.month_id) === 3) {
+        this.currSess = this.sessionName.split('-')[1];
+      } else {
+        this.currSess = this.sessionName.split('-')[0];
+      }
+      let param = {
+				month_id: this.attendanceReport.value.month_id,
+				from_attendance: true,
+				year: this.currSess
+			};
+      this.commonAPIService.getAllEmployee(param).subscribe((result: any) => {
         if (result && result.length > 0) {
           this.employeeArray = result;
           this.getEmployeeAttendance();
