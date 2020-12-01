@@ -201,14 +201,22 @@ export class ShiftAttendanceReportComponent implements OnInit {
     }
   }
   async getShiftAttendanceReport(){
-
+    let currSess;
+    if (Number(this.acumulativeReport.value.month_id) === 1 || Number(this.acumulativeReport.value.month_id) === 2 || Number(this.acumulativeReport.value.month_id) === 3) {
+      currSess = this.sessionName.split('-')[1];
+    } else {
+      currSess = this.sessionName.split('-')[0];
+    }
     let inputJson = {
 			'month_id': this.acumulativeReport.value.month_id,
 			'emp_status': 'all',
-			from_attendance: true,
+      from_attendance: true,
+      year:currSess
     };
     this.dateArray=[];
     this.EMPLOYEE_ELEMENT = [];
+    this.displayedEmployeeColumns = ['emp_code_no', 'emp_name', 'emp_shift','parameters'];;
+    
     var no_of_days = this.getDaysInMonth(this.acumulativeReport.value.month_id, new Date().getFullYear());
     const inputJson1: any = {};
     inputJson1.datefrom = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-1';
