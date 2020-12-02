@@ -59,7 +59,7 @@ const providers = [
 	ExamService];
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
 	],
 	imports: [
 		BrowserModule,

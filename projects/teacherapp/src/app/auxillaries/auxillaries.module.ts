@@ -12,6 +12,7 @@ import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
 import { ReportCorrectionComponent } from './report-correction/report-correction.component';
+import { StudentVerificationModalComponent } from './report-correction/student-verification-modal/student-verification-modal.component';
 
 @NgModule({
 	imports: [
@@ -32,7 +33,8 @@ import { ReportCorrectionComponent } from './report-correction/report-correction
 		TeacherTimetableComponent,
 		BmiCalculatorComponent,
 		ExamAchievementComponent,
-		ReportCorrectionComponent
+		ReportCorrectionComponent,
+		StudentVerificationModalComponent
 	],
 	entryComponents: [],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],

@@ -6,6 +6,7 @@ import { Element } from './rollno.model';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe,TitleCasePipe } from '@angular/common';
+import { StudentVerificationModalComponent } from './student-verification-modal/student-verification-modal.component'
 
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -18,11 +19,11 @@ const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 
 @Component({
-  selector: 'app-report-correction',
-  templateUrl: './report-correction.component.html',
-  styleUrls: ['./report-correction.component.css']
+  selector: 'app-student-verification',
+  templateUrl: './student-verification.component.html',
+  styleUrls: ['./student-verification.component.css']
 })
-export class ReportCorrectionComponent implements OnInit {
+export class StudentVerificationComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
   displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',action:'Action'};
@@ -126,6 +127,16 @@ export class ReportCorrectionComponent implements OnInit {
       syl_section_id: ''
     });
   }
+  openModal(item) {
+		const dialogRef = this.dialog.open(StudentVerificationModalComponent, {
+			width: '30%',
+			height: '55%',
+			data: item
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			console.log(dresult);
+		});
+	}
   // get session year of the selected session
 	getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {

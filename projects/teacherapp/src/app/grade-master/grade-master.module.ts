@@ -16,6 +16,9 @@ import { MarkAttendanceThemeTwoComponent } from './mark-attendance-theme-two/mar
 import { MarksInputComponent } from './marks-input/marks-input.component';
 import { MarksRegisterComponent } from './marks-register/marks-register.component';
 import { ResultEntryComponent } from './result-entry/result-entry.component';
+import { StudentVerificationComponent } from './student-verification/student-verification.component';
+import { StudentVerificationModalComponent } from './student-verification/student-verification-modal/student-verification-modal.component';
+
 
 @NgModule({
   imports: [
@@ -23,7 +26,7 @@ import { ResultEntryComponent } from './result-entry/result-entry.component';
     GradeMasterRoutingModule,
     SharedModule
   ],
-  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent],
-  entryComponents: [],
+  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent, StudentVerificationComponent,StudentVerificationModalComponent],
+  entryComponents: [StudentVerificationModalComponent],
 })
 export class GradeMasterModule { }
