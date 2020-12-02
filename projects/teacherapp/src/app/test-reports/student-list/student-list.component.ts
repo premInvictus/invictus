@@ -7,6 +7,14 @@ import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe,TitleCasePipe } from '@angular/common';
 
+import {
+  GridOption, Column, AngularGridInstance, Grouping, Aggregators,
+  FieldType,
+  Filters,
+  Formatters,
+  DelimiterType,
+  FileType
+} from 'angular-slickgrid';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import * as Excel from 'exceljs/dist/exceljs';
@@ -17,16 +25,17 @@ declare var require;
 const jsPDF = require('jspdf');
 import 'jspdf-autotable';
 
+
 @Component({
-  selector: 'app-report-correction',
-  templateUrl: './report-correction.component.html',
-  styleUrls: ['./report-correction.component.css']
+  selector: 'app-student-list',
+  templateUrl: './student-list.component.html',
+  styleUrls: ['./student-list.component.css']
 })
-export class ReportCorrectionComponent implements OnInit {
+export class StudentListComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
-  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',action:'Action'};
-  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob','action'];
+  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB'};
+  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob'];
   firstForm: FormGroup;
   rollNoForm: FormGroup;
   disableApiCall = false;
@@ -40,6 +49,10 @@ export class ReportCorrectionComponent implements OnInit {
   finalArray: any[] = [];
   class_id: any;
   section_id: any;
+  boardArray: any[] = [
+    { id: 0, name: 'Board' },
+    { id: 1, name: 'Non-Board' },
+  ];
   @ViewChild(MatSort) sort: MatSort;
 
   reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
@@ -200,6 +213,7 @@ export class ReportCorrectionComponent implements OnInit {
         }
       );
   }
+  getMasterStudentDetail
   fetchDetails() {
     this.firstForm.patchValue({
       'syl_class_id': this.class_id,
@@ -237,8 +251,7 @@ export class ReportCorrectionComponent implements OnInit {
                 father_name: new CapitalizePipe().transform(item.father_name),
                 mother_name: new CapitalizePipe().transform(item.mother_name),
                 upd_dob: new DatePipe('en-in').transform(new Date(item.upd_dob), 'd-MMM-y'),
-                active_parent_no:item.active_parent == 'F' ? item.father_contact_no : item.mother_contact_no,
-                action:item
+                active_parent_no:item.active_parent == 'F' ? item.father_contact_no : item.mother_contact_no
               });
               counter++;
             }

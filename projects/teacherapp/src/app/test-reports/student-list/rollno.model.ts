@@ -7,6 +7,5 @@ export interface Element {
 	upd_dob:any;
 	active_parent_no:any,
 	class_sec:any,
-	r_rollno:number,
-	action:any
+	r_rollno:number
 } 

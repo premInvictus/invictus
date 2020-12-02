@@ -11,6 +11,8 @@ import { RemarksEntryComponent } from './remarks-entry/remarks-entry.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 import { MarksInputComponent } from './marks-input/marks-input.component';
 import { ResultEntryComponent } from './result-entry/result-entry.component';
+import { StudentVerificationComponent } from './student-verification/student-verification.component';
+
 
 const routes: Routes = [
 	{
@@ -42,6 +44,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'result-entry', component: ResultEntryComponent
+	},
+	{
+		path: 'student-verification', component: StudentVerificationComponent
 	},
 ];
 
