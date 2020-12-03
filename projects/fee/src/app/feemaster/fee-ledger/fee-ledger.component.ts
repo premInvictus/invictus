@@ -731,7 +731,8 @@ export class FeeLedgerComponent implements OnInit {
 			data: {
 				invoiceNo: item.flgr_inv_id,
 				edit: edit,
-				paidStatus: item.inv_paid_status
+				paidStatus: item.inv_paid_status,
+				fromModel: true
 			},
 			hasBackdrop: true
 		});
@@ -1044,6 +1045,10 @@ export class FeeLedgerComponent implements OnInit {
 
 	getShowLess(i) {
 		this.FEE_LEDGER_ELEMENT[i]['showMore'] = false;
+	}
+
+	isExistUserAccessMenu(mod_id) {
+		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
 
 }

@@ -40,14 +40,14 @@
           <table style="width:100%;" id="tablepdf">
             <tr>
               <td style="padding: 0px;width:50%">
-                <table #tablecmp
+                <table #tablecmp id="tablecmp"
                   class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height"  style="width:100%;">
                   <thead>
                     <tr>
                       <th width="18%">Date</th>
                       <th width="47%">Particulars</th>
                       <th width="20%">Folio</th>
-                      <th width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th>
+                      <th width="15%">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -128,7 +128,7 @@
                 </table>
               </td>
               <td style="padding:0px;width:50%">
-                <table #tablecmp1
+                <table #tablecmp1 id="tablecmp1"
                   class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height"  style="width:100%;">
                   <thead>
 
@@ -136,7 +136,7 @@
                       <th width="18%">Date</th>
                       <th width="47%">Particulars</th>
                       <th width="20%">Folio</th>
-                      <th width="15%">Amount (<i class="fas fa-rupee-sign font-size-14 m-lr-2"></i>)</th>
+                      <th width="15%">Amount (₹)</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -227,5 +227,5 @@
     </div>
   </div>
 </div>
-<!-- <div #dummydiv [hidden]="!showExcel">
-</div> -->
+<div #dummydiv [hidden]="!showExcel">
+</div>

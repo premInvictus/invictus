@@ -606,4 +606,9 @@ export class FeeService {
 		this.service.startLoading();
 		return this.http.post(environment.apiInvUrl + '/location/getAll', value);
 	}
+
+	getDeletedReceiptReport(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDeletedFeeReceiptReport', value);
+	}
 }
