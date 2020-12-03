@@ -12,33 +12,12 @@
   <form [formGroup]="leaveForm">
     <div class="row margin-top-20">
       <div class="col-2 margin-top-20">
-        <mat-checkbox (change)="enableInput($event)" formControlName="upd_dob_check"></mat-checkbox>
-      </div>
-      <div class="col-5">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>DOB</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="upd_dob" required>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-      <div class="col-5" *ngIf="leaveForm.value.upd_dob_check">
-        <mat-form-field appearance="outline" class="form-field">
-          <mat-label>DOB</mat-label>
-          <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="upd_dob_change">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="row margin-top-20">
-      <div class="col-2 margin-top-20">
-        <mat-checkbox (change)="enableInput($event)" formControlName="au_full_name_check"></mat-checkbox>
+        <mat-checkbox formControlName="au_full_name_check"></mat-checkbox>
       </div>
       <div class="col-5">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Name</mat-label>
-          <input matInput placeholder="Name" formControlName="au_full_name">
+          <input matInput placeholder="Name" formControlName="au_full_name" readonly>
         </mat-form-field>
       </div>
       <div class="col-5" *ngIf="leaveForm.value.au_full_name_check">
@@ -50,12 +29,12 @@
     </div>
     <div class="row margin-top-20">
       <div class="col-2 margin-top-20">
-        <mat-checkbox (change)="enableInput($event)" formControlName="father_name_check"></mat-checkbox>
+        <mat-checkbox formControlName="father_name_check"></mat-checkbox>
       </div>
       <div class="col-5">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Father Name</mat-label>
-          <input matInput placeholder="Father Name" formControlName="father_name">
+          <input matInput placeholder="Father Name" formControlName="father_name" readonly>
         </mat-form-field>
       </div>
       <div class="col-5" *ngIf="leaveForm.value.father_name_check">
@@ -67,18 +46,39 @@
     </div>
     <div class="row margin-top-20">
       <div class="col-2 margin-top-20">
-        <mat-checkbox (change)="enableInput($event)" formControlName="mother_name_check"></mat-checkbox>
+        <mat-checkbox formControlName="mother_name_check"></mat-checkbox>
       </div>
       <div class="col-5">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Mother Name</mat-label>
-          <input matInput placeholder="Mother Name" formControlName="mother_name">
+          <input matInput placeholder="Mother Name" formControlName="mother_name" readonly>
         </mat-form-field>
       </div>
       <div class="col-5" *ngIf="leaveForm.value.mother_name_check">
         <mat-form-field appearance="outline" class="form-field">
           <mat-label>Mother Name</mat-label>
           <input matInput placeholder="Mother Name" formControlName="mother_name_change">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row margin-top-20">
+      <div class="col-2 margin-top-20">
+        <mat-checkbox formControlName="upd_dob_check"></mat-checkbox>
+      </div>
+      <div class="col-5">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>DOB</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="upd_dob" readonly>
+          <mat-datepicker-toggle matSuffix [for]="picker" ></mat-datepicker-toggle>
+          <mat-datepicker #picker disabled></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="col-5" *ngIf="leaveForm.value.upd_dob_check">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>DOB</mat-label>
+          <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="upd_dob_change">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
     </div>

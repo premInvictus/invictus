@@ -26,14 +26,14 @@ import 'jspdf-autotable';
 export class StudentVerificationComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
-  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',action:'Action'};
-  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob','action'];
+  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',action:'Action',correction:'Correction'};
+  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob','correction','action'];
   firstForm: FormGroup;
   rollNoForm: FormGroup;
   disableApiCall = false;
-  classArray: any[];
-  sectionArray: any[];
-  studentArray: any[];
+  classArray: any[]=[];
+  sectionArray: any[]=[];
+  studentArray: any[]=[];
   currentUser: any;
   session: any;
   ELEMENT_DATA: Element[] = [];
@@ -211,6 +211,29 @@ export class StudentVerificationComponent implements OnInit {
         }
       );
   }
+  getStudentVerification(){
+    let loginarr = [];
+    const param :any = {};
+    if(this.studentArray.length > 0){
+      this.studentArray.forEach(element => {
+        loginarr.push(element.au_login_id);
+      });
+    }
+    param['au_login_id'] = loginarr;
+    this.examService.getStudentVerification(param).subscribe((result2: any) => {
+      if (result2.status === 'ok') {
+        this.ELEMENT_DATA.forEach(element => {
+          const tdata = result2.data.find(e => e.esv_au_login_id == element.action.au_login_id);
+          if(tdata) {
+            element.correction = tdata.esv_correction;
+          }
+        });
+        console.log('this.ELEMENT_DATA',this.ELEMENT_DATA);
+        this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+        this.rollNoDataSource.sort = this.sort;
+      }
+    });
+  }
   fetchDetails() {
     this.firstForm.patchValue({
       'syl_class_id': this.class_id,
@@ -249,13 +272,15 @@ export class StudentVerificationComponent implements OnInit {
                 mother_name: new CapitalizePipe().transform(item.mother_name),
                 upd_dob: new DatePipe('en-in').transform(new Date(item.upd_dob), 'd-MMM-y'),
                 active_parent_no:item.active_parent == 'F' ? item.father_contact_no : item.mother_contact_no,
-                action:item
+                action:item,
+                correction:''
               });
               counter++;
             }
             this.ELEMENT_DATA.sort((a, b) => a.r_rollno < b.r_rollno ? -1 : a.r_rollno > b.r_rollno ? 1 : 0)
             this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
             this.rollNoDataSource.sort = this.sort;
+            this.getStudentVerification();
           } else {
             this.studentArray = [];
           }
@@ -264,14 +289,17 @@ export class StudentVerificationComponent implements OnInit {
   }
 
   exportAsExcel() {
+    let notExport:string[] = ['action'];
 		let reportType: any = '';
 		let reportType2: any = '';
     const columns: any = [];
     this.displayedColumns.forEach(element => {
-      columns.push({
-        key: element,
-        width: this.checkWidth(element, this.displayedColumns_heading[element])
-      });
+      if(notExport.indexOf(element) == -1) {
+        columns.push({
+          key: element,
+          width: this.checkWidth(element, this.displayedColumns_heading[element])
+        });
+      }
     });
 		reportType = new TitleCasePipe().transform('student_list: ' + this.sessionName);
     let reportType1 = new TitleCasePipe().transform('Student List: ' + this.sessionName);
@@ -288,7 +316,9 @@ export class StudentVerificationComponent implements OnInit {
     worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
     this.displayedColumns.forEach((element,index) => {
       console.log('index',index)
-      worksheet.getCell(this.alphabetJSON[index+1]+'4').value = this.displayedColumns_heading[element];
+      if(notExport.indexOf(element) == -1) {
+        worksheet.getCell(this.alphabetJSON[index+1]+'4').value = this.displayedColumns_heading[element];
+      }
     });
 		worksheet.columns = columns;
     this.length = worksheet._rows.length;
@@ -297,7 +327,9 @@ export class StudentVerificationComponent implements OnInit {
 			const obj: any = {};
       this.length++;
       this.displayedColumns.forEach((element,index) => {
-        worksheet.getCell(this.alphabetJSON[index+1]+this.length).value = dety[element];
+        if(notExport.indexOf(element) == -1) {
+          worksheet.getCell(this.alphabetJSON[index+1]+this.length).value = dety[element];
+        }
       });
 			worksheet.addRow(obj);
     }

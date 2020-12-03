@@ -8,5 +8,6 @@ export interface Element {
 	active_parent_no:any,
 	class_sec:any,
 	r_rollno:number,
-	action:any
+	action:any,
+	correction:any;
 } 

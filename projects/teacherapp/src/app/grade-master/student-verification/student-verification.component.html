@@ -96,6 +96,12 @@
                     {{element.upd_dob}}
                 </td>
               </ng-container>
+              <ng-container matColumnDef="correction">
+                <th mat-header-cell *matHeaderCellDef style="width:10%" mat-sort-header>Correction </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.correction}}
+                </td>
+              </ng-container>
               <ng-container matColumnDef="action">
                 <th mat-header-cell *matHeaderCellDef style="width:10%" mat-sort-header>Action </th>
                 <td mat-cell *matCellDef="let element">
