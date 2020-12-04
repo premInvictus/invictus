@@ -209,6 +209,14 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/gradeMaster/getRemarksEntryStudent', value);
 	}
+	insertStudentVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertStudentVerification', value);
+	}
+	getStudentVerification(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getStudentVerification', value);
+	}
 }
 
 
