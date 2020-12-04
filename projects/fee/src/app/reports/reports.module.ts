@@ -21,7 +21,7 @@ import { ChequeclearanceReportComponent } from './reports2/chequeclearance-repor
 import { SecurityDepositReportComponent } from './reports2/security-deposit-report/security-deposit-report.component';
 import { TransportReportComponent } from './reports2/transport-report/transport-report.component';
 import { DropoutReportComponent } from './reports2/drop-out-report/drop-out-report.component';
-
+import { DeletedReceiptReportComponent } from './reports2/deleted-receipt-report/deleted-receipt-report.component';
 
 @NgModule({
 	imports: [
@@ -36,7 +36,7 @@ import { DropoutReportComponent } from './reports2/drop-out-report/drop-out-repo
 		CollectionReportComponent, OutstandingReportComponent, FeeLedgerReportComponent,
 		DeletedFeetransReportComponent, FeeadjReportComponent, FeeconReportComponent,
 		MissingFeeinvReportComponent, FeestrucReportComponent, ChequeclearanceReportComponent,
-		SecurityDepositReportComponent, TransportReportComponent,DropoutReportComponent],
+		SecurityDepositReportComponent, TransportReportComponent,DropoutReportComponent,DeletedReceiptReportComponent],
 	entryComponents: [ReportFilterComponent, ReportSortComponent],
 	providers: [TranslateService],
 })

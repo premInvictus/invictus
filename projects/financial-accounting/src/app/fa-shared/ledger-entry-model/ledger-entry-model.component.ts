@@ -12,6 +12,7 @@ import html2canvas from 'html2canvas';
 import 'jspdf-autotable';
 import { TitleCasePipe, DatePipe } from '@angular/common';
 import { ErpCommonService } from 'src/app/_services';
+import * as $ from 'jquery';
 @Component({
   selector: 'app-ledger-entry-model',
   templateUrl: './ledger-entry-model.component.html',
@@ -39,6 +40,9 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   @Input() param: any;
   closingDate:any;
   showExcel= false;
+
+
+  showExcelDiv = false;
   partialPaymentStatus = 1;
   @ViewChildren('tablecmp') tablecmp:QueryList<ElementRef>;
   @ViewChildren('tablecmp1') tablecmp1:QueryList<ElementRef>;
@@ -264,18 +268,84 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   // }
 
   downloadExcel(index) {
-    this.showExcel= true;
-    this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp.toArray()[0].nativeElement);
-    this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp1.toArray()[0].nativeElement);
+    //  this.showExcelDiv= true;
+    //console.log($("#tablepdf").html());
+    // console.log(this.tablecmp.toArray()[0].nativeElement)
+    // console.log(document.getElementById('tablecmp'))
+    // this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp.toArray()[0].nativeElement);
+    // this.dummydiv.toArray()[0].nativeElement.appendChild(this.tablecmp1.toArray()[0].nativeElement);
     
+    var tablecmp = [];
+var $headers = $("#tablecmp th");
+var $rows = $("#tablecmp tbody tr").each(function(index) {
+  var cells = $(this).find("td");
+  tablecmp[index] = {};
+  cells.each(function(cellIndex) {
+  if($(this).nodeType === Node.COMMENT_NODE) {
+      $(this).remove();
+  }
+    tablecmp[index][$($headers[cellIndex]).html()] = $(this).text();
+  });    
+});
+
+var tablecmp1 = [];
+var $headers = $("#tablecmp1 th");
+var $rows = $("#tablecmp1 tbody tr").each(function(index) {
+  var cells = $(this).find("td");
+  tablecmp1[index] = {};
+  if($(this).nodeType === Node.COMMENT_NODE) {
+    $(this).remove();
+}
+  cells.each(function(cellIndex) {
+    tablecmp1[index][$($headers[cellIndex]).html()] = $(this).text();
+  });    
+});
+
+// Let's put this in the object like you want and convert to JSON (Note: jQuery will also do this for you on the Ajax request)
+console.log(tablecmp1);
+
+    // const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(document.getElementById('tablecmp'));
+    // const ws1: XLSX.WorkSheet=XLSX.utils.table_to_sheet(document.getElementById('tablecmp1'));
+    // let a= XLSX.utils.sheet_to_json(ws);
+    // let b= XLSX.utils.sheet_to_json(ws1);
     
-    const ws: XLSX.WorkSheet=XLSX.utils.table_to_sheet(this.dummydiv.toArray()[0].nativeElement);
+    // console.log(b[0]);
+    for (var i=0; i<tablecmp.length;i++) {
+      tablecmp[i]['CDate'] =tablecmp1[i]['Date'];
+      tablecmp[i]['CParticulars'] = tablecmp1[i]['Particulars'];
+      tablecmp[i]['CFolio'] = tablecmp1[i]['Folio'];
+      tablecmp[i]['CAmount (₹)'] = tablecmp1[i]['Amount (₹)'];
+    }
+    // console.log('as--------------',a[0])
+    // let c=          a.concat(b);
+    //let cs = XLSX.utils.json_to_sheet(tablecmp);
+    
+    let thirdArray = (tablecmp);
+    console.log('tablecmp', tablecmp,thirdArray);
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.utils.sheet_add_json(wb.Sheets.sheet1,
+      [
+        {note: "This is a note"},
+      ],
+      {
+        header: ["note"],
+        skipHeader:true,
+        origin: "A1"
+      }
+    );
+    const cs: XLSX.WorkSheet = XLSX.utils.sheet_add_json(wb.Sheets.sheet1,thirdArray);
+    cs["!cols"] = [{width:20},{width:20},{width:20},{width:20},{width:20},{width:20},{width:20},{width:20}];
     
+    
+    XLSX.utils.book_append_sheet(wb, cs, 'Sheet1');
+
+    // this.showExcel= false;
     /* save to file */
+    
+   
+    
     XLSX.writeFile(wb, 'SheetJS.xlsx');
-    this.showExcel= false;
+    
   }
   
   downloadPdf(accountName) {

@@ -36,21 +36,21 @@
           <!-- <button *ngIf="actionFlag.receiptmodification" mat-raised-button class="btn-primary btn-receiptMod"
             (click)="openReciptModificationDialog()">Receipt Modification</button> -->
           <button *ngIf="actionFlag.attach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openAttachDialog(fetchInvId())">Attach</button>
+            (click)="openAttachDialog(fetchInvId())" *ngIf="isExistUserAccessMenu('766')">Attach</button>
           <button *ngIf="actionFlag.detach" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openDetachReceiptDialog(fetchInvId())">Detach</button>
+            (click)="openDetachReceiptDialog(fetchInvId())"  *ngIf="isExistUserAccessMenu('767')">Detach</button>
           <button *ngIf="actionFlag.edit" mat-raised-button class="btn-primary btn-edit-inv btn-spacer"
-            (click)="openDialog1(true)">Edit Invoice</button>
+            (click)="openDialog1(true)"  *ngIf="isExistUserAccessMenu('768')">Edit Invoice</button>
           <button *ngIf="actionFlag.consolidate" mat-raised-button class="btn-primary btn-consolidate btn-spacer"
-            (click)="openConsolidateDialog({})">Consolidate</button>
+            (click)="openConsolidateDialog({})"  *ngIf="isExistUserAccessMenu('769')">Consolidate</button>
           <button *ngIf="actionFlag.unconsolidate" mat-raised-button class="btn-primary btn-unconsolidate btn-spacer"
-            (click)="openUnConsolidateDialog(fetchInvId())">Un-Consolidate</button>
+            (click)="openUnConsolidateDialog(fetchInvId())"  *ngIf="isExistUserAccessMenu('770')">Un-Consolidate</button>
           <button *ngIf="actionFlag.recalculate" mat-raised-button class="btn-primary recalulate-invoice-btn btn-spacer"
-            (click)="openRecalculateDialog()">Re-calutate</button>
+            (click)="openRecalculateDialog()"  *ngIf="isExistUserAccessMenu('771')">Re-calutate</button>
           <button *ngIf="actionFlag.deleteinvoice" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
-            (click)="openDeleteDialog(fetchInvId())">Delete Invoice</button>
+            (click)="openDeleteDialog(fetchInvId())"  *ngIf="isExistUserAccessMenu('772')">Delete Invoice</button>
           <button *ngIf="actionFlag.deletereceipt" mat-raised-button class="btn-primary btn-delete-rec btn-spacer"
-            (click)="openDeleteReciptDialog(fetchRecId())">Delete Receipt</button>
+            (click)="openDeleteReciptDialog(fetchRecId())"  *ngIf="isExistUserAccessMenu('773')">Delete Receipt</button>
         </div>
         <div class="row">
           <div class="col-12">
