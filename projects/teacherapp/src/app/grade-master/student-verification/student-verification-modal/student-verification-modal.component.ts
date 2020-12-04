@@ -91,24 +91,41 @@ export class StudentVerificationModalComponent implements OnInit {
     const param:any = {};
     param['au_login_id'] = this.data.au_login_id;
     param['formvalue'] = JSON.stringify(this.leaveForm.value);
-    const correction:any = {};
+    let correction:any[] = [];
     Object.keys(this.leaveForm.value).forEach(key => {
       if(key.indexOf('change') != -1) {
         if(this.leaveForm.value[key]) {
           if(moment.isMoment(this.leaveForm.value[key])) {
-            correction[this.changeMap[key]] = moment(this.leaveForm.value[key]).format('D-MMM-YYYY');
+            correction.push(this.changeMap[key]+':'+ moment(this.leaveForm.value[key]).format('D-MMM-YYYY'));
+            //correction[this.changeMap[key]] = moment(this.leaveForm.value[key]).format('D-MMM-YYYY');
           } else {
-            correction[this.changeMap[key]] = this.leaveForm.value[key];
+            correction.push(this.changeMap[key]+':'+ this.leaveForm.value[key])
+            //correction[this.changeMap[key]] = this.leaveForm.value[key];
           }
         }
       }
     })
-    param['correction'] = JSON.stringify(correction);
+    param['correction'] = correction.join(', ');
+    //param['correction'] = correction;
     console.log('param',param);
     this.examService.insertStudentVerification(param).subscribe((result2: any) => {
       if (result2.status === 'ok') {
         this.common.showSuccessErrorMessage(result2.message,'success');
-        this.closeDialog();
+        this.dialogRef.close({reload:true});
+      } else {
+        this.common.showSuccessErrorMessage(result2.message,'error');
+      }
+    });
+  }
+  reset(){
+    const param:any = {};
+    param['au_login_id'] = this.data.au_login_id;
+    param['formvalue'] = '';
+    param['correction'] = '';
+    this.examService.insertStudentVerification(param).subscribe((result2: any) => {
+      if (result2.status === 'ok') {
+        this.common.showSuccessErrorMessage(result2.message,'success');
+        this.dialogRef.close({reload:true});
       } else {
         this.common.showSuccessErrorMessage(result2.message,'error');
       }

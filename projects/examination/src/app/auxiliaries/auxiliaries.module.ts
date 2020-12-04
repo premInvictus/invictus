@@ -16,6 +16,7 @@ import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.componen
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
 import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pagesetup.component';
+import { StudentVerificationComponent } from './student-verification/student-verification.component';
 
 @NgModule({
 	imports: [
@@ -25,7 +26,7 @@ import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pag
 		AngularSlickgridModule.forRoot()
 	],
 	declarations: [GradecardPrintingComponent, AdditionalSubjectComponent, CbseMarksAnalysisComponent,
-		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent, BmiCalculatorComponent, CommonAttendanceComponent, ExamAchievementComponent, GradecardPagesetupComponent],
+		RollnoAllotmentComponent, MarkAttendanceComponent, CbseMarksUploadDialog, ViewGradecardDialogComponent, MarkAttendanceThemeTwoComponent, BmiCalculatorComponent, CommonAttendanceComponent, ExamAchievementComponent, GradecardPagesetupComponent, StudentVerificationComponent],
 	entryComponents: [
 		CbseMarksUploadDialog, ViewGradecardDialogComponent, GradecardPagesetupComponent
 	],

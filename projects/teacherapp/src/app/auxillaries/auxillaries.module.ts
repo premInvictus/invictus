@@ -11,8 +11,6 @@ import { SharedModule } from '../shared-module/share-module.module';
 import { TeacherTimetableComponent } from './teacher-timetable/teacher-timetable.component';
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
-import { ReportCorrectionComponent } from './report-correction/report-correction.component';
-import { StudentVerificationModalComponent } from './report-correction/student-verification-modal/student-verification-modal.component';
 
 @NgModule({
 	imports: [
@@ -32,9 +30,7 @@ import { StudentVerificationModalComponent } from './report-correction/student-v
 	declarations: [
 		TeacherTimetableComponent,
 		BmiCalculatorComponent,
-		ExamAchievementComponent,
-		ReportCorrectionComponent,
-		StudentVerificationModalComponent
+		ExamAchievementComponent
 	],
 	entryComponents: [],
 	schemas: [CUSTOM_ELEMENTS_SCHEMA],
