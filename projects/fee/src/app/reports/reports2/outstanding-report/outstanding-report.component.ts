@@ -2117,6 +2117,7 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'feedue') {
+				this.gridOptions.rowHeight = 65;
 				value.from_date = new DatePipe('en-in').transform(value.from_date, 'yyyy-MM-dd');
 				const collectionJSON: any = {
 					'admission_no': '',
@@ -2160,10 +2161,13 @@ export class OutstandingReportComponent implements OnInit {
 								&& ((schoolArray.indexOf(repoArray[bi]['school_prefix']) ) == -1)) {
 								
 								schoolArray.push(repoArray[bi]['school_prefix']);
+								if (repoArray[bi]['fee_head_data']) {
 								for (var ji=0; ji< repoArray[bi]['fee_head_data'].length;ji++) {
+									if (typeof repoArray[bi]['fee_head_data'][ji] == 'object') {
 									repoArray[bi]['fee_head_data'][ji]['fh_prefix'] = repoArray[bi]['school_prefix'];
+									}
 									tempHeadArray.push(repoArray[bi]['fee_head_data'][ji]);
-								}
+								}}
 								
 							}
 						}
@@ -2395,7 +2399,9 @@ export class OutstandingReportComponent implements OnInit {
 									let tot = 0;
 									stuFeeHeadArray = [];
 								for(let fij=0; fij < repoArray[Number(keys)]['fee_head_data'].length;fij++) {
-									repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									if (typeof repoArray[Number(keys)]['fee_head_data'][fij] == 'object') {
+										repoArray[Number(keys)]['fee_head_data'][fij]['fh_prefix'] = repoArray[Number(keys)]['school_prefix'];
+									}
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 									
 								}
@@ -2476,7 +2482,9 @@ export class OutstandingReportComponent implements OnInit {
 									}
 								}
 								i++;
-								this.dataset.push(obj);
+								if(Object.keys(obj).length > 0) {
+									this.dataset.push(obj);
+								}
 							});
 							this.columnDefinitions.push(
 								// {

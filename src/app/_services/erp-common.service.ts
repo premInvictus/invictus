@@ -717,6 +717,15 @@ export class ErpCommonService {
 		return this.http.post(environment.apiFaUrl + '/ledger/getTrialBalance', value);
 	}
 
+	getVoucherState(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/getAllVoucherEntry', value);
+	}
+
+	updateVoucherEntry(value) {
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/updateVoucherEntry', value);
+	}
+
 	updateClosingBalance(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/charts-of-account/updateClosingBalance', value);
