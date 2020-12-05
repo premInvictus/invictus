@@ -10,7 +10,7 @@ import { Element, QUESTIONElement, ReviewElement, ESSAYQUESTIONElement } from '.
 import { SelectionModel } from '@angular/cdk/collections';
 import { AddInstructionComponent } from '../../shared-module/add-instruction/add-instruction.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
-//import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
+//import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser'; 
 import { style, animate, transition, trigger } from '@angular/animations';
 //import { Http } from '@angular/http';
 import {tabJSON} from './express-tab-data';
@@ -78,7 +78,7 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		short: { tf_qt_id: 1, tf_qst_id: 10 },
 		veryshort: { tf_qt_id: 1, tf_qst_id: 9 },
 		long: { tf_qt_id: 1, tf_qst_id: 11 },
-		veryling: { tf_qt_id: 1, tf_qst_id: 12 },
+		verylong: { tf_qt_id: 1, tf_qst_id: 12 },
 		essay: { tf_qt_id: 3, tf_qst_id: 0 }
 	};
 	allTabSelectedQuestion: any = {
@@ -1622,11 +1622,14 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 	}
 
 	getFillInTheBlankQuestion() {
+		console.log('getFillInTheBlankQuestion');
+		console.log(this.arrayTabSelectedQuestion);
 		this.currentSelectedTab = 'fill';
 		this.questionsArray = [];
 		const param: any = this.setParam(6);
 		if (this.express_form_one.value.qp_sub_id) {
 			if (this.arrayTabQuestions[this.currentSelectedSubIndex]['fill'].length < 1) {
+
 				this.qelementService.getQuestionsInTemplate(param).subscribe(
 					(result: any) => {
 						if (result && result.status === 'ok') {
@@ -2034,22 +2037,40 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 			});
 			if(this.qp_id){
 				let subcount=0;
+				// const qstmapping:any={
+				// 	'1':'mcq',
+				// 	'2':'mcqmr',
+				// 	'3':'matrix',
+				// 	'4':'mtf',
+				// 	'5':'tf',
+				// 	'6':'single',
+				// 	'7':'double',
+				// 	'8':'matrix45',
+				// 	'9':'identify',
+				// 	'10':'oneline',
+				// 	'11':'fill',
+				// 	'12':'short',
+				// 	'13':'veryshort',
+				// 	'14':'long',
+				// 	'15':'verylong',
+				// 	'16':'essay'
+				// };
 				const qstmapping:any={
 					'1':'mcq',
 					'2':'mcqmr',
-					'3':'matrix',
+					'3':'tf',
 					'4':'mtf',
-					'5':'tf',
-					'6':'single',
-					'7':'double',
-					'8':'matrix45',
-					'9':'identify',
-					'10':'oneline',
-					'11':'fill',
-					'12':'short',
-					'13':'veryshort',
-					'14':'long',
-					'15':'verylong',
+					'5':'matrix',
+					'7':'identify',
+					'8':'oneline',
+					'6':'fill',
+					'10':'short',
+					'9':'veryshort',
+					'11':'long',
+					'12':'verylong',
+					'13':'matrix45',
+					'14':'single',
+					'15':'double',
 					'16':'essay'
 				};
 				const updateQstset= new Set();
@@ -2158,11 +2179,14 @@ export class ExpressPaperSetupComponent implements OnInit, AfterViewInit, AfterV
 		let ninthId_2 = 0;
 		let id9 = 0;
 		let id9_2 = 0;
+		console.log('this.arrayTabSelectedQuestion',this.arrayTabSelectedQuestion);
 		for (let aIndex = 0; aIndex < this.arrayTabSelectedQuestion.length; aIndex++) {
 			// tslint:disable-next-line:forin
 			for (const key in this.arrayTabSelectedQuestion[aIndex]) {
 				if (this.arrayTabSelectedQuestion[aIndex][key].length > 0) {
 					this.qstfilterArray.push(this.tabkeyvalue[key]);
+					console.log('key',key);
+					console.log(this.qstfilterArray)
 					for (const sindex of this.arrayTabSelectedQuestion[aIndex][key]) {
 						let id13;
 						let id13_2;
