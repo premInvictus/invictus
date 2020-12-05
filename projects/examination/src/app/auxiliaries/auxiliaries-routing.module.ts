@@ -7,6 +7,7 @@ import { RollnoAllotmentComponent } from './rollno-allotment/rollno-allotment.co
 import { BmiCalculatorComponent } from './bmi-calculator/bmi-calculator.component';
 import { CommonAttendanceComponent } from './common-attendance/common-attendance.component';
 import { ExamAchievementComponent } from './exam-achievement/exam-achievement.component';
+import { StudentVerificationComponent } from './student-verification/student-verification.component';
 
 const routes: Routes = [
 	{
@@ -29,6 +30,9 @@ const routes: Routes = [
 	},
 	{
 		path: 'exam-achievement', component: ExamAchievementComponent
+	},
+	{
+		path: 'student-verification', component: StudentVerificationComponent
 	}
 ];
 

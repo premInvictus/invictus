@@ -6,7 +6,7 @@ import { Element } from './rollno.model';
 import { MatSort, MatTableDataSource } from '@angular/material';
 import { CapitalizePipe } from '../../../../../examination/src/app/_pipes';
 import { DatePipe,TitleCasePipe } from '@angular/common';
-import { StudentVerificationModalComponent } from './student-verification-modal/student-verification-modal.component'
+// import { StudentVerificationModalComponent } from './student-verification-modal/student-verification-modal.component'
 
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
@@ -26,8 +26,8 @@ import 'jspdf-autotable';
 export class StudentVerificationComponent implements OnInit {
   defaultFlag = false;
   finalDivFlag = true;
-  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',action:'Action',correction:'Correction'};
-  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob','correction','action'];
+  displayedColumns_heading: any = {sr_no:'Sr. No.',au_admission_no:'Adm. No.',r_rollno:'Roll No.', au_full_name:'Name', class_sec:'Class-Section', father_name:'Father\'s Name', mother_name:'Mother\'s Name',active_parent_no:'Active Parent Contact No.',upd_dob:'DOB',correction:'Correction'};
+  displayedColumns: string[] = ['r_rollno', 'au_full_name', 'au_admission_no', 'class_sec', 'father_name', 'mother_name','active_parent_no','upd_dob','correction'];
   firstForm: FormGroup;
   rollNoForm: FormGroup;
   disableApiCall = false;
@@ -114,7 +114,6 @@ export class StudentVerificationComponent implements OnInit {
     this.getSchool();
     this.getSession();
     this.getClass();
-    this.ctForClass();
   }
 
   ngAfterViewInit() {
@@ -127,19 +126,19 @@ export class StudentVerificationComponent implements OnInit {
       syl_section_id: ''
     });
   }
-  openModal(item) {
-		const dialogRef = this.dialog.open(StudentVerificationModalComponent, {
-			width: '30%',
-			height: '55%',
-			data: item
-		});
-		dialogRef.afterClosed().subscribe(dresult => {
-      if(dresult && dresult.reload) {
-        this.getStudentVerification();
-      }
-			console.log(dresult);
-		});
-	}
+  // openModal(item) {
+	// 	const dialogRef = this.dialog.open(StudentVerificationModalComponent, {
+	// 		width: '30%',
+	// 		height: '55%',
+	// 		data: item
+	// 	});
+	// 	dialogRef.afterClosed().subscribe(dresult => {
+  //     if(dresult && dresult.reload) {
+  //       this.getStudentVerification();
+  //     }
+	// 		console.log(dresult);
+	// 	});
+	// }
   // get session year of the selected session
 	getSession() {
     this.erpCommonService.getSession().subscribe((result2: any) => {
@@ -168,18 +167,6 @@ export class StudentVerificationComponent implements OnInit {
     this.defaultFlag = false;
     this.finalDivFlag = true;
   }
-  ctForClass() {
-    this.examService.ctForClass({ uc_login_id: this.currentUser.login_id })
-      .subscribe(
-        (result: any) => {
-          if (result && result.status === 'ok') {
-            this.class_id = result.data[0].uc_class_id;
-            this.section_id = result.data[0].uc_sec_id;
-            this.getSectionsByClass();
-          }
-        }
-      );
-  }
   //  Get Class List function
   getClass() {
     this.sectionArray = [];
@@ -201,13 +188,12 @@ export class StudentVerificationComponent implements OnInit {
       'syl_section_id': ''
     });
     const sectionParam: any = {};
-    sectionParam.class_id = this.class_id;
+    sectionParam.class_id = this.firstForm.value.syl_class_id;
     this.smartService.getSectionsByClass(sectionParam)
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
             this.sectionArray = result.data;
-            this.fetchDetails();
           } else {
             this.sectionArray = [];
           }
@@ -238,19 +224,15 @@ export class StudentVerificationComponent implements OnInit {
     });
   }
   fetchDetails() {
-    this.firstForm.patchValue({
-      'syl_class_id': this.class_id,
-      'syl_section_id': this.section_id
-    });
     this.getClassByBoard();
     this.ELEMENT_DATA = [];
     this.rollNoDataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
     const studentParam: any = {};
-    studentParam.class_id = this.class_id;
-    studentParam.sec_id = this.section_id;
+    studentParam.class_id = this.firstForm.value.syl_class_id;
+    studentParam.sec_id = this.firstForm.value.syl_section_id;
     studentParam.enrollment_type = '4';
     studentParam.status = '1';
-    this.sisService.getMasterStudentDetail(studentParam)
+    this.sisService.getAllStudents(studentParam)
       .subscribe(
         (result: any) => {
           if (result && result.status === 'ok') {
@@ -469,3 +451,4 @@ export class StudentVerificationComponent implements OnInit {
 		}
 	}
 }
+
