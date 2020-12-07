@@ -461,22 +461,23 @@ export class MarksEntryComponent implements OnInit {
   }
 
   isClassTeacher(){
-    this.smartService.isClassTeacher({
-      teacher_id: this.currentUser.login_id,
-      class_id: this.paramform.value.eme_class_id,
-      sec_id: this.paramform.value.eme_sec_id
-    }).subscribe((result: any) => {
-      if (result && result.status === 'ok') {
-        console.log('result',result);
-        if(result.data[0]['uc_class_teacher'] == 1){
-          this.getSubjectsByClass1();
-        } else {
-          this.getSubjectsByClass();
-        }
-      } else {
-        this.getSubjectsByClass();
-      }
-    });
+    this.getSubjectsByClass();
+    // this.smartService.isClassTeacher({
+    //   teacher_id: this.currentUser.login_id,
+    //   class_id: this.paramform.value.eme_class_id,
+    //   sec_id: this.paramform.value.eme_sec_id
+    // }).subscribe((result: any) => {
+    //   if (result && result.status === 'ok') {
+    //     console.log('result',result);
+    //     if(result.data[0]['uc_class_teacher'] == 1){
+    //       this.getSubjectsByClass();
+    //     } else {
+    //       this.getSubjectsByClass();
+    //     }
+    //   } else {
+    //     this.getSubjectsByClass();
+    //   }
+    // });
   }
 
   getSubjectsByClass() {

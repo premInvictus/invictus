@@ -1,0 +1,13 @@
+.header > img {
+    height: 60px !important;
+    width: 60px !important;
+}.stu-image-div {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.coscholastic-grade span:not(:last-child):after {
+    content: ", ";
+  }
+  

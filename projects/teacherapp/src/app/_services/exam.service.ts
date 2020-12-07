@@ -217,6 +217,195 @@ export class ExamService {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/auxiliaries/getStudentVerification', value);
 	}
+
+
+
+
+
+	// copy from exam.service
+
+	getTermStudentAttendence2(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermStudentAttendence2', value);
+	}
+	getGradeCardMark(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getGradeCardMark', value);
+	}
+	getIsBoardClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/common/getIsBoardClass', value);
+	}
+	insertMarksAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertMarksAnalysis', value);
+	}
+	getMarksAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getMarksAnalysis', value);
+	}
+	getTopFiveSubjects(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopFiveSubjects', value);
+	}
+	getSubjectWiseAnalysis(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getSubjectWiseAnalysis', value);
+	}
+	lockUnlockGradeCard(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/lockUnlockGradeCard', value);
+	}
+	getClassGradeset(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassGradeset', value);
+	}
+	insertClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertClassTermGrade', value);
+	}
+	getGlobalSettingReplace(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSettingReplace', value);
+	}
+	updateGlobalSetting(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/updateGlobalSetting', value);
+	}
+
+	getTopTenDataPerSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTopTenDataPerSubject', value);
+	}
+	deleteClassTermGrade(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteClassTermGrade', value);
+	}
+	getDropdownGradeSet(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getDropdownGradeSet', value);
+	}
+	printGradecard(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/printGradecard', value);
+	}
+	getAdditionalSubjectForClass(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/getAdditionalSubjectForClass', value);
+	}
+	downloadMarkEntryTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/downloadMarkEntryTemplate', value);
+	}
+	uploadMarkEntryTemplate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/uploadMarkEntryTemplate', value);
+	}
+	addSubjectSubexamMapping(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addSubjectSubexamMapping', value);
+	}
+	sessionWisePerformance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/sessionWisePerformance', value);
+	}
+	yearWisePerformance(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/yearWisePerformance', value);
+	}
+	getStudentSubjects(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getStudentSubjects', value);
+	}
+	getClassStudentSubjects(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassStudentSubjects', value);
+	}
+	insertExamSubjectStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/insertExamSubjectStudent', value);
+	}
+	updateExamSubjectStudent(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/updateExamSubjectStudent', value);
+	}
+	getClassHighestAndAverage(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getClassHighestAndAverage', value);
+	}
+	getTermStudentAttendence(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermStudentAttendence', value);
+	}
+	getTermWorkingAndHoliday(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/auxiliaries/getTermWorkingAndHoliday', value);
+	}
+	getStudentAttendence(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getStudentAttendence', value);
+	}
+	insertClassTermDate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertClassTermDate', value);
+	}
+	getClassTermDate(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getClassTermDate', value);
+	}
+	getFailureList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getFailureList', value);
+	}
+
+	getComparativeList(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getComparativeList', value);
+	}
+	insertExamSexamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/insertExamSexamAlias', value);
+	}
+	getExamSexamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamSexamAlias', value);
+	}
+	getExamPerCumulativeSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeSubject', value);
+	}
+	getExamPerCumulativeExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/getExamPerCumulativeExam', value);
+	}
+	deleteExamAlias(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/deleteExamAlias', value);
+	}
+	addExamPerCumulativeSubject(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeSubject', value);
+	}
+	addExamPerCumulativeExam(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/setup/addExamPerCumulativeExam', value);
+	}
+	getSubmissionClasswise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getSubmissionClasswise', value);
+	}
+	getSubmissionTeacherwise(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getSubmissionTeacherwise', value);
+	}
+	updateStatusMarksInput(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/updateStatusMarksInput', value);
+	}
+	updateStatusRemark(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/marksEntry/updateStatusRemark', value);
+	}
 }
 
 
