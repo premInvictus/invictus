@@ -18,7 +18,9 @@ import { MarksRegisterComponent } from './marks-register/marks-register.componen
 import { ResultEntryComponent } from './result-entry/result-entry.component';
 import { StudentVerificationComponent } from './student-verification/student-verification.component';
 import { StudentVerificationModalComponent } from './student-verification/student-verification-modal/student-verification-modal.component';
-
+import { GradecardPrintingComponent} from './gradecard-printing/gradecard-printing.component';
+import { ViewGradecardDialogComponent } from './view-gradecard-dialog/view-gradecard-dialog.component';
+import { GradecardPagesetupComponent } from './gradecard-pagesetup/gradecard-pagesetup.component'
 
 @NgModule({
   imports: [
@@ -26,7 +28,7 @@ import { StudentVerificationModalComponent } from './student-verification/studen
     GradeMasterRoutingModule,
     SharedModule
   ],
-  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent, StudentVerificationComponent,StudentVerificationModalComponent],
-  entryComponents: [StudentVerificationModalComponent],
+  declarations: [MarksEntryComponent, MarksEntryPrimaryComponent, MarksEntrySecondaryComponent, MarksEntryFinalComponent, MarkAttendanceComponent, AdditionalSubjectComponent, RollnoAllotmentComponent, RemarksEntryComponent, CommonAttendanceComponent, MarkAttendanceThemeTwoComponent, MarksInputComponent, MarksRegisterComponent, ResultEntryComponent, StudentVerificationComponent,StudentVerificationModalComponent,GradecardPrintingComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent],
+  entryComponents: [StudentVerificationModalComponent,ViewGradecardDialogComponent,GradecardPagesetupComponent],
 })
 export class GradeMasterModule { }

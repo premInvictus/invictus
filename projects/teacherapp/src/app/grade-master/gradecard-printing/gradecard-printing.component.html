@@ -1,0 +1,200 @@
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="paramform">
+        <div class="row">
+          <div class="col-4 remove-col-padding-left margin-top-15">
+            <span class="font-size-24">Grade Card Printing</span>
+          </div>
+          <div class="col-8 remove-col-padding-right text-right">
+            <mat-form-field appearance="outline" class="form-field-150">
+              <mat-label>Class</mat-label>
+              <mat-select placeholder="Class" formControlName="eme_class_id"
+                (selectionChange)="getSectionsByClass();getClassTerm();" required disabled>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Section</mat-label>
+              <mat-select placeholder="Section" formControlName="eme_sec_id"
+                required disabled>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150">
+              <mat-label>Term</mat-label>
+              <mat-select placeholder="Term" formControlName="eme_term_id" (selectionChange)="getExamDetails();resetTableDiv();" required>
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of termsArray" [value]="item.id">{{item.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
+              <mat-label>Exam</mat-label>
+              <mat-select placeholder="Exam" formControlName="eme_exam_id"
+                (selectionChange)="resetTableDiv();getSubExam()">
+                <mat-option value="">Please select</mat-option>
+                <mat-option *ngFor="let item of examArray" [value]="item.exam_id">{{item.exam_name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="margin-left-15 form-field-150" *ngIf="paramform.value.eme_term_id != 'comulative'">
+              <mat-label>Sub-Exam</mat-label>
+              <mat-select placeholder="Sub-Exam" formControlName="eme_subexam_id" multiple
+                >
+                <mat-option *ngFor="let item of subexamArray" [value]="item.se_id">
+                  {{item.sexam_name | titlecase}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-raised-button class="btn-primary-100" style="margin-top: 10px; width: 100px !important;margin-left: 15px;" (click)="displayData()">Submit</button>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row" *ngIf="tableDivFlag">
+  <div class="col-12">
+    <mat-card>
+      <div class="row">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-6">
+              <mat-form-field appearance="legacy">
+                <input matInput (keyup)="applyFilter($event.target.value)">
+                <mat-icon matPrefix>filter_list</mat-icon>
+              </mat-form-field>
+            </div>
+            <div class="col-6 text-right" *ngIf="selection.selected.length > 0">
+              <button mat-button class="btn-success-purple text-capitalize"
+                (click)="openUnlockModal({}, '1')">Unlock</button>
+              <button mat-button class="btn-success-purple btn-spacer text-capitalize"
+                (click)="openLockModal({}, '1')">Lock</button>
+              <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+                (click)="printGradecard()">Print</button>
+              <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+              (click)="openPrintSetupDialog()">Print Setting</button>
+            </div>
+            <div class="col-6 text-right" *ngIf="selection.selected.length == 0">
+              <button mat-button class="btn-success-blue btn-spacer text-capitalize"
+              (click)="openPrintSetupDialog()">Print Setting</button>
+            </div>
+          </div>
+          <div class="row remove-top-margin">
+            <div class="col-12">
+              <!-- <table class="custom-table">
+                <thead>
+                  <tr class="custom-tr">
+                    <th class="custom-th text-center">Select</th>
+                    <th class="custom-th text-center">Admission No.</th>
+                    <th class="custom-th text-center">Student Name</th>
+                    <th class="custom-th text-center">Class</th>
+                    <th class="custom-th text-center">Status</th>
+                    <th class="custom-th text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="custom-td">
+                    <td class="custom-td text-left">
+                      <div class="margin-left-15">
+                        <mat-checkbox></mat-checkbox>
+                      </div>
+                    </td>
+                    <td class="custom-td text-center"><span class="font-size-14">125468</span></td>
+                    <td class="custom-td text-left"><span class="margin-left-15 font-size-14">Amit Kumar</span></td>
+                    <td class="custom-td text-center"><span class="font-size-14">XI-A</span></td>
+                    <td class="custom-td text-center font-size-14">Cleared</td>
+                    <td class="custom-td text-center font-size-14"><i class="fas fa-lock icon-purple"></i><span
+                        class="ver-line-divider margin-left-15"></span><i class="fas fa-eye icon-green" (click)="openGradeCardPrint()"></i><span
+                        class="margin-left-15 ver-line-divider"></span><i class="fas fa-print  icon-skyblue"></i></td>
+                  </tr>
+                </tbody>
+              </table> -->
+              <table mat-table [dataSource]="dataSource" class="table-100 text-center">
+
+                <!-- Checkbox Column -->
+                <ng-container matColumnDef="select">
+                  <th mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+                    </mat-checkbox>
+                    <!-- Select -->
+                  </th>
+                  <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+                    </mat-checkbox>
+                  </td>
+                </ng-container>
+
+                <!-- Position Column -->
+                <ng-container matColumnDef="au_admission_no">
+                  <th mat-header-cell *matHeaderCellDef> Admission No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.au_admission_no}} </td>
+                </ng-container>
+
+                <!-- Name Column -->
+                <ng-container matColumnDef="au_full_name">
+                  <th mat-header-cell *matHeaderCellDef> Student Name </th>
+                  <td mat-cell *matCellDef="let element" class="text-left"> {{element.au_full_name | titlecase}} </td>
+                </ng-container>
+
+                <!-- Weight Column -->
+                <ng-container matColumnDef="r_rollno">
+                  <th mat-header-cell *matHeaderCellDef> Roll No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.r_rollno}} </td>
+                </ng-container>
+
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="class_name">
+                  <th mat-header-cell *matHeaderCellDef> Class </th>
+                  <td mat-cell *matCellDef="let element"> {{element.class_name}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.status === '1' ? 'Cleared' : 'Uncleared' | titlecase}} </td>
+                </ng-container>
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let element">
+                    <span *ngIf="element.action.egl_lock_status === '1'"><i class="fas fa-lock icon-purple"
+                        (click)="openUnlockModal(element.action, '0')"></i><span
+                        class="ver-line-divider margin-left-15"></span></span>
+                    <span *ngIf="element.action.egl_lock_status === '0'"><i class="fas fa-lock-open icon-purple"
+                        (click)="openLockModal(element.action, '0')"></i><span
+                        class="ver-line-divider margin-left-15"></span></span>
+                    <span *ngIf="element.action.egl_lock_status === '0'"> <i class="fas fa-print icon-skyblue"
+                        (click)="printGradecard(element.action)"></i>
+                      <span class="margin-left-15 ver-line-divider"></span></span>
+                    <i class="fas fa-eye icon-green" (click)="openDialog(element.action)"></i>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row" *ngIf="!tableDivFlag">
+  <div class="col-12 text-center">
+    <mat-card>
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'Please select class, section and term'"></app-no-data>
+    </mat-card>
+  </div>
+</div>
+<app-delete-modal #deleteModal (deleteOk)="lockGradeCard($event)"></app-delete-modal>
+<app-delete-modal #deleteModalUnlock (deleteOk)="unlockGradeCard($event)"></app-delete-modal>

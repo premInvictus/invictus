@@ -12,6 +12,7 @@ import { CommonAttendanceComponent } from './common-attendance/common-attendance
 import { MarksInputComponent } from './marks-input/marks-input.component';
 import { ResultEntryComponent } from './result-entry/result-entry.component';
 import { StudentVerificationComponent } from './student-verification/student-verification.component';
+import { GradecardPrintingComponent } from './gradecard-printing/gradecard-printing.component'
 
 
 const routes: Routes = [
@@ -48,6 +49,9 @@ const routes: Routes = [
 	{
 		path: 'student-verification', component: StudentVerificationComponent
 	},
+	{
+		path: 'grade-card', component: GradecardPrintingComponent,
+	}
 ];
 
 @NgModule({
