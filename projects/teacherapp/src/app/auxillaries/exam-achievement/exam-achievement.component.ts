@@ -117,7 +117,14 @@ export class ExamAchievementComponent implements OnInit {
         }
       );
   }
-
+  checkEditableForStudent(stu) {
+    //console.log('stu---->',stu);
+    if(stu.is_editable === '1') {
+      return true;
+    } else {
+      return false;
+    }
+  }
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.a_class_id }).subscribe((result: any) => {

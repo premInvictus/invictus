@@ -60,7 +60,7 @@ export class ClasswiseComponent implements OnInit, OnChanges {
       });
     }
     if(status === '-') {
-      if(this.printData.subjectSubexamArr.length > 0) {
+      if(this.printData.subjectSubexamArr && this.printData.subjectSubexamArr.length > 0) {
         this.printData.subjectSubexamArr.forEach(element => {
           if(element.ssm_class_id === eme_class_id && element.ssm_exam_id === eme_exam_id && element.ssm_se_id === eme_subexam_id && element.ssm_sub_id === eme_sub_id) {
             if(Number(element.ssm_sub_mark) > 0) {
