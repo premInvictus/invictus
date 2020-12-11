@@ -53,6 +53,9 @@
                                   <mat-label *ngIf="control.gs_alias != 'fa_closing_balance_move' && control.gs_alias != 'fa_session_freez'">
                                     {{control.gs_name | titlecase}}
                                   </mat-label>
+                                  <mat-label *ngIf="control.gs_alias == 'fa_session_freez'">
+                                      Session Freez/Unfree
+                                  </mat-label>
                                 </div>
                                 <div class="col-lg-6 col-mobile-view-add-ques remove-col-modal-padding">
                                   <ng-container *ngIf="control.gs_type == 'text'">
@@ -127,9 +130,19 @@
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
-                                      <mat-checkbox class="example-margin" *ngIf="showClosingSession"
-                                      (change)="setSessionFreez('fa_session_freez','fa_closing_balance_move')">Session Freez </mat-checkbox>
-                                      <!-- <input type="button" value="Move" (click)="moveClosingBalance()"/> -->
+                                    </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'fa_session_freez'">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-select [formControlName]="control.gs_alias" (selectionChange)="checkFreez($event.value)">
+                                          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
+                                            {{item.ses_name}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                      <mat-checkbox class="example-margin" *ngIf="freezUnfreez == 1"
+                                      (change)="setSessionFreez('fa_session_freez','freez')">Session Freez </mat-checkbox>
+                                      <mat-checkbox class="example-margin" *ngIf="freezUnfreez == 2"
+                                      (change)="setSessionFreez('fa_session_freez','unfreez')">Session Unfreez </mat-checkbox>
                                     </ng-container>
                                     <!-- <ng-container *ngIf="control.gs_alias == 'fa_session_freez'">
                                       <mat-checkbox class="example-margin"
