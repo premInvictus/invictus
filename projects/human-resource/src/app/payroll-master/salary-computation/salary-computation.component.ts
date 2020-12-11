@@ -1479,10 +1479,15 @@ export class SalaryComputationComponent implements OnInit {
 		//let vcType = (vcType1 === 'jv') ? 'JV' : 'P';
 		let tempVcType = '';
 		let vcTypeArr = vcType1.split(" ");
-		if (vcTypeArr.length > 0) {
-			vcTypeArr.forEach(element => {
-				tempVcType += element.substring(0, 1).toUpperCase();
-			});
+		if (vcType1 === 'Journal') {
+			tempVcType = 'JV';
+		} else {
+			tempVcType='BPV';
+		// if (vcTypeArr.length > 0) {
+		// 	vcTypeArr.forEach(element => {
+		// 		tempVcType += element.substring(0, 1).toUpperCase();
+		// 	});
+		// }
 		}
 		let vcType = vcType1;
 		let currentSessionFirst = this.sessionName.split('-')[0];
@@ -1577,9 +1582,9 @@ export class SalaryComputationComponent implements OnInit {
 						};
 						console.log('inputJson delete', inputJson);
 						
-						// this.erpCommonService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
+						this.erpCommonService.updateVoucherEntry(inputJson).subscribe((data:any)=>{
 							
-						// });
+						});
 					}
 						this.erpCommonService.insertVoucherEntry(fJson).subscribe((data: any) => {
 							
