@@ -92,7 +92,7 @@
                         </td>
                       </tr>
                     </ng-container>
-                    <ng-container *ngIf="item.debit_data.length < item.credit_data.length">
+                    <ng-container *ngIf="item?.debit_data?.length < item?.credit_data?.length">
                       <tr *ngFor="let citem of checkBlankArray(item);">
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
@@ -109,7 +109,7 @@
                     </tr>
                     <tr *ngIf="getDeviation(item) < 0">
                       <td><span
-                          *ngIf="item?.credit_data.length > 0">{{item?.credit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span>
+                          *ngIf="item?.credit_data?.length > 0">{{item?.credit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span>
                       </td>
                       <td class="text-left"><b> Balance c/d</b></td>
                       <td>&nbsp;</td>
