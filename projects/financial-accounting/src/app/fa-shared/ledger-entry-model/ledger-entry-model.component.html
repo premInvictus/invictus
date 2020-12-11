@@ -162,7 +162,7 @@
                       </tr>
                     </ng-container>
 
-                    <ng-container *ngIf="item.debit_data.length > item.credit_data.length">
+                    <ng-container *ngIf="item?.debit_data?.length > item?.credit_data?.length">
                       <tr *ngFor="let citem of checkBlankArray(item);">
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>

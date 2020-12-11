@@ -281,7 +281,13 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
         if ($(this).nodeType === Node.COMMENT_NODE) {
           $(this).remove();
         }
-        tablecmp[index][$($headers[cellIndex]).html()] = $(this).text();
+        console.log($($headers[cellIndex]).html(),'html--');
+        if ($($headers[cellIndex]).html() == "Amount (₹)") {
+          tablecmp[index][$($headers[cellIndex]).html()] = Number($(this).text().replace(/[^0-9.-]+/g,""));
+        } else {
+          tablecmp[index][$($headers[cellIndex]).html()] = $(this).text();
+        }
+        
       });
     });
 
@@ -294,7 +300,12 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
         $(this).remove();
       }
       cells.each(function (cellIndex) {
-        tablecmp1[index][$($headers[cellIndex]).html()] = $(this).text();
+        // tablecmp1[index][$($headers[cellIndex]).html()] = $(this).text();
+        if ($($headers[cellIndex]).html() == "Amount (₹)") {
+          tablecmp1[index][$($headers[cellIndex]).html()] = Number($(this).text().replace(/[^0-9.-]+/g,""));
+        } else {
+          tablecmp1[index][$($headers[cellIndex]).html()] = $(this).text();
+        }
       });
     });
 
