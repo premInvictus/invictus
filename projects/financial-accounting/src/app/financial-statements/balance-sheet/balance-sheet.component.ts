@@ -353,7 +353,11 @@ export class BalanceSheetComponent implements OnInit {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if (data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
-                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+                console.log(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
+                if (Array.isArray(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }} else {
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = data.ledger_data[i];
+                }
               } else {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if (data.ledger_data[i]['total_dev'] != 0) {
