@@ -43,6 +43,7 @@
                                 && control.gs_alias !== 'employee_salary_slip'
                                 && control.gs_alias !== 'deduction_config'
                                 && control.gs_alias != 'financial_accounting_signature'
+                                && control.gs_alias != 'gradecard_printing_signature'
                                 && control.gs_alias !== 'add_prefix_before_admission_no'
                                 && control.gs_alias !== 'voucher_printsetup'
                                 && control.gs_alias !== 'gradecard_report_settings_app'
@@ -410,6 +411,52 @@
                                         </div>
                                         <div class="col-1">
                                           <input type="button" value="-" (click)="removeSignature(fi)" />
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </ng-container>
+                                </div>
+                              </ng-container>
+                              <ng-container *ngIf="control.gs_alias=='gradecard_printing_signature'">
+                                <div class="col-12">
+                                  Upload Signature &nbsp;<input type="button" value="+ Add Signature"
+                                    (click)="addSignature_gradecard()" />
+                                  <ng-container *ngFor="let fitem of gradecardsignatureForm;let fi=index ">
+                                    <form [formGroup]="fitem">
+                                      <div class="row" style="padding:15px 0">
+
+                                        <div class="col-3">
+                                          <mat-form-field class="form-field" appearance="outline">
+                                            <input matInput type="text" class="text-capitalize" formControlName="title"
+                                              placeholder="Signature Title">
+                                          </mat-form-field>
+                                        </div>
+
+                                        <div class="col-3">
+                                          <mat-form-field class="form-field" appearance="outline">
+                                            <input matInput type="text" class="text-capitalize" formControlName="order"
+                                              placeholder="Order">
+                                          </mat-form-field>
+                                        </div>
+                                        <div class="col-3" style="margin-top:-10px">
+                                          <div>
+                                            <button mat-stroked-button class="btn-outline-green">
+                                              <label for="sig_{{fi}}">Choose File
+                                                &nbsp; <i class="fas fa-cloud-upload-alt"></i></label></button>
+                                            <input style="display:none" type="file" accept="image/*"
+                                              (change)="uploadSignatureFile_gradecard($event, fi)" id="sig_{{fi}}">
+
+                                            <img *ngIf="fitem?.value?.signature"
+                                              style="height:80px;width:80px;border:1px solid #646471;border-radius: 4%;margin-left: 20px;"
+                                              [src]="fitem?.value?.signature" />
+                                            <span *ngIf="fitem?.value?.signature"><a href="javascript:void(0)"
+                                                class="delete-signature"
+                                                (click)="deleteSignatureImage_gradecard(fitem,fi)">X</a></span>
+                                          </div>
+
+                                        </div>
+                                        <div class="col-1">
+                                          <input type="button" value="-" (click)="removeSignature_gradecard(fi)" />
                                         </div>
                                       </div>
                                     </form>
