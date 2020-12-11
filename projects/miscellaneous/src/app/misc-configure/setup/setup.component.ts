@@ -73,6 +73,7 @@ export class SetupComponent implements OnInit {
     waterMarkImage: any = '';
     currentImage: any;
     fasignatureForm: any = [];
+    gradecardsignatureForm: any = [];
     logoPosition: any[] = [{ id: '1', pos: 'Top' },
     { id: '2', pos: 'Bottom' },
     { id: '3', pos: 'Left' },
@@ -1058,6 +1059,22 @@ export class SetupComponent implements OnInit {
                         }
 
                     }
+                    if (this.settingForm && this.settingForm.value && this.settingForm.value.gradecard_printing_signature) {
+                        console.log('in fa');
+                        this.gradecardsignatureForm = [];
+                        if (this.settingForm.value.gradecard_printing_signature) {
+                            let tempSignatureForm = JSON.parse(this.settingForm.value.gradecard_printing_signature);
+                            for (var i = 0; i < tempSignatureForm.length; i++) {
+                                var tForm = this.fbuild.group({
+                                    title: tempSignatureForm[i]['title'],
+                                    signature: tempSignatureForm[i]['signature'],
+                                    order: tempSignatureForm[i]['order']
+                                })
+                                this.gradecardsignatureForm.push(tForm)
+                            }
+                        }
+
+                    }
                     console.log(this.settingForm);
                 }
                 this.formFlag = true;
@@ -1216,6 +1233,12 @@ export class SetupComponent implements OnInit {
             'order': ''
         });
         this.fasignatureForm.push(fasignfrm);
+        let gradecardsignfrm = this.fbuild.group({
+            'title': '',
+            'signature': '',
+            'order': ''
+        });
+        this.gradecardsignatureForm.push(gradecardsignfrm);
     }
     checkIfSelectedSMS(i, j, value) {
         if (this.processForms[i][value][j].formGroup.value.enabled === 'true') {
@@ -1593,6 +1616,19 @@ export class SetupComponent implements OnInit {
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
         }
+        if (this.currentGsetup === 'examination') {
+            if (this.gradecardsignatureForm.length > 0) {
+                var tempSignatureArr = [];
+                for (var i = 0; i < this.gradecardsignatureForm.length; i++) {
+                    tempSignatureArr.push({
+                        'title': this.gradecardsignatureForm[i].value.title,
+                        'signature': this.gradecardsignatureForm[i].value.signature,
+                        'order': this.gradecardsignatureForm[i].value.order
+                    });
+                }
+                this.settingForm.value.gradecard_printing_signature = JSON.stringify(tempSignatureArr)
+            }
+        }
 
         if (this.settingForm.value && this.settingForm.value.admit_code_reset === '1') {
             this.sisService.resetAdmitCode({}).subscribe((data: any) => {
@@ -1606,6 +1642,7 @@ export class SetupComponent implements OnInit {
             if (result && result.status === 'ok') {
                 this.disabledApiButton = false;
                 this.fasignatureForm = [];
+                this.gradecardsignatureForm = [];
                 this.commonService.showSuccessErrorMessage(result.message, result.status);
                 this.getGlobalSetting(this.currentGsetup);
             } else {
@@ -2099,6 +2136,44 @@ export class SetupComponent implements OnInit {
                     console.log('this.fasignatureForm[fi]--', this.fasignatureForm[fi])
                     this.fasignatureForm[fi].get('signature').patchValue(result.data[0].file_url);
                     console.log('this.fasignatureForm[fi]--', this.fasignatureForm[fi])
+                    //this.settingForm.get(gs_alias).patchValue(result.data[0].file_url);
+                }
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+    addSignature_gradecard() {
+        let gradecardsignfrm = this.fbuild.group({
+            'title': '',
+            'signature': '',
+            'order': ''
+        });
+        this.gradecardsignatureForm.push(gradecardsignfrm);
+    }
+
+    removeSignature_gradecard(fi) {
+        console.log('fi--', fi)
+        this.gradecardsignatureForm.splice(fi, 1);
+    }
+
+    deleteSignatureImage_gradecard(fitem, fi) {
+        console.log('fitem', fitem, fi);
+        console.log('fitem1', this.gradecardsignatureForm[fi]);
+        this.gradecardsignatureForm[fi]['value']['signature'] = '';
+    }
+    uploadSignatureFile_gradecard($event, fi) {
+        const file: File = $event.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = (e) => {
+            const fileJson = {
+                fileName: file.name,
+                imagebase64: reader.result
+            };
+            this.sisService.uploadDocuments([fileJson]).subscribe((result: any) => {
+                if (result.status === 'ok') {
+                    console.log('this.gradecardsignatureForm[fi]--', this.gradecardsignatureForm[fi])
+                    this.gradecardsignatureForm[fi].get('signature').patchValue(result.data[0].file_url);
+                    console.log('this.gradecardsignatureForm[fi]--', this.gradecardsignatureForm[fi])
                     //this.settingForm.get(gs_alias).patchValue(result.data[0].file_url);
                 }
             });

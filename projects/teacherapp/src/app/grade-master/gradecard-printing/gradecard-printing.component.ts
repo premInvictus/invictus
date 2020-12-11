@@ -37,6 +37,7 @@ export class GradecardPrintingComponent implements OnInit {
   subexamArray: any[] = [];
   currentUser: any;
   session: any;
+  defaultmsg = 'Please select class, section and term';
   constructor(
     private fbuild: FormBuilder,
     private examService: ExamService,
@@ -71,6 +72,8 @@ export class GradecardPrintingComponent implements OnInit {
             }
             this.getSectionsByClass();
             this.getClassTerm()
+          } else {
+            this.defaultmsg = 'You are not a class teacher';
           }
         }
       );

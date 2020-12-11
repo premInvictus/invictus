@@ -8,6 +8,12 @@
       </div>
     </div>
   </div>
+  <!-- <div class="inline-flex btn-spacer text-right margin-bottom-5">
+    <div>
+      <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+        matTooltip="Export as excel()" (click)="downloadAllExcel()" [matTooltipPosition]="'left'" />
+    </div>
+  </div> -->
   <div class="row" id="ledger_log" style="margin:20px 0">
     <div class="col-12">
       <div class="row" *ngFor="let item of param?.ledger_data; let tableindex=index; ">
@@ -32,15 +38,15 @@
             <div class="inline-flex btn-spacer text-right margin-bottom-5">
               <div>
                 <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
-                  matTooltip="Export as excel" (click)="downloadExcel(tableindex)" [matTooltipPosition]="'left'" />
+                  matTooltip="Export as excel" (click)="downloadExcel(tableindex, item.coa_acc_name)" [matTooltipPosition]="'left'" />
               </div>
             </div>
           </div>
         <ng-container>
-          <table style="width:100%;" id="tablepdf">
+          <table style="width:100%;" id="tablepdf" class="tablePdf">
             <tr>
               <td style="padding: 0px;width:50%">
-                <table #tablecmp id="tablecmp"
+                <table #tablecmp id="tablecmp{{tableindex}}"
                   class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height"  style="width:100%;">
                   <thead>
                     <tr>
@@ -128,7 +134,7 @@
                 </table>
               </td>
               <td style="padding:0px;width:50%">
-                <table #tablecmp1 id="tablecmp1"
+                <table #tablecmp1 id="tablecmp1{{tableindex}}"
                   class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height"  style="width:100%;">
                   <thead>
 

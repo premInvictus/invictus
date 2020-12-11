@@ -22,7 +22,7 @@
           </ng-container>
           <td>{{getColumnTotal(item) | indianCurrency}}</td>
           <td class="action-btn">
-              <span *ngIf="(!item?.voucherExists        ||  item?.vc_state=='delete') && isExistUserAccessMenu('746') && session.ses_id != globalsetup['fa_session_freez']"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+              <span *ngIf="((!item?.voucherExists) ) && isExistUserAccessMenu('746') && session.ses_id != globalsetup['fa_session_freez']  && (item?.vc_state =='draft' || item?.vc_state =='' || item?.vc_state =='delete')"> <button mat-button class="btn-success-green btn-spacer " (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
               <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('748') && session.ses_id != globalsetup['fa_session_freez']" [ngClass]="item.be_back_status ? 'dotted_border':''"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,'update'); ">Update Voucher</button></span>
           </td>
         </tr>
