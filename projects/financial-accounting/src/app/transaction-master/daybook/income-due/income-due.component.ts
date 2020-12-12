@@ -235,6 +235,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             console.log(this.previousBalanceObject['id_'+ee.id]);  
             
             this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_'+ee.id]);
+            this.headtoatl += Number(this.previousBalanceObject['id_'+ee.id]);
           }
 
         });
