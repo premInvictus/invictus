@@ -179,7 +179,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     this.ELEMENT_DATA = [];
     this.apiInvoiceData = [];
     this.apiReceiptData = [];
-    
+    this.previousBalanceObject = {};
     this.faService.getInvoiceDayBook({ sessionId: this.session.ses_id, monthId: Number(this.param.month), vc_process: 'automatic/invoice' }).subscribe((data: any) => {
       if (data && data.invoice_due_data.length > 0) {
         this.displayedColumns = [];
