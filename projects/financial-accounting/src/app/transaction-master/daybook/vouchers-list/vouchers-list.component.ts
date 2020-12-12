@@ -71,7 +71,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			vc_narrations:element.vc_narrations,
 			vc_attachments: element.vc_attachments,
 			vc_particulars_data: element.vc_particulars_data,
-			vc_state : 'delete'
+			vc_state : 'delete',
+			voucherExists:false
 		};
 	
 		

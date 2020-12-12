@@ -143,9 +143,10 @@ export class LedgerComponent implements OnInit {
           
           var receipt_data = data.receipt_data;
           var receiptArr = [];
+          if (receipt_data) {
           for(var j=0; j<receipt_data.length; j++) {
             receiptArr.push(receipt_data[j]['tb_name']);
-          }
+          }}
           for (var i =0;  i < data.ledger_data.length; i++) {
             if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );

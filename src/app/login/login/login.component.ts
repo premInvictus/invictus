@@ -195,6 +195,7 @@ export class LoginComponent implements OnInit {
 									this.notif.getSchool().subscribe((result2: any) => {
 										if (result2.status === 'ok') {
 											this.schoolInfo = result2.data[0];
+											console.log('this.schoolInfo', this.schoolInfo);
 											childWindow.localStorage.setItem('expire_time', JSON.stringify({ expire_time: this.schoolInfo.seesion_expire }));
 											if (this.currentDate.getMonth() + 1 >= Number(this.schoolInfo.session_start_month) &&
 												Number(this.schoolInfo.session_end_month) <= this.currentDate.getMonth() + 1) {
