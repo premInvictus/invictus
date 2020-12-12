@@ -162,35 +162,33 @@ export class BalanceSheetModalComponent implements OnInit {
     var diff = 0;
     var diffTotal = 0;
     var diffCTotal = 0;
-    var debitTotal = 0;
-    var creditTotal = 0;
-    var debitSideTotal = 0;
-    var creditSideTotal = 0;
+    this.debitSideBlankArr = [];
+    this.creditSideBlankArr = [];
     for (var i = 0; i < this.incomeExpenditureArray['ledger_data'].length; i++) {
-      debitTotal = 0;
-      creditTotal = 0;
+      this.debitTotal = 0;
+      this.creditTotal = 0;
       for (var j = 0; j < this.incomeExpenditureArray['ledger_data'][i]['debit_data'].length; j++) {
-        debitTotal = debitTotal + (this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+        this.debitTotal = this.debitTotal + (this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
       }
       for (var k = 0; k < this.incomeExpenditureArray['ledger_data'][i]['credit_data'].length; k++) {
-        creditTotal = creditTotal + (this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
+        this.creditTotal = this.creditTotal + (this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
       }
 
-      diff = creditTotal - debitTotal;
+      diff = this.creditTotal - this.debitTotal;
       if (diff > 0) {
         diffTotal = diffTotal + diff;
-        creditSideTotal = diffTotal;
+        this.creditSideTotal = diffTotal;
+        this.creditSideBlankArr.push(i);
       } else if (diff < 0) {
-        diffCTotal = diffCTotal + diff;
-        debitSideTotal = diffCTotal;
+        diffCTotal = diffCTotal + (-diff);
+        this.debitSideTotal = diffCTotal;
+        this.debitSideBlankArr.push(i);
       }
 
-
     }
-    creditSideTotal = creditSideTotal;
-    debitSideTotal = debitSideTotal;
-    //console.log(debitSideTotal, creditSideTotal)
-    this.incomeExpenditureDeviation = debitSideTotal - creditSideTotal;
+    this.incomeExpenditureDeviation = this.creditSideTotal-this.debitSideTotal;
+    console.log('expenditure difference',this.creditSideTotal-this.debitSideTotal);
+    
   }
 
 

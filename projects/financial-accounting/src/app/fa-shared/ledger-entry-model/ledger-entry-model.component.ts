@@ -335,7 +335,7 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
 
     const ws: XLSX.WorkSheet = XLSX.utils.sheet_add_json(wb, tablecmp, { origin: 'A4', skipHeader: true });
 
-    ws["!cols"] = [{ width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }];
+    ws["!cols"] = [{ width: 20}, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }, { width: 20 }];
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
     XLSX.writeFile(wb, 'SheetJS.xlsx');
