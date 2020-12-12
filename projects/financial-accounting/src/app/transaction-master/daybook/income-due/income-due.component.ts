@@ -145,7 +145,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     
     this.faService.checkPreviosuDueStatus({vc_narrations: 'Previous Due' }).subscribe((data:any)=> {
       console.log('data--', data);
-      if(data && data[0]['vc_id']) {
+      if(data && data[0] && data[0]['vc_id']) {
         this.previousYearVoucherData = data[0];
         this.previousYearVoucherExists = true;
         this.previousBalanceObject = {};
@@ -231,6 +231,12 @@ export class IncomeDueComponent implements OnInit, OnChanges {
         this.displayedColumns.forEach(ee => {
           this.con_adj_details['id_' + ee.id] = 0;
           this.eachheadtotal_details['id_' + ee.id] = 0;
+          if(this.previousBalanceObject['id_'+ee.id]) {
+            console.log(this.previousBalanceObject['id_'+ee.id]);  
+            
+            this.eachheadtotal_details['id_' + ee.id] += Number(this.previousBalanceObject['id_'+ee.id]);
+          }
+
         });
         const dateArray: any[] = [];
         tempData.forEach(e => {
@@ -265,19 +271,26 @@ export class IncomeDueComponent implements OnInit, OnChanges {
                     tempelement['id_' + ee.id] = tempvaluehead;
                     this.con_adj_details['id_' + ee.id] += tempvaluecon;
                     this.eachheadtotal_details['id_' + ee.id] += tempvaluehead;
+                    
                   }
+                  
+                    
+                    
+                  
                 });
+                
 
               });
+              
             }
-            console.log('tempelement--',tempelement);
+            // console.log('tempelement--',tempelement);
             this.ELEMENT_DATA.push(tempelement);
           });
           this.tableDivFlag = true;
         }
-        console.log(this.ELEMENT_DATA);
-        console.log(this.eachheadtotal_details);
-        console.log(this.con_adj_details);
+        // console.log(this.ELEMENT_DATA);
+        // console.log(this.eachheadtotal_details);
+        // console.log(this.con_adj_details);
 
       }
     });
