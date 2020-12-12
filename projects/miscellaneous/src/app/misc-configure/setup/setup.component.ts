@@ -123,12 +123,16 @@ export class SetupComponent implements OnInit {
     classterm: any;
     examArray: any[];
     subexamArray: any[];
+    freezUnfreez=1;
+    session_freez:any[] = [];
+    session:any;
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
         private erpCommonService: ErpCommonService) { }
 
     ngOnInit() {
+        this.session = JSON.parse(localStorage.getItem('session'));
         this.ckeConfig = {
             allowedContent: true,
             pasteFromWordRemoveFontStyles: false,
@@ -178,9 +182,20 @@ export class SetupComponent implements OnInit {
         this.getPayGways();
         this.getBanks();
     }
-    setSessionFreez(key1,key2){
-        if(this.settingForm.value[key2]){
-            this.settingForm.value[key1]=this.settingForm.value[key2];
+    setSessionFreez(key1,key3){
+        if(this.settingForm.value[key1]){
+            if(key3 == 'freez') {
+                const findex = this.session_freez.findIndex(e => e == this.settingForm.value[key1]);
+                if(findex == -1) {
+                    this.session_freez.push(this.settingForm.value[key1])
+                }
+            } else if(key3 == 'unfreez') {
+                const findex = this.session_freez.findIndex(e => e == this.settingForm.value[key1]);
+                if(findex != -1) {
+                    this.session_freez.splice(findex,1);
+                }
+            }
+            console.log(this.session_freez);
         }
     }
     getSession() {
@@ -419,7 +434,11 @@ export class SetupComponent implements OnInit {
                 return this.fbuild.array([this.fbuild.group(jsontemp)]);
             }
         }
-        if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance') {
+        if (element.gs_alias === 'gradecard_health_status' || element.gs_alias === 'comparative_analysis' || element.gs_alias === 'student_performance' || element.gs_alias === 'fa_session_freez') {
+            if(element.gs_alias === 'fa_session_freez') {
+                this.session_freez = element.gs_value && element.gs_value !== '' ? element.gs_value.split(',') : [];
+                console.log('this.session_freez',this.session_freez);
+            }
             return element.gs_value && element.gs_value !== '' ? [element.gs_value.split(',')] : [''];
         } else {
             return element.gs_value;
@@ -861,6 +880,11 @@ export class SetupComponent implements OnInit {
                     });
                     this.settingForm = this.fbuild.group(temp);
                     console.log('this.settingForm', this.settingForm)
+                    if (this.currentGsetup === 'financial accounting') {
+                        console.log('this.session.ses_id ********************',this.session.ses_id,this.settingForm.value.fa_session_freez);
+                        this.settingForm.controls.fa_session_freez.setValue(this.session.ses_id);
+                        this.checkFreez(this.session.ses_id);
+                    }
                     if (this.settingForm && this.settingForm.value && this.settingForm.value.gradecard_report_settings_app) {
                         const gradesSettings: any[] = JSON.parse(this.settingForm.value.gradecard_report_settings_app);
                         this.GRADE_CARD_SETTINS = [];
@@ -1615,6 +1639,7 @@ export class SetupComponent implements OnInit {
                 }
                 this.settingForm.value.financial_accounting_signature = JSON.stringify(tempSignatureArr)
             }
+            this.settingForm.value.fa_session_freez = this.session_freez.join(',');
         }
         if (this.currentGsetup === 'examination') {
             if (this.gradecardsignatureForm.length > 0) {
@@ -2160,6 +2185,16 @@ export class SetupComponent implements OnInit {
         console.log('fitem', fitem, fi);
         console.log('fitem1', this.gradecardsignatureForm[fi]);
         this.gradecardsignatureForm[fi]['value']['signature'] = '';
+    }
+    checkFreez(value){
+        console.log(value);
+        console.log('fa_session_freez',this.session_freez);
+        const findex = this.session_freez.findIndex(e => e == value);
+        if(findex == -1) {
+            this.freezUnfreez = 1;
+        } else {
+            this.freezUnfreez = 2;
+        }
     }
     uploadSignatureFile_gradecard($event, fi) {
         const file: File = $event.target.files[0];

@@ -31,8 +31,8 @@
           </ng-container>
           <td>{{getColumnTotal(item) | indianCurrency}}</td>
           <td class="action-btn">
-           <span *ngIf="(!item?.voucherExists) && isExistUserAccessMenu('745') && session.ses_id != globalsetup['fa_session_freez']"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
-           <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('747') && session.ses_id != globalsetup['fa_session_freez']"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span>
+           <span *ngIf="(!item?.voucherExists) && isExistUserAccessMenu('745') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+           <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('747') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span>
 
            <!-- <span *ngIf="(!item?.voucherExists) "> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
            <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') "> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span>          -->

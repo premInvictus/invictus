@@ -173,10 +173,12 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.PROMOTE_ELEMENT_DATA = [];
 		this.promotedataSource = new MatTableDataSource<Element>(this.PROMOTE_ELEMENT_DATA);
 		if (!this.promoteForm.value.enrollment_type) {
-			this.commonApiService.showSuccessErrorMessage('Enroll type needed', 'error');
+			this.commonApiService.showSuccessErrorMessage('Enroll type required', 'error');
 		} else if (!this.promoteForm.value.class_id) {
-			this.commonApiService.showSuccessErrorMessage('Previous Class needed', 'error');
-		} else {
+			this.commonApiService.showSuccessErrorMessage('Previous Class required', 'error');
+		} else if (!this.promoteForm.value.new_class_id) {
+			this.commonApiService.showSuccessErrorMessage('New Class required', 'error');
+		}else {
 			this.disableApiCall = true;
 			this.sisService.getStudentsPromotionTool({
 				class_id: this.promoteForm.value.class_id,
@@ -224,9 +226,9 @@ export class PromotionToolComponent implements OnInit, AfterViewInit {
 		this.DEMOTE_ELEMENT_DATA = [];
 		this.demotedataSource = new MatTableDataSource<Element>(this.DEMOTE_ELEMENT_DATA);
 		if (!this.demoteForm.value.enrollment_type) {
-			this.commonApiService.showSuccessErrorMessage('Enroll type needed', 'error');
+			this.commonApiService.showSuccessErrorMessage('Enroll type required', 'error');
 		} else if (!this.demoteForm.value.class_id) {
-			this.commonApiService.showSuccessErrorMessage('Current Class needed', 'error');
+			this.commonApiService.showSuccessErrorMessage('Current Class required', 'error');
 		} else {
 			this.disableApiCall = true;
 			this.sisService.getStudentsPromotionTool({
