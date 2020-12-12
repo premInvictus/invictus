@@ -154,7 +154,7 @@ export class ReceiptModeWiseComponent implements OnInit {
             tempelement['date'] = e.date;
             tempelement['vc_id'] = e.vc_id;
             tempelement['vc_state'] = e.vc_state;
-            tempelement['voucherExists'] = e.voucherExists;
+            tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
             tempelement['be_back_status'] = e.be_back_status;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
