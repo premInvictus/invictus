@@ -736,13 +736,13 @@ export class ReceiptModeWiseComponent implements OnInit {
   }
 
   getVcName(vcData, voucherEntryArray) {
-    let vcType = '';
-    const vcTypeArr = this.currentVcType.split(" ");
-    if (vcTypeArr.length > 0) {
-      vcTypeArr.forEach(element => {
-        vcType += element.substring(0, 1).toUpperCase();
-      });
-    }
+    let vcType = 'RV';
+    // const vcTypeArr = this.currentVcType.split(" ");
+    // if (vcTypeArr.length > 0) {
+    //   vcTypeArr.forEach(element => {
+    //     vcType += element.substring(0, 1).toUpperCase();
+    //   });
+    // }
     //vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
     let currentSessionFirst = this.sessionName.split('-')[0];
     let currentSessionSecond = this.sessionName.split('-')[1];

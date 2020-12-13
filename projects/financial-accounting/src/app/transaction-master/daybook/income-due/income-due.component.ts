@@ -34,7 +34,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   apiData:any[]=[];
   chartsOfAccount: any[] = [];
   vcData: any;
-  currentVcType = 'Journal Voucher';
+  currentVcType = 'Journal';
   sessionArray: any[] = [];
   sessionName: any;
   voucherDate: any;
@@ -252,7 +252,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
             tempelement['date'] = e.date;
             tempelement['vc_id'] = e.vc_id;
             tempelement['vc_state'] = e.vc_state;
-            tempelement['voucherExists'] = e.voucherExists;
+            tempelement['voucherExists'] = e.vc_state == 'delete' ? false : e.voucherExists;
             tempelement['vc_records'] = e.vc_data;
             let tempvalue = tempData.find(element => element.date == e.date);
             if (tempvalue) {
@@ -516,13 +516,13 @@ export class IncomeDueComponent implements OnInit, OnChanges {
   }
 
   getVcName(vcData, voucherEntryArray, prev_balance_voucher) {
-    let vcType = '';
-    const vcTypeArr = this.currentVcType.split(" ");
-    if (vcTypeArr.length > 0) {
-      vcTypeArr.forEach(element => {
-        vcType += element.substring(0, 1).toUpperCase();
-      });
-    }
+    let vcType = 'JV';
+    // const vcTypeArr = this.currentVcType.split(" ");
+    // if (vcTypeArr.length > 0) {
+    //   vcTypeArr.forEach(element => {
+    //     vcType += element.substring(0, 1).toUpperCase();
+    //   });
+    // }
     //vcType = (this.currentVcType.split(" ")[0].substring(0,1)+this.currentVcType.split(" ")[1].substring(0,1)).toUpperCase();
     let currentSessionFirst = this.sessionName.split('-')[0];
     let currentSessionSecond = this.sessionName.split('-')[1];
@@ -550,7 +550,7 @@ export class IncomeDueComponent implements OnInit, OnChanges {
     if (this.vcData) {
       var fJson = {
         vc_id: null,
-        vc_type: 'Journal Voucher',
+        vc_type: 'Journal',
         vc_number: { vc_code: this.vcData.vc_code, vc_name: this.vcData.vc_name },
         vc_date: prev_balance_voucher  ? '' : this.voucherDate,
         vc_narrations: prev_balance_voucher ? 'Previous Due' : 'Invoice Due of Date ' + this.voucherDate,
