@@ -20,7 +20,7 @@
           <td *ngFor="let itm of displayedColumns; let i=index;"><span>{{getPreviousHeadAmt(itm) | indianCurrency}}</span></td>
           
           <td>{{getColumnTotal(previousBalanceObject) | indianCurrency}}</td>
-          <td><span *ngIf="(!previousYearVoucherExists) && isExistUserAccessMenu('745')"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(previousBalanceObject,''); ">Create Voucher</button></span>
+          <td><span *ngIf="((!previousYearVoucherExists) && isExistUserAccessMenu('745')) || (previousBalanceObject?.vc_state =='delete')"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(previousBalanceObject,''); ">Create Voucher</button></span>
             <span *ngIf="(previousYearVoucherExists && previousBalanceObject?.vc_state =='draft') && isExistUserAccessMenu('747')"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(previousBalanceObject, 'update'); ">Update Voucher</button></span>
           </td>
         </tr>
@@ -31,7 +31,7 @@
           </ng-container>
           <td>{{getColumnTotal(item) | indianCurrency}}</td>
           <td class="action-btn">
-           <span *ngIf="(!item?.voucherExists) && isExistUserAccessMenu('745') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
+           <span *ngIf="(item?.vc_state =='draft' || item?.vc_state =='' || item?.vc_state =='delete') && (!item?.voucherExists) && isExistUserAccessMenu('745') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
            <span *ngIf="(item?.voucherExists && item?.vc_state =='draft') && isExistUserAccessMenu('747') && (!globalsetup['fa_session_freez']?.includes(session.ses_id))"> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item, 'update'); ">Update Voucher</button></span>
 
            <!-- <span *ngIf="(!item?.voucherExists) "> <button mat-button class="btn-success-green btn-spacer" (click)="$event.stopPropagation(); createVoucher(item,''); ">Create Voucher</button></span>
