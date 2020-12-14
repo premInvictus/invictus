@@ -242,6 +242,17 @@
                   <div class="col-3"></div>
                   <div class="col-6">
                      <div class="row">
+                        <div class="col-12" *ngIf="selectedMode === '4'">
+                           <mat-form-field appearance="outline" class="form-field">
+                              <mat-label>Wallet Process</mat-label>
+                              <mat-select placeholder="Select wallet process"
+                                 formControlName="walletProcess">
+                                 <mat-option value="">Please Select</mat-option>
+                                 <mat-option *ngFor="let mode of walletProcess" [value]="mode">{{mode | titlecase}}
+                                 </mat-option>
+                              </mat-select>
+                           </mat-form-field>
+                        </div>
                         <div class="col-12">
                            <mat-form-field appearance="outline" class="form-field ">
                               <mat-label>Payment Mode</mat-label>

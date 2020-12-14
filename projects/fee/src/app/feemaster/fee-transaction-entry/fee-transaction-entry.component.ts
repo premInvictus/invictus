@@ -44,6 +44,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	btnDisable = false;
 	currentInvoiceId = '';
 	invoiceArrayForm: any[]= [];
+	walletProcess: any[]= ['deposit','withdrawal'];
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -111,7 +112,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				'ftr_remark': '',
 				'is_cheque': '',
 				'ftr_deposit_bnk_id': '',
-				'saveAndPrint': ''
+				'saveAndPrint': '',
+				'walletProcess':''
 			});
 			this.selectedMode = '1';
 			this.currentInvoiceId  = invDet2.inv_id;
@@ -135,7 +137,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint': ''
+			'saveAndPrint': '',
+			'walletProcess':''
 		});
 	}
 	checkEmit(process_type) {
@@ -327,7 +330,8 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			'ftr_remark': '',
 			'is_cheque': '',
 			'ftr_deposit_bnk_id': '',
-			'saveAndPrint': ''
+			'saveAndPrint': '',
+			'walletProcess':''
 		});
 		const optedforhostel = 1;
 		if(optedforhostel == 1) {
@@ -555,41 +559,52 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		if (validateFlag) {
 			this.btnDisable = true;
 			if (this.selectedMode === '4') {
-				let inputjson:any = this.feeTransactionForm.value;
-				inputjson.ftr_amount_type = 'credit';
-				let receiptMappArr=  [];
-				for (var i=0;i<this.invoiceArrayForm.length;i++) {
-					if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
-					receiptMappArr.push({
-						rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
-						rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
-						rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
-						rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
-						rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
-						rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
-						rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
-						rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
-						rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
-						rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
-						rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
-					}) }
-				}
-				inputjson.receipt_mapping= receiptMappArr;
-
-				this.feeService.insertWallets(inputjson).subscribe((result: any) => {
-					this.btnDisable = false;
-					if (result && result.status === 'ok') {
-						this.common.showSuccessErrorMessage(result.messsage, 'success');
-						this.reset();
-						this.getStudentInformation(this.lastRecordId);
-						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
-					} else {
-						this.common.showSuccessErrorMessage(result.messsage, 'error');
-						this.reset();
-						this.getStudentInformation(this.lastRecordId);
-						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+				if(this.feeTransactionForm.value.walletProcess) {
+					let inputjson:any = this.feeTransactionForm.value;
+					if(this.feeTransactionForm.value.walletProcess == 'deposit') {
+						inputjson.ftr_amount_type = 'credit';
+					} else if(this.feeTransactionForm.value.walletProcess == 'withdrawal') {
+						inputjson.ftr_amount_type = 'debit';
 					}
-				});
+					
+					let receiptMappArr=  [];
+					for (var i=0;i<this.invoiceArrayForm.length;i++) {
+						if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {
+						receiptMappArr.push({
+							rm_inv_id:this.invoiceArrayForm[i].value.rm_inv_id,
+							rm_head_type:this.invoiceArrayForm[i].value.rm_head_type,
+							rm_fm_id:this.invoiceArrayForm[i].value.rm_fm_id,
+							rm_fh_id:this.invoiceArrayForm[i].value.rm_fh_id,
+							rm_fh_name:this.invoiceArrayForm[i].value.rm_fh_name,
+							rm_fh_amount:this.invoiceArrayForm[i].value.rm_fh_amount,
+							rm_fcc_id:this.invoiceArrayForm[i].value.rm_fcc_id,
+							rm_fcc_name:this.invoiceArrayForm[i].value.rm_fcc_name,
+							rm_fcc_amount:this.invoiceArrayForm[i].value.rm_fcc_amount,
+							rm_adj_amount:this.invoiceArrayForm[i].value.rm_adj_amount,
+							rm_total_amount:this.invoiceArrayForm[i].value.rm_total_amount,
+						}) }
+					}
+					inputjson.receipt_mapping= receiptMappArr;
+
+					this.feeService.insertWallets(inputjson).subscribe((result: any) => {
+						this.btnDisable = false;
+						if (result && result.status === 'ok') {
+							this.common.showSuccessErrorMessage(result.messsage, 'success');
+							this.reset();
+							this.getStudentInformation(this.lastRecordId);
+							this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+							this.reset();
+							this.getStudentInformation(this.lastRecordId);
+							this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
+						}
+					});
+				} else {
+					this.common.showSuccessErrorMessage('Please Select Wallet Process', 'error');
+					this.btnDisable = false;
+				}
+				
 			} else {
 				let inputjson:any = this.feeTransactionForm.value;
 				let receiptMappArr=  [];

@@ -144,18 +144,15 @@
                                       <mat-checkbox class="example-margin" *ngIf="freezUnfreez == 2"
                                       (change)="setSessionFreez('fa_session_freez','unfreez')">Session Unfreez </mat-checkbox>
                                     </ng-container>
-                                    <!-- <ng-container *ngIf="control.gs_alias == 'fa_session_freez'">
-                                      <mat-checkbox class="example-margin"
-                                        >Session Freez </mat-checkbox>
-                                      <mat-form-field class="form-field" appearance="outline"
-                                        *ngIf="settingForm.value[control.gs_alias] != 0">
+                                    <ng-container *ngIf="control.gs_alias == 'teacher_signature_position'">
+                                      <mat-form-field class="form-field" appearance="outline">
                                         <mat-select [formControlName]="control.gs_alias">
-                                          <mat-option *ngFor="let item of sessionArray" [value]="item.ses_id">
-                                            {{item.ses_name}}
+                                          <mat-option *ngFor="let item of sig_positionArray" [value]="item">
+                                            {{item}}
                                           </mat-option>
                                         </mat-select>
                                       </mat-form-field>
-                                    </ng-container> -->
+                                    </ng-container>
                                   </ng-container>
                                   <ng-container *ngIf="control.gs_type == 'json'">
                                     <ng-container *ngIf="control.gs_alias == 'library_user_setting'">
