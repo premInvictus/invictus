@@ -31,11 +31,13 @@ import 'jspdf-autotable';
 })
 export class ShiftAttendanceReportComponent implements OnInit {
   reportdate = new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+  @ViewChild('searchModal') searchModal;
   @ViewChild('paginator') paginator: MatPaginator;
 	@ViewChild(MatSort) sort: MatSort;
   monthArray: any[] = [];
   currentUser:any;
   session:any;
+  filterdata:any;
   acumulativeReport: FormGroup;
   schoolInfo: any;
   nodataFlag=true;
@@ -49,7 +51,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
 	employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
 	//'emp_present',
   displayedEmployeeColumns: string[] = ['emp_code_no', 'emp_name', 'emp_shift','parameters'];
-  parameters_arr = ['in','exit','duration','remarks','status'];
+  parameters_arr = ['in','out','duration','remarks','status'];
   spans = [];
   allemployeeleavearr:any[]=[];
 	sessionName: any;
@@ -202,17 +204,24 @@ export class ShiftAttendanceReportComponent implements OnInit {
   }
   async getShiftAttendanceReport(){
     let currSess;
+    let serviceName='getAllEmployee';
     if (Number(this.acumulativeReport.value.month_id) === 1 || Number(this.acumulativeReport.value.month_id) === 2 || Number(this.acumulativeReport.value.month_id) === 3) {
       currSess = this.sessionName.split('-')[1];
     } else {
       currSess = this.sessionName.split('-')[0];
     }
-    let inputJson = {
-			'month_id': this.acumulativeReport.value.month_id,
-			'emp_status': 'all',
-      from_attendance: true,
-      year:currSess
-    };
+    let inputJson:any = {};
+    if(this.filterdata){
+      inputJson = this.filterdata;
+      serviceName = 'getFilterData';
+    } else {
+      inputJson = {
+        'month_id': this.acumulativeReport.value.month_id,
+        'emp_status': 'all',
+        from_attendance: true,
+        year:currSess
+      };      
+    }
     this.dateArray=[];
     this.EMPLOYEE_ELEMENT = [];
     this.displayedEmployeeColumns = ['emp_code_no', 'emp_name', 'emp_shift','parameters'];;
@@ -251,6 +260,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
 
           }
         }
+        this.displayedEmployeeColumns.push('total_absent');
+        this.displayedEmployeeColumns.push('total_present');
       }
     });
     await this.commonAPIService.getAllEmployeeLeaveData().toPromise().then((result: any) => {
@@ -260,7 +271,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     });
     console.log('dateArray',this.dateArray);
     this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
-		this.commonAPIService.getAllEmployee(inputJson).subscribe((result1: any) => {
+		this.commonAPIService[serviceName](inputJson).subscribe((result1: any) => {
       if(result1 && result1.length > 0) {
         let inputJson = {
           month_id: this.acumulativeReport.value.month_id,
@@ -285,11 +296,13 @@ export class ShiftAttendanceReportComponent implements OnInit {
                   emp_name: employeeData.emp_name,
                   emp_shift: shift_arr,
                   parameters: para,
-                  dateArray:JSON.parse(JSON.stringify(this.dateArray))
+                  dateArray:JSON.parse(JSON.stringify(this.dateArray)),
+                  total_absent:0,
+                  total_present:0
                 };
                 element.dateArray.forEach(dt => {
                   if(dt.attendance == 'H') {
-                    if(para == 'in' || para == 'exit' || para == 'duration' || para == 'remarks') {
+                    if(para == 'in' || para == 'out' || para == 'duration' || para == 'remarks') {
                       dt.data='';
                     }
                   } else {
@@ -305,7 +318,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
                         // dt.data = 'A';
                       }
                     }
-                    if(para == 'exit') {
+                    if(para == 'out') {
                       if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
                         let temp = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
                         if(temp){
@@ -339,19 +352,21 @@ export class ShiftAttendanceReportComponent implements OnInit {
                         const exittm = shiftdayAtt.employeeList.find(e => e.exit == true && e.emp_code_no == employeeData.emp_code_no);
                         let remarks = '';
                         if(intm) {
-                          remarks += intm.remarks+' ';
+                          remarks += (intm.remarks ? intm.remarks+' ' : '');
                         }
                         if(exittm) {
-                          remarks += exittm.remarks+' ';
+                          remarks += (exittm.remarks ? exittm.remarks+' ' : '');
                         }
+                        dt.data = remarks;
                       }  else {
-                        // dt.data = 'A';
+                        dt.data = '';
                       }
                     }
                     if(para == 'status') {
                       let temp;
                       let status='';
                       if(shiftdayAtt && shiftdayAtt.employeeList && shiftdayAtt.employeeList.length > 0){
+                        status='P';
                         temp = shiftdayAtt.employeeList.find(e => e.shortleave == true && e.emp_code_no == employeeData.emp_code_no);
                         if(temp){
                           status='Shortleave';
@@ -390,6 +405,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
                             status='A';
                           }
                           dt.data=status;
+                        } else {
+                          dt.data=status;
                         }
                       }  else {
                         dt.data = 'A';
@@ -397,9 +414,27 @@ export class ShiftAttendanceReportComponent implements OnInit {
                     }
                   }
                 });
+                if(para == 'status') {
+                  if(element.dateArray && element.dateArray.length > 0){
+                    let ab=0;
+                    element.dateArray.forEach(e => {
+                      if(e.data == 'A') {
+                        ab++;
+                      }
+                    });
+                    element.total_absent = ab;
+                    element.total_present = this.dateArray.length - ab;
+                  }
+
+                } else {
+                  element.total_absent = '';
+                  element.total_present = '';
+                }
                 this.EMPLOYEE_ELEMENT.push(element);
               });
+              
             });
+            
             this.employeedataSource = new MatTableDataSource<EmployeeElement>(this.EMPLOYEE_ELEMENT);
             this.employeedataSource.paginator = this.paginator;
             // if (this.sort) {
@@ -410,11 +445,22 @@ export class ShiftAttendanceReportComponent implements OnInit {
             this.cacheSpan('emp_code_no', d => d.emp_code_no);
             this.cacheSpan('emp_name', d => d.emp_name);
             this.cacheSpan('emp_shift', d => d.emp_shift);
+            this.cacheSpan('total_absent', d => d.total_absent);
+            this.cacheSpan('total_present', d => d.total_present);
             console.log('this.EMPLOYEE_ELEMENT',this.EMPLOYEE_ELEMENT)
           }
         });
       }
     });
+  }
+  openSearchDialog = (data) => { this.searchModal.openModal(data); }
+  searchOk($event) {
+    this.filterdata = $event;
+    this.getShiftAttendanceReport();
+  }
+  reset(){
+    this.filterdata = null;
+    this.getShiftAttendanceReport();
   }
 
   getMonthName(id){
@@ -449,6 +495,14 @@ export class ShiftAttendanceReportComponent implements OnInit {
         });
       });
     }
+    columns.push({
+			key: 'total_absent',
+			width: this.checkWidth('total_absent', 'Total Absent')
+    });
+    columns.push({
+			key: 'total_present',
+			width: this.checkWidth('total_present', 'Total Present')
+		});
 		reportType = new TitleCasePipe().transform('shift_attendance_report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
     let reportType1 = new TitleCasePipe().transform('shift Attendance Report: ' + this.sessionName+'_'+this.getMonthName(this.acumulativeReport.value.month_id));
     const fileName =reportType + '_' + this.reportdate +'.xlsx';
@@ -472,6 +526,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
         worksheet.getCell(this.alphabetJSON[headerColIndex++]+'4').value = dt.shortdate.toString();
       });
     }
+    worksheet.getCell(this.alphabetJSON[headerColIndex++]+'4').value = 'Total Absent';
+    worksheet.getCell(this.alphabetJSON[headerColIndex++]+'4').value = 'Total Present';
 		worksheet.columns = columns;
     this.length = worksheet._rows.length;
     let mergelength = worksheet._rows.length+1;
@@ -496,6 +552,8 @@ export class ShiftAttendanceReportComponent implements OnInit {
           worksheet.getCell(this.alphabetJSON[headerColIndex++]+this.length).value = this.getdaystatus(dt.shortdate,dety.dateArray)
         });
       }
+      worksheet.getCell(this.alphabetJSON[headerColIndex++]+this.length).value = dety.total_absent;
+      worksheet.getCell(this.alphabetJSON[headerColIndex++]+this.length).value = dety.total_present;
 			worksheet.addRow(obj);
     }
 
@@ -648,5 +706,7 @@ export interface EmployeeElement {
 	emp_name: string;
 	parameters: string;
   emp_shift: any;
-  dateArray:any
+  dateArray:any;
+  total_absent:number;
+  total_present:number;
 }

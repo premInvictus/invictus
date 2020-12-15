@@ -299,13 +299,19 @@ export class LeaveApplicationComponent implements OnInit {
 					if(element.ses_id == this.session_id.ses_id){
 						if(element.month_data  && element.month_data.length > 0){
               const tempmonthdata = element.month_data[element.month_data.length-1];
+              console.log('tempmonthdata',tempmonthdata);
+
               const templeaveCredit = tempmonthdata.attendance_detail.emp_leave_credited.find(e => e.leave_id == this.leaveForm.value.leave_type);
               if(templeaveCredit){
                 this.leave_credit = templeaveCredit.leave_value;
               }
-              const templeaveAvailed = tempmonthdata.attendance_detail.emp_leave_availed.find(e => e.leave_id == this.leaveForm.value.leave_type);
-              if(templeaveAvailed){
-                this.leave_credit -= templeaveAvailed.leave_value;
+              // const templeaveAvailed = tempmonthdata.attendance_detail.emp_leave_availed.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              // if(templeaveAvailed){
+              //   this.leave_credit -= templeaveAvailed.leave_value;
+              // }
+              const templeaveGranted = tempmonthdata.attendance_detail.emp_leave_granted.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              if(templeaveGranted){
+                this.leave_credit -= templeaveGranted.leave_value;
               }
             }
 					}

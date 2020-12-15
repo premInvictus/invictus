@@ -566,7 +566,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					} else if(this.feeTransactionForm.value.walletProcess == 'withdrawal') {
 						inputjson.ftr_amount_type = 'debit';
 					}
-					
+					inputjson.ftr_amount_status = this.feeTransactionForm.value.walletProcess;
 					let receiptMappArr=  [];
 					for (var i=0;i<this.invoiceArrayForm.length;i++) {
 						if (this.invoiceArrayForm[i].value.rm_inv_id && Number(this.invoiceArrayForm[i].value.rm_total_amount) != 0 ) {

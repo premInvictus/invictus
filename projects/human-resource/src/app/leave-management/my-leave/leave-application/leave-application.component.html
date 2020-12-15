@@ -29,7 +29,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <span>Leave Balance: {{leave_credit}}</span>
+          <span *ngIf="this.leaveForm.value.leave_type">Leave Balance: {{leave_credit}}</span>
         </div>
       </div>
       <div class="row">
