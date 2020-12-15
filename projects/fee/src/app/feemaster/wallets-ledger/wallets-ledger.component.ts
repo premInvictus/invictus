@@ -245,30 +245,29 @@ export class WalletsLedgerComponent implements OnInit {
 							w_bnk_id: item.tb_name_bnk ? item.tb_name_bnk : '-',
 				w_branch: item.w_branch ? item.w_branch : '-',
 				w_transaction_id: item.w_transaction_id ? item.w_transaction_id : '-',
-				w_opening: item.w_opening
+				w_opening: item.w_opening,
+				w_amount_status:item.w_amount_status
 			};
 			if(item.w_pay_id == 3){
 				element.w_bnk_id = item.tb_name_deposit ? item.tb_name_deposit : '-';
 			}
-			if(item.w_amount_type == 'credit'){
+			if(item.w_amount_status == 'deposite'){
 				total_credit += parseInt(item.w_amount);
 				element.rpt_type = 'RPT';
 				element.particulars='Amount Received';
 				element.subparticulars = item.pay_name ? '(By '+item.pay_name+')':'';
-			}
-			if(item.w_amount_type == 'debit'){
+			} else if(item.w_amount_status == 'withdrawal'){
 				total_debit += parseInt(item.w_amount);
-				if(item.w_ref_id) {
-					element.w_rpt_no = item.w_ref_id
-					element.rpt_type = 'BIL';
-					element.particulars=this.getLocationName(item.w_ref_location_id);
-					element.subparticulars = item.w_ref_no_of_items ? '(No of items - '+item.w_ref_no_of_items+')' : '';
-				} else {
-					element.w_rpt_no = item.w_ref_id
-					element.rpt_type = 'BIL';
-					element.particulars='Withdrawal';
-					element.subparticulars = item.pay_name ? '(By '+item.pay_name+')':'';
-				}
+				element.w_rpt_no = item.w_rpt_no
+				element.rpt_type = 'BIL';
+				element.particulars='Withdrawal';
+				element.subparticulars = item.pay_name ? '(By '+item.pay_name+')':'';
+			} else if(item.w_amount_status == 'purchase'){
+				total_debit += parseInt(item.w_amount);
+				element.w_rpt_no = item.w_ref_id
+				element.rpt_type = 'BIL';
+				element.particulars=this.getLocationName(item.w_ref_location_id);
+				element.subparticulars = item.w_ref_no_of_items ? '(No of items - '+item.w_ref_no_of_items+')' : '';
 			}
 			if(item.w_opening == 1){
 				element.w_rpt_no='';
@@ -380,7 +379,7 @@ export class WalletsLedgerComponent implements OnInit {
 		}
   }
   openReceiptDialog(element, edit): void {
-	  if(element.w_amount_type == 'credit') {
+	  if(element.w_amount_status == 'deposite' || element.w_amount_status == 'withdrawal') {
 		const dialogRef = this.dialog.open(WalletReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
@@ -393,7 +392,7 @@ export class WalletsLedgerComponent implements OnInit {
 
 		dialogRef.afterClosed().subscribe(result => {
 		});
-	  } else if(element.w_amount_type == 'debit') {
+	  } else if(element.w_amount_status == 'purchase') {
 		  this.feeService.allStoreBill({bill_no:parseInt(element.w_rpt_no)}).subscribe((result:any) => {
 			  if(result && result.length > 0) {
 				this.billDetailsModal.openModal(result[result.length-1]);
@@ -600,6 +599,7 @@ export interface Element {
 	w_transaction_date: string;
 	w_amount: number;
 	w_amount_type: string;
+	w_amount_status: string;
 	w_amount_sign:string;
 	w_pay_id: string;
   w_cheque_no: string;

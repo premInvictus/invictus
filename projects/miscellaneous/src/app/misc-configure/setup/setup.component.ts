@@ -126,6 +126,7 @@ export class SetupComponent implements OnInit {
     freezUnfreez=1;
     session_freez:any[] = [];
     session:any;
+    sig_positionArray = ['first','last'];
     constructor(private fbuild: FormBuilder,
         private commonService: CommonAPIService,
         private sisService: SisService,
