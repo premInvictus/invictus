@@ -61,7 +61,7 @@
                       <tr *ngIf="par?.vc_account_type === 'Opening Balance'">
                         <td><span
                             *ngIf="par?.vc_credit != 0 && !(par?.vc_mode)">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span><span
-                            *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date}}</span></td>
+                            *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
 
                         <td class="text-left"><span
                             *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
@@ -77,7 +77,7 @@
                       <tr *ngIf="!(par?.vc_account_type === 'Opening Balance')">
                         <td><span
                             *ngIf="par?.vc_credit != 0 && !(par?.vc_mode)">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span><span
-                            *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date}}</span></td>
+                            *ngIf="par?.vc_credit != 0 && (par?.vc_mode == 'consolidate')">{{par?.vc_date | date: 'd-MMM-yyyy'}}</span></td>
 
                         <td class="text-left"><span
                             *ngIf="par?.vc_credit != 0">{{par?.vc_account_type | titlecase}}</span></td>
