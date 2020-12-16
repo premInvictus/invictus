@@ -2,14 +2,23 @@
     <div class="row">
       <div class="col-2">
         <mat-form-field appearance="outline">
+          <mat-label>Report Type</mat-label>
+          <mat-select placeholder="Month" formControlName="report_type" (selectionChange)="getReport()" required>
+            <mat-option value="">Please select</mat-option>
+            <mat-option *ngFor="let item of reportTypeArr" [value]="item">{{item | titlecase}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-2">
+        <mat-form-field appearance="outline">
           <mat-label>Month</mat-label>
-          <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getShiftAttendanceReport()" required>
+          <mat-select placeholder="Month" formControlName="month_id" (selectionChange)="getReport()" required>
             <mat-option value="">Please select</mat-option>
             <mat-option *ngFor="let item of monthArray" [value]="item.fm_id">{{item.fm_name}}</mat-option>
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="col-10 ">
+      <div class="col-8">
         <div class="margin-top-10 margin-bottom-10">
           <button class="filter-bt" mat-raised-button (click)="openSearchDialog('')">
             filter
@@ -22,7 +31,7 @@
       </div>
     </div>
   </form>
-  <div class="row">
+  <div class="row" *ngIf="acumulativeReport.value.report_type == 'detail'">
     <div class="col-12">
       <mat-card class="margin-top-10 card-height-325" [hidden]="!(EMPLOYEE_ELEMENT.length > 0)">
         <!-- <div class="row">
@@ -121,12 +130,31 @@
         </div>
       </mat-card>
       <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
-        <div class="text-center">
-          <app-no-data
-            [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
-            [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
-        </div>
-      </mat-card>
+          <div class="text-center">
+            <app-no-data
+              [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+              [noDataText]="" [subText]="'No Employee Found'"></app-no-data>
+          </div>
+        </mat-card>
     </div>
   </div>
+  <div *ngIf="acumulativeReport.value.report_type == 'consolidate'">
+    <div style="width: 100% !important; overflow: auto !important" *ngIf="dataset.length > 0">
+      <angular-slickgrid gridId="grid1" [columnDefinitions]="columnDefinitions" [gridOptions]="gridOptions"
+        [dataset]="dataset" [gridHeight]="gridHeight" (onAngularGridCreated)="angularGridReady($event)"
+        (sgOnClick)="onCellClicked($event.detail.eventData, $event.detail.args)"
+        (sgOnCellChange)="onCellChanged($event.detail.eventData, $event.detail.args)">
+      </angular-slickgrid>
+    </div>    
+  </div>
+  <div *ngIf="dataset.length == 0 && EMPLOYEE_ELEMENT.length == 0">
+    <div class="text-center">
+      <app-no-data
+        [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+        [noDataText]="" [subText]="'Please select all required field'">
+      </app-no-data>
+    </div>
+    <br>
+  </div>
+  
   <app-advanced-search-modal (searchOk)="searchOk($event)" #searchModal></app-advanced-search-modal>
