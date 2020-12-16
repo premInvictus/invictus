@@ -221,7 +221,24 @@ export class ReceiptDetailsModalComponent implements OnInit {
 	// }
 	getReceiptBifurcation(data) {
 		console.log('data--', data);
-		this.invoiceBifurcationArray = [];
+		this.invoiceBifurcationArray = [];		
+		let param:any= {};
+			param.gs_name = ['show_grouped_head_receipt_bifurcation'];
+			this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok' && result.data) {
+				if (result.data[0]['gs_value'] == '1') {
+					this.getReceiptGroupBifurcation(data);
+				} else {
+					this.callReceiptBifurcationAPI(data);
+				}
+			
+			} else {
+				this.callReceiptBifurcationAPI(data);
+			}
+			});
+	}
+
+	callReceiptBifurcationAPI(data) {
 		let recieptJSON = {};
 		
 		if (this.data.invoiceNo) {

@@ -777,9 +777,50 @@ export class OutstandingReportComponent implements OnInit {
 										}
 									});
 								}
+							} else {
+								let tot=0;
+								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+												repoArray[Number(keys)]['rpt_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
+
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+											}
+											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+												repoArray[Number(keys)]['invoice_id'] : '-';
+											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+												repoArray[Number(keys)]['fp_name'] : '-';
+											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+												repoArray[Number(keys)]['invoice_no'] : '-';
+											
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
 							i++;
-							this.dataset.push(obj);
+							if (Object.keys(obj).length > 0) {
+								this.dataset.push(obj);
+							}
+							
 						});
 						this.columnDefinitions.push(
 							{
@@ -1196,9 +1237,49 @@ export class OutstandingReportComponent implements OnInit {
 										}
 									});
 								}
+							} else {
+								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+												repoArray[Number(keys)]['rpt_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+											}
+											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+												repoArray[Number(keys)]['invoice_id'] : '-';
+											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+												repoArray[Number(keys)]['fp_name'] : '-';
+											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+												repoArray[Number(keys)]['invoice_no'] : '-';
+											
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
+							
 							i++;
-							this.dataset.push(obj);
+							if (Object.keys(obj).length >0 ) {
+								this.dataset.push(obj);
+							}
+							
 						});
 						this.columnDefinitions.push(
 							{
@@ -3164,19 +3245,53 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 				
 			} else if ($event.value === 'headwisedetail') {
 				this.valueLabel = 'Fee Heads';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 			} else if ($event.value === 'classwise') {
 				this.valueLabel = 'Class';
 				if (this.reportFilterForm.value.school_branch.length > 1) {
@@ -3200,11 +3315,28 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			} else if ($event.value === 'feedue') {
 				this.valueLabel = 'Fee Dues';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 			} else if ($event.value === 'aging') {
 				this.valueLabel = '';
 			}
@@ -3213,6 +3345,48 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: '', report_name: 'Outstanding Report' });
 			this.filterFlag = false;
 		}
+	}
+	getGroupedFeeHeads() {
+		this.multiValueArray=[];
+		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
+		console.log('inputJson--',inputJson)
+		this.feeService.getGroupFeeHeads(inputJson).subscribe((result:any)=>{
+			if(result && result.data) {
+				this.multiBranchFeeHeads = result.data;
+				let  groupJson = {};
+				let temp_array=[];
+				for (const item of result.data) {
+					temp_array=[{
+						id: '0',
+						name: 'Transport'
+					}];
+					groupJson = {};
+					for (const it of item.items) {
+						if(it.fs_classification == 'group') {
+							temp_array.push({
+								id: 'g-'+(it.fs_id),
+								name: new CapitalizePipe().transform(it.fs_name),
+								fs_classification : 'group'
+							});
+						} else {
+							temp_array.push({
+								id: it.fh_id,
+								name: new CapitalizePipe().transform(it.fh_name),
+								fs_classification: 'head'
+							});
+						}
+						
+					}
+					
+					groupJson = {name: item.name, items : temp_array };
+					this.multiValueArray.push(groupJson);
+					
+				}
+				
+			} else {
+				this.multiBranchFeeHeads = [];
+			}			
+		});
 	}
 	getMultiBranchFeeHeads() {
 		this.multiValueArray=[];
