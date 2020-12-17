@@ -355,7 +355,6 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           // dt.data = temp.datetime;
                         }
                       }  else {
-                        // dt.data = 'A';
                       }
                     }
                     if(para == 'out') {
@@ -366,7 +365,6 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           // dt.data = temp.datetime;
                         }
                       }  else {
-                        // dt.data = 'A';
                       }
                     }
                     if(para == 'duration') {
@@ -383,7 +381,6 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           dt.data = hours + 'h ' + minutes + 'm ' + seconds + 's ';
                         }
                       }  else {
-                        // dt.data = 'A';
                       }
                     }
                     if(para == 'remarks') {
@@ -409,7 +406,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
                         status='P';
                         temp = shiftdayAtt.employeeList.find(e => e.shortleave == true && e.emp_code_no == employeeData.emp_code_no);
                         if(temp){
-                          status='Shortleave';
+                          status='P(L)';
                         }
                         temp = shiftdayAtt.employeeList.find(e => e.emp_code_no == employeeData.emp_code_no);
                         if(!temp){
@@ -442,14 +439,14 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           if(day_emp_leave) {
                             status = day_emp_leave.leave_type.aliasname;
                           } else {
-                            status='A';
+                            status='LWP';
                           }
                           dt.data=status;
                         } else {
                           dt.data=status;
                         }
                       }  else {
-                        dt.data = 'A';
+                        dt.data = 'LWP';
                       }
                     }
                   }
@@ -458,7 +455,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
                   if(element.dateArray && element.dateArray.length > 0){
                     let ab=0;
                     element.dateArray.forEach(e => {
-                      if(e.data == 'A') {
+                      if(e.data == 'LWP') {
                         ab++;
                       }
                     });

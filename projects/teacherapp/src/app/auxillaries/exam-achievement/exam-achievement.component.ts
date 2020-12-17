@@ -179,7 +179,8 @@ export class ExamAchievementComponent implements OnInit {
                 roll_no:item.r_rollno,
                 au_admission_no: item.au_admission_no,
                 au_full_name: new CapitalizePipe().transform(item.au_full_name),
-                au_achievement: item.a_achievement
+                au_achievement: item.a_achievement,
+                is_editable: item.is_editable
               });
               counter++;
               this.formgroupArray.push({
@@ -254,4 +255,5 @@ export interface Element {
   au_admission_no: any;
   au_full_name: any;
   au_achievement: any;
+  is_editable:any;
 }
