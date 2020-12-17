@@ -190,6 +190,9 @@ export class OutstandingReportComponent implements OnInit {
 		if(this.common.isExistUserAccessMenu('659')) {
 			this.reportTypeArray.push({report_type: 'defaulter', report_name: 'Defaulter\'s List'});
 		}
+		if(this.common.isExistUserAccessMenu('659')) {
+			this.reportTypeArray.push({report_type: 'defaulter_month_wise', report_name: 'Defaulter\'s List Month Wise'});
+		}
 		if(this.common.isExistUserAccessMenu('660')) {
 			this.reportTypeArray.push({report_type: 'feedue', report_name: 'Fee dues'});
 		}
@@ -1950,13 +1953,14 @@ export class OutstandingReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
-			} else if (this.reportType === 'defaulter' && value.to_date) {
+			} else if (this.reportType === 'defaulter') {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': this.reportType,
 					'classId': value.fee_value,
-					'to_date': value.to_date,
+					'to_date': value.from_date,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -1964,6 +1968,255 @@ export class OutstandingReportComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
+				};
+				this.columnDefinitions = [
+					{
+						id: 'srno',
+						name: 'SNo.',
+						field: 'srno',
+						sortable: true,
+						width: 2
+					},
+					{
+						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+						width: 60,
+						grouping: {
+							getter: 'stu_admission_no',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						groupTotalsFormatter: this.srnTotalsFormatter
+					},
+					{
+						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'stu_full_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_parent_name',
+						name: 'Active Parent',
+						field: 'epd_parent_name',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'epd_parent_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_contact_no',
+						name: 'Active Parent Contact',
+						field: 'epd_contact_no',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText }										
+					},
+					{
+						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
+						filterSearchType: FieldType.string,
+						width: 50,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'stu_class_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							comparer: (a, b) => {
+								// (optional) comparer is helpful to sort the grouped data
+								// code below will sort the grouped value in ascending order
+								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', filterable: true,
+						filterSearchType: FieldType.string,
+						width: 50,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							comparer: (a, b) => {
+								// (optional) comparer is helpful to sort the grouped data
+								// code below will sort the grouped value in ascending order
+								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'rpt_amount',
+						name: 'Amount Due',
+						field: 'rpt_amount',
+						width: 50,
+						filterable: true,
+						cssClass: 'amount-report-fee',
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						sortable: true,
+						formatter: this.checkFeeFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'fp_name',
+						name: 'Fee Period',
+						width: 120,
+						field: 'fp_name',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'fp_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+				}];
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
+				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let index = 0;
+						for (const item of repoArray) {
+							const obj: any = {};
+							obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
+							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
+												repoArray[Number(index)]['school_prefix'] : '-';
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
+							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ? repoArray[Number(index)]['epd_contact_no'] : '-';
+
+							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+							} else {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
+							}
+							obj['rpt_amount'] = repoArray[Number(index)]['defaulter_inv_group_amount'] ?
+								Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0;
+							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+								repoArray[Number(index)]['fp_name'] : '-';
+							this.dataset.push(obj);
+							index++;
+						}
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['rpt_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
+						obj3['fp_name'] = '';
+						this.totalRow = obj3;
+						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
+						this.aggregatearray.push(new Aggregators.Sum('srno'));
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+						setTimeout(() => this.groupByClass(), 2);
+					} else {
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.reportType === 'defaulter_month_wise') {
+				this.gridOptions.rowHeight=65;
+				const collectionJSON: any = {
+					'admission_no': '',
+					'studentName': '',
+					'report_type': 'defaulter',
+					'classId': value.fee_value,
+					'to_date': value.from_date,
+					'pageSize': '10',
+					'pageIndex': '0',
+					'filterReportBy': 'outstanding',
+					'login_id': value.login_id,
+					'orderBy': value.orderBy,
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch,
+					'fee_month':this.reportFilterForm.value.month_id
 				};
 				this.columnDefinitions = [
 					{

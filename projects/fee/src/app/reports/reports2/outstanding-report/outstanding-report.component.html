@@ -20,7 +20,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length ==0"
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length ==0"
             class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
@@ -31,7 +31,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && reportType !== 'defaulter' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length > 0"
+        <div *ngIf="filterFlag && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' && this.reportFilterForm.value.report_type && reportType !== 'aging' && reportType !== 'aging_detail'  && multiValueArray.length > 0"
             class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>{{valueLabel}}</mat-label>
@@ -46,7 +46,10 @@
         </div>
         <div *ngIf="reportType !== 'feedue'" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
-                <mat-label>From Date</mat-label>
+                <mat-label>
+                    <span *ngIf="reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' &&  reportType !== 'aging' &&  reportType !== 'aging_detail'">From Date</span>
+                    <span *ngIf="reportType == 'defaulter' || reportType == 'defaulter_month_wise' ||  reportType == 'aging' ||  reportType == 'aging_detail'">To Date</span>
+                </mat-label>
                 <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="from_date"
                 (blur)="getFromDate($event.target.value)"/>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -62,7 +65,16 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && (reportType !== 'feedue' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
+        <div *ngIf="reportType === 'defaulter_month_wise' " class="col-2">
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Month</mat-label>
+                <mat-select formControlName="month_id" [placeholder]="valueLabel" multiple>
+                    <mat-option *ngFor="let item of monthArray" value="{{item.fm_id}}">{{item.fm_name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div *ngIf="filterFlag && (reportType !== 'feedue' && reportType !== 'defaulter' && reportType !== 'defaulter_month_wise' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>To Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"
