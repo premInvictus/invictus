@@ -267,9 +267,13 @@ export class LeaveApplicationComponent implements OnInit {
               if(templeaveCredit){
                 this.leave_credit = templeaveCredit.leave_value;
               }
-              const templeaveAvailed = tempmonthdata.attendance_detail.emp_leave_availed.find(e => e.leave_id == this.leaveForm.value.leave_type);
-              if(templeaveAvailed){
-                this.leave_credit -= templeaveAvailed.leave_value;
+              // const templeaveAvailed = tempmonthdata.attendance_detail.emp_leave_availed.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              // if(templeaveAvailed){
+              //   this.leave_credit -= templeaveAvailed.leave_value; 
+              // }
+              const templeaveGranted = tempmonthdata.attendance_detail.emp_leave_granted.find(e => e.leave_id == this.leaveForm.value.leave_type);
+              if(templeaveGranted){
+                this.leave_credit -= templeaveGranted.leave_value;
               }
             }
 					}
