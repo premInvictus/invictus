@@ -125,6 +125,15 @@ export class ExamAchievementComponent implements OnInit {
       return false;
     }
   }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
+  }
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.a_class_id }).subscribe((result: any) => {
