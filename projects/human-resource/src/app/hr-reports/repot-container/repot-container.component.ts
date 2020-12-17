@@ -67,8 +67,30 @@ export class RepotContainerComponent implements OnInit {
   constructor(private erpCommonService: ErpCommonService, private CommonAPIService: CommonAPIService) { }
 
   ngOnInit() {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser')); 
+    this.getGlobalSettings();
   }
+  getGlobalSettings() {
+		this.erpCommonService.getGlobalSetting({ gs_alias: 'attendance_calculation' }).subscribe((res: any) => {
+			if (res && res.status === 'ok') {
+				if (res.data[0] && res.data[0].gs_value) {
+          let attendance_calculation = res.data[0].gs_value;
+          if(attendance_calculation == 'manual') {
+            let findex = this.feeReportArray.findIndex(e => e.report_id == 5);
+            if(findex != -1){
+              this.feeReportArray.splice(findex,1);
+            }
+          } else {
+            let findex = this.feeReportArray.findIndex(e => e.report_id == 2);
+            if(findex != -1){
+              this.feeReportArray.splice(findex,1);
+            }
+          } 
+				}
+			}
+		});
+
+	}
   checkEnable(report_id) {
     return 'report-card mat-card';
   }

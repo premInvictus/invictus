@@ -62,7 +62,7 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div *ngIf="filterFlag && (reportType !== 'feedue' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
+        <div *ngIf="filterFlag && (reportType !== 'feedue' && reportType !== 'defaulter' &&  reportType !== 'aging' &&  reportType !== 'aging_detail')" class="col-2">
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>To Date</mat-label>
                 <input matInput [matDatepicker]="picker1" placeholder="Choose a date" formControlName="to_date"

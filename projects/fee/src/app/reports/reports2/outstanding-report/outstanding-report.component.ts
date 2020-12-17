@@ -1951,12 +1951,13 @@ export class OutstandingReportComponent implements OnInit {
 					}
 				});
 			} else if (this.reportType === 'defaulter' && value.to_date) {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': this.reportType,
 					'classId': value.fee_value,
-					'to_date': value.to_date,
+					'to_date': value.from_date,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',

@@ -125,6 +125,15 @@ export class ExamAchievementComponent implements OnInit {
       return false;
     }
   }
+  isAnyoneEditabelStu() {
+    let anyoneeditable = false;
+    this.studentArray.forEach(element => {
+      if(element.is_editable === '1') {
+        anyoneeditable = true;
+      }
+    });
+    return anyoneeditable;
+  }
   getClassTerm() {
     this.termsArray = [];
     this.examService.getClassTerm({ class_id: this.paramform.value.a_class_id }).subscribe((result: any) => {
@@ -179,7 +188,8 @@ export class ExamAchievementComponent implements OnInit {
                 roll_no:item.r_rollno,
                 au_admission_no: item.au_admission_no,
                 au_full_name: new CapitalizePipe().transform(item.au_full_name),
-                au_achievement: item.a_achievement
+                au_achievement: item.a_achievement,
+                is_editable: item.is_editable
               });
               counter++;
               this.formgroupArray.push({
@@ -254,4 +264,5 @@ export interface Element {
   au_admission_no: any;
   au_full_name: any;
   au_achievement: any;
+  is_editable:any;
 }
