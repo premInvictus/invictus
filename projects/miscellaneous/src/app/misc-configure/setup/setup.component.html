@@ -153,6 +153,15 @@
                                         </mat-select>
                                       </mat-form-field>
                                     </ng-container>
+                                    <ng-container *ngIf="control.gs_alias == 'attendance_calculation'">
+                                      <mat-form-field class="form-field" appearance="outline">
+                                        <mat-select [formControlName]="control.gs_alias">
+                                          <mat-option *ngFor="let item of hrattendanceArray" [value]="item">
+                                            {{item}}
+                                          </mat-option>
+                                        </mat-select>
+                                      </mat-form-field>
+                                    </ng-container>
                                   </ng-container>
                                   <ng-container *ngIf="control.gs_type == 'json'">
                                     <ng-container *ngIf="control.gs_alias == 'library_user_setting'">
