@@ -833,20 +833,58 @@ export class FeeLedgerComponent implements OnInit {
 		
 		if (this.selection.selected.length > 0) {
 			this.selection.selected.forEach(item => {
-				tempactionFlag.deleteinvoice = tempactionFlag.deleteinvoice && item.eachActionFlag.deleteinvoice && this.selection.selected.length > 0;
-				tempactionFlag.deletereceipt = tempactionFlag.deletereceipt && item.eachActionFlag.deletereceipt && this.selection.selected.length > 0;
-				tempactionFlag.edit = tempactionFlag.edit && item.eachActionFlag.edit && this.selection.selected.length === 1;
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.deleteinvoice = false;
+				} else {
+					tempactionFlag.deleteinvoice = tempactionFlag.deleteinvoice && item.eachActionFlag.deleteinvoice && this.selection.selected.length > 0;
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.deletereceipt = false;
+				} else {
+					tempactionFlag.deletereceipt = tempactionFlag.deletereceipt && item.eachActionFlag.deletereceipt && this.selection.selected.length > 0;
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.edit = false;
+				} else {
+					tempactionFlag.edit = tempactionFlag.edit && item.eachActionFlag.edit && this.selection.selected.length === 1;
+				}					
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
 					tempactionFlag.recalculate = false;
 				} else {
 					tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0 ;
-				}				
-				tempactionFlag.consolidate = tempactionFlag.consolidate && item.eachActionFlag.consolidate && this.selection.selected.length > 1;
-				tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
-				tempactionFlag.detach = (tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1) || item.flgr_payment_mode === 'partial';
-				tempactionFlag.unconsolidate = tempactionFlag.unconsolidate && item.eachActionFlag.unconsolidate && this.selection.selected.length > 0;
+				}	
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.attach = false;
+				} else {
+					tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.detach = true;
+				} else {
+					tempactionFlag.detach = (tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1) || item.flgr_payment_mode === 'partial';
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.consolidate = false;
+				} else {
+					tempactionFlag.consolidate = tempactionFlag.consolidate && item.eachActionFlag.consolidate && this.selection.selected.length > 0;
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.unconsolidate = false;
+				} else {
+					tempactionFlag.unconsolidate = tempactionFlag.unconsolidate && item.eachActionFlag.unconsolidate && this.selection.selected.length > 0;
+				}
+				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.receiptmodification = false;
+				} else {
+					tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
+				}			
+					
+				
+				
+				
+				
 				// tslint:disable-next-line:max-line-length
-				tempactionFlag.receiptmodification = tempactionFlag.receiptmodification && item.eachActionFlag.receiptmodification && this.selection.selected.length === 1;
+				
 
 			});
 			this.actionFlag = tempactionFlag;
