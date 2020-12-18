@@ -47,6 +47,7 @@ export class SearchDialogComponent implements OnInit {
 	openModal(data) {
 		console.log('data', data);
 		this.inputData = data;
+		this.showTable =false;
 		this.searchForm.patchValue({
 			'inv_id': data,
 			'receipt_number': ''
@@ -282,6 +283,7 @@ export class SearchDialogComponent implements OnInit {
 		this.deleteCancel.emit(this.searchForm.value);
 	}
 	closeDialog() {
+		this.deleteCancel.emit(this.searchForm.value);
 		this.dialogRef.close();
 	}
 
