@@ -4,6 +4,10 @@ import { QelementService } from '../../questionbank/service/qelement.service';
 import { MatPaginator, MatTableDataSource, MatSort } from '@angular/material';
 import { UserAccessMenuService, BreadCrumbService, NotificationService, SocketService, CommonAPIService } from '../../_services/index';
 import { Element } from './scheduleexam.model';
+import { StudentStatusModalComponent } from '../student-status-modal/student-status-modal.component';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
+
 @Component({
 	selector: 'app-scheduleexam',
 	templateUrl: './scheduleexam.component.html',
@@ -39,7 +43,9 @@ export class ScheduleexamComponent implements OnInit {
 		private userAccessMenuService: UserAccessMenuService,
 		private breadCrumbService: BreadCrumbService,
 		private socketService: SocketService,
-		private _commonAPIService: CommonAPIService
+		private _commonAPIService: CommonAPIService,
+		public dialog: MatDialog
+
 	) {
 		// this.socket = io.connect(appConfig.socketUrl);
 	}
@@ -272,4 +278,15 @@ export class ScheduleexamComponent implements OnInit {
 	}
 	openModal = (data) => this.deleteModalRef.openDeleteModal(data);
 	deleteComCancel() { }
+	openStudentStatusModal(es_id) {
+		const dialogRef = this.dialog.open(StudentStatusModalComponent, {
+			width: '1000px',
+			data: {es_id:es_id}
+		});
+		dialogRef.afterClosed().subscribe(dresult => {
+			if (dresult && dresult.data) {
+			}
+		});
+			
+	}
 }
