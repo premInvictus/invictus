@@ -340,8 +340,11 @@ export class FeeLedgerComponent implements OnInit {
 		
 		//this.recordArray.sort( function ( a, b ) { return b.flgr_id - a.flgr_id; } );
 		console.log('recordArray--',this.recordArray);
+		var partialLedgerArr = [];
 		for (let i=0; i<this.recordArray.length;i++) {
 			if(this.recordArray[i]['flgr_payment_mode'] === 'partial' && this.recordArray[i]['flgr_invoice_receipt_no'] === invoice_no) {
+				partialLedgerArr.push(this.recordArray[i]);
+
 				tempArr.push(this.recordArray[i]['flgr_balance']);
 				//console.log('this.recordArray[i]', this.recordArray[i]);
 				if(this.recordArray[i]['ftr_pay_id'] === "6") {
@@ -350,8 +353,9 @@ export class FeeLedgerComponent implements OnInit {
 			}
 			
 		}
-		 console.log('tempArr--',tempArr.reverse(),pgStatus);
-		return pgStatus ?  tempArr[0] : tempArr.reverse()[0];
+		partialLedgerArr.sort( function ( a, b ) { return b.flgr_id - a.flgr_id; } );
+		 console.log('tempArr--',tempArr.reverse(),pgStatus, partialLedgerArr);
+		return pgStatus ?  tempArr[0] : partialLedgerArr[0]['flgr_balance'];
 	}
 
 	getRowSpan(col, index) {
