@@ -854,7 +854,7 @@ export class FeeLedgerComponent implements OnInit {
 					tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0 ;
 				}	
 				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
-					tempactionFlag.attach = false;
+					tempactionFlag.attach = true;
 				} else {
 					tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
 				}
