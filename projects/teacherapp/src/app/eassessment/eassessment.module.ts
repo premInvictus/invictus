@@ -10,6 +10,8 @@ import { EassessmentRoutingModule } from './eassessment-routing.module';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { ChartsModule } from 'ng2-charts';
 import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dialog/question-paper-dialog.component';
+import { StudentStatusModalComponent } from './student-status-modal/student-status-modal.component';
+
 
 @NgModule({
 	imports: [
@@ -22,13 +24,14 @@ import { QuestionPaperDialogComponent } from '../questionbank/question-paper-dia
 		ChartsModule
 	],
 	entryComponents: [
-		QuestionPaperDialogComponent
+		QuestionPaperDialogComponent,StudentStatusModalComponent
 	],
 	declarations: [
 		ExamsetupComponent,
 		ScheduleexamComponent,
 		TestinitiationscreenComponent,
 		TeinvilagationComponent,
+		StudentStatusModalComponent
 	]
 })
 export class EassessmentModule { }
