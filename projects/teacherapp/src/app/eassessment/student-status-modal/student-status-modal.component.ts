@@ -135,6 +135,7 @@ export class StudentStatusModalComponent implements OnInit, AfterViewInit {
     this.dialogRef.close();
   }
   changeStatus(eva_id,eva_status) {
+	// console.log('chagestatus');
     this.qelementService.teacherFinalSubmit({ eva_id: eva_id, eva_status: eva_status }).subscribe(
       // tslint:disable-next-line:no-shadowed-variable
       (result: any) => {
