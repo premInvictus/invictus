@@ -218,9 +218,15 @@ export class SalaryComputationComponent implements OnInit {
 	}
 
 	getPaymentModes() {
+		var banks = [];
 		this.commonAPIService.getBanks({}).subscribe((res: any) => {
 			if (res && res.status === 'ok') {
 
+				for (var i = 0; i < res.data.length; i++) {
+					if ((!(res.data[i]['bnk_module_list'] == '')) || (res.data[i]['bnk_module_list'].includes('other'))) {
+						banks.push(res.data[i]);
+					}
+				}
 				this.paymentModeArray.push(
 					{
 						'pm_id': 'Cash' ? 'Cash'.trim().toLowerCase().replace(' ', '_') : '',
@@ -234,7 +240,10 @@ export class SalaryComputationComponent implements OnInit {
 
 					}
 				);
-				for (const item of res.data) {
+
+
+
+				for (const item of banks) {
 					let i = 0;
 					for (const trans of this.transMode) {
 						this.paymentModeArray.push(
