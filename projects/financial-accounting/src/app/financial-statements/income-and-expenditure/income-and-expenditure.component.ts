@@ -48,7 +48,7 @@ export class IncomeAndExpenditureComponent implements OnInit {
         this.feeMonthArray = result.data;
         this.feeMonthArray.push({
           fm_id:'consolidate',
-          fm_name:'Consolidate'
+          fm_name:'Consolidated'
         })
 			}
 		});

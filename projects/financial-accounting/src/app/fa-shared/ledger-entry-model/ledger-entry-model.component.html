@@ -111,7 +111,7 @@
                       <td><span
                           *ngIf="item?.credit_data?.length > 0">{{item?.credit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span>
                       </td>
-                      <td class="text-left"><b> Balance c/d</b></td>
+                      <td class="text-left"><b> <span *ngIf="item?.coa_acc_type?.acc_type_name=='Income' || item?.coa_acc_type?.acc_type_name=='Expense'">Income &amp; Expenditure Account</span><span *ngIf="!(item?.coa_acc_type?.acc_type_name=='Income' || item?.coa_acc_type?.acc_type_name=='Expense')">Balance c/d</span></b></td>
                       <td>&nbsp;</td>
                       <td class="text-right"><b>{{getTwoDecimalValue(-(deviation_f)) | indianCurrency }}</b></td>
                     </tr>
@@ -175,7 +175,7 @@
                       <td><span
                           *ngIf="item?.debit_data.length > 0">{{item?.debit_data[0]['vc_closing_date'] | date: 'd-MMM-yyyy'}}</span>
                       </td>
-                      <td class="text-left"><b> Balance c/d</b></td>
+                      <td class="text-left"><b> <span *ngIf="item?.coa_acc_type?.acc_type_name=='Income' || item?.coa_acc_type?.acc_type_name=='Expense'">Income &amp; Expenditure Account</span><span *ngIf="!(item?.coa_acc_type?.acc_type_name=='Income' || item?.coa_acc_type?.acc_type_name=='Expense')">Balance c/d</span></b></td>
                       <td>&nbsp;</td>
                       <td class="text-right"><b>{{getTwoDecimalValue(deviation_f) | indianCurrency}}</b></td>
                     </tr>
