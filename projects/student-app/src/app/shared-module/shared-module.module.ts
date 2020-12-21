@@ -59,7 +59,10 @@ import { MakePaymentViaEazypayComponent } from '../student-fee/make-payment-via-
 import { ViewStudentProfileComponent } from './view-student-profile/view-student-profile.component';
 import { MakePaymentHdfcComponent } from '../student-fee/make-payment-hdfc/make-payment-hdfc.component';
 import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-modal/admit-code-confirmation-modal.component';
+import { MatGridListModule } from '@angular/material';
 //import { NotificationPageComponent } from 'src/app/login/notification-page/notification-page.component';
+import { AngularCalendarYearViewComponent } from './angular-calendar-year-view/angular-calendar-year-view.component';
+import {PopoverModule} from 'ngx-bootstrap/popover';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -99,7 +102,9 @@ import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-m
 		ReactiveFormsModule,
 		InvictusSharedModule,
 		ImageViewerModule,
-		InfiniteScrollModule
+		InfiniteScrollModule,
+		PopoverModule.forRoot(),
+		MatGridListModule
 	],
 	declarations: [
 		CommonDynamicChartComponent,
@@ -125,8 +130,9 @@ import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-m
 		DeleteModalComponent,
 		ViewStudentProfileComponent,
 		MakePaymentHdfcComponent,
-		AdmitCodeConfirmationModalComponent
-		//NotificationPageComponent
+		AdmitCodeConfirmationModalComponent,
+		//NotificationPageComponent,
+		AngularCalendarYearViewComponent
 	],
 	exports: [
 		MatProgressBarModule,
@@ -180,7 +186,9 @@ import { AdmitCodeConfirmationModalComponent } from './admit-code-confirmation-m
 		InfiniteScrollModule,
 		ViewStudentProfileComponent,
 		MakePaymentHdfcComponent,
-		AdmitCodeConfirmationModalComponent
+		AdmitCodeConfirmationModalComponent,
+		AngularCalendarYearViewComponent,
+		MatGridListModule
 	],
 	entryComponents: [OngoingTestInstructionComponent, PaymentOrderModalComponent, PreviewDocumentComponent, ImageViewerComponent,
 		AdvancedSearchModalComponent,
