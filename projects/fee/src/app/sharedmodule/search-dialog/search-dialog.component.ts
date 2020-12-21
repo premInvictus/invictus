@@ -221,6 +221,7 @@ export class SearchDialogComponent implements OnInit {
   }
 		console.log('this.searchForm.value.receipt_number--',code,this.searchForm.value.receipt_number);
 		//this.invoiceArrayForm = this.invoiceFormArrayClone;
+		if (this.searchForm.value.receipt_number) {
 		this.feeService.getReceiptBifurcation({flgr_invoice_receipt_no:this.searchForm.value.receipt_number}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.showTable = true;
@@ -265,7 +266,9 @@ export class SearchDialogComponent implements OnInit {
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
-		});
+		}); } else {
+			this.common.showSuccessErrorMessage('Please Enter Receipt Number', 'error');
+		}
 		// if (this.searchForm.valid) {
 		// 	this.deleteOk.emit(this.searchForm.value);
 		// 	this.dialogRef.close();

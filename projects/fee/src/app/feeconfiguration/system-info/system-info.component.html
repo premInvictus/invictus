@@ -36,6 +36,11 @@
                           </mat-error>
                         </mat-form-field>
                         <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Enter Bank Alias</mat-label>
+                          <input matInput placeholder="Enter bank alias..." maxlength="150" minlength="1"
+                            formControlName="bnk_alias">
+                        </mat-form-field>
+                        <mat-form-field class="form-field" appearance="outline">
                           <mat-label>Enter Bank Branch</mat-label>
                           <input matInput placeholder="Enter bank branch..." maxlength="150" minlength="1"
                             formControlName="bnk_branch">
@@ -49,6 +54,13 @@
                           <mat-label>Enter IFSC code</mat-label>
                           <input matInput placeholder="Enter IFSC code..." maxlength="150" minlength="1"
                             formControlName="bnk_ifsc">
+                        </mat-form-field>
+                        <mat-form-field class="form-field" appearance="outline">
+                          <mat-label>Bank For Module</mat-label>
+                          <mat-select placeholder="Bank For Module" multiple formControlName="bnk_module_list">                            
+                            <mat-option value="fees">Fees</mat-option>
+                            <mat-option value="other">Other</mat-option>
+                          </mat-select>
                         </mat-form-field>
                       </form>
                     </div>
@@ -115,8 +127,25 @@
                                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                                           {{secondHeaderArray[configValue-1]}}
                                         </th>
-                                        <td mat-cell *matCellDef="let item">
+                                        <td mat-cell *matCellDef="let item" class="title-case">
                                           {{ item.alias }}
+                                        </td>
+                                      </ng-container>
+                                       <!-- Class Column -->
+                                       <ng-container matColumnDef="branch">
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          {{secondHeaderArray[1]}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let item">
+                                          {{ item.branch }}
+                                        </td>
+                                      </ng-container>
+                                      <ng-container matColumnDef="bnk_module_list" >
+                                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                                          {{secondHeaderArray[2]}}
+                                        </th>
+                                        <td mat-cell *matCellDef="let item" class="title-case">
+                                          {{ item.bnk_module_list }}
                                         </td>
                                       </ng-container>
                                       <!-- Column 1 -->

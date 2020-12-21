@@ -461,7 +461,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.banks = [];
 		this.feeService.getBanks({}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
-				this.banks = result.data;
+				for (var i=0; i<result.data.length;i++) {
+					if ((!(result.data[i]['bnk_module_list'] == '')) || (result.data[i]['bnk_module_list'].includes('fees'))) {
+						this.banks.push(result.data[i]);
+					}
+				}
+				
 			}
 		});
 	}
