@@ -334,4 +334,16 @@ export class CommonAPIService {
 	getMappedSchoolWithUser(value) {
 		return this.http.post(environment.apiAxiomUrl + '/dashboard/getMappedSchoolWithUser',value);
 	}
+	getShiftAttendance(value) {
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/getall',value);
+	}
+	getShiftSeasonAttendance(value) {
+		return this.http.post(environment.apiHRUrl + '/shiftattendance/getSessionShiftAttendance',value);
+	}
+	getAllEmployeeLeaveData() {
+		return this.http.get(environment.apiHRUrl + '/employee-leave-management/getAllEmployeeLeaveData');
+	}
+	GetHolidayDays(value) {
+		return this.http.post(environment.apiSmartUrl + '/common/GetHolidayDays', value);
+	}
 }

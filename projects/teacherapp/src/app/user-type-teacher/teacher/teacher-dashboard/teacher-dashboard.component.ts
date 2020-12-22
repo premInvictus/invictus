@@ -127,10 +127,18 @@ export class TeacherDashboardComponent implements OnInit {
 	periodSup = ['st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th', 'th'];
 	weekArr: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
 	week: any[] = ['Monday', 'Tuesday', 'Wednesday', 'Thrusday', 'Friday', 'Saturday'];
+	userDetails: any;
+	leave_credit = 0;
+	leave_granted = 0;
+	monthDays: any[] = [];
 	week_day: number;
 	todaysDate = new Date();
 	sub_id;
+	dataMonth = 0;
+	dataSession = 0
 	assignmentArray: any[] = [];
+	gaugeOptionsflag = false;
+	gaugeOptions: any;
 	currentAssignment: any;
 	currentAssignmentIndex: number;
 	assignmentPre = true;
@@ -139,6 +147,8 @@ export class TeacherDashboardComponent implements OnInit {
 	tclassArr: any[] = [];
 	tsecArr: any[] = [];
 	aparamform: FormGroup;
+	workingDay = 0;
+	sessionLeave: any ;
 	constructor(
 		private qelementService: QelementService,
 		private adminService: AdminService,
@@ -152,12 +162,186 @@ export class TeacherDashboardComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
+		this.getDaySpace();
 		this.setTeacherDashboard();
-		this.branchChangeService.branchSwitchSubject.subscribe((data:any)=>{
-			if(data) {
+		this.branchChangeService.branchSwitchSubject.subscribe((data: any) => {
+			if (data) {
 				this.setTeacherDashboard();
 			}
 		});
+		this.getUserDetailsHr();
+		// this.getAttendanceReport();
+	}
+
+	getUserDetailsHr() {
+		this.userAccessMenuService.getAllUser({ emp_login_id: this.currentUser.login_id }).subscribe(
+			(result: any) => {
+				// console.log("i am result", result, result);
+				if (result && result.length > 0) {
+					this.userDetails = result[0];
+					this.getAttendanceReport();
+					if (this.userDetails && this.userDetails.emp_month_attendance_data) {
+						// console.log("i am here inside", this.userDetails.emp_month_attendance_data);
+
+						this.userDetails.emp_month_attendance_data.forEach(element => {
+							// console.log("i am session",);
+
+							if (element.ses_id == JSON.parse(localStorage.getItem('session')).ses_id) {
+								if (element.month_data && element.month_data.length > 0) {
+									const tempmonthdata = element.month_data[element.month_data.length - 1];
+									// console.log('tempmonthdata', tempmonthdata);
+
+									tempmonthdata.attendance_detail.emp_leave_credited.forEach(e => {
+										this.leave_credit += e.leave_value;
+									})
+
+
+									element.month_data.forEach(e => {
+										e.attendance_detail.emp_leave_granted.forEach(x => {
+											this.leave_granted += x.leave_value
+										})
+									})
+								}
+							}
+						});
+					}
+				}
+			}
+		);
+	}
+
+	getAttendanceReport() {
+		console.log("in here");
+
+		const inputJson = {
+			month_id: new Date().getMonth() + 1,
+			ses_id: JSON.parse(localStorage.getItem('session')).ses_id,
+		}
+		const inputJson2 = {
+			emp_code_no: this.userDetails.emp_id,
+			ses_id: JSON.parse(localStorage.getItem('session')).ses_id,
+		}
+
+		this.commonAPIService.getShiftAttendance(inputJson).subscribe(
+			(result: any) => {
+				if (result != undefined && result.length != 0) {
+					let arr = [];
+					var t = new Date();
+					let count = 0;
+					let present = 0;
+					for (let i = 0; i < t.getDate(); i++) {
+						if (i + 1 == new Date(result[i - count].created_on).getDate()) {
+							let stat = [];
+							stat = result[i - count].employeeList.find(element => (element.emp_code_no == this.userDetails.emp_id));
+							if (stat != undefined) {
+								present += 1
+								arr.push({
+									day: i + 1,
+									value: "#30B835"
+								})
+							}
+							else {
+								arr.push({
+									day: i + 1,
+									value: "#F63B3B"
+								})
+							}
+						} else {
+							arr.push({
+								day: i + 1,
+								value: "#F6B838"
+							})
+							count += 1;
+						}
+					}
+					for (let i = t.getDate(); i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
+						arr.push({
+							day: i + 1,
+							value: "#ffffff"
+						})
+					}
+
+					this.dataMonth = Math.round(present * 100 / result.length);
+
+					if (arr.length == 0) {
+						for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
+							arr.push({
+								day: i + 1,
+								value: "#ffffff"
+							})
+						}
+					}
+					this.monthDays = this.monthDays.concat(arr);
+
+				} else {
+					let arr = [];
+					var t = new Date();
+					for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
+						arr.push({
+							day: i + 1,
+							value: "#ffffff"
+						})
+					}
+					this.monthDays = this.monthDays.concat(arr);
+				}
+
+				function formatDate(date) {
+					var d = new Date(date),
+						month = '' + (d.getMonth() + 1),
+						day = '' + d.getDate(),
+						year = d.getFullYear();
+				
+					if (month.length < 2) 
+						month = '0' + month;
+					if (day.length < 2) 
+						day = '0' + day;
+				
+					return [year, month, day].join('-');
+				}
+
+				let workingDayParam: any = {};
+				workingDayParam.datefrom = formatDate('May 11,2020');
+				workingDayParam.dateto = formatDate(new Date());
+				workingDayParam.class_id = 1;
+				
+				
+				this.commonAPIService.GetHolidayDays(workingDayParam).subscribe(
+					(res: any) => {
+						this.workingDay = res.data.workingDay
+						this.commonAPIService.getShiftSeasonAttendance(inputJson2).subscribe(res => {
+							console.log("i am sessionLeave", res);
+							
+							this.sessionLeave = res;
+							this.dataSession = Math.round(this.sessionLeave.length*100/this.workingDay);
+							this.HighChartOption(this.dataMonth, this.dataSession);
+						})
+					}
+				)
+
+				
+
+			}
+		);
+		
+		this.commonAPIService.getAllEmployeeLeaveData().subscribe(
+			(result: any) => {
+				console.log("i am cennn", result);
+
+			}
+		);
+
+	}
+
+	getDaySpace() {
+		var date = new Date();
+		var dayOne = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+		for (let i = 0; i < dayOne; i++) {
+			this.monthDays.unshift({
+				day: "",
+				value: "white"
+			})
+		}
+
 	}
 
 	setTeacherDashboard() {
@@ -170,6 +354,8 @@ export class TeacherDashboardComponent implements OnInit {
 			}
 			this.usernane = this.usernane.charAt(0).toUpperCase() + this.usernane.slice(1);
 		}
+		// this.getUserDetailsHr();
+		// console.log("i am currentUser", this.currentUser);
 		// this.getPastScheduledExams();
 		this.getComingScheduledExams();
 		this.getDashboardReport();
@@ -181,6 +367,7 @@ export class TeacherDashboardComponent implements OnInit {
 		this.getSubject();
 		this.getClassByTeacherId();
 		this.getScheduler();
+		// this.HighChartOption()
 		this.erpCommonService.getUser({ login_id: this.currentUser.login_id, role_id: '3' }).subscribe(
 			(result: any) => {
 				if (result && result.status === 'ok') {
@@ -197,6 +384,120 @@ export class TeacherDashboardComponent implements OnInit {
 				}
 			}
 		);
+	}
+	//HighChartOption(dataMonth,dataSession) when fetching from api
+	HighChartOption(dataMonth, dataSession) {
+
+		// dataLabels: {
+		// 	format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+		// 		('black') + '">{y}%</span><br/>' +
+		// 		   '<span style="font-size:12px;color:silver"></span></div>'
+		// },
+		this.gaugeOptionsflag = true;
+		this.gaugeOptions = {
+			chart: {
+				type: 'solidgauge',
+				height: 250,
+				width: 250,
+				events: {
+					render: ''
+				}
+			},
+
+			title: {
+				text: '',
+				style: {
+					fontSize: '10px'
+				}
+			},
+
+			// tooltip: {
+			//   borderWidth: 0,
+			//   backgroundColor: 'none',
+			//   shadow: false,
+			//   style: {
+			// 	fontSize: '14px'
+			//   },
+			//   pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
+			//   positioner: function (labelWidth) {
+			// 	return {
+			// 	  x: (this.chart.chartWidth - labelWidth) / 40,
+			// 	  y: (this.chart.plotHeight / 2) - 117
+			// 	};
+			//   }
+			// },
+
+			tooltip: {
+				borderWidth: 0,
+				backgroundColor: 'none',
+				shadow: false,
+				style: {
+					fontSize: '14px'
+				},
+				valueSuffix: '%',
+				pointFormat: '<span style="font-size:1.5em; color: {point.color}; font-weight: bold">{point.y}</span><br>{series.name}',
+				positioner: function (labelWidth) {
+					return {
+						x: (this.chart.chartWidth - labelWidth) / 2,
+						y: (this.chart.plotHeight / 2) - 10
+					};
+				}
+			},
+
+			pane: {
+				startAngle: 0,
+				endAngle: 360,
+				background: [{ // Track for Highest
+					outerRadius: '100%',
+					innerRadius: '80%',
+					backgroundColor: '#d6fed8',
+					borderWidth: 0
+				},
+				{ // Track for Highest
+					outerRadius: '80%',
+					innerRadius: '60%',
+					backgroundColor: '#ede5ff',
+					borderWidth: 0
+				}]
+			},
+
+			yAxis: {
+				min: 0,
+				max: 100,
+				lineWidth: 0,
+				tickPositions: []
+			},
+
+			plotOptions: {
+				solidgauge: {
+					dataLabels: {
+						enabled: false
+					},
+					linecap: 'round',
+					stickyTracking: false,
+					rounded: true
+				}
+			},
+
+			series: [{
+				name: 'Present',
+				data: [{
+					color: '#14aae1',
+					radius: '100%',
+					innerRadius: '80%',
+					y: dataSession
+				}]
+			},
+			{
+				name: 'Present',
+				data: [{
+					color: '#4b1fd4',
+					radius: '80%',
+					innerRadius: '60%',
+					y: dataMonth
+				}]
+			}]
+		};
 	}
 
 	getDashboardReport() {

@@ -637,15 +637,174 @@
                 <div class="col-6 margin-top-10">
                     <h1 class="remove-bottom-margin font-size-24">Dashboard</h1>
                 </div>
-                <div class="col-6 text-right">
-                    <span class="font-size-20 font-bold font-skyblue">{{currentHour()}},</span> <span class="font-size-20 font-skyblue"> {{currentUser.full_name | titlecase}}</span>
-                    <br>
-                    <span class="font-size-14 font-skyblue">{{todaysDate | date:'d MMM y'}}
-            <!-- 13<sup>th</sup> April 2018 --></span>
-                </div>
             </div>
         </mat-card>
     </div>
+</div>
+<div class="row margin-top-10">
+	<div class="col-6 remove-right-padding">
+		<mat-card class="height-296 height-320 min-h-320" style="height:100% ;">
+			<mat-card-title>
+				<div class="row row-remove-top-margin">
+					<div class="col-6">
+						<span class="font-size-20 font-bold">Profile</span>
+					</div>
+					<div class="col-6">
+						<div class="float-right">
+							<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+						</div>
+					</div>
+				</div>
+			</mat-card-title>
+			<hr class="border-bottom-grey">
+			<mat-card-content>
+				<div class="row">
+					<div class="col-4">
+						<div class="row margin-top-20">
+						  <div class="col-12 text-center">
+							<img style="border-radius:50%"
+							  [src]="'https://apisis.invictusdigisoft.com/createonfly.php?src=' + defaultsrc + '&h=150&w=150'"
+							  onError="this.src='https://apisis.invictusdigisoft.com/createonfly.php?src=https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/man.png&h=150&w=150'" />
+						  </div>
+						</div>
+					</div>
+					<div class="col-8">
+						<table cellpadding="3" >
+							<tr>
+								<td width="40%">Employee ID</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{(userDetails?.emp_id)}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Name</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_name}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Designation</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">Teacher</td>
+							</tr>
+							<tr>
+								<td width="40%">Date of Joining</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_salary_detail?.emp_organisation_relation_detail?.doj}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Available leaves</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{leave_credit}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Availed Leaves</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{leave_granted}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Contact No</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_personal_detail?.contact_detail?.primary_mobile_no}}</td>
+							</tr>
+							<tr>
+								<td width="40%">Email Id</td>
+								<td width="3%">:</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_personal_detail?.contact_detail?.email_id}}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
+	<div class="col-6 remove-right-padding">
+		<mat-card class="height-296 height-320 min-h-320">
+			<mat-card-title>
+				<div class="row row-remove-top-margin">
+					<div class="col-6" style="display: inline-grid;">
+						<span class="font-size-20 font-bold">Attendance</span>
+						<span class="font-size-12">{{today | date:'EEEE, d MMMM, y'}}</span>
+					</div>
+					<div class="col-6">
+						<div class="float-right">
+							<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+						</div>
+					</div>
+				</div>
+			</mat-card-title>
+			<mat-card-content style="word-break: break-all;">
+				<div class="row">
+					<div class="col-4 border-right">
+						<app-common-dynamic-chart *ngIf="gaugeOptionsflag"
+								[options]="gaugeOptions">
+						</app-common-dynamic-chart>
+						<mat-grid-list cols="2" rowHeight="3:1">
+							<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#05ABE1'}"></span>&nbsp;  Yearly</mat-grid-tile>
+							<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#4B11D4'}"></span>&nbsp;  Monthly</mat-grid-tile>
+						</mat-grid-list>
+					</div>
+					<!-- <div class="col-8">
+						<div class="row">
+							<div class="col-12">
+								<app-common-dynamic-chart *ngIf="sessionAttendancechartflag"
+									[options]="sessionAttendancechart">
+								</app-common-dynamic-chart>
+								<div class="attendance-bottom" *ngIf="sessionAttendancechartflag">
+									<span class="session-left session-color">Presents: 10 Days</span>
+									<span class="session-right">Total: 15 Days</span>
+								</div>
+							</div>
+							<div class="col-12">
+								<app-common-dynamic-chart *ngIf="monthAttendancechartflag"
+									[options]="monthAttendancechart">
+								</app-common-dynamic-chart>
+								<div class="attendance-bottom" *ngIf="monthAttendancechartflag">
+									<span class="session-left month-color">Presents: 10 Days</span>
+									<span class="session-right">Total: 15 Days</span>
+								</div>
+							</div>
+							
+						</div>
+						<div class="row" style="padding-left: 10px;">
+							<div class="col-6" *ngIf="sessionAttendancechartflag">
+								<div class="legend-box session-bgcolor"
+									style="display: inline-block">
+								</div>
+								<span class="font-size-14 middle-align">&nbsp;Current Session</span>
+							</div>
+							<div class="col-6" *ngIf="monthAttendancechartflag">
+								<div class="legend-box month-bgcolor"
+									style="display: inline-block">
+								</div>
+								<span class="font-size-14 middle-align">&nbsp;Current Month</span>
+							</div>
+						</div>
+					</div> -->
+					<div class="col-8" >
+						<div class="monthHead">{{today | date:'MMMM' | uppercase}}</div>
+						<mat-grid-list class="headerWeek" cols="7" rowHeight="2:1"  >
+							<mat-grid-tile>Sun</mat-grid-tile>
+							<mat-grid-tile>Mon</mat-grid-tile>
+							<mat-grid-tile>Tue</mat-grid-tile>
+							<mat-grid-tile>Wed</mat-grid-tile>
+							<mat-grid-tile>Thu</mat-grid-tile>
+							<mat-grid-tile>Fri</mat-grid-tile>
+							<mat-grid-tile>Sat</mat-grid-tile>
+						</mat-grid-list>
+						<mat-grid-list cols="7" rowHeight="2:1" >
+							<mat-grid-tile *ngFor="let monthDay of monthDays"><span class="iamcircle" [style.background]="monthDay.value">{{monthDay.day}}</span></mat-grid-tile>
+						</mat-grid-list>
+						<mat-grid-list cols="4" rowHeight="3:1">
+							<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#30B835'}"></span>&nbsp;  Present</mat-grid-tile>
+							<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F63B3B'}"></span>&nbsp;  Leave</mat-grid-tile>
+							<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#2C6E06'}"></span>&nbsp;  Half Day</mat-grid-tile>
+							<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F6B838'}"></span>&nbsp;  Holiday</mat-grid-tile>
+						</mat-grid-list>
+					</div>
+					
+				</div>
+			</mat-card-content>
+		</mat-card>
+	</div>
 </div>
 
 <div class="row margin-top-10">
