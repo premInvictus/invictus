@@ -857,13 +857,13 @@ export class FeeLedgerComponent implements OnInit {
 				} else {
 					tempactionFlag.recalculate = tempactionFlag.recalculate && item.eachActionFlag.recalculate && this.selection.selected.length > 0 ;
 				}	
-				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
-					tempactionFlag.attach = true;
+				if (this.selection.selected.length > 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.attach = false;
 				} else {
 					tempactionFlag.attach = tempactionFlag.attach && item.eachActionFlag.attach && this.selection.selected.length === 1;
 				}
-				if (this.selection.selected.length >= 1 && item.flgr_payment_mode === 'partial') {
-					tempactionFlag.detach = true;
+				if (this.selection.selected.length > 1 && item.flgr_payment_mode === 'partial') {
+					tempactionFlag.detach = false;
 				} else {
 					tempactionFlag.detach = (tempactionFlag.detach && item.eachActionFlag.detach && this.selection.selected.length === 1) || item.flgr_payment_mode === 'partial';
 				}
