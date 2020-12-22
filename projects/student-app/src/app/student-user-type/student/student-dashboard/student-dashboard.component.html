@@ -162,20 +162,20 @@
 				</mat-card-title>
 				<mat-card-content style="word-break: break-all;">
 					<div class="row">
-						<div class="col-5">
+						<div class="col-5" style="border-right: 1px solid #ccc;margin-bottom: 10px;">
 							<app-common-dynamic-chart *ngIf="gaugeOptionsflag"
 								[options]="gaugeOptions">
 							</app-common-dynamic-chart>
 							<br>
-							<mat-grid-list cols="2" rowHeight="5:1">
+							<mat-grid-list cols="2" rowHeight="9:1">
 								<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#14aae1'}"></span>&nbsp; Yearly</mat-grid-tile>
 								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#4b1fd4'}"></span>&nbsp; Monthly</mat-grid-tile>
 							</mat-grid-list>
 						</div>
-						<div class="col-7">
+						<div class="col-7" style="margin-bottom: 10px;">
 							<app-yearly *ngIf="attendanceFlag" [reloadScheduler]="reloadScheduler"></app-yearly>
 							<br>
-							<mat-grid-list cols="3" rowHeight="5:1">
+							<mat-grid-list cols="3" rowHeight="9:1">
 								<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#30B835'}"></span>&nbsp; Present</mat-grid-tile>
 								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F63B3B'}"></span>&nbsp; Leave</mat-grid-tile>
 								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F6B838'}"></span>&nbsp; Holiday</mat-grid-tile>

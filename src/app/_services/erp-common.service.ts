@@ -767,6 +767,10 @@ export class ErpCommonService {
 		this.service.startLoading();
 		return this.http.post(environment.apiHRUrl + '/salary-compute/updateSalaryStructureToEmployee', value);
 	}
+	getStudentAttendence(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiExamUrl + '/report/getStudentAttendence', value);
+	}
 	
 
 }

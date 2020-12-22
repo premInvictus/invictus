@@ -294,7 +294,7 @@ export class LeaveApplicationComponent implements OnInit {
     if(inputJson.emp_id) {
       this.common.getEmployeeDetail(inputJson).subscribe((result: any) => {
         this.employeeData = result;
-        if(this.employeeData && this.employeeData.emp_month_attendance_data)
+        if(this.employeeData && this.employeeData.emp_month_attendance_data){
         this.employeeData.emp_month_attendance_data.forEach(element => {
 					if(element.ses_id == this.session_id.ses_id){
 						if(element.month_data  && element.month_data.length > 0){
@@ -315,7 +315,8 @@ export class LeaveApplicationComponent implements OnInit {
               }
             }
 					}
-				});
+        });
+      }
       });
     }
   }
