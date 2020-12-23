@@ -697,6 +697,7 @@ export class OutstandingReportComponent implements OnInit {
 										
 									}
 							}
+							
 							if (repoArray[Number(keys)]['fee_head_data']) {
 								let k = 0;
 								let tot = 0;
@@ -709,6 +710,7 @@ export class OutstandingReportComponent implements OnInit {
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
+											
 											const feeObj: any = {};
 											this.columnDefinitions.push({
 												id: 'fh_name' + j,
@@ -759,6 +761,7 @@ export class OutstandingReportComponent implements OnInit {
 												repoArray[Number(keys)]['fp_name'] : '-';
 											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
 												repoArray[Number(keys)]['invoice_no'] : '-';
+												console.log('student record',repoArray[Number(keys)], key2,stuFeeHeadArray);
 											for(var fi=0; fi<stuFeeHeadArray.length;fi++) {												
 												if( ( stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) &&  (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
 													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
@@ -820,6 +823,7 @@ export class OutstandingReportComponent implements OnInit {
 												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
 							i++;
+							console.log('obj--',obj);
 							if (Object.keys(obj).length > 0) {
 								this.dataset.push(obj);
 							}
