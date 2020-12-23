@@ -147,6 +147,24 @@ export class LedgerComponent implements OnInit {
           for(var j=0; j<receipt_data.length; j++) {
             receiptArr.push(receipt_data[j]['tb_name']);
           }}
+          for(var i=0; i<data.ledger_data.length;i++) {
+            
+            for(var j=0; j<data.ledger_data[i]['debit_data'].length;j++) {
+              if (data.ledger_data[i]['debit_data'][j]['vc_account_type'] === 'Opening Balance') {
+                var a = data.ledger_data[i]['debit_data'].splice(j,1);   // removes the item
+                data.ledger_data[i]['debit_data'].unshift(a[0]);         // adds it back to the beginning
+                break;
+              }
+            }
+            for(var j=0; j<data.ledger_data[i]['credit_data'].length;j++) {
+              if (data.ledger_data[i]['credit_data'][j]['vc_account_type'] === 'Opening Balance') {
+                var a = data.ledger_data[i]['credit_data'].splice(j,1);   // removes the item
+                data.ledger_data[i]['credit_data'].unshift(a[0]);         // adds it back to the beginning
+                break;
+              }
+            }
+          }
+          
           for (var i =0;  i < data.ledger_data.length; i++) {
             if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] ) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name'] );

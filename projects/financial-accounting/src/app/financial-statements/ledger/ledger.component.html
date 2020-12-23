@@ -6,7 +6,7 @@
                 <span class="font-size-24">Ledger</span>
               </div>
               <div class="col-5 remove-col-padding-right text-right">
-                <form [formGroup]="accountForm">
+                <form [formGroup]="accountForm" autocomplete="off">
                   <mat-form-field class="form-field-150" appearance="outline">
                     <mat-label>Account </mat-label>
                     <mat-select formControlName="coa_id" multiple (selectionChange)="getLedger()" required>

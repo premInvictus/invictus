@@ -190,6 +190,9 @@ export class OutstandingReportComponent implements OnInit {
 		if(this.common.isExistUserAccessMenu('659')) {
 			this.reportTypeArray.push({report_type: 'defaulter', report_name: 'Defaulter\'s List'});
 		}
+		if(this.common.isExistUserAccessMenu('659')) {
+			this.reportTypeArray.push({report_type: 'defaulter_month_wise', report_name: 'Defaulter\'s List Month Wise'});
+		}
 		if(this.common.isExistUserAccessMenu('660')) {
 			this.reportTypeArray.push({report_type: 'feedue', report_name: 'Fee dues'});
 		}
@@ -777,9 +780,50 @@ export class OutstandingReportComponent implements OnInit {
 										}
 									});
 								}
+							} else {
+								let tot=0;
+								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+												repoArray[Number(keys)]['rpt_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
+
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+											}
+											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+												repoArray[Number(keys)]['invoice_id'] : '-';
+											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+												repoArray[Number(keys)]['fp_name'] : '-';
+											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+												repoArray[Number(keys)]['invoice_no'] : '-';
+											
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
 							i++;
-							this.dataset.push(obj);
+							if (Object.keys(obj).length > 0) {
+								this.dataset.push(obj);
+							}
+							
 						});
 						this.columnDefinitions.push(
 							{
@@ -1196,9 +1240,49 @@ export class OutstandingReportComponent implements OnInit {
 										}
 									});
 								}
+							} else {
+								obj['id'] = repoArray[Number(keys)]['stu_admission_no'] + keys +
+												repoArray[Number(keys)]['rpt_id'];
+											obj['srno'] = (collectionJSON.pageSize * collectionJSON.pageIndex) +
+												(Number(keys) + 1);
+											obj['stu_admission_no'] = repoArray[Number(keys)]['stu_admission_no'] ?
+												repoArray[Number(keys)]['stu_admission_no'] : '-';
+											obj['school_prefix'] = repoArray[Number(keys)]['school_prefix'] ?
+												repoArray[Number(keys)]['school_prefix'] : '-';
+											obj['login_id'] = repoArray[Number(keys)]['login_id'] ?
+												repoArray[Number(keys)]['login_id'] : '-';
+											obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['stu_full_name']);
+											obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(keys)]['epd_parent_name']);
+											obj['epd_contact_no'] = repoArray[Number(keys)]['epd_contact_no'] ?
+												repoArray[Number(keys)]['epd_contact_no'] : '-';
+											obj['tag_name'] = repoArray[Number(keys)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(keys)]['tag_name']) : '-';
+											if (repoArray[Number(keys)]['stu_sec_id'] !== '0') {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'] + '-' +
+													repoArray[Number(keys)]['stu_sec_name'];
+											} else {
+												obj['stu_class_name'] = repoArray[Number(keys)]['stu_class_name'];
+											}
+											obj['receipt_id'] = repoArray[Number(keys)]['invoice_id'] ?
+												repoArray[Number(keys)]['invoice_id'] : '-';
+											obj['invoice_created_date'] = repoArray[Number(keys)]['invoice_created_date'];
+											obj['fp_name'] = repoArray[Number(keys)]['fp_name'] ?
+												repoArray[Number(keys)]['fp_name'] : '-';
+											obj['receipt_no'] = repoArray[Number(keys)]['invoice_no'] ?
+												repoArray[Number(keys)]['invoice_no'] : '-';
+											
+											obj['inv_opening_balance'] = repoArray[Number(keys)]['inv_opening_balance']
+												? Number(repoArray[Number(keys)]['inv_opening_balance']) : 0;
+											obj['invoice_fine_amount'] = repoArray[Number(keys)]['invoice_fine_amount']
+												? Number(repoArray[Number(keys)]['invoice_fine_amount']) : 0;
+											obj['total'] = repoArray[Number(keys)]['invoice_amount']
+												? Number(repoArray[Number(keys)]['invoice_amount']) : 0;
 							}
+							
 							i++;
-							this.dataset.push(obj);
+							if (Object.keys(obj).length >0 ) {
+								this.dataset.push(obj);
+							}
+							
 						});
 						this.columnDefinitions.push(
 							{
@@ -1869,13 +1953,14 @@ export class OutstandingReportComponent implements OnInit {
 						this.tableFlag = true;
 					}
 				});
-			} else if (this.reportType === 'defaulter' && value.to_date) {
+			} else if (this.reportType === 'defaulter') {
+				this.gridOptions.rowHeight=65;
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
 					'report_type': this.reportType,
 					'classId': value.fee_value,
-					'to_date': value.to_date,
+					'to_date': value.from_date,
 					'pageSize': '10',
 					'pageIndex': '0',
 					'filterReportBy': 'outstanding',
@@ -1883,6 +1968,255 @@ export class OutstandingReportComponent implements OnInit {
 					'orderBy': value.orderBy,
 					'downloadAll': true,
 					'school_branch': this.reportFilterForm.value.school_branch
+				};
+				this.columnDefinitions = [
+					{
+						id: 'srno',
+						name: 'SNo.',
+						field: 'srno',
+						sortable: true,
+						width: 2
+					},
+					{
+						id: 'stu_admission_no', name: 'Enrollment No', field: 'stu_admission_no', filterable: true,
+						width: 60,
+						grouping: {
+							getter: 'stu_admission_no',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> [${g.count} records]</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						groupTotalsFormatter: this.srnTotalsFormatter
+					},
+					{
+						id: 'stu_full_name', name: 'Student Name', field: 'stu_full_name', filterable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'stu_full_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_parent_name',
+						name: 'Active Parent',
+						field: 'epd_parent_name',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						grouping: {
+							getter: 'epd_parent_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					},
+					{
+						id: 'epd_contact_no',
+						name: 'Active Parent Contact',
+						field: 'epd_contact_no',
+						filterable: true,
+						sortable: true,
+						width: 180,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText }										
+					},
+					{
+						id: 'stu_class_name', name: 'Class-Section', field: 'stu_class_name', filterable: true,
+						filterSearchType: FieldType.string,
+						width: 50,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'stu_class_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							comparer: (a, b) => {
+								// (optional) comparer is helpful to sort the grouped data
+								// code below will sort the grouped value in ascending order
+								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'tag_name', name: 'Tag', field: 'tag_name', filterable: true,
+						filterSearchType: FieldType.string,
+						width: 50,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'tag_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							comparer: (a, b) => {
+								// (optional) comparer is helpful to sort the grouped data
+								// code below will sort the grouped value in ascending order
+								return Sorters.string(a.value, b.value, SortDirectionNumber.desc);
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+					},
+					{
+						id: 'rpt_amount',
+						name: 'Amount Due',
+						field: 'rpt_amount',
+						width: 50,
+						filterable: true,
+						cssClass: 'amount-report-fee',
+						filterSearchType: FieldType.number,
+						type:FieldType.number,
+						filter: { model: Filters.compoundInputNumber },
+						sortable: true,
+						formatter: this.checkFeeFormatter,
+						groupTotalsFormatter: this.sumTotalsFormatter
+					},
+					{
+						id: 'fp_name',
+						name: 'Fee Period',
+						width: 120,
+						field: 'fp_name',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInput },
+						sortable: true,
+						grouping: {
+							getter: 'fp_name',
+							formatter: (g) => {
+								return `${g.value}  <span style="color:green">(${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false,
+						},
+				}];
+				if(this.reportFilterForm.value.school_branch.length > 1) {
+					let aColumn = {
+						id: 'school_prefix',
+						name: 'School',
+						field: 'school_prefix',
+						filterable: true,
+						filterSearchType: FieldType.string,
+						filter: { model: Filters.compoundInputText },
+						sortable: true,
+						width: 90,
+						grouping: {
+							getter: 'school_prefix',
+							formatter: (g) => {
+								return `${g.value} <span style="color:green"> (${g.count})</span>`;
+							},
+							aggregators: this.aggregatearray,
+							aggregateCollapsed: true,
+							collapsed: false
+						},
+					};
+					this.columnDefinitions.splice(1, 0, aColumn);
+					
+				}
+				this.feeService.getDefaulterList(collectionJSON).subscribe((result: any) => {
+					if (result && result.status === 'ok') {
+						this.common.showSuccessErrorMessage('Report Data Fetched Successfully', 'success');
+						repoArray = result.data.reportData;
+						this.totalRecords = Number(result.data.totalRecords);
+						localStorage.setItem('invoiceBulkRecords', JSON.stringify({ records: this.totalRecords }));
+						let index = 0;
+						for (const item of repoArray) {
+							const obj: any = {};
+							obj['id'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['srno'] = (this.reportFilterForm.value.pageSize * this.reportFilterForm.value.pageIndex) +
+								(index + 1);
+							obj['stu_admission_no'] = repoArray[Number(index)]['stu_admission_no'] ?
+								repoArray[Number(index)]['stu_admission_no'] : '-';
+							obj['login_id'] = repoArray[Number(index)]['login_id'] ?
+								repoArray[Number(index)]['login_id'] : '-';
+							obj['stu_full_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['stu_full_name']);
+							obj['school_prefix'] = repoArray[Number(index)]['school_prefix'] ?
+												repoArray[Number(index)]['school_prefix'] : '-';
+							obj['tag_name'] = repoArray[Number(index)]['tag_name'] ? new CapitalizePipe().transform(repoArray[Number(index)]['tag_name']) : '-';
+							obj['epd_parent_name'] = new CapitalizePipe().transform(repoArray[Number(index)]['epd_parent_name']);
+							obj['epd_contact_no'] = repoArray[Number(index)]['epd_contact_no'] ? repoArray[Number(index)]['epd_contact_no'] : '-';
+
+							if (repoArray[Number(index)]['stu_sec_id'] !== '0') {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'] + '-' +
+									repoArray[Number(index)]['stu_sec_name'];
+							} else {
+								obj['stu_class_name'] = repoArray[Number(index)]['stu_class_name'];
+							}
+							obj['rpt_amount'] = repoArray[Number(index)]['defaulter_inv_group_amount'] ?
+								Number(repoArray[Number(index)]['defaulter_inv_group_amount']) : 0;
+							obj['fp_name'] = repoArray[Number(index)]['fp_name'] ?
+								repoArray[Number(index)]['fp_name'] : '-';
+							this.dataset.push(obj);
+							index++;
+						}
+						this.totalRow = {};
+						const obj3: any = {};
+						obj3['id'] = 'footer';
+						obj3['srno'] = '';
+						obj3['stu_admission_no'] = this.common.htmlToText('<b>Grand Total</b>');
+						obj3['stu_full_name'] = '';
+						obj3['stu_class_name'] = '';
+						obj3['rpt_amount'] = new DecimalPipe('en-in').transform(this.dataset.map(t => t['rpt_amount']).reduce((acc, val) => acc + val, 0));
+						obj3['fp_name'] = '';
+						this.totalRow = obj3;
+						this.aggregatearray.push(new Aggregators.Sum('rpt_amount'));
+						this.aggregatearray.push(new Aggregators.Sum('srno'));
+						if (this.dataset.length <= 5) {
+							this.gridHeight = 300;
+						} else if (this.dataset.length <= 10 && this.dataset.length > 5) {
+							this.gridHeight = 400;
+						} else if (this.dataset.length > 10 && this.dataset.length <= 20) {
+							this.gridHeight = 550;
+						} else if (this.dataset.length > 20) {
+							this.gridHeight = 750;
+						}
+						this.tableFlag = true;
+						setTimeout(() => this.groupByClass(), 2);
+					} else {
+						this.tableFlag = true;
+					}
+				});
+			} else if (this.reportType === 'defaulter_month_wise') {
+				this.gridOptions.rowHeight=65;
+				const collectionJSON: any = {
+					'admission_no': '',
+					'studentName': '',
+					'report_type': 'defaulter',
+					'classId': value.fee_value,
+					'to_date': value.from_date,
+					'pageSize': '10',
+					'pageIndex': '0',
+					'filterReportBy': 'outstanding',
+					'login_id': value.login_id,
+					'orderBy': value.orderBy,
+					'downloadAll': true,
+					'school_branch': this.reportFilterForm.value.school_branch,
+					'fee_month':this.reportFilterForm.value.month_id
 				};
 				this.columnDefinitions = [
 					{
@@ -3164,19 +3498,53 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: $event.value, report_name: this.getReportName($event.value) });
 			if ($event.value === 'headwise') {
 				this.valueLabel = 'Fee Heads';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 				
 			} else if ($event.value === 'headwisedetail') {
 				this.valueLabel = 'Fee Heads';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 			} else if ($event.value === 'classwise') {
 				this.valueLabel = 'Class';
 				if (this.reportFilterForm.value.school_branch.length > 1) {
@@ -3200,11 +3568,28 @@ export class OutstandingReportComponent implements OnInit {
 				}
 			} else if ($event.value === 'feedue') {
 				this.valueLabel = 'Fee Dues';
-				if (this.reportFilterForm.value.school_branch.length > 1) {
-					this.getMultiBranchFeeHeads();
+				let param:any= {};
+				param.gs_name = ['show_grouped_head_on_report'];
+				this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+				if (result && result.status === 'ok' && result.data) {
+					if (result.data[0]['gs_value'] == '1') {
+						this.getGroupedFeeHeads();
+					} else {
+						if (this.reportFilterForm.value.school_branch.length > 1) {
+							this.getMultiBranchFeeHeads();
+						} else {
+							this.getFeeHeads();
+						}
+					}
+				
 				} else {
-					this.getFeeHeads();
+					if (this.reportFilterForm.value.school_branch.length > 1) {
+						this.getMultiBranchFeeHeads();
+					} else {
+						this.getFeeHeads();
+					}
 				}
+				});
 			} else if ($event.value === 'aging') {
 				this.valueLabel = '';
 			}
@@ -3213,6 +3598,48 @@ export class OutstandingReportComponent implements OnInit {
 			this.displyRep.emit({ report_index: 2, report_id: '', report_name: 'Outstanding Report' });
 			this.filterFlag = false;
 		}
+	}
+	getGroupedFeeHeads() {
+		this.multiValueArray=[];
+		let inputJson = {school_branch:this.reportFilterForm.value.school_branch};
+		console.log('inputJson--',inputJson)
+		this.feeService.getGroupFeeHeads(inputJson).subscribe((result:any)=>{
+			if(result && result.data) {
+				this.multiBranchFeeHeads = result.data;
+				let  groupJson = {};
+				let temp_array=[];
+				for (const item of result.data) {
+					temp_array=[{
+						id: '0',
+						name: 'Transport'
+					}];
+					groupJson = {};
+					for (const it of item.items) {
+						if(it.fs_classification == 'group') {
+							temp_array.push({
+								id: 'g-'+(it.fs_id),
+								name: new CapitalizePipe().transform(it.fs_name),
+								fs_classification : 'group'
+							});
+						} else {
+							temp_array.push({
+								id: it.fh_id,
+								name: new CapitalizePipe().transform(it.fh_name),
+								fs_classification: 'head'
+							});
+						}
+						
+					}
+					
+					groupJson = {name: item.name, items : temp_array };
+					this.multiValueArray.push(groupJson);
+					
+				}
+				
+			} else {
+				this.multiBranchFeeHeads = [];
+			}			
+		});
 	}
 	getMultiBranchFeeHeads() {
 		this.multiValueArray=[];

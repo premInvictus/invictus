@@ -772,7 +772,23 @@ export class ErpCommonService {
 		return this.http.post(environment.apiExamUrl + '/report/getStudentAttendence', value);
 	}
 	
+	getProjectList(value) {
+		return this.http.post(environment.apiSisUrl + '/dashboard/getProjectList', value);
+	}
 
+	getSubModule(value) {
+		return this.http.post(environment.apiSisUrl + '/dashboard/getDatabaseModuleList', value);
+	}
+
+	backupDatabase(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/dashboard/backupDatabase', value);
+	}
+	
+	restoreDatabase(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiSisUrl + '/dashboard/restoreDatabase', value);
+	}
 }
 
 

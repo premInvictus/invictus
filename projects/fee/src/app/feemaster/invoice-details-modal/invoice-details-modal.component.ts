@@ -307,8 +307,29 @@ export class InvoiceDetailsModalComponent implements OnInit {
 	
 	getInvoiceBifurcation(data: any) {
 		this.invoiceBifurcationArray = [];
-		console.log('this.modificationFlag', this.modificationFlag)
+		console.log('this.modificationFlag', this.modificationFlag);
 		if (this.modificationFlag) {
+			this.callgetInvoiceBifurcationAPI(data);			
+		} else {
+			let param:any= {};
+			param.gs_name = ['show_grouped_head_invoice_bifurcation'];
+			this.feeService.getGlobalSetting(param).subscribe((result: any) => {
+			if (result && result.status === 'ok' && result.data) {
+				if (result.data[0]['gs_value'] == '1') {
+					this.getInvoiceGroupBifurcation(data);
+				} else {
+					this.callgetInvoiceBifurcationAPI(data);
+				}
+			
+			} else {
+				this.callgetInvoiceBifurcationAPI(data);
+			}
+			});
+		}		
+	}
+
+
+	callgetInvoiceBifurcationAPI(data) {
 		if (this.data.invoiceNo) {
 			this.feeService.getInvoiceBifurcation({ inv_id: this.data.invoiceNo, 'no_partial':true, fromModel : true }).subscribe((result: any) => {
 				if (result && result.status === 'ok') {
@@ -383,8 +404,6 @@ export class InvoiceDetailsModalComponent implements OnInit {
 					this.closemodal();
 				}
 			});
-		}} else {
-			this.getInvoiceGroupBifurcation(data);
 		}
 	}
 

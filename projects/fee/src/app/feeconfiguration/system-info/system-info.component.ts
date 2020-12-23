@@ -23,11 +23,11 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	vaccinationArray: any[] = [];
 	CONFIG_ELEMENT_DATA: ConfigElement[] = [];
 	configDataSource = new MatTableDataSource<ConfigElement>(this.CONFIG_ELEMENT_DATA);
-	displayedColumns: any[] = ['position', 'name', 'alias', 'column1', 'column2', 'action', 'modify'];
+	displayedColumns: any[] = ['position', 'name', 'alias','branch','bnk_module_list', 'column1', 'column2', 'action', 'modify'];
 	firstHeaderArray: any[] = ['Bank Name'];
 	column1HeaderArray: any[] = ['Account Number'];
 	column2HeaderArray: any[] = ['IFSC Code'];
-	secondHeaderArray: any[] = ['Branch'];
+	secondHeaderArray: any[] = ['Alias','Branch','Module'];
 	configFlag = false;
 	updateFlag = false;
 	formatFlag = false;
@@ -68,10 +68,12 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			formGroup: this.fbuild.group({
 				bnk_id: '',
 				bnk_gid: '',
+				bnk_alias: '',
 				bnk_branch: '',
 				bnk_account_no: '',
 				bnk_ifsc: '',
-				bnk_status: ''
+				bnk_status: '',
+				bnk_module_list: ''
 			})
 		}];
 		this.printForm = this.fbuild.group({
@@ -139,7 +141,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 					that.CONFIG_ELEMENT_DATA.push({
 						position: pos,
 						name: item.bank_name,
-						alias: item.bnk_branch,
+						alias: item.bnk_alias,
+						branch:item.bnk_branch,
+						bnk_module_list: item.bnk_module_list,						
 						column1: item.bnk_account_no,
 						column2: item.bnk_ifsc,
 						action: item
@@ -174,7 +178,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
 				bnk_id: value.bnk_id,
 				bnk_gid: value.bnk_gid,
+				bnk_alias:value.bnk_alias,
 				bnk_branch: value.bnk_branch,
+				bnk_module_list:value.bnk_module_list ? (value.bnk_module_list.split(",")) : [],
 				bnk_account_no: value.bnk_account_no,
 				bnk_ifsc: value.bnk_ifsc,
 				bnk_status: value.bnk_status
@@ -186,7 +192,9 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 			this.commonService.showSuccessErrorMessage('Enter required fields', 'error');
 		} else {
 			switch (value) {
-				case '1':
+				case '1':		
+				
+					this.formGroupArray[value - 1].formGroup.value.bnk_module_list =  this.formGroupArray[value - 1].formGroup.value.bnk_module_list.toString();
 					this.updateEntry(this.formGroupArray[value - 1].formGroup.value, 'updateSchoolBank', this.getBankAll);
 					break;
 			}

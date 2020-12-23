@@ -127,7 +127,17 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
     return this.blankArr;
 
   }
-
+   promote(foo, arr) {
+    for (var i=0; i < arr.length; i++) {
+        if (arr[i].foo === foo) {
+            var a = arr.splice(i,1);   // removes the item
+            arr.unshift(a[0]);         // adds it back to the beginning
+            break;
+        }
+    }
+    // Matching item wasn't found. Array is unchanged, but you could do something
+    // else here if you wish (like an error message).
+  }
   getLedger() {
     if (this.data.coa_id) {
       console.log(this.data.date);
@@ -140,6 +150,8 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
           for (var j = 0; j < receipt_data.length; j++) {
             receiptArr.push(receipt_data[j]['tb_name']);
           }
+
+          
           for (var i = 0; i < data.ledger_data.length; i++) {
             if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
               var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']);

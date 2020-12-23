@@ -47,6 +47,7 @@ export class SearchDialogComponent implements OnInit {
 	openModal(data) {
 		console.log('data', data);
 		this.inputData = data;
+		this.showTable =false;
 		this.searchForm.patchValue({
 			'inv_id': data,
 			'receipt_number': ''
@@ -220,6 +221,7 @@ export class SearchDialogComponent implements OnInit {
   }
 		console.log('this.searchForm.value.receipt_number--',code,this.searchForm.value.receipt_number);
 		//this.invoiceArrayForm = this.invoiceFormArrayClone;
+		if (this.searchForm.value.receipt_number) {
 		this.feeService.getReceiptBifurcation({flgr_invoice_receipt_no:this.searchForm.value.receipt_number}).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.showTable = true;
@@ -264,7 +266,9 @@ export class SearchDialogComponent implements OnInit {
 			} else {
 				// this.commonAPIService.showSuccessErrorMessage(result.message, 'error');
 			}
-		});
+		}); } else {
+			this.common.showSuccessErrorMessage('Please Enter Receipt Number', 'error');
+		}
 		// if (this.searchForm.valid) {
 		// 	this.deleteOk.emit(this.searchForm.value);
 		// 	this.dialogRef.close();
@@ -282,6 +286,7 @@ export class SearchDialogComponent implements OnInit {
 		this.deleteCancel.emit(this.searchForm.value);
 	}
 	closeDialog() {
+		this.deleteCancel.emit(this.searchForm.value);
 		this.dialogRef.close();
 	}
 

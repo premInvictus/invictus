@@ -22,7 +22,8 @@
             <mat-label>Deposited Bank</mat-label>
             <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
               <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">{{bank.bank_name}}
+              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid"><span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
+                <span *ngIf="!(bank?.bnk_alias)">{{bank.bank_name}}</span>
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -49,7 +50,9 @@
             <mat-label>Deposited Bank</mat-label>
             <mat-select placeholder="Bank Name" formControlName="ftr_deposit_bnk_id" required>
               <mat-option value="">Please Select</mat-option>
-              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">{{bank.bank_name}}
+              <mat-option *ngFor="let bank of banks" [value]="bank.bnk_gid">
+                <span *ngIf="bank?.bnk_alias">{{bank.bnk_alias}}</span>
+                <span *ngIf="!(bank?.bnk_alias)">{{bank.bank_name}}</span>
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -137,11 +140,11 @@
     <div class="col-12">
       <table mat-table id="cheque_control_list1" [dataSource]="dataSource" class="fee-table-100 text-center" matSort>
         <ng-container matColumnDef="srno">
-          <th mat-header-cell *matHeaderCellDef>
+          <th mat-header-cell *matHeaderCellDef width="2%">
            
             <span >S.No.</span>
           </th>
-          <td width="3%" mat-cell *matCellDef="let row">
+          <td mat-cell *matCellDef="let row">
             
             <span>{{row?.position}}</span>
           </td>
@@ -152,25 +155,25 @@
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.recieptdate}} </td>
         </ng-container>
         <ng-container matColumnDef="recieptno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Reciept no. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header width="10%"> Reciept no. </th>
           <td mat-cell *matCellDef="let item" class="text-nowrap">
               <span>{{item.recieptno}}</span>
           </td>
         </ng-container>
         <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef> Amount </th>
+          <th mat-header-cell *matHeaderCellDef  width="10%"> Amount </th>
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.amount | number}} </td>
         </ng-container>
         <ng-container matColumnDef="chequeno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Cheque No </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header  width="10%"> Cheque No </th>
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.chequeno}}</td>
         </ng-container>
-        <ng-container matColumnDef="bankname">
+        <ng-container matColumnDef="drawnbankname"  width="10%">
           <th mat-header-cell *matHeaderCellDef> Drawn  on Bank </th>
-          <td mat-cell *matCellDef="let item"> {{item.bankname}} </td>
+          <td mat-cell *matCellDef="let item"> {{item.drawnbankname}} </td>
         </ng-container>
         <ng-container matColumnDef="fee">
-            <th mat-header-cell *matHeaderCellDef> Fee Period</th>
+            <th mat-header-cell *matHeaderCellDef  width="10%"> Fee Period</th>
             <td mat-cell *matCellDef="let item"> {{item.fee}} </td>
           </ng-container>
         <ng-container matColumnDef="bankdeposite">
@@ -231,23 +234,23 @@
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.approved_by}} </td>
         </ng-container>
         <ng-container matColumnDef="admno">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Enrl. No. </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header  width="10%"> Enrl. No. </th>
           <td mat-cell *matCellDef="let item"> {{item.admno}} </td>
         </ng-container>
         <ng-container matColumnDef="studentnam">
-          <th mat-header-cell *matHeaderCellDef> Student Name </th>
+          <th mat-header-cell *matHeaderCellDef  width="15%"> Student Name </th>
           <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studentname | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="studenttags">
-          <th mat-header-cell *matHeaderCellDef> Tag </th>
+          <th mat-header-cell *matHeaderCellDef  width="5%"> Tag </th>
           <td style="text-align: center !important" mat-cell *matCellDef="let item" class="text-nowrap">
             <span class="icon-spacer">{{item.studenttags | titlecase}} </span>
           </td>
         </ng-container>
         <ng-container matColumnDef="class_name">
-          <th mat-header-cell *matHeaderCellDef> Class </th>
+          <th mat-header-cell *matHeaderCellDef  width="10%"> Class </th>
           <td mat-cell *matCellDef="let item" class="text-nowrap"> {{item.class_name}} </td>
         </ng-container>
         <ng-container matColumnDef="action" >

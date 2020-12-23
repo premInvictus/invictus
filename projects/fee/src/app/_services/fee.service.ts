@@ -290,7 +290,12 @@ export class FeeService {
 	}
 	getFeeCollectionSummaryReport(value) {
 		this.service.startLoading();
-		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeCollectionSummaryReport', value);
+		if (value && value.group_report) {
+			return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getGroupedFeeCollectionSummaryReport', value);
+		} else {
+			return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getFeeCollectionSummaryReport', value);
+		}
+		
 	}
 	getMissingFeeInvoiceReport(value) {
 		this.service.startLoading();
@@ -610,5 +615,10 @@ export class FeeService {
 	getDeletedReceiptReport(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getDeletedFeeReceiptReport', value);
+	}
+
+	getGroupFeeHeads(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFeeUrl + '/feeCollectionReports/getGroupedFeeHeads', value);
 	}
 }
