@@ -15,6 +15,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatGridListModule } from '@angular/material';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,6 +61,7 @@ import { AddInstructionComponent }   from './add-instruction/add-instruction.com
 		MatProgressSpinnerModule,
 		MatButtonModule,
 		MatTooltipModule,
+		MatGridListModule,
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
@@ -124,6 +126,7 @@ import { AddInstructionComponent }   from './add-instruction/add-instruction.com
 		MatExpansionModule,
 		LayoutModule,
 		MatTooltipModule,
+		MatGridListModule,
 		MatMenuModule,
 		CommonDynamicChartComponent,
 		DeleteModalComponent,

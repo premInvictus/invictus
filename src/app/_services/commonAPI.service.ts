@@ -338,12 +338,18 @@ export class CommonAPIService {
 		return this.http.post(environment.apiHRUrl + '/shiftattendance/getall',value);
 	}
 	getShiftSeasonAttendance(value) {
-		return this.http.post(environment.apiHRUrl + '/shiftattendance/getSessionShiftAttendance',value);
+		return this.http.post(environment.apiHRUrl + '/common/getSessionStaffAttendance',value);
 	}
-	getAllEmployeeLeaveData() {
-		return this.http.get(environment.apiHRUrl + '/employee-leave-management/getAllEmployeeLeaveData');
+	getAllEmployeeLeaveData(value) {
+		return this.http.post(environment.apiHRUrl + '/attendance/getSessionAttendance', value);
 	}
 	GetHolidayDays(value) {
 		return this.http.post(environment.apiSmartUrl + '/common/GetHolidayDays', value);
+	}
+	getGlobalSetting(value) {
+		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
+	}
+	getHolidayOnly(value) {
+		return this.http.post(environment.apiSmartUrl + '/common/getHolidayOnly', value);
 	}
 }

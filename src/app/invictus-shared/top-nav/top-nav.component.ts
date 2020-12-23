@@ -38,6 +38,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	upperMenu: any;
 	getUserDetail: any[] = [];
 	usernane: any = '';
+	userrole:any = '';
 	schoolinfoArray: any;
 	image: any;
 	showNotification = false;
@@ -131,6 +132,7 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 		}
 		if (this.currentUser.full_name) {
 			this.usernane = this.currentUser.full_name.charAt(0).toUpperCase() + this.currentUser.full_name.slice(1);
+			this.userrole = this.currentUser.role_id;
 		}
 		this.getSchool();
 		this.checkUpdateProfile();
@@ -291,7 +293,12 @@ export class TopNavComponent implements OnInit, OnDestroy, AfterViewInit {
 	}
 	viewProfile() {
 		if (Number(this.currentUser.role_id) === 4 || Number(this.currentUser.role_id) === 3) {
-			this.router.navigateByUrl('/student/view-profile-student')
+			// this.router.navigateByUrl('/student/view-profile-student')
+			console.log("i am here", typeof(this.currentUser.role_id), this.currentUser.role_id == 4);
+		} else if (Number(this.currentUser.role_id) === 2) {
+			
+			
+			this.router.navigateByUrl('/admin/view_profile')
 		} else {
 			console.log('only student can view profile');
 		}

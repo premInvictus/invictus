@@ -1,0 +1,78 @@
+.img-teacher {
+    width: 150px;
+}
+
+.img-student {
+    width: 150px;
+}
+
+.stud-id-first-name {
+    font-size: 20px !important;
+}
+
+.stud-id-last-name {
+    font-size: 20px !important;
+}
+
+.fas,
+.far {
+    width: 30px;
+}
+
+.side {
+    display: inline-block;
+    padding-left: 0px !important;
+}
+
+.disablePage {
+    color: #9a9696;
+}
+
+mat-grid-tile {
+    
+    border-radius: 50%;
+    line-height: 20px;
+    width: 50%;
+  }
+
+.iamcircle {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    text-align: center;
+    padding-top: 10%;
+    font-weight: 800;
+  }
+
+.headerWeek {
+    font-weight: 900;
+    color: darkgray;
+}
+
+.smallbox {
+    height: 10px;
+    width: 10px;
+    border: black;
+    border-width: 2px;
+}
+
+.fontclass {
+    font-weight: bold;
+}
+
+.monthHead {
+    text-align: center;
+    font-weight: bolder;
+    font-size: medium;
+}
+
+  
+
+.info-box-margin {
+    margin: 0px 15px;
+    color: #ffffff;
+}
+
+.border-right {
+    border-right: 1px solid black;
+}
