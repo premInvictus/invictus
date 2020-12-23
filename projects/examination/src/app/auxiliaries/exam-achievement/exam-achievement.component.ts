@@ -180,6 +180,7 @@ export class ExamAchievementComponent implements OnInit {
         this.commonAPIService.showSuccessErrorMessage('Insert failed', 'error');
         this.disableApiCall = false;
       }
+      this.disableApiCall = false;
     });
 
     console.log(this.finalArray);
