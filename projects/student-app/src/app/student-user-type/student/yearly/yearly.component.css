@@ -1,0 +1,99 @@
+::ng-deep .mat-step-header .mat-step-icon-selected {
+    background-color: red; 
+}
+
+.steps {
+    width: 500px;
+    background-color: #FFF;
+    padding: 24px 0;
+    position: relative;
+    margin: auto;
+  }
+  
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    left: calc(50px / 2);
+    z-index: 1;
+  }
+  
+  .steps::after {
+    content: '';
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    background-color: var(--primary-color);
+    box-shadow: 0px 0px 5px 0px var(--primary-color);
+    border-radius: 15px;
+    left: calc(50px / 2);
+    bottom: 24px;
+    transform: translateX(-45%);
+    z-index: 2;
+  }
+  
+  .step {
+    padding: 0 20px 24px 50px;
+    position: relative;
+    transition: all 0.4s ease-in-out;
+    background-color: #FFF;
+  }
+  
+  .step::before {
+    content: '';
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    border-radius: 15px;
+    left: calc(50px / 2);
+    transform: translateX(-45%);
+    z-index: 2;
+  }
+
+  .step.minimized.holiday::before  {
+      background-color: #1fbcbb !important ;
+  }
+  .step.minimized.non-teaching::before  {
+      background-color: #eb4d4b !important ;
+  }
+  .step.minimized.class-spe::before  {
+    background-color: #febe36 !important ;
+  }
+  
+  .step::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background-color: rgb(198, 198, 198);
+    left: calc(50px / 2);
+    top: 0;
+    z-index: 1;
+  }
+  
+  .step.minimized {
+    background-color: #FFF;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .header {
+    user-select: none;
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 10px;
+  }
+  
+  .subheader {
+    margin-top: 5px;
+    user-select: none;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .step-content {
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
+  }

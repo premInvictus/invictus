@@ -250,7 +250,7 @@ export class BalanceSheetComponent implements OnInit {
 
               tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
             } else {
-              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if ( data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
@@ -260,8 +260,10 @@ export class BalanceSheetComponent implements OnInit {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if ( data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
-               
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [(data.ledger_data[i])];
+                if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']]) {
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [(data.ledger_data[i])];
+                }
+                
               }
               }
             }

@@ -1,0 +1,9 @@
+<angular-calendar-year-view *ngIf="schedulerFlag"
+    [themecolor]="themecolor" 
+    [events]="events" 
+    [yearFrom]= "reloadScheduler.year_id"
+    [yearTo]= "reloadScheduler.year_id"
+    [monthFrom]= "reloadScheduler.fm_id"
+    [monthTo]= "reloadScheduler.fm_id"
+    (eventClicked)="eventClicked($event)" (actionClicked)="actionClicked($event)">
+    </angular-calendar-year-view>

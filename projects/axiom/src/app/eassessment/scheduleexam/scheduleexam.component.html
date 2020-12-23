@@ -115,7 +115,10 @@
                                                 <i class="fas fa-hourglass-end" data-toggle="tooltip" data-placement="top" matTooltip="End Test" aria-hidden="true"></i>&nbsp;&nbsp;
                                             </a>
                                             <a *ngIf="isExistUserAccessMenu(65)">
-                                                <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top" matTooltip="Delete" aria-hidden="true" (click)="openModal({});deleteExam(item.action.es_id)"></i>
+                                                <i class="far fa-trash-alt table-delete-icon" data-toggle="tooltip" data-placement="top" matTooltip="Delete" aria-hidden="true" (click)="openModal({});deleteExam(item.action.es_id)"></i>&nbsp;&nbsp;
+                                            </a>
+                                            <a *ngIf="isExistUserAccessMenu(60)">
+                                                <i class="fas fa-user" data-toggle="tooltip" data-placement="top" matTooltip="View Student" aria-hidden="true" (click)="openStudentStatusModal(item.action.es_id);"></i>
                                             </a>
                                         </td>;
                                     </ng-container>

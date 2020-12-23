@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { QelementService } from 'projects/axiom/src/app/questionbank/service/qelement.service';
 import { AdminService } from 'projects/axiom/src/app/user-type/admin/services/admin.service';
 import { ReportService } from 'projects/axiom/src/app/reports/service/report.service';
@@ -18,7 +18,7 @@ import { BranchChangeService } from 'src/app/_services/branchChange.service';
 })
 export class StudentDashboardComponent implements OnInit {
 
-
+	reloadScheduler:any;
 	today = Date.now();
 	currentUser: any = {};
 	getUserDetail: any[] = [];
@@ -106,6 +106,8 @@ export class StudentDashboardComponent implements OnInit {
 	sessionAttendancechart:any={};
 	monthAttendancechartflag=false;
 	monthAttendancechart:any={};
+	studentAttenance:any[] = [];
+	attendanceFlag=false;
 
 	
 
@@ -163,7 +165,6 @@ export class StudentDashboardComponent implements OnInit {
 			}
 		});
 	}
-
 	setStudentDashboard() {
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		const currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -237,6 +238,7 @@ export class StudentDashboardComponent implements OnInit {
 					this.getStudentRankInAllExams();
 					this.getMessages();
 					this.getSession();
+					this.getStudentAttendence();
 				}
 			}
 		);
@@ -310,6 +312,22 @@ export class StudentDashboardComponent implements OnInit {
 					}
 				});
 	}
+	async getStudentAttendence(){
+		const studentAttenance = [];
+		const param:any={};
+		param.class_id = this.userDetail.au_class_id;
+		param.sec_id = this.userDetail.au_sec_id;
+		param.fm_id = ("0" + (new Date().getMonth() + 1)).slice(-2)
+		param.year_id = new Date().getFullYear();
+		param.au_login_id = this.userDetail.au_login_id;
+		this.reloadScheduler = param;
+		this.attendanceFlag = true;
+		await this.erpCommonService.getStudentAttendence(param).toPromise().then((result: any) => {
+			if (result && result.status === 'ok') {
+				this.sessionAttendance = result.data;
+			}
+		});
+	}
 	async getStudentDashboardAttendance(){
 		const sessionNameArr = this.sessionName.split('-');
 		const param:any={};
@@ -331,17 +349,23 @@ export class StudentDashboardComponent implements OnInit {
 			}
 		});
 		//this.FeeReceiptReportCalculation(this.sessionAttendance);
-		this.sessionChart(this.sessionAttendance);
-		this.monthChart(this.monthAttendance);
-		this.HighChartOption(this.sessionAttendance);
+		// this.sessionChart(this.sessionAttendance);
+		// this.monthChart(this.monthAttendance);
+		this.HighChartOption(this.monthAttendance,this.sessionAttendance);
 	}
-	HighChartOption(data) {
+	HighChartOption(dataMonth,dataSession) {
+
+		// dataLabels: {
+		// 	format: '<div style="text-align:center"><span style="font-size:25px;color:' +
+		// 		('black') + '">{y}%</span><br/>' +
+		// 		   '<span style="font-size:12px;color:silver"></span></div>'
+		// },
 		this.gaugeOptionsflag = true;
 		this.gaugeOptions = {
 			chart: {
 			  type: 'solidgauge',
-			  height: 200,
-			  width: 200,
+			  height: 280,
+			  width: 280,
 			  events: {
 				render: ''
 			  }
@@ -354,29 +378,52 @@ export class StudentDashboardComponent implements OnInit {
 			  }
 			},
 		
-			tooltip: {
-			  borderWidth: 0,
-			  backgroundColor: 'none',
-			  shadow: false,
-			  style: {
-				fontSize: '14px'
-			  },
-			  pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
-			  positioner: function (labelWidth) {
-				return {
-				  x: (this.chart.chartWidth - labelWidth) / 40,
-				  y: (this.chart.plotHeight / 2) - 117
-				};
-			  }
-			},
+			// tooltip: {
+			//   borderWidth: 0,
+			//   backgroundColor: 'none',
+			//   shadow: false,
+			//   style: {
+			// 	fontSize: '14px'
+			//   },
+			//   pointFormat: '{series.name}<br><span style="font-size:16px; color: {point.color}; font-weight: bold;">{point.y}</span>',
+			//   positioner: function (labelWidth) {
+			// 	return {
+			// 	  x: (this.chart.chartWidth - labelWidth) / 40,
+			// 	  y: (this.chart.plotHeight / 2) - 117
+			// 	};
+			//   }
+			// },
 		
+			tooltip: {
+				borderWidth: 0,
+				backgroundColor: 'none',
+				shadow: false,
+				style: {
+				  fontSize: '14px'
+				},
+				valueSuffix: '%',
+				pointFormat: '<span style="font-size:1.5em; color: {point.color}; font-weight: bold">{point.y}</span><br>{series.name}',
+				positioner: function (labelWidth) {
+				  return {
+					x: (this.chart.chartWidth - labelWidth) / 2,
+					y: (this.chart.plotHeight / 2) - 10
+				  };
+				}
+			  },
+
 			pane: {
 			  startAngle: 0,
 			  endAngle: 360,
 			  background: [{ // Track for Highest
 				outerRadius: '100%',
 				innerRadius: '80%',
-				backgroundColor: '#E5E5E5',
+				backgroundColor: '#d6fed8',
+				borderWidth: 0
+			  },
+			  { // Track for Highest
+				outerRadius: '80%',
+				innerRadius: '60%',
+				backgroundColor: '#ede5ff',
 				borderWidth: 0
 			  }]
 			},
@@ -388,33 +435,47 @@ export class StudentDashboardComponent implements OnInit {
 			  tickPositions: []
 			},
 		
+			// plotOptions: {
+			//   solidgauge: {
+			// 	cursor: 'pointer',
+			// 	dataLabels: {
+            //         y: 5,
+            //         borderWidth: 0,
+            //         useHTML: true
+            //     },
+			// 	linecap: '',
+			// 	stickyTracking: false,
+			//   }
+			// },
 			plotOptions: {
-			  solidgauge: {
-				cursor: 'pointer',
-				dataLabels: {
-                    y: 5,
-                    borderWidth: 0,
-                    useHTML: true
-                },
-				linecap: '',
-				stickyTracking: false,
-			  }
+				solidgauge: {
+				  dataLabels: {
+					enabled: false
+				  },
+				  linecap: 'round',
+				  stickyTracking: false,
+				  rounded: true
+				}
 			},
 		
 			series: [{
-			  name: 'Attendance',
+			  name: 'Present',
 			  data: [{
-				color: '#4DB848',
+				color: '#14aae1',
 				radius: '100%',
 				innerRadius: '80%',
-				y: data.attendenceInPercent
-			  }],
-			  dataLabels: {
-                format: '<div style="text-align:center"><span style="font-size:25px;color:' +
-                    ('black') + '">{y}%</span><br/>' +
-                       '<span style="font-size:12px;color:silver"></span></div>'
-            },
-			}]
+				y: dataSession.attendenceInPercent
+			  }]
+			},
+			{
+				name: 'Present',
+				data: [{
+					color: '#4b1fd4',
+					radius: '80%',
+					innerRadius: '60%',
+					y: dataMonth.attendenceInPercent
+				  }]
+			  }]
 		  };
 	  }
 	monthChart(data){

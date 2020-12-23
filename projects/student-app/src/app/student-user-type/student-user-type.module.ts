@@ -16,6 +16,8 @@ import { LoadingModule } from 'ngx-loading';
 import { TreeviewModule } from 'ngx-treeview';
 import { StudentDashboardComponent } from './student/student-dashboard/student-dashboard.component';
 import { StudentComponent } from './student/student.component';
+import { YearlyComponent } from './student/yearly/yearly.component';
+
 
 @NgModule({
 	imports: [
@@ -36,6 +38,7 @@ import { StudentComponent } from './student/student.component';
 	],
 	declarations: [
 		StudentComponent,
-		StudentDashboardComponent]
+		StudentDashboardComponent,
+		YearlyComponent]
 })
 export class StudentUserTypeModule {}

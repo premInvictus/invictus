@@ -19,7 +19,7 @@
 	</div>
 	<div class="row margin-top-10">
 		<div class="col-6 remove-right-padding">
-			<mat-card class="height-296 height-263 min-h-320">
+			<mat-card class="height-296 height-263 min-h-350">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
 						<div class="col-6">
@@ -82,7 +82,7 @@
 				</mat-card-content>
 			</mat-card>
 		</div>
-		<div class="col-6 remove-right-padding">
+		<!-- <div class="col-6 remove-right-padding">
 			<mat-card class="height-296 height-263 min-h-320">
 				<mat-card-title>
 					<div class="row row-remove-top-margin">
@@ -140,6 +140,46 @@
 									<span class="font-size-14 middle-align">&nbsp;Current Month</span>
 								</div>
 							</div>
+						</div>
+					</div>
+				</mat-card-content>
+			</mat-card>
+		</div> -->
+		<div class="col-6 remove-right-padding">
+			<mat-card class="height-296 height-263 min-h-350">
+				<mat-card-title>
+					<div class="row row-remove-top-margin">
+						<div class="col-6" style="display: inline-grid;">
+							<span class="font-size-20 font-bold">Attendance</span>
+							<span class="font-size-12">{{today | date:'EEEE, d MMMM, y'}}</span>
+						</div>
+						<div class="col-6">
+							<div class="float-right">
+								<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+							</div>
+						</div>
+					</div>
+				</mat-card-title>
+				<mat-card-content style="word-break: break-all;">
+					<div class="row">
+						<div class="col-5" style="border-right: 1px solid #ccc;margin-bottom: 10px;">
+							<app-common-dynamic-chart *ngIf="gaugeOptionsflag"
+								[options]="gaugeOptions">
+							</app-common-dynamic-chart>
+							<br>
+							<mat-grid-list cols="2" rowHeight="9:1">
+								<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#14aae1'}"></span>&nbsp; Yearly</mat-grid-tile>
+								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#4b1fd4'}"></span>&nbsp; Monthly</mat-grid-tile>
+							</mat-grid-list>
+						</div>
+						<div class="col-7" style="margin-bottom: 10px;">
+							<app-yearly *ngIf="attendanceFlag" [reloadScheduler]="reloadScheduler"></app-yearly>
+							<br>
+							<mat-grid-list cols="3" rowHeight="9:1">
+								<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#30B835'}"></span>&nbsp; Present</mat-grid-tile>
+								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F63B3B'}"></span>&nbsp; Leave</mat-grid-tile>
+								<mat-grid-tile class= "fontclass"><span class="smallbox" [ngStyle]="{background: '#F6B838'}"></span>&nbsp; Holiday</mat-grid-tile>
+							</mat-grid-list>
 						</div>
 					</div>
 				</mat-card-content>

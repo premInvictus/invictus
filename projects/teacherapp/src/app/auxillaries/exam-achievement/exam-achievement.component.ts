@@ -227,7 +227,7 @@ export class ExamAchievementComponent implements OnInit {
     this.disableApiCall = true;
     this.examService.checkAchievement(checkParam).subscribe((result: any) => {
       if (result && result.status === 'ok') {
-        this.examService.insertAchievement(this.finalArray).subscribe((result_i: any) => {
+        this.examService.insertAchievement({param: checkParam, finalArray: this.finalArray}).subscribe((result_i: any) => {
           if (result_i && result_i.status === 'ok') {
             this.finalCancel();
             this.fetchDetails();
