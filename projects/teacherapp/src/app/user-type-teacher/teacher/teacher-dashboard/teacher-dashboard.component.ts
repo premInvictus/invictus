@@ -179,7 +179,7 @@ export class TeacherDashboardComponent implements OnInit {
 	getUserDetailsHr() {
 		this.userAccessMenuService.getAllUser({ emp_login_id: this.currentUser.login_id }).subscribe(
 			(result: any) => {
-				// console.log("i am result", result, result);
+				console.log("i am result", result, this.currentUser.login_id);
 				if (result && result.length > 0) {
 					this.userDetails = result[0];
 					this.getAttendanceReport();
@@ -251,7 +251,7 @@ export class TeacherDashboardComponent implements OnInit {
 										let stat = (stat1 as any).filter((item: any) => item.emp_id == 1)[0];
 										// console.log("i am stat", stat);
 
-										if (stat != undefined && stat.leave_half_day == 1) {
+										if (stat != undefined && stat.leave_half_day == true) {
 											present += 1
 											arr.push({
 												day: i + 1,

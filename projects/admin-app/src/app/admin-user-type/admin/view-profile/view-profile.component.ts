@@ -250,7 +250,7 @@ export class ViewProfileComponent implements OnInit {
 										let stat = (stat1 as any).filter((item: any) => item.emp_id == 1)[0];
 										// console.log("i am stat", stat);
 
-										if (stat != undefined && stat.leave_half_day == 1) {
+										if (stat != undefined && stat.leave_half_day == true) {
 											present += 1
 											arr.push({
 												day: i + 1,
