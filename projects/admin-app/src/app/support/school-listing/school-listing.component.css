@@ -1,0 +1,117 @@
+.user-table {
+    padding-top: 10px;
+    overflow-x: auto;
+    width: 100%;
+}
+
+tr, th, td {
+    padding: 5px;
+}
+
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+tr.mat-footer-row {
+  font-weight: bold;
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+td.mat-footer-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+
+
+.create-new-school {
+    float: right;
+    margin-right: 10px;
+}
+
+.form-group-filter {
+
+  margin-bottom: 0rem;
+}
+
+.school-logo {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+}
+
+.fa-active {
+  color: #28a745;
+}
+
+.fa-edit {
+  color: #0069d9;
+}
+
+.fa-delete {
+  color: #dc3545;
+}
+
+table {
+  font-size: 14px;
+}
+
+/* css for create new school*/
+.create-school-button {
+	float: right;
+	margin-right: 10px;
+}
+
+.submit-button{
+	margin-left: 10px;
+}
+
+.form-card {
+	font-size: 14px;
+}
+
+.school-img {
+  background-image: url('https://via.placeholder.com/109x145');
+}
+
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload img
+{
+    cursor: pointer;
+}
+
+.cdk-column-select{
+  width: 3%!important;
+}
+.mat-column-srno {
+  width: 6% !important;
+  flex: 0 0 8% !important;
+}
+td.mat-cell {
+  border: 1px solid #89A8C9 !important;
+}
+th.mat-header-cell {
+  border: 1px solid #89A8C9 !important;
+  border-collapse: collapse;
+}
+::ng-deep.my-toggle > label > div > div > div.mat-slide-toggle-thumb {
+  background-color: #1aed11 !important;
+}
+::ng-deep.my-toggle > label > div.mat-slide-toggle-bar {
+  background-color: #1aed11 !important;
+}
+.reset-btn{
+  background-color: #e11022;
+  color: #fff;
+  text-transform: uppercase;
+  width: 126px;
+  height: 32px;
+  font-size: 13px;
+  line-height: 32px !important;
+}

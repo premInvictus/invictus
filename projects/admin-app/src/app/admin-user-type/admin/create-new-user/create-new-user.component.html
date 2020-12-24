@@ -1,5 +1,5 @@
 <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
-<simple-notifications></simple-notifications>
+<simple-notifications></simple-notifications> 
 
 <div class="row">
   <div class="col-12">
@@ -31,6 +31,18 @@
                 </div>
                 <div class="col-lg-6">
                   <mat-form-field class="form-field" appearance="outline">
+                     <mat-label>Username</mat-label>
+                     <input matInput formControlName="au_username" placeholder="Username"
+                        autocomplete="off" [readonly]="updateFlag"
+                        minlength="6"
+                        required>
+                     <mat-error *ngIf="au_username.hasError('required')">
+                        Username is <strong>required of length min 6</strong>
+                     </mat-error>
+                  </mat-form-field>
+               </div>
+                <div class="col-lg-6">
+                  <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Mobile Number</mat-label>
                     <input matInput formControlName="au_mobile" placeholder="Mobile Number" required pattern="[0-9]*"
                       maxlength="10">
@@ -53,7 +65,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-lg-6">
+                <!-- <div class="col-lg-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Access Level</mat-label>
                     <mat-select placeholder="Access Level" formControlName="au_role_id" required>
@@ -63,7 +75,7 @@
                       </mat-option>
                     </mat-select>
                   </mat-form-field>
-                </div>
+                </div> -->
                 <div class="col-lg-6">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Email</mat-label>
@@ -78,7 +90,7 @@
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>Password</mat-label>
                     <input matInput formControlName="au_password" placeholder="Password" type="password" required>
-                    <mat-error *ngIf="au_full_name.hasError('required')">
+                    <mat-error *ngIf="au_password.hasError('required')">
                       Password is <strong>required</strong>
                     </mat-error>
                   </mat-form-field>

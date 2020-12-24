@@ -65,6 +65,11 @@ const routes: Routes = [
 				loadChildren:
 					'projects/admin-app/src/app/billing/billing.module#BillingModule'
 			},
+			{
+				path: 'support',
+				loadChildren:
+					'projects/admin-app/src/app/support/support.module#SupportModule'
+			},
 		]
 	}
 ];

@@ -50,6 +50,7 @@ export class CreateNewUserComponent implements OnInit {
 
 	au_mobile = new FormControl('', [Validators.required]);
 	au_full_name = new FormControl('', [Validators.required]);
+	au_username = new FormControl('', [Validators.required]);
 
 	au_password = new FormControl('', [Validators.required]);
 	au_dob = new FormControl('', [Validators.required]);
@@ -92,6 +93,7 @@ export class CreateNewUserComponent implements OnInit {
 	buildForm() {
 		this.Cu_Form = this.fbuild.group({
 			au_full_name: '',
+			au_username: '',
 			au_password: '',
 			au_mobile: '',
 			au_email: '',
@@ -103,6 +105,9 @@ export class CreateNewUserComponent implements OnInit {
 			up_switch_tp: '',
 			up_read_only: ''
 		});
+		this.Cu_Form.patchValue({
+			au_role_id: '1'
+		})
 	}
 
 	addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -126,6 +131,9 @@ export class CreateNewUserComponent implements OnInit {
 		if (!this.Cu_Form.value.au_full_name) {
 			this.notif.showSuccessErrorMessage('FullName is Required', 'error');
 		}
+		if (!this.Cu_Form.value.au_username) {
+			this.notif.showSuccessErrorMessage('Username is Required', 'error');
+		}
 		if (!this.Cu_Form.value.au_password) {
 			this.notif.showSuccessErrorMessage('Password is Required', 'error');
 		}
@@ -146,6 +154,7 @@ export class CreateNewUserComponent implements OnInit {
 		if (this.Cu_Form.valid) {
 			const newUserFormData = new FormData();
 			newUserFormData.append('au_full_name', this.Cu_Form.value.au_full_name);
+			newUserFormData.append('au_username', this.Cu_Form.value.au_username);
 			newUserFormData.append('au_email', this.Cu_Form.value.au_email);
 			newUserFormData.append('au_password', this.Cu_Form.value.au_password);
 			newUserFormData.append('au_mobile', this.Cu_Form.value.au_mobile);
@@ -211,7 +220,9 @@ export class CreateNewUserComponent implements OnInit {
 		if (!this.Cu_Form.value.au_full_name) {
 			this.notif.showSuccessErrorMessage('FullName is Required', 'error');
 		}
-
+		if (!this.Cu_Form.value.au_username) {
+			this.notif.showSuccessErrorMessage('Username is Required', 'error');
+		}
 		if (!this.Cu_Form.value.au_mobile) {
 			this.notif.showSuccessErrorMessage('Mobile Number is Required', 'error');
 		}
@@ -229,6 +240,7 @@ export class CreateNewUserComponent implements OnInit {
 			const newUserFormData = new FormData();
 			newUserFormData.append('au_login_id', this.userDetails.au_login_id);
 			newUserFormData.append('au_full_name', this.Cu_Form.value.au_full_name);
+			newUserFormData.append('au_username', this.Cu_Form.value.au_username);
 			newUserFormData.append('au_mobile', this.Cu_Form.value.au_mobile);
 			newUserFormData.append('au_email', this.Cu_Form.value.au_email);
 			newUserFormData.append('au_password', this.Cu_Form.value.au_password);
@@ -287,7 +299,9 @@ export class CreateNewUserComponent implements OnInit {
 	}
 
 	setUserForm(value) {
+		console.log('user detaild',value);
 		this.Cu_Form.controls.au_full_name.setValue(value.au_full_name);
+		this.Cu_Form.controls.au_username.setValue(value.au_username);
 		this.Cu_Form.controls.au_email.setValue(value.au_email);
 		this.Cu_Form.controls.au_mobile.setValue(value.au_mobile);
 		// this.Cu_Form.controls.au_password.setValue(value.au);
