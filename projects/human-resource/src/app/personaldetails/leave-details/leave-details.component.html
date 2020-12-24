@@ -1,0 +1,168 @@
+<div class="row">
+  <div class="col-12 ">
+    <mat-card class="card-top-title__container">
+      <div class="row">
+        <div class="col-6">
+          <h1 class="remove-bottom-margin font-size-24">Leave Details</h1>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>
+<div class="row">
+
+  <div class="col-12">
+
+    <mat-card class="margin-top-10 card-height-325">
+
+      <div class="row margin-top-15 booklog" >
+        <div class="row">
+          <div class="col-11 remove-col-padding">
+            <!-- <span class="font-size-14 font-bold">Employee ID : </span><span
+              class="font-size-14 opacity-7">{{userDetail?.emp_id}}</span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Employee Name : </span><span
+              class="font-size-14 opacity-7">
+              {{userDetail?.emp_name}}
+            </span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Designation : </span><span
+              class="font-size-14 opacity-7">{{userDetail?.emp_designation_detail?.name}} </span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Department : </span><span
+              class="font-size-14 opacity-7">
+              {{userDetail?.emp_department_detail?.name}}
+            </span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Category : </span><span
+              class="font-size-14 opacity-7">
+              {{userDetail?.emp_category_detail?.cat_name}}
+            </span>
+            <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Status : </span><span
+              class="font-size-14 opacity-7">
+              {{userDetail?.emp_status}}
+            </span> -->
+            <!-- <span class="font-size-14 font-bold margin-left-15 ver-line-divider">Opening Balance : </span><span
+              class="font-size-14 opacity-7">
+              
+            </span> -->
+            <!-- <span class="font-size-14 font-bold margin-left-15 ver-line-divider text-right" style="cursor: pointer;" (click)="openLeaveCredit()">Add leave credit </span> -->
+          </div>
+          <!-- <div class="col-1 text-right">
+            <button mat-button class="font-size-14 margin-left-10 font-white  btn-blue"
+            (click)="openLeaveCredit()">Add leave credit
+            </button>
+          </div> -->
+        </div>
+        <div class="col-12 margin-top-15">
+
+          <!-- <form [formGroup]="employeeForm"> -->
+
+          <div class="row">
+            <div class="col-12" *ngIf="EMPLOYEE_ELEMENT.length > 0">
+              <table mat-table [dataSource]="employeedataSource" matSort class="table-80 text-center"
+                id="report_table67" width="100%">
+                <ng-container matColumnDef="group1">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="2"> </th>
+                </ng-container>
+                <ng-container matColumnDef="group2">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length">Opening </th>
+                </ng-container>
+                <ng-container matColumnDef="group3">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length+1">Availed </th>
+                </ng-container>
+                <ng-container matColumnDef="group4">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="leaveTypeArray.length">Closing </th>
+                </ng-container>
+                <ng-container matColumnDef="group5">
+                  <th mat-header-cell *matHeaderCellDef [attr.colspan]="3">Total </th>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="['group1','group2','group3','group4','group5']"></tr>
+                <ng-container matColumnDef="srno">
+                  <th mat-header-cell *matHeaderCellDef class="text-nowrap" width="5%"> Sr. No. </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.srno}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="month_name">
+                  <th mat-header-cell *matHeaderCellDef width="15%"> Month </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    {{element.month_name}}
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_credited' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.aliasname}} </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    <ng-container *ngFor="let item of element.leave_credited;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value || '-'}}</span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_availed' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.aliasname}} </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    <ng-container *ngFor="let item of element.leave_availed;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value || '-'}}</span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="lwp">
+                  <th mat-header-cell *matHeaderCellDef width="5%"> LWP</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.lwp || '-'}}
+                  </td>
+                </ng-container>
+                <ng-container *ngFor="let column of leaveTypeArray; let i = index;"
+                [matColumnDef]="'leave_closing' + column?.leave_id">
+                  <th mat-header-cell *matHeaderCellDef> {{column?.aliasname}} </th>
+                  <td mat-cell *matCellDef="let element" class="text-center">
+                    <ng-container *ngFor="let item of element.leave_closing;" >
+                      <span *ngIf="item.leave_id==column.leave_id">{{item.leave_value}}</span>
+                    </ng-container>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="total_credited">
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Opening</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.total_credited}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="total_availed">
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Availed</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.total_availed}}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="total_balance">
+                  <th mat-header-cell *matHeaderCellDef width="5%"> Closing</th>
+                  <td mat-cell *matCellDef="let element">
+                    {{element.total_balance}}
+                  </td>
+                </ng-container>
+                
+                <tr mat-header-row *matHeaderRowDef="displayedEmployeeColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedEmployeeColumns;">
+                </tr>
+              </table>
+              <mat-paginator #paginator [pageSizeOptions]=[20,50,100] [pageSize]="20" showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </div>
+          <br />
+
+          <!-- </form> -->
+
+        </div>
+      </div>
+      <br />
+
+
+
+    </mat-card>
+    <mat-card class="margin-top-10 card-height-325" *ngIf="EMPLOYEE_ELEMENT.length == 0">
+      <div class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/reservoir/no_book_search.png'"
+          [noDataText]="" [subText]="'No Employee Leave Found'"></app-no-data>
+      </div>
+    </mat-card>
+  </div>
+</div>

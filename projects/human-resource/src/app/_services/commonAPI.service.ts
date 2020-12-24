@@ -46,6 +46,9 @@ export class CommonAPIService {
 	stopLoading() {
 		this.loader.stopLoading();
 	}
+	getFeeMonths(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
 
 	getCokkieData() {
 		if (this._cookieService && this._cookieService.get('userData')) {
