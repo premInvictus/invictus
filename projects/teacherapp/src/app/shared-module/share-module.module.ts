@@ -59,7 +59,9 @@ import * as _moment from 'moment';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 import { MessagesAdvancedSearchModalComponent } from './messages-advanced-search-modal/messages-advanced-search-modal.component';
+import { EmpCommonProfileComponent } from '../../../../human-resource/src/app/employee-master/emp-common-profile/emp-common-profile.component';
 import { SortDirective} from '../_directive/sort';
+import { SalarySlipModalComponent } from './salary-slip-modal/salary-slip-modal.component';
 export const MY_FORMATS = {
 	parse: {
 		dateInput: 'L',
@@ -118,6 +120,7 @@ export const MY_FORMATS = {
 		AddInstructionComponent,
 		CommonDynamicChartComponent,
 		PublishUnpublishDialogComponent,
+		SalarySlipModalComponent,
 		MathJaxDirective,
 		OngoingTestInstructionComponent,
 		EssayDialogsComponent,
@@ -139,6 +142,7 @@ export const MY_FORMATS = {
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
+		EmpCommonProfileComponent,
 		SortDirective
 	],
 	exports: [
@@ -196,8 +200,10 @@ export const MY_FORMATS = {
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
 		MessagesAdvancedSearchModalComponent,
+		EmpCommonProfileComponent,
 		CKEditorModule,
-		SortDirective
+		SortDirective,
+		SalarySlipModalComponent
 	],
 	entryComponents: [ImagecropComponent, EssayDialogsComponent, QuestionPaperDialogComponent, AddInstructionComponent,
 		ImageViewerComponent,
@@ -207,6 +213,7 @@ export const MY_FORMATS = {
 		BookReserveRequestConfirmationComponent,
 		BookDetailsModalComponent,
 		ComposeMessageComponent,
+		SalarySlipModalComponent,
 		MessagesAdvancedSearchModalComponent],
 		providers: [
 			{ provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },

@@ -24,12 +24,18 @@ export class CommonAPIService {
 		this.question_type = [];
 		this.question_type = value;
 	}
+	generatePaySlip(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/generatePaySlip', value);
+	}
 	getQtype() {
 		if (JSON.parse(localStorage.getItem('qSubType'))) {
 			this.question_type = JSON.parse(localStorage.getItem('qSubType'));
 			return of(this.question_type);
 		}
 		return of(this.question_type);
+	}
+	getEmployeeSalaryDetail(value){
+		return this.http.post(environment.apiHRUrl + '/salary-compute/getAll', value);
 	}
 	getQsubtype(qt_id) {
 		let tempdata: any = null;
@@ -104,6 +110,31 @@ export class CommonAPIService {
 		this.loaderService.startLoading();
 		return this.http.post(environment.apiHRUrl + '/communication/getAll', value);
 	}
+	getEmployeeDetail(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/get', value);
+	}
+	getLeaveManagement() {
+		return this.http.get(environment.apiHRUrl + '/leave-management/getLeaveManagement');
+	}
+	getAllEmployee(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
+	}
+	updateEmployee(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/update', value);
+	}
+	getFeeMonths(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getFeeMonths');
+	}
+	getBanks(value) {
+		return this.http.get(environment.apiFeeUrl + '/feeSetup/getBanks');
+	}
+	getEmployeeLedger(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/getEmployeeLedger', value);
+	}
+	getEmployeeNavigationRecords(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/getNavigationId', value);
+	}
+
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?
