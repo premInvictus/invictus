@@ -5,7 +5,7 @@ import { environment } from '../../../../../../../src/environments/environment';
 import * as Highcharts from 'highcharts';
 import { UserAccessMenuService, NotificationService } from '../../../_services';
 import { ErpCommonService, CommonAPIService } from 'src/app/_services/index';
-import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
+// import { PreviewDocumentComponent } from '../../../shared-module/preview-document/preview-document.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { BranchChangeService } from 'src/app/_services/branchChange.service';
@@ -21,14 +21,13 @@ require('highcharts/highcharts-3d')(Highcharts);
 
 
 @Component({
-	selector: 'app-teacher-dashboard',
-	templateUrl: './teacher-dashboard.component.html',
-	styleUrls: ['./teacher-dashboard.component.css']
+  selector: 'app-view-profile',
+  templateUrl: './view-profile.component.html',
+  styleUrls: ['./view-profile.component.css']
 })
+export class ViewProfileComponent implements OnInit {
 
-export class TeacherDashboardComponent implements OnInit {
-
-	hosturl = environment.apiAxiomUrl;
+  hosturl = environment.apiAxiomUrl;
 	qtptData: any = {};
 	qtptDataInReview: any = {};
 	topperArray: any[] = [];
@@ -154,7 +153,7 @@ export class TeacherDashboardComponent implements OnInit {
 	sessionValue = 4;
 	constructor(
 		private qelementService: QelementService,
-		private adminService: AdminService,
+		
 		private notif: NotificationService,
 		private userAccessMenuService: UserAccessMenuService,
 		private erpCommonService: ErpCommonService,
@@ -179,7 +178,7 @@ export class TeacherDashboardComponent implements OnInit {
 	getUserDetailsHr() {
 		this.userAccessMenuService.getAllUser({ emp_login_id: this.currentUser.login_id }).subscribe(
 			(result: any) => {
-				console.log("i am result", result, this.currentUser.login_id);
+				// console.log("i am result", result, result);
 				if (result && result.length > 0) {
 					this.userDetails = result[0];
 					this.getAttendanceReport();
@@ -506,9 +505,9 @@ export class TeacherDashboardComponent implements OnInit {
 		// console.log("i am currentUser", this.currentUser);
 		// this.getPastScheduledExams();
 		this.getComingScheduledExams();
-		this.getDashboardReport();
-		this.getStudentLeaderBoard();
-		this.getClassLeaderBoard();
+		// this.getDashboardReport();
+		// this.getStudentLeaderBoard();
+		// this.getClassLeaderBoard();
 
 		this.buildForm();
 		this.login_id = this.currentUser.login_id;
@@ -648,50 +647,50 @@ export class TeacherDashboardComponent implements OnInit {
 		};
 	}
 
-	getDashboardReport() {
-		this.qtptData = {};
-		this.adminService.getDashboardReport(
-			{ qus_status: '1', tp_status: '1', qp_status: '1', es_status: '2', login_id: this.currentUser.login_id }).subscribe(
-				(result: any) => {
-					if (result && result.status === 'ok') {
-						this.qtptData = result.data;
-						this.qtptDataInReview = {};
-						this.adminService.getDashboardReport(
-							{
-								qus_status: '0', tp_status: '0',
-								qp_status: '0', es_status: '0', login_id: this.currentUser.login_id
-							}).subscribe(
-								(result2: any) => {
-									if (result2 && result2.status === 'ok') {
-										this.qtptDataInReview = result2.data;
-										this.threedchart.series[0].data = [
-											Number(this.qtptDataInReview.qus_count),
-											Number(this.qtptDataInReview.tp_count),
-											Number(this.qtptDataInReview.qp_count),
-											Number(this.qtptDataInReview.es_count)
-										];
-										this.threedchart.series[1].data = [
-											Number(this.qtptData.qus_count),
-											Number(this.qtptData.tp_count),
-											Number(this.qtptData.qp_count),
-											Number(this.qtptData.es_count)
-										];
-										this.workanalysisdiv = true;
-									}
-								});
-					}
-				});
-	}
-	getClassLeaderBoard() {
-		this.topperclassArray = [];
-		this.adminService.getClassLeaderBoard().subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.topperclassArray = result.data;
-				}
-			}
-		);
-	}
+	// getDashboardReport() {
+	// 	this.qtptData = {};
+	// 	this.adminService.getDashboardReport(
+	// 		{ qus_status: '1', tp_status: '1', qp_status: '1', es_status: '2', login_id: this.currentUser.login_id }).subscribe(
+	// 			(result: any) => {
+	// 				if (result && result.status === 'ok') {
+	// 					this.qtptData = result.data;
+	// 					this.qtptDataInReview = {};
+	// 					this.adminService.getDashboardReport(
+	// 						{
+	// 							qus_status: '0', tp_status: '0',
+	// 							qp_status: '0', es_status: '0', login_id: this.currentUser.login_id
+	// 						}).subscribe(
+	// 							(result2: any) => {
+	// 								if (result2 && result2.status === 'ok') {
+	// 									this.qtptDataInReview = result2.data;
+	// 									this.threedchart.series[0].data = [
+	// 										Number(this.qtptDataInReview.qus_count),
+	// 										Number(this.qtptDataInReview.tp_count),
+	// 										Number(this.qtptDataInReview.qp_count),
+	// 										Number(this.qtptDataInReview.es_count)
+	// 									];
+	// 									this.threedchart.series[1].data = [
+	// 										Number(this.qtptData.qus_count),
+	// 										Number(this.qtptData.tp_count),
+	// 										Number(this.qtptData.qp_count),
+	// 										Number(this.qtptData.es_count)
+	// 									];
+	// 									this.workanalysisdiv = true;
+	// 								}
+	// 							});
+	// 				}
+	// 			});
+	// }
+	// getClassLeaderBoard() {
+	// 	this.topperclassArray = [];
+	// 	this.adminService.getClassLeaderBoard().subscribe(
+	// 		(result: any) => {
+	// 			if (result && result.status === 'ok') {
+	// 				this.topperclassArray = result.data;
+	// 			}
+	// 		}
+	// 	);
+	// }
 	getComingScheduledExams() {
 		this.examArray = [];
 		const inputJson = {
@@ -738,16 +737,16 @@ export class TeacherDashboardComponent implements OnInit {
 		}
 
 	}
-	getStudentLeaderBoard() {
-		this.topperArray = [];
-		this.adminService.getStudentLeaderBoard().subscribe(
-			(result: any) => {
-				if (result && result.status === 'ok') {
-					this.topperArray = result.data;
-				}
-			}
-		);
-	}
+	// getStudentLeaderBoard() {
+	// 	this.topperArray = [];
+	// 	this.adminService.getStudentLeaderBoard().subscribe(
+	// 		(result: any) => {
+	// 			if (result && result.status === 'ok') {
+	// 				this.topperArray = result.data;
+	// 			}
+	// 		}
+	// 	);
+	// }
 	convertFloat(value) {
 		const parseValue = Math.round(value * 100) / 100;
 		return parseValue;
@@ -951,14 +950,14 @@ export class TeacherDashboardComponent implements OnInit {
 					file_url: element.atmt_url
 				});
 			});
-			const dialogRef = this.dialog.open(PreviewDocumentComponent, {
-				height: '80%',
-				width: '1000px',
-				data: {
-					index: '',
-					images: attArr
-				}
-			});
+			// const dialogRef = this.dialog.open(PreviewDocumentComponent, {
+			// 	height: '80%',
+			// 	width: '1000px',
+			// 	data: {
+			// 		index: '',
+			// 		images: attArr
+			// 	}
+			// });
 		}
 	}
 	getClassByTeacherId() {
@@ -1084,3 +1083,5 @@ export class TeacherDashboardComponent implements OnInit {
 		else return "Good Evening"
 	}
 }
+
+ 
