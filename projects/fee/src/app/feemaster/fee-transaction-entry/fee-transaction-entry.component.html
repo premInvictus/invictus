@@ -162,7 +162,7 @@
                               <mat-select (selectionChange)="getSelectedMode($event)" required placeholder="Select Mode"
                                  formControlName="ftr_emod_id" [(ngModel)]="selectedMode">
                                  <mat-option value="">Please Select</mat-option>
-                                 <mat-option *ngFor="let mode of entryModes" [value]="mode.emod_id">{{mode.emod_name}}
+                                 <mat-option *ngFor="let mode of entryModes" [value]="mode?.emod_id">{{mode?.emod_name}}
                                  </mat-option>
                               </mat-select>
                            </mat-form-field>
