@@ -134,6 +134,7 @@
     "../projects/financial-accounting/src/app/transaction-master/transaction-master.module.ts",
     "../projects/teacherapp/src/app/leave-management/leave-management.module.ts",
     // "../projects/fee/src/app/wallets/wallets.module.ts",
+    "../projects/human-resource/src/app/personaldetails/personaldetails.module.ts"
 
   ]
 }

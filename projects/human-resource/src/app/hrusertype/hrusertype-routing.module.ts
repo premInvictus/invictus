@@ -18,6 +18,7 @@ const routes: Routes = [
 			{ path: 'configure', loadChildren:  '../hr-configure/hr-configure.module#HrConfigureModule' },
 			{ path: 'leave-management', loadChildren:  '../leave-management/leave-management.module#LeaveManagementModule' },
 			{ path: 'communication', loadChildren:  '../employee-messages/employee-messages.module#EmployeeMessagesModule' },
+			{ path: 'personaldetails', loadChildren:  '../personaldetails/personaldetails.module#PersonaldetailsModule' },
 		]
 	}
 ];
