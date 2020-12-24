@@ -79,3 +79,6 @@ mat-grid-tile {
 .border-right {
     border-right: 1px solid black;
 }
+.min-h-350{
+    min-height: 400px;
+}

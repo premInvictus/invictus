@@ -152,6 +152,7 @@ export class TeacherDashboardComponent implements OnInit {
 	holidayArr: any[];
 	sessionLeave: any;
 	sessionValue = 4;
+	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
 	constructor(
 		private qelementService: QelementService,
 		private adminService: AdminService,
@@ -182,6 +183,9 @@ export class TeacherDashboardComponent implements OnInit {
 				console.log("i am result", result, this.currentUser.login_id);
 				if (result && result.length > 0) {
 					this.userDetails = result[0];
+					if(this.userDetails.emp_profile_pic){
+						this.defaultsrc = this.userDetails.emp_profile_pic;
+					}
 					this.getAttendanceReport();
 					if (this.userDetails && this.userDetails.emp_month_attendance_data) {
 						// console.log("i am here inside", this.userDetails.emp_month_attendance_data);
@@ -195,13 +199,16 @@ export class TeacherDashboardComponent implements OnInit {
 									// console.log('tempmonthdata', tempmonthdata);
 
 									tempmonthdata.attendance_detail.emp_leave_credited.forEach(e => {
-										this.leave_credit += e.leave_value;
+										this.leave_credit += (e.leave_value ? Number(e.leave_value) : 0);
+									});
+									tempmonthdata.attendance_detail.emp_leave_granted.forEach(e => {
+										this.leave_credit -= (e.leave_value ? Number(e.leave_value) : 0);
 									})
 
 
 									element.month_data.forEach(e => {
 										e.attendance_detail.emp_leave_granted.forEach(x => {
-											this.leave_granted += x.leave_value
+											this.leave_granted += (x.leave_value ? Number(x.leave_value) : 0);
 										})
 									})
 								}

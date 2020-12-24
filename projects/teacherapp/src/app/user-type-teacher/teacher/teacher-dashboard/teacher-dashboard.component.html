@@ -643,7 +643,7 @@
 </div>
 <div class="row margin-top-10">
 	<div class="col-6 remove-right-padding">
-		<mat-card class="height-296 height-320 min-h-320" style="height:100% ;">
+		<mat-card class="height-296 height-320 min-h-350">
 			<mat-card-title>
 				<div class="row row-remove-top-margin">
 					<div class="col-6">
@@ -683,12 +683,12 @@
 							<tr>
 								<td width="40%">Designation</td>
 								<td width="3%">:</td>
-								<td width="57%" class="text-bold">Teacher</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_designation_detail?.name}}</td>
 							</tr>
 							<tr>
 								<td width="40%">Date of Joining</td>
 								<td width="3%">:</td>
-								<td width="57%" class="text-bold">{{userDetails?.emp_salary_detail?.emp_organisation_relation_detail?.doj}}</td>
+								<td width="57%" class="text-bold">{{userDetails?.emp_salary_detail?.emp_organisation_relation_detail?.doj | date:'d-MMM-y'}}</td>
 							</tr>
 							<tr>
 								<td width="40%">Available leaves</td>
@@ -717,7 +717,7 @@
 		</mat-card>
 	</div>
 	<div class="col-6 remove-right-padding">
-		<mat-card class="height-296 height-320 min-h-320">
+		<mat-card class="height-296 height-320 min-h-350">
 			<mat-card-title>
 				<div class="row row-remove-top-margin">
 					<div class="col-6" style="display: inline-grid;">
