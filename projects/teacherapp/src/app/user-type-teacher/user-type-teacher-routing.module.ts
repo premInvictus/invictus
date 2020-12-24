@@ -57,6 +57,7 @@ const routes: Routes = [
 				loadChildren: 'projects/teacherapp/src/app/teacher-library/teacher-library.module#TeacherLibraryModule'
 			},
 			{ path: 'logentry', loadChildren: 'projects/teacherapp/src/app/logentry/logentry.module#LogentryModule' },
+			{ path: 'personaldetails', loadChildren: 'projects/teacherapp/src/app/personaldetails/personaldetails.module#PersonaldetailsModule' },
 			{ path: 'assignment', loadChildren: 'projects/teacherapp/src/app/assignment/assignment.module#AssignmentModule' },
 			{ path: 'auxillaries', loadChildren: 'projects/teacherapp/src/app/auxillaries/auxillaries.module#AuxillariesModule' },
 			{ path: 'user-credential', component: UserCredentialComponent },
