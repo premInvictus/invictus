@@ -23,6 +23,7 @@ import { AccesscontrolComponent } from './admin/accesscontrol/accesscontrol.comp
 import { SchoolsetupComponent } from './admin/schoolsetup/schoolsetup.component';
 import { AdminDashboardComponent } from './admin/admin-dashboard/admin-dashboard.component';
 import { AdminComponent } from './admin/admin.component';
+import { ViewProfileComponent } from './admin/view-profile/view-profile.component';
 
 @NgModule({
 	imports: [
@@ -49,7 +50,8 @@ import { AdminComponent } from './admin/admin.component';
 		CreateNewUserComponent,
 		ManageAccessComponent,
 		CreateNewSchoolComponent,
-		UserCredentialComponent
+		UserCredentialComponent,
+		ViewProfileComponent
 	]
 })
 export class AdminUserTypeModule {}

@@ -24,6 +24,9 @@ export class UserAccessMenuService {
 		}
 		return this.http.post(environment.apiAxiomUrl + '/users/getUserAccessMenu', param);
 	}
+	getAllUser(value) {
+		return this.http.post(environment.apiHRUrl + '/employee/getAllEmployee', value);
+	}
 	isExistUserAccessMenu(mod_id) {
 		if (this.menus.length === 0) {
 			this.menus = (JSON.parse(localStorage.getItem('userAccessMenu'))) ?

@@ -9,6 +9,7 @@ import { CreateNewUserComponent } from './admin/create-new-user/create-new-user.
 import { CreateNewSchoolComponent } from './admin/create-new-school/create-new-school.component';
 import { UserCredentialComponent } from './user-credential/user-credential.component';
 import { ProjectComponent } from 'src/app/invictus-shared/project/project.component';
+import { ViewProfileComponent } from './admin/view-profile/view-profile.component';
 
 const routes: Routes = [
 	{
@@ -52,9 +53,13 @@ const routes: Routes = [
 				canActivate: [AuthGuard]
 			},
 			{
-				path: 'accesscontrol',
-				component: AccesscontrolComponent,
+				path: 'schoolsetup',
+				component: SchoolsetupComponent,
 				canActivate: [AuthGuard]
+			},
+			{
+				path: 'view_profile',
+				component: ViewProfileComponent,
 			},
 			{ path: 'create_new_user', component: CreateNewUserComponent },
 			{ path: 'manage-access/:id', component: ManageAccessComponent },
