@@ -312,65 +312,89 @@ export class SchoolsetupComponent implements OnInit {
 				});
 		}
 	}
-	addNewSchool() {
+	validateForm(){
+		let validate = true;
 		if (!this.newSchoolForm.value.school_logo) {
 			this.notif.showSuccessErrorMessage('Logo is required', 'info');
 		}
 		if (!this.newSchoolForm.value.school_name) {
 			this.notif.showSuccessErrorMessage('School Name is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_board) {
 			this.notif.showSuccessErrorMessage('Board is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_afflication_no) {
 			this.notif.showSuccessErrorMessage('Affiliation No. is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_address) {
 			this.notif.showSuccessErrorMessage('Address is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_city) {
 			this.notif.showSuccessErrorMessage('City is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_state) {
 			this.notif.showSuccessErrorMessage('State is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_country) {
 			this.notif.showSuccessErrorMessage('Country is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_favicon) {
 			this.notif.showSuccessErrorMessage('School Favicon is required', 'info');
 		}
 		if (!this.newSchoolForm.value.school_website) {
 			this.notif.showSuccessErrorMessage('School Website is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_phone) {
 			this.notif.showSuccessErrorMessage('Contact No. is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_smsid) {
 			this.notif.showSuccessErrorMessage('SMS ID is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_email) {
 			this.notif.showSuccessErrorMessage('Email ID is required', 'error');
 		}
 		if (!this.newSchoolForm.value.school_prefix) {
 			this.notif.showSuccessErrorMessage('Assigned Prefix is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.si_pincode) {
 			this.notif.showSuccessErrorMessage('Pin Code is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_theme) {
 			this.notif.showSuccessErrorMessage('Theme is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_fee_period) {
 			this.notif.showSuccessErrorMessage('Fee period is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_session_start_month) {
 			this.notif.showSuccessErrorMessage('Start Month is required', 'error');
+			validate = false;
 		}
 		if (!this.newSchoolForm.value.school_session_end_month) {
 			this.notif.showSuccessErrorMessage('End Month is required', 'error');
+			validate = false;
 		}
-		if (this.newSchoolForm.valid) {
+		if (this.newSchoolForm.value.school_group == 'other' && this.newSchoolForm.value.school_group_text == '') {
+			this.notif.showSuccessErrorMessage('School Group is required', 'error');
+			validate = false;
+		}
+		return validate;
+	}
+	addNewSchool() {
+		if (this.newSchoolForm.valid && this.validateForm()) {
 			const city = this.getCityId(this.newSchoolForm.value.school_city);
 			const newSchoolFormData = new FormData();
 			newSchoolFormData.append('school_logo', this.file1);
@@ -603,7 +627,7 @@ export class SchoolsetupComponent implements OnInit {
 		console.log('this.newSchoolForm--',this.newSchoolForm)
 	}
 	editNewSchool() {
-		if (this.newSchoolForm.valid) {
+		if (this.newSchoolForm.valid && this.validateForm()) {
 			const newSchoolFormData = new FormData();
 			newSchoolFormData.append('school_logo', this.file1);
 			newSchoolFormData.append('school_favicon', this.file2);
@@ -840,6 +864,11 @@ export class SchoolsetupComponent implements OnInit {
 				this.schoolGroupData = data.data;
 				console.log('this.schoolGroupData--', this.schoolGroupData);
 			}
+		})
+	}
+	setGroup(event){
+		this.newSchoolForm.patchValue({
+			school_group_text:event.value
 		})
 	}
 }
