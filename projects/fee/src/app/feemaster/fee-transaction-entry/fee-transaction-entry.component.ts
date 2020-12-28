@@ -45,6 +45,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 	currentInvoiceId = '';
 	invoiceArrayForm: any[]= [];
 	walletProcess: any[]= ['deposit','withdrawal'];
+	opening_balance_paid_status = 0;
 	constructor(
 		private sisService: SisService,
 		public processtypeService: ProcesstypeFeeService,
@@ -180,6 +181,7 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 				this.dataSource = new MatTableDataSource<InvoiceElement>(this.INVOICE_ELEMENT_DATA);
 				this.invoice = {};
 				this.invoice = result.data[0];
+				
 				this.invoice.netPay = this.invoice.late_fine_amt ?
 					Number(this.invoice.late_fine_amt) + Number(this.invoice.fee_amount) :
 					Number(this.invoice.fee_amount);
@@ -353,6 +355,20 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		this.sisService.getStudentInformation({ au_login_id: login_id, au_status: '1' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
 				this.studentInfo = result.data[0];
+				this.opening_balance_paid_status = result.data[0]['opening_balance_paid_status'];
+				for (var i=0; i<this.entryModes.length;i++) {
+					if(Number(this.opening_balance_paid_status)) {
+						if (this.entryModes[i]['emod_alias'] == 'AOB') {
+							this.entryModes.splice(i,1);
+						}
+					}
+					if(!(Number(this.opening_balance_paid_status)) && this.studentInfo.student_opening_balance == 0) {
+						if (this.entryModes[i]['emod_alias'] == 'AOB') {
+							this.entryModes.splice(i,1);
+						}
+					}
+
+				}
 				this.selectedMode = '1';
 				if (this.studentInfo.last_invoice_number) {
 					this.currentInvoiceId = this.studentInfo.last_invoice_number;
@@ -536,6 +552,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 			validateFlag = false;
 			this.common.showSuccessErrorMessage('Invoice Number cannot be blank for against invoice', 'error');
 		}
+		if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
+			validateFlag = false;
+			this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
+		}
 		if (Number(this.feeTransactionForm.value.ftr_pay_id) === 1) {
 			if (!(this.feeTransactionForm.value.ftr_pay_id &&
 				this.feeTransactionForm.value.ftr_remark)) {
@@ -630,6 +650,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}) }
 				}
 				inputjson.receipt_mapping= receiptMappArr;
+				if (this.selectedMode == '5') {
+					inputjson.inv_id = [];
+					inputjson.inv_invoice_no = [];
+					inputjson.inv_process_type = this.studentInfo.au_process_type;
+					inputjson.ftr_prev_balance = 0;
+					inputjson.lateFeeAmt = 0;
+					inputjson.opening_balance_transaction =  true;
+					inputjson.receipt_mapping = [];
+				} else {
+					inputjson.opening_balance_transaction =  false
+				}
+				
 				console.log('inputjson-->', inputjson);
 				this.feeService.insertFeeTransaction(inputjson).subscribe((result: any) => {
 					this.btnDisable = false;
@@ -639,7 +671,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					} else {
-						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						if (result.message) {
+							this.common.showSuccessErrorMessage(result.message, 'error');
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+						}
+						
 						this.reset();
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -675,6 +712,10 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		if (Number(this.invoice.fee_amount) === 0) {
 			this.common.showSuccessErrorMessage('Zero Amount Entry not possible', 'error');
 			validateFlag = false;
+		}
+		if(this.selectedMode == '5' && (Number(this.studentInfo.student_opening_balance) != this.feeTransactionForm.value.ftr_amount)) {
+			validateFlag = false;
+			this.common.showSuccessErrorMessage('Transaction Amount should match with Opening Balance Amount', 'error');
 		}
 		if (this.selectedMode === '1' && this.invoiceArray.length === 0) {
 			validateFlag = false;
@@ -739,7 +780,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					} else {
-						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						if (result.message) {
+							this.common.showSuccessErrorMessage(result.message, 'error');
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+						}
 						this.reset();
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
@@ -765,6 +810,18 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 					}) }
 				}
 				inputjson.receipt_mapping= receiptMappArr;
+				if (this.selectedMode == '5') {
+					inputjson.inv_id = [];
+					inputjson.inv_invoice_no = [];
+					inputjson.inv_process_type = this.studentInfo.au_process_type;
+					inputjson.ftr_prev_balance = 0;
+					inputjson.lateFeeAmt = 0;
+					inputjson.receipt_mapping = [];
+
+					inputjson.opening_balance_transaction =  true;
+				} else {
+					inputjson.opening_balance_transaction =  false
+				}
 				this.feeService.insertFeeTransaction(this.feeTransactionForm.value).subscribe((result: any) => {
 					this.btnDisable = false;
 					if (result && result.status === 'ok') {
@@ -776,7 +833,11 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					} else {
 						this.reset();
-						this.common.showSuccessErrorMessage(result.messsage, 'error');
+						if (result.message) {
+							this.common.showSuccessErrorMessage(result.message, 'error');
+						} else {
+							this.common.showSuccessErrorMessage(result.messsage, 'error');
+						}
 						this.getStudentInformation(this.lastRecordId);
 						this.feeRenderId = this.commonStu.studentdetailsform.value.au_enrollment_id;
 					}
@@ -800,6 +861,12 @@ export class FeeTransactionEntryComponent implements OnInit, OnDestroy {
 		} else {
 			this.feeTransactionForm.patchValue({
 				'ftr_amount': this.invoice.netPay,
+			});
+		}
+
+		if (this.selectedMode == '5') {
+			this.feeTransactionForm.patchValue({
+				'ftr_amount' : this.studentInfo.student_opening_balance
 			});
 		}
 	}

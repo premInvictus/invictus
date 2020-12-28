@@ -720,17 +720,18 @@ export class CollectionReportComponent implements OnInit {
 										formatter: this.checkReceiptFormatter,
 										cssClass: 'receipt_collection_report'
 									},
-									{
-										id: 'inv_opening_balance', name: 'Opening Balance / Previous Balance (₹)', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										type: FieldType.number,
-										filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+									// {
+									// 	id: 'inv_opening_balance', name: 'Opening Balance / Previous Balance (₹)', field: 'inv_opening_balance',
+									// 	filterable: true,
+									// 	cssClass: 'amount-report-fee',
+									// 	filterSearchType: FieldType.number,
+									// 	type: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber, operator: OperatorType.greaterThan },
+									// 	sortable: true,
+									// 	formatter: this.checkFeeFormatter,
+									// 	groupTotalsFormatter: this.sumTotalsFormatter
+									// }
+								];
 								if (branchArray.length > 1) {
 									let aColumn = {
 										id: 'school_prefix',
@@ -768,8 +769,8 @@ export class CollectionReportComponent implements OnInit {
 								}
 								// console.log(repoArray[Number(keys)]['stu_admission_no']);
 								//console.log(repoArray[Number(keys)], repoArray[Number(keys)]);
-								console.log('stuFeeHeadArray--', stuFeeHeadArray);
-
+								console.log('commonHeadsArray--', commonHeadsArray);
+								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - b.fh_order; } );
 								for (const titem of commonHeadsArray) {
 
 									Object.keys(titem).forEach((key2: any) => {
@@ -824,9 +825,25 @@ export class CollectionReportComponent implements OnInit {
 
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													break;
+													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															break;
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														}
+													} else {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														break;
+													}
+													
+													
 
 												}
 											}
@@ -2852,17 +2869,18 @@ export class CollectionReportComponent implements OnInit {
 										formatter: this.checkReceiptFormatter,
 										cssClass: 'receipt_collection_report'
 									},
-									{
-										id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										sortable: true,
-										formatter: this.checkFeeFormatter,
-										type: FieldType.number,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+									// {
+									// 	id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
+									// 	filterable: true,
+									// 	cssClass: 'amount-report-fee',
+									// 	filterSearchType: FieldType.number,
+									// 	filter: { model: Filters.compoundInputNumber },
+									// 	sortable: true,
+									// 	formatter: this.checkFeeFormatter,
+									// 	type: FieldType.number,
+									// 	groupTotalsFormatter: this.sumTotalsFormatter
+									// }
+								];
 								if (branchArray.length > 1) {
 									let aColumn = {
 										id: 'school_prefix',
@@ -2897,6 +2915,7 @@ export class CollectionReportComponent implements OnInit {
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 
 								}
+								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - b.fh_order; } );
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
@@ -2947,10 +2966,27 @@ export class CollectionReportComponent implements OnInit {
 												repoArray[Number(keys)]['receipt_no'] : '-';
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
-													break;
+													// obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+													// tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+													// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+													// break;
+													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															break;
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														}
+													} else {
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														break;
+													}
 
 												}
 											}
@@ -3376,17 +3412,18 @@ export class CollectionReportComponent implements OnInit {
 										formatter: this.checkReceiptFormatter,
 										cssClass: 'receipt_collection_report'
 									},
-									{
-										id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
-										filterable: true,
-										cssClass: 'amount-report-fee',
-										filterSearchType: FieldType.number,
-										filter: { model: Filters.compoundInputNumber },
-										sortable: true,
-										type: FieldType.number,
-										formatter: this.checkFeeFormatter,
-										groupTotalsFormatter: this.sumTotalsFormatter
-									}];
+								// 	{
+								// 		id: 'inv_opening_balance', name: 'Opening Balance (₹)', field: 'inv_opening_balance',
+								// 		filterable: true,
+								// 		cssClass: 'amount-report-fee',
+								// 		filterSearchType: FieldType.number,
+								// 		filter: { model: Filters.compoundInputNumber },
+								// 		sortable: true,
+								// 		type: FieldType.number,
+								// 		formatter: this.checkFeeFormatter,
+								// 		groupTotalsFormatter: this.sumTotalsFormatter
+								// 	}
+								];
 								if (this.reportFilterForm.value.school_branch.length > 1) {
 									let aColumn = {
 										id: 'school_prefix',
@@ -3420,6 +3457,7 @@ export class CollectionReportComponent implements OnInit {
 									stuFeeHeadArray.push(repoArray[Number(keys)]['fee_head_data'][fij]);
 
 								}
+								commonHeadsArray.sort( function ( a, b ) { return a.fh_order - a.fh_order; } );
 								for (const titem of commonHeadsArray) {
 									Object.keys(titem).forEach((key2: any) => {
 										if (key2 === 'fh_name' && Number(keys) === 0) {
@@ -3472,10 +3510,31 @@ export class CollectionReportComponent implements OnInit {
 											// tot = tot + (titem['fh_amt'] ? Number(titem['fh_amt']) : 0);
 											for (var fi = 0; fi < stuFeeHeadArray.length; fi++) {
 												if ((stuFeeHeadArray[fi]['fh_name'] == titem['fh_name']) && (stuFeeHeadArray[fi]['fh_prefix'] == repoArray[Number(keys)]['school_prefix'])) {
-													obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
-													tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
-													console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
-													break;
+													// obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+													// tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+													// console.log(key2 + k, 'titem--', titem['fh_name'], titem['fh_amt'], stuFeeHeadArray, repoArray[Number(keys)]['school_prefix'], repoArray[Number(keys)]['stu_full_name']);
+													// break;
+													if (stuFeeHeadArray[fi]['fh_calm_id'] =='6') {
+														console.log("1",repoArray[Number(keys)]['accd_opening_balance_paid_status']);
+														if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && !(Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															console.log("2");
+															obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+															tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+															break;
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '1' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															console.log("3");
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														}
+													} else {
+														console.log("4");
+														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
+														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
+														break;
+													}
 
 												}
 											}
