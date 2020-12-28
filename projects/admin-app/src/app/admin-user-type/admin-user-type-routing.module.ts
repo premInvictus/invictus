@@ -53,6 +53,11 @@ const routes: Routes = [
 				canActivate: [AuthGuard]
 			},
 			{
+				path: 'accesscontrol',
+				component: AccesscontrolComponent,
+				canActivate: [AuthGuard]
+			},
+			{
 				path: 'view_profile',
 				component: ViewProfileComponent,
 			},
