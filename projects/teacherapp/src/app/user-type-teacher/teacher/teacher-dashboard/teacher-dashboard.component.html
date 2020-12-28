@@ -791,7 +791,7 @@
 							<mat-grid-tile>Sat</mat-grid-tile>
 						</mat-grid-list>
 						<mat-grid-list cols="7" rowHeight="2:1" >
-							<mat-grid-tile *ngFor="let monthDay of monthDays"><span class="iamcircle" [style.background]="monthDay.value">{{monthDay.day}}</span></mat-grid-tile>
+							<mat-grid-tile *ngFor="let monthDay of monthDays"><span class="iamcircle" [style.color]="monthDay.colorV" [style.background]="monthDay.value">{{monthDay.day}}</span></mat-grid-tile>
 						</mat-grid-list>
 						<mat-grid-list cols="4" rowHeight="3:1">
 							<mat-grid-tile class= "fontclass" ><span class="smallbox" [ngStyle]="{background: '#30B835'}"></span>&nbsp;  Present</mat-grid-tile>
@@ -921,60 +921,76 @@
         </mat-card>
     </div>
     <div class="col-4 remove-right-padding">
-        <mat-card class="height-296 height-263">
-            <mat-card-title>
-                <div class="row row-remove-top-margin">
-                    <div class="col-10">
-                        <span class="font-size-20 font-bold">Communication</span>
-                    </div>
-                    <div class="col-2 ">
-                        <div class="float-right">
-                            <span class="font-size-12 font-skyblue font-bold cursor-pointer">View All</span>
-                        </div>
+		<mat-card class="height-296 height-263 min-h-320">
+			<mat-card-title>
+				<div class="row row-remove-top-margin">
+					<div class="col-6">
+						<span class="font-size-20 font-bold">Communications</span>
+					</div>
+					<div class="col-6">
+						<div class="float-right">
+							<span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+						</div>
+					</div>
+				</div>
+			</mat-card-title>
+			<hr class="border-bottom-grey">
+			<mat-card-content style="word-break: break-all;">
+				<ng-container *ngIf="msgArray.length > 0">
+					<div class="row">
+						<div class="col-10">
+							<span
+								class="font-size-20 font-medium font-skyblue">{{currentmsg?.msg_subject}}</span>
+						</div>
+						<div class="col-2">
+							<button *ngIf="currentmsg && currentmsg.msg_attachment.length > 0"
+								mat-button class="float-btn-blue font-size-14 font-white"
+								(click)="previewDocuments(currentmsg?.msg_attachment)">
+								
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							
+							<div class="font-size-15 margin-top-10"
+								[innerHTML]="currentmsg?.msg_description"></div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-8 remove-right-padding">
+							<span class="font-size-15">Event Date :</span><span class="font-medium font-size-15">
+								{{currentmsg?.msg_date| date:'d-MMM-y'}}</span><br>
+							<span class="font-size-15">Updated Date :</span><span class="font-medium font-size-15">
+								{{currentmsg?.msg_updated_date| date:'d-MMM-y'}}</span>
+						</div>
 
-                    </div>
-                </div>
-            </mat-card-title>
-            <hr class="border-bottom-grey">
-            <mat-card-content>
-                <div class="row">
-                    <div class="col-11">
-                        <span class="font-size-20 font-medium">Annual Day Celebration</span>
-                    </div>
-                    <div class="col-1 text-right margin-top-10">
-                        <i class="fas fa-bullhorn font-size-20 font-skyblue"></i>
-                    </div>
+						<div class="col-4 remove-col-modal-padding text-center">
+							<span><button mat-button class="side" [disabled]="msgPre"
+									(click)="msgNavigate(currentmsgIndex-1)">
+									<i class="fas fa-chevron-left cursor-pointer"></i>
+								</button>
+								<button mat-button class="side" [disabled]="msgNext"
+									(click)="msgNavigate(currentmsgIndex+1)">
+									<i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
+								</button></span>
+						</div>
 
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <p class="font-size-15 margin-top-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-10 remove-right-padding">
-                        <span class="font-size-15">Event Date :</span><span class="font-medium font-size-15">
-													18-Apr-2018</span>
-                    </div>
-
-
-
-                </div>
-                <div class="row row-remove-top-margin">
-                    <div class="col-10 remove-right-padding">
-                        <span class="font-size-15">Updated On :</span><span class="font-medium font-size-15">
-														12-Apr-2019</span>
-                    </div>
-
-                    <div class="col-2 remove-col-modal-padding text-center">
-                        <i class="fas fa-chevron-left cursor-pointer"></i><i class="fas fa-chevron-right cursor-pointer margin-left-15"></i>
-                    </div>
-
-                </div>
-
-            </mat-card-content>
-        </mat-card>
-    </div>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="msgArray.length == 0">
+					<div class="text-center">
+						<img [src]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+							height="150px">
+						<br>
+						<span class="font-size-20 font-bold font-color-brown">
+							No Record Found
+						</span>
+					</div>
+				</ng-container>
+			</mat-card-content>
+		</mat-card>
+	</div>
     <div class="col-4">
         <mat-card class="height-296 height-263">
             <mat-card-title>

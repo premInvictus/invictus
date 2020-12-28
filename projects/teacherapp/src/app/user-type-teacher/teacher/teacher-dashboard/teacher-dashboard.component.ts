@@ -153,6 +153,13 @@ export class TeacherDashboardComponent implements OnInit {
 	sessionLeave: any;
 	sessionValue = 4;
 	defaultsrc = 'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/other.png';
+
+	msgArray: any[] = [];
+	currentmsg: any;
+	currentmsgIndex: number;
+	msgPre = true;
+	msgNext = true;
+
 	constructor(
 		private qelementService: QelementService,
 		private adminService: AdminService,
@@ -174,6 +181,7 @@ export class TeacherDashboardComponent implements OnInit {
 			}
 		});
 		this.getUserDetailsHr();
+		this.getMessages();
 		// this.getAttendanceReport();
 	}
 
@@ -262,24 +270,28 @@ export class TeacherDashboardComponent implements OnInit {
 											present += 1
 											arr.push({
 												day: i + 1,
-												value: "#2C6E06"
+												value: "#2C6E06",
+												colorV:"#ffffff"
 											})
 										} else if ((stat != undefined && stat.attendance == 1)) {
 											present += 1
 											arr.push({
 												day: i + 1,
-												value: "#30B835"
+												value: "#30B835",
+												colorV:"#ffffff"
 											})
 										} else {
 											arr.push({
 												day: i + 1,
-												value: "#F63B3B"
+												value: "#F63B3B",
+												colorV:"#ffffff"
 											})
 										}
 									} else {
 										arr.push({
 											day: i + 1,
-											value: "#F6B838"
+											value: "#F6B838",
+											colorV:'#ffffff'
 										})
 										count += 1;
 									}
@@ -287,7 +299,8 @@ export class TeacherDashboardComponent implements OnInit {
 								for (let i = t.getDate(); i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 									arr.push({
 										day: i + 1,
-										value: "#ffffff"
+										value: "#ffffff",
+										colorV:'#000'
 									})
 								}
 
@@ -297,7 +310,8 @@ export class TeacherDashboardComponent implements OnInit {
 									for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 										arr.push({
 											day: i + 1,
-											value: "#ffffff"
+											value: "#ffffff",
+											colorV:'#000000'
 										})
 									}
 								}
@@ -305,7 +319,8 @@ export class TeacherDashboardComponent implements OnInit {
 
 								for (let i = 0; i < this.holidayArr.length; i++) {
 									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838"
+									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838";
+									arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
 
 								}
 								this.monthDays = this.monthDays.concat(arr);
@@ -316,7 +331,8 @@ export class TeacherDashboardComponent implements OnInit {
 								for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 									arr.push({
 										day: i + 1,
-										value: "#ffffff"
+										value: "#ffffff",
+										colorV:"#000"
 									})
 								}
 								for (let i = 0; i < this.holidayArr.length; i++) {
@@ -347,19 +363,22 @@ export class TeacherDashboardComponent implements OnInit {
 											present += 1
 											arr.push({
 												day: i + 1,
-												value: "#30B835"
+												value: "#30B835",
+												colorV:"#ffffff"
 											})
 										}
 										else {
 											arr.push({
 												day: i + 1,
-												value: "#F63B3B"
+												value: "#F63B3B",
+												colorV:"#ffffff"
 											})
 										}
 									} else {
 										arr.push({
 											day: i + 1,
-											value: "#F6B838"
+											value: "#F6B838",
+											colorV:"#ffffff"
 										})
 										count += 1;
 									}
@@ -367,7 +386,8 @@ export class TeacherDashboardComponent implements OnInit {
 								for (let i = t.getDate(); i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 									arr.push({
 										day: i + 1,
-										value: "#ffffff"
+										value: "#ffffff",
+										colorV:"#000"
 									})
 								}
 
@@ -377,13 +397,15 @@ export class TeacherDashboardComponent implements OnInit {
 									for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 										arr.push({
 											day: i + 1,
-											value: "#ffffff"
+											value: "#ffffff",
+											colorV:"#000"
 										})
 									}
 								}
 								for (let i = 0; i < this.holidayArr.length; i++) {
 									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838"
+									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838",
+									arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
 
 								}
 								this.monthDays = this.monthDays.concat(arr);
@@ -394,12 +416,14 @@ export class TeacherDashboardComponent implements OnInit {
 								for (let i = 0; i < new Date(t.getFullYear(), t.getMonth() + 1, 0, 23, 59, 59).getDate(); i++) {
 									arr.push({
 										day: i + 1,
-										value: "#ffffff"
+										value: "#ffffff",
+										colorV: "#000"
 									})
 								}
 								for (let i = 0; i < this.holidayArr.length; i++) {
 									// console.log("i am focal point", new Date(this.holidayArr[i]).getDate());
-									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838"
+									arr[new Date(this.holidayArr[i]).getDate() - 1].value = "#F6B838";
+									arr[new Date(this.holidayArr[i]).getDate() - 1].colorV = "#ffffff"
 
 								}
 								this.monthDays = this.monthDays.concat(arr);
@@ -539,6 +563,46 @@ export class TeacherDashboardComponent implements OnInit {
 				}
 			}
 		);
+	}
+
+	getMessages() {
+		this.msgArray = [];
+		console.log("i am here");
+		
+		this.commonAPIService.getWebPushNotification({ 'msg_to': this.currentUser.login_id }).subscribe((result: any) => {
+			if (result && result.data && result.data[0]) {
+				//this.msgArray = result.data;
+				console.log("i am result data", result.data);
+				
+				let i =0;
+				for (const item of result.data) {
+					if (i < 5) {
+						this.msgArray.push(item);
+					}
+					i++;
+				}
+				this.msgNavigate(0);
+			}
+		});
+	}
+
+	msgNavigate(index) {
+		this.currentmsgIndex = index;
+		this.currentmsg = this.msgArray[this.currentmsgIndex];
+		if (this.msgArray.length === 1 || this.msgArray.length === 0) {
+			this.msgPre = true;
+			this.msgNext = true;
+		} else if (this.currentmsgIndex === this.msgArray.length - 1) {
+			this.msgNext = true;
+			this.msgPre = false;
+		} else if (this.currentmsgIndex === 0) {
+			this.msgNext = false;
+			this.msgPre = true;
+		} else {
+			this.msgPre = false;
+			this.msgNext = false;
+		}
+
 	}
 	//HighChartOption(dataMonth,dataSession) when fetching from api
 	HighChartOption(dataMonth, dataSession) {
