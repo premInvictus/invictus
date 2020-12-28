@@ -174,9 +174,9 @@
             <span class="font-size-20 font-bold">Leave Applications</span>
           </div>
           <div class="col-6">
-            <div class="float-right">
-              <span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')" *ngIf="msgArray.length > 0">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
-            </div>
+            <!-- <div class="float-right">
+              <span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')" >View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+            </div> -->
           </div>
         </div>
       </mat-card-title>
@@ -201,7 +201,7 @@
         </div>
         <div class="col-6">
           <div class="float-right">
-            <span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
+            <span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')" *ngIf="msgArray.length > 0">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
           </div>
         </div>
       </div>
@@ -271,9 +271,9 @@
               <span class="font-size-20 font-bold">To-Do List</span>
             </div>
             <div class="col-6">
-              <div class="float-right">
+              <!-- <div class="float-right">
                 <span class="font-size-12 font-skyblue font-bold cursor-pointer" style="display: inline-block;" (click)="viewmore('communication')">View More &nbsp; <i class="fa fa-arrow-right" aria-hidden="true"></i></span>
-              </div>
+              </div> -->
             </div>
           </div>
         </mat-card-title>
