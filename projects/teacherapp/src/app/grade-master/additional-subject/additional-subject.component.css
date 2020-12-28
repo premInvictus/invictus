@@ -1,3 +1,25 @@
 table {
     width: 100%;
 }
+/* .mat-form-field-wrapper{
+    padding-left: 1em !important;
+    padding-right: 1em !important;
+}
+.mat-form-field-appearance-outline .mat-form-field-wrapper{
+    margin: 0em 0em !important;
+    padding: 1em !important;
+}  */
+.mat-form-field-wrapper {
+    padding-bottom: 0em !important;
+}
+.center-mr{
+    width: 70% ;
+    margin:auto ;
+}
+::ng-deep.mat-checkbox-disabled {
+    cursor: default;
+    opacity: 0.3 !important;
+}
+.vertical-90{
+    transform: rotate(-90deg);
+}
