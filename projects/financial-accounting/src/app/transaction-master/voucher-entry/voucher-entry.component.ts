@@ -207,7 +207,8 @@ export class VoucherEntryComponent implements OnInit {
 		this.acc_type_id_arr = [];
 		if(this.currentVcType == 'Contra' ){
 			this.acc_type_id_arr.push(13);
-		} else if(this.currentVcType == 'Journal' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'  || this.currentVcType == 'Purchase' ||  this.currentVcType == 'Sale' || this.currentVcType == 'Receipt'){
+		} else if(this.currentVcType == 'Journal' || this.currentVcType == 'Credit Note' || this.currentVcType == 'Debit Note'){
+			// || this.currentVcType == 'Purchase' ||  this.currentVcType == 'Sale' || this.currentVcType == 'Receipt'
 			this.accountTypeArr.forEach(element => {
 				if(element != 13){
 					this.acc_type_id_arr.push(element);
