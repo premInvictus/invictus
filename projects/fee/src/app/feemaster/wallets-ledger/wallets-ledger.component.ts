@@ -251,7 +251,7 @@ export class WalletsLedgerComponent implements OnInit {
 			if(item.w_pay_id == 3){
 				element.w_bnk_id = item.tb_name_deposit ? item.tb_name_deposit : '-';
 			}
-			if(item.w_amount_status == 'deposite'){
+			if(item.w_amount_status == 'deposit'){
 				total_credit += parseInt(item.w_amount);
 				element.rpt_type = 'RPT';
 				element.particulars='Amount Received';
@@ -379,7 +379,7 @@ export class WalletsLedgerComponent implements OnInit {
 		}
   }
   openReceiptDialog(element, edit): void {
-	  if(element.w_amount_status == 'deposite' || element.w_amount_status == 'withdrawal') {
+	  if(element.w_amount_status == 'deposit' || element.w_amount_status == 'withdrawal') {
 		const dialogRef = this.dialog.open(WalletReceiptDetailsModalComponent, {
 			width: '80%',
 			data: {
