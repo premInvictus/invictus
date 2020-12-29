@@ -156,10 +156,11 @@ export class AppComponent implements OnInit {
 			if (localStorage.getItem('expire_time') && JSON.parse(localStorage.getItem('expire_time')).expire_time) {
 				let expire_time;
 				expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;
+				this.idle.stopWatching();
 				this.idle.setConfigValues(
-					{ idle: Number(expire_time), timeout: 240, ping: 30 }
+					{ idle: 1, timeout: 299, ping: 30 }
 				);
-				//console.log(this.idle.getConfigValue());
+				console.log("dhdhdhd", this.idle.getConfigValue());
 				//this.idle.stopWatching();
 				this.idle.startWatching();
 				clearInterval(x);
@@ -167,7 +168,7 @@ export class AppComponent implements OnInit {
 		}, 1);
 		this.loaderService.counterTimer = 4;
 		this.idle.onTimerStart().subscribe((count: any) => {
-			console.log(count);
+			console.log("i am count", count);
 			const valJson: any = this.idle.getConfigValue();
 			const routeData: any = this.route.snapshot;
 			const routeUrl: String = routeData._routerState.url;
