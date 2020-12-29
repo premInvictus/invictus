@@ -68,7 +68,7 @@
                         <td><span *ngIf="par?.vc_credit != 0">{{par?.vc_number?.vc_name}}</span></td>
                         <td class="text-right"><span
                             *ngIf="par?.vc_credit < 0">{{getTwoDecimalValue(-par?.vc_credit) | indianCurrency}}</span><span
-                            *ngIf="par?.vc_credit > 0">{{par?.vc_credit | indianCurrency}}</span>
+                            *ngIf="par?.vc_credit > 0">{{getTwoDecimalValue(par?.vc_credit) | indianCurrency}}</span>
                           <span *ngIf="par?.vc_credit == 0">
                             -</span></td>
                       </tr>
