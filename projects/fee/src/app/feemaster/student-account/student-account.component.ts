@@ -182,8 +182,18 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 	additionalFeeComponent(class_id) {
 		this.feeService.getAdditionFeeHeadComponent({ fh_class_id: class_id ? class_id : '' }).subscribe((result: any) => {
 			if (result && result.status === 'ok') {
+				this.additionalFeeComponentArray = [];
 				//console.log('additionalFeeComponentArray--', result.data);
-				this.additionalFeeComponentArray = result.data;
+				for (var i=0; i<result.data.length;i++) {
+					if (result.data[i]['fs_classification']=='group') {
+						result.data[i]['fh_id'] = 'g-'+result.data[i]['fs_id'];
+						result.data[i]['fh_name'] = result.data[i]['fs_name'];
+						this.additionalFeeComponentArray.push(result.data[i]);
+					} else {
+						this.additionalFeeComponentArray.push(result.data[i]);
+					}
+				}
+				
 			}
 		});
 	}

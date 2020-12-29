@@ -163,13 +163,13 @@
                   <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
                     style="padding:10px;">
                     <input matInput type="number" class="remark-text" placeholder="Enter Debit"
-                      formControlName="vc_debit" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i);removeZero(i)">
+                      formControlName="vc_debit" step="0.01" (blur)="calculateDebitTotal();oneValueDebitOrCredit(i);removeZero(i)">
                   </td>
                   <td [ngStyle]="{'background-color': getColor(i)}" class="custom-td text-left font-size-14"
                     style="padding:10px;">
                     <!-- [readonly]="!creditEnable" -->
                     <input matInput type="number" class="remark-text" placeholder="Enter Credit"
-                      formControlName="vc_credit" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i);removeZero(i)">
+                      formControlName="vc_credit" step="0.01" (blur)="calculateCreditTotal();oneValueDebitOrCredit(i);removeZero(i)">
                   </td>
                   <td class="custom-td text-center font-size-14" style="padding:10px;">
                     <a href="javascript:void(0)" (click)="getSattleJV(i)"><i class="fa fa-plus-circle gray-add"></i></a>
