@@ -836,7 +836,13 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														}
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														} 
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
@@ -2981,7 +2987,13 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														}
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														} 
 													} else {
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;
 														tot = tot + (stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0);
@@ -3185,7 +3197,7 @@ export class CollectionReportComponent implements OnInit {
 				const collectionJSON: any = {
 					'admission_no': '',
 					'studentName': '',
-					'report_type': 'cumulativeheadwise',
+					'report_type': 'dailyheadwise',
 					'feeHeadId': value.fee_value,
 					'from_date': value.from_date,
 					'to_date': value.from_date,
@@ -3528,7 +3540,13 @@ export class CollectionReportComponent implements OnInit {
 															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
 															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
 															break;
-														}
+														} else if (repoArray[Number(keys)]['accd_opening_balance_paid_status'] == '0' && (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']))) {
+															obj[key2 + k] = Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0);
+															tot = tot + (Number(repoArray[Number(keys)]['defaulter_inv_group_amount']
+															? Number(repoArray[Number(keys)]['defaulter_inv_group_amount']) : 0));
+															break;
+														} 
 													} else {
 														console.log("4");
 														obj[key2 + k] = stuFeeHeadArray[fi]['fh_amt'] ? Number(stuFeeHeadArray[fi]['fh_amt']) : 0;

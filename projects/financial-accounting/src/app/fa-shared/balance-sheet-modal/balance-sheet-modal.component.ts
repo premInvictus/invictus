@@ -1,16 +1,16 @@
-import { Component, OnInit, Inject, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit,Inject, Input, OnChanges } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { SisService, CommonAPIService, SmartService, FaService } from '../../_services';
 import { forEach } from '@angular/router/src/utils/collection';
 import { LedgerEntryModelComponent } from '../../fa-shared/ledger-entry-model/ledger-entry-model.component';
-
+import * as $ from 'jquery';
 @Component({
   selector: 'app-balance-sheet-modal',
   templateUrl: './balance-sheet-modal.component.html',
   styleUrls: ['./balance-sheet-modal.component.css']
 })
-export class BalanceSheetModalComponent implements OnInit {
+export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
   accountform: FormGroup;
   disabledApiButton = false;
@@ -49,6 +49,15 @@ export class BalanceSheetModalComponent implements OnInit {
     private dialog: MatDialog,
   ) { }
 
+  ngAfterViewInit() {
+    console.log(' view loaded');
+    console.log($("#liabilities_side tr").length);
+    console.log($("#assets_side tr").length);
+    this.totalDebitRowLength = $("#liabilities_side tr").length;
+    this.totalCreditRowLength = $("#assets_side tr").length;
+    this.checkBlankArray();
+  }
+
   ngOnInit() {
     this.buildForm();
   }
@@ -62,8 +71,8 @@ export class BalanceSheetModalComponent implements OnInit {
     this.totalCreditRowLength = 0;
     //this.getGroupArray();
     this.checkPartialPaymentStatus();
-    this.recursiveDebitArraylength(this.param.liabilities_group_data);
-    this.recursiveCreditArraylength(this.param.assets_group_data);
+    // this.recursiveDebitArraylength(this.param.liabilities_group_data);
+    // this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
     this.getTotal();
   }
@@ -86,8 +95,8 @@ export class BalanceSheetModalComponent implements OnInit {
     this.blankArr = [];
     this.debitRow = 0;
     this.creditRow = 0;
-    this.debitRow = this.incomeExpenditureDeviation != 0 ? this.totalDebitRowLength+1 : this.totalDebitRowLength;
-    this.creditRow = this.incomeExpenditureDeviation != 0 ? this.totalCreditRowLength : this.totalCreditRowLength;
+    this.debitRow =  this.totalDebitRowLength;
+    this.creditRow =  this.totalCreditRowLength;
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
@@ -98,6 +107,10 @@ export class BalanceSheetModalComponent implements OnInit {
       }
     }
     console.log(this.debitRow, this.creditRow);
+    if (document.readyState === 'complete') { 
+      // The page is fully loaded
+      console.log('pages is loaded');
+     } 
   }
 
 
@@ -105,12 +118,12 @@ export class BalanceSheetModalComponent implements OnInit {
 
     for (var ele in arr) {
       if (Array.isArray(arr[ele])  && arr[ele].length > 0) {
-       // console.log(this.totalDebitRowLength, arr[ele]);
+        console.log(this.totalDebitRowLength, arr[ele]);
         this.totalDebitRowLength++;
         this.recursiveDebitArraylength(arr[ele])
       } 
       if (!(Array.isArray(arr[ele]))){
-        this.totalDebitRowLength++;
+       // this.totalDebitRowLength++;
         
       }
     }
@@ -128,7 +141,7 @@ export class BalanceSheetModalComponent implements OnInit {
       } 
       
       if (!(Array.isArray(arr[ele]))){
-        this.totalCreditRowLength++;
+        //this.totalCreditRowLength++;
         
       }
       
@@ -257,7 +270,7 @@ export class BalanceSheetModalComponent implements OnInit {
     this.debitSideTotal = debitTotal;
     this.creditSideTotal = creditTotal;
     console.log('debitTotal', debitTotal, 'creditTotal', creditTotal)
-    this.checkBlankArray();
+    //this.checkBlankArray();
   }
 
 

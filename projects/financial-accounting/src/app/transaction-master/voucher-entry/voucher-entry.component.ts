@@ -730,7 +730,8 @@ export class VoucherEntryComponent implements OnInit {
 	}
 	getColor(i) {
 		var color = "#fe756d";
-		if (this.voucherFormGroupArray[i].value.vc_credit && this.voucherFormGroupArray[i].value.vc_debit) {
+		
+		if (Number(this.voucherFormGroupArray[i].value.vc_credit) && Number(this.voucherFormGroupArray[i].value.vc_debit)) {
 			return color;
 		} else {
 			return '';
@@ -748,7 +749,7 @@ export class VoucherEntryComponent implements OnInit {
 			})
 		} else {
 			this.voucherFormGroupArray[i].patchValue({
-				vc_credit:parseInt(this.voucherFormGroupArray[i].value.vc_credit,10)
+				vc_credit:parseFloat(this.voucherFormGroupArray[i].value.vc_credit).toFixed(2)
 			})
 		}
 		if (this.voucherFormGroupArray[i].value.vc_debit == 0) {
@@ -757,7 +758,7 @@ export class VoucherEntryComponent implements OnInit {
 			})
 		} else {
 			this.voucherFormGroupArray[i].patchValue({
-				vc_debit:parseInt(this.voucherFormGroupArray[i].value.vc_debit,10)
+				vc_debit:parseFloat(this.voucherFormGroupArray[i].value.vc_debit).toFixed(2)
 			})
 		}
 	}
