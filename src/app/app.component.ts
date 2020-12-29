@@ -229,7 +229,7 @@ export class AppComponent implements OnInit {
 						(result: any) => {
 							if (result.status === 'ok') {
 								this.deleteToken();
-								const prefix = (JSON.parse(localStorage.getItem('Prefix')).pre);
+								const prefix = (JSON.parse(localStorage.getItem('Prefix')) ? JSON.parse(localStorage.getItem('Prefix')).pre: JSON.parse(localStorage.getItem('currentUser')).Prefix);
 								localStorage.clear();
 								localStorage.setItem('Prefix', JSON.stringify({ pre: prefix }));
 								this.loaderService.setUserPrefix(prefix);
