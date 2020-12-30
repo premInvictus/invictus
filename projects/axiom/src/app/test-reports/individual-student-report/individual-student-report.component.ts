@@ -1122,6 +1122,26 @@ export class IndividualStudentReportComponent implements OnInit, AfterViewInit {
 			.subscribe((result: any) => {
 				if (result) {
 					if (result.data.length > 0) {
+						if(result.data[0].evd_time_taken){
+							const timeArr = result.data[0].evd_time_taken.split(':');
+							if(timeArr[0] != '00') {
+								timeArr[0] += 'H';
+							} else {
+								timeArr.splice(0,1);
+							}
+							if(timeArr[1] != '00') {
+								timeArr[1] += 'M';
+							} else {
+								timeArr.splice(1,1);
+							}
+							if(timeArr[2] != '00') {
+								timeArr[2] += 'S';
+							} else {
+								timeArr.splice(2,1);
+							}
+							this.currentQA['evd_time_taken'] = timeArr.join(':');
+							console.log('this.currentQA',this.currentQA);
+						}
 						if (
 							Number(this.currentQA.qus_qst_id) > 5 &&
 							Number(this.currentQA.qus_qst_id) < 13

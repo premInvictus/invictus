@@ -235,7 +235,7 @@ export class WalletsLedgerComponent implements OnInit {
 				w_transaction_date: new DatePipe('en-in').transform(item.w_transaction_date,'d-MMM-y'),
 				w_rpt_no: item.w_rpt_no && item.w_rpt_no != 0 ? item.w_rpt_no : '',
 				rpt_type:'',
-				w_remarks: item.w_remarks ? item.w_remarks : '-',
+				w_remarks: item.w_remarks ? item.w_remarks : '',
 				w_amount: item.w_amount ? item.w_amount : '0',
 				w_amount_type: item.w_amount_type ? item.w_amount_type : '-',
 				w_amount_sign: item.w_amount_type == 'credit' ?  '+': '-',
@@ -270,6 +270,11 @@ export class WalletsLedgerComponent implements OnInit {
 				element.subparticulars = item.w_ref_no_of_items ? '(No of items - '+item.w_ref_no_of_items+')' : '';
 			}
 			if(item.w_opening == 1){
+				if(item.w_amount_type == 'credit') {
+					total_credit += parseInt(item.w_amount);
+				} else if(item.w_amount_type == 'debit') {
+					total_debit += parseInt(item.w_amount);
+				}
 				element.w_rpt_no='';
 				element.particulars = 'Opening Balance';
 				element.subparticulars = '';

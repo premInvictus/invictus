@@ -617,16 +617,16 @@ export class MyLeaveComponent implements OnInit {
 						dety.attendance_detail['emp_leave_availed'].push(leave_availed_ele);
 						dety.attendance_detail['emp_leave_granted'] = [];
 						dety.attendance_detail['emp_leave_granted'].push(leave_availed_ele);
-
-						if (approvedArraytemp[findex].attendance_detail.emp_leave_credited &&
-							approvedArraytemp[findex].attendance_detail.emp_leave_credited.length > 0) {
-								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[findex].attendance_detail.emp_leave_credited));
+						const lastindex = approvedArraytemp.length-1;
+						if (approvedArraytemp[lastindex].attendance_detail.emp_leave_credited &&
+							approvedArraytemp[lastindex].attendance_detail.emp_leave_credited.length > 0) {
+								let temp_balance_leaves:any[] = JSON.parse(JSON.stringify(approvedArraytemp[lastindex].attendance_detail.emp_leave_credited));
 								temp_balance_leaves.forEach(element => {
-									const tempind = approvedArraytemp[findex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
+									const tempind = approvedArraytemp[lastindex].attendance_detail.emp_leave_granted.findIndex(e => e.leave_id == element.leave_id);
 									if(tempind != -1){
-										element.leave_value -= approvedArraytemp[findex].attendance_detail.emp_leave_granted[tempind].leave_value;
+										element.leave_value -= approvedArraytemp[lastindex].attendance_detail.emp_leave_granted[tempind].leave_value;
 									}
-									approvedArraytemp[findex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
+									approvedArraytemp[lastindex].attendance_detail['emp_balance_leaves'] =temp_balance_leaves; 
 								})
 						}
 						
