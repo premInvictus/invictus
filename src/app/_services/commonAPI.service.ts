@@ -272,7 +272,7 @@ export class CommonAPIService {
 		this.familyNumber = value;
 	}
 	logout(value: any) {
-		this.startLoading();
+		// this.startLoading();
 		return this.http.post(environment.apiSisUrl + '/users/logout', value);
 	}
 	getFamilyInformation() {
