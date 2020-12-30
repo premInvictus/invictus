@@ -99,10 +99,10 @@ export class TrialBalanceModalComponent implements OnInit {
       this.credit_total_f = 0;
       this.deviation_f = 0;
       for (var i = 0; i < param['debit_data'].length; i++) {
-        this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+        this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] &&  !(isNaN(param['debit_data'][i]['vc_credit']))  ? parseFloat(param['debit_data'][i]['vc_credit']) : 0);
       }
       for (var i = 0; i < param['credit_data'].length; i++) {
-        this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+        this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] &&  !(isNaN(param['credit_data'][i]['vc_debit']))   ? parseFloat(param['credit_data'][i]['vc_debit']) : 0);
       }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
       
@@ -121,12 +121,12 @@ export class TrialBalanceModalComponent implements OnInit {
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < param['ledger_data'][i]['debit_data'].length; j++) {
-        this.debitTotal = this.debitTotal + (param['ledger_data'][i]['debit_data'][j]['vc_credit'] ? param['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+        this.debitTotal = this.debitTotal + (param['ledger_data'][i]['debit_data'][j]['vc_credit' ] && !isNaN(param['ledger_data'][i]['debit_data'][j]['vc_credit' ]) ? parseFloat(param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
          
       }
       
       for (var k = 0; k < param['ledger_data'][i]['credit_data'].length; k++) {
-        this.creditTotal = this.creditTotal + (param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? param['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
+        this.creditTotal = this.creditTotal + (param['ledger_data'][i]['credit_data'][k]['vc_debit'] && !isNaN(param['ledger_data'][i]['credit_data'][k]['vc_debit' ]) ? parseFloat(param['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
        // console.log(k);
       }
 
@@ -176,10 +176,10 @@ export class TrialBalanceModalComponent implements OnInit {
   }
   getTwoDecimalValue(value) {
     // console.log('value',value);
-    if (value && value != 0 && value != '') {
+    if (value && value != 0 && value != '' && !isNaN(value)) {
       return Number.parseFloat(value.toFixed(2));
     } else {
-      return value;
+      return isNaN(value) ? 0 : value;
     }
 
   }

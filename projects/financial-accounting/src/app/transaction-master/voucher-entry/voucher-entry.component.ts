@@ -345,8 +345,8 @@ export class VoucherEntryComponent implements OnInit {
 							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
 							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
 							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
-							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
+							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
@@ -446,8 +446,8 @@ export class VoucherEntryComponent implements OnInit {
 							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
 							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
 							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
-							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
+							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
@@ -543,8 +543,8 @@ export class VoucherEntryComponent implements OnInit {
 							vc_grno: this.voucherFormGroupArray[i].value.vc_grno,
 							vc_invoiceno: this.voucherFormGroupArray[i].value.vc_invoiceno,
 							selected: this.voucherFormGroupArray[i].value.selected,
-							vc_debit: this.voucherFormGroupArray[i].value.vc_debit,
-							vc_credit: this.voucherFormGroupArray[i].value.vc_credit,
+							vc_debit: parseFloat(this.voucherFormGroupArray[i].value.vc_debit),
+							vc_credit: parseFloat(this.voucherFormGroupArray[i].value.vc_credit),
 							// vc_instrumentno: this.voucherFormGroupArray[i].value.vc_instrumentno,
 							// vc_instrumentdate:this.voucherFormGroupArray[i].value.vc_instrumentdate
 						};
