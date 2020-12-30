@@ -158,7 +158,7 @@ export class AppComponent implements OnInit {
 				expire_time = JSON.parse(localStorage.getItem('expire_time')).expire_time;
 				this.idle.stopWatching();
 				this.idle.setConfigValues(
-					{ idle: 1, timeout: 99, ping: 30 }
+					{ idle: 1, timeout: 299, ping: 30 }
 				);
 				console.log("dhdhdhd", this.idle.getConfigValue());
 				//this.idle.stopWatching();
