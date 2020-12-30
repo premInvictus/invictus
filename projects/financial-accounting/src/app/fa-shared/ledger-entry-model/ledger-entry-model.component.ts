@@ -197,16 +197,17 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
       if(param['debit_data']) {
       for (var i = 0; i < param['debit_data'].length; i++) {
         //debit_total = debit_total+param['debit_data'][i]['vc_credit'];
-        this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+        this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] && !(isNaN(param['debit_data'][i]['vc_credit'])) ? parseFloat(param['debit_data'][i]['vc_credit']) : 0);
       }}
 
       if(param['credit_data']) {
       for (var i = 0; i < param['credit_data'].length; i++) {
         //credit_total = credit_total+param['credit_data'][i]['vc_debit'];
-        this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+        this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] && !(isNaN(param['credit_data'][i]['vc_debit'])) ? parseFloat(param['credit_data'][i]['vc_debit']) : 0);
       }}
       // console.log(this.debit_total_f, this.credit_total_f);
       this.deviation_f = this.debit_total_f - this.credit_total_f;
+      
       return this.deviation_f;
     }
   }
@@ -236,10 +237,10 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
   }
   getTwoDecimalValue(value) {
     // console.log('value',value);
-    if (value && value != 0 && value != '') {
-      return Number.parseFloat(value.toFixed(2));
+    if (value && value != 0 && value != '' && !isNaN(value)) {
+      return parseFloat((value).toString()).toFixed(2);
     } else {
-      return value;
+      return !isNaN(value) ? value : 0;
     }
 
   }

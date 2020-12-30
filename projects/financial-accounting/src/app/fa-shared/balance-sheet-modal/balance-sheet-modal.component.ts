@@ -157,12 +157,12 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       this.deviation_f = 0;
       if (param['debit_data']) {
         for (var i = 0; i < param['debit_data'].length; i++) {
-          this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] ? param['debit_data'][i]['vc_credit'] : 0);
+          this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] && !(isNaN(param['debit_data'][i]['vc_credit'])) ? parseFloat(param['debit_data'][i]['vc_credit']) : 0);
         }
       }
       if (param['credit_data']) {
         for (var i = 0; i < param['credit_data'].length; i++) {
-          this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] ? param['credit_data'][i]['vc_debit'] : 0);
+          this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] && !(isNaN(param['credit_data'][i]['vc_debit'])) ? parseFloat(param['credit_data'][i]['vc_debit']) : 0);
         }
       }
       this.deviation_f = this.debit_total_f - this.credit_total_f;
@@ -181,10 +181,10 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       this.debitTotal = 0;
       this.creditTotal = 0;
       for (var j = 0; j < this.incomeExpenditureArray['ledger_data'][i]['debit_data'].length; j++) {
-        this.debitTotal = this.debitTotal + (this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] : 0);
+        this.debitTotal = this.debitTotal + (this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? parseFloat(this.incomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
       }
       for (var k = 0; k < this.incomeExpenditureArray['ledger_data'][i]['credit_data'].length; k++) {
-        this.creditTotal = this.creditTotal + (this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] : 0);
+        this.creditTotal = this.creditTotal + (this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? parseFloat(this.incomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
       }
 
       diff = this.creditTotal - this.debitTotal;
@@ -291,10 +291,10 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
   }
   getTwoDecimalValue(value) {
     // console.log('value',value);
-    if (value && value != 0 && value != '') {
+    if (value && value != 0 && value != '' && !isNaN(value)) {
       return Number.parseFloat(value.toFixed(2));
     } else {
-      return value;
+      return isNaN(value) ? 0 : value;
     }
 
   }

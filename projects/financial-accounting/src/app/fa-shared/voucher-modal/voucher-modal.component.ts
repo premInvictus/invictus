@@ -84,8 +84,8 @@ export class VoucherModalComponent implements OnInit {
               debit: item.vc_debit,
               credit: item.vc_credit
             };
-            this.ctotal += (item.vc_credit ? item.vc_credit: 0);
-            this.dtotal += (item.vc_debit ? item.vc_debit: 0)
+            this.ctotal += (item.vc_credit && !isNaN(item.vc_credit) ? parseFloat(item.vc_credit): 0);
+            this.dtotal += (item.vc_debit && !isNaN(item.vc_debit) ? parseFloat(item.vc_debit): 0)
             this.ELEMENT_DATA.push(element);
             pos++;
           }
@@ -95,9 +95,10 @@ export class VoucherModalComponent implements OnInit {
             particular: 'Total',
             account_code:'',
             invoiceno: '',
-            debit: this.dtotal,
-            credit: this.ctotal
+            debit: parseFloat((this.dtotal).toString()).toFixed(2),
+            credit: parseFloat((this.ctotal).toString()).toFixed(2)
           };
+          console.log('dTotal',this.dtotal,'cTotal',this.ctotal);
           this.ELEMENT_DATA.push(element);
           this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
           this.tableDivFlag = true;
