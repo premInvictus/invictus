@@ -1,5 +1,6 @@
 export interface Element {
-  vc_number: any;
+    srno:any;
+    vc_number: any;
     vc_type: any;
     vc_date:any;
     vc_narrations: any;
