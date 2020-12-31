@@ -56,7 +56,9 @@
               Create Voucher
             </button>&nbsp;&nbsp;
             <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
-                matTooltip="Download as Pdf" (click)="printvoucherlist()" [matTooltipPosition]="'down'" />
+                matTooltip="Download as Pdf" (click)="printvoucherlist()" [matTooltipPosition]="'left'" />&nbsp;&nbsp;
+                <img style="cursor: pointer; height: 25px !important" src="/assets/images/xml.svg"
+                matTooltip="Download as Excel" (click)="exportAsExcel()" [matTooltipPosition]="'left'" />
             </div>
           </div>
           <div class="row remove-top-margin" [hidden]="!ELEMENT_DATA.length > 0">

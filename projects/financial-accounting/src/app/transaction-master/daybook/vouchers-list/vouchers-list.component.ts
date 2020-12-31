@@ -9,9 +9,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource, MatPaginator, PageEvent, MatSort, MatPaginatorIntl } from '@angular/material';
 import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-modal.component';
 import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
-import { saveAs } from 'file-saver';
 import { VoucherPrintSetupComponent } from '../../voucher-print-setup/voucher-print-setup.component';
 import { ItemMasterReportsComponent } from 'projects/inventory/src/app/inventory-reports/item-master-reports/item-master-reports.component';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+declare var require;
+import * as Excel from 'exceljs/dist/exceljs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-vouchers-list',
@@ -34,6 +38,61 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	session:any;
 	globalsetup:any;
 	spans = [];
+
+
+	schoolInfo:any;
+	sessionName: any;
+	sessionArray: any[] = [];
+	currentUser: any;
+	session_id: any;
+	length: any;
+	alphabetJSON = {
+		1: 'A',
+		2: 'B',
+		3: 'C',
+		4: 'D',
+		5: 'E',
+		6: 'F',
+		7: 'G',
+		8: 'H',
+		9: 'I',
+		10: 'J',
+		11: 'K',
+		12: 'L',
+		13: 'M',
+		14: 'N',
+		15: 'O',
+		16: 'P',
+		17: 'Q',
+		18: 'R',
+		19: 'S',
+		20: 'T',
+		21: 'U',
+		22: 'V',
+		23: 'W',
+		24: 'X',
+		25: 'Y',
+		26: 'Z',
+		27: 'AA',
+		28: 'AB',
+		29: 'AC',
+		30: 'AD',
+		31: 'AE',
+		32: 'AF',
+		33: 'AG',
+		34: 'AH',
+		35: 'AI',
+		36: 'AJ',
+		37: 'AK',
+		38: 'AL',
+		39: 'AM',
+		40: 'AN',
+		41: 'AO',
+		42: 'AP',
+		43: 'AQ',
+		44: 'AR',
+
+  };
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -47,10 +106,13 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
   
 	ngOnInit(){
 		this.session = JSON.parse(localStorage.getItem('session'));
+		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 		this.getGlobalSetting();
 	  this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 	  this.tableDivFlag = true;
 	  this.getVouchers();
+	  this.getSession();
+	  this.getSchool();
 	}
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
@@ -289,7 +351,10 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	}
 	printvoucherlist(){
 		if(this.vouchersArray.length > 0){
-			this.faService.printvoucherlist(this.vouchersArray).subscribe((result: any) => {
+			const param:any={};
+			param.filter=this.commonAPIService.state$['filterText'];
+			param.vouchersArray = this.vouchersArray;
+			this.faService.printvoucherlist(param).subscribe((result: any) => {
 				if (result && result.status == 'ok') {
 				  console.log(result.data);
 				  this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
@@ -360,6 +425,197 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 
 			}
 		})
+	}
+	getSession() {
+		this.sisService.getSession()
+		.subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					for (const citem of result.data) {
+						this.sessionArray[citem.ses_id] = citem.ses_name;
+					}
+					this.sessionName = this.sessionArray[this.session.ses_id];
+				}
+			});
+  	}
+  	getSchool() {
+		this.commonAPIService.getSchoolDetails()
+		.subscribe(
+			(result: any) => {
+				if (result && result.status === 'ok') {
+					this.schoolInfo = result.data[0];
+				}
+			});
+	}
+	exportAsExcel() {
+		let reportType: any = '';
+		let reportType2: any = '';
+		const columns: any = [];
+		columns.push({key:'srno'});
+		columns.push({key:'vc_date'});
+		columns.push({key:'vc_number'});
+		columns.push({key:'vc_type'});
+		columns.push({key:'partyname'});
+		columns.push({key:'vc_debit'});
+		columns.push({key:'vc_credit'});
+
+		reportType = new TitleCasePipe().transform('Day Book ' + (this.commonAPIService.state$['filterText'] ? ': '+ this.commonAPIService.state$['filterText'] : ''));
+		const fileName = reportType + '.xlsx';
+		const workbook = new Excel.Workbook();
+		const worksheet = workbook.addWorksheet(reportType, { properties: { showGridLines: true } },
+			{ pageSetup: { fitToWidth: 7 } });
+		worksheet.mergeCells('A1:' + this.alphabetJSON[7] + '1');
+		worksheet.getCell('A1').value =
+			new TitleCasePipe().transform(this.schoolInfo.school_name) + ', ' + this.schoolInfo.school_city + ', ' + this.schoolInfo.school_state;
+		worksheet.getCell('A1').alignment = { horizontal: 'left' };
+		worksheet.mergeCells('A2:' + this.alphabetJSON[7] + '2');
+		worksheet.getCell('A2').value = reportType;
+		worksheet.getCell(`A2`).alignment = { horizontal: 'left' };
+	
+		worksheet.getCell('A4').value = 'SNo.';
+		worksheet.getCell('B4').value = 'Date';
+		worksheet.getCell('C4').value = 'Vch No.';
+		worksheet.getCell('D4').value = 'Vch Type';
+		worksheet.getCell('E4').value = 'Particulars';
+		worksheet.getCell('F4').value = 'Debit';
+		worksheet.getCell('G4').value = 'Credit';
+		worksheet.columns = columns;
+		this.length = worksheet._rows.length;
+		let templength = worksheet._rows.length + 1;
+		for (const dety of this.ELEMENT_DATA) {
+			this.length++;
+			worksheet.getCell('A' + this.length).value = dety.srno;
+			worksheet.getCell('B' + this.length).value = dety.vc_date;
+			worksheet.getCell('C' + this.length).value = dety.vc_number.vc_name;
+			worksheet.getCell('D' + this.length).value = dety.vc_type;
+			worksheet.getCell('E' + this.length).value = dety.partyname;
+			worksheet.getCell('F' + this.length).value = dety.vc_debit ? dety.vc_debit:'';
+			worksheet.getCell('G' + this.length).value = dety.vc_credit ? dety.vc_credit : '';
+		}
+		let i=0;
+		console.log('this.ELEMENT_DATA.length',this.ELEMENT_DATA.length);
+		while(i<this.ELEMENT_DATA.length) {
+			let mergelength = this.ELEMENT_DATA[i].action.vc_particulars_data.length;
+			worksheet.mergeCells('A' + (i+templength) + ':' + 'A' + (i+templength + mergelength-1));
+			worksheet.mergeCells('B' + (i+templength) + ':' + 'B' + (i+templength + mergelength-1));
+			worksheet.mergeCells('C' + (i+templength) + ':' + 'C' + (i+templength + mergelength-1));
+			worksheet.mergeCells('D' + (i+templength) + ':' + 'D' + (i+templength + mergelength-1));
+			i = i+mergelength;
+		}
+		worksheet.eachRow((row, rowNum) => {
+			if (rowNum === 1) {
+				row.font = {
+					name: 'Arial',
+					size: 16,
+					bold: true
+				};
+			}
+			if (rowNum === 2) {
+				row.font = {
+					name: 'Arial',
+					size: 14,
+					bold: true
+				};
+			}
+			if (rowNum === 4) {
+				row.eachCell(cell => {
+					cell.font = {
+						name: 'Arial',
+						size: 10,
+						bold: true,
+						color: { argb: '636a6a' }
+					};
+					cell.fill = {
+						type: 'pattern',
+						pattern: 'solid',
+						fgColor: { argb: 'c8d6e5' },
+						bgColor: { argb: 'c8d6e5' },
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+			if (rowNum > 4 && rowNum <= worksheet._rows.length) {
+				row.eachCell(cell => {
+					// tslint:disable-next-line: max-line-length
+					if (cell._address.charAt(0) !== 'A' && cell._address.charAt(0) !== 'F' && cell._address.charAt(0) !== 'J' && cell._address.charAt(0) !== 'L') {
+						cell.fill = {
+							type: 'pattern',
+							pattern: 'solid',
+							fgColor: { argb: 'ffffff' },
+							bgColor: { argb: 'ffffff' },
+						};
+					}
+					cell.font = {
+						color: { argb: 'black' },
+						bold: false,
+						name: 'Arial',
+						size: 10
+					};
+					cell.border = {
+						top: { style: 'thin' },
+						left: { style: 'thin' },
+						bottom: { style: 'thin' },
+						right: { style: 'thin' }
+					};
+					cell.alignment = { horizontal: 'center', vertical: 'top', wrapText: true };
+				});
+			}
+		});
+
+		// worksheet.eachRow((row, rowNum) => {
+		// 	if (rowNum === worksheet._rows.length) {
+		// 		row.eachCell(cell => {
+		// 			cell.fill = {
+		// 				type: 'pattern',
+		// 				pattern: 'solid',
+		// 				fgColor: { argb: '004261' },
+		// 				bgColor: { argb: '004261' },
+		// 			};
+		// 			cell.font = {
+		// 				color: { argb: 'ffffff' },
+		// 				bold: true,
+		// 				name: 'Arial',
+		// 				size: 10
+		// 			};
+		// 			cell.border = {
+		// 				top: { style: 'thin' },
+		// 				left: { style: 'thin' },
+		// 				bottom: { style: 'thin' },
+		// 				right: { style: 'thin' }
+		// 			};
+		// 			cell.alignment = { horizontal: 'center' };
+		// 		});
+		// 	}
+		// });
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+		this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated On: '
+		+ new DatePipe('en-in').transform(new Date(), 'd-MMM-y');
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+		name: 'Arial',
+		size: 10,
+		bold: true
+		};
+
+		worksheet.mergeCells('A' + (worksheet._rows.length + 1) + ':' +
+		this.alphabetJSON[columns.length] + (worksheet._rows.length + 1));
+		worksheet.getCell('A' + worksheet._rows.length).value = 'Generated By: ' + this.currentUser.full_name;
+		worksheet.getCell('A' + worksheet._rows.length).font = {
+		name: 'Arial',
+		size: 10,
+		bold: true
+		};
+		workbook.xlsx.writeBuffer().then(data => {
+			const blob = new Blob([data], { type: 'application/octet-stream' });
+			saveAs(blob, fileName);
+		});
+
 	}
 
 }
