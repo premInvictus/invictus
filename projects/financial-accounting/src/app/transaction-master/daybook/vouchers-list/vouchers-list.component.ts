@@ -287,6 +287,18 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			}
 		  });
 	}
+	printvoucherlist(){
+		if(this.vouchersArray.length > 0){
+			this.faService.printvoucherlist(this.vouchersArray).subscribe((result: any) => {
+				if (result && result.status == 'ok') {
+				  console.log(result.data);
+				  this.commonAPIService.showSuccessErrorMessage('Download Successfully', 'success');
+					const length = result.data.fileUrl.split('/').length;
+					saveAs(result.data.fileUrl, result.data.fileUrl.split('/')[length - 1]);
+				}
+			  });
+		}
+	}
 	isExistUserAccessMenu(mod_id) {
 		return this.commonAPIService.isExistUserAccessMenu(mod_id);
 	}
