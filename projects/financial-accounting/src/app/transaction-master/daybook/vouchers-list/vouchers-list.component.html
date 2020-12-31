@@ -54,7 +54,9 @@
               (click)="createVoucher()"
             >
               Create Voucher
-            </button>
+            </button>&nbsp;&nbsp;
+            <img style="cursor: pointer; height: 25px !important" src="/assets/images/pdf.svg"
+                matTooltip="Download as Pdf" (click)="printvoucherlist()" [matTooltipPosition]="'down'" />
             </div>
           </div>
           <div class="row remove-top-margin" [hidden]="!ELEMENT_DATA.length > 0">

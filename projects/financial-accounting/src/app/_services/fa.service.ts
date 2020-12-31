@@ -90,6 +90,10 @@ export class FaService {
 		this.service.startLoading();
 		return this.http.post(environment.apiFaUrl + '/voucher-entry/printvoucher', value);
 	}
+	printvoucherlist(value) {
+		this.service.startLoading();
+		return this.http.post(environment.apiFaUrl + '/voucher-entry/printvoucherlist', value);
+	}
 	getGlobalSetting(value) {
 		this.service.startLoading();
 		return this.http.post(environment.apiExamUrl + '/setup/getGlobalSetting', value);
