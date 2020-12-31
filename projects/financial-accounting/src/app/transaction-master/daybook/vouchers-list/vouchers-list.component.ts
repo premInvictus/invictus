@@ -22,7 +22,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 
   	tableDivFlag = false;
 	ELEMENT_DATA: Element[];
-	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit','vc_credit', 'action'];
+	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname',  'vc_debit','vc_credit','vc_narrations', 'action'];
 	dataSource = new MatTableDataSource<Element>();
 	selection = new SelectionModel<Element>(true, []);
 	@ViewChild('searchModal') searchModal;
@@ -98,6 +98,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		// 	param.to_date = this.searchData.to_date;
 		// }
 		this.ELEMENT_DATA = [];
+		this.spans = [];
 		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 		param=this.commonAPIService.state$['filter'] ? this.commonAPIService.state$['filter'] : {};
@@ -149,8 +150,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 				this.cacheSpan('vc_date', d => d.vc_date);
 				this.cacheSpan('partyname', d => d.partyname);
 				this.cacheSpan('vc_narrations', d => d.vc_narrations);
-				this.cacheSpan('vc_debit', d => d.vc_debit);
-				this.cacheSpan('vc_credit', d => d.vc_credit);
+				// this.cacheSpan('vc_debit', d => d.vc_debit);
+				// this.cacheSpan('vc_credit', d => d.vc_credit);
 				this.cacheSpan('action', d => d.action);
 				this.dataSource.paginator = this.paginator;
 				//this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);

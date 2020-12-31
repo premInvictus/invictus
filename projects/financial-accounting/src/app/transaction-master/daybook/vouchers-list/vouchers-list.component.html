@@ -57,9 +57,9 @@
             </button>
             </div>
           </div>
-          <div class="row remove-top-margin">
+          <div class="row remove-top-margin" [hidden]="!ELEMENT_DATA.length > 0">
             <div class="col-12">
-              <table mat-table [dataSource]="dataSource" matSort class="table-100 text-center" style="width:100% !important">
+              <table mat-table [dataSource]="dataSource"  matSort class="table-100 text-center" style="width:100% !important">
 
                 <!-- Checkbox Column -->
                 <ng-container matColumnDef="select">
