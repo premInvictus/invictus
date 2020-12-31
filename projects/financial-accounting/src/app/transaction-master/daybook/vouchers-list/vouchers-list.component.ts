@@ -11,6 +11,7 @@ import {VoucherModalComponent} from '../../../fa-shared/voucher-modal/voucher-mo
 import {MoveVoucherModalComponent} from '../../../fa-shared/move-voucher-modal/move-voucher-modal.component';
 import { saveAs } from 'file-saver';
 import { VoucherPrintSetupComponent } from '../../voucher-print-setup/voucher-print-setup.component';
+import { ItemMasterReportsComponent } from 'projects/inventory/src/app/inventory-reports/item-master-reports/item-master-reports.component';
 
 @Component({
   selector: 'app-vouchers-list',
@@ -21,7 +22,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 
   	tableDivFlag = false;
 	ELEMENT_DATA: Element[];
-	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit', 'action'];
+	displayedColumns: string[] = ['select', 'vc_date','vc_number', 'vc_type', 'partyname', 'vc_narrations', 'vc_debit','vc_credit', 'action'];
 	dataSource = new MatTableDataSource<Element>();
 	selection = new SelectionModel<Element>(true, []);
 	@ViewChild('searchModal') searchModal;
@@ -32,6 +33,7 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 	searchData:any;
 	session:any;
 	globalsetup:any;
+	spans = [];
 	constructor(
 		  private fbuild: FormBuilder,
 		  private sisService: SisService,
@@ -95,6 +97,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		// if(this.searchData && this.searchData.to_date){
 		// 	param.to_date = this.searchData.to_date;
 		// }
+		this.ELEMENT_DATA = [];
+		this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
 
 		param=this.commonAPIService.state$['filter'] ? this.commonAPIService.state$['filter'] : {};
 		  this.faService.getAllVoucherEntry(param).subscribe((data:any)=>{
@@ -107,25 +111,47 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			let pos = 1;
 			
 			for (const item of this.vouchersArray) {
+				for (const litem of item.vc_particulars_data) {
+					
 			  element = {
 				srno: pos,
 				vc_id: item.vc_id,
 				vc_number: item.vc_number,
 				vc_type: item.vc_type,
 				vc_date:item.vc_date,
-				partyname:this.getPartyName(item.vc_particulars_data),
+				partyname:this.getPartyName(litem),
 				vc_narrations: item.vc_narrations,
-				vc_debit: this.calculateDebit(item.vc_particulars_data),
-				vc_credit:this.calculateCredit(item.vc_particulars_data),
+				// vc_debit: this.calculateDebit(item.vc_particulars_data),
+				// vc_credit:this.calculateCredit(item.vc_particulars_data),
+				vc_debit : litem.vc_debit,
+				vc_credit: litem.vc_credit,
 				// status:item.vc_state == 'publish' ? 'published' : item.vc_state,
 				action:item
   
 			  };
 			  this.ELEMENT_DATA.push(element);
-			  pos++;
-			  
 			}
-			this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+			  
+			
+			pos++;
+			}
+			//console.log("this.ELEMENT_DATA==>",this.ELEMENT_DATA);
+			
+				this.dataSource = new MatTableDataSource<Element>(this.ELEMENT_DATA);
+				
+			
+			
+
+				this.cacheSpan('srno', d => d.srno);
+				this.cacheSpan('vc_id', d => d.vc_id);
+				this.cacheSpan('vc_number', d => d.vc_number);
+				this.cacheSpan('vc_type', d => d.vc_type);
+				this.cacheSpan('vc_date', d => d.vc_date);
+				this.cacheSpan('partyname', d => d.partyname);
+				this.cacheSpan('vc_narrations', d => d.vc_narrations);
+				this.cacheSpan('vc_debit', d => d.vc_debit);
+				this.cacheSpan('vc_credit', d => d.vc_credit);
+				this.cacheSpan('action', d => d.action);
 				this.dataSource.paginator = this.paginator;
 				//this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 				this.dataSource.sort = this.sort;
@@ -135,7 +161,35 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 			  }
 		  })
 	}
+	getRowSpan(col, index) {
+		//console.log('col '+col, 'index'+index, this.spans);
+		return this.spans[index] && this.spans[index][col];
+	}
+	cacheSpan(key, accessor) {
+		//console.log(key, accessor);
+		for (let i = 0; i < this.ELEMENT_DATA.length;) {
+			let currentValue = accessor(this.ELEMENT_DATA[i]);
+			let count = 1;
+			//console.log('currentValue',currentValue);
+			// Iterate through the remaining rows to see how many match
+			// the current value as retrieved through the accessor.
+			for (let j = i + 1; j < this.ELEMENT_DATA.length; j++) {
+				if (currentValue != accessor(this.ELEMENT_DATA[j])) {
+					break;
+				}
+				count++;
+			}
 
+			if (!this.spans[i]) {
+				this.spans[i] = {};
+			}
+
+			// Store the number of similar values that were found (the span)
+			// and skip i to the next unique row.
+			this.spans[i][key] = count;
+			i += count;
+		}
+	}
 	calculateDebit(voucherFormGroupArray) {
 		var totalDebit = 0;
 		for (let i=0; i<voucherFormGroupArray.length;i++) {
@@ -145,8 +199,8 @@ export class VouchersListComponent implements OnInit,AfterViewInit {
 		return totalDebit;
 	}
 	getPartyName(voucherFormGroupArray) {
-		if (voucherFormGroupArray && voucherFormGroupArray[0])
-			return voucherFormGroupArray[0].vc_account_type;
+		if (voucherFormGroupArray && voucherFormGroupArray.vc_account_type)
+			return voucherFormGroupArray.vc_account_type;
 	}
 
 	calculateCredit(voucherFormGroupArray) {
