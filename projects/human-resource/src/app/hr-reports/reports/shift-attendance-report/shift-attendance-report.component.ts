@@ -245,6 +245,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
     } else {
       currSess = this.sessionName.split('-')[0];
     }
+    console.log('currSess-------',currSess);
     let inputJson:any = {};
     if(this.filterdata){
       inputJson = this.filterdata;
@@ -261,10 +262,10 @@ export class ShiftAttendanceReportComponent implements OnInit {
     this.EMPLOYEE_ELEMENT = [];
     this.displayedEmployeeColumns = ['emp_code_no', 'emp_name', 'emp_shift','parameters'];;
     
-    var no_of_days = this.getDaysInMonth(this.acumulativeReport.value.month_id, new Date().getFullYear());
+    var no_of_days = this.getDaysInMonth(this.acumulativeReport.value.month_id, currSess);
     const inputJson1: any = {};
-    inputJson1.datefrom = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-1';
-    inputJson1.dateto = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
+    inputJson1.datefrom = currSess + '-' + this.acumulativeReport.value.month_id + '-1';
+    inputJson1.dateto = currSess + '-' + this.acumulativeReport.value.month_id + '-' + no_of_days;
 
     await this.smartService.getHolidayOnly(inputJson1).toPromise().then((res: any) => {
       if (res) {
@@ -273,7 +274,7 @@ export class ShiftAttendanceReportComponent implements OnInit {
         var dateFormate;
         for (let i = 1; i <= no_of_days; i++) {
           this.displayedEmployeeColumns.push(i.toString());
-          date = new Date().getFullYear() + '-' + this.acumulativeReport.value.month_id + '-' + ("0" + i).slice(-2);;
+          date = currSess + '-' + this.acumulativeReport.value.month_id + '-' + ("0" + i).slice(-2);;
           dateFormate = this.commonAPIService.dateConvertion(date, 'y-MM-dd');
           if (i !== 0) {
             const findex = this.holidayArray.indexOf(dateFormate);
