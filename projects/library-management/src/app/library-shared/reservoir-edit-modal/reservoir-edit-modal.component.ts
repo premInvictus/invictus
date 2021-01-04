@@ -307,7 +307,7 @@ export class ReservoirEditModalComponent implements OnInit {
       publishedDate: '',
       description: '',
       genre_id: '',
-      images_links: [],
+      images_links: '',
       lang_id: '',
       source: '',
       page_count: '',
