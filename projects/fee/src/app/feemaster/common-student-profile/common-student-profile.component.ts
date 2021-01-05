@@ -459,14 +459,14 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 								}
 							}
 						});
+						this.footerRecord = {
+							balancetotal: 0,
+							balancetype:''
+						};
 						this.feeService.getWallets({ login_id: this.studentdetails.au_login_id }).subscribe((result: any) => {
 							if (result && result.status === 'ok') {
 								const recordArray=result.data;
 								console.log('recordArray in common',recordArray);
-								this.footerRecord = {
-									balancetotal: 0,
-									balancetype:''
-								};
 								let total_credit = 0;
 								let total_debit = 0;
 								for (const item of recordArray) {
