@@ -86,8 +86,7 @@
           <div class="row margin-top-10">
             <div class="col-12 text-left tab-remove-padding">
               <span class="font-size-14 font-light">Pocket Money</span><br>
-              <span
-                class="font-size-16 font-bold">{{studentdetails.ead_concession_category ? (studentdetails.ead_concession_category | capitalize) : '-'}}</span>
+              <span [ngClass]="footerRecord?.balancetotal > -1 ? 'credit' : 'debit'"> {{footerRecord?.balancetype}}{{footerRecord?.balancetotal | number}}</span>
             </div>
           </div>
         </div>
@@ -154,7 +153,7 @@
           <div class="col-12 text-left tab-remove-padding">
             <span class="font-size-14 font-light">Tag </span><br>
             <span
-              class="font-size-16 font-bold">{{tag_name}}</span>
+              class="font-size-16 font-bold">{{tag_name | titlecase}}</span>
           </div>
         </div>
         <div class="row margin-top-10">
