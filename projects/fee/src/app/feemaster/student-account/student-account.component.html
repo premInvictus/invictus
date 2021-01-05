@@ -103,7 +103,7 @@
 
 
             <div class="col-12 remove-col-padding">
-                <div class="inline-flex">
+                <!-- <div class="inline-flex">
                     <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_transport"
                         (change)="enableTransport($event)">Whether the child has opted for Transport facility
                     </mat-checkbox>
@@ -111,7 +111,11 @@
                 <div class="inline-flex margin-left-15">
                     <mat-checkbox class="font-size-16" [disabled]="viewOnly" formControlName="accd_is_hostel"
                         (change)="enableHostel($event)">Whether the child has opted for Hostel facility.</mat-checkbox>
-                </div>
+                </div> -->
+                <mat-radio-group formControlName="optedFacilites" (change)="optedFacilitesEvent($event)" [disabled]="viewOnly">
+                    <mat-radio-button class="example-radio-button" value="1">Whether the child has opted for Transport facility</mat-radio-button>
+                    <mat-radio-button class="example-radio-button" value="2">Whether the child has opted for Hostel facility</mat-radio-button>
+                </mat-radio-group>
 
             </div>
         </div>
