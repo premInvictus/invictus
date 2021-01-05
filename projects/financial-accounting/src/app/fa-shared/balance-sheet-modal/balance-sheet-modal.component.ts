@@ -300,7 +300,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
   }
 
   toggle(parent, subgroup, mode) {
-    console.log(parent, mode);
+    // console.log(parent, mode);
     var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
     var total = 0;
     if (parent == '' && subgroup != '') {
@@ -335,7 +335,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
     }  else if (parent != '') {
 
@@ -370,7 +370,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
 
     }
@@ -379,7 +379,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
 
   getGroupTotal(parent, subgroup, mode) {
-    console.log(parent, mode);
+    // console.log(parent, mode);
     var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
     var total = 0;
     if (parent == '' && subgroup != '') {
@@ -408,7 +408,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
     }  else if (parent != '') {
 
@@ -434,7 +434,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
 
     }
