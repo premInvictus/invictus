@@ -4,12 +4,12 @@
       <div class="monthcontainer ">
         <p class="monthname" style="font-weight: bold; color: black !important;margin-bottom: 0.1rem !important;">{{Month.date | date:'MMMM' | uppercase}}</p>
         <div class="flexdays">
-          <div class="day" style="margin-right:15px" *ngFor="let label of days">
+          <div class="day" style="margin-right:27px" *ngFor="let label of days">
             {{label.substring(0,1) | uppercase}}
           </div>
         </div>
         <div *ngFor="let week of Month.days" class="flexdays">
-          <div *ngFor="let day of week;let i=index" style="margin-right:15px" [ngClass]="day?( day.istoday?'todayclass':(day.nb>0?'haveevents-text':'')):   'void_day'"
+          <div *ngFor="let day of week;let i=index" style="margin-right:27px" [ngClass]="day?( day.istoday?'todayclass':(day.nb>0?'haveevents-text':'')):   'void_day'"
             [style.background-image]="day? ('linear-gradient(120deg, '+day.colors+','+day.colors+')'):''" class="day" [outsideClick]="true"
             [popover]="yearcalendarpoptemplate" placement="right" (onShown)="dayindex=i">
             {{day?.day}}
