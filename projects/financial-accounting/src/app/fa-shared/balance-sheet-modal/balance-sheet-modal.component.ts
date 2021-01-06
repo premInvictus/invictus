@@ -34,10 +34,12 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
   assetsGroupArr = [];
   liabilitiesGroupArr = [];
   incomeExpenditureDeviation = 0;
+  previousIncomeExpenditureDeviation = 0;
   totalDebitRowLength = 0;
   totalCreditRowLength = 0;
   @Input() param: any;
   @Input() incomeExpenditureArray: any;
+  @Input() prevIncomeExpenditureArray:any;
   @Input() date: any;
   currentReceiptData: any;
   partialPaymentStatus = 1;
@@ -74,8 +76,12 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     // this.recursiveDebitArraylength(this.param.liabilities_group_data);
     // this.recursiveCreditArraylength(this.param.assets_group_data);
     this.getIncomeExpenditureDeviation();
+    this.getPreviousIncomeExpenditureDeviation();
     this.getTotal();
   }
+
+  
+
 
   checkPartialPaymentStatus() {
     let param: any = {};
@@ -204,6 +210,37 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     
   }
 
+  getPreviousIncomeExpenditureDeviation() {
+    var diff = 0;
+    var diffTotal = 0;
+    var diffCTotal = 0;
+    var debitSideTotal =0;
+    var creditSideTotal =0;
+    for (var i = 0; i < this.prevIncomeExpenditureArray['ledger_data'].length; i++) {
+      var debitTotal = 0;
+      var creditTotal = 0;
+      for (var j = 0; j < this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'].length; j++) {
+        debitTotal = debitTotal + (this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? parseFloat(this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+      }
+      for (var k = 0; k < this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'].length; k++) {
+        creditTotal = creditTotal + (this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? parseFloat(this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
+      }
+
+      diff = creditTotal - debitTotal;
+      if (diff > 0) {
+        diffTotal = diffTotal + diff;
+        creditSideTotal = diffTotal;
+      } else if (diff < 0) {
+        diffCTotal = diffCTotal + (-diff);
+        debitSideTotal = diffCTotal;
+      }
+
+    }
+    this.previousIncomeExpenditureDeviation = creditSideTotal-debitSideTotal;
+    console.log('expenditure difference',creditSideTotal-debitSideTotal);
+
+  }
+
 
 
   getTotal() {
@@ -300,7 +337,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
   }
 
   toggle(parent, subgroup, mode) {
-    console.log(parent, mode);
+    // console.log(parent, mode);
     var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
     var total = 0;
     if (parent == '' && subgroup != '') {
@@ -335,7 +372,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
     }  else if (parent != '') {
 
@@ -370,7 +407,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
 
     }
@@ -379,7 +416,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
 
   getGroupTotal(parent, subgroup, mode) {
-    console.log(parent, mode);
+    // console.log(parent, mode);
     var activearr = (mode === 'liabilities') ? this.param['liabilities_group_data'] : this.param['assets_group_data'];
     var total = 0;
     if (parent == '' && subgroup != '') {
@@ -408,7 +445,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
     }  else if (parent != '') {
 
@@ -434,7 +471,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             }
           }
         }
-        console.log(activearr)
+        // console.log(activearr)
       }
 
     }

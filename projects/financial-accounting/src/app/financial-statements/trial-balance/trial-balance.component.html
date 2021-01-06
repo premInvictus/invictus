@@ -15,7 +15,7 @@
               <mat-datepicker #picker></mat-datepicker> -->
               <mat-label>Month</mat-label>
               <mat-select placeholder="Month" formControlName="tb_month"
-                  required (selectionChange)="getTrialBalance()" >
+                  required (selectionChange)="getTrialBalance();getPreviousIncomeAndExenditure();" >
                   <mat-option value="">Please select</mat-option>
                   <mat-option *ngFor="let item of feeMonthArray" [value]="item.fm_id"
                           style="font-size: 14px;">
@@ -36,7 +36,7 @@
   <div class="col-12">
     <mat-card>
       
-            <app-trial-balance-modal [param]="ledgerArray" [date]="accountForm.value.tb_month"></app-trial-balance-modal>
+            <app-trial-balance-modal [param]="ledgerArray" [prevIncomeExpenditureArray]="prevIncomeExpenditureArray" [date]="accountForm.value.tb_month"></app-trial-balance-modal>
           
     </mat-card>
   </div>

@@ -21,6 +21,7 @@ export class BalanceSheetComponent implements OnInit {
   tableDivFlag = false;
   feeMonthArray: any[] = [];
   incomeExpenditureArray: any[] = [];
+  prevIncomeExpenditureArray:any[] = [];
   assetsGroupArr = [];
   liabilitiesGroupArr = [];
   constructor(
@@ -135,11 +136,92 @@ export class BalanceSheetComponent implements OnInit {
     }
   }
 
+  getPreviousIncomeAndExenditure() {
+    if (this.accountForm.valid && this.accountForm.value.tb_month !='consolidate') {
+      this.tableDivFlag = false;
+      this.ledgerArray = [];
+
+      let prevMonth = 0;
+      if (Number(this.accountForm.value.tb_month) == 1 || Number(this.accountForm.value.tb_month) == 2 || Number(this.accountForm.value.tb_month) == 3) {
+        if (Number(this.accountForm.value.tb_month) == 1) {
+          prevMonth = 12
+        } else {
+          prevMonth = Number(this.accountForm.value.tb_month) -1;
+        }
+      } else if (Number(this.accountForm.value.tb_month) > 4 && Number(this.accountForm.value.tb_month) <= 12) {
+        prevMonth = Number(this.accountForm.value.tb_month) -1;
+      }
+      console.log('prevMonth--',prevMonth)
+      var inputJson = {
+        monthId: prevMonth ,
+        display_section: 'incomeExpenditure'
+      };
+
+      this.faService.getTrialBalance(inputJson).subscribe((data: any) => {
+        if (data) {
+
+          var receipt_data = data.receipt_data;
+          var receiptArr = [];
+          for (var j = 0; j < receipt_data.length; j++) {
+            receiptArr.push(receipt_data[j]['tb_name']);
+          }
+          if (data.ledger_data.length > 0) {
+            for (var i = 0; i < data.ledger_data.length; i++) {
+              if (data.ledger_data[i]['coa_dependencies'] && receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']) > -1) {
+                var index = receiptArr.indexOf(data.ledger_data[i]['coa_dependencies'][0]['dependency_name']);
+
+                var opening_balance = 0;
+                if (data.ledger_data[i]['debit_data'] && data.ledger_data[i]['debit_data'][0] && data.ledger_data[i]['debit_data'][0]['vc_account_type'] === 'opening_balance') {
+                  opening_balance = data.ledger_data[i]['debit_data'][0]['vc_account_type']['vc_debit'];
+                }
+
+                var receipt_value = receipt_data[index]['receipt_amt'];
+                if (receipt_value > 0) {
+                  var iJson: any = {
+                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                    "vc_credit": receipt_value + opening_balance
+
+                  }
+                  data.ledger_data[i]['debit_data'].push(iJson);
+                  data.ledger_data[i]['credit_data'].push({});
+                }
+                if (receipt_value < 0) {
+                  var iJson: any = {
+                    "vc_account_type": data.ledger_data[i]['coa_dependencies'][0]['dependency_name'],
+                    "vc_debit": receipt_value + opening_balance
+
+                  }
+                  data.ledger_data[i]['credit_data'].push(iJson);
+                  data.ledger_data[i]['debit_data'].push({});
+                }
+              }
+              if (i === data.ledger_data.length - 1) {
+                this.prevIncomeExpenditureArray = data;
+                
+              }
+            }
+          } else {
+            this.prevIncomeExpenditureArray = data;
+            
+          }
+
+          // console.log('this.ledgerArray--', this.ledgerArray);
+
+
+
+        } else {
+          
+        }
+      })
+    }
+  }
+
   getBalanceSheet() {
     if (this.accountForm.valid) {
       var inputJson = {
         monthId: this.accountForm.value.tb_month && (this.accountForm.value.tb_month != 'consolidate') ? Number(this.accountForm.value.tb_month) : 'consolidate',
-        display_section: 'balanceSheet'
+        display_section: 'balanceSheet',
+        
       };
 
       this.faService.getTrialBalance(inputJson).subscribe((data: any) => {
@@ -206,177 +288,342 @@ export class BalanceSheetComponent implements OnInit {
     for (var i = 0; i < data.ledger_data.length; i++) {
 
 
-      if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['liabilities']) {
+      // if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['liabilities']) {
         
+      //   if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
+          
+      //     if ((((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
+      //       if(data.ledger_data[i]['coa_id'] ==151) {
+      //         console.log(data.ledger_data[i]);
+      //       }
+      //       data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
+      //       data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+
+      //       if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+      //         if(data.ledger_data[i]['coa_id'] ==151) {
+      //           console.log(data.ledger_data[i]);
+      //         }
+      //         data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //         if ( data.ledger_data[i]['total_dev'] != 0) {
+      //         data.ledger_data[i]['expand'] = true;
+      //         data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+      //       } else {
+      //         if(data.ledger_data[i]['coa_id'] ==151) {
+      //           console.log(data.ledger_data[i]);
+      //         }
+      //         data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //         if ( data.ledger_data[i]['total_dev'] != 0) {
+      //         data.ledger_data[i]['expand'] = true;
+      //         data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];}
+      //       }
+      //       tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+      //       tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
+            
+
+      //     } else {
+      //       if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
+      //         // console.log('iunn 236')
+      //         if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+      //           data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //           if ( data.ledger_data[i]['total_dev'] != 0) {
+      //           data.ledger_data[i]['expand'] = true;
+      //           // console.log(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
+      //           data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+      //         } else {
+      //           data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //           if ( data.ledger_data[i]['total_dev'] != 0) {
+      //           data.ledger_data[i]['expand'] = true;
+      //           data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
+      //         }
+
+      //         tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+      //       } else {
+      //         if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+      //           data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //           if ( data.ledger_data[i]['total_dev'] != 0) {
+      //           data.ledger_data[i]['expand'] = true;
+      //           // console.log( data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
+      //           data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);}
+      //         } else {
+      //           data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //           if ( data.ledger_data[i]['total_dev'] != 0) {
+      //           data.ledger_data[i]['expand'] = true;
+      //           if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']]) {
+      //             data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [(data.ledger_data[i])];
+      //           }
+                
+      //         }
+      //         }
+      //       }
+
+
+      //     }
+
+          
+
+      //   } else {
+      //     // console.log(data.ledger_data[i]['coa_acc_group']['group_name'], data.ledger_data[i]['coa_acc_name']);
+
+      //     if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
+            
+      //       if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+      //         data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //         if ( data.ledger_data[i]['total_dev'] != 0) {
+      //         data.ledger_data[i]['expand'] = true;
+      //         data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+      //       }
+
+      //       tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+      //     } else {
+
+      //       if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].length > 0) {
+      //         data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //         if ( data.ledger_data[i]['total_dev'] != 0) {
+      //         data.ledger_data[i]['expand'] = true;
+      //         data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+      //       } else {
+      //         data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+      //         if ( data.ledger_data[i]['total_dev'] != 0) {
+      //         data.ledger_data[i]['expand'] = true;
+      //         data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
+      //       }
+      //       tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+
+      //     }
+      //   }
+        
+      // }
+      if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['liabilities']) {
         if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
+         
+          if( data.ledger_data[i]['coa_acc_group']['group_parent_name'] == 'Designated Fund') {
+            console.log(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
+            if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']]['group_name'] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']]['group_name'] == "Reserve Fund") {
+              console.log('in reserve fund', data.ledger_data[i]);
+            }
+          }
           
           if ((((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
-            console.log(data.ledger_data[i]['coa_acc_group']['group_parent_name'])
+            
             data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
-            data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
 
             if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
               
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-              if ( data.ledger_data[i]['total_dev'] != 0) {
+              if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
               data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
             } else {
               
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-              if ( data.ledger_data[i]['total_dev'] != 0) {
+              if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
-              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];}
+              if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+              }
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push( data.ledger_data[i]); 
+              }
             }
-            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
-            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
             
-
+            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
           } else {
             if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
-              // console.log('iunn 236')
-              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-                if ( data.ledger_data[i]['total_dev'] != 0) {
-                data.ledger_data[i]['expand'] = true;
-                // console.log(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+              
+              if ((data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])) {
+                
+                if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+                  data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+                  if (data.ledger_data[i]['total_dev'] != 0) {
+                  data.ledger_data[i]['expand'] = true;
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+                } else {
+                  
+                  data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+                  if (data.ledger_data[i]['total_dev'] != 0) {
+                  data.ledger_data[i]['expand'] = true;
+                  if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                    data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  }
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
+                }
               } else {
-                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-                if ( data.ledger_data[i]['total_dev'] != 0) {
-                data.ledger_data[i]['expand'] = true;
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
-              }
-
-              tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
-            } else {
-              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
-                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-                if ( data.ledger_data[i]['total_dev'] != 0) {
-                data.ledger_data[i]['expand'] = true;
-                console.log( data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
-                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);}
-              } else {
-                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-                if ( data.ledger_data[i]['total_dev'] != 0) {
-                data.ledger_data[i]['expand'] = true;
-                if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']]) {
-                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [(data.ledger_data[i])];
+                
+                if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])) {
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
+                }
+                if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
                 }
                 
+                tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
               }
+
+             
+              
+            } else {
+              if ((data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])){
+              if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+                if (data.ledger_data[i]['total_dev'] != 0) {
+                data.ledger_data[i]['expand'] = true;
+                
+                if ((data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }} else {
+                  if(!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                    data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  }
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push( data.ledger_data[i]);
+                }
+              } else {
+                data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
+                if (data.ledger_data[i]['total_dev'] != 0) {
+                data.ledger_data[i]['expand'] = true;
+                if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                  data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                }
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); 
+              }
+              }}else {
+                
+                tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
               }
             }
-
 
           }
 
-          
-
         } else {
-          // console.log(data.ledger_data[i]['coa_acc_group']['group_name'], data.ledger_data[i]['coa_acc_name']);
-
+          
           if (((tempLiabilitiesGroupArr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
-            
             if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]) {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-              if ( data.ledger_data[i]['total_dev'] != 0) {
+              if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
               data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
             }
 
             tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
           } else {
-
-            if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] && data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].length > 0) {
+            
+            if (data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']])  {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-              if ( data.ledger_data[i]['total_dev'] != 0) {
+              if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
               data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push([data.ledger_data[i]]); }
             } else {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
-              if ( data.ledger_data[i]['total_dev'] != 0) {
+              if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
-              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
+              
+              if (!(data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                
+              }
+              data['liabilities_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+              
+              }
+              tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
             }
-            tempLiabilitiesGroupArr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+            
 
           }
         }
-        
       }
-
       if (data.ledger_data[i]['account_display']['display_section']['balanceSheet']['assets']) {
-        // console.log('data.ledger_data[i]--', data.ledger_data[i])
         if (data.ledger_data[i]['coa_acc_group']['group_parent_name']) {
-
+          
+          
           if ((((tempAssetsGrouparr.indexOf(data.ledger_data[i]['coa_acc_group']['group_parent_name'])) < 0) && (data.ledger_data[i]['coa_acc_group']['group_parent_name']) != '')) {
-
+            
             data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
 
             if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
+              
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
               if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
               data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
             } else {
+              
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
               if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
-              data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
+              if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+              }
+              data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push( data.ledger_data[i]); 
+              }
             }
-            tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+            
             tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
           } else {
             if (((tempAssetsGrouparr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) < 0)) {
-              // console.log("data['assets_group_data']--",data['assets_group_data'], data.ledger_data[i]['coa_acc_group'], data.ledger_data[i]['coa_acc_group']['group_parent_name']);
+              
               if ((data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])) {
+                
                 if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
                   data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                   if (data.ledger_data[i]['total_dev'] != 0) {
                   data.ledger_data[i]['expand'] = true;
                   data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
                 } else {
+                  
                   data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                   if (data.ledger_data[i]['total_dev'] != 0) {
                   data.ledger_data[i]['expand'] = true;
-                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]]; }
+                  if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                    data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  }
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }
                 }
-  
               } else {
+                
+                if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])) {
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']] = [];
+                }
+                if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+                }
+                
                 tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
               }
 
              
-              tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+              
             } else {
               if ((data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']])){
               if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]) {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if (data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
-                console.log(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]);
-                if (Array.isArray(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                
+                if ((data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
                 data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); }} else {
-                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = data.ledger_data[i];
+                  if(!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                    data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                  }
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push( data.ledger_data[i]);
                 }
               } else {
                 data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
                 if (data.ledger_data[i]['total_dev'] != 0) {
                 data.ledger_data[i]['expand'] = true;
-                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']]=data.ledger_data[i]; }
+                if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                  data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                }
+                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_parent_name']][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]); 
+              }
               }}else {
                 
                 tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_parent_name']);
               }
             }
-            // console.log("data['assets_group_data']---?",data['assets_group_data'])
 
           }
 
         } else {
-          // console.log(data.ledger_data[i]['coa_acc_group']['group_name'], data.ledger_data[i]['coa_acc_name']);
-
+          
           if (((tempAssetsGrouparr.indexOf(data.ledger_data[i]['coa_acc_group']['group_name'])) > -1)) {
             if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']]) {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
@@ -387,8 +634,8 @@ export class BalanceSheetComponent implements OnInit {
 
             tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
           } else {
-
-            if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] && data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].length > 0) {
+            
+            if (data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']])  {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
               if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
@@ -397,9 +644,17 @@ export class BalanceSheetComponent implements OnInit {
               data.ledger_data[i]['total_dev'] = this.getDeviation( data.ledger_data[i]);
               if (data.ledger_data[i]['total_dev'] != 0) {
               data.ledger_data[i]['expand'] = true;
-              data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [data.ledger_data[i]];}
+              
+              if (!(data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']])) {
+                data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']] = [];
+                
+              }
+              data['assets_group_data'][data.ledger_data[i]['coa_acc_group']['group_name']].push(data.ledger_data[i]);
+              
+              }
+              tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
             }
-            tempAssetsGrouparr.push(data.ledger_data[i]['coa_acc_group']['group_name']);
+            
 
           }
         }

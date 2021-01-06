@@ -91,6 +91,17 @@
                     <b>{{getTwoDecimalValue((pitem?.head_amt- pitem?.concession_amt-pitem?.adjustment_amt)) | indianCurrency}}</b></td>
                 </tr>
               </ng-container> -->
+              <tr *ngIf="previousIncomeExpenditureDeviation != 0"> 
+                  <td width="20%"></td>
+                  <td width="55%" class="text-left">
+                    <span>Accumalated Excess of Income over Expenditure</span>
+                  </td>
+                  <td width="25%" class="text-right">
+                   
+                      {{getTwoDecimalValue(previousIncomeExpenditureDeviation)  | indianCurrency}}
+                    
+                  </td>                
+              </tr>
               <ng-container *ngFor="let citem of param?.ledger_data;let i=index; ">
                 <ng-container *ngIf="citem?.account_display.display_section.trialBalance">
                   <tr *ngIf="citem?.credit_data?.length > 0 && citem?.credit_data[0]?.vc_debit && getDeviation(citem) < 0  ">
