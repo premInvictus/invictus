@@ -35,7 +35,7 @@ export class TrialBalanceModalComponent implements OnInit {
   @Input() prevIncomeExpenditureArray:any;
   @Input() date: any;
   currentReceiptData: any;
-  previousIncomeExpenditureDeviation:any;
+  previousIncomeExpenditureDeviation:any=0;
   partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
@@ -55,17 +55,20 @@ export class TrialBalanceModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
+    this.previousIncomeExpenditureDeviation=0;
     this.checkPartialPaymentStatus();
     this.getPreviousIncomeExpenditureDeviation();
     
   }
 
   getPreviousIncomeExpenditureDeviation() {
+    console.log('in previousd');
     var diff = 0;
     var diffTotal = 0;
     var diffCTotal = 0;
     var debitSideTotal =0;
     var creditSideTotal =0;
+    this.previousIncomeExpenditureDeviation = 0;
     for (var i = 0; i < this.prevIncomeExpenditureArray['ledger_data'].length; i++) {
       var debitTotal = 0;
       var creditTotal = 0;
@@ -191,6 +194,8 @@ export class TrialBalanceModalComponent implements OnInit {
       }
       
     }
+
+    this.creditTotal = this.creditTotal + this.previousIncomeExpenditureDeviation;
     
   }
 

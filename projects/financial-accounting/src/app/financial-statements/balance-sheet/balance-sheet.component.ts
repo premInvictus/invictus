@@ -137,6 +137,7 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   getPreviousIncomeAndExenditure() {
+    this.prevIncomeExpenditureArray=[];
     if (this.accountForm.valid && this.accountForm.value.tb_month != 'consolidate') {
       this.tableDivFlag = false;
       this.ledgerArray = [];

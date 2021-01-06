@@ -71,6 +71,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     this.debitSideTotal = 0;
     this.totalDebitRowLength = 0;
     this.totalCreditRowLength = 0;
+    this.previousIncomeExpenditureDeviation =0;
     //this.getGroupArray();
     this.checkPartialPaymentStatus();
     // this.recursiveDebitArraylength(this.param.liabilities_group_data);
@@ -216,6 +217,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     var diffCTotal = 0;
     var debitSideTotal =0;
     var creditSideTotal =0;
+    this.previousIncomeExpenditureDeviation = 0;
     if (this.prevIncomeExpenditureArray && this.prevIncomeExpenditureArray['ledger_data'] && this.prevIncomeExpenditureArray['ledger_data'].length > 0) {
 
       for (var i = 0; i < this.prevIncomeExpenditureArray['ledger_data'].length; i++) {
@@ -284,6 +286,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       //   }
       // }
       
+      
 
       // diff = this.debitTotal - this.creditTotal;
       // if (diff < 0) {
@@ -301,6 +304,8 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
 
     }
+
+    this.debitTotal = this.debitTotal + this.previousIncomeExpenditureDeviation+this.incomeExpenditureDeviation;
 
     // this.creditSideTotal = this.creditSideTotal;
     // if (this.creditSideTotal < 0) {
