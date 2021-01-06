@@ -155,7 +155,8 @@ export class BalanceSheetComponent implements OnInit {
       console.log('prevMonth--', prevMonth)
       var inputJson = {
         monthId: Number(this.accountForm.value.tb_month) ,
-        display_section: 'incomeExpenditure'
+        display_section: 'incomeExpenditure',
+        foraccumulate: true
       };
 
       this.faService.getTrialBalance(inputJson).subscribe((data: any) => {
