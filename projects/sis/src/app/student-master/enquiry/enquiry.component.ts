@@ -36,6 +36,7 @@ export class EnquiryComponent implements OnInit, OnDestroy {
 		this.processtypeService.setProcesstype('1');
 		this.formEnabledService.resetFromEnable();
 		this.formsTab = this.studentFormConfigService.getForm(this.formname);
+		console.log('this.formsTab',this.formsTab);
 		this.route.queryParams.subscribe(value => {
 			if (value.login_id) {
 				this.tabSelectedIndex = 0;

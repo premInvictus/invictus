@@ -447,7 +447,14 @@ export class ShiftAttendanceReportComponent implements OnInit {
                           dt.data=status;
                         }
                       }  else {
-                        dt.data = 'LWP';
+                        const today = new Date();
+                        const d1 = new Date(dt.date);
+                        if(d1.getTime() <= today.getTime()) {
+                          dt.data = 'LWP';
+                        } else {
+                          dt.data = '-';
+                        }
+                        
                       }
                     }
                   }
@@ -455,13 +462,19 @@ export class ShiftAttendanceReportComponent implements OnInit {
                 if(para == 'status') {
                   if(element.dateArray && element.dateArray.length > 0){
                     let ab=0;
+                    let totalday = 0;
                     element.dateArray.forEach(e => {
+                      const today = new Date();
+                      const d1 = new Date(e.date);
+                      if(d1.getTime() <= today.getTime()) {
+                        totalday++;
+                      }
                       if(e.data == 'LWP') {
                         ab++;
                       }
                     });
                     element.total_absent = ab;
-                    element.total_present = this.dateArray.length - ab;
+                    element.total_present = totalday - ab;
                   }
 
                 } else {

@@ -51,7 +51,7 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			// 	if (processType === '4') {
 			// 		this.parentId = '160';
 			// 	}
-			// }
+			// } 
 
 		});
 
@@ -81,8 +81,14 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			if (data && (data.currrentTab === 2)) {
 				// this.login_id = data.au_login_id;
 				const processType = this.processTypeService.getProcesstype();
-				if (processType === '3' || processType === '4') {
+				if (processType === '1' || processType === '2' || processType === '3' || processType === '4') {
 					this.getRemarkData(this.context.studentdetails.studentdetailsform.value.au_login_id);
+				}
+				if (processType === '1') {
+					this.parentId = '157';
+				}
+				if (processType === '2') {
+					this.parentId = '158';
 				}
 				if (processType === '3') {
 					this.parentId = '159';
@@ -228,7 +234,9 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 			}
 			return { admissionRemarkData, studentRemarkData, parentRemarkData, finalRemarkData, concessionFormData };
 		} else {
-			this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Field for Management Remark', 'error');
+			console.log('admissionRemarkData, studentRemarkData, parentRemarkData, finalRemarkData, concessionFormData', admissionRemarkData, studentRemarkData, parentRemarkData, finalRemarkData, concessionFormData)
+			return { admissionRemarkData, studentRemarkData, parentRemarkData, finalRemarkData, concessionFormData };
+			// this.commonAPIService.showSuccessErrorMessage('Please Fill all Required Field for Management Remark', 'error');
 		}
 	}
 
@@ -257,11 +265,12 @@ export class ThemeTwoTabThreeContainerComponent extends DynamicComponent impleme
 
 	prepareMarkSplitData() {
 		const markSplitData = this.managementRemarkData['markSplit'];
-		const dynamicRemarkForm = this.management_remark.dynamicMarksForm;
+		console.log('markSplitData',markSplitData);
+		const dynamicRemarkForm = this.management_remark && this.management_remark.dynamicMarksForm ? this.management_remark.dynamicMarksForm : [];
 
 		for (let i = 0; i < markSplitData.length; i++) {
 			for (let j = 0; j < markSplitData[i]['data'].length; j++) {
-				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[i]['value']['col' + j];
+				markSplitData[i]['data'][j]['erms_value'] = dynamicRemarkForm[i] ? dynamicRemarkForm[i]['value']['col' + j] : '';
 			}
 		}
 		return markSplitData;
