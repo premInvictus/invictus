@@ -137,7 +137,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			accd_status: 1,
 			hs_building: '',
 			hs_room: '',
-			hs_bed: ''
+			hs_bed: '',
+			optedFacilites:''
 		});
 	}
 	isAllocatedToStudent() {
@@ -231,6 +232,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				this.hostel_history = result.data[0]['hostel_history'];
 				if (this.accountDetails.accd_is_transport === 'Y') {
 					this.transportFlag = true;
+					this.accountsForm.patchValue({
+						optedFacilites :'1'
+					})
 				} else {
 					this.transportFlag = false;
 				}
@@ -255,6 +259,9 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 				}
 				if (this.accountDetails.accd_is_hostel === 'Y') {
 					this.hostelFlag = true;
+					this.accountsForm.patchValue({
+						optedFacilites :'2'
+					})
 					if(this.accountDetails.hostel_details) {
 						this.accountsForm.patchValue({
 							hs_building: this.accountDetails.hostel_details.hs_building,
@@ -279,8 +286,8 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 					accd_fcg_id: this.accountDetails.accd_fcg_id,
 					accd_reason_id: this.accountDetails.accd_reason_id,
 					accd_remark_id: this.accountDetails.accd_fcg_id > 0 ? this.accountDetails.accd_remark_id : '',
-					accd_is_transport: this.accountDetails.accd_is_transport === 'N' ? false : true,
-					accd_is_hostel: this.accountDetails.accd_is_hostel === 'N' ? false : true,
+					// accd_is_transport: this.accountDetails.accd_is_transport === 'N' ? false : true,
+					// accd_is_hostel: this.accountDetails.accd_is_hostel === 'N' ? false : true,
 					accd_transport_mode: this.accountDetails.accd_transport_mode,
 					accd_tr_id: this.accountDetails.accd_tr_id,
 					accd_tsp_id: this.accountDetails.accd_tsp_id,
@@ -361,6 +368,44 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			}
 		});
 	}
+	optedFacilitesEvent(event){
+		console.log(event);
+		console.log(event.value);
+		if(event.value == '1'){
+			this.accountsForm.patchValue({
+				accd_transport_mode: '1',
+			});
+			this.modeFlag = true;
+			this.transportFlag = true;
+
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
+			this.hostelTerminateFlag = false;
+			this.hostelFlag = false;
+		} else if(event.value == '2'){
+			this.hostelFlag = true;
+
+			this.accountsForm.patchValue({
+				accd_transport_mode: '',
+				accd_tr_id: '',
+				accd_tsp_id: '',
+				accd_ts_id: '',
+				accd_is_terminate: false,
+				accd_transport_from: '',
+				accd_transport_to: '',
+				accd_remark: ''
+			});
+			this.slabArray = [];
+			this.stoppageArray = [];
+			this.transportFlag = false;
+			this.terminationFlag = false;
+		}
+	}
 	enableTransport($event) {
 		if ($event.checked) {
 			this.accountsForm.patchValue({
@@ -368,24 +413,6 @@ export class StudentAccountComponent implements OnInit, OnChanges {
 			});
 			this.modeFlag = true;
 			this.transportFlag = true;
-			/*if (this.accountDetails && Object.keys(this.accountDetails).length > 0) {
-				this.getStoppages(this.accountDetails.accd_tr_id);
-				this.getSlab(this.accountDetails.accd_tsp_id);
-				this.terminationFlag = this.accountDetails.accd_is_terminate === 'Y' ? true : false;
-				console.log('terminationFlag', this.accountDetails.accd_is_terminate === 'Y');
-				if (this.accountDetails.accd_transport_mode && this.accountDetails.accd_transport_mode !== '0') {
-					this.modeFlag = true;
-				}
-				this.accountsForm.patchValue({
-					accd_transport_mode: this.accountDetails.accd_transport_mode,
-					accd_tr_id: this.accountDetails.accd_tr_id,
-					accd_tsp_id: this.accountDetails.accd_tsp_id,
-					accd_ts_id: this.accountDetails.accd_ts_id,
-					accd_is_terminate: this.accountDetails.accd_is_terminate === 'N' ? false : true,
-					accd_transport_from: this.accountDetails.accd_transport_from.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_from,
-					accd_transport_to: this.accountDetails.accd_transport_to.split('-')[0] === '1970' ? '' : this.accountDetails.accd_transport_to,
-				});
-			} */
 		} else {
 			this.accountsForm.patchValue({
 				accd_transport_mode: '',

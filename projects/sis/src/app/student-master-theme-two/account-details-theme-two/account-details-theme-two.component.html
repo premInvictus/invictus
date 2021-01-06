@@ -51,7 +51,7 @@
                     </fieldset>
                     <div class="row">
                         <div class="col-12 ">
-                            <div class="row">
+                            <!-- <div class="row"> 
                                 <div class="col-sm margin-top-15 mar-bot-25">
                                     <span>Whether the child has opted for Transport facility. </span>
                                     <mat-slide-toggle class="margin-legt-imp-10" [disabled]="viewOnly"
@@ -63,8 +63,12 @@
                                     <mat-slide-toggle class="margin-legt-imp-10" [disabled]="viewOnly"
                                         formControlName="accd_is_hostel" (change)="enableHostel($event)">
                                     </mat-slide-toggle>
-                                </div>
-                            </div>
+                                </div>                                
+                            </div> -->
+                            <mat-radio-group formControlName="optedFacilites" (change)="optedFacilitesEvent($event)" [disabled]="viewOnly">
+                                <mat-radio-button class="example-radio-button" value="1">Whether the child has opted for Transport facility</mat-radio-button>
+                                <mat-radio-button class="example-radio-button" value="2">Whether the child has opted for Hostel facility</mat-radio-button>
+                            </mat-radio-group>
                         </div>
                     </div>
                     <fieldset class="col-12 fieldset_invoice" *ngIf="transportFlag">

@@ -125,7 +125,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			accd_status: 1,
 			hs_building: '',
 			hs_room: '',
-			hs_bed: ''
+			hs_bed: '',
+			optedFacilites:''
 		});
 	}
 	isAllocatedToStudent() {
@@ -198,6 +199,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 		if (this.feeDet.accd_login_id) {
 			if (this.feeDet.accd_is_transport === 'Y') {
 				this.transportFlag = true;
+				this.accountsForm.patchValue({
+					optedFacilites :'1'
+				})
 			} else {
 				this.transportFlag = false;
 			}
@@ -222,6 +226,9 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 			if (this.feeDet.accd_is_hostel === 'Y') {
 				this.hostelFlag = true;
+				this.accountsForm.patchValue({
+					optedFacilites :'2'
+				})
 				if (this.feeDet.hostel_details) {
 					this.accountsForm.patchValue({
 						hs_building: this.feeDet.hostel_details.hs_building,
@@ -251,8 +258,8 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 				accd_fcg_id: this.feeDet.accd_fcg_id,
 				accd_reason_id: this.feeDet.accd_reason_id,
 				accd_remark_id: this.feeDet.accd_fcg_id > 0 && this.feeDet.accd_remark_id ? this.feeDet.accd_remark_id : '',
-				accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
-				accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
+				// accd_is_transport: this.feeDet.accd_is_transport === 'N' ? false : true,
+				// accd_is_hostel: this.feeDet.accd_is_hostel === 'N' ? false : true,
 				accd_transport_mode: this.feeDet.accd_transport_mode,
 				accd_tr_id: this.feeDet.accd_tr_id,
 				accd_tsp_id: this.feeDet.accd_tsp_id,
@@ -347,24 +354,42 @@ export class AccountDetailsThemeTwoComponent implements OnInit, OnChanges {
 			}
 		});
 	}
-	/* enableTransport($event) {
-		if ($event.checked) {
+	optedFacilitesEvent(event){
+		console.log(event);
+		console.log(event.value);
+		if(event.value == '1'){
+			this.accountsForm.patchValue({
+				accd_transport_mode: '1',
+			});
+			this.modeFlag = true;
 			this.transportFlag = true;
-		} else {
+
+			this.accountsForm.patchValue({
+				accd_hostel_fs_id: '',
+				accd_hostel_fcc_id: '',
+				accd_hostel_from: '',
+				accd_hostel_to: '',
+				accd_is_hostel_terminate: 'N',
+			});
+			this.hostelTerminateFlag = false;
+			this.hostelFlag = false;
+		} else if(event.value == '2'){
+			this.hostelFlag = true;
+
 			this.accountsForm.patchValue({
 				accd_transport_mode: '',
 				accd_tr_id: '',
 				accd_tsp_id: '',
 				accd_ts_id: '',
-				accd_is_terminate: 'N',
+				accd_is_terminate: false,
 				accd_transport_from: '',
 				accd_transport_to: '',
+				accd_remark: ''
 			});
-			this.slabArray = [];
-			this.stoppageArray = [];
 			this.transportFlag = false;
+			this.terminationFlag = false;
 		}
-	} */
+	}
 	enableTransport($event) {
 		if ($event.checked) {
 			this.accountsForm.patchValue({

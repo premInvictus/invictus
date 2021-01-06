@@ -71,3 +71,6 @@
 textarea.mat-input-element {
     padding: 2px 0px !important;
 }
+.example-radio-button {
+    margin: 5px;
+  }

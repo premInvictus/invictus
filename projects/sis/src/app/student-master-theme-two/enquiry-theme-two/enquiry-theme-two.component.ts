@@ -36,6 +36,7 @@ export class EnquiryThemeTwoComponent implements OnInit, AfterViewInit , OnDestr
 		this.processtypeService.setProcesstype('1');
 		this.formEnabledTwoService.resetFromEnable();
 		this.formsTab = this.studentFormConfigTwoService.getForm(this.formname);
+		console.log('this.formsTab', this.formsTab);
 		this.route.queryParams.subscribe(value => {
 			if (value.login_id) {
 				this.tabSelectedIndex = 0;

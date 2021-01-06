@@ -111,6 +111,8 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 		{ id: '4', name: 'Admission No.' }
 	];
 	wallet_balance:any;
+	tag_name='';
+	footerRecord:any;
 	constructor(
 		private fbuild: FormBuilder,
 		private feeService: FeeService,
@@ -444,6 +446,44 @@ export class CommonStudentProfileComponent implements OnInit, OnChanges {
 						//myInput.select()
 						const inputElem = <HTMLInputElement>this.myInput.nativeElement;
 						inputElem.select();
+						this.feeService.getFeeAccount({ accd_login_id: this.studentdetails.au_login_id }).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								const accountDetails = result.data[0];
+								console.log('accountDetails in common',accountDetails);
+								if(accountDetails && accountDetails.accd_is_transport == 'Y') {
+									this.tag_name = 'day scholar - bus';
+								} else if(accountDetails && accountDetails.accd_is_hostel == 'Y') {
+									this.tag_name = 'hostler';
+								} else {
+									this.tag_name = 'day scholar';
+								}
+							}
+						});
+						this.footerRecord = {
+							balancetotal: 0,
+							balancetype:''
+						};
+						this.feeService.getWallets({ login_id: this.studentdetails.au_login_id }).subscribe((result: any) => {
+							if (result && result.status === 'ok') {
+								const recordArray=result.data;
+								console.log('recordArray in common',recordArray);
+								let total_credit = 0;
+								let total_debit = 0;
+								for (const item of recordArray) {
+									if(item.w_amount_type == 'credit'){
+										total_credit += parseInt(item.w_amount);
+									} else if(item.w_amount_type == 'debit'){
+										total_debit += parseInt(item.w_amount);
+									}
+								}
+								this.footerRecord.balancetotal = total_credit - total_debit;
+								if(this.footerRecord.balancetotal > 0) {
+									this.footerRecord.balancetype = '+';
+								} else if(this.footerRecord.balancetotal < 0) {
+									this.footerRecord.balancetype = '';
+								}
+							}
+						});
 					} else {
 						// this.commonAPIService.showSuccessErrorMessage(result.data, 'error');
 						this.processtypeService.setProcesstype(this.studentRouteMoveStoreService.getProcessTypePrev());
