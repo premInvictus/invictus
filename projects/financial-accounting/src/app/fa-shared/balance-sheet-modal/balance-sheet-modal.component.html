@@ -161,8 +161,8 @@
               <tr>
                 <td width="20%"></td>
                 <td width="55%" class="text-left"><b>Total</b></td>
-                <td width="25%" classs="text-right"><b><span *ngIf="getTwoDecimalValue(debitSideTotal) < 0">( - ) {{-getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span>
-                  <span *ngIf="getTwoDecimalValue(debitSideTotal) > 0">{{getTwoDecimalValue(debitSideTotal) | indianCurrency}}</span></b></td>
+                <td width="25%" classs="text-right"><b><span *ngIf="getTwoDecimalValue(debitTotal) < 0">( - ) {{-getTwoDecimalValue(debitTotal) | indianCurrency}}</span>
+                  <span *ngIf="getTwoDecimalValue(debitTotal) > 0">{{getTwoDecimalValue(debitTotal) | indianCurrency}}</span></b></td>
               </tr>
 
             </tbody>
@@ -275,8 +275,8 @@
               <tr>
                 <td width="20%"><b>&nbsp;</b></td>
                 <td width="55%" class="text-left"><b>Total</b></td>
-                <td width="25%" class="text-right"><b><span *ngIf="getTwoDecimalValue(creditSideTotal) < 0">( - ) {{-getTwoDecimalValue(creditSideTotal) | indianCurrency}}</span>
-                  <span *ngIf="getTwoDecimalValue(creditSideTotal) > 0">{{getTwoDecimalValue(creditSideTotal) | indianCurrency}}</span></b></td>
+                <td width="25%" class="text-right"><b><span *ngIf="getTwoDecimalValue(creditTotal) < 0">( - ) {{-getTwoDecimalValue(creditTotal) | indianCurrency}}</span>
+                  <span *ngIf="getTwoDecimalValue(creditTotal) > 0">{{getTwoDecimalValue(creditTotal) | indianCurrency}}</span></b></td>
               </tr>
             </tbody>
           </table>
