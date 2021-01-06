@@ -143,18 +143,18 @@ export class BalanceSheetComponent implements OnInit {
       this.ledgerArray = [];
 
       let prevMonth = 0;
-      if (Number(this.accountForm.value.tb_month) == 1 || Number(this.accountForm.value.tb_month) == 2 || Number(this.accountForm.value.tb_month) == 3) {
-        if (Number(this.accountForm.value.tb_month) == 1) {
-          prevMonth = 12
-        } else {
-          prevMonth = Number(this.accountForm.value.tb_month) - 1;
-        }
-      } else if (Number(this.accountForm.value.tb_month) > 4 && Number(this.accountForm.value.tb_month) <= 12) {
-        prevMonth = Number(this.accountForm.value.tb_month) - 1;
-      }
+      // if (Number(this.accountForm.value.tb_month) == 1 || Number(this.accountForm.value.tb_month) == 2 || Number(this.accountForm.value.tb_month) == 3) {
+      //   if (Number(this.accountForm.value.tb_month) == 1) {
+      //     prevMonth = 12
+      //   } else {
+      //     prevMonth = Number(this.accountForm.value.tb_month) - 1;
+      //   }
+      // } else if (Number(this.accountForm.value.tb_month) > 4 && Number(this.accountForm.value.tb_month) <= 12) {
+      //   prevMonth = Number(this.accountForm.value.tb_month) - 1;
+      // }
       console.log('prevMonth--', prevMonth)
       var inputJson = {
-        monthId: prevMonth,
+        monthId: Number(this.accountForm.value.tb_month) ,
         display_section: 'incomeExpenditure'
       };
 
