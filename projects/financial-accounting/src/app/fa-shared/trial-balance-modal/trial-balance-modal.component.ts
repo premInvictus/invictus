@@ -32,8 +32,10 @@ export class TrialBalanceModalComponent implements OnInit {
   debitSideBlankArr = [];
   creditSideBlankArr = [];
   @Input() param: any;
+  @Input() prevIncomeExpenditureArray:any;
   @Input() date: any;
   currentReceiptData: any;
+  previousIncomeExpenditureDeviation:any;
   partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
@@ -54,7 +56,39 @@ export class TrialBalanceModalComponent implements OnInit {
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
     this.checkPartialPaymentStatus();
+    this.getPreviousIncomeExpenditureDeviation();
     
+  }
+
+  getPreviousIncomeExpenditureDeviation() {
+    var diff = 0;
+    var diffTotal = 0;
+    var diffCTotal = 0;
+    var debitSideTotal =0;
+    var creditSideTotal =0;
+    for (var i = 0; i < this.prevIncomeExpenditureArray['ledger_data'].length; i++) {
+      var debitTotal = 0;
+      var creditTotal = 0;
+      for (var j = 0; j < this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'].length; j++) {
+        debitTotal = debitTotal + (this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit'] ? parseFloat(this.prevIncomeExpenditureArray['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+      }
+      for (var k = 0; k < this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'].length; k++) {
+        creditTotal = creditTotal + (this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? parseFloat(this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
+      }
+
+      diff = creditTotal - debitTotal;
+      if (diff > 0) {
+        diffTotal = diffTotal + diff;
+        creditSideTotal = diffTotal;
+      } else if (diff < 0) {
+        diffCTotal = diffCTotal + (-diff);
+        debitSideTotal = diffCTotal;
+      }
+
+    }
+    this.previousIncomeExpenditureDeviation = creditSideTotal-debitSideTotal;
+    console.log('expenditure difference',creditSideTotal-debitSideTotal);
+
   }
 
 
