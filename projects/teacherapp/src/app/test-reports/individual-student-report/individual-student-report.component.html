@@ -422,8 +422,8 @@
                                                                                         <ng-container *ngFor="let sitem of titem.stArray;let sIndex=index">
                                                                                             <tr *ngIf="sub.subId == titem.sub_id">
                                                                                                 <td *ngIf="sIndex === 0 " [attr.rowspan]="titem.row_span">{{i+1}}</td>
-                                                                                                <td *ngIf="sIndex === 0 " [attr.rowspan]="titem.row_span">{{titem.topic_name}}</td>
-                                                                                                <td [attr.rowspan]="sitem.row_span">{{sitem.st_name}}</td>
+                                                                                                <td *ngIf="sIndex === 0 " [attr.rowspan]="titem.row_span"><span [innerHTML]="titem.topic_name"></span></td>
+                                                                                                <td [attr.rowspan]="sitem.row_span"><span [innerHTML]="sitem.st_name"></span></td>
                                                                                                 <td>{{sitem.max_mark}}</td>
                                                                                                 <td *ngIf="sitem.mark_scored==null">0</td>
                                                                                                 <td *ngIf="sitem.mark_scored!=null">{{sitem.mark_scored}}</td>

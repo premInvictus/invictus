@@ -15,6 +15,7 @@
               <mat-select (selectionChange)="loadComponent($event)" placeholder="Setup Component">
                 <mat-option value="">Please Select</mat-option>
                 <mat-option value="1">Charts of Account</mat-option>
+                <mat-option value="2">Account Group</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field *ngIf="uploadComponent && uploadComponent === '4'" class="form-field" appearance="outline">

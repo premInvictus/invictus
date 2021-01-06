@@ -100,7 +100,7 @@
                                                 <mat-label>Topic</mat-label>
                                                 <mat-select formControlName="tf_topic_id" (selectionChange)="getSubtopicByTopic()" required placeholder="Topic">
                                                     <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
-                                                        {{item.topic_name}}
+                                                        <span [innerHTML]="item.topic_name"></span>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>
@@ -110,7 +110,7 @@
                                                 <mat-label>Sub Topic</mat-label>
                                                 <mat-select formControlName="tf_st_id" required placeholder="Sub Topic">
                                                     <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
-                                                        {{item.st_name}}
+                                                        <span [innerHTML]="item.st_name"></span>
                                                     </mat-option>
                                                 </mat-select>
                                             </mat-form-field>

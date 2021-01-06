@@ -54,8 +54,8 @@
                         <ng-container *ngFor="let titem of classPerformanceArray;let i=index">
                           <ng-container *ngFor="let sitem of titem.st_array;let sIndex=index">
                             <tr class="text-center custom-tr">
-                              <td class="custom-td" *ngIf="sIndex === 0" [attr.rowspan]="titem.st_array.length">{{titem.topic_name}}</td>
-                              <td class="custom-td"><p>{{sitem.st_name}}</p></td>
+                              <td class="custom-td" *ngIf="sIndex === 0" [attr.rowspan]="titem.st_array.length"><span [innerHTML]="titem.topic_name"></span></td>
+                              <td class="custom-td"><p><span [innerHTML]="sitem.st_name"></span></p></td>
                               <td class="barStyle custom-td">
                      <p><mat-progress-bar class="change_mat_progress" mode="determinate" value="{{sitem.score | number}}"></mat-progress-bar></p>
                     </td>
