@@ -198,12 +198,14 @@ export class LedgerEntryModelComponent implements OnInit, OnChanges {
       for (var i = 0; i < param['debit_data'].length; i++) {
         //debit_total = debit_total+param['debit_data'][i]['vc_credit'];
         this.debit_total_f = this.debit_total_f + (param['debit_data'][i]['vc_credit'] && !(isNaN(param['debit_data'][i]['vc_credit'])) ? parseFloat(param['debit_data'][i]['vc_credit']) : 0);
+        console.log('debit--',param['debit_data'][i]['vc_credit']);
       }}
 
       if(param['credit_data']) {
       for (var i = 0; i < param['credit_data'].length; i++) {
         //credit_total = credit_total+param['credit_data'][i]['vc_debit'];
         this.credit_total_f = this.credit_total_f + (param['credit_data'][i]['vc_debit'] && !(isNaN(param['credit_data'][i]['vc_debit'])) ? parseFloat(param['credit_data'][i]['vc_debit']) : 0);
+        console.log('credit--',param['credit_data'][i]['vc_debit']);
       }}
       // console.log(this.debit_total_f, this.credit_total_f);
       this.deviation_f = this.debit_total_f - this.credit_total_f;
