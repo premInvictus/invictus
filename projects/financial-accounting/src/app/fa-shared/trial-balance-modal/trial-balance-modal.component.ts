@@ -35,7 +35,7 @@ export class TrialBalanceModalComponent implements OnInit {
   @Input() prevIncomeExpenditureArray:any;
   @Input() date: any;
   currentReceiptData: any;
-  previousIncomeExpenditureDeviation:any;
+  previousIncomeExpenditureDeviation:any=0;
   partialPaymentStatus = 1;
   constructor(
     private fbuild: FormBuilder,
@@ -55,17 +55,20 @@ export class TrialBalanceModalComponent implements OnInit {
     console.log(this.param);
     this.creditSideTotal = 0;
     this.debitSideTotal = 0;
+    this.previousIncomeExpenditureDeviation=0;
     this.checkPartialPaymentStatus();
     this.getPreviousIncomeExpenditureDeviation();
     
   }
 
   getPreviousIncomeExpenditureDeviation() {
+    console.log('in previousd',this.prevIncomeExpenditureArray['ledger_data'].length);
     var diff = 0;
     var diffTotal = 0;
     var diffCTotal = 0;
     var debitSideTotal =0;
     var creditSideTotal =0;
+    this.previousIncomeExpenditureDeviation = 0;
     for (var i = 0; i < this.prevIncomeExpenditureArray['ledger_data'].length; i++) {
       var debitTotal = 0;
       var creditTotal = 0;
@@ -87,7 +90,36 @@ export class TrialBalanceModalComponent implements OnInit {
 
     }
     this.previousIncomeExpenditureDeviation = creditSideTotal-debitSideTotal;
-    console.log('expenditure difference',creditSideTotal-debitSideTotal);
+    // console.log('expenditure difference previous',creditSideTotal, debitSideTotal,creditTotal-debitTotal);
+    // var diff = 0;
+    // var diffTotal = 0;
+    // var diffCTotal = 0;
+    // for (var i = 0; i < param['ledger_data'].length; i++) {
+    //   this.debitTotal = 0;
+    //   this.creditTotal = 0;
+    //   for (var j = 0; j < param['ledger_data'][i]['debit_data'].length; j++) {
+    //     this.debitTotal = this.debitTotal + (param['ledger_data'][i]['debit_data'][j]['vc_credit'] && !(isNaN(param['ledger_data'][i]['debit_data'][j]['vc_credit'])) ? parseFloat(param['ledger_data'][i]['debit_data'][j]['vc_credit']) : 0);
+    //   }
+    //   for (var k = 0; k < param['ledger_data'][i]['credit_data'].length; k++) {
+    //     this.creditTotal = this.creditTotal + (param['ledger_data'][i]['credit_data'][k]['vc_debit'] && !(isNaN(param['ledger_data'][i]['credit_data'][k]['vc_debit']))  ? parseFloat(param['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
+    //   }
+
+    //   diff = this.creditTotal - this.debitTotal;
+    //   if (diff > 0) {
+    //     diffTotal = diffTotal + diff;
+    //     this.creditSideTotal = diffTotal;
+    //   } else if (diff < 0) {
+    //     diffCTotal = diffCTotal + (-diff);
+    //     this.debitSideTotal = diffCTotal;
+    //   }
+
+
+    // }
+    // this.creditSideTotal = this.creditSideTotal;
+    // this.debitSideTotal = this.debitSideTotal;
+
+    // console.log('debitSideTotal', this.debitSideTotal);
+    // console.log('creditSideTotal', this.creditSideTotal,this.creditSideBlankArr);
 
   }
 
@@ -167,7 +199,7 @@ export class TrialBalanceModalComponent implements OnInit {
       diff = this.debitTotal - this.creditTotal;
       if (diff < 0) {
         diffTotal = diffTotal - diff;
-        console.log(diff, i); 
+        // console.log(diff, i); 
         this.creditSideTotal = diffTotal;
         this.creditSideBlankArr.push(i);
       } else if (diff > 0) {
@@ -191,6 +223,8 @@ export class TrialBalanceModalComponent implements OnInit {
       }
       
     }
+
+    this.creditSideTotal = this.creditSideTotal + this.previousIncomeExpenditureDeviation;
     
   }
 
