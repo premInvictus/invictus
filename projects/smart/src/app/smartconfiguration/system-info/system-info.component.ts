@@ -824,6 +824,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 				st_status: value.st_status
 			});
 			this.getSubjectsByClassForTopic();
+			this.getTopicForSubtopic();
 		} else if (Number(this.configValue) === 6) {
 			this.setupUpdateFlag = true;
 			this.formGroupArray[this.configValue - 1].formGroup.patchValue({
