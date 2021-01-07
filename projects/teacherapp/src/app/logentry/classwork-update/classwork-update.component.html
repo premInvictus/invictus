@@ -112,7 +112,7 @@
                   <mat-label>SubTopic</mat-label>
                   <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)" [disabled]="disableSubtopicArray[i]">
                       <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id">{{item.st_name | capitalize}}</mat-option>
+                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id"><span [innerHTML]="item.st_name"></span></mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>

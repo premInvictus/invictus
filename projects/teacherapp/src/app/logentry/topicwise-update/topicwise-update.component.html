@@ -105,7 +105,7 @@
                     </td>
                   </tr>
                   <tr class="custom-tr" *ngIf="j != 0">
-                    <td class="custom-td text-left">{{subtopic.st_name | capitalize}}</td>
+                    <td class="custom-td text-left"><span [innerHTML]="subtopic.st_name"></span></td>
                   </tr>
                 </ng-container>
               </ng-container>
