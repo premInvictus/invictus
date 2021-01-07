@@ -23,6 +23,7 @@ export class SystemInfoComponent implements OnInit, AfterViewInit {
 	session: any;
 	param: any = {};
 	classArray: any[] = [];
+	daysArr: any[] = ['1','2','3','4','5','6','7','8','9','10'];
 	parentSubArray: any[];
 	secArray: any[] = [];
 	topicArray: any[] = [];
