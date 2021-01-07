@@ -27,9 +27,10 @@
                         </mat-error>
                       </mat-form-field>
                     </div>
-                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_category')">
-                      <div class="row">
-                        <div class="col-6" style="padding-left:0">
+                    
+                    <div class="col-12 " style="padding-top: 0;" *ngIf="checkIfFieldExist('upd_category')">
+                      <div class="row" style="margin-top: 0px">
+                        <div class="col-6" style="padding-left:0; padding-top:0">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Category</mat-label>
                             <mat-select placeholder="Category" formControlName="upd_category" required
@@ -44,7 +45,7 @@
                             </mat-error>
                           </mat-form-field>
                         </div>
-                        <div class="col-6" style="padding-right:0">
+                        <div class="col-6" style="padding-right:0; padding-top:0">
                           <mat-form-field class="form-field" appearance="outline">
                             <mat-label>Student Tags</mat-label>
                             <mat-select placeholder="Tags" formControlName="upd_tag_id" [disabled]="viewOnly"
@@ -62,31 +63,46 @@
                       </div>
 
                     </div>
-                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_religion_id')">
-                      <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Religion</mat-label>
-                        <mat-select formControlName="upd_religion_id" placeholder="Religion" required
-                          [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-                          <mat-option>Please Select</mat-option>
-                          <mat-option *ngFor="let item of arrayReligion" [value]="item.rel_id">
-                            {{item.rel_name}}
-                          </mat-option>
-                        </mat-select>
-                        <mat-error>
-                          This field is required
-                        </mat-error>
-                      </mat-form-field>
+                    <div class="col-12">
+                      <div class='row' style="margin-top: 0px">
+                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left" style="padding-left:0" *ngIf="checkIfFieldExist('upd_religion_id')">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Religion</mat-label>
+                            <mat-select formControlName="upd_religion_id" placeholder="Religion" required
+                              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                              <mat-option>Please Select</mat-option>
+                              <mat-option *ngFor="let item of arrayReligion" [value]="item.rel_id">
+                                {{item.rel_name}}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error>
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                        <div class="col-6 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right" style="padding-right:0"*ngIf="checkIfFieldExist('upd_mt_id')">
+                          <mat-form-field class="form-field" appearance="outline">
+                            <mat-label>Mother Tongue</mat-label>
+                            <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required
+                              [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
+                              <mat-option>Please Select</mat-option>
+                              <mat-option *ngFor="let item of arrayMotherTongue" [value]="item.mt_id">
+                                {{item.mt_name}}
+                              </mat-option>
+                            </mat-select>
+                            <mat-error>
+                              This field is required
+                            </mat-error>
+                          </mat-form-field>
+                        </div>
+                      </div>
                     </div>
-                    <div class="col-12 " *ngIf="checkIfFieldExist('upd_mt_id')">
+                    <div class="col-12 " *ngIf="checkIfFieldExist('au_process_class')">
                       <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Mother Tongue</mat-label>
-                        <mat-select formControlName="upd_mt_id" placeholder="Mother Tongue" required
-                          [disabled]="viewOnly" [errorStateMatcher]="confirmValidParentMatcher">
-                          <mat-option>Please Select</mat-option>
-                          <mat-option *ngFor="let item of arrayMotherTongue" [value]="item.mt_id">
-                            {{item.mt_name}}
-                          </mat-option>
-                        </mat-select>
+                        <mat-label>Admitted In.</mat-label>
+                        <input formControlName="au_process_class" type="number" minlength="1" maxlength="2"
+                          matInput placeholder="Admitted In." [readonly]="viewOnly"
+                        >
                         <mat-error>
                           This field is required
                         </mat-error>
@@ -111,7 +127,7 @@
                     </div>
                     <div class="col-12 " *ngIf="checkIfFieldExist('upd_doj')">
                       <mat-form-field class="form-field" appearance="outline">
-                        <mat-label>Date of Joining</mat-label>
+                        <mat-label>{{datePlaceHolder}}</mat-label>
                         <input formControlName="upd_doj" [max]="maxDate" matInput [matDatepicker]="picker1"
                           [placeholder]="datePlaceHolder" required [readonly]="viewOnly"
                           [errorStateMatcher]="confirmValidParentMatcher">
@@ -195,14 +211,14 @@
                     <mat-autocomplete #autoGroup="matAutocomplete" autocomplete="off">
                       <mat-option (onSelectionChange)="getCityPerId(item)" (click)="getCityPerId(item)"
                         *ngFor="let item of cityCountryArray" [value]="item.cit_id">{{item.cit_name}} -
-                        {{item.sta_name}} - {{item.cou_name}}</mat-option>
+                        {{item.sta_name}} - {{item.dist_name}} - {{item.cou_name}}</mat-option>
                     </mat-autocomplete>
                     <mat-error>
                       This field is required
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_state')">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_state')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>State</mat-label>
                     <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
@@ -210,6 +226,21 @@
                       <mat-option>Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
                         {{item.sta_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-left " *ngIf="checkIfFieldExist('ea_district')">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>District</mat-label>
+                    <mat-select formControlName="ea_district" placeholder="District" required disabled="true"
+                      [errorStateMatcher]="confirmValidParentMatcher">
+                      <mat-option>Please Select</mat-option>
+                      <mat-option *ngFor="let item of arrayDist" [value]="item.dist_id">
+                        {{item.dist_name}}
                       </mat-option>
                     </mat-select>
                     <mat-error>
@@ -298,7 +329,7 @@
                     </mat-error>
                   </mat-form-field>
                 </div>
-                <div class="col-12  remove-col-padding-right" *ngIf="checkIfFieldExist('ea_state')">
+                <div class="col-12  col-sm-12 col-md-12 col-lg-6 col-xl-6" *ngIf="checkIfFieldExist('ea_state')">
                   <mat-form-field class="form-field" appearance="outline">
                     <mat-label>State</mat-label>
                     <mat-select formControlName="ea_state" placeholder="State" required disabled="true"
@@ -306,6 +337,21 @@
                       <mat-option value="">Please Select</mat-option>
                       <mat-option *ngFor="let item of arrayState" [value]="item.sta_id">
                         {{item.sta_name}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      This field is required
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 remove-col-padding-right " *ngIf="checkIfFieldExist('ea_district')">
+                  <mat-form-field class="form-field" appearance="outline">
+                    <mat-label>District</mat-label>
+                    <mat-select formControlName="ea_district" placeholder="District" required 
+                      [errorStateMatcher]="confirmValidParentMatcher">
+                      <mat-option>Please Select</mat-option>
+                      <mat-option *ngFor="let item of arrayDist2" [value]="item.dist_id">
+                        {{item.dist_name}}
                       </mat-option>
                     </mat-select>
                     <mat-error>

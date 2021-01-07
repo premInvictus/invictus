@@ -48,6 +48,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	checkReadOnlyStatus = false;
 	arrayCountry: any[] = [];
 	arrayState: any[] = [];
+	arrayDist: any[] = [];
+	arrayDist2: any[] = [];
 	arrayCity: any[] = [];
 	arrayReligion: any[] = [];
 	arrayMotherTongue: any[] = [];
@@ -86,6 +88,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		// this.getSchool();
 		this.getCountry();
 		this.getState();
+		this.getDist();
 		this.getReligionDetails();
 		this.getMotherTongue();
 		this.getStudentTags();
@@ -208,6 +211,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	// }
 
 	checkIfFieldExist(value) {
+
 		const findex = this.settingsArray.findIndex(f => f.ff_field_name === value);
 		if (findex !== -1 && this.settingsArray[findex]['cos_status'] === 'Y') {
 			return true;
@@ -220,6 +224,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 		this.baseform = this.fbuild.group({
 			upd_id: '',
 			upd_aadhaar_no: '',
+			au_process_class:'',
 			upd_dob: '',
 			upd_doj: '',
 			upd_religion_id: '',
@@ -238,6 +243,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address1: '',
 			ea_city: '',
 			ea_state: '',
+			ea_district: '',
 			ea_country: '',
 			ea_pincode: ''
 		});
@@ -250,6 +256,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address1: '',
 			ea_city: '',
 			ea_state: '',
+			ea_district: '',
 			ea_country: '',
 			ea_pincode: ''
 		});
@@ -278,6 +285,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address1: '',
 			ea_city: '',
 			ea_state: '',
+			ea_district: '',
 			ea_country: '',
 			ea_pincode: ''
 		});
@@ -291,6 +299,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			ea_address1: '',
 			ea_city: '',
 			ea_state: '',
+			ea_district: '',
 			ea_country: '',
 			ea_pincode: ''
 		});
@@ -364,6 +373,15 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			(result: any) => {
 				if (result.status === 'ok') {
 					this.arrayState = result.data;
+				}
+			}
+		);
+	}
+	getDist() {
+		this.sisService.getDistrict().subscribe(
+			(result: any) => {
+				if (result.status === 'ok') {
+					this.arrayDist = result.data;
 				}
 			}
 		);
@@ -535,6 +553,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 			this.baseform.patchValue({
 				upd_id: personalDetails[0].upd_id,
 				upd_aadhaar_no: personalDetails[0].upd_aadhaar_no,
+				au_process_class: personalDetails[0].au_process_class,
 				upd_dob: personalDetails[0].upd_dob,
 				upd_doj: personalDetails[0].upd_doj,
 				upd_religion_id: personalDetails[0].upd_religion_id,
@@ -554,6 +573,8 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 								}
 							});
 						}
+						// console.log("i am eeeee", element);
+						
 						this.paddressform.patchValue({
 							ea_id: element.ea_id,
 							ea_login_id: element.ea_login_id,
@@ -563,6 +584,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_address1: element.ea_address1,
 							ea_city: element.cit_name,
 							ea_state: element.ea_state,
+							ea_district: element.ea_district,
 							ea_country: element.ea_country,
 							ea_pincode: element.ea_pincode
 						});
@@ -585,6 +607,7 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 							ea_address1: element.ea_address1,
 							ea_city: element.cit_name,
 							ea_state: element.ea_state,
+							ea_district: element.ea_district,
 							ea_country: element.ea_country,
 							ea_pincode: element.ea_pincode
 						});
@@ -613,19 +636,23 @@ export class ChildDetailsThemeTwoComponent implements OnInit, OnChanges, AfterVi
 	}
 
 	getCityResId(item: any) {
+		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
 		this.cityId2 = item.cit_id;
 		this.raddressform.patchValue({
 			ea_city: this.getCityName(item.cit_id),
 			ea_state: item.sta_id,
-			ea_country: item.cou_id
+			ea_country: item.cou_id,
+			ea_district: item.dist_id
 		});
 	}
 	getCityPerId(item: any) {
 		this.cityId = item.cit_id;
+		// this.arrayDist2 = this.arrayDist.filter(e => e.state_id == item.sta_id);
 		this.paddressform.patchValue({
 			ea_city: this.getCityName(item.cit_id),
 			ea_state: item.sta_id,
-			ea_country: item.cou_id
+			ea_country: item.cou_id,
+			ea_district: item.dist_id
 		});
 	}
 
