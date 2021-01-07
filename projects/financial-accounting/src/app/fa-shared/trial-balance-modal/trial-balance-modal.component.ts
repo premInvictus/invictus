@@ -102,7 +102,7 @@ export class TrialBalanceModalComponent implements OnInit {
         this.totalDebitRowLength = $("#liabilities_side tr").length;
         this.totalCreditRowLength = $("#assets_side tr").length;
         this.checkBlankArray();
-      }, 1000);
+      }, 1500);
 
     }
     // console.log('expenditure difference previous',creditSideTotal, debitSideTotal,creditTotal-debitTotal);
