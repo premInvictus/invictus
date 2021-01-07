@@ -31,10 +31,10 @@
 
     <div class="row">
 
-      <ng-container>
-        <div class="col-6" style="padding-right: 0px;">
+      <ng-container *ngIf="showTrialData">
+        <div class="col-6"  style="padding-right: 0px;">
 
-          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+          <table id="liabilities_side" class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
 
               <!-- <tr *ngIf="partialPaymentStatus">
@@ -75,7 +75,7 @@
 
         </div>
         <div class="col-6" style="padding-left: 0px;">
-          <table class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
+          <table id="assets_side"  class="mat-table table table-borderd table-stripped custom-table text-center empty-same-height">
             <tbody>
               <!-- <tr *ngIf="param?.invoice_due_data?.length > 0 && partialPaymentStatus">
                 <td width="20%">-</td>

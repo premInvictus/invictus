@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit,Inject, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Inject, Input, OnChanges } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { SisService, CommonAPIService, SmartService, FaService } from '../../_services';
@@ -10,7 +10,7 @@ import * as $ from 'jquery';
   templateUrl: './balance-sheet-modal.component.html',
   styleUrls: ['./balance-sheet-modal.component.css']
 })
-export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
+export class BalanceSheetModalComponent implements OnInit, AfterViewInit {
 
   accountform: FormGroup;
   disabledApiButton = false;
@@ -37,9 +37,10 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
   previousIncomeExpenditureDeviation = 0;
   totalDebitRowLength = 0;
   totalCreditRowLength = 0;
+  showData = false;
   @Input() param: any;
   @Input() incomeExpenditureArray: any;
-  @Input() prevIncomeExpenditureArray:any;
+  @Input() prevIncomeExpenditureArray: any;
   @Input() date: any;
   currentReceiptData: any;
   partialPaymentStatus = 1;
@@ -55,9 +56,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     console.log(' view loaded');
     console.log($("#liabilities_side tr").length);
     console.log($("#assets_side tr").length);
-    this.totalDebitRowLength = $("#liabilities_side tr").length;
-    this.totalCreditRowLength = $("#assets_side tr").length;
-    this.checkBlankArray();
+
   }
 
   ngOnInit() {
@@ -71,7 +70,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     this.debitSideTotal = 0;
     this.totalDebitRowLength = 0;
     this.totalCreditRowLength = 0;
-    this.previousIncomeExpenditureDeviation =0;
+    this.previousIncomeExpenditureDeviation = 0;
     //this.getGroupArray();
     this.checkPartialPaymentStatus();
     // this.recursiveDebitArraylength(this.param.liabilities_group_data);
@@ -81,7 +80,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     this.getTotal();
   }
 
-  
+
 
 
   checkPartialPaymentStatus() {
@@ -102,8 +101,8 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     this.blankArr = [];
     this.debitRow = 0;
     this.creditRow = 0;
-    this.debitRow =  this.totalDebitRowLength;
-    this.creditRow =  this.totalCreditRowLength;
+    this.debitRow = this.totalDebitRowLength;
+    this.creditRow = this.totalCreditRowLength;
     if (this.debitRow > this.creditRow) {
       for (var i = 0; i < (this.debitRow - this.creditRow); i++) {
         this.blankArr.push(i);
@@ -114,44 +113,44 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       }
     }
     console.log(this.debitRow, this.creditRow);
-    if (document.readyState === 'complete') { 
+    if (document.readyState === 'complete') {
       // The page is fully loaded
       console.log('pages is loaded');
-     } 
+    }
   }
 
 
   recursiveDebitArraylength(arr) {
 
     for (var ele in arr) {
-      if (Array.isArray(arr[ele])  && arr[ele].length > 0) {
+      if (Array.isArray(arr[ele]) && arr[ele].length > 0) {
         console.log(this.totalDebitRowLength, arr[ele]);
         this.totalDebitRowLength++;
         this.recursiveDebitArraylength(arr[ele])
-      } 
-      if (!(Array.isArray(arr[ele]))){
-       // this.totalDebitRowLength++;
-        
+      }
+      if (!(Array.isArray(arr[ele]))) {
+        // this.totalDebitRowLength++;
+
       }
     }
 
   }
 
   recursiveCreditArraylength(arr) {
-    
+
     for (var ele in arr) {
-      
+
       if (Array.isArray(arr[ele]) && arr[ele].length > 0) {
         this.totalCreditRowLength++;
-        
+
         this.recursiveCreditArraylength(arr[ele])
-      } 
-      
-      if (!(Array.isArray(arr[ele]))){
-        //this.totalCreditRowLength++;
-        
       }
-      
+
+      if (!(Array.isArray(arr[ele]))) {
+        //this.totalCreditRowLength++;
+
+      }
+
     }
 
   }
@@ -206,17 +205,17 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       }
 
     }
-    this.incomeExpenditureDeviation = this.creditSideTotal-this.debitSideTotal;
-    console.log('expenditure difference',this.creditSideTotal-this.debitSideTotal);
-    
+    this.incomeExpenditureDeviation = this.creditSideTotal - this.debitSideTotal;
+    console.log('expenditure difference', this.creditSideTotal - this.debitSideTotal);
+
   }
 
   getPreviousIncomeExpenditureDeviation() {
     var diff = 0;
     var diffTotal = 0;
     var diffCTotal = 0;
-    var debitSideTotal =0;
-    var creditSideTotal =0;
+    var debitSideTotal = 0;
+    var creditSideTotal = 0;
     this.previousIncomeExpenditureDeviation = 0;
     if (this.prevIncomeExpenditureArray && this.prevIncomeExpenditureArray['ledger_data'] && this.prevIncomeExpenditureArray['ledger_data'].length > 0) {
 
@@ -229,7 +228,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
         for (var k = 0; k < this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'].length; k++) {
           creditTotal = creditTotal + (this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit'] ? parseFloat(this.prevIncomeExpenditureArray['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
         }
-  
+
         diff = creditTotal - debitTotal;
         if (diff > 0) {
           diffTotal = diffTotal + diff;
@@ -238,13 +237,27 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
           diffCTotal = diffCTotal + (-diff);
           debitSideTotal = diffCTotal;
         }
-  
-      }
-      this.previousIncomeExpenditureDeviation = creditSideTotal-debitSideTotal;
-      console.log('expenditure difference',creditSideTotal-debitSideTotal);
 
+      }
+      this.previousIncomeExpenditureDeviation = creditSideTotal - debitSideTotal;
+      console.log('expenditure difference', creditSideTotal - debitSideTotal);
+
+      this.showData = true;
+      setTimeout(() => {
+        this.totalDebitRowLength = $("#liabilities_side tr").length;
+        this.totalCreditRowLength = $("#assets_side tr").length;
+        this.checkBlankArray();
+      }, 1500);
+
+    } else {
+      this.showData = true;
+      setTimeout(() => {
+        this.totalDebitRowLength = $("#liabilities_side tr").length;
+        this.totalCreditRowLength = $("#assets_side tr").length;
+        this.checkBlankArray();
+      }, 1500);
     }
-    
+
 
   }
 
@@ -257,20 +270,20 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
     var diffCTotal = 0;
     this.debitSideBlankArr = [];
     this.creditSideBlankArr = [];
-    var debitTotal =0;
+    var debitTotal = 0;
     var creditTotal = 0;
     this.debitTotal = 0;
-      this.creditTotal = 0;
+    this.creditTotal = 0;
     for (var i = 0; i < this.param['ledger_data'].length; i++) {
-      
+
 
       if (this.param['ledger_data'][i]['account_display'] && this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['liabilities']) {
         // console.log('liability', this.param['ledger_data'][i]['total_dev']);
-        this.debitTotal = this.debitTotal+(this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
+        this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
       }
       if (this.param['ledger_data'][i]['account_display'] && this.param['ledger_data'][i]['account_display']['display_section']['balanceSheet']['assets']) {
         // console.log('asset', this.param['ledger_data'][i]['total_dev']);
-        this.creditTotal = this.creditTotal+(this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
+        this.creditTotal = this.creditTotal + (this.param['ledger_data'][i]['total_dev'] ? this.param['ledger_data'][i]['total_dev'] : 0);
       }
 
       // for (var j = 0; j < this.param['ledger_data'][i]['debit_data'].length; j++) {
@@ -285,8 +298,8 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       //     this.debitTotal = this.debitTotal + (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] ? (this.param['ledger_data'][i]['credit_data'][k]['vc_debit'] < 0 ? -(this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : this.param['ledger_data'][i]['credit_data'][k]['vc_debit']) : 0);
       //   }
       // }
-      
-      
+
+
 
       // diff = this.debitTotal - this.creditTotal;
       // if (diff < 0) {
@@ -305,7 +318,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
     }
 
-    this.debitTotal = this.debitTotal + this.previousIncomeExpenditureDeviation+this.incomeExpenditureDeviation;
+    this.debitTotal = this.debitTotal + this.previousIncomeExpenditureDeviation + this.incomeExpenditureDeviation;
 
     // this.creditSideTotal = this.creditSideTotal;
     // if (this.creditSideTotal < 0) {
@@ -385,7 +398,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
         }
         // console.log(activearr)
       }
-    }  else if (parent != '') {
+    } else if (parent != '') {
 
       if (activearr) {
         for (var i = 0; i < activearr.length; i++) {
@@ -434,13 +447,13 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
       if (activearr) {
         for (var i = 0; i < activearr.length; i++) {
           if (activearr[i]['coa_acc_group'] && activearr[i]['coa_acc_group']['group_name'] === subgroup) {
-            
+
             total = total + this.getDeviation(activearr[i]);
             activearr[i]['total'] = total;
           }
           for (var j = 0; j < activearr[i].length; j++) {
             if (activearr[i][j]['coa_acc_group'] && activearr[i][j]['coa_acc_group']['group_name'] === subgroup) {
-              
+
               total = total + this.getDeviation(activearr[i][j]);
               activearr[i][j]['total'] = total;
             }
@@ -448,7 +461,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
             if (activearr[i][j]) {
               for (var k = 0; k < activearr[i][j].length; k++) {
                 if (activearr[i][j][k]['coa_acc_group'] && activearr[i][j][k]['coa_acc_group']['group_name'] === subgroup) {
-                  
+
                   total = total + this.getDeviation(activearr[i][j][k]);
                   activearr[i][j][k]['total'] = total;
                 }
@@ -458,7 +471,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
         }
         // console.log(activearr)
       }
-    }  else if (parent != '') {
+    } else if (parent != '') {
 
       if (activearr) {
         for (var i = 0; i < activearr.length; i++) {
@@ -491,7 +504,7 @@ export class BalanceSheetModalComponent implements OnInit,AfterViewInit {
 
   }
 
- 
+
 
 }
 
