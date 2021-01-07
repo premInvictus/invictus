@@ -44,7 +44,7 @@
                                    <tbody>
                                       <tr class="text-center">
                                          <td id="tdTopic" class="qstStyle">Topics</td>
-                                         <th [ngStyle]="{'width':topicHeaderStyle}" *ngFor="let topic of topicArray">{{topic.topic_name}}</th>
+                                         <th [ngStyle]="{'width':topicHeaderStyle}" *ngFor="let topic of topicArray"><span [innerHTML]="topic.topic_name"></span></th>
                                          <th [ngStyle]="{'width':topicHeaderStyle}">Overall</th>
                                       </tr>
                                    </tbody>

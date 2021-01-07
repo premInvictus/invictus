@@ -70,11 +70,11 @@
                     <td style="width: 7rem;"
                       *ngIf="sIndex === 0 && qusIndex === 0"
                       [attr.rowspan]="titem.row_span"
-                    >{{titem.topic_name}}</td>
+                    ><span [innerHTML]="titem.topic_name"></span></td>
                     <td style="width: 10rem;"
                       *ngIf="qusIndex === 0"
                       [attr.rowspan]="sitem.row_span"
-                    >{{sitem.st_name}}</td>
+                    ><span [innerHTML]="sitem.st_name"></span></td>
                     <td style="width: 5.1rem;">{{getQusPosition(qus.qus_id)}}</td>
                     <td style="width: 7.4rem;">{{getAttempted(qus.correct,qus.incorrect)}}</td>
                     <td style="width: 6.3rem;">{{qus.correct}}</td>

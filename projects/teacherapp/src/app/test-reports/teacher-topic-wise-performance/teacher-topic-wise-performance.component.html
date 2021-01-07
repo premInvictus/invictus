@@ -34,8 +34,8 @@
                             <ng-container *ngFor="let sitem of titem.stArray;let sIndex=index">
                                 <ng-container *ngFor="let qus of sitem.qusArray;let qusIndex=index">
                                     <tr *ngIf="sub.sub_id == titem.sub_id">
-                                        <td class="tStyle" *ngIf="sIndex === 0 && qusIndex === 0" [attr.rowspan]="titem.row_span">{{titem.topic_name}}</td>
-                                        <td class="tStyle" *ngIf="qusIndex === 0" [attr.rowspan]="sitem.row_span">{{sitem.st_name}}</td>
+                                        <td class="tStyle" *ngIf="sIndex === 0 && qusIndex === 0" [attr.rowspan]="titem.row_span"><span [innerHTML]="titem.topic_name"></span></td>
+                                        <td class="tStyle" *ngIf="qusIndex === 0" [attr.rowspan]="sitem.row_span"><span [innerHTML]="sitem.st_name"></span></td>
                                         <td class="barStyle" *ngIf="qusIndex === 0" [attr.rowspan]="sitem.row_span">
                                         <mat-progress-bar class="change_mat_progress" mode="determinate" value="{{sitem.totalCorrect}}"></mat-progress-bar>
                                         </td>

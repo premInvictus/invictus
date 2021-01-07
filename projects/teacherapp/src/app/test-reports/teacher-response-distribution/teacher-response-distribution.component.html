@@ -39,9 +39,9 @@
                     <td *ngIf="sIndex === 0 && qusIndex === 0"
                       [attr.rowspan]="titem.row_span">{{i+1}}</td>
                     <td *ngIf="sIndex === 0 && qusIndex === 0"
-                      [attr.rowspan]="titem.row_span">{{titem.topic_name}}</td>  
+                      [attr.rowspan]="titem.row_span"><span [innerHTML]="titem.topic_name"></span></td>  
                     <td *ngIf="qusIndex === 0"
-                      [attr.rowspan]="sitem.row_span">{{sitem.st_name}}</td>  
+                      [attr.rowspan]="sitem.row_span"><span [innerHTML]="sitem.st_name"></span></td>  
                     <td >{{getQusPosition(qus.qus_id)}}</td>
                     <td [ngStyle]="{'background':getColormcqmr(qus.options[0].qopt_answer)}">{{qus.opt1Percentage}}</td>
                     <td [ngStyle]="{'background':getColormcqmr(qus.options[1].qopt_answer)}">{{qus.opt2Percentage}}</td>

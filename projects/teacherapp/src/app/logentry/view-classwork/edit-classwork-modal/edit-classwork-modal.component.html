@@ -57,7 +57,7 @@
             <mat-select formControlName="cw_topic_id"
                     (selectionChange)="getSubtopicByTopic();resetSuptopic()" required [disabled]="disableTopic">
                     <mat-option value="">Please select</mat-option>
-                    <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">{{item.topic_name}}
+                    <mat-option *ngFor="let item of topicArray" [value]="item.topic_id"><span [innerHTML]="item.topic_name"></span>
                     </mat-option>
                   </mat-select>
           </mat-form-field>
@@ -69,7 +69,7 @@
             <mat-label>Subtopic</mat-label>
             <mat-select formControlName="cw_st_id" required [disabled]="disableSubtop">
                 <mat-option value="">Please select</mat-option>
-              <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">{{item.st_name}}</mat-option>
+              <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id"><span [innerHTML]="item.st_name"></span></mat-option>
             </mat-select>
           </mat-form-field>
         </div>

@@ -176,7 +176,7 @@
                                     <mat-select formControlName="qp_topic_id" id="topic" placeholder="Topic"
                                        (selectionChange)="getSubtopicByTopic()" required>
                                        <mat-option *ngFor="let item of topicArray" [value]="item.topic_id">
-                                          {{item.topic_name}}
+                                          <span [innerHTML]="item.topic_name"></span>
                                        </mat-option>
                                     </mat-select>
                                  </mat-form-field>
@@ -187,7 +187,7 @@
                                     <mat-select multiple formControlName="qp_st_id" id="marks" placeholder="Sub-Topic"
                                        id="subtopic" (selectionChange)="addQuestionList()" required>
                                        <mat-option *ngFor="let item of subtopicArray" [value]="item.st_id">
-                                          {{item.st_name}}
+                                          <span [innerHTML]="item.st_name"></span>
                                        </mat-option>
                                     </mat-select>
                                  </mat-form-field>
