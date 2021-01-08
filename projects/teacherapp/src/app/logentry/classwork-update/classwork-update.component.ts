@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AxiomService, SisService, SmartService, CommonAPIService } from '../../_services';
+import { AxiomService, SisService, SmartService, CommonAPIService, ExamService } from '../../_services';
 import { MatDialog } from '@angular/material/dialog';
 import { ReviewClassworkComponent } from './review-classwork/review-classwork.component';
 // tslint:disable-next-line: max-line-length
@@ -34,6 +34,7 @@ export class ClassworkUpdateComponent implements OnInit {
 	entry_date = new Date();
 	noDataFlag = true;
 	isTeacher = false;
+	backdate_attendance_to_teacher = 0;
 	disableSubtopicArray: any[] = [];
 	disabletopicArray: any[] = [];
 	disableClassArray: any[] = [];
@@ -44,6 +45,7 @@ export class ClassworkUpdateComponent implements OnInit {
 		private axiomService: AxiomService,
 		private sisService: SisService,
 		private smartService: SmartService,
+		private examService: ExamService,
 		private commonAPIService: CommonAPIService,
 		private dialog: MatDialog,
 		public router: Router,
@@ -62,6 +64,19 @@ export class ClassworkUpdateComponent implements OnInit {
 		this.ctrList();
 		this.getTeacherwiseTableDetails(this.currentUser.login_id);
 	}
+	getGlobalSetting() {
+		let param: any = {};
+		param.gs_alias = ['backdate_attendance_to_teacher'];
+		this.examService.getGlobalSettingReplace(param).subscribe((result: any) => {
+		  if (result && result.status === 'ok') {
+			const settings = result.data;
+			settings.forEach(element => {
+			  this.backdate_attendance_to_teacher = element.gs_value
+			});
+		  }
+		})
+	  }
+	
 	datechange(){
 		console.log(this.classworkforForm.value.cw_entry_date);
 		this.resetClasswork();
