@@ -1,0 +1,151 @@
+<div class="row margin-top-0">
+  <div class="col-12 ">
+    <mat-card class="remove-card-padding">
+      <form [formGroup]="classworkforForm">
+        <div class="row">
+          <div class="col-6">
+            <div class="top-card-title">
+              <span class="font-size-24 font-medium">Classwise Update</span>
+            </div>
+
+          </div>
+          <div class="col-6 text-right">
+            <div class="top-card-title-form">
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10"
+                appearance="outline">
+                <mat-label>Date</mat-label>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" formControlName="cw_entry_date"
+                  (dateChange)="changeDate()">
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+              <!-- <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline"
+                *ngIf="!isTeacher">
+                <mat-label>Teacher Name</mat-label>
+                <input matInput formControlName="teacher_name" placeholder="Teacher Name" aria-label="State"
+                  [matAutocomplete]="auto" (keyup)="getTeacherInfo($event)">
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let item of teacherArray" [value]="item.au_login_id"
+                    (onSelectionChange)="setTeacherId(item)">
+                    <small>{{item.au_full_name | capitalize}} ( {{item.au_login_id}} )</small>
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field> -->
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Class</mat-label>
+                <mat-select formControlName="cw_class_id" (selectionChange)="getSectionsByClass();getSubjectsByClass();">
+                    <mat-option *ngFor="let item of classArray" [value]="item.class_id">{{item.class_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="form-field-220 remove-form-field-bottom-margin margin-left-10" appearance="outline">
+                <mat-label>Section</mat-label>
+                <mat-select formControlName="cw_sec_id">
+                    <mat-option *ngFor="let item of sectionArray" [value]="item.sec_id">{{item.sec_name}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-12">
+    <mat-card>
+      <form [formGroup]="classworkForm" *ngIf="!noDataFlag">
+        <ng-container formArrayName="periods">
+          <ng-container *ngFor="let item of Periods.controls; let i = index" [formGroupName]="i">
+            <div class="row">
+              <div class="col-1 smart-col-5 margin-top-5 text-center">
+                <span class="font-size-24  font-skyblue">{{i+1}}<sup>{{periodSup[i]}}</sup></span>
+                <div class="margin-top-ve5"><span class="font-size-10 ">Period</span></div>
+              </div>
+              <div class="col-2">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>Subject</mat-label>
+                  <mat-select formControlName="cw_sub_id"
+                    (selectionChange)="getTopicByClassSubject(i);reviewElementClass(i,$event)"
+                    [disabled]="disableSubjectArray[i]">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of subjectArray" [value]="item.sub_id">{{item.sub_name | capitalize}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-1">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>Category</mat-label>
+                  <mat-select formControlName="cw_ctr_id"
+                    (selectionChange)="reviewElementCategory(i,$event);disableSt(i,$event) ">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of categoryArray" [value]="item.ctr_id">{{item.ctr_name | capitalize}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- <div class="col-1">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>Section</mat-label>
+                  <mat-select formControlName="cw_sec_id" (selectionChange)="reviewElementSection(i,$event)">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of sectiontArray[i]" [value]="item.sec_id">{{item.sec_name}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div> -->
+              <div class="col-3">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>Topic</mat-label>
+                  <mat-select formControlName="cw_topic_id"
+                    (selectionChange)="getSubtopicByTopic(i);reviewElementTopic(i,$event)"
+                    [disabled]="disabletopicArray[i]">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of topicArray[i]" [value]="item.topic_id">
+                      <span [innerHTML]="item.topic_name"></span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-3">
+                <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>SubTopic</mat-label>
+                  <mat-select formControlName="cw_st_id" (selectionChange)="reviewElementSubtopic(i,$event)"
+                    [disabled]="disableSubtopicArray[i]">
+                    <mat-option value="">Please select</mat-option>
+                    <mat-option *ngFor="let item of subtopicArray[i]" [value]="item.st_id"><span [innerHTML]="item.st_name"></span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-1">
+                <!-- <mat-form-field class="form-field remove-form-field-bottom-margin" appearance="outline">
+                  <mat-label>Assignment</mat-label>
+                  <input matInput formControlName="cw_assignment_desc" (blur)="reviewElementAssignment(i,$event)">
+                  <mat-icon matSuffix style="cursor: pointer" (click)="attachmentDialog(i)">attachment</mat-icon>
+                </mat-form-field> -->
+                <button mat-raised-button class="btn-primary-100 margin-top-10"
+                  (click)="attachmentDialog(i);$event.stopPropagation();">Add Assignment</button>
+              </div>
+
+            </div>
+            <hr>
+          </ng-container>
+        </ng-container>
+      </form>
+      <div *ngIf="noDataFlag" class="text-center">
+        <app-no-data
+          [imgsrc]="'https://s3.ap-south-1.amazonaws.com/files.invictusdigisoft.com/images/syllabus_empty_state.png'"
+          [noDataText]="" [subText]="'Please select teacher'"></app-no-data>
+      </div>
+      <div class="row margin-top-20" *ngIf="!noDataFlag">
+        <div class="col-12 text-center">
+          <button mat-raised-button class="btn-success-green" (click)="openReviewClasswork()"
+            [disabled]="disabledApiButton">Review</button>
+          <button mat-raised-button class="btn-reset margin-left-10" (click)="cancelForm()">cancel</button>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+</div>

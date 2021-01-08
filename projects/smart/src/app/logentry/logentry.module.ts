@@ -9,6 +9,7 @@ import { ReviewClassworkComponent } from './classwork-update/review-classwork/re
 import { UpdateConfirmationComponent } from './topicwise-update/update-confirmation/update-confirmation.component';
 import { ViewClassworkComponent } from './view-classwork/view-classwork.component';
 import { EditClassworkModalComponent } from './view-classwork/edit-classwork-modal/edit-classwork-modal.component';
+import { ClasswiseUpdateComponent } from './classwise-update/classwise-update.component';
 
 @NgModule({
 	imports: [
@@ -17,7 +18,7 @@ import { EditClassworkModalComponent } from './view-classwork/edit-classwork-mod
 		LoadingModule,
 		SmartSharedModule,
 	],
-	declarations: [ClassworkUpdateComponent, TopicwiseUpdateComponent, ReviewClassworkComponent, UpdateConfirmationComponent, ViewClassworkComponent, EditClassworkModalComponent],
+	declarations: [ClassworkUpdateComponent, TopicwiseUpdateComponent, ReviewClassworkComponent, UpdateConfirmationComponent, ViewClassworkComponent, EditClassworkModalComponent, ClasswiseUpdateComponent],
 	entryComponents: [ReviewClassworkComponent, UpdateConfirmationComponent, EditClassworkModalComponent]
 })
 export class LogentryModule { }
